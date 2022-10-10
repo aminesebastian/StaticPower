@@ -12,7 +12,6 @@ import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraftforge.event.RegistryEvent;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.world.features.StaticPowerLakeFeature;
@@ -31,9 +30,5 @@ public class ModConfiguredFeatures {
 
 	public static final Holder<ConfiguredFeature<RandomFeatureConfiguration, ?>> RUBBER_WOOD_TREE_SPAWN = FeatureUtils.register("rubber_tree_spawn", Feature.RANDOM_SELECTOR,
 			new RandomFeatureConfiguration(List.of(new WeightedPlacedFeature(RUBBER_WOOD_TREE_CHECKED, 0.25f)), RUBBER_WOOD_TREE_CHECKED));
-
-	public static void registerFeatures(final RegistryEvent.Register<Feature<?>> event) {
-		event.getRegistry().register(STATIC_LAKE);
-	}
 
 }

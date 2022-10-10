@@ -34,6 +34,7 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntity;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.utilities.FluidUtilities;
 
 public class BlockEntityCauldron extends BlockEntityBase {
 	@BlockEntityTypePopulator()
@@ -86,14 +87,14 @@ public class BlockEntityCauldron extends BlockEntityBase {
 					offset.subtract(new Vector2D(1, 1));
 					offset.multiply(0.35f);
 
+					int temperature = FluidUtilities.getFluidTemperature(internalTank.getFluid());
 					// Render boiling bubbles.
-					SimpleParticleType bubbleParticle = internalTank.getFluid().getFluid().getAttributes().getTemperature() > 500 ? ParticleTypes.FALLING_LAVA
-							: ParticleTypes.BUBBLE_POP;
+					SimpleParticleType bubbleParticle = temperature > 500 ? ParticleTypes.FALLING_LAVA : ParticleTypes.BUBBLE_POP;
 					((ServerLevel) getLevel()).sendParticles(bubbleParticle, getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.87,
 							getBlockPos().getZ() + 0.5f + offset.getY(), 1, 0.0D, 0.0D, 0.0D, 0.01D);
 
 					// Render a splash half of the time.
-					SimpleParticleType splashParticle = internalTank.getFluid().getFluid().getAttributes().getTemperature() > 500 ? ParticleTypes.LAVA : ParticleTypes.SPLASH;
+					SimpleParticleType splashParticle = temperature > 500 ? ParticleTypes.LAVA : ParticleTypes.SPLASH;
 					if (SDMath.diceRoll(0.5)) {
 						((ServerLevel) getLevel()).sendParticles(splashParticle, getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.5,
 								getBlockPos().getZ() + 0.5f + offset.getY(), 1, 0.0D, 0.0D, 0.0D, 0.5D);

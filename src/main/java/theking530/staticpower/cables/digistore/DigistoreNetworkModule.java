@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -217,11 +216,11 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 
 		// Inventories.
 		String digistoreInventories = new MetricConverter(digistores.size()).getValueAsString(true);
-		output.add(new TextComponent(String.format("Contains: %1$s digistore inventories.", digistoreInventories)));
+		output.add(Component.literal(String.format("Contains: %1$s digistore inventories.", digistoreInventories)));
 
 		// ItemCount
 		String itemCount = new MetricConverter(items).getValueAsString(true);
-		output.add(new TextComponent(String.format("Contains: %1$s items.", itemCount)));
+		output.add(Component.literal(String.format("Contains: %1$s items.", itemCount)));
 	}
 
 	@Override

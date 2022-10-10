@@ -9,7 +9,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -21,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.HeatedItemModel;
@@ -136,9 +135,9 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelSupplier
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.remaining_heat_time").append(" ")
+		tooltip.add(Component.translatable("gui.staticpower.remaining_heat_time").append(" ")
 				.append(GuiTextUtilities.formatNumberAsStringOneDecimal(getRemainingHeat(stack) / 20.0f).withStyle(ChatFormatting.GOLD))
-				.append(new TranslatableComponent("gui.staticpower.seconds.short").withStyle(ChatFormatting.GOLD)));
+				.append(Component.translatable("gui.staticpower.seconds.short").withStyle(ChatFormatting.GOLD)));
 	}
 
 	@Override
@@ -148,7 +147,7 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelSupplier
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new HeatedItemModel(existingModel);
 	}
 }

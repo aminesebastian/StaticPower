@@ -151,7 +151,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 			// Check the fluid.
 			if (fluid != null) {
 				for (ResourceLocation fluidTag : fluids) {
-					if (fluid.getRegistryName().equals(fluidTag)) {
+					if (ForgeRegistries.FLUIDS.getKey(fluid).equals(fluidTag)) {
 						return true;
 					}
 				}
@@ -163,7 +163,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 			Block block = matchParams.getBlocks()[0].getBlock();
 			for (ResourceLocation blockTag : blocks) {
 				TagKey<Block> tag = ForgeRegistries.BLOCKS.tags().createTagKey(blockTag);
-				if (block.getRegistryName().equals(blockTag) || ModTags.tagContainsBlock(tag, block)) {
+				if (ForgeRegistries.BLOCKS.getKey(block).equals(blockTag) || ModTags.tagContainsBlock(tag, block)) {
 					return true;
 				}
 			}

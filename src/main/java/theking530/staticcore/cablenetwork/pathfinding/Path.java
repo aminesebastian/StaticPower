@@ -112,7 +112,7 @@ public class Path {
 		}
 		nbt.put("entries", pathNBTList);
 		nbt.putFloat("length", length);
-		nbt.putString("supported_network_module", supportedNetworkType.getRegistryName().toString());
+		nbt.putString("supported_network_module", StaticPowerRegistries.CableModuleRegsitry().getKey(supportedNetworkType).toString());
 		return nbt;
 	}
 

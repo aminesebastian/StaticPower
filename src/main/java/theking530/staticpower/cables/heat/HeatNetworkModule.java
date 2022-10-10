@@ -7,7 +7,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.Level;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorage;
@@ -50,10 +49,10 @@ public class HeatNetworkModule extends CableNetworkModule {
 		Component heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick());
 		Component averageConductivity = GuiTextUtilities.formatHeatRateToString(averageThermalConductivity);
 
-		components.add(new TextComponent(ChatFormatting.WHITE.toString()).append(new TextComponent("Contains: ")).append(ChatFormatting.GRAY.toString()).append(currentHeat));
-		components.add(new TextComponent(ChatFormatting.RED.toString()).append(new TextComponent("Heating: ")).append(ChatFormatting.GRAY.toString()).append(heating));
-		components.add(new TextComponent(ChatFormatting.BLUE.toString()).append(new TextComponent("Cooling: ")).append(ChatFormatting.GRAY.toString()).append(cooling));
-		components.add(new TextComponent(ChatFormatting.AQUA.toString()).append(new TextComponent("Average Conductivity: ")).append(ChatFormatting.GRAY.toString())
+		components.add(Component.literal(ChatFormatting.WHITE.toString()).append(Component.literal("Contains: ")).append(ChatFormatting.GRAY.toString()).append(currentHeat));
+		components.add(Component.literal(ChatFormatting.RED.toString()).append(Component.literal("Heating: ")).append(ChatFormatting.GRAY.toString()).append(heating));
+		components.add(Component.literal(ChatFormatting.BLUE.toString()).append(Component.literal("Cooling: ")).append(ChatFormatting.GRAY.toString()).append(cooling));
+		components.add(Component.literal(ChatFormatting.AQUA.toString()).append(Component.literal("Average Conductivity: ")).append(ChatFormatting.GRAY.toString())
 				.append(averageConductivity));
 	}
 

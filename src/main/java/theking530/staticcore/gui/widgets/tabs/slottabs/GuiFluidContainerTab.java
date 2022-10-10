@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,8 +18,8 @@ import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.fluids.PacketFluidContainerComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
-import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
+import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.FluidContainerSlot;
@@ -57,12 +57,12 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 			registerWidget(fillDirectionButton = new SpriteButton(9, 40, 10, 10, StaticPowerSprites.IMPORT, StaticPowerSprites.IMPORT, this::buttonPressed));
 			this.topSlotPreview = filledBucketPreview;
 			this.bottomSlotPreview = emptyBucketPreview;
-			fillDirectionButton.setTooltip(new TextComponent("Fill Machine with Container Contents"));
+			fillDirectionButton.setTooltip(Component.literal("Fill Machine with Container Contents"));
 		} else {
 			registerWidget(fillDirectionButton = new SpriteButton(9, 40, 10, 10, StaticPowerSprites.EXPORT, StaticPowerSprites.EXPORT, this::buttonPressed));
 			this.topSlotPreview = emptyBucketPreview;
 			this.bottomSlotPreview = filledBucketPreview;
-			fillDirectionButton.setTooltip(new TextComponent("Fill Container with Machine Contents"));
+			fillDirectionButton.setTooltip(Component.literal("Fill Container with Machine Contents"));
 		}
 
 		// Disable the default button background rendering.
@@ -134,13 +134,13 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
 			fillDirectionButton.setRegularTexture(StaticPowerSprites.IMPORT);
 			fillDirectionButton.setHoveredTexture(StaticPowerSprites.IMPORT);
-			fillDirectionButton.setTooltip(new TextComponent("Fill Machine with Container Contents"));
+			fillDirectionButton.setTooltip(Component.literal("Fill Machine with Container Contents"));
 			topSlot.setPreviewItem(new ItemStack(filledBucketPreview));
 			bottomSlot.setPreviewItem(new ItemStack(emptyBucketPreview));
 		} else {
 			fillDirectionButton.setRegularTexture(StaticPowerSprites.EXPORT);
 			fillDirectionButton.setHoveredTexture(StaticPowerSprites.EXPORT);
-			fillDirectionButton.setTooltip(new TextComponent("Fill Container with Machine Contents"));
+			fillDirectionButton.setTooltip(Component.literal("Fill Container with Machine Contents"));
 			topSlot.setPreviewItem(new ItemStack(emptyBucketPreview));
 			bottomSlot.setPreviewItem(new ItemStack(filledBucketPreview));
 		}

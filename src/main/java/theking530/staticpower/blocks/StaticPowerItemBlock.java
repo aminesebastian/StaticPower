@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -66,7 +65,7 @@ public class StaticPowerItemBlock extends BlockItem implements ITooltipProvider 
 
 		// Return early if the owning block is not an instance of a static power block.
 		if (!(OWNING_BLOCK instanceof StaticPowerBlock)) {
-			return new TranslatableComponent(OWNING_BLOCK.getDescriptionId());
+			return Component.translatable(OWNING_BLOCK.getDescriptionId());
 		}
 
 		// Get the display name from the block.

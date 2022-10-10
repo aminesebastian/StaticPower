@@ -122,7 +122,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 			}
 
 			if (processingComponent.getIsOnBlockState()) {
-				miningSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING.getRegistryName(), SoundSource.BLOCKS, 0.2f, 0.5f, getBlockPos(), 64);
+				miningSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING, SoundSource.BLOCKS, 0.2f, 0.5f, getBlockPos(), 64);
 			} else {
 				miningSoundComponent.stopPlayingSound();
 			}

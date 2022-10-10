@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:fusion_furnace_recipe",
+	"type": "staticpower:fusion_furnace",
 	"inputs": [
 		{
 			"tag": "forge:ingots/silver"

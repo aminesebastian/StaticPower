@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -132,17 +131,17 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 		if (isBound(world, item)) {
 			// Check if it has power.
 			if (usePower(item)) {
-				NetworkGUI.openGui((ServerPlayer) player, new WirelessDigistoreAccessContainerProvider(item), buff -> {
+				NetworkGUI.openScreen((ServerPlayer) player, new WirelessDigistoreAccessContainerProvider(item), buff -> {
 					buff.writeInt(getTerminalAttachDirection(item).ordinal());
 					buff.writeBlockPos(BlockPos.of(item.getTag().getLong(TERMINAL_POSITION_KEY)));
 				});
 				return true;
 			} else {
-				player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_not_enough_power"), true);
+				player.displayClientMessage(Component.translatable("gui.staticpower.digistore_wireless_terminal_not_enough_power"), true);
 				return false;
 			}
 		} else {
-			player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_not_bound"), true);
+			player.displayClientMessage(Component.translatable("gui.staticpower.digistore_wireless_terminal_not_bound"), true);
 			return false;
 		}
 	}
@@ -156,7 +155,7 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 				CompoundTag itemNBT = item.getOrCreateTag();
 				itemNBT.putLong(TERMINAL_POSITION_KEY, pos.asLong());
 				itemNBT.putInt(TERMINAL_SIDE_KEY, face.ordinal());
-				player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_bound"), true);
+				player.displayClientMessage(Component.translatable("gui.staticpower.digistore_wireless_terminal_bound"), true);
 				return InteractionResult.SUCCESS;
 			}
 		}
@@ -166,7 +165,7 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (worldIn != null && isBound(worldIn, stack)) {
-			tooltip.add(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_advanced_tooltip",
+			tooltip.add(Component.translatable("gui.staticpower.digistore_wireless_terminal_advanced_tooltip",
 					BlockPos.of(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
 		}
 	}

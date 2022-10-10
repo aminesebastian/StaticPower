@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
@@ -241,7 +241,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 						// Open prompt for crafting if we can actually craft some.
 						// Create the container opener.
-						ContainerOpener<?> requestUi = new ContainerOpener<>(new TextComponent("Crafting Request"), (id, inv, data) -> {
+						ContainerOpener<?> requestUi = new ContainerOpener<>(Component.literal("Crafting Request"), (id, inv, data) -> {
 							return new ContainerCraftingAmount(id, inv, newBundles, network.getNetwork().getId());
 						}).fromParent(this);
 

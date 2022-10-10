@@ -12,7 +12,8 @@ import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.AABB;
@@ -189,11 +190,11 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		return EInputResult.UNHANDLED;
 	}
 
-	public TranslatableComponent conditionallyGetCardinal(BlockSide side) {
+	public MutableComponent conditionallyGetCardinal(BlockSide side) {
 		if (tileEntity instanceof BlockEntityBase) {
 			BlockEntityBase te = (BlockEntityBase) tileEntity;
-			return new TranslatableComponent("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
+			return Component.translatable("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
 		}
-		return new TranslatableComponent("ERROR");
+		return Component.translatable("ERROR");
 	}
 }

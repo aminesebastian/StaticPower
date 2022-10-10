@@ -13,16 +13,12 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
@@ -38,11 +34,11 @@ public class GuiFluidBarUtilities {
 		drawFluidBar(pose, fluid, capacity, amount, x, y, zLevel, width, height, null, drawOverlay);
 	}
 
-	public static void drawFluidBar(PoseStack pose, FluidStack fluid, int capacity, int amount, float x, float y,
-			float zLevel, float width, float height, MachineSideMode mode, boolean drawOverlay) {
+	public static void drawFluidBar(PoseStack pose, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, MachineSideMode mode,
+			boolean drawOverlay) {
 
 		// Draw the outline around the fluid slot.
-		if (mode != null &&  mode != MachineSideMode.Never) {
+		if (mode != null && mode != MachineSideMode.Never) {
 			GuiDrawUtilities.drawSlotWithBorder(pose, (int) width, (int) height, (int) x, (int) (y - height), 0, mode.getColor());
 		} else {
 			GuiDrawUtilities.drawSlot(pose, (int) width, (int) height, (int) x, (int) (y - height), 0);
@@ -64,12 +60,12 @@ public class GuiFluidBarUtilities {
 		if (fluid != null && !fluid.isEmpty()) {
 			Component name = fluid.getDisplayName();
 			tooltip.add(name);
-			tooltip.add(new TextComponent(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity))
-					.append(new TranslatableComponent("gui.staticpower.millbuckets")));
+			tooltip.add(Component.literal(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity))
+					.append(Component.translatable("gui.staticpower.millbuckets")));
 			return tooltip;
 		} else {
-			tooltip.add(new TranslatableComponent("gui.staticpower.empty"));
-			tooltip.add(new TextComponent("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).append(new TranslatableComponent("gui.staticpower.millbuckets")));
+			tooltip.add(Component.translatable("gui.staticpower.empty"));
+			tooltip.add(Component.literal("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).append(Component.translatable("gui.staticpower.millbuckets")));
 			return tooltip;
 		}
 	}
@@ -93,8 +89,7 @@ public class GuiFluidBarUtilities {
 		}
 
 		SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
-		FluidAttributes attributes = fluid.getFluid().getAttributes();
-		boolean isGas = fluid.getFluid().getAttributes().isGaseous();
+		boolean isGas = false;// TOOD: Figure out how this changed in 1.19.2 fluid.getFluid().getFluidType().
 		float topColorTint = isGas ? 0.5f : 0.55f;
 
 		// We'll use the still texture here.
@@ -172,10 +167,8 @@ public class GuiFluidBarUtilities {
 			return;
 		}
 
-		TextureAtlasSprite fluidStillSprite = getStillFluidSprite(fluidStack);
-
-		FluidAttributes attributes = fluid.getAttributes();
-		int fluidColor = attributes.getColor(fluidStack);
+		TextureAtlasSprite fluidStillSprite = GuiDrawUtilities.getStillFluidSprite(fluidStack);
+		int fluidColor = IClientFluidTypeExtensions.of(fluid).getTintColor();
 
 		int amount = fluidStack.getAmount();
 		float scaledAmount = (amount * height) / capacity;
@@ -189,16 +182,8 @@ public class GuiFluidBarUtilities {
 		drawTiledSprite(poseStack, xPosition, yPosition, width, height, fluidColor, scaledAmount, fluidStillSprite);
 	}
 
-	private static TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {
-		Minecraft minecraft = Minecraft.getInstance();
-		Fluid fluid = fluidStack.getFluid();
-		FluidAttributes attributes = fluid.getAttributes();
-		ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
-		return minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
-	}
-
-	private static void drawTiledSprite(PoseStack poseStack, final int xPosition, final int yPosition, final float tiledWidth, final float tiledHeight, int color, float scaledAmount,
-			TextureAtlasSprite sprite) {
+	private static void drawTiledSprite(PoseStack poseStack, final int xPosition, final int yPosition, final float tiledWidth, final float tiledHeight, int color,
+			float scaledAmount, TextureAtlasSprite sprite) {
 		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 		Matrix4f matrix = poseStack.last().pose();
 		setGLColorFromInt(color);

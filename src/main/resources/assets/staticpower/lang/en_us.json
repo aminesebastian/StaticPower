@@ -1305,5 +1305,12 @@
 	"research.basic_research.title": "Back to School!",
 	"research.basic_research.description": "Here at Static Co., we take our research and development VERY seriously. So much so that you guys are the ONLY team we pay more than minimum wage. How you choose to spend that extra nickel is up to you.",
 	"research.basic_soldering.title": "Basic Soldering",
-	"research.basic_soldering.description": "Watch your fingers!"
+	"research.basic_soldering.description": "Watch your fingers!",
+	
+	"config.jade.plugin_staticpower.fluid_pipe": "Fluid Pipe",
+	"config.jade.plugin_staticpower.digistore": "Digistore",
+	"config.jade.plugin_staticpower.heat": "Heat",
+	"config.jade.plugin_staticpower.processing": "Processing",
+	"config.jade.plugin_staticpower.digistore_master_presence": "Digistore",
+	"config.jade.plugin_staticpower.static_voltage": "Static Power"
 }

@@ -14,12 +14,14 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
+import theking530.staticpower.StaticPowerConfig;
 
 /**
  * Light class for any static power items that require the ability to store
@@ -45,9 +47,12 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		double capacity = getCapacity();
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(
-				new ItemStackStaticPowerEnergyCapability("default", stack, capacity, getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower()));
+		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
+			double capacity = getCapacity();
+			return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, capacity, getInputVoltageRange(),
+					getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower()));
+		}
+		return null;
 	}
 
 	public ItemStack getFilledVariant() {
@@ -108,7 +113,7 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public static class EnergyItemJEIInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
 		@Override
 		public String apply(ItemStack itemStack, UidContext context) {
-			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " "
+			return ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString() + EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " "
 					+ EnergyHandlerItemStackUtilities.getStoredPower(itemStack);
 		}
 	}

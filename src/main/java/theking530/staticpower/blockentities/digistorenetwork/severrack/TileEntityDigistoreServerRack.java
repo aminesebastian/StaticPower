@@ -8,8 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -42,9 +41,9 @@ public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 
 	@Nonnull
 	@Override
-	public IModelData getModelData() {
-		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		return builder.withInitial(CARD_RENDERING_STATE, new ServerRackRenderingState(getCards())).build();
+	public ModelData getModelData() {
+		ModelData.Builder builder = ModelData.builder();
+		return builder.with(CARD_RENDERING_STATE, new ServerRackRenderingState(getCards())).build();
 	}
 
 	protected ItemStack[] getCards() {

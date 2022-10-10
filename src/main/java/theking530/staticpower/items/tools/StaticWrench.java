@@ -3,7 +3,7 @@ package theking530.staticpower.items.tools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -35,10 +35,10 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 			if (playerIn.isShiftKeyDown()) {
 				if (getWrenchMode(itemStack).ordinal() + 1 <= RegularWrenchMode.values().length - 1) {
 					setWrenchMode(itemStack, RegularWrenchMode.values()[getWrenchMode(itemStack).ordinal() + 1]);
-					playerIn.sendMessage(new TextComponent("Wrench Mode: " + getWrenchMode(itemStack).toString()), playerIn.getUUID());
+					playerIn.sendSystemMessage(Component.literal("Wrench Mode: " + getWrenchMode(itemStack).toString()));
 				} else {
 					setWrenchMode(itemStack, RegularWrenchMode.values()[0]);
-					playerIn.sendMessage(new TextComponent("Wrench Mode: " + getWrenchMode(itemStack).toString()), playerIn.getUUID());
+					playerIn.sendSystemMessage(Component.literal("Wrench Mode: " + getWrenchMode(itemStack).toString()));
 				}
 			}
 		}

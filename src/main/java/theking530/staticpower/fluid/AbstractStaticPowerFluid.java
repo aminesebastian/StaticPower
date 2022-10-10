@@ -12,47 +12,26 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
-import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
 public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid implements IRenderLayerProvider {
 
 	public TagKey<Fluid> Tag;
-	private SDColor fogColor;
-	private SDColor overlayColor;
 
-	public AbstractStaticPowerFluid(Properties properties, TagKey<Fluid> tag, SDColor fogColor, SDColor overlayColor) {
+	public AbstractStaticPowerFluid(Properties properties, TagKey<Fluid> tag) {
 		super(properties);
-		this.fogColor = fogColor;
-		this.overlayColor = overlayColor;
 		Tag = tag;
-	}
-
-	public SDColor getFogColor() {
-		return fogColor;
-	}
-
-	public void setFogColor(SDColor fogColor) {
-		this.fogColor = fogColor;
-	}
-
-	public SDColor getOverlayColor() {
-		return overlayColor;
-	}
-
-	public void setOverlayColor(SDColor overlayColor) {
-		this.overlayColor = overlayColor;
 	}
 
 	@Override
 	public int getTickDelay(LevelReader reader) {
-		return getAttributes().getViscosity() / 200;
+		return getFluidType().getViscosity() / 200;
 	}
 
 	@Override
 	public void tick(Level worldIn, BlockPos pos, FluidState state) {
 		// Check if we're gaseous.
-		if (state.getType().getAttributes().isGaseous()) {
+		if (state.getType().getFluidType().isLighterThanAir()) {
 			// If the fluid is near the world height, kill it.
 			if (pos.getY() > worldIn.getMaxBuildHeight() - 5) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
@@ -89,14 +68,14 @@ public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid impleme
 
 	public static class Source extends AbstractStaticPowerFluid {
 
-		public Source(Properties properties,TagKey<Fluid> tag, SDColor fogColor, SDColor overlayColor) {
-			super(properties, tag, fogColor, overlayColor);
+		public Source(Properties properties, TagKey<Fluid> tag) {
+			super(properties, tag);
 		}
 
 		@Override
-        public int getAmount(FluidState state) {
-            return 8;
-        }
+		public int getAmount(FluidState state) {
+			return 8;
+		}
 
 		@Override
 		public boolean isSource(FluidState state) {
@@ -106,8 +85,8 @@ public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid impleme
 
 	public static class Flowing extends AbstractStaticPowerFluid {
 
-		public Flowing(Properties properties,TagKey<Fluid> tag, SDColor fogColor, SDColor overlayColor) {
-			super(properties, tag, fogColor, overlayColor);
+		public Flowing(Properties properties, TagKey<Fluid> tag) {
+			super(properties, tag);
 		}
 
 		@Override
@@ -115,10 +94,10 @@ public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid impleme
 			super.createFluidStateDefinition(builder);
 			builder.add(LEVEL);
 		}
-		
+
 		@Override
 		public int getAmount(FluidState state) {
-            return state.getValue(LEVEL);
+			return state.getValue(LEVEL);
 		}
 
 		@Override

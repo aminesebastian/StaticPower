@@ -13,6 +13,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
@@ -53,7 +54,8 @@ public class ThermalConductivityJEIRecipeWrapper implements Recipe<Container> {
 			fluidOutput = FluidStack.EMPTY;
 		}
 
-		this.hasFireOutput = recipe.getOverheatedBlock() != null ? recipe.getOverheatedBlock().getBlock().getRegistryName().toString().equals("minecraft:fire") : false;
+		this.hasFireOutput = recipe.getOverheatedBlock() != null ? ForgeRegistries.BLOCKS.getKey(recipe.getOverheatedBlock().getBlock()).toString().equals("minecraft:fire")
+				: false;
 	}
 
 	public void addInput(ItemStack input) {

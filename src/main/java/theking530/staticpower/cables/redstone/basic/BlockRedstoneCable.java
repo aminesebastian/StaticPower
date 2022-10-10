@@ -8,7 +8,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
@@ -23,11 +22,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.network.NetworkHooks;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult;
-import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHoverType;
+import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.Vector3D;
@@ -57,16 +56,16 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		if (color.equals("naked")) {
-			BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT);
-			BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION);
-			BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT);
+			BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION);
+			BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		} else {
-			BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0]);
-			BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1]);
-			BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0]);
+			BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1]);
+			BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		}
 	}
@@ -114,7 +113,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 		if (!world.isClientSide) {
 			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 			RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (BlockEntityRedstoneCable) tileEntity, hit.getDirection());
-			NetworkGUI.openGui((ServerPlayer) player, provider, buf -> {
+			NetworkGUI.openScreen((ServerPlayer) player, provider, buf -> {
 				buf.writeBlockPos(pos);
 				buf.writeInt(hoverResult.direction.ordinal());
 			});
@@ -179,7 +178,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 		@Override
 		public Component getDisplayName() {
-			return new TranslatableComponent(owningBlock.getDescriptionId());
+			return Component.translatable(owningBlock.getDescriptionId());
 		}
 
 	}

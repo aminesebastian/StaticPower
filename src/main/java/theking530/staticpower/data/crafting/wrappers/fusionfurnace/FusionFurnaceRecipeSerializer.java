@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
@@ -68,15 +67,5 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);
-	}
-
-	@Override
-	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
-		return INSTANCE;
-	}
-
-	@Override
-	public ResourceLocation getRegistryName() {
-		return ID;
 	}
 }

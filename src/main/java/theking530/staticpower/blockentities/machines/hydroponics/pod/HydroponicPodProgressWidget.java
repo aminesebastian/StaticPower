@@ -8,9 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
@@ -65,7 +64,7 @@ public class HydroponicPodProgressWidget extends AbstractGuiWidget<GuiPowerBarFr
 		}
 
 		long gameTime = getMinecraft().level.getGameTime();
-		GuiDrawUtilities.drawBlockState(matrix, state.get(), BlockPos.ZERO, EmptyModelData.INSTANCE, new Vector3D(5.5f, 5.5f, 1), new Vector3D(15, gameTime + partialTicks, 180),
+		GuiDrawUtilities.drawBlockState(matrix, state.get(), BlockPos.ZERO, ModelData.EMPTY, new Vector3D(5.5f, 5.5f, 1), new Vector3D(15, gameTime + partialTicks, 180),
 				new Vector3D(8, 8, -1));
 		GuiDrawUtilities.drawStringLeftAligned(matrix, state.get().getBlock().getName().getString(), 15.5f, 10, 1, 0.5f, SDColor.EIGHT_BIT_DARK_GREY, false);
 	}
@@ -73,20 +72,20 @@ public class HydroponicPodProgressWidget extends AbstractGuiWidget<GuiPowerBarFr
 	@Override
 	protected void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (currentPod == null) {
-			tooltips.add(new TextComponent("Missing Pod!"));
+			tooltips.add(Component.literal("Missing Pod!"));
 			return;
 		}
 
 		Optional<BlockState> state = currentPod.getPlantBlockStateForHarvest();
 		if (state.isEmpty()) {
-			tooltips.add(new TextComponent("Pod not currently active!"));
+			tooltips.add(Component.literal("Pod not currently active!"));
 			return;
 		}
 
-		tooltips.add(new TextComponent("Currently growing:").withStyle(ChatFormatting.AQUA));
-		tooltips.add(new TextComponent("• ").append(state.get().getBlock().getName()));
-		tooltips.add(new TextComponent("Growth Progress: ").withStyle(ChatFormatting.GREEN));
-		tooltips.add(new TextComponent("• ").append(GuiTextUtilities.formatNumberAsPercentStringNoDecimal(currentPod.getGrowthPercentage())));
+		tooltips.add(Component.literal("Currently growing:").withStyle(ChatFormatting.AQUA));
+		tooltips.add(Component.literal("• ").append(state.get().getBlock().getName()));
+		tooltips.add(Component.literal("Growth Progress: ").withStyle(ChatFormatting.GREEN));
+		tooltips.add(Component.literal("• ").append(GuiTextUtilities.formatNumberAsPercentStringNoDecimal(currentPod.getGrowthPercentage())));
 	}
 
 }

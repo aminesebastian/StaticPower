@@ -6,13 +6,12 @@ import java.util.List;
 import com.google.common.base.Strings;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.recipe.IFocus;
-import mezz.jei.api.recipe.IFocus.Mode;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -147,8 +146,8 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 		// Add island for the crafting tab.
 		registerWidget(new GuiIslandWidget(this.imageWidth - 4, 168, 25, 24));
-		registerWidget(craftingViewButton = (SpriteButton) new SpriteButton(this.imageWidth - 1, 170, 20, 20, StaticPowerSprites.CRAFTING_TABLE_ICON, null, (a, b) -> switchToCraftingStatusView())
-				.setShouldDrawButtonBackground(false));
+		registerWidget(craftingViewButton = (SpriteButton) new SpriteButton(this.imageWidth - 1, 170, 20, 20, StaticPowerSprites.CRAFTING_TABLE_ICON, null,
+				(a, b) -> switchToCraftingStatusView()).setShouldDrawButtonBackground(false));
 
 		// Add the crafting steps renderer.
 		registerWidget(craftingStepsWidget = new AutoCraftingStepsWidget(8, 40, 160, 133, MAX_CRAFTING_STEPS_ROWS, MAX_CRAFTING_STEP_COLUMNS));
@@ -163,7 +162,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		// Cancel crafting request button.
 		registerWidget(craftingRequestCancelButton = (SpriteButton) new SpriteButton(98, 24, 8, 8, StaticPowerSprites.ERROR, null, (a, b) -> cancelCurrentCraftingRequest())
 				.setShouldDrawButtonBackground(false));
-		craftingRequestCancelButton.setTooltip(new TextComponent("Cancel"));
+		craftingRequestCancelButton.setTooltip(Component.literal("Cancel"));
 		craftingRequestCancelButton.setVisible(false);
 
 		// This is just a constant used to indicate the size of a slot (16 + 2(1) for
@@ -224,10 +223,10 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		if (getMenu().getCurrentCraftingQueue().size() > 0) {
 			CraftingRequestResponse currentRequest = getMenu().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
 			craftingStepsWidget.setRequest(currentRequest);
-			craftingViewButton.setTooltip(new TextComponent(String.format("%1$d jobs currently queued.", getMenu().getCurrentCraftingQueue().size())));
+			craftingViewButton.setTooltip(Component.literal(String.format("%1$d jobs currently queued.", getMenu().getCurrentCraftingQueue().size())));
 		} else {
 			craftingStepsWidget.setRequest(null);
-			craftingViewButton.setTooltip(new TextComponent("No crafting jobs currently queued."));
+			craftingViewButton.setTooltip(Component.literal("No crafting jobs currently queued."));
 		}
 
 		// IF we are in the crafting view and have crafting requests, show the cancel
@@ -287,13 +286,15 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 						if (binding.getKey().getValue() == key) {
 							if (binding.getName() == "key.jei.showRecipe") {
 								if (!buttonStack.isEmpty()) {
-									IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.OUTPUT, buttonStack);
+									IFocus<ItemStack> focus = PluginJEI.RUNTIME.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, VanillaTypes.ITEM_STACK,
+											buttonStack);
 									PluginJEI.RUNTIME.getRecipesGui().show(focus);
 									return true;
 								}
 							} else if (binding.getName() == "key.jei.showUses") {
 								if (!buttonStack.isEmpty()) {
-									IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.INPUT, buttonStack);
+									IFocus<ItemStack> focus = PluginJEI.RUNTIME.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.INPUT, VanillaTypes.ITEM_STACK,
+											buttonStack);
 									PluginJEI.RUNTIME.getRecipesGui().show(focus);
 									return true;
 								}
@@ -351,20 +352,20 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		if (mouseY - topPos >= 65) {
 			if (mouseX - leftPos >= -19 && mouseX - leftPos <= -12 && mouseY - topPos <= 99) {
 				float filledPercent = (float) snapshot.getUsedCapacity() / snapshot.getTotalCapacity();
-				tooltips.add(new TranslatableComponent("gui.staticpower.digistore_capacity_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(filledPercent * 100)));
+				tooltips.add(Component.translatable("gui.staticpower.digistore_capacity_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(filledPercent * 100)));
 
 				// Include actual numbers.
 				MetricConverter totalCapacity = new MetricConverter(snapshot.getTotalCapacity());
 				MetricConverter usedCapacity = new MetricConverter(snapshot.getUsedCapacity());
-				tooltips.add(new TextComponent(usedCapacity.getValueAsString(true) + "/" + totalCapacity.getValueAsString(true)));
+				tooltips.add(Component.literal(usedCapacity.getValueAsString(true) + "/" + totalCapacity.getValueAsString(true)));
 			} else if (mouseX - leftPos >= -9 && mouseX - leftPos <= -2 && mouseY - topPos <= 99) {
 				float typesPercent = (float) snapshot.getUsedUniqueTypes() / snapshot.getMaxUniqueTypes();
-				tooltips.add(new TranslatableComponent("gui.staticpower.digistore_types_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(typesPercent * 100)));
+				tooltips.add(Component.translatable("gui.staticpower.digistore_types_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(typesPercent * 100)));
 
 				// Include actual numbers.
 				MetricConverter totalTypes = new MetricConverter(snapshot.getMaxUniqueTypes());
 				MetricConverter usedTypes = new MetricConverter(snapshot.getUsedUniqueTypes());
-				tooltips.add(new TextComponent(usedTypes.getValueAsString(true) + "/" + totalTypes.getValueAsString(true)));
+				tooltips.add(Component.literal(usedTypes.getValueAsString(true) + "/" + totalTypes.getValueAsString(true)));
 			}
 		}
 	}
@@ -545,15 +546,15 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		if (ModList.get().isLoaded(StaticPowerModEventsCommon.JEI_MODID)) {
 			switch (searchMode) {
 			case DEFAULT:
-				searchModeButton.setTooltip(new TextComponent("Default Search Mode"));
+				searchModeButton.setTooltip(Component.literal("Default Search Mode"));
 				searchModeButton.setRegularTexture(StaticPowerSprites.SEARCH_MODE_DEFAULT);
 				break;
 			case ONE_WAY:
-				searchModeButton.setTooltip(new TextComponent("One-Way JEI Search Mode"));
+				searchModeButton.setTooltip(Component.literal("One-Way JEI Search Mode"));
 				searchModeButton.setRegularTexture(StaticPowerSprites.SEARCH_MODE_ONE_WAY);
 				break;
 			case TWO_WAY:
-				searchModeButton.setTooltip(new TextComponent("Two-Way JEI Search Mode"));
+				searchModeButton.setTooltip(Component.literal("Two-Way JEI Search Mode"));
 				searchModeButton.setRegularTexture(StaticPowerSprites.SEARCH_MODE_TWO_WAY);
 				break;
 			}
@@ -561,11 +562,11 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 		switch (sortType) {
 		case NAME:
-			sortButton.setTooltip(new TextComponent("Sort by Name").append(" ").append(descending ? "(Descending)" : "(Ascending)"));
+			sortButton.setTooltip(Component.literal("Sort by Name").append(" ").append(descending ? "(Descending)" : "(Ascending)"));
 			sortButton.setRegularTexture(descending ? StaticPowerSprites.SORT_ALPHA_DESC : StaticPowerSprites.SORT_ALPHA_ASC);
 			break;
 		case COUNT:
-			sortButton.setTooltip(new TextComponent("Sort by Count").append(" ").append(descending ? "(Descending)" : "(Ascending)"));
+			sortButton.setTooltip(Component.literal("Sort by Count").append(" ").append(descending ? "(Descending)" : "(Ascending)"));
 			sortButton.setRegularTexture(descending ? StaticPowerSprites.SORT_NUMERICAL_DESC : StaticPowerSprites.SORT_NUMERICAN_ASC);
 			break;
 		}

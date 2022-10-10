@@ -8,13 +8,12 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
@@ -34,7 +33,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 		// If we have a pattern, mark this card as encoded.
 		if (stack.hasTag() && stack.getTag().contains(ENCODED_PATTERN_TAG)) {
-			cardName.append(new TextComponent(" (Encoded)"));
+			cardName.append(Component.literal(" (Encoded)"));
 		}
 
 		// Return the final name.
@@ -54,19 +53,19 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 			}
 
 			// Add inputs.
-			tooltip.add(new TextComponent("Inputs: "));
+			tooltip.add(Component.literal("Inputs: "));
 			for (ItemStack input : pattern.getInputs()) {
 				if (!input.isEmpty()) {
-					tooltip.add(new TextComponent("  �").append(input.getHoverName()));
+					tooltip.add(Component.literal("  �").append(input.getHoverName()));
 				}
 			}
 
 			// Add outputs.
-			tooltip.add(new TextComponent("Output: "));
+			tooltip.add(Component.literal("Output: "));
 			if (!pattern.getOutput().isEmpty()) {
-				MutableComponent outputTooltip = new TextComponent("  �").append(pattern.getOutput().getHoverName());
+				MutableComponent outputTooltip = Component.literal("  �").append(pattern.getOutput().getHoverName());
 				if (pattern.getOutput().getCount() > 1) {
-					outputTooltip.append(new TextComponent(" x" + pattern.getOutput().getCount()));
+					outputTooltip.append(Component.literal(" x" + pattern.getOutput().getCount()));
 				}
 				tooltip.add(outputTooltip);
 			}
@@ -109,8 +108,8 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
-		BakedModel encodedModel = event.getModelRegistry().get(StaticPowerAdditionalModels.DIGISTORE_PATTERN_CARD_ENCODED);
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+		BakedModel encodedModel = event.getModels().get(StaticPowerAdditionalModels.DIGISTORE_PATTERN_CARD_ENCODED);
 		return new PatternCardItemModel(existingModel, encodedModel);
 	}
 

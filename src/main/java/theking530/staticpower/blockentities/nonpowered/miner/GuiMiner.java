@@ -7,8 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
@@ -43,7 +41,7 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, BlockEnti
 		registerWidget(new FireProgressBar(19, 52).bindToMachineProcessingComponent(getTileEntity().fuelComponent));
 		registerWidget(new SquareProgressBar(78, 55, 20, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 		registerWidget(drawPreviewButton = new SpriteButton(156, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
-		drawPreviewButton.setTooltip(new TextComponent("Preview Range"));
+		drawPreviewButton.setTooltip(Component.literal("Preview Range"));
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
 
@@ -73,9 +71,9 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, BlockEnti
 		if (!getTileEntity().isDoneMining()) {
 			if (mouseX > leftPos + 72 && mouseX < leftPos + 102 && mouseY > topPos + 62 && mouseY < topPos + 72) {
 				BlockPos currentPos = getTileEntity().getCurrentlyTargetedBlockPos();
-				tooltips.add(new TextComponent(String.format("X=%1$s Z=%2$d", currentPos.getX(), currentPos.getZ())));
+				tooltips.add(Component.literal(String.format("X=%1$s Z=%2$d", currentPos.getX(), currentPos.getZ())));
 			} else if (mouseX > leftPos + 66 && mouseX < leftPos + 110 && mouseY > topPos + 16 && mouseY < topPos + 26) {
-				tooltips.add(new TextComponent("Time remaining until this miner reaches bedrock."));
+				tooltips.add(Component.literal("Time remaining until this miner reaches bedrock."));
 			}
 		}
 	}
@@ -103,14 +101,14 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, BlockEnti
 
 	@Override
 	public void updateData() {
-		infoTab.addKeyValueTwoLiner("fuel", new TextComponent("Fuel Usage"),
-				new TextComponent(String.valueOf(getTileEntity().getFuelUsage())).append(" ").append(new TranslatableComponent("gui.staticpower.fuel_usage")),
+		infoTab.addKeyValueTwoLiner("fuel", Component.literal("Fuel Usage"),
+				Component.literal(String.valueOf(getTileEntity().getFuelUsage())).append(" ").append(Component.translatable("gui.staticpower.fuel_usage")),
 				ChatFormatting.GOLD);
 
-		infoTab.addKeyValueTwoLiner("radius", new TextComponent("Mining Radius"),
-				new TextComponent(String.valueOf(getTileEntity().getRadius())).append(" ").append(new TranslatableComponent("gui.staticpower.blocks")), ChatFormatting.BLUE);
+		infoTab.addKeyValueTwoLiner("radius", Component.literal("Mining Radius"),
+				Component.literal(String.valueOf(getTileEntity().getRadius())).append(" ").append(Component.translatable("gui.staticpower.blocks")), ChatFormatting.BLUE);
 
-		infoTab.addKeyValueTwoLiner("heat_generation", new TextComponent("Heat Genreation"), GuiTextUtilities.formatHeatRateToString(getTileEntity().getHeatGeneration()),
+		infoTab.addKeyValueTwoLiner("heat_generation", Component.literal("Heat Genreation"), GuiTextUtilities.formatHeatRateToString(getTileEntity().getHeatGeneration()),
 				ChatFormatting.RED);
 	}
 }

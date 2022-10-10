@@ -101,7 +101,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements 
 			}
 
 			if (burnTimeRemaining > 0) {
-				furnaceSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE.getRegistryName(), SoundSource.BLOCKS, 1f, 1.0f, getBlockPos(), 64);
+				furnaceSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1f, 1.0f, getBlockPos(), 64);
 			} else {
 				furnaceSoundComponent.stopPlayingSound();
 				if (processingComponent.getCurrentProcessingTime() > 0) {

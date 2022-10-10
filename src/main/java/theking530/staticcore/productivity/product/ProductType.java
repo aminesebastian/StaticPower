@@ -2,14 +2,11 @@ package theking530.staticcore.productivity.product;
 
 import java.util.function.Supplier;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.entry.ProductionEntry;
 
-public abstract class ProductType<T> implements IForgeRegistryEntry<ProductType<T>> {
-	private ResourceLocation registryName;
+public abstract class ProductType<T> {
 	private final Class<T> productClass;
 	private Supplier<ProductionCache<T>> cacheType;
 
@@ -37,26 +34,5 @@ public abstract class ProductType<T> implements IForgeRegistryEntry<ProductType<
 
 	public Class<T> getProductClass() {
 		return productClass;
-	}
-
-	@Override
-	public ProductType<T> setRegistryName(ResourceLocation name) {
-		registryName = name;
-		return this;
-	}
-
-	@Override
-	public ResourceLocation getRegistryName() {
-		return registryName;
-	}
-
-	@Override
-	public Class<ProductType<T>> getRegistryType() {
-		return castClass(this.getClass());
-	}
-
-	@SuppressWarnings("unchecked") // Need this wrapper, because generics
-	private static <G> Class<G> castClass(Class<?> cls) {
-		return (Class<G>) cls;
 	}
 }

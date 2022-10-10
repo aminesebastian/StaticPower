@@ -10,8 +10,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -28,9 +26,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -56,7 +53,7 @@ public class BlockTank extends StaticPowerBlockEntityBlock implements ICustomMod
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "� Capacity ").append(GuiTextUtilities.formatFluidToString(
+		tooltip.add(Component.literal(ChatFormatting.GREEN.toString() + "� Capacity ").append(GuiTextUtilities.formatFluidToString(
 				SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultTankCapacity.get(), BlockEntityTank.MACHINE_TANK_CAPACITY_MULTIPLIER))));
 
 		// Check to see if the stack has the serialized nbt.If it does, add the stored
@@ -66,7 +63,7 @@ public class BlockTank extends StaticPowerBlockEntityBlock implements ICustomMod
 			CompoundTag tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
 			CompoundTag fluidTank = tankTag.getCompound("fluidStorage");
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));
-			tooltip.add(new TextComponent(ChatFormatting.AQUA.toString() + "� Stored ").append(GuiTextUtilities.formatFluidToString(fluid.getAmount())));
+			tooltip.add(Component.literal(ChatFormatting.AQUA.toString() + "� Stored ").append(GuiTextUtilities.formatFluidToString(fluid.getAmount())));
 		}
 	}
 
@@ -130,10 +127,10 @@ public class BlockTank extends StaticPowerBlockEntityBlock implements ICustomMod
 			CompoundTag fluidTank = tankTag.getCompound("fluidStorage");
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));
 			if (!fluid.isEmpty()) {
-				return new TranslatableComponent(getDescriptionId()).append(" (").append(new TranslatableComponent(fluid.getTranslationKey()).append(")"));
+				return Component.translatable(getDescriptionId()).append(" (").append(Component.translatable(fluid.getTranslationKey()).append(")"));
 			}
 		}
-		return new TranslatableComponent(getDescriptionId());
+		return Component.translatable(getDescriptionId());
 	}
 
 	@Override
@@ -141,15 +138,14 @@ public class BlockTank extends StaticPowerBlockEntityBlock implements ICustomMod
 		BlockEntity te = world.getBlockEntity(pos);
 		if (te instanceof BlockEntityTank) {
 			FluidStack fluid = ((BlockEntityTank) te).fluidTankComponent.getFluid();
-			FluidAttributes attributes = fluid.getFluid().getAttributes();
-			return attributes.getLuminosity(fluid);
+			return fluid.getFluid().getFluidType().getLightLevel();
 		}
 		return super.getLightEmission(state, world, pos);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		if (tier == StaticPowerTiers.IRON) {
 			return new TankMachineBakedModel(existingModel, StaticPowerSprites.IRON_TANK);
 		} else if (tier == StaticPowerTiers.BASIC) {

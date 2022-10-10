@@ -7,7 +7,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -66,15 +65,5 @@ public class HammerRecipeSerializer extends StaticPowerRecipeSerializer<HammerRe
 		} else {
 			recipe.getInputItem().write(buffer);
 		}
-	}
-
-	@Override
-	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
-		return INSTANCE;
-	}
-
-	@Override
-	public ResourceLocation getRegistryName() {
-		return ID;
 	}
 }

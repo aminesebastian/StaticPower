@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
@@ -21,7 +20,7 @@ public class GuiHeatBarUtilities {
 
 		// Show the total amount of energy remaining / total energy capacity.
 		tooltip.add(GuiTextUtilities.formatHeatToString(currentTemp, maximumTemp));
-		tooltip.add(new TextComponent("Overheat: ").withStyle(ChatFormatting.RED).append(GuiTextUtilities.formatHeatToString(overheatTemp)));
+		tooltip.add(Component.literal("Overheat: ").withStyle(ChatFormatting.RED).append(GuiTextUtilities.formatHeatToString(overheatTemp)));
 
 		return tooltip;
 	}

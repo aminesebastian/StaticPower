@@ -10,7 +10,6 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -96,11 +95,6 @@ public class PackagerRecipeProvider implements IRecipeManagerPlugin {
 	@Override
 	public <T, V> List<T> getRecipes(IRecipeCategory<T> recipeCategory, IFocus<V> focus) {
 		return Collections.emptyList();
-	}
-
-	@Override
-	public <V> List<ResourceLocation> getRecipeCategoryUids(IFocus<V> focus) {
-		return getRecipeTypes(focus).stream().map((type) -> type.getUid()).toList();
 	}
 
 	@SuppressWarnings("resource")

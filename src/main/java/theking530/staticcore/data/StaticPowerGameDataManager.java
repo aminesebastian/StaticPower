@@ -18,8 +18,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.world.WorldEvent.Load;
-import net.minecraftforge.event.world.WorldEvent.Save;
+import net.minecraftforge.event.level.LevelEvent.Load;
+import net.minecraftforge.event.level.LevelEvent.Save;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.events.StaticPowerForgeEventsCommon;
@@ -35,7 +35,7 @@ public class StaticPowerGameDataManager {
 	}
 
 	public static void loadDataFromDisk(Load load) {
-		if (!load.getWorld().isClientSide() && load.getWorld().dimensionType().effectsLocation().equals(new ResourceLocation("minecraft:overworld"))) {
+		if (!load.getLevel().isClientSide() && load.getLevel().dimensionType().effectsLocation().equals(new ResourceLocation("minecraft:overworld"))) {
 			// TODO: Determine how to prevent it from loading multiple times (if there are
 			// multiple worlds loaded).
 			StaticPower.LOGGER.info("Loading Static Power data!");
@@ -72,7 +72,7 @@ public class StaticPowerGameDataManager {
 	}
 
 	public static void saveDataToDisk(Save save) {
-		if (!save.getWorld().isClientSide() && save.getWorld().dimensionType().effectsLocation().equals(new ResourceLocation("minecraft:overworld"))) {
+		if (!save.getLevel().isClientSide() && save.getLevel().dimensionType().effectsLocation().equals(new ResourceLocation("minecraft:overworld"))) {
 			// TODO: Determine how to prevent it from saving multiple times (if there are
 			// multiple worlds loaded).
 			StaticPower.LOGGER.info("Saving Static Power data!");

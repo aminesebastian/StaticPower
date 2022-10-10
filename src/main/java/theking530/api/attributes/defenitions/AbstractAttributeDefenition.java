@@ -11,7 +11,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 import theking530.api.attributes.capability.IAttributable;
@@ -60,7 +59,7 @@ public abstract class AbstractAttributeDefenition<T, K extends AbstractAttribute
 	protected abstract void deserializeBaseValue(CompoundTag nbt);
 
 	public MutableComponent getAttributeTitle(boolean showAdvanced) {
-		return new TranslatableComponent(getUnlocalizedName()).withStyle(getColor());
+		return Component.translatable(getUnlocalizedName()).withStyle(getColor());
 	}
 
 	public void addAdditionalTooltipValues(List<Component> tooltip, boolean showAdvanced) {

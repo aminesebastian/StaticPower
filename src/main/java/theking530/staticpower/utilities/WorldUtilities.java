@@ -29,6 +29,7 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticcore.utilities.Vector3D;
@@ -251,7 +252,7 @@ public class WorldUtilities {
 
 	public static void playBucketFillSound(FluidStack incomingFluid, @Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos) {
 		Fluid content = incomingFluid.getFluid();
-		SoundEvent soundevent = content.getAttributes().getFillSound();
+		SoundEvent soundevent = content.getFluidType().getSound(SoundActions.BUCKET_FILL);
 		if (soundevent == null)
 			soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA;
 		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -260,7 +261,7 @@ public class WorldUtilities {
 
 	public static void playBucketEmptySound(FluidStack outgoingFluid, @Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos) {
 		Fluid content = outgoingFluid.getFluid();
-		SoundEvent soundevent = content.getAttributes().getEmptySound();
+		SoundEvent soundevent = content.getFluidType().getSound(SoundActions.BUCKET_EMPTY);
 		if (soundevent == null)
 			soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
 		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);

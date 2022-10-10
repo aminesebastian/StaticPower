@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.utilities.TriFunction;
 import theking530.staticpower.blockentities.BlockEntityBase;
@@ -33,12 +32,10 @@ public class BlockEntityTypeAllocator<T extends BlockEntityBase> {
 	public final TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory;
 	public final RegistryObject<? extends Block> block;
 	protected BlockEntityType<T> type;
-	private boolean registered;
 
 	public BlockEntityTypeAllocator(TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory, RegistryObject<? extends Block> block) {
 		this.factory = factory;
 		this.block = block;
-		this.registered = false;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -58,20 +55,11 @@ public class BlockEntityTypeAllocator<T extends BlockEntityBase> {
 	}
 
 	public BlockEntityType<T> getType() {
-		return type;
-	}
-
-	public void register(RegistryEvent.Register<BlockEntityType<?>> event) {
-		if (registered) {
-			throw new RuntimeException("Attempted to register an already registered TileEntityTypeAllocator!");
-		} else {
+		if(type == null) {
 			BlockEntityInitializer<T> initializer = new BlockEntityInitializer<T>(this);
-			type = BlockEntityType.Builder.of(initializer, block.get()).build(null);
-			type.setRegistryName(block.get().getRegistryName());
-			event.getRegistry().register(type);
-			initializer.setType(type);
-			registered = true;
+			type =  BlockEntityType.Builder.of(initializer, block.get()).build(null);
 		}
+		return type;
 	}
 
 	public BlockEntity create(BlockPos pos, BlockState state) {

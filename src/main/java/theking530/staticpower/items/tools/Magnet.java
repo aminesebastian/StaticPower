@@ -8,8 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -107,12 +105,12 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive")
+		tooltip.add(Component.translatable(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive")
 				.withStyle(isActivated(stack) ? ChatFormatting.GREEN : ChatFormatting.RED));
-		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.radius"))
+		tooltip.add(Component.literal("� ").append(Component.translatable("gui.staticpower.radius"))
 				.append(" " + ChatFormatting.GREEN.toString() + String.valueOf(getRadius(stack))));
 
-		tooltip.add(new TextComponent(""));
+		tooltip.add(Component.literal(""));
 
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}

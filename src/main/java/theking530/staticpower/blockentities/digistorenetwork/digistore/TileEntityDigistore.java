@@ -16,8 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -29,8 +28,8 @@ import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
-import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.items.InventoryComponent.InventoryChangeType;
+import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blockentities.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderDigistore;
@@ -182,9 +181,9 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 
 	@Nonnull
 	@Override
-	public IModelData getModelData() {
-		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		return builder.withInitial(RENDERING_STATE, new DigistoreRenderingState(inventory.getStackInSlot(0), inventory.getFilledRatio())).build();
+	public ModelData getModelData() {
+		ModelData.Builder builder = ModelData.builder();
+		return builder.with(RENDERING_STATE, new DigistoreRenderingState(inventory.getStackInSlot(0), inventory.getFilledRatio())).build();
 	}
 
 	public boolean isVoidUpgradeInstalled() {

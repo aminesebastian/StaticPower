@@ -2,7 +2,7 @@ package theking530.staticpower.teams.research;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
@@ -84,7 +84,7 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 
 			// Draw icon.
 			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 10, 1.0f);
-			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 23, 13, 0.0f, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringLeftAligned(pose, Component.translatable(research.getTitle()).getString(), 23, 13, 0.0f, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
 
 			// Draw progress bar.
 			progressBar.setPosition(20, 16);
@@ -110,10 +110,10 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 			// Draw the tooltip.
 			String openTooltip;
 			if (team.getResearchManager().hasSelectedResearch()) {
-				openTooltip = new TranslatableComponent("gui.staticpower.research_menu_key_tooltip", ModKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
+				openTooltip = Component.translatable("gui.staticpower.research_menu_key_tooltip", ModKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
 						.getString();
 			} else {
-				openTooltip = new TranslatableComponent("gui.staticpower.research_menu_no_selected_research_key_tooltip", ModKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
+				openTooltip = Component.translatable("gui.staticpower.research_menu_no_selected_research_key_tooltip", ModKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
 						.getString();
 			}
 

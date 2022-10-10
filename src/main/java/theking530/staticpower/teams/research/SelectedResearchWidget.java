@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
@@ -49,11 +49,11 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 		// Split the description into wrapped lines and cache it. Also resize the widget
 		// here and not on the render method for optimization reasons.
 		if (research != null) {
-			description = GuiDrawUtilities.wrapString(new TranslatableComponent(research.getDescription()).getString(), getSize().getXi() * 2 - 35);
+			description = GuiDrawUtilities.wrapString(Component.translatable(research.getDescription()).getString(), getSize().getXi() * 2 - 35);
 			setSize(getSize().getX(), Math.max(65, 50 + (description.size() * 5)));
 		}
-		
-		if(researchProgress != null && research != null && researchProgress.getTrackedResearch() != research) {
+
+		if (researchProgress != null && research != null && researchProgress.getTrackedResearch() != research) {
 			System.out.println("WTF");
 		}
 	}
@@ -73,7 +73,7 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 
 				// Draw icon.
 				GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 2, 2, 100, 1.0f);
-				GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 4, 25, 0.0f, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawStringLeftAligned(pose, Component.translatable(research.getTitle()).getString(), 4, 25, 0.0f, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
 
 				// Draw progress bar.
 				progressBar.setPosition(20, 6);

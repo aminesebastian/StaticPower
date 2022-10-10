@@ -131,7 +131,7 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 				(x, y, z) -> opener.getParent().duplicateForRevert(x, y, opener.getParent().getRevertDataPacket()));
 
 		// Open the UI.
-		NetworkGUI.openGui((ServerPlayer) getPlayerInventory().player, requestUi, buff -> {
+		NetworkGUI.openScreen((ServerPlayer) getPlayerInventory().player, requestUi, buff -> {
 			FriendlyByteBuf parent = opener.getParent().getRevertDataPacket();
 			if (parent != null) {
 				parent.resetReaderIndex();

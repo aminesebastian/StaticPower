@@ -12,6 +12,7 @@ import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -20,8 +21,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.api.attributes.capability.CapabilityAttributable;
@@ -32,8 +31,8 @@ import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.AutoSmithProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -44,7 +43,7 @@ import theking530.staticpower.utilities.MetricConverter;
 public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipeJEIWrapper> {
 	public static final RecipeType<SmithingRecipeJEIWrapper> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "auto_smith"), SmithingRecipeJEIWrapper.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -54,7 +53,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 
 	public SmithingRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.AutoSmith.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.AutoSmith.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(170, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.AutoSmith.get()));
 		pBar = new AutoSmithProgressBar(49, 19);
@@ -78,18 +77,13 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 	}
 
 	@Override
-	public Class<? extends SmithingRecipeJEIWrapper> getRecipeClass() {
-		return SmithingRecipeJEIWrapper.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@SuppressWarnings("resource")
 	@Override
-	public void draw(SmithingRecipeJEIWrapper recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SmithingRecipeJEIWrapper recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 50, 0, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 80, 20, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 48, 40, 0);
@@ -111,7 +105,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		// Draw the attribute title.
-		Minecraft.getInstance().font.drawShadow(matrixStack, new TranslatableComponent("gui.staticpower.attributes").append(": ").getString(), 104.5f, 2,
+		Minecraft.getInstance().font.drawShadow(matrixStack, Component.translatable("gui.staticpower.attributes").append(": ").getString(), 104.5f, 2,
 				SDColor.EIGHT_BIT_WHITE.encodeInInteger());
 
 		// Create a copy of the input.
@@ -157,10 +151,10 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(SmithingRecipeJEIWrapper recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(SmithingRecipeJEIWrapper recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getRecipe().getPowerCost() * recipe.getRecipe().getProcessingTime())));
+			output.add(Component.literal("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getRecipe().getPowerCost() * recipe.getRecipe().getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
@@ -178,7 +172,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, SmithingRecipeJEIWrapper recipe, IFocusGroup ingredients) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 50,0).addIngredients(recipe.getInput());
+		builder.addSlot(RecipeIngredientRole.INPUT, 50, 0).addIngredients(recipe.getInput());
 		builder.addSlot(RecipeIngredientRole.INPUT, 80, 20).addIngredients(recipe.getRecipe().getModifierMaterial().getIngredient());
 		builder.addSlot(RecipeIngredientRole.INPUT, 77, 4).addIngredient(ForgeTypes.FLUID_STACK, recipe.getRecipe().getModifierFluid())
 				.setFluidRenderer(getFluidTankDisplaySize(recipe.getRecipe().getModifierFluid()), false, 16, 52);

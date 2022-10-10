@@ -12,13 +12,13 @@ import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -35,7 +35,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationRecipe> {
 	public static final RecipeType<CondensationRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "condenser"), CondensationRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -43,7 +43,7 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 
 	public CondenserRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Condenser.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.Condenser.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Condenser.get()));
 	}
@@ -66,17 +66,12 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 	}
 
 	@Override
-	public Class<? extends CondensationRecipe> getRecipeClass() {
-		return CondensationRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(CondensationRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CondensationRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getInputFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 104, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
@@ -91,17 +86,17 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(CondensationRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(CondensationRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 
 		// Render the heat bar tooltip.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Generates: ").append(GuiTextUtilities.formatHeatToString(recipe.getHeatGeneration())));
+			output.add(Component.literal("Generates: ").append(GuiTextUtilities.formatHeatToString(recipe.getHeatGeneration())));
 		}
 
 		// Render the progress bar tooltip.
 		if (mouseX > 69 && mouseX < 99 && mouseY > 21 && mouseY < 29) {
-			output.add(new TextComponent("Required Time: " + recipe.getProcessingTime() / 20.0f + "s"));
+			output.add(Component.literal("Required Time: " + recipe.getProcessingTime() / 20.0f + "s"));
 		}
 
 		return output;

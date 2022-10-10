@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:evaporation_recipe",
+	"type": "staticpower:evaporation",
 	"input_fluid": {
 		"fluid": "minecraft:water",
 		"volume": 1

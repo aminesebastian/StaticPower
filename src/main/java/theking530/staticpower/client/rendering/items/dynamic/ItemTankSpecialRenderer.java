@@ -44,7 +44,7 @@ public class ItemTankSpecialRenderer extends AbstractStaticPowerItemStackRendere
 			// Calculate the height and determine if we should raise the fluid to the top
 			// if it is a gas.
 			float height = (float) fluid.getAmount() / fluidTank.getInt("capacity");
-			boolean isGas = fluid.getFluid().getAttributes().isGaseous();
+			boolean isGas = fluid.getFluid().getFluidType().isLighterThanAir();
 			float yPosition = isGas ? 14.0f * TEXEL - (11.98f * TEXEL * height) : 2.01f * TEXEL;
 
 			// Render the fluid.

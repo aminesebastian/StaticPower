@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
@@ -48,15 +47,5 @@ public class FertalizerRecipeSerializer extends StaticPowerRecipeSerializer<Fert
 	public void toNetwork(FriendlyByteBuf buffer, FertalizerRecipe recipe) {
 		buffer.writeFluidStack(recipe.getRequiredFluid());
 		buffer.writeFloat(recipe.getFertalizationAmount());
-	}
-
-	@Override
-	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
-		return INSTANCE;
-	}
-
-	@Override
-	public ResourceLocation getRegistryName() {
-		return ID;
 	}
 }

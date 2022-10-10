@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:former_recipe",
+	"type": "staticpower:former",
 	"input": {
 		"tag": "forge:ingots/gold"
 	},

@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,7 +29,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -175,9 +175,9 @@ public class Backpack extends StaticPowerItem implements ICustomModelSupplier {
 	protected boolean transferInventoryContentsToBackpack(ItemStack backpack, Player player, BlockPos blockPos, Direction face) {
 		BlockEntity entity = player.level.getBlockEntity(blockPos);
 		if (entity != null) {
-			IItemHandler inventory = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face).orElse(null);
+			IItemHandler inventory = entity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).orElse(null);
 			if (inventory != null) {
-				IItemHandler backpackInventory = backpack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+				IItemHandler backpackInventory = backpack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 				for (int i = 0; i < inventory.getSlots(); i++) {
 					// Pull an item out of the inventory, if we can't accept it, skip it.
 					ItemStack simulatedExtract = inventory.extractItem(i, Integer.MAX_VALUE, true);
@@ -199,9 +199,9 @@ public class Backpack extends StaticPowerItem implements ICustomModelSupplier {
 	protected boolean transferBackpackContentsToBlock(ItemStack backpack, Player player, BlockPos blockPos, Direction face) {
 		BlockEntity entity = player.level.getBlockEntity(blockPos);
 		if (entity != null) {
-			IItemHandler inventory = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face).orElse(null);
+			IItemHandler inventory = entity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).orElse(null);
 			if (inventory != null) {
-				IItemHandler backpackInventory = backpack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+				IItemHandler backpackInventory = backpack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 				for (int i = 0; i < backpackInventory.getSlots(); i++) {
 					ItemStack simulatedExtract = backpackInventory.extractItem(i, Integer.MAX_VALUE, true);
 					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(inventory, simulatedExtract, false);
@@ -216,8 +216,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelSupplier {
 	}
 
 	protected boolean openBackpack(ItemStack backpack, Player player) {
-		player.level.playSound(null, player.eyeBlockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.4f, 1.0f);
-		NetworkGUI.openGui((ServerPlayer) player, new BackPackContainerProvider(backpack), buff -> {
+		player.level.playSound(null, player.blockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.4f, 1.0f);
+		NetworkGUI.openScreen((ServerPlayer) player, new BackPackContainerProvider(backpack), buff -> {
 			buff.writeInt(player.getInventory().selected);
 		});
 		return true;
@@ -241,7 +241,7 @@ public class Backpack extends StaticPowerItem implements ICustomModelSupplier {
 			backpack.getTag().putByte("mode", (byte) newMode.ordinal());
 
 			// Send a change message.
-			player.sendMessage(new TranslatableComponent("gui.staticpower.backpack_mode_updated", new TranslatableComponent(newMode.unlocalizedName)), player.getUUID());
+			player.sendSystemMessage(Component.translatable("gui.staticpower.backpack_mode_updated", Component.translatable(newMode.unlocalizedName)));
 			player.getInventory().setChanged();
 		}
 	}
@@ -274,7 +274,7 @@ public class Backpack extends StaticPowerItem implements ICustomModelSupplier {
 				return false;
 			}
 
-			IItemHandler backpackInventory = backpack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+			IItemHandler backpackInventory = backpack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 
 			ItemStack pickedUpStack = item.getItem().copy();
 
@@ -296,7 +296,7 @@ public class Backpack extends StaticPowerItem implements ICustomModelSupplier {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		// TODO: Implement open model format.
 		return new BackpackItemModel(existingModel, null);
 	}

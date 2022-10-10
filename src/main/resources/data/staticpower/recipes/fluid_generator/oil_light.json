@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:fluid_generator_recipe",
+	"type": "staticpower:fluid_generator",
 	"fluid": {
 		"fluid": "staticpower:oil_light",
 		"volume": 1

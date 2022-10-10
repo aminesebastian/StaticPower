@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
@@ -66,15 +65,5 @@ public class LumberMillRecipeSerializer extends StaticPowerRecipeSerializer<Lumb
 		recipe.getSecondaryOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluid());
 		recipe.getProcessingSection().writeToBuffer(buffer);
-	}
-
-	@Override
-	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
-		return INSTANCE;
-	}
-
-	@Override
-	public ResourceLocation getRegistryName() {
-		return ID;
 	}
 }

@@ -8,8 +8,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.network.IContainerFactory;
 
 /**
@@ -22,25 +20,16 @@ public class ContainerTypeAllocator<T extends AbstractContainerMenu, K extends A
 	protected final IContainerFactory<T> containerFactory;
 	protected ScreenConstructor<T, K> screenFactory;
 	protected MenuType<T> type;
-	private boolean containerRegistered;
 	private boolean screenRegistered;
 
 	public ContainerTypeAllocator(String name, IContainerFactory<T> factory) {
 		this.name = name;
 		this.containerFactory = factory;
-		this.containerRegistered = false;
 		this.screenRegistered = false;
 	}
 
-	public void registerContainer(RegistryEvent.Register<MenuType<?>> event) {
-		if (containerRegistered) {
-			throw new RuntimeException("Attempted to register an already registered TileEntityTypeAllocator!");
-		} else {
-			type = IForgeMenuType.create(containerFactory);
-			type.setRegistryName(name);
-			event.getRegistry().register(type);
-			containerRegistered = true;
-		}
+	public String getName() {
+		return name;
 	}
 
 	public IContainerFactory<T> getContainerFactory() {

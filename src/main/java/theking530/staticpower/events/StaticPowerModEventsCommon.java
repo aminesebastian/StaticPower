@@ -5,23 +5,15 @@ import javax.annotation.Nonnull;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -50,13 +42,11 @@ import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.Nethe
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.StemCropHarvester;
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.SugarCaneCropHarvester;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.data.loot.StaticPowerLootModifier;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
-import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.teams.TeamManager;
-import theking530.staticpower.world.ModConfiguredFeatures;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerModEventsCommon {
@@ -67,42 +57,36 @@ public class StaticPowerModEventsCommon {
 
 	@SubscribeEvent
 	public static void commonSetupEvent(FMLCommonSetupEvent event) {
-
-		// Register farming harvesters.
-		BlockEntityBasicFarmer.registerHarvester(new GenericCropHarvester());
-		BlockEntityBasicFarmer.registerHarvester(new SugarCaneCropHarvester());
-		BlockEntityBasicFarmer.registerHarvester(new CactusCropHarvester());
-		BlockEntityBasicFarmer.registerHarvester(new NetherWartCropHarvester());
-		BlockEntityBasicFarmer.registerHarvester(new StemCropHarvester());
-
-		// Register composter recipes.
 		event.enqueueWork(() -> {
-			ComposterBlock.COMPOSTABLES.put(ModBlocks.RubberTreeLeaves.get().asItem(), 0.6f);
-		});
+			// Register farming harvesters.
+			BlockEntityBasicFarmer.registerHarvester(new GenericCropHarvester());
+			BlockEntityBasicFarmer.registerHarvester(new SugarCaneCropHarvester());
+			BlockEntityBasicFarmer.registerHarvester(new CactusCropHarvester());
+			BlockEntityBasicFarmer.registerHarvester(new NetherWartCropHarvester());
+			BlockEntityBasicFarmer.registerHarvester(new StemCropHarvester());
 
-		// Register data classes.
-		StaticPowerGameDataManager.registerDataFactory(TeamManager.ID, () -> {
-			return new TeamManager();
-		});
+			// Register composter recipes.
+			event.enqueueWork(() -> {
+				ComposterBlock.COMPOSTABLES.put(ModBlocks.RubberTreeLeaves.get().asItem(), 0.6f);
+			});
 
-		LOGGER.info("Static Power Common Setup Completed!");
+			// Register data classes.
+			StaticPowerGameDataManager.registerDataFactory(TeamManager.ID, () -> {
+				return new TeamManager();
+			});
+
+			ModEntities.registerPlacements(event);
+
+			LOGGER.info("Static Power Common Setup Completed!");
+		});
 	}
 
 	@SubscribeEvent
 	public static void registerCustomRegistries(@Nonnull NewRegistryEvent event) {
-		event.create(new RegistryBuilder<CableDestination>().setName(StaticPowerRegistries.CABLE_DESTINATION_REGISTRY).setType(CableDestination.class).setIDRange(0,
-				Integer.MAX_VALUE - 1));
-		event.create(new RegistryBuilder<CableNetworkModuleType>().setName(StaticPowerRegistries.CABLE_MODULE_REGISTRY).setType(CableNetworkModuleType.class).setIDRange(0,
-				Integer.MAX_VALUE - 1));
-		event.create(new RegistryBuilder<ServerCableCapabilityType>().setName(StaticPowerRegistries.CABLE_CAPABILITY_REGISTRY).setType(ServerCableCapabilityType.class)
-				.setIDRange(0, Integer.MAX_VALUE - 1));
-		event.create(
-				new RegistryBuilder<ProductType<?>>().setName(StaticPowerRegistries.PRODUCT_REGISTRY).setType(castClass(ProductType.class)).setIDRange(0, Integer.MAX_VALUE - 1));
-	}
-
-	@SuppressWarnings("unchecked") // Need this wrapper, because generics
-	private static <G> Class<G> castClass(Class<?> cls) {
-		return (Class<G>) cls;
+		event.create(new RegistryBuilder<CableDestination>().setName(StaticPowerRegistries.CABLE_DESTINATION_REGISTRY).setIDRange(0, Integer.MAX_VALUE - 1));
+		event.create(new RegistryBuilder<CableNetworkModuleType>().setName(StaticPowerRegistries.CABLE_MODULE_REGISTRY).setIDRange(0, Integer.MAX_VALUE - 1));
+		event.create(new RegistryBuilder<ServerCableCapabilityType>().setName(StaticPowerRegistries.CABLE_CAPABILITY_REGISTRY).setIDRange(0, Integer.MAX_VALUE - 1));
+		event.create(new RegistryBuilder<ProductType<?>>().setName(StaticPowerRegistries.PRODUCT_REGISTRY).setIDRange(0, Integer.MAX_VALUE - 1));
 	}
 
 	@SubscribeEvent
@@ -121,6 +105,12 @@ public class StaticPowerModEventsCommon {
 	}
 
 	@SubscribeEvent
+	public static void registerKeyBindings(RegisterKeyMappingsEvent event) {
+		ModKeyBindings.registerBindings(event);
+		LOGGER.info("Static Power registered key bindings!");
+	}
+
+	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void clientSetupEvent(FMLClientSetupEvent event) {
 		StaticPowerForgeEventsProxy.onClientSetupEvent(event);
@@ -129,23 +119,23 @@ public class StaticPowerModEventsCommon {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void modelRegistryEvent(ModelRegistryEvent event) {
+	public static void modelRegistryEvent(ModelEvent.RegisterAdditional event) {
 		// Register any additional models we want.
 		LOGGER.info("Registering Additional Models!");
-		StaticPowerAdditionalModels.registerModels();
+		StaticPowerAdditionalModels.registerModels(event);
 		LOGGER.info(String.format("Registered: %1$d Additional Models!", StaticPowerAdditionalModels.MODELS.size()));
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void modelBakeEvent(ModelBakeEvent event) {
+	public static void modelBakeEvent(ModelEvent.BakingCompleted event) {
 		StaticPowerForgeEventsProxy.onModelBakeEvent(event);
 		LOGGER.info("Static Power Model Overrides Completed!");
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void onItemColorBakeEvent(ColorHandlerEvent.Item event) {
+	public static void onItemColorBakeEvent(RegisterColorHandlersEvent.Item event) {
 		StaticPowerForgeEventsProxy.onItemColorBakeEvent(event);
 		LOGGER.info("Static Power Item Color Overrides Completed!");
 	}
@@ -169,38 +159,7 @@ public class StaticPowerModEventsCommon {
 	}
 
 	@SubscribeEvent
-	public static void registerTileEntityTypes(RegistryEvent.Register<BlockEntityType<?>> event) {
-		StaticCoreRegistry.registerBlockEntityTypes(event);
-	}
-
-	@SubscribeEvent
-	public static void registerContainerTypes(RegistryEvent.Register<MenuType<?>> event) {
-		StaticCoreRegistry.registerContainerTypes(event);
-	}
-
-	@SubscribeEvent
-	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		ModEntities.onRegisterEntities(event);
-	}
-
-	@SubscribeEvent
-	public static void registerFeatures(final RegistryEvent.Register<Feature<?>> event) {
-		ModConfiguredFeatures.registerFeatures(event);
-	}
-
-	@SubscribeEvent
 	public static void onAttributeCreate(EntityAttributeCreationEvent event) {
-		ModEntities.onRegisterEntityAttributes(event);
-	}
-
-	@SubscribeEvent
-	public static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-		ModRecipeSerializers.onRegisterRecipeSerializers(event);
-		LOGGER.info("Static Power Reipce Serializers registered!");
-	}
-
-	@SubscribeEvent
-	public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-		event.getRegistry().register(new StaticPowerLootModifier.Serializer().setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "static_power_loot_modifier")));
+		ModEntities.registerEntityAttributes(event);
 	}
 }

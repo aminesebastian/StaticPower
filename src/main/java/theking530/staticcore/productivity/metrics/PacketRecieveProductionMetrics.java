@@ -25,7 +25,7 @@ public class PacketRecieveProductionMetrics extends NetworkMessage {
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeUtf(productType.getRegistryName().toString());
+		buffer.writeUtf(StaticPowerRegistries.ProductRegistry().getKey(productType).toString());
 		metrics.encode(buffer);
 	}
 

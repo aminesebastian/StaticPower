@@ -2,8 +2,6 @@ package theking530.staticpower.blockentities.components.control.sideconfiguratio
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.utilities.SDColor;
 
 // TODO: The NA mode could probably be removed.
@@ -32,7 +30,7 @@ public enum MachineSideMode {
 	}
 
 	public Component getName() {
-		return new TextComponent(fontColor.toString()).append(new TranslatableComponent(name));
+		return Component.literal(fontColor.toString()).append(Component.translatable(name));
 	}
 
 	public SDColor getColor() {

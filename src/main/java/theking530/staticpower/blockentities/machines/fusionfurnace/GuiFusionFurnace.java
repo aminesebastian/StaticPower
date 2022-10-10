@@ -1,7 +1,6 @@
 package theking530.staticpower.blockentities.machines.fusionfurnace;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.progressbars.FusionProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -26,7 +25,7 @@ public class GuiFusionFurnace extends StaticPowerTileEntityGui<ContainerFusionFu
 		registerWidget(new FusionProgressBar(79, 36).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine("desc1", new TextComponent("Combines basic items into their more complex constructions."));
+		infoTab.addLine("desc1", Component.literal("Combines basic items into their more complex constructions."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));

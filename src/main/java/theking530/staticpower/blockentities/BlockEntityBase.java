@@ -21,8 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,8 +41,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelData.Builder;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
@@ -766,8 +764,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	@Nonnull
 	@Override
-	public IModelData getModelData() {
-		ModelDataMap.Builder builder = new ModelDataMap.Builder();
+	public ModelData getModelData() {
+		ModelData.Builder builder = ModelData.builder();
 		for (AbstractBlockEntityComponent component : components.values()) {
 			component.getModelData(builder);
 		}
@@ -775,7 +773,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		return builder.build();
 	}
 
-	protected void getAdditionalModelData(ModelDataMap.Builder builder) {
+	protected void getAdditionalModelData(Builder builder) {
 
 	}
 
@@ -836,8 +834,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	@Override
 	public Component getDisplayName() {
 		if (getBlockState() != null && getBlockState().getBlock() != null) {
-			return new TranslatableComponent(getBlockState().getBlock().getDescriptionId());
+			return Component.translatable(getBlockState().getBlock().getDescriptionId());
 		}
-		return new TextComponent("**ERROR**");
+		return Component.literal("**ERROR**");
 	}
 }

@@ -3,7 +3,6 @@ package theking530.staticpower.items.tools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -30,11 +29,11 @@ public class CableNetworkAnalyzer extends StaticPowerItem {
 				ServerCable cable = CableNetworkManager.get(world).getCable(pos);
 				// Get all the messages that should be written to the output and write them.
 				for (Component text : cable.getNetwork().getReaderOutput(pos)) {
-					player.sendMessage(text, player.getUUID());
+					player.sendSystemMessage(text);
 				}
 
-				player.sendMessage(new TextComponent("Cable Location: ").append(pos.toShortString()), player.getUUID());
-				player.sendMessage(new TextComponent("Cable Sparse Links: ").append("" + cable.getSparseLinks().size()), player.getUUID());
+				player.sendSystemMessage(Component.literal("Cable Location: ").append(pos.toShortString()));
+				player.sendSystemMessage(Component.literal("Cable Sparse Links: ").append("" + cable.getSparseLinks().size()));
 
 				return InteractionResult.SUCCESS;
 			}

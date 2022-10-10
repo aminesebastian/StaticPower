@@ -12,13 +12,13 @@ import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -38,7 +38,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	public static final RecipeType<LatheRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "lathe"), LatheRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
@@ -48,7 +48,7 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 
 	public LatheRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Lathe.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.Lathe.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Lathe.get()));
 		pBar = new ArrowProgressBar(91, 6);
@@ -72,17 +72,12 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	}
 
 	@Override
-	public Class<? extends LatheRecipe> getRecipeClass() {
-		return LatheRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(LatheRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(LatheRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
 				GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 32 + x * 18, 5 + y * 18, 0);
@@ -102,10 +97,10 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(LatheRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(LatheRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(Component.literal("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.

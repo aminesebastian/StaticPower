@@ -20,7 +20,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
 import theking530.api.IBreakSerializeable;
 import theking530.api.energy.StaticPowerStorage;
 import theking530.api.energy.StaticVoltageRange;
@@ -98,7 +99,7 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, BakingCompleted event) {
 		return new DefaultMachineBakedModel(existingModel);
 	}
 

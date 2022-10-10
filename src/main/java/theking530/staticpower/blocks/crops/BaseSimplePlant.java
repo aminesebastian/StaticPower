@@ -1,6 +1,5 @@
 package theking530.staticpower.blocks.crops;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -69,7 +69,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
 		super.tick(state, worldIn, pos, rand);
 		if (!worldIn.isAreaLoaded(pos, 1)) {
 			return; // Forge: prevent loading unloaded chunks when checking neighbor's light
@@ -300,7 +300,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 * Indicates that this plant can be bonemealed.
 	 */
 	@Override
-	public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
+	public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
 		return true;
 	}
 
@@ -308,7 +308,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 * This method is called when an external item/block wants to grow this item.
 	 */
 	@Override
-	public void performBonemeal(ServerLevel worldIn, Random rand, BlockPos pos, BlockState state) {
+	public void performBonemeal(ServerLevel worldIn, RandomSource rand, BlockPos pos, BlockState state) {
 		this.growUsingBonemeal(worldIn, pos, state);
 	}
 

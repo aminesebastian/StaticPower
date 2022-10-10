@@ -8,8 +8,8 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -57,9 +57,9 @@ public class WireCutters extends StaticPowerItem {
 	}
 
 	@Override
-	public ItemStack getContainerItem(ItemStack stack) {
+	public ItemStack getCraftingRemainingItem(ItemStack stack) {
 		ItemStack stackCopy = stack.copy();
-		if (stackCopy.hurt(1, RANDOM, null)) {
+		if (stackCopy.hurt(1, RandomSource.create(), null)) {
 			stackCopy.shrink(1);
 			stackCopy.setDamageValue(0);
 		}
@@ -89,7 +89,7 @@ public class WireCutters extends StaticPowerItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent("Max Uses: " + getMaxDamage(stack)));
-		tooltip.add(new TextComponent("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
+		tooltip.add(Component.literal("Max Uses: " + getMaxDamage(stack)));
+		tooltip.add(Component.literal("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
 	}
 }

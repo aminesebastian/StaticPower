@@ -3,31 +3,29 @@ package theking530.staticpower.client.rendering.items;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.utilities.Vector2D;
@@ -54,7 +52,7 @@ public class MiningDrillItemModel implements BakedModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
+	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
 		return emptyDrillModel.getQuads(state, side, rand);
 	}
 
@@ -93,13 +91,9 @@ public class MiningDrillItemModel implements BakedModel {
 			this.inWorld = inWorld;
 		}
 
+		@SuppressWarnings("resource")
 		@Override
-		public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
-			return getQuads(state, side, rand, EmptyModelData.INSTANCE);
-		}
-
-		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand, IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromModelData(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderLayer) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
@@ -108,22 +102,22 @@ public class MiningDrillItemModel implements BakedModel {
 			AtomicBoolean drillBitEquipped = new AtomicBoolean(false);
 
 			// Attempt to get the drill inventory.
-			stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
+			stack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent((handler) -> {
 				if (!handler.getStackInSlot(0).isEmpty()) {
 					drillBitEquipped.set(true);
 					BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(handler.getStackInSlot(0), Minecraft.getInstance().level, null, 0);
-					List<BakedQuad> drillBitQuads = itemModel.getQuads(state, side, rand, data);
+					List<BakedQuad> drillBitQuads = itemModel.getQuads(state, side, rand, data, renderLayer);
 					output.addAll(transformQuads(drillBitQuads, new Vector3f(0.3f, 0.3f, -0.001f), new Vector3f(0.55f, 0.55f, 1.1f), new Quaternion(0, 0, 135, true)));
 				}
 			});
 
 			if (drillBitEquipped.get()) {
 				// Add a mini drill.
-				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
+				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data, renderLayer);
 				output.addAll(transformQuads(baseQuads, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 1.0f), new Quaternion(0, 0, 0, true)));
 			} else {
 				// Add the full drill.
-				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
+				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data, renderLayer);
 				output.addAll(transformQuads(baseQuads, new Vector3f(0.15f, 0.15f, 0.0f), new Vector3f(1.3f, 1.3f, 1.0f), new Quaternion(0, 0, 0, true)));
 			}
 
@@ -152,12 +146,6 @@ public class MiningDrillItemModel implements BakedModel {
 		}
 
 		@Override
-		public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
-			BaseModel.handlePerspective(cameraTransformType, mat);
-			return this;
-		}
-
-		@Override
 		public boolean isGui3d() {
 			return false;
 		}
@@ -182,11 +170,12 @@ public class MiningDrillItemModel implements BakedModel {
 			return false;
 		}
 
+		@SuppressWarnings("resource")
 		@Override
 		public TextureAtlasSprite getParticleIcon() {
 			// If we have a drill bit, return the particle texture for the drill bit.
 			// Otherwise, return the particle texture for the base model.
-			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+			IItemHandler inv = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 			if (inv != null && !inv.getStackInSlot(0).isEmpty()) {
 				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inv.getStackInSlot(0), Minecraft.getInstance().level, null, 0);
 				return itemModel.getParticleIcon();

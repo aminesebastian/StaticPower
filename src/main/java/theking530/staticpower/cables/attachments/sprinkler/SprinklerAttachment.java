@@ -9,8 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -238,14 +236,14 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
-			tooltip.add(new TranslatableComponent("gui.staticpower.sprinkler_tooltip").withStyle(ChatFormatting.DARK_AQUA));
+			tooltip.add(Component.translatable("gui.staticpower.sprinkler_tooltip").withStyle(ChatFormatting.DARK_AQUA));
 		}
 	}
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.sprinkler_description")).withStyle(ChatFormatting.BLUE));
-		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.sprinkler_experience_description")).withStyle(ChatFormatting.GREEN));
-		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.redstone_control_enabled")).withStyle(ChatFormatting.DARK_RED));
+		tooltip.add(Component.literal("� ").append(Component.translatable("gui.staticpower.sprinkler_description")).withStyle(ChatFormatting.BLUE));
+		tooltip.add(Component.literal("� ").append(Component.translatable("gui.staticpower.sprinkler_experience_description")).withStyle(ChatFormatting.GREEN));
+		tooltip.add(Component.literal("� ").append(Component.translatable("gui.staticpower.redstone_control_enabled")).withStyle(ChatFormatting.DARK_RED));
 	}
 }

@@ -2,7 +2,6 @@ package theking530.staticpower.blockentities.machines.chargingstation;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -140,6 +139,6 @@ public class BlockEntityChargingStation extends BlockEntityMachine {
 
 	@Override
 	public Component getDisplayName() {
-		return new TranslatableComponent(ModBlocks.ChargingStation.get().getDescriptionId());
+		return Component.translatable(ModBlocks.ChargingStation.get().getDescriptionId());
 	}
 }

@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
@@ -63,15 +62,5 @@ public class SolderingRecipeSerializer extends StaticPowerRecipeSerializer<Solde
 
 		buffer.writeItem(recipe.recipeOutput);
 		recipe.getSolderingIron().toNetwork(buffer);
-	}
-
-	@Override
-	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
-		return INSTANCE;
-	}
-
-	@Override
-	public ResourceLocation getRegistryName() {
-		return ID;
 	}
 }

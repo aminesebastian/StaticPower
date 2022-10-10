@@ -2,7 +2,6 @@ package theking530.staticpower.blockentities.machines.cropfarmer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.ProcessingComponentStateWidget;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
@@ -39,7 +38,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		registerWidget(new ProcessingComponentStateWidget(getTileEntity().processingComponent, 48, 38));
 
 		registerWidget(drawPreviewButton = new SpriteButton(132, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
-		drawPreviewButton.setTooltip(new TextComponent("Preview Range"));
+		drawPreviewButton.setTooltip(Component.literal("Preview Range"));
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
 
@@ -65,11 +64,11 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 	public void updateData() {
 		super.updateData();
 		infoTab.clear();
-		infoTab.addLine("desc1", new TextComponent("Harvests crops in a " + ChatFormatting.YELLOW + getTileEntity().getRadius() + " block radius."));
+		infoTab.addLine("desc1", Component.literal("Harvests crops in a " + ChatFormatting.YELLOW + getTileEntity().getRadius() + " block radius."));
 		infoTab.addLineBreak();
 		infoTab.addLine("desc2",
-				new TextComponent("Requires " + ChatFormatting.DARK_AQUA + "water" + ChatFormatting.RESET + " to operate but other fluids may yield better growth results..."));
+				Component.literal("Requires " + ChatFormatting.DARK_AQUA + "water" + ChatFormatting.RESET + " to operate but other fluids may yield better growth results..."));
 		infoTab.addLineBreak();
-		infoTab.addLine("desc3", new TextComponent("Current Growth Factor: " + ChatFormatting.GOLD + getTileEntity().getGrowthBonus() * 100.0f + "%"));
+		infoTab.addLine("desc3", Component.literal("Current Growth Factor: " + ChatFormatting.GOLD + getTileEntity().getGrowthBonus() * 100.0f + "%"));
 	}
 }

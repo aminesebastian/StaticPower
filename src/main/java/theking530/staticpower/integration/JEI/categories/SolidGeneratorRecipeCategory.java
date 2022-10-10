@@ -11,6 +11,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -18,8 +19,7 @@ import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
@@ -28,8 +28,8 @@ import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
@@ -40,7 +40,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFuelRecipe> {
 	public static final RecipeType<SolidFuelRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "solid_generator"), SolidFuelRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
@@ -51,7 +51,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 
 	public SolidGeneratorRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.SolidGenerator.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.SolidGenerator.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(90, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.SolidGenerator.get()));
 		pBar = new ArrowProgressBar(55, 19).setFlipped(true);
@@ -76,17 +76,12 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 	}
 
 	@Override
-	public Class<? extends SolidFuelRecipe> getRecipeClass() {
-		return SolidFuelRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(SolidFuelRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SolidFuelRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 66, 19, 0);
 
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
@@ -107,11 +102,11 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(SolidFuelRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(SolidFuelRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			int burnTime = ForgeHooks.getBurnTime(recipe.getInput(), null);
-			output.add(new TextComponent("Generates: ").append(PowerTextFormatting.formatPowerToString(StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get() * burnTime)));
+			output.add(Component.literal("Generates: ").append(PowerTextFormatting.formatPowerToString(StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get() * burnTime)));
 		}
 
 		// Render the progress bar tooltip.

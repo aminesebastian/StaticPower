@@ -2,7 +2,7 @@ package theking530.staticpower.cables.digistore.crafting;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 
@@ -13,7 +13,7 @@ public class CraftingRequestResponse {
 	private final ItemStack craftingTarget;
 	private final CraftingStepsBundle steps; // This is included here to access the steps stored internally. I know there's
 												// data redundancy here, but this is the safer approach.
-	private TranslatableComponent currentBlocker;
+	private MutableComponent currentBlocker;
 
 	public CraftingRequestResponse(long id, int craftableAmount, ItemStack craftingTarget, CraftingStepsBundle steps) {
 		this.id = id;
@@ -50,7 +50,7 @@ public class CraftingRequestResponse {
 		currentCraftingStep++;
 	}
 
-	public void setBlocker(TranslatableComponent currentCraftingError) {
+	public void setBlocker(MutableComponent currentCraftingError) {
 		this.currentBlocker = currentCraftingError;
 	}
 
@@ -62,7 +62,7 @@ public class CraftingRequestResponse {
 		return currentBlocker != null;
 	}
 
-	public TranslatableComponent getBlockerMessage() {
+	public MutableComponent getBlockerMessage() {
 		return currentBlocker;
 	}
 
@@ -129,7 +129,7 @@ public class CraftingRequestResponse {
 
 		// Read the blocker if it was supplied.
 		if (nbt.contains("blocker")) {
-			output.currentBlocker = (TranslatableComponent) Component.Serializer.fromJson(nbt.getString("blocker"));
+			output.currentBlocker = (MutableComponent) Component.Serializer.fromJson(nbt.getString("blocker"));
 		}
 
 		return output;

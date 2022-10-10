@@ -4,37 +4,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
@@ -54,8 +53,7 @@ public class FluidCapsuleItemModel implements BakedModel {
 	public ItemOverrides getOverrides() {
 		return new ItemOverrides() {
 			@Override
-			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world,
-					@Nullable LivingEntity livingEntity, int x) {
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity, int x) {
 				// Make sure we have a valid fluid capsule.
 				if (!(stack.getItem() instanceof FluidCapsule)) {
 					return originalModel;
@@ -72,8 +70,7 @@ public class FluidCapsuleItemModel implements BakedModel {
 				int intRatio = (int) (ratio * 50);
 
 				// Hash the unique info about this model.
-				int hash = Objects.hash(stack.getItem().getRegistryName(),
-						handler.getFluidInTank(0).getFluid().getRegistryName(), intRatio);
+				int hash = Objects.hash(ForgeRegistries.ITEMS.getKey(stack.getItem()), ForgeRegistries.FLUIDS.getKey(handler.getFluidInTank(0).getFluid()), intRatio);
 
 				// Check to see if we need to cache this model, if we do, do it.
 				FluidCapsuleModel model = FluidCapsuleItemModel.this.cache.get(hash);
@@ -88,7 +85,7 @@ public class FluidCapsuleItemModel implements BakedModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
+	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
 		return baseModel.getQuads(state, side, rand);
 	}
 
@@ -131,40 +128,26 @@ public class FluidCapsuleItemModel implements BakedModel {
 		}
 
 		@Override
-		public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
-			return getQuads(state, side, rand, EmptyModelData.INSTANCE);
-		}
-
-		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand,
-				IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromModelData(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderLayer) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
 
 			if (quads == null) {
 				quads = new ArrayList<BakedQuad>();
-				quads.addAll(baseModel.getQuads(state, side, rand, data));
+				quads.addAll(baseModel.getQuads(state, side, rand, data, renderLayer));
 
 				TextureAtlasSprite sideSprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 				BlockElementFace blockPartFace = new BlockElementFace(null, 1, sideSprite.getName().toString(), blockFaceUV);
 
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(6.5f, 3.5f, 0.0f),
-						new Vector3f(9.5f, 3.5f + (filledRatio * 9.0f), 8.51f), blockPartFace, sideSprite,
-						Direction.SOUTH, ModelUtilities.IDENTITY, null, false,
-						new ResourceLocation("dummy_name"));
+				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(6.5f, 3.5f, 0.0f), new Vector3f(9.5f, 3.5f + (filledRatio * 9.0f), 8.51f), blockPartFace, sideSprite,
+						Direction.SOUTH, ModelUtilities.IDENTITY, null, false, new ResourceLocation("dummy_name"));
 
 				quads.add(newQuad);
 			}
 			return quads;
-		}
-
-		@Override
-		public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
-			BaseModel.handlePerspective(cameraTransformType, mat);
-			return this;
 		}
 
 		@Override
@@ -211,8 +194,7 @@ public class FluidCapsuleItemModel implements BakedModel {
 			if (handler == null || handler.getFluidInTank(0).isEmpty()) {
 				return -1;
 			} else {
-				FluidAttributes attributes = handler.getFluidInTank(0).getFluid().getAttributes();
-				return attributes.getColor(handler.getFluidInTank(0));
+				return IClientFluidTypeExtensions.of(handler.getFluidInTank(0).getFluid()).getTintColor();
 			}
 		}
 	}

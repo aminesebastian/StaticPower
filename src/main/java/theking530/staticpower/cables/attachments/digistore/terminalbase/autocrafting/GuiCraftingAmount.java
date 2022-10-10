@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
@@ -70,9 +70,9 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 		registerWidget(confirm = new TextButton(61, 176, 45, 16, "Confirm", (b, n) -> confirmCraft()));
 
 		registerWidget(
-				leftRecipe = (TextButton) new TextButton(60, 18, 14, 14, "<", (b, n) -> modifyBundleIndex(-1)).setTooltip(new TranslatableComponent("gui.staticpower.previous_recipe")));
+				leftRecipe = (TextButton) new TextButton(60, 18, 14, 14, "<", (b, n) -> modifyBundleIndex(-1)).setTooltip(Component.translatable("gui.staticpower.previous_recipe")));
 		registerWidget(
-				rightRecipe = (TextButton) new TextButton(92, 18, 14, 14, ">", (b, n) -> modifyBundleIndex(1)).setTooltip(new TranslatableComponent("gui.staticpower.next_recipe")));
+				rightRecipe = (TextButton) new TextButton(92, 18, 14, 14, ">", (b, n) -> modifyBundleIndex(1)).setTooltip(Component.translatable("gui.staticpower.next_recipe")));
 
 		registerWidget(scrollBar = new ScrollBarWidget(146, 53, 119));
 		registerWidget(stepsWidget = new AutoCraftingStepsWidget(7, 53, 136, 95, MAX_ROWS, COLUMNS));

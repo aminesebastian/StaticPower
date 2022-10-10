@@ -2,7 +2,6 @@ package theking530.staticpower.blockentities.nonpowered.vacuumchest;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Items;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -52,8 +51,8 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 	public void updateData() {
 		// Update the input tab.
 		infoTab.clear();
-		infoTab.addLine("desc", new TextComponent("Vacuums items in a nearby radius"));
-		infoTab.addKeyValueTwoLiner("radius", new TextComponent("Radius"), new TextComponent(String.valueOf(getTileEntity().getRadius())), ChatFormatting.AQUA);
+		infoTab.addLine("desc", Component.literal("Vacuums items in a nearby radius"));
+		infoTab.addKeyValueTwoLiner("radius", Component.literal("Radius"), Component.literal(String.valueOf(getTileEntity().getRadius())), ChatFormatting.AQUA);
 
 		// Change the size of the GUI depending on if there is a XP upgrade present.
 		if (!getTileEntity().showTank()) {

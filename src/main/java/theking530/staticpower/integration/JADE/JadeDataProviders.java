@@ -3,15 +3,17 @@ package theking530.staticpower.integration.JADE;
 
 import java.util.Optional;
 
-import mcp.mobius.waila.api.IServerDataProvider;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import snownee.jade.api.IServerDataProvider;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.heat.CapabilityHeatable;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.components.control.processing.AbstractProcesingComponent;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
@@ -33,7 +35,7 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		}
 
 		// Add fluid data.
-		te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(tank -> {
+		te.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(tank -> {
 			CompoundTag fluidData = new CompoundTag();
 			fluidData.putInt("value", tank.getFluidInTank(0).getAmount());
 			fluidData.putInt("max", tank.getTankCapacity(0));
@@ -83,14 +85,19 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 				processingData.putInt("remaining", remaining);
 				processingData.putInt("max", processing.get().getMaxProcessingTime());
 				processingData.putString("description",
-						GuiTextUtilities.formatNumberAsString(remaining).append(" ").append(new TranslatableComponent("gui.staticpower.ticks_remaining")).getString());
+						GuiTextUtilities.formatNumberAsString(remaining).append(" ").append(Component.translatable("gui.staticpower.ticks_remaining")).getString());
 			} else {
 				processingData.putInt("remaining", 0);
 				processingData.putInt("max", 0);
 				processingData.putString("description",
-						GuiTextUtilities.formatNumberAsString(0).append(" ").append(new TranslatableComponent("gui.staticpower.ticks_remaining")).getString());
+						GuiTextUtilities.formatNumberAsString(0).append(" ").append(Component.translatable("gui.staticpower.ticks_remaining")).getString());
 			}
 			data.put(PROCESSING_TAG, processingData);
 		}
+	}
+
+	@Override
+	public ResourceLocation getUid() {
+		return new ResourceLocation(StaticPower.MOD_ID, "jade_data_provider");
 	}
 }

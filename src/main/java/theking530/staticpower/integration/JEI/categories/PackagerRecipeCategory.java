@@ -11,13 +11,13 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -35,7 +35,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe> {
 	public static final RecipeType<PackagerRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "packager"), PackagerRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
@@ -45,7 +45,7 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 
 	public PackagerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Packager.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.Packager.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(98, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Packager.get()));
 		pBar = new ArrowProgressBar(50, 22);
@@ -69,17 +69,12 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 	}
 
 	@Override
-	public Class<? extends PackagerRecipe> getRecipeClass() {
-		return PackagerRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(PackagerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(PackagerRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 28, 22, 0);
 
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 75, 20, 0);
@@ -93,10 +88,10 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(PackagerRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(PackagerRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getProcessingTime() * recipe.getPowerCost())));
+			output.add(Component.literal("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getProcessingTime() * recipe.getPowerCost())));
 		}
 
 		// Render the progress bar tooltip.

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,7 +24,7 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 	}
 
 	@Override
-	public boolean useSolderingItem(ItemStack itemstack) {
+	public boolean useSolderingItem(Level level, ItemStack itemstack) {
 		// Should move to config, but 10SV per soldering operation.
 		if (EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >= 10) {
 			EnergyHandlerItemStackUtilities.drainPower(itemstack, 10, false);
@@ -41,11 +40,11 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TextComponent("Power per Operation: 10SV"));
+		tooltip.add(Component.literal("Power per Operation: 10SV"));
 		if (showAdvanced) {
 			double energyStored = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 			double capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
-			tooltip.add(new TextComponent("Power Stored: ").append(PowerTextFormatting.formatPowerToString(energyStored, capacity)));
+			tooltip.add(Component.literal("Power Stored: ").append(PowerTextFormatting.formatPowerToString(energyStored, capacity)));
 		}
 	}
 

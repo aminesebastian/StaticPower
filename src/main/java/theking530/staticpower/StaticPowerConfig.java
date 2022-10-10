@@ -812,6 +812,10 @@ public class StaticPowerConfig {
 		return TIERS.get(tierId.toString()).tier;
 	}
 
+	public static boolean isConfigLoaded(ResourceLocation tierId) {
+		return TIERS.get(tierId.toString()).spec.isLoaded();
+	}
+
 	public static void preInitialize() {
 		// Verify the config sub-folder exists.
 		checkOrCreateFolder(StaticPower.MOD_ID);

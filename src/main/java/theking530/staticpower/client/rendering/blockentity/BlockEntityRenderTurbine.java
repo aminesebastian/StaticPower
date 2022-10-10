@@ -16,8 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
@@ -55,11 +54,11 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 			BakedModel model = Minecraft.getInstance().getModelManager().getModel(modelLocation);
 
 			// Get the data.
-			IModelData data = model.getModelData(tileEntity.getLevel(), pos, tileEntity.getLevel().getBlockState(pos), ModelDataManager.getModelData(tileEntity.getLevel(), pos));
+			ModelData data = model.getModelData(tileEntity.getLevel(), pos, tileEntity.getLevel().getBlockState(pos), ModelData.EMPTY);
 
-			if (data.hasProperty(BlockEntityTurbine.TURBINE_RENDERING_STATE)) {
+			if (data.has(BlockEntityTurbine.TURBINE_RENDERING_STATE)) {
 				// Get the thread safe rotation container.
-				TurbineRenderingState renderingState = data.getData(BlockEntityTurbine.TURBINE_RENDERING_STATE);
+				TurbineRenderingState renderingState = data.get(BlockEntityTurbine.TURBINE_RENDERING_STATE);
 
 				// Increment the rotation (or decrement, that will be handled automatically).
 				renderingState.rotate(Minecraft.getInstance().getDeltaFrameTime());
@@ -74,28 +73,28 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 				matrixStack.mulPose(new Quaternion(0, renderingState.rotationAngle, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
 				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
-						combinedOverlay, data);
+						combinedOverlay, data, RenderType.cutout());
 
 				matrixStack.translate(0, 0.2, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
 				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
-						combinedOverlay, data);
+						combinedOverlay, data, RenderType.cutout());
 
 				matrixStack.translate(0, 0.2, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
 				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
-						combinedOverlay, data);
+						combinedOverlay, data, RenderType.cutout());
 
 				matrixStack.translate(0, 0.22, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
 				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
-						combinedOverlay, data);
+						combinedOverlay, data, RenderType.cutout());
 
 				// Pop the matrix we pushed.
 				matrixStack.popPose();

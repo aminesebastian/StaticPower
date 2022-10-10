@@ -20,7 +20,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
@@ -171,8 +170,8 @@ public class CableNetwork {
 	public List<Component> getReaderOutput(BlockPos fromPos) {
 		// Allocate the output list.
 		List<Component> output = new LinkedList<Component>();
-		output.add(new TextComponent(""));
-		output.add(new TextComponent("NetworkID: ").append(String.format("%1$s%2$d with %3$d cables", ChatFormatting.GRAY.toString(), networkId, graph.getCables().size())));
+		output.add(Component.literal(""));
+		output.add(Component.literal("NetworkID: ").append(String.format("%1$s%2$d with %3$d cables", ChatFormatting.GRAY.toString(), networkId, graph.getCables().size())));
 
 		// Capture the output contents of the modules.
 		for (CableNetworkModule module : modules.values()) {
@@ -262,7 +261,7 @@ public class CableNetwork {
 		ListTag moduleTagList = new ListTag();
 		modules.values().forEach(module -> {
 			CompoundTag moduleTag = new CompoundTag();
-			moduleTag.putString("type", module.getType().getRegistryName().toString());
+			moduleTag.putString("type", StaticPowerRegistries.CableModuleRegsitry().getKey(module.getType()).toString());
 			module.writeToNbt(moduleTag);
 			moduleTagList.add(moduleTag);
 		});

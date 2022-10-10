@@ -10,6 +10,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.init.ModTags;
 
 public class ItemUtilities {
@@ -37,7 +38,7 @@ public class ItemUtilities {
 		if (!match && matchMod) {
 			for (int i = 0; i < filterItems.size(); i++) {
 				if (!filterItems.get(i).isEmpty()) {
-					if (filterItems.get(i).getItem().getRegistryName().getNamespace() == itemToCheck.getItem().getRegistryName().getNamespace()) {
+					if (ForgeRegistries.ITEMS.getKey(filterItems.get(i).getItem()).getNamespace() == ForgeRegistries.ITEMS.getKey(itemToCheck.getItem()).getNamespace()) {
 						match = true;
 						break;
 					}

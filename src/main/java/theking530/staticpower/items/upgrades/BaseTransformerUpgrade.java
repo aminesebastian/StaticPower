@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -38,8 +37,8 @@ public class BaseTransformerUpgrade extends BaseUpgrade {
 			toVoltage = StaticPowerVoltage.BONKERS;
 		}
 
-		tooltip.add(new TranslatableComponent("gui.staticpower.transformer_upgrade_tooltip", new TranslatableComponent(fromVoltage.getShortName()),
-				new TranslatableComponent(toVoltage.getShortName())));
+		tooltip.add(Component.translatable("gui.staticpower.transformer_upgrade_tooltip", Component.translatable(fromVoltage.getShortName()),
+				Component.translatable(toVoltage.getShortName())));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

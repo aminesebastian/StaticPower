@@ -5,16 +5,17 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -29,15 +30,14 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 
 public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRecipe> {
 	public static final RecipeType<FertalizerRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "fertilization"), FertalizerRecipe.class);
-	private static final int FLUID_INPUT = 0;
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
 	public FertilizerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent("gui.staticpower.fertlization");
+		locTitle = Component.translatable("gui.staticpower.fertlization");
 		background = guiHelper.createBlankDrawable(130, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.BasicFarmer.get()));
 	}
@@ -60,44 +60,30 @@ public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRe
 	}
 
 	@Override
-	public Class<? extends FertalizerRecipe> getRecipeClass() {
-		return FertalizerRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(FertalizerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(FertalizerRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getRequiredFluid(), 0, 0, 53, 56, 1.0f, 24, 40, MachineSideMode.Never, true);
-		TranslatableComponent bonus = new TranslatableComponent("gui.staticpower.fertlization_bonus",
+		MutableComponent bonus = Component.translatable("gui.staticpower.fertlization_bonus",
 				GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
-		bonus.append(new TextComponent("%"));
+		bonus.append(Component.literal("%"));
 		GuiDrawUtilities.drawStringCentered(matrixStack, bonus.getString(), 65, 9, 0.0f, 1f, SDColor.EIGHT_BIT_DARK_GREY, false);
 	}
 
 	@Override
-	public void setIngredients(FertalizerRecipe recipe, IIngredients ingredients) {
-		ingredients.setInput(VanillaTypes.FLUID, recipe.getRequiredFluid());
-	}
+	public void setRecipe(IRecipeLayoutBuilder builder, FertalizerRecipe recipe, IFocusGroup ingredients) {
+		builder.addSlot(RecipeIngredientRole.INPUT, 53, 16).addIngredient(ForgeTypes.FLUID_STACK, recipe.getRequiredFluid())
+				.setFluidRenderer(getFluidTankDisplaySize(recipe.getRequiredFluid()), false, 24, 40).addTooltipCallback((recipeSlotView, tooltip) -> {
+					tooltip.add(tooltip.get(tooltip.size() - 1));
 
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, FertalizerRecipe recipe, IIngredients ingredients) {
-		// Add the input fluids.
-		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-		fluids.init(FLUID_INPUT, true, 53, 16, 24, 40, 1, true, null);
-		fluids.set(ingredients);
-
-		fluids.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
-			tooltip.add(tooltip.get(tooltip.size() - 1));
-
-			TranslatableComponent bonus = new TranslatableComponent("gui.staticpower.fertlization_bonus",
-					GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
-			bonus.append(new TextComponent("%"));
-			bonus.withStyle(ChatFormatting.GOLD);
-			tooltip.set(tooltip.size() - 2, bonus);
-		});
+					MutableComponent bonus = Component.translatable("gui.staticpower.fertlization_bonus",
+							GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
+					bonus.append(Component.literal("%"));
+					bonus.withStyle(ChatFormatting.GOLD);
+					tooltip.set(tooltip.size() - 2, bonus);
+				});
 	}
 }

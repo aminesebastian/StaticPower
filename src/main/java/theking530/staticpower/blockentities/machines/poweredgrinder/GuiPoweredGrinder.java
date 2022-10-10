@@ -2,7 +2,6 @@ package theking530.staticpower.blockentities.machines.poweredgrinder;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.progressbars.GrinderProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -27,9 +26,9 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 		registerWidget(new GrinderProgressBar(79, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine("desc", new TextComponent("Grinds items into their base components."));
+		infoTab.addLine("desc", Component.literal("Grinds items into their base components."));
 		infoTab.addLineBreak();
-		infoTab.addKeyValueTwoLiner("bonus", new TextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).append("%"),
+		infoTab.addKeyValueTwoLiner("bonus", Component.literal("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).append("%"),
 				ChatFormatting.GREEN);
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
@@ -40,7 +39,7 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 
 	@Override
 	public void updateData() {
-		infoTab.addKeyValueTwoLiner("bonus", new TextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).append("%"),
+		infoTab.addKeyValueTwoLiner("bonus", Component.literal("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).append("%"),
 				ChatFormatting.GREEN);
 	}
 }

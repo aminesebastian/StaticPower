@@ -12,13 +12,13 @@ import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -36,7 +36,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe> {
 	public static final RecipeType<RefineryRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "refinery"), RefineryRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -48,7 +48,7 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 
 	public RefineryRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.RefineryController.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.RefineryController.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(170, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.RefineryController.get()));
 		fluidBar1 = new FluidProgressBar(75, 27, 24, 4);
@@ -74,17 +74,12 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 	}
 
 	@Override
-	public Class<? extends RefineryRecipe> getRecipeClass() {
-		return RefineryRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(RefineryRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(RefineryRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 79, 2, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
@@ -119,10 +114,10 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(RefineryRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(RefineryRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 0) {
-			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(Component.literal("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.

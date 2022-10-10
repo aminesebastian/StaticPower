@@ -11,22 +11,22 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.CentrifugeProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
@@ -37,7 +37,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRecipe> {
 	public static final RecipeType<CentrifugeRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "centrifuge"), CentrifugeRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final CentrifugeProgressBar pBar;
@@ -47,7 +47,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 
 	public CentrifugeRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Centrifuge.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.Centrifuge.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(150, 70);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Centrifuge.get()));
 		pBar = new CentrifugeProgressBar(79, 26);
@@ -71,18 +71,13 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	}
 
 	@Override
-	public Class<? extends CentrifugeRecipe> getRecipeClass() {
-		return CentrifugeRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@SuppressWarnings("resource")
 	@Override
-	public void draw(CentrifugeRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CentrifugeRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 80, 6, 0);
 
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 78, 46, 0);
@@ -101,10 +96,10 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(CentrifugeRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(CentrifugeRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(Component.literal("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
@@ -115,7 +110,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 			for (Component tooltip : tooltips) {
 				output.add(tooltip);
 			}
-			output.add(new TextComponent("Required RPM: " + recipe.getMinimumSpeed()));
+			output.add(Component.literal("Required RPM: " + recipe.getMinimumSpeed()));
 		}
 
 		return output;

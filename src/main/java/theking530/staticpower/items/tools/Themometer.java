@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -28,7 +27,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorageUtilities;
@@ -55,9 +54,9 @@ public class Themometer extends StaticPowerItem implements ICustomModelSupplier 
 
 			BlockHitResult traceResult = RaytracingUtilities.findPlayerRayTrace(world, player, ClipContext.Fluid.ANY);
 			if (traceResult.getType() == HitResult.Type.MISS) {
-				MutableComponent chatComponent = new TextComponent("Temperature (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString())
+				MutableComponent chatComponent = Component.literal("Temperature (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString())
 						.append(")");
-				player.sendMessage(chatComponent, player.getUUID());
+				player.sendSystemMessage(chatComponent);
 				return InteractionResultHolder.consume(item);
 			}
 		}
@@ -68,7 +67,7 @@ public class Themometer extends StaticPowerItem implements ICustomModelSupplier 
 	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		if (!world.isClientSide()) {
 			int temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos());
-			MutableComponent chatComponent = new TextComponent("Temperature (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString())
+			MutableComponent chatComponent = Component.literal("Temperature (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString())
 					.append(")");
 
 			boolean found = false;
@@ -98,9 +97,9 @@ public class Themometer extends StaticPowerItem implements ICustomModelSupplier 
 
 			if (found) {
 				chatComponent = chatComponent.append(" ")
-						.append(new TextComponent("Block (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString()).append(")"));
+						.append(Component.literal("Block (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString()).append(")"));
 			}
-			player.sendMessage(chatComponent, player.getUUID());
+			player.sendSystemMessage(chatComponent);
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
@@ -113,7 +112,7 @@ public class Themometer extends StaticPowerItem implements ICustomModelSupplier 
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new ThermometerItemModel(existingModel);
 	}
 

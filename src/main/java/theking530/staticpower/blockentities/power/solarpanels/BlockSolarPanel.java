@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -47,7 +46,7 @@ public class BlockSolarPanel extends StaticPowerBlockEntityBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + " • Generation ")
+		tooltip.add(Component.literal(ChatFormatting.GREEN.toString() + " • Generation ")
 				.append(PowerTextFormatting.formatPowerRateToString(StaticPowerConfig.getTier(tier).powerConfiguration.solarPanelPowerGeneration.get())));
 	}
 

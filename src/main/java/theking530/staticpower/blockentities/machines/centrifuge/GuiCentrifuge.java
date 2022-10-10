@@ -5,8 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.progressbars.CentrifugeProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -43,11 +41,11 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 	@Override
 	public void updateData() {
 		infoTab.clear();
-		infoTab.addLine("desc1", new TextComponent("Separates items into their base components."));
-		infoTab.addKeyValueTwoLiner("c_speed", new TextComponent("Current Speed"),
-				GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed()).append(new TranslatableComponent("gui.staticpower.rpm")), ChatFormatting.YELLOW);
-		infoTab.addKeyValueTwoLiner("max_speed", new TextComponent("Max Speed"),
-				GuiTextUtilities.formatNumberAsString(getTileEntity().getMaxSpeed()).append(new TranslatableComponent("gui.staticpower.rpm")), ChatFormatting.RED);
+		infoTab.addLine("desc1", Component.literal("Separates items into their base components."));
+		infoTab.addKeyValueTwoLiner("c_speed", Component.literal("Current Speed"),
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed()).append(Component.translatable("gui.staticpower.rpm")), ChatFormatting.YELLOW);
+		infoTab.addKeyValueTwoLiner("max_speed", Component.literal("Max Speed"),
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getMaxSpeed()).append(Component.translatable("gui.staticpower.rpm")), ChatFormatting.RED);
 	}
 
 	@Override

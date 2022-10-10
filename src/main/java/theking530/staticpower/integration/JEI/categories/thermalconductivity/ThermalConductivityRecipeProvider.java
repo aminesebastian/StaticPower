@@ -12,13 +12,12 @@ import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.RegistryManager;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
@@ -66,7 +65,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 					RECIPES.add(jeiRecipe);
 
 					// Add all the potential inputs.
-					for (Entry<ResourceKey<Block>, Block> block : RegistryManager.ACTIVE.getRegistry(Block.class).getEntries()) {
+					for (Entry<ResourceKey<Block>, Block> block : ForgeRegistries.BLOCKS.getEntries()) {
 						RecipeMatchParameters matchParams = new RecipeMatchParameters(block.getValue().defaultBlockState());
 						if (recipe.isValid(matchParams)) {
 							jeiRecipe.addInput(new ItemStack(block.getValue()));
@@ -77,7 +76,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 				} else if (recipe.getFluidTags().length > 0) {
 					RECIPES.add(jeiRecipe);
 					// Add all the potential inputs.
-					for (Entry<ResourceKey<Fluid>, Fluid> fluid : RegistryManager.ACTIVE.getRegistry(Fluid.class).getEntries()) {
+					for (Entry<ResourceKey<Fluid>, Fluid> fluid : ForgeRegistries.FLUIDS.getEntries()) {
 						RecipeMatchParameters matchParams = new RecipeMatchParameters(new FluidStack(fluid.getValue(), 1));
 						if (recipe.isValid(matchParams)) {
 							jeiRecipe.setFluidStack(new FluidStack(fluid.getValue(), 1000));
@@ -97,7 +96,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 	@Override
 	public <V> List<RecipeType<?>> getRecipeTypes(IFocus<V> focus) {
 		if (focus.getTypedValue().getIngredient() instanceof ItemStack) {
-			ItemStack itemStack = (ItemStack) focus.getValue();
+			ItemStack itemStack = (ItemStack) focus.getTypedValue().getIngredient();
 			if (focus.getRole() == RecipeIngredientRole.OUTPUT) {
 				if (isValidOverheatingOutput(itemStack)) {
 					return Collections.singletonList(ThermalConductivityRecipeCategory.TYPE);
@@ -109,7 +108,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 			}
 		} else if (focus.getTypedValue().getIngredient() instanceof FluidStack) {
 			if (focus.getRole() == RecipeIngredientRole.INPUT) {
-				if (hasThermalConductivity((FluidStack) focus.getValue())) {
+				if (hasThermalConductivity((FluidStack) focus.getTypedValue().getIngredient())) {
 					return Collections.singletonList(ThermalConductivityRecipeCategory.TYPE);
 				}
 			}
@@ -172,10 +171,5 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public <V> List<ResourceLocation> getRecipeCategoryUids(IFocus<V> focus) {
-		return getRecipeTypes(focus).stream().map((type) -> type.getUid()).toList();
 	}
 }

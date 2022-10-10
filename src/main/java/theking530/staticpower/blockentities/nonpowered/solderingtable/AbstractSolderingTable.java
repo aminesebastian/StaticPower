@@ -151,7 +151,7 @@ public abstract class AbstractSolderingTable extends BlockEntityConfigurable imp
 
 			// Use the soldering iron.
 			ISolderingIron iron = (ISolderingIron) solderingIronInventory.getStackInSlot(0).getItem();
-			iron.useSolderingItem(solderingIronInventory.getStackInSlot(0));
+			iron.useSolderingItem(getLevel(), solderingIronInventory.getStackInSlot(0));
 
 			// Grow the output.
 			if (output.isEmpty()) {

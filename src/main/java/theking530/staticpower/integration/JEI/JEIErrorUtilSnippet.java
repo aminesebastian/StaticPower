@@ -8,6 +8,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class JEIErrorUtilSnippet {
 	public static void checkNotEmpty(@Nullable ItemStack itemStack, String name) {
@@ -40,7 +41,7 @@ public class JEIErrorUtilSnippet {
 		}
 		Item item = itemStack.getItem();
 		final String itemName;
-		ResourceLocation registryName = item.getRegistryName();
+		ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(item);
 		if (registryName != null) {
 			itemName = registryName.toString();
 		} else if (item instanceof BlockItem) {
@@ -49,7 +50,7 @@ public class JEIErrorUtilSnippet {
 			if (block == null) {
 				blockName = "null";
 			} else {
-				ResourceLocation blockRegistryName = block.getRegistryName();
+				ResourceLocation blockRegistryName = ForgeRegistries.BLOCKS.getKey(block);
 				if (blockRegistryName != null) {
 					blockName = blockRegistryName.toString();
 				} else {

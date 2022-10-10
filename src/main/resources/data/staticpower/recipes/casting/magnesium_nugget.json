@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:casting_recipe",
+	"type": "staticpower:casting",
 	"input": {
 		"fluid": "staticpower:molten_magnesium",
 		"volume": 16

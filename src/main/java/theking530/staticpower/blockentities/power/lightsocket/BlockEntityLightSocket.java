@@ -5,8 +5,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.api.energy.CurrentType;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
@@ -125,8 +124,7 @@ public class BlockEntityLightSocket extends BlockEntityMachine {
 
 	@Nonnull
 	@Override
-	public IModelData getModelData() {
-		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		return builder.withInitial(LIGHT_SOCKET_RENDERING_STATE, new LightSocketRenderingState(lightbulb)).build();
+	public ModelData getModelData() {
+		return ModelData.builder().with(LIGHT_SOCKET_RENDERING_STATE, new LightSocketRenderingState(lightbulb)).build();
 	}
 }

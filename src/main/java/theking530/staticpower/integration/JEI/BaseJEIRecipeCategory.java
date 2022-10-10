@@ -5,7 +5,6 @@ import com.mojang.math.Vector4f;
 
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,11 +25,6 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 
 	public int getFluidTankDisplaySize(FluidStack stack) {
 		return getNetHighestMultipleOf10(stack.getAmount());
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return getRecipeType().getUid();
 	}
 
 	public int getNetHighestMultipleOf10(int value) {

@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -130,7 +130,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 						// Start the sound.
 						if (!isGenerating) {
 							isGenerating = true;
-							generatingSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE.getRegistryName(), SoundSource.BLOCKS, 2.0f, 1.5f, getBlockPos(), 32);
+							generatingSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 2.0f, 1.5f, getBlockPos(), 32);
 						}
 
 						// Draw the input and fill the output.
@@ -188,8 +188,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 	}
 
 	@Override
-	protected void getAdditionalModelData(ModelDataMap.Builder builder) {
-		builder.withInitial(TURBINE_RENDERING_STATE, renderingState);
+	protected void getAdditionalModelData(ModelData.Builder builder) {
+		builder.with(TURBINE_RENDERING_STATE, renderingState);
 	}
 
 	public boolean isGenerating() {

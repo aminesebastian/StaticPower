@@ -1,8 +1,5 @@
 package theking530.staticpower.integration.JEI.categories;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -10,24 +7,22 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
-import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -39,7 +34,6 @@ import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.rendering.BlockModel;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
@@ -47,12 +41,8 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe> {
 	public static final RecipeType<CauldronRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "cauldron"), CauldronRecipe.class);
-	private static final int INPUT_SLOT = 0;
-	private static final int OUTPUT_SLOT = 1;
-	private static final int INPUT_FLUID_SLOT = 2;
-	private static final int OUTPUT_FLUID_SLOT = 3;
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar arrow;
@@ -60,7 +50,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 
 	public CauldronRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.RustyCauldron.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.RustyCauldron.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 55);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.RustyCauldron.get()));
 		arrow = new ArrowProgressBar(57, 16);
@@ -84,18 +74,13 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 	}
 
 	@Override
-	public Class<? extends CauldronRecipe> getRecipeClass() {
-		return CauldronRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void draw(CauldronRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CauldronRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 4, 6, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 105, 22, 0);
 
@@ -178,43 +163,19 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 	}
 
 	@Override
-	public void setIngredients(CauldronRecipe recipe, IIngredients ingredients) {
-		// Set the input ingrdient.
-		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getInput().getIngredient());
-		ingredients.setInputIngredients(input);
+	public void setRecipe(IRecipeLayoutBuilder builder, CauldronRecipe recipe, IFocusGroup ingredients) {
+		builder.addSlot(RecipeIngredientRole.INPUT, 3, 5).addIngredients(recipe.getInput().getIngredient());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 107, 24).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 
-		// Set the input fluid.
-		ingredients.setInput(VanillaTypes.FLUID, recipe.getRequiredFluid());
-
-		// Set the output.
-		ingredients.setOutput(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
-
-		// Set the output fluid.
-		ingredients.setOutput(VanillaTypes.FLUID, recipe.getOutputFluid());
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, CauldronRecipe recipe, IIngredients ingredients) {
-		// Set the inputs.
-		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		guiItemStacks.init(INPUT_SLOT, true, 3, 5);
-		guiItemStacks.set(ingredients);
-
-		// Set the outputs.
-		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
-		probabilityStacks.init(OUTPUT_SLOT, false, 107, 24);
-		probabilityStacks.set(ingredients);
-
-		// Add the fluid.
-		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
+		// Add the fluids.
 		if (!recipe.getRequiredFluid().isEmpty()) {
-			fluids.init(INPUT_FLUID_SLOT, true, 56, 18, 10, 10, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
+			builder.addSlot(RecipeIngredientRole.INPUT, 56, 18).addFluidStack(recipe.getRequiredFluid().getFluid(), recipe.getRequiredFluid().getAmount())
+					.setFluidRenderer(getFluidTankDisplaySize(recipe.getRequiredFluid()), false, 10, 10);
 		}
 		if (!recipe.getOutputFluid().isEmpty()) {
-			fluids.init(OUTPUT_FLUID_SLOT, false, 56, 30, 10, 10, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 56, 30).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount())
+					.setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false, 10, 10);
 		}
-		fluids.set(ingredients);
 
 		// Set the timer.
 		int processingTime = SDMath.clamp(recipe.getRequiredTimeInCauldron() / 2, 0, recipe.getRequiredTimeInCauldron());

@@ -9,8 +9,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
@@ -54,29 +52,29 @@ public class BlockItemCable extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		BakedModel extensionModel = null;
 		BakedModel straightModel = null;
-		BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_DEFAULT_ATTACHMENT);
+		BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_DEFAULT_ATTACHMENT);
 
 		if (tier == StaticPowerTiers.BASIC) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_BASIC_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_BASIC_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_BASIC_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_BASIC_STRAIGHT);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_ADVANCED_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_ADVANCED_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_ADVANCED_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_ADVANCED_STRAIGHT);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_STATIC_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_STATIC_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_STATIC_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_STATIC_STRAIGHT);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_ENERGIZED_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_ENERGIZED_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_ENERGIZED_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_ENERGIZED_STRAIGHT);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_LUMUM_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_LUMUM_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_LUMUM_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_LUMUM_STRAIGHT);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_CREATIVE_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_ITEM_CREATIVE_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_CREATIVE_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_ITEM_CREATIVE_STRAIGHT);
 		}
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
@@ -87,17 +85,17 @@ public class BlockItemCable extends AbstractCableBlock {
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		double blocksPerTick = StaticPowerConfig.getTier(tier).cableItemConfiguration.itemCableMaxSpeed.get();
 
-		tooltip.add(new TranslatableComponent("gui.staticpower.max_transfer_rate"));
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.item_cable_transfer_rate",
-				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslatableComponent("gui.staticpower.blocks").getString())));
+		tooltip.add(Component.translatable("gui.staticpower.max_transfer_rate"));
+		tooltip.add(Component.literal("• ").append(Component.translatable("gui.staticpower.item_cable_transfer_rate",
+				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), Component.translatable("gui.staticpower.blocks").getString())));
 	}
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent(""));
-		tooltip.add(new TranslatableComponent("gui.staticpower.item_cable_acceleration",
+		tooltip.add(Component.literal(""));
+		tooltip.add(Component.translatable("gui.staticpower.item_cable_acceleration",
 				ChatFormatting.BLUE + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(tier).cableItemConfiguration.itemCableAcceleration.get() * 100).getString()));
-		tooltip.add(new TranslatableComponent("gui.staticpower.item_cable_friction",
+		tooltip.add(Component.translatable("gui.staticpower.item_cable_friction",
 				ChatFormatting.RED + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(tier).cableItemConfiguration.itemCableFriction.get() * 100).getString()));
 	}
 

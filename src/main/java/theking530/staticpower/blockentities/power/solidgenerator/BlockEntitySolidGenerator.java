@@ -88,7 +88,7 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 	public void process() {
 		if (!level.isClientSide) {
 			if (processingComponent.getIsOnBlockState()) {
-				generatingSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE.getRegistryName(), SoundSource.BLOCKS, 1.0f, 1.0f, getBlockPos(), 32);
+				generatingSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0f, 1.0f, getBlockPos(), 32);
 			} else {
 				generatingSoundComponent.stopPlayingSound();
 			}

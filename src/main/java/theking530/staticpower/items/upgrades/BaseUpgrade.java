@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -71,7 +70,7 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.WHITE + "Stacks Up To " + stack.getMaxStackSize()));
+		tooltip.add(Component.literal(ChatFormatting.WHITE + "Stacks Up To " + stack.getMaxStackSize()));
 	}
 
 	@Override

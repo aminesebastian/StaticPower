@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:fermenter_recipe",
+	"type": "staticpower:fermenter",
 	"input": {
 		"item": "minecraft:beetroot"
 	},

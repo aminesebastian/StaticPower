@@ -17,6 +17,7 @@ import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
 import theking530.staticcore.productivity.metrics.SertializedBiDirectionalMetrics;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerRegistries;
 
 public class ProductionCache<T> {
 	private final List<Map<Integer, ProductionEntry<T>>> productivityBuckets;
@@ -29,7 +30,7 @@ public class ProductionCache<T> {
 
 	public ProductionCache(ProductType<T> productType) {
 		this.productType = productType;
-		this.productTablePrefix = productType.getRegistryName().toString().replace(":", "_");
+		this.productTablePrefix = StaticPowerRegistries.ProductRegistry().getKey(productType).toString().replace(":", "_");
 		bucketRoundRobinIndex = 0;
 		productivityBucketMap = new HashMap<>();
 		productivityBuckets = new LinkedList<Map<Integer, ProductionEntry<T>>>();

@@ -6,7 +6,6 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
@@ -24,9 +23,9 @@ public class GuiInverter extends StaticPowerTileEntityGui<ContainerInverter, Blo
 	public void initializeGui() {
 		GuiInfoTab infoTab;
 		getTabManager().registerTab(infoTab = new GuiInfoTab("Battery", 120));
-		infoTab.addLine("desc1", new TextComponent("A Battery stores power for later usage."));
+		infoTab.addLine("desc1", Component.literal("A Battery stores power for later usage."));
 		infoTab.addLineBreak();
-		infoTab.addLine("desc2", new TextComponent("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
+		infoTab.addLine("desc2", Component.literal("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));

@@ -1,23 +1,22 @@
 package theking530.staticpower.integration.JADE;
 
-import mcp.mobius.waila.api.BlockAccessor;
-import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IRegistrar;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.IWailaPlugin;
-import mcp.mobius.waila.api.TooltipPosition;
-import mcp.mobius.waila.api.WailaPlugin;
-import mcp.mobius.waila.api.config.IPluginConfig;
-import mcp.mobius.waila.api.ui.IElementHelper;
-import mcp.mobius.waila.api.ui.IProgressStyle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaCommonRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
+import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.api.ui.IProgressStyle;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.StaticPowerVoltage;
@@ -52,17 +51,21 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static final SDColor ALT_FLUID_COLOR = new SDColor(0, 0.164f, 0.831f).fromFloatToEightBit();
 
 	@Override
-	public void register(IRegistrar registrar) {
-		registrar.registerComponentProvider(new DigistoreMasterPresenceDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new DigistoreDecorator(), TooltipPosition.BODY, BlockDigistore.class);
+	public void register(IWailaCommonRegistration registrar) {
 		registrar.registerBlockDataProvider(new JadeDataProviders(), BlockEntity.class);
-		registrar.registerComponentProvider(new StaticVoltDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new HeatDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new ProcessingTimeDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new FluidPipeDecorator(), TooltipPosition.BODY, Block.class);
 	}
 
-	public static class StaticVoltDecorator implements IComponentProvider {
+	@Override
+	public void registerClient(IWailaClientRegistration registrar) {
+		registrar.registerBlockComponent(new DigistoreMasterPresenceDecorator(), Block.class);
+		registrar.registerBlockComponent(new DigistoreDecorator(), BlockDigistore.class);
+		registrar.registerBlockComponent(new StaticVoltDecorator(), Block.class);
+		registrar.registerBlockComponent(new HeatDecorator(), Block.class);
+		registrar.registerBlockComponent(new ProcessingTimeDecorator(), Block.class);
+		registrar.registerBlockComponent(new FluidPipeDecorator(), Block.class);
+	}
+
+	public static class StaticVoltDecorator implements IBlockComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			BlockEntity tile = accessor.getBlockEntity();
@@ -117,12 +120,12 @@ public class JadePluginImplementation implements IWailaPlugin {
 					// Draw the output voltage.
 					if (displayOutputVoltage) {
 						JadePluginImplementation.drawValue(tooltip,
-								new TranslatableComponent("gui.staticpower.output_voltage").append(": ").append(PowerTextFormatting.formatVoltageToString(outputVoltage)),
+								Component.translatable("gui.staticpower.output_voltage").append(": ").append(PowerTextFormatting.formatVoltageToString(outputVoltage)),
 								OUTPUT_VOLTAGE_RENDERER);
 					}
 
 					if (isAlternating) {
-						JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("~"), new ResourceLocation(StaticPower.MOD_ID, "TEMP_AC"));
+						JadePluginImplementation.drawValue(tooltip, Component.translatable("~"), new ResourceLocation(StaticPower.MOD_ID, "TEMP_AC"));
 					}
 
 					// Draw stored power bar.
@@ -130,18 +133,18 @@ public class JadePluginImplementation implements IWailaPlugin {
 						if (minVoltage != StaticPowerVoltage.LOW && maxVoltage != StaticPowerVoltage.BONKERS) {
 							if (minVoltage == maxVoltage) {
 								JadePluginImplementation.drawValue(tooltip,
-										new TranslatableComponent("gui.staticpower.input_voltage").append(": ").append(new TranslatableComponent(minVoltage.getShortName())),
+										Component.translatable("gui.staticpower.input_voltage").append(": ").append(Component.translatable(minVoltage.getShortName())),
 										INPUT_VOLTAGE_RENDERER);
 							} else if (minVoltage == StaticPowerVoltage.ZERO) {
 								JadePluginImplementation.drawValue(tooltip,
-										new TranslatableComponent("gui.staticpower.input_voltage").append(": <").append(new TranslatableComponent(maxVoltage.getShortName())),
+										Component.translatable("gui.staticpower.input_voltage").append(": <").append(Component.translatable(maxVoltage.getShortName())),
 										INPUT_VOLTAGE_RENDERER);
 							} else if (maxVoltage == StaticPowerVoltage.BONKERS) {
 								JadePluginImplementation.drawValue(tooltip,
-										new TranslatableComponent("gui.staticpower.input_voltage").append(": >").append(new TranslatableComponent(minVoltage.getShortName())),
+										Component.translatable("gui.staticpower.input_voltage").append(": >").append(Component.translatable(minVoltage.getShortName())),
 										INPUT_VOLTAGE_RENDERER);
 							} else {
-								JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": ")
+								JadePluginImplementation.drawValue(tooltip, Component.translatable("gui.staticpower.input_voltage").append(": ")
 										.append(PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minVoltage, maxVoltage))), INPUT_VOLTAGE_RENDERER);
 							}
 						}
@@ -154,9 +157,14 @@ public class JadePluginImplementation implements IWailaPlugin {
 				}
 			}
 		}
+
+		@Override
+		public ResourceLocation getUid() {
+			return new ResourceLocation(StaticPower.MOD_ID, "static_voltage");
+		}
 	}
 
-	public static class HeatDecorator implements IComponentProvider {
+	public static class HeatDecorator implements IBlockComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			BlockEntity tile = accessor.getBlockEntity();
@@ -179,9 +187,14 @@ public class JadePluginImplementation implements IWailaPlugin {
 				}
 			}
 		}
+
+		@Override
+		public ResourceLocation getUid() {
+			return new ResourceLocation(StaticPower.MOD_ID, "heat");
+		}
 	}
 
-	public static class ProcessingTimeDecorator implements IComponentProvider {
+	public static class ProcessingTimeDecorator implements IBlockComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			if (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.PROCESSING_TAG)) {
@@ -192,43 +205,63 @@ public class JadePluginImplementation implements IWailaPlugin {
 				// Draw bar
 				if (remaining > 0) {
 					JadePluginImplementation.drawBar(tooltip, remaining, totalTime, MAIN_PROCESSING_COLOR, ALT_PROCESSING_COLOR, GuiTextUtilities.formatNumberAsString(remaining)
-							.append(" ").append(new TranslatableComponent("gui.staticpower.ticks_remaining")).withStyle(ChatFormatting.WHITE), PROCESSING_BAR_RENDERER);
+							.append(" ").append(Component.translatable("gui.staticpower.ticks_remaining")).withStyle(ChatFormatting.WHITE), PROCESSING_BAR_RENDERER);
 				}
 			}
 		}
+
+		@Override
+		public ResourceLocation getUid() {
+			return new ResourceLocation(StaticPower.MOD_ID, "processing");
+		}
 	}
 
-	public static class FluidPipeDecorator implements IComponentProvider {
+	public static class FluidPipeDecorator implements IBlockComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			if (accessor.getServerData().contains("pressure")) {
 				int pressure = (int) Math.floor(accessor.getServerData().getFloat("pressure"));
 
 				JadePluginImplementation.drawBar(tooltip, pressure, 32.0f, MAIN_FLUID_COLOR, ALT_FLUID_COLOR,
-						new TranslatableComponent("gui.staticpower.pressure").append(" ").append(GuiTextUtilities.formatNumberAsString(pressure)).withStyle(ChatFormatting.WHITE),
+						Component.translatable("gui.staticpower.pressure").append(" ").append(GuiTextUtilities.formatNumberAsString(pressure)).withStyle(ChatFormatting.WHITE),
 						FLUID_BAR_RENDERER);
 			}
 		}
+
+		@Override
+		public ResourceLocation getUid() {
+			return new ResourceLocation(StaticPower.MOD_ID, "fluid_pipe");
+		}
 	}
 
-	public static class DigistoreDecorator implements IComponentProvider {
+	public static class DigistoreDecorator implements IBlockComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 
 		}
+
+		@Override
+		public ResourceLocation getUid() {
+			return new ResourceLocation(StaticPower.MOD_ID, "digistore");
+		}
 	}
 
-	public static class DigistoreMasterPresenceDecorator implements IComponentProvider {
+	public static class DigistoreMasterPresenceDecorator implements IBlockComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			if (accessor.getServerData().contains(JadeDataProviders.DIGISTORE_MANAGER_TAG)) {
 				boolean managerPresent = accessor.getServerData().getBoolean(JadeDataProviders.DIGISTORE_MANAGER_TAG);
 				if (managerPresent) {
-					tooltip.add(new TranslatableComponent("gui.staticpower.manager_present").withStyle(ChatFormatting.GREEN));
+					tooltip.add(Component.translatable("gui.staticpower.manager_present").withStyle(ChatFormatting.GREEN));
 				} else {
-					tooltip.add(new TranslatableComponent("gui.staticpower.manager_missing").withStyle(ChatFormatting.RED));
+					tooltip.add(Component.translatable("gui.staticpower.manager_missing").withStyle(ChatFormatting.RED));
 				}
 			}
+		}
+
+		@Override
+		public ResourceLocation getUid() {
+			return new ResourceLocation(StaticPower.MOD_ID, "digistore_master_presence");
 		}
 	}
 

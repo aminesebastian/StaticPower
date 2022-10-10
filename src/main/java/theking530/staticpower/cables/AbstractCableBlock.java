@@ -114,7 +114,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 				// If the item requests a GUI, open it.
 				if (attachmentItem.hasGui(attachment)) {
 					if (!world.isClientSide()) {
-						NetworkGUI.openGui((ServerPlayer) player, attachmentItem.getUIContainerProvider(attachment, component, hoveredDirection), buff -> {
+						NetworkGUI.openScreen((ServerPlayer) player, attachmentItem.getUIContainerProvider(attachment, component, hoveredDirection), buff -> {
 							buff.writeInt(hoveredDirection.ordinal());
 							buff.writeBlockPos(pos);
 						});
@@ -141,7 +141,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 			for (ItemStack stack : stacks) {
 				WorldUtilities.dropItem(world, pos, stack);
 			}
-			this.spawnAfterBreak(state, (ServerLevel) world, pos, wrench);
+			this.spawnAfterBreak(state, (ServerLevel) world, pos, wrench, true);
 
 			// Perform this on both the client and the server so the client updates any
 			// render changes (any conected cables).
@@ -238,9 +238,9 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 
 	@Deprecated
 	@Override
-	public void spawnAfterBreak(BlockState state, ServerLevel worldIn, BlockPos pos, ItemStack stack) {
+	public void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack, boolean brokenByPlayer) {
 		// Get the cable provider if present.
-		ComponentUtilities.getComponent(AbstractCableProviderComponent.class, worldIn.getBlockEntity(pos)).ifPresent(component -> {
+		ComponentUtilities.getComponent(AbstractCableProviderComponent.class, level.getBlockEntity(pos)).ifPresent(component -> {
 			// Allocate a container for the additional drops.
 			List<ItemStack> additionalDrops = new ArrayList<ItemStack>();
 
@@ -256,7 +256,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 
 			// Drop the additional drops.
 			for (ItemStack drop : additionalDrops) {
-				WorldUtilities.dropItem(worldIn, pos, drop);
+				WorldUtilities.dropItem(level, pos, drop);
 			}
 		});
 	}

@@ -162,7 +162,7 @@ public class HeatStorageUtilities {
 			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(5);
 		}
 
-		if (biome.containsTag(Tags.Biomes.IS_BEACH)) {
+		if (biome.containsTag(Tags.Biomes.IS_SANDY)) {
 			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(5);
 		}
 		

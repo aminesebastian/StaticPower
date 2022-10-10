@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
@@ -46,8 +46,7 @@ public class BlockEntityRenderHydroponicPod extends StaticPowerBlockEntitySpecia
 				CropBlock crop = (CropBlock) block.get();
 				int age = ((int) (growthPercentage * crop.getMaxAge())) % crop.getMaxAge();
 				BlockState state = crop.getStateForAge(age);
-				GuiDrawUtilities.drawBlockState(stack, state, pos, EmptyModelData.INSTANCE, new Vector3D(0.175f, 0.1f, 0.175f), new Vector3D(0, 45, 0),
-						new Vector3D(0.65f, 0.65f, 0.65f));
+				GuiDrawUtilities.drawBlockState(stack, state, pos, ModelData.EMPTY, new Vector3D(0.175f, 0.1f, 0.175f), new Vector3D(0, 45, 0), new Vector3D(0.65f, 0.65f, 0.65f));
 			} else if (block.get() instanceof StemBlock) {
 				float scale = (growthPercentage * 0.9f) + 0.1f;
 				scale *= 0.5f;
@@ -57,13 +56,13 @@ public class BlockEntityRenderHydroponicPod extends StaticPowerBlockEntitySpecia
 				int age = (int) (growthPercentage * StemBlock.MAX_AGE);
 				BlockState stemState = stem.defaultBlockState();
 				stemState = stemState.setValue(StemBlock.AGE, age);
-				GuiDrawUtilities.drawBlockState(stack, stemState, pos, EmptyModelData.INSTANCE, new Vector3D(0.75f - (scale / 2), 0.1f, 0.75f - (scale / 2)), new Vector3D(0, 0, 0),
+				GuiDrawUtilities.drawBlockState(stack, stemState, pos, ModelData.EMPTY, new Vector3D(0.75f - (scale / 2), 0.1f, 0.75f - (scale / 2)), new Vector3D(0, 0, 0),
 						new Vector3D(scale, scale, scale));
 
 				// Draw the fruit.
 				StemGrownBlock fruit = stem.getFruit();
 				BlockState state = fruit.defaultBlockState();
-				GuiDrawUtilities.drawBlockState(stack, state, pos, EmptyModelData.INSTANCE, new Vector3D(0.75f - scale, 0.1f, 0.75f - scale), new Vector3D(0, 45, 0),
+				GuiDrawUtilities.drawBlockState(stack, state, pos, ModelData.EMPTY, new Vector3D(0.75f - scale, 0.1f, 0.75f - scale), new Vector3D(0, 45, 0),
 						new Vector3D(scale, scale, scale));
 			}
 			Minecraft.getInstance().getProfiler().pop();

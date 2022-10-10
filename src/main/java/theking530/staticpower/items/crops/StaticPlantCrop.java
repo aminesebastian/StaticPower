@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +22,7 @@ public class StaticPlantCrop extends StaticPowerItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TextComponent("These Seem to Radiate"));
-		tooltip.add(new TextComponent("Energy...Yummy"));
+		tooltip.add(Component.literal("These Seem to Radiate"));
+		tooltip.add(Component.literal("Energy...Yummy"));
 	}
 }

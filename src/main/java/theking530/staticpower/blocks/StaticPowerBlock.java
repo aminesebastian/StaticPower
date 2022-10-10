@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -69,7 +68,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	public enum FacingType {
 		NONE, AXIS, HORIZONTAL_FACING, FACING
 	}
-	
+
 	/**
 	 * Constructor for a static power block.
 	 * 
@@ -112,7 +111,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	}
 
 	public Component getDisplayName(ItemStack stack) {
-		return new TranslatableComponent(getDescriptionId());
+		return Component.translatable(getDescriptionId());
 	}
 
 	/**

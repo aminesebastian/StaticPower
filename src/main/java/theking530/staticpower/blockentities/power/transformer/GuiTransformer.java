@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticcore.gui.text.PowerTextFormatting;
@@ -35,9 +34,9 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 	public void initializeGui() {
 		GuiInfoTab infoTab;
 		getTabManager().registerTab(infoTab = new GuiInfoTab("Battery", 120));
-		infoTab.addLine("desc1", new TextComponent("A Battery stores power for later usage."));
+		infoTab.addLine("desc1", Component.literal("A Battery stores power for later usage."));
 		infoTab.addLineBreak();
-		infoTab.addLine("desc2", new TextComponent("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
+		infoTab.addLine("desc2", Component.literal("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
@@ -75,13 +74,13 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 		String maxVoltage = PowerTextFormatting.formatVoltageToString(getTileEntity().powerStorage.getOutputVoltage()).getString();
 
 		if (mouseX > leftPos + 28 - (font.width(maxPower) / 2) && mouseX < leftPos + 28 + (font.width(maxPower) / 2) && mouseY > this.topPos + 41 && mouseY < this.topPos + 50) {
-			tooltips.add(new TextComponent(maxPower));
+			tooltips.add(Component.literal(maxPower));
 		}
 
 		// Add tooltip for the actual value of the output.
 		if (mouseX > leftPos + 149 - (font.width(maxVoltage) / 2) && mouseX < leftPos + 149 + (font.width(maxVoltage) / 2) && mouseY > this.topPos + 41
 				&& mouseY < this.topPos + 50) {
-			tooltips.add(new TextComponent(maxVoltage));
+			tooltips.add(Component.literal(maxVoltage));
 		}
 	}
 

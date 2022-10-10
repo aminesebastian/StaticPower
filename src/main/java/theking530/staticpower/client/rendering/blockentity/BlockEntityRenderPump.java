@@ -6,12 +6,11 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ForgeModelBakery;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
@@ -39,13 +38,9 @@ public class BlockEntityRenderPump extends StaticPowerBlockEntitySpecialRenderer
 
 		// Draw the glass. We have to do it like this because of how mineraft orders
 		// transparency.
-		if (ForgeModelBakery.instance().getSpriteMap() != null) {
-			@SuppressWarnings("deprecation")
-			TextureAtlas blocksTexture = ForgeModelBakery.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
-			TextureAtlasSprite sprite = blocksTexture.getSprite(StaticPowerSprites.BLANK_TEXTURE);
-			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL),
-					new SDColor(0.4f, 0.45f, 0.55f, 0.35f), sprite);
-		}
+		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.BLANK_TEXTURE);
+		BlockModel.drawCubeInWorld(matrixStack, new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL),
+				new SDColor(0.4f, 0.45f, 0.55f, 0.35f), sprite);
 		Minecraft.getInstance().getProfiler().pop();
 	}
 }

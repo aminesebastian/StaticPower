@@ -2,7 +2,7 @@ package theking530.staticcore.gui.widgets.tabs.redstonecontrol;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,9 +36,9 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 			updateToggledButton(highRedstoneButton);
 		}));
 
-		highRedstoneButton.setTooltip(new TranslatableComponent("gui.staticpower.redstone_mode.high"));
-		ignoreRedstoneButton.setClickSoundPitch(0.7f).setTooltip(new TranslatableComponent("gui.staticpower.redstone_mode.ignore"));
-		lowRedstoneButton.setClickSoundPitch(0.85f).setTooltip(new TranslatableComponent("gui.staticpower.redstone_mode.low"));
+		highRedstoneButton.setTooltip(Component.translatable("gui.staticpower.redstone_mode.high"));
+		ignoreRedstoneButton.setClickSoundPitch(0.7f).setTooltip(Component.translatable("gui.staticpower.redstone_mode.ignore"));
+		lowRedstoneButton.setClickSoundPitch(0.85f).setTooltip(Component.translatable("gui.staticpower.redstone_mode.low"));
 
 		// Initialize the correct button.
 		if (currentMode == RedstoneMode.Ignore) {

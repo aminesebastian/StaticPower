@@ -3,7 +3,8 @@ package theking530.staticpower.blockentities.components.control.sideconfiguratio
 import com.mojang.math.Vector3f;
 
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import theking530.staticpower.StaticPower;
 
 public class SideConfigurationUtilities {
@@ -20,8 +21,8 @@ public class SideConfigurationUtilities {
 			this.sign = sign;
 		}
 
-		public TranslatableComponent getName() {
-			return new TranslatableComponent("gui.staticpower.side." + name.toLowerCase());
+		public MutableComponent getName() {
+			return Component.translatable("gui.staticpower.side." + name.toLowerCase());
 		}
 
 		public Direction.AxisDirection getSign() {
@@ -32,7 +33,7 @@ public class SideConfigurationUtilities {
 			if (this == TOP) {
 				return BOTTOM;
 			}
-			if (this == BOTTOM) {
+			if (this == BOTTOM) {	
 				return TOP;
 			}
 			if (this == FRONT) {

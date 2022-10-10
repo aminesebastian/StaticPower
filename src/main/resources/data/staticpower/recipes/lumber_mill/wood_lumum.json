@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:lumber_mill_recipe",
+	"type": "staticpower:lumber_mill",
 	"input": {
 		"item": "staticpower:log_lumum"
 	},

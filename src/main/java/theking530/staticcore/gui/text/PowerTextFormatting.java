@@ -2,9 +2,8 @@ package theking530.staticcore.gui.text;
 
 import java.text.NumberFormat;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticpower.utilities.MetricConverter;
@@ -18,18 +17,18 @@ public class PowerTextFormatting {
 	private static final NumberFormat NUMBER_FORMATTER_NO_DECIMAL;
 
 	/** Translation text component for Static Volts (V). */
-	public static final TranslatableComponent VOLTAGE_UNIT = new TranslatableComponent("gui.staticpower.volt_unit");
+	public static final MutableComponent VOLTAGE_UNIT = Component.translatable("gui.staticpower.volt_unit");
 
 	/** Translation text component for Static Current (C). */
-	public static final TranslatableComponent CURRENT_UNIT = new TranslatableComponent("gui.staticpower.current_unit");
+	public static final MutableComponent CURRENT_UNIT = Component.translatable("gui.staticpower.current_unit");
 
 	/** Translation text component for Static Power (P). */
-	public static final TranslatableComponent POWER_UNIT = new TranslatableComponent("gui.staticpower.power_unit");
+	public static final MutableComponent POWER_UNIT = Component.translatable("gui.staticpower.power_unit");
 	/** Translation text component for Static Power Per Tick (P/t). */
-	public static final TranslatableComponent POWER_RATE_UNIT = new TranslatableComponent("gui.staticpower.power_unit_per_tick");
+	public static final MutableComponent POWER_RATE_UNIT = Component.translatable("gui.staticpower.power_unit_per_tick");
 
 	/** Translation text component for Static Resistance (Ω). */
-	public static final TranslatableComponent RESISTANCE_UNIT = new TranslatableComponent("gui.staticpower.power_resistance_unit");
+	public static final MutableComponent RESISTANCE_UNIT = Component.translatable("gui.staticpower.power_resistance_unit");
 
 	/**
 	 * Static initializer for number formatter.
@@ -54,10 +53,10 @@ public class PowerTextFormatting {
 
 		// If the value is equal to the integer max, make it infinite.
 		if (Double.isInfinite(powerRate) || powerRate == Double.MAX_VALUE) {
-			output = new TextComponent("∞");
+			output = Component.literal("∞");
 		} else {
 			MetricConverter metricRate = new MetricConverter(powerRate);
-			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).append(metricRate.getSuffix());
+			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).append(metricRate.getSuffix());
 		}
 		return output.append(POWER_RATE_UNIT);
 	}
@@ -68,11 +67,11 @@ public class PowerTextFormatting {
 
 		// If the value is equal to the integer max, make it infinite.
 		if (Double.isInfinite(power) || power == Double.MAX_VALUE) {
-			output = new TextComponent("∞");
+			output = Component.literal("∞");
 		} else {
 			// Perform the metric conversion.
 			MetricConverter metricEnergy = new MetricConverter(power);
-			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
+			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
 
 			// Include the metric unit if requested.
 			if (includeMetricUnit) {
@@ -99,17 +98,17 @@ public class PowerTextFormatting {
 	}
 
 	public static MutableComponent formatVoltageToString(double voltage, boolean includeUnits, boolean includeMetricUnit) {
-		return new TranslatableComponent(StaticPowerVoltage.getVoltageClass(voltage).getShortName());
+		return Component.translatable(StaticPowerVoltage.getVoltageClass(voltage).getShortName());
 //		// Allocate the text component.
 //		MutableComponent output;
 //
 //		// If the value is equal to the integer max, make it infinite.
 //		if (Double.isInfinite(voltage) || voltage == Double.MAX_VALUE || voltage == Double.MIN_VALUE) {
-//			output = new TextComponent("∞");
+//			output = Component.literal("∞");
 //		} else {
 //			// Perform the metric conversion.
 //			MetricConverter metricEnergy = new MetricConverter(voltage);
-//			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
+//			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
 //
 //			// Include the metric unit if requested.
 //			if (includeMetricUnit) {
@@ -133,13 +132,13 @@ public class PowerTextFormatting {
 
 	public static MutableComponent formatVoltageRangeToString(StaticVoltageRange range) {
 		if (range.minimumVoltage() == range.maximumVoltage()) {
-			return new TranslatableComponent(range.maximumVoltage().getShortName());
+			return Component.translatable(range.maximumVoltage().getShortName());
 		} else if (range.minimumVoltage() == StaticPowerVoltage.LOW) {
-			return new TextComponent("<").append(new TranslatableComponent(range.maximumVoltage().getShortName()));
+			return Component.literal("<").append(Component.translatable(range.maximumVoltage().getShortName()));
 		} else if (range.maximumVoltage() == StaticPowerVoltage.EXTREME) {
-			return new TextComponent("<").append(new TranslatableComponent(range.maximumVoltage().getShortName()));
+			return Component.literal("<").append(Component.translatable(range.maximumVoltage().getShortName()));
 		} else {
-			return new TranslatableComponent(range.minimumVoltage().getShortName()).append("⇔").append(new TranslatableComponent(range.maximumVoltage().getShortName()));
+			return Component.translatable(range.minimumVoltage().getShortName()).append("⇔").append(Component.translatable(range.maximumVoltage().getShortName()));
 		}
 	}
 
@@ -149,11 +148,11 @@ public class PowerTextFormatting {
 
 		// If the value is equal to the integer max, make it infinite.
 		if (Double.isInfinite(resistance) || resistance == Double.MAX_VALUE) {
-			output = new TextComponent("∞");
+			output = Component.literal("∞");
 		} else {
 			// Perform the metric conversion.
 			MetricConverter metricEnergy = new MetricConverter(resistance, 0);
-			output = new TextComponent(NUMBER_FORMATTER_NO_DECIMAL.format(metricEnergy.getValue()));
+			output = Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(metricEnergy.getValue()));
 
 			// Include the metric unit if requested.
 			if (includeMetricUnit) {

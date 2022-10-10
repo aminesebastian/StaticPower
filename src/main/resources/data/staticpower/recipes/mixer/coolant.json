@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:mixer_recipe",
+	"type": "staticpower:mixer",
 	"item_input_1": {
 		"item": "minecraft:snowball"
 	},

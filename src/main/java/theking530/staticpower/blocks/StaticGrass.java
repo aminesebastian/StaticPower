@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -29,8 +28,8 @@ public class StaticGrass extends StaticPowerBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent("Take a Leap."));
-		tooltip.add(new TextComponent("Take Flight."));
+		tooltip.add(Component.literal("Take a Leap."));
+		tooltip.add(Component.literal("Take Flight."));
 	}
 
 	@Override

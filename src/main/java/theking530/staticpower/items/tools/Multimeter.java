@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -44,12 +43,12 @@ public class Multimeter extends StaticPowerItem {
 					clearPendingLocation(item);
 
 					if (!CableNetworkManager.get(world).isTrackingCable(pos)) {
-						player.sendMessage(new TranslatableComponent("gui.staticpower.invalid_multimeter_second_location"), player.getUUID());
+						player.sendSystemMessage(Component.translatable("gui.staticpower.invalid_multimeter_second_location"));
 						return InteractionResult.PASS;
 					} else {
 						ServerCable firstPositionCable = CableNetworkManager.get(world).getCable(firstLocation);
 						if (firstPositionCable.getNetwork() != cable.getNetwork()) {
-							player.sendMessage(new TranslatableComponent("gui.staticpower.invalid_multimeter_second_location"), player.getUUID());
+							player.sendSystemMessage(Component.translatable("gui.staticpower.invalid_multimeter_second_location"));
 							return InteractionResult.PASS;
 						}
 					}
@@ -60,7 +59,7 @@ public class Multimeter extends StaticPowerItem {
 
 					module.getMultimeterOutput(messages, firstLocation, pos);
 					for (Component message : messages) {
-						player.sendMessage(message, player.getUUID());
+						player.sendSystemMessage(message);
 					}
 					return InteractionResult.SUCCESS;
 				} else {

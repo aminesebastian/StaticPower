@@ -1,7 +1,7 @@
 package theking530.staticpower.blockentities.components.control.processing;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class ProcessingCheckState {
 	public enum ProcessingState {
@@ -12,7 +12,7 @@ public class ProcessingCheckState {
 	private final MutableComponent errorMessage;
 
 	private ProcessingCheckState(ProcessingState state, String errorMessage) {
-		this(state, new TranslatableComponent(errorMessage));
+		this(state, Component.translatable(errorMessage));
 	}
 
 	private ProcessingCheckState(ProcessingState state, MutableComponent errorMessage) {
@@ -73,7 +73,7 @@ public class ProcessingCheckState {
 	}
 
 	public static ProcessingCheckState notEnoughPower(double requiredPower) {
-		return new ProcessingCheckState(ProcessingState.ERROR, new TranslatableComponent("gui.staticpower.alert.not_enough_power", requiredPower));
+		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticpower.alert.not_enough_power", requiredPower));
 	}
 
 	public static ProcessingCheckState powerOutputFull() {

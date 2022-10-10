@@ -12,13 +12,13 @@ import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -38,7 +38,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRecipe> {
 	public static final RecipeType<LumberMillRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "lumber_mill"), LumberMillRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
@@ -48,7 +48,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 
 	public LumberMillRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.LumberMill.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.LumberMill.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.LumberMill.get()));
 		pBar = new ArrowProgressBar(63, 19);
@@ -72,17 +72,12 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	}
 
 	@Override
-	public Class<? extends LumberMillRecipe> getRecipeClass() {
-		return LumberMillRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(LumberMillRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(LumberMillRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 41, 19, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 89, 17, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 119, 17, 0);
@@ -97,10 +92,10 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(LumberMillRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(LumberMillRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(Component.literal("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
@@ -127,8 +122,8 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 
 		// Add the fluid.
 		if (recipe.hasOutputFluid()) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 153, 6).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid()).setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false,
-					16, 48);
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 153, 6).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid())
+					.setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false, 16, 48);
 		}
 
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);

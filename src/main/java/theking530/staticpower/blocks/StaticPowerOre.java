@@ -4,6 +4,8 @@ import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,9 +61,8 @@ public class StaticPowerOre extends StaticPowerBlock {
 	 * Gets the amount of XP spawned when this ore is mined.
 	 */
 	@Override
-	public int getExpDrop(BlockState state, net.minecraft.world.level.LevelReader reader, BlockPos pos, int fortune,
-			int silktouch) {
-		return silktouch == 0 ? this.getExperience(RANDOM) : 0;
+	public int getExpDrop(BlockState state, LevelReader level, RandomSource randomSource, BlockPos pos, int fortuneLevel, int silkTouchLevel) {
+		return silkTouchLevel == 0 ? this.getExperience(randomSource) : 0;
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class StaticPowerOre extends StaticPowerBlock {
 	 * @param rand An instance of {@link Random} to use in the calculation.
 	 * @return The amount of XP to spawn, or 0 if no XP should be spawned.
 	 */
-	protected int getExperience(Random rand) {
+	protected int getExperience(RandomSource rand) {
 		if (maximumXP > 0) {
 			return Mth.nextInt(rand, minimumXP, maximumXP);
 		}

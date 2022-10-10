@@ -22,6 +22,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -33,11 +34,11 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
@@ -560,19 +561,23 @@ public class GuiDrawUtilities {
 	}
 
 	@SuppressWarnings("resource")
-	public static Matrix4f drawBlockState(PoseStack pose, BlockState state, BlockPos pos, IModelData modelData, Vector3D translation, Vector3D rotation, Vector3D scale) {
+	public static Matrix4f drawBlockState(PoseStack pose, BlockState state, BlockPos pos, ModelData modelData, Vector3D translation, Vector3D rotation, Vector3D scale) {
 		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		BakedModel model = renderer.getBlockModel(state);
-
-		IModelData data = model.getModelData(Minecraft.getInstance().level, pos, state, modelData);
+		ModelData data = model.getModelData(Minecraft.getInstance().level, pos, state, modelData);
+		ChunkRenderTypeSet renderTypes = model.getRenderTypes(state, Minecraft.getInstance().level.getRandom(), data);
 		pose.pushPose();
 		pose.translate(translation.getX(), translation.getY(), translation.getZ());
 		pose.scale(scale.getX(), scale.getY(), scale.getZ());
 		pose.translate(0.5f, 0.5f, 0.5f);
 		pose.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getX(), rotation.getY(), rotation.getZ())));
 		pose.translate(-0.5f, -0.5f, -0.5f);
-		renderer.renderSingleBlock(state, pose, buffer, 15728880, OverlayTexture.NO_OVERLAY, data);
+
+		for (RenderType type : renderTypes) {
+			renderer.renderSingleBlock(state, pose, buffer, 15728880, OverlayTexture.NO_OVERLAY, data, type);
+		}
+
 		buffer.endBatch();
 
 		Matrix4f output = pose.last().pose().copy();
@@ -588,15 +593,12 @@ public class GuiDrawUtilities {
 	}
 
 	public static TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {
-		Fluid fluid = fluidStack.getFluid();
-		FluidAttributes attributes = fluid.getAttributes();
-		ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
+		ResourceLocation fluidStill = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture();
 		return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
 	}
 
 	public static SDColor getFluidColor(FluidStack fluid) {
-		FluidAttributes attributes = fluid.getFluid().getAttributes();
-		int encodedFluidColor = attributes.getColor(fluid);
+		int encodedFluidColor = IClientFluidTypeExtensions.of(fluid.getFluid()).getTintColor();
 		return SDColor.fromEncodedInteger(encodedFluidColor).fromEightBitToFloat();
 	}
 

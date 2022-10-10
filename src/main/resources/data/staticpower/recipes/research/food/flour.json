@@ -21,7 +21,7 @@
 	],
 	"unlocks": [
 		{
-			"type": "machine_recipe",
+			"type": "machine",
 			"tooltip": {
 				"item": "staticpower:flour_wheat"
 			},
@@ -30,7 +30,7 @@
 			}
 		},
 		{
-			"type": "machine_recipe",
+			"type": "machine",
 			"tooltip": {
 				"item": "staticpower:flour_potato"
 			},
@@ -39,7 +39,7 @@
 			}
 		},
 		{
-			"type": "machine_recipe",
+			"type": "machine",
 			"tooltip": {
 				"item": "staticpower:bread_potato"
 			},

@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -148,7 +147,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 			return ProcessingCheckState.notEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get());
 
 		}
-		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) > fluidTankComponent.getCapacity()) {
+		if ((fluidTankComponent.getFluidAmount() + 1000) > fluidTankComponent.getCapacity()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
 
@@ -163,7 +162,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 	 */
 	public ProcessingCheckState pump() {
 		// Do nothing if the tank is near full.
-		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) > fluidTankComponent.getCapacity()) {
+		if ((fluidTankComponent.getFluidAmount() + 1000) > fluidTankComponent.getCapacity()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
 
@@ -203,7 +202,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 					powerStorage.drainPower(StaticPowerConfig.SERVER.pumpPowerUsage.get(), false);
 
 					// Pump the fluid.
-					FluidStack pumpedStack = new FluidStack(fluidState.getType(), FluidAttributes.BUCKET_VOLUME);
+					FluidStack pumpedStack = new FluidStack(fluidState.getType(), 1000);
 					fluidTankComponent.fill(pumpedStack, FluidAction.EXECUTE);
 
 					// Do not suck away the source block if this is a creative pump or its sucking

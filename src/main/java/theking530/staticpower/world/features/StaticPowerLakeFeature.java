@@ -1,13 +1,12 @@
 package theking530.staticpower.world.features;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -17,14 +16,13 @@ import theking530.staticcore.utilities.SDMath;
 public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfiguration> {
 	public StaticPowerLakeFeature(ResourceLocation registryName, Codec<StaticPowerLakeFeatureConfiguration> codec) {
 		super(codec);
-		this.setRegistryName(registryName);
 	}
 
 	@Override
 	public boolean place(FeaturePlaceContext<StaticPowerLakeFeatureConfiguration> configContext) {
 		BlockPos blockpos = configContext.origin();
 		WorldGenLevel worldgenlevel = configContext.level();
-		Random random = configContext.random();
+		RandomSource random = configContext.random();
 		StaticPowerLakeFeatureConfiguration config = configContext.config();
 
 		int depth = SDMath.getRandomIntInRange(config.getDepthProvider().getMinValue(), config.getDepthProvider().getMaxValue());
@@ -46,7 +44,7 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 				}
 				continue;
 			}
-			
+
 			// Don't let it go below the world.
 			if (configContext.origin().getY() - y <= worldgenlevel.getMinBuildHeight()) {
 				break;
@@ -84,7 +82,7 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 			if (dir == Direction.UP) {
 				continue;
 			}
-			
+
 			BlockPos offsetPos = pos.relative(dir);
 			BlockState state = level.getBlockState(offsetPos);
 			if (state.isAir()) {

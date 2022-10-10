@@ -9,8 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.IDrawable;
@@ -19,7 +17,6 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.blockentities.components.control.processing.AbstractProcesingComponent;
-import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
@@ -162,15 +159,15 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 		if (isProcessingErrored) {
 			String[] splitTooltips = processingErrorMessage.getString().split("\\$");
 			for (String tip : splitTooltips) {
-				tooltips.add(new TextComponent(tip));
+				tooltips.add(Component.literal(tip));
 			}
 		} else if (enableProgressTooltip) {
 			if (currentProgress > 0) {
 				MutableComponent remainingTime = GuiTextUtilities.formatTicksToTimeUnit((int) ((maxProgress - currentProgress) / (tickDownRate)));
-				tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime));
+				tooltips.add(Component.translatable("gui.staticpower.remaining").append(": ").append(remainingTime));
 			} else {
 				MutableComponent maxTime = GuiTextUtilities.formatTicksToTimeUnit((int) (maxProgress / (tickDownRate)));
-				tooltips.add(new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime));
+				tooltips.add(Component.translatable("gui.staticpower.max").append(": ").append(maxTime));
 			}
 		}
 	}

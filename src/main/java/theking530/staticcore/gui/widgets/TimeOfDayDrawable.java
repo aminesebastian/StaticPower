@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.utilities.Vector2D;
@@ -74,13 +73,13 @@ public class TimeOfDayDrawable extends AbstractGuiWidget<TimeOfDayDrawable> {
 		// Add the state of the day.
 		EStateOfDay dayState = getDayState();
 		if (dayState == EStateOfDay.DAY) {
-			output = new TranslatableComponent("gui.staticpower.day");
+			output = Component.translatable("gui.staticpower.day");
 		} else if (dayState == EStateOfDay.SUNSET) {
-			output = new TranslatableComponent("gui.staticpower.sunset");
+			output = Component.translatable("gui.staticpower.sunset");
 		} else if (dayState == EStateOfDay.SUNRISE) {
-			output = new TranslatableComponent("gui.staticpower.sunrise");
+			output = Component.translatable("gui.staticpower.sunrise");
 		} else {
-			output = new TranslatableComponent("gui.staticpower.night");
+			output = Component.translatable("gui.staticpower.night");
 		}
 
 		// Open parenthesis for the weather report.
@@ -88,11 +87,11 @@ public class TimeOfDayDrawable extends AbstractGuiWidget<TimeOfDayDrawable> {
 
 		// Add the weather report.
 		if (isRaining()) {
-			output.append(new TranslatableComponent("gui.staticpower.rainy"));
+			output.append(Component.translatable("gui.staticpower.rainy"));
 		} else if (isSnowing()) {
-			output.append(new TranslatableComponent("gui.staticpower.snowy"));
+			output.append(Component.translatable("gui.staticpower.snowy"));
 		} else {
-			output.append(new TranslatableComponent("gui.staticpower.clear"));
+			output.append(Component.translatable("gui.staticpower.clear"));
 		}
 
 		// Close parenthesis for the weather report.

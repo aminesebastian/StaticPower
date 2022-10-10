@@ -2,29 +2,28 @@ package theking530.staticpower.client.rendering.blocks;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.common.model.TransformationHelper;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.common.util.TransformationHelper;
 import theking530.staticpower.blockentities.power.lightsocket.BlockEntityLightSocket;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 
@@ -36,27 +35,27 @@ public class LightSocketModel extends AbstractBakedModel {
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public ModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull ModelData tileData) {
 		return tileData;
 	}
 
 	@SuppressWarnings("resource")
 	@Override
-	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
+	protected List<BakedQuad> getBakedQuadsFromModelData(@Nullable BlockState state, Direction side, @Nonnull RandomSource rand, @Nonnull ModelData data, RenderType renderLayer) {
 		// If the property is not there, return early.
-		if (!data.hasProperty(BlockEntityLightSocket.LIGHT_SOCKET_RENDERING_STATE)) {
+		if (!data.has(BlockEntityLightSocket.LIGHT_SOCKET_RENDERING_STATE)) {
 			return Collections.emptyList();
 		}
 
 		// If there is no bulb, just return the base
 		// model.
-		ItemStack bulb = data.getData(BlockEntityLightSocket.LIGHT_SOCKET_RENDERING_STATE).bulb();
+		ItemStack bulb = data.get(BlockEntityLightSocket.LIGHT_SOCKET_RENDERING_STATE).bulb();
 		if (bulb.isEmpty()) {
-			return BaseModel.getQuads(state, side, rand, data);
+			return BaseModel.getQuads(state, side, rand, data, renderLayer);
 		}
 
 		// Create the output array.
-		List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
+		List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data, renderLayer);
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
 		newQuads.addAll(baseQuads);
 
@@ -81,15 +80,9 @@ public class LightSocketModel extends AbstractBakedModel {
 
 		// Transform the bulbs quads.
 		BakedModel bulbModel = Minecraft.getInstance().getItemRenderer().getModel(bulb, Minecraft.getInstance().level, null, 0);
-		List<BakedQuad> bakedCardQuads = transformQuads(bulbModel, offset, scale, TransformationHelper.quatFromXYZ(rotation, true), side, state, rand);
+		List<BakedQuad> bakedCardQuads = transformQuads(bulbModel, offset, scale, TransformationHelper.quatFromXYZ(rotation, true), side, state, rand, renderLayer);
 		newQuads.addAll(bakedCardQuads);
 		return newQuads.build();
-	}
-
-	protected ModelDataMap getEmptyIModelData() {
-		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		ModelDataMap modelDataMap = builder.build();
-		return modelDataMap;
 	}
 
 	@Override

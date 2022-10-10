@@ -1,7 +1,7 @@
 package theking530.staticcore.gui.widgets.tabs;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,7 +23,7 @@ public class GuiMachineFluidTab extends AbstractInfoTab {
 	public void tick() {
 		super.tick();
 		clear();
-		addKeyValueTwoLiner("Filled", new TextComponent("Filled"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getFilledPerTick()), ChatFormatting.AQUA);
-		addKeyValueTwoLiner("Drained", new TextComponent("Drained"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getDrainedPerTick()), ChatFormatting.GRAY);
+		addKeyValueTwoLiner("Filled", Component.literal("Filled"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getFilledPerTick()), ChatFormatting.AQUA);
+		addKeyValueTwoLiner("Drained", Component.literal("Drained"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getDrainedPerTick()), ChatFormatting.GRAY);
 	}
 }

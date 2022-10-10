@@ -1,7 +1,7 @@
 package theking530.staticcore.gui.widgets.tabs;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
@@ -18,10 +18,10 @@ public class GuiPassiveHeatTab extends GuiMachineHeatTab {
 	public void tick() {
 		super.tick();
 		clear();
-		addKeyValueTwoLiner("Heating", new TextComponent("Heating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick()), ChatFormatting.RED);
-		addKeyValueTwoLiner("Cooling", new TextComponent("Cooling"), GuiTextUtilities.formatHeatRateToString(heatStorage.getCooledPerTick()), ChatFormatting.AQUA);
+		addKeyValueTwoLiner("Heating", Component.literal("Heating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick()), ChatFormatting.RED);
+		addKeyValueTwoLiner("Cooling", Component.literal("Cooling"), GuiTextUtilities.formatHeatRateToString(heatStorage.getCooledPerTick()), ChatFormatting.AQUA);
 		if (heatStorage.getConductivity() != 1) {
-			addKeyValueTwoLiner("Conductivity", new TextComponent("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getConductivity()),
+			addKeyValueTwoLiner("Conductivity", Component.literal("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getConductivity()),
 					ChatFormatting.GREEN);
 		}
 	}

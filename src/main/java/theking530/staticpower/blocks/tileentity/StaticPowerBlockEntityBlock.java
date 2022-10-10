@@ -169,7 +169,7 @@ public abstract class StaticPowerBlockEntityBlock extends StaticPowerBlock imple
 	 */
 	public void enterGuiScreen(BlockEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (!world.isClientSide) {
-			NetworkHooks.openGui((ServerPlayer) player, tileEntity, pos);
+			NetworkHooks.openScreen((ServerPlayer) player, tileEntity, pos);
 		}
 	}
 

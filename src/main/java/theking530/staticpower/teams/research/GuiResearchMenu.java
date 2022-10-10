@@ -20,9 +20,9 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.TimeOfDayDrawable;
 import theking530.staticcore.gui.widgets.containers.PanBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
-import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StringUtilities;
 import theking530.staticcore.utilities.Vector2D;
@@ -85,7 +85,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				research = getResearchManager().getLastCompletedResearch();
 			}
 		}
-		
+
 		selectedResearchWidget.setResearch(research, researchInstance);
 		currentResearch = research.getId();
 

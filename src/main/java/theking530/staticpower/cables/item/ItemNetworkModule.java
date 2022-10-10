@@ -19,7 +19,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -886,7 +885,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 		}
 
 		String itemsInTransit = new MetricConverter(activeParcels).getValueAsString(true);
-		output.add(new TextComponent(String.format("Contains: %1$s items in transit.", itemsInTransit)));
+		output.add(Component.literal(String.format("Contains: %1$s items in transit.", itemsInTransit)));
 	}
 
 	@Override

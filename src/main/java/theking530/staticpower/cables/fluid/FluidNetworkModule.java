@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -272,9 +271,9 @@ public class FluidNetworkModule extends CableNetworkModule {
 		String gainedPerTick = GuiTextUtilities.formatFluidRateToString(capability.get().getFluidStorage().getFilledPerTick()).getString();
 		String drainedPerTick = GuiTextUtilities.formatFluidRateToString(capability.get().getFluidStorage().getDrainedPerTick()).getString();
 
-		output.add(new TextComponent(String.format("Pipe Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluidAtPos,
+		output.add(Component.literal(String.format("Pipe Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluidAtPos,
 				capability.get().getFluidStorage().getFluid().getDisplayName().getString(), capacityAtPos)));
-		output.add(new TextComponent(String.format("Gained: %1$smB Drained: %2$s", drainedPerTick, gainedPerTick)));
+		output.add(Component.literal(String.format("Gained: %1$smB Drained: %2$s", drainedPerTick, gainedPerTick)));
 	}
 
 	@Nullable

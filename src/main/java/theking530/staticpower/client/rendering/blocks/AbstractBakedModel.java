@@ -5,33 +5,32 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
-import net.minecraftforge.client.model.pipeline.TRSRTransformer;
-import net.minecraftforge.common.model.TransformationHelper;
+import net.minecraftforge.client.model.IQuadTransformer;
+import net.minecraftforge.client.model.QuadTransformers;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.common.util.TransformationHelper;
 
 public abstract class AbstractBakedModel implements BakedModel {
 	protected static final float UNIT = 1.0f / 16.0f;
@@ -65,18 +64,19 @@ public abstract class AbstractBakedModel implements BakedModel {
 
 	@Override
 	@Nonnull
-	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-		return getBakedQuadsFromIModelData(state, side, rand, extraData);
+	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData data, @Nullable RenderType renderType) {
+		return getBakedQuadsFromModelData(state, side, rand, data, renderType);
 	}
 
-	protected abstract List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data);
+	protected abstract List<BakedQuad> getBakedQuadsFromModelData(@Nullable BlockState state, Direction side, @Nonnull RandomSource rand, @Nonnull ModelData data,
+			RenderType renderLayer);
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
-		return Collections.emptyList();
+	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
+		return getQuads(state, side, rand, ModelData.EMPTY, null);
 	}
 
-	protected List<BakedQuad> rotateQuadsToFaceDirection(BakedModel model, Direction desiredRotation, Direction drawingSide, BlockState state, Random rand) {
+	protected List<BakedQuad> rotateQuadsToFaceDirection(BakedModel model, Direction desiredRotation, Direction drawingSide, BlockState state, RandomSource rand) {
 		Transformation transformation = SIDE_TRANSFORMS.get(desiredRotation);
 		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
@@ -87,11 +87,9 @@ public abstract class AbstractBakedModel implements BakedModel {
 
 		// Build the output.
 		try {
-			for (BakedQuad quad : model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE)) {
-				BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
-				TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
-				quad.pipe(transformer);
-				quads.add(builder.build());
+			IQuadTransformer transformer = QuadTransformers.applying(transformation);
+			for (BakedQuad quad : model.getQuads(state, drawingSide, rand, ModelData.EMPTY, null)) {
+				quads.add(transformer.process(quad));
 			}
 		} catch (Exception e) {
 			LOGGER.error(String.format("An error occured when attempting to rotate a model to face the desired rotation. Model: %1$s.", model), e);
@@ -100,10 +98,11 @@ public abstract class AbstractBakedModel implements BakedModel {
 		return quads.build();
 	}
 
-	protected List<BakedQuad> transformQuads(BakedModel model, Vector3f translation, Vector3f scale, Quaternion rotation, Direction drawingSide, BlockState state, Random rand) {
+	protected List<BakedQuad> transformQuads(BakedModel model, Vector3f translation, Vector3f scale, Quaternion rotation, Direction drawingSide, BlockState state,
+			RandomSource rand, @Nullable RenderType renderType) {
 		// Build the output.
 		if (model != null) {
-			return transformQuads(model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE), translation, scale, rotation);
+			return transformQuads(model.getQuads(state, drawingSide, rand, ModelData.EMPTY, renderType), translation, scale, rotation);
 		}
 
 		return Collections.emptyList();
@@ -117,11 +116,9 @@ public abstract class AbstractBakedModel implements BakedModel {
 		// Build the output.
 		if (inQuads != null && inQuads.size() > 0) {
 			try {
+				IQuadTransformer transformer = QuadTransformers.applying(transformation);
 				for (BakedQuad quad : inQuads) {
-					BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
-					TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
-					quad.pipe(transformer);
-					quads.add(builder.build());
+					quads.add(transformer.process(quad));
 				}
 			} catch (Exception e) {
 				LOGGER.error("An error occured when attempting to translate the quads of a model.", e);
@@ -155,12 +152,6 @@ public abstract class AbstractBakedModel implements BakedModel {
 	@Override
 	public TextureAtlasSprite getParticleIcon() {
 		return BaseModel.getParticleIcon();
-	}
-
-	@Override
-	public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
-		BaseModel.handlePerspective(cameraTransformType, mat);
-		return this;
 	}
 
 	@Override

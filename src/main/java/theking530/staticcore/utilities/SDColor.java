@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.JsonObject;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -15,8 +16,8 @@ import net.minecraft.network.FriendlyByteBuf;
  */
 public class SDColor extends AbstractVector<SDColor> {
 
-	public static final List<String> DYE_COLORS = Arrays.asList("white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green",
-			"red", "black");
+	public static final List<String> DYE_COLORS = Arrays.asList("white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple",
+			"blue", "brown", "green", "red", "black");
 
 	public static final SDColor EIGHT_BIT_RED = new SDColor(255.0f, 0.0f, 0.0f, 255.0f);
 	public static final SDColor EIGHT_BIT_WHITE = new SDColor(255.0f, 255.0f, 255.0f, 255.0f);
@@ -142,6 +143,10 @@ public class SDColor extends AbstractVector<SDColor> {
 	@Override
 	public SDColor copy() {
 		return new SDColor(values[0], values[1], values[2], values[3]);
+	}
+
+	public Vector3f toVector3f() {
+		return new Vector3f(getRed(), getGreen(), getBlue());
 	}
 
 	public void toBuffer(FriendlyByteBuf buff) {

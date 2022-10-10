@@ -11,9 +11,8 @@ import org.lwjgl.glfw.GLFW;
 import com.mojang.blaze3d.platform.InputConstants;
 
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 
 public class ModKeyBindings {
 	private static final List<KeyBinding> BINDINGS = new ArrayList<>();
@@ -66,9 +65,9 @@ public class ModKeyBindings {
 	 * 
 	 * @param event
 	 */
-	public static void registerBindings(FMLClientSetupEvent event) {
+	public static void registerBindings(RegisterKeyMappingsEvent event) {
 		for (KeyBinding binding : BINDINGS) {
-			ClientRegistry.registerKeyBinding(binding.mapping);
+			event.register(binding.mapping);
 		}
 	}
 
@@ -77,7 +76,7 @@ public class ModKeyBindings {
 	 * 
 	 * @param event
 	 */
-	public static void onKeyEvent(KeyInputEvent event) {
+	public static void onKeyEvent(InputEvent.Key event) {
 		for (KeyBinding binding : BINDINGS) {
 			if (binding.mapping.getKey().getValue() == event.getKey() && binding.handle(event)) {
 				if (CALLBACKS.containsKey(binding)) {
@@ -131,7 +130,7 @@ public class ModKeyBindings {
 		 * @param event
 		 * @return
 		 */
-		private boolean handle(KeyInputEvent event) {
+		private boolean handle(InputEvent.Key event) {
 			// If this was a press event, capture that.
 			boolean tempIsDown = event.getAction() == GLFW.GLFW_PRESS || event.getAction() == GLFW.GLFW_REPEAT;
 			justPressed = !isDown && tempIsDown;

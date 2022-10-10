@@ -1,8 +1,7 @@
 package theking530.staticcore.gui.widgets.tabs;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,8 +22,8 @@ public class GuiResearchTab extends AbstractInfoTab {
 	public GuiResearchTab(TeamComponent teamComponent) {
 		super("gui.staticpower.tab_title.team", new SDColor(255, 255, 255), 100, new SDColor(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(Blocks.LECTERN.asItem()));
 		this.teamComponent = teamComponent;
-		registerWidget(setTeamButton = new TextButton(14, 18, 16, new TranslatableComponent("gui.staticpower.set_team").getString(), this::setTeamClicked));
-		setTeamButton.setTooltip(new TranslatableComponent("gui.staticpower.machine_set_team"));
+		registerWidget(setTeamButton = new TextButton(14, 18, 16, Component.translatable("gui.staticpower.set_team").getString(), this::setTeamClicked));
+		setTeamButton.setTooltip(Component.translatable("gui.staticpower.machine_set_team"));
 	}
 
 	public void setTeamClicked(StandardButton button, MouseButton mouseButton) {
@@ -38,9 +37,9 @@ public class GuiResearchTab extends AbstractInfoTab {
 	public void tick() {
 		super.tick();
 		if (teamComponent.getOwningTeam() != null) {
-			addKeyValueTwoLiner("team_name", new TextComponent("Owners"), new TextComponent(teamComponent.getOwningTeam().getName()), ChatFormatting.AQUA);
+			addKeyValueTwoLiner("team_name", Component.literal("Owners"), Component.literal(teamComponent.getOwningTeam().getName()), ChatFormatting.AQUA);
 		} else {
-			addLine("team_name", ChatFormatting.RED, new TextComponent("Missing Team!"));
+			addLine("team_name", ChatFormatting.RED, Component.literal("Missing Team!"));
 		}
 
 		setTeamButton.setPosition(setTeamButton.getPosition().getX(), getHeight() - 28);

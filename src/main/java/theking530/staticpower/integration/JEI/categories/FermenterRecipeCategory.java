@@ -12,13 +12,13 @@ import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -37,7 +37,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterRecipe> {
 	public static final RecipeType<FermenterRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "fermenter"), FermenterRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -46,7 +46,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 	public FermenterRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Fermenter.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.Fermenter.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Fermenter.get()));
 	}
@@ -69,17 +69,12 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	}
 
 	@Override
-	public Class<? extends FermenterRecipe> getRecipeClass() {
-		return FermenterRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(FermenterRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(FermenterRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		// Draw the slots.
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
@@ -103,12 +98,12 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(FermenterRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(FermenterRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 
 		// Add a tooltip for the energy bar.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ")
+			output.add(Component.literal("Usage: ")
 					.append(PowerTextFormatting.formatPowerToString(StaticPowerConfig.SERVER.fermenterPowerUsage.get() * StaticPowerConfig.SERVER.fermenterProcessingTime.get())));
 
 		}

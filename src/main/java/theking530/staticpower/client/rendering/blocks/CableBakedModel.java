@@ -3,7 +3,6 @@ package theking530.staticpower.client.rendering.blocks;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,12 +16,12 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.cablenetwork.CableRenderingState;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
@@ -47,11 +46,11 @@ public class CableBakedModel extends AbstractBakedModel {
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public ModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull ModelData tileData) {
 		// If we're missing a property, just return the default core model.
-		if (tileData.hasProperty(AbstractCableProviderComponent.CABLE_RENDERING_STATE)) {
+		if (tileData.has(AbstractCableProviderComponent.CABLE_RENDERING_STATE)) {
 			// Get the model properties and set the rendering world.
-			CableRenderingState renderingState = tileData.getData(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
+			CableRenderingState renderingState = tileData.get(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
 			renderingState.setRenderingLevel(world);
 		} else {
 			LOGGER.error("Cable is missing one of the required model data properties.");
@@ -60,18 +59,18 @@ public class CableBakedModel extends AbstractBakedModel {
 	}
 
 	@Override
-	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
+	protected List<BakedQuad> getBakedQuadsFromModelData(@Nullable BlockState state, Direction side, @Nonnull RandomSource rand, @Nonnull ModelData data, RenderType renderLayer) {
 		// If we're missing a property, just return the default core model.
-		if (!data.hasProperty(AbstractCableProviderComponent.CABLE_RENDERING_STATE)) {
+		if (!data.has(AbstractCableProviderComponent.CABLE_RENDERING_STATE)) {
 			LOGGER.error("Cable is missing one of the required model data properties.");
-			return BaseModel.getQuads(state, side, rand, data);
+			return BaseModel.getQuads(state, side, rand, data, renderLayer);
 		}
 
 		// Build the proper quad array.
 		List<BakedQuad> newQuads = new ArrayList<BakedQuad>();
 
 		// Get the model properties.
-		CableRenderingState renderingState = data.getData(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
+		CableRenderingState renderingState = data.get(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
 		if (renderingState == null) {
 			return Collections.emptyList();
 		}
@@ -79,11 +78,10 @@ public class CableBakedModel extends AbstractBakedModel {
 		// Render the covers when we're on the NULL render side. Reason for this is, as
 		// much as we lose some render optimization, if we don't do this, chests placed
 		// on a cover will stop rendering the cover.
-		RenderType layer = MinecraftForgeClient.getRenderType();
 		if (side == null) {
 			for (Direction dir : Direction.values()) {
 				if (renderingState.hasCover(dir)) {
-					coverBuilder.buildFacadeQuads(state, renderingState, layer, rand, newQuads, dir);
+					coverBuilder.buildFacadeQuads(state, renderingState, renderLayer, rand, newQuads, dir);
 				}
 			}
 		}
@@ -101,7 +99,7 @@ public class CableBakedModel extends AbstractBakedModel {
 			}
 		} else {
 			// Add the core.
-			newQuads.addAll(BaseModel.getQuads(state, side, rand, data));
+			newQuads.addAll(BaseModel.getQuads(state, side, rand, data, renderLayer));
 
 			// Add the attachments and connecting pieces.
 			for (Direction dir : Direction.values()) {

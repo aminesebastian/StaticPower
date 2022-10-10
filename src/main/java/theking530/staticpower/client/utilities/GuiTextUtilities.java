@@ -7,8 +7,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticpower.utilities.MetricConverter;
 
 /**
@@ -20,16 +18,16 @@ import theking530.staticpower.utilities.MetricConverter;
  */
 public class GuiTextUtilities {
 	/** Translation text component for millibuckets (mB). */
-	public static final TranslatableComponent FLUID_UNIT_TRANSLATION = new TranslatableComponent("gui.staticpower.fluid_unit");
+	public static final MutableComponent FLUID_UNIT_TRANSLATION = Component.translatable("gui.staticpower.fluid_unit");
 	/** Translation text component for millibuckets Per Tick (mB/t). */
-	public static final TranslatableComponent FLUID_RATE_TRANSLATION = new TranslatableComponent("gui.staticpower.fluid_unit_per_tick");
+	public static final MutableComponent FLUID_RATE_TRANSLATION = Component.translatable("gui.staticpower.fluid_unit_per_tick");
 
 	/** Translation text component for heat (H). */
-	public static final TranslatableComponent HEAT_UNIT_TRANSLATION = new TranslatableComponent("gui.staticpower.heat_unit");
+	public static final MutableComponent HEAT_UNIT_TRANSLATION = Component.translatable("gui.staticpower.heat_unit");
 	/** Translation text component for Heat Per Tick (H/t). */
-	public static final TranslatableComponent HEAT_RATE_TRANSLATION = new TranslatableComponent("gui.staticpower.heat_unit_per_tick");
+	public static final MutableComponent HEAT_RATE_TRANSLATION = Component.translatable("gui.staticpower.heat_unit_per_tick");
 	/** Translation text component for Conductivity. */
-	public static final TranslatableComponent HEAT_CONDUCTIVITY_TRANSLATION = new TranslatableComponent("gui.staticpower.heat_conductivity_unit");
+	public static final MutableComponent HEAT_CONDUCTIVITY_TRANSLATION = Component.translatable("gui.staticpower.heat_conductivity_unit");
 
 	/** Single instance of number formatter with two decimal places.. */
 	private static final NumberFormat NUMBER_FORMATTER_TWO_DECIMAL;
@@ -56,7 +54,7 @@ public class GuiTextUtilities {
 	}
 
 	public static MutableComponent formatTicksToTimeUnit(int ticks) {
-		return new TranslatableComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(ticks / 20)).append(new TranslatableComponent("gui.staticpower.seconds.short"));
+		return Component.translatable(NUMBER_FORMATTER_ONE_DECIMAL.format(ticks / 20)).append(Component.translatable("gui.staticpower.seconds.short"));
 	}
 
 	public static MutableComponent formatHeatToString(int currentHeat, int capacity) {
@@ -74,10 +72,10 @@ public class GuiTextUtilities {
 
 		// If the value is equal to the integer max, make it infinite.
 		if ((int) heat == Integer.MAX_VALUE) {
-			output = new TextComponent("∞");
+			output = Component.literal("∞");
 		} else {
 			MetricConverter metricEnergy = new MetricConverter(heat, -1);
-			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
+			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
 
 			if (includeMetricUnit) {
 				output.append(metricEnergy.getSuffix());
@@ -96,10 +94,10 @@ public class GuiTextUtilities {
 
 		// If the value is equal to the integer max, make it infinite.
 		if ((int) heatTransferRate == Integer.MAX_VALUE) {
-			output = new TextComponent("∞");
+			output = Component.literal("∞");
 		} else {
 			MetricConverter metricRate = new MetricConverter(heatTransferRate, -1);
-			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).append(" ").append(metricRate.getSuffix());
+			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).append(" ").append(metricRate.getSuffix());
 		}
 
 		return output.append(HEAT_RATE_TRANSLATION);
@@ -111,10 +109,10 @@ public class GuiTextUtilities {
 
 		// If the value is equal to the integer max, make it infinite.
 		if ((int) conductivity == Integer.MAX_VALUE) {
-			output = new TextComponent("∞");
+			output = Component.literal("∞");
 		} else {
 			MetricConverter metricRate = new MetricConverter(conductivity);
-			output = new TextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).append(metricRate.getSuffix());
+			output = Component.literal(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).append(metricRate.getSuffix());
 		}
 
 		return output.append(HEAT_CONDUCTIVITY_TRANSLATION);
@@ -135,10 +133,10 @@ public class GuiTextUtilities {
 
 		// If the value is equal to the integer max, make it infinite.
 		if ((int) fluid == Integer.MAX_VALUE) {
-			output = new TextComponent("∞");
+			output = Component.literal("∞");
 		} else {
 			MetricConverter metricFluid = new MetricConverter(fluid, -1);
-			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricFluid.getValue()));
+			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricFluid.getValue()));
 
 			if (includeMetricUnit) {
 				output.append(metricFluid.getSuffix());
@@ -155,13 +153,13 @@ public class GuiTextUtilities {
 
 	public static MutableComponent formatUnitRateToString(double rate, String unlocalizedUnit) {
 		MutableComponent output = formatUnitRateToString(rate);
-		output.append(new TranslatableComponent(unlocalizedUnit));
+		output.append(Component.translatable(unlocalizedUnit));
 		return output;
 	}
 
 	public static MutableComponent formatUnitRateToString(double rate) {
 		MetricConverter metricPerUnit = new MetricConverter(rate);
-		MutableComponent output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricPerUnit.getValue()));
+		MutableComponent output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricPerUnit.getValue()));
 		output.append(metricPerUnit.getSuffix());
 		return output;
 	}
@@ -176,37 +174,37 @@ public class GuiTextUtilities {
 
 		// If the value is equal to the integer max, make it infinite.
 		if ((int) fluidRate == Integer.MAX_VALUE) {
-			output = new TextComponent("∞");
+			output = Component.literal("∞");
 		} else {
 			MetricConverter metricRate = new MetricConverter(fluidRate, -1);
-			output = new TextComponent(NUMBER_FORMATTER_NO_DECIMAL.format(metricRate.getValue())).append(includeSpace ? " " : "").append(metricRate.getSuffix());
+			output = Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(metricRate.getValue())).append(includeSpace ? " " : "").append(metricRate.getSuffix());
 		}
 
 		return output.append(FLUID_RATE_TRANSLATION);
 	}
 
 	public static MutableComponent formatNumberAsString(double number) {
-		return new TextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(number));
+		return Component.literal(NUMBER_FORMATTER_TWO_DECIMAL.format(number));
 	}
 
 	public static MutableComponent formatNumberAsStringNoDecimal(double number) {
-		return new TextComponent(NUMBER_FORMATTER_NO_DECIMAL.format(Double.isNaN(number) ? 0 : number));
+		return Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(Double.isNaN(number) ? 0 : number));
 	}
 
 	public static MutableComponent formatNumberAsStringOneDecimal(double number) {
-		return new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(number));
+		return Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(number));
 	}
 
 	public static MutableComponent formatNumberAsString(int number) {
-		return new TextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(number));
+		return Component.literal(NUMBER_FORMATTER_TWO_DECIMAL.format(number));
 	}
 
 	public static MutableComponent formatNumberAsPercentStringNoDecimal(double number) {
-		return new TextComponent(NUMBER_FORMATTER_NO_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100)).append("%");
+		return Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100)).append("%");
 	}
 
 	public static MutableComponent formatNumberAsPercentStringOneDecimal(double number) {
-		return new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100)).append("%");
+		return Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100)).append("%");
 	}
 
 	public static void addColoredBulletTooltip(List<Component> tooltip, String key, ChatFormatting keyColor, String value) {
@@ -218,7 +216,7 @@ public class GuiTextUtilities {
 	}
 
 	public static void addColoredBulletTooltip(List<Component> tooltip, String key, Style keyStyle, String value, Style valueStyle) {
-		tooltip.add(new TranslatableComponent(key).setStyle(keyStyle));
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent(value).setStyle(valueStyle)));
+		tooltip.add(Component.translatable(key).setStyle(keyStyle));
+		tooltip.add(Component.literal("• ").append(Component.translatable(value).setStyle(valueStyle)));
 	}
 }

@@ -18,7 +18,8 @@ public class ClientSoundComponentProxy implements ISoundComponentProxy {
 	public void startPlayingSound(Level world, ResourceLocation soundIdIn, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
 		if (world.isClientSide) {
 			if (currentlyPlayingSound == null || !Minecraft.getInstance().getSoundManager().isActive(currentlyPlayingSound)) {
-				currentlyPlayingSound = new SimpleSoundInstance(soundIdIn, SoundSource.BLOCKS, volumeIn, pitchIn, true, 0, SoundInstance.Attenuation.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
+				currentlyPlayingSound = new SimpleSoundInstance(soundIdIn, SoundSource.BLOCKS, volumeIn, pitchIn, Minecraft.getInstance().level.getRandom(), true, 0,
+						SoundInstance.Attenuation.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
 				Minecraft.getInstance().getSoundManager().play(currentlyPlayingSound);
 			}
 		}

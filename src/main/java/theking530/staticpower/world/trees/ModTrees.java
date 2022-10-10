@@ -3,7 +3,6 @@ package theking530.staticpower.world.trees;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import theking530.staticpower.world.trees.rubbertree.RubberTreePlacer;
 
 public class ModTrees {
@@ -25,9 +24,4 @@ public class ModTrees {
 		return tree;
 	}
 
-	public static void addTreeFeatures(BiomeLoadingEvent event) {
-		for (AbstractStaticPowerTree tree : TREES) {
-			tree.addTreeToBiome(event);
-		}
-	}
 }

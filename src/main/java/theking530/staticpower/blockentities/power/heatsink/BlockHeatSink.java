@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -53,7 +52,7 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 		super.getAdvancedTooltip(stack, worldIn, tooltip);
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(tierObject.heatSinkElectricHeatGeneration.get()));
-		tooltip.add(new TextComponent(ChatFormatting.GRAY + "Generation Usage: ")
+		tooltip.add(Component.literal(ChatFormatting.GRAY + "Generation Usage: ")
 				.append(PowerTextFormatting.formatPowerRateToString(tierObject.heatSinkElectricHeatPowerUsage.get())).withStyle(ChatFormatting.RED));
 	}
 

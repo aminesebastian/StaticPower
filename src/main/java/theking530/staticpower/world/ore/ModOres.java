@@ -1,11 +1,8 @@
 package theking530.staticpower.world.ore;
 
 import net.minecraft.data.worldgen.features.OreFeatures;
-import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import theking530.staticcore.world.OreRegistrationBuilder;
 import theking530.staticcore.world.OreRegistrationBuilder.OreGenerationResult;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.init.ModBlocks;
 
 public class ModOres {
@@ -57,83 +54,83 @@ public class ModOres {
 	public static final OreGenerationResult NETHER_TUNGSTEN = OreRegistrationBuilder.createOre("ore_nether_tungsten")
 			.source(ModBlocks.OreNetherTungsten.get(), OreFeatures.NETHER_ORE_REPLACEABLES).levelRange(0, 100).veinSize(5).rarity(12).register();
 
-	public static void addOreGenFeatures(BiomeLoadingEvent event) {
-		// Overworld
-		if (StaticPowerConfig.SERVER.generateZincOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ZINC.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateMagnesiumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MAGENSIUM.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateTinOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TIN.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateLeadOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, LEAD.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateSilverOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, SILVER.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateTungstenOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TUNGSTEN.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generatePlatinumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, PLATINUM.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateAluminumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ALUMINUM.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateSapphireOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, SAPPHIRE.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateRubyOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, RUBY.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateRustyIronOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, RUSTY_IRON_ORE.getFeature());
-		}
-
-		// Deepslate
-		if (StaticPowerConfig.SERVER.generateDeepslateZincOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_ZINC.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateDeepslateMagnesiumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_MAGENSIUM.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateDeepslateTinOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_TIN.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateDeepslateLeadOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_LEAD.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateDeepslateSilverOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_SILVER.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateDeepslateTungstenOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_TUNGSTEN.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateDeepslatePlatinumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_PLATINUM.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateDeepslateAluminumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_ALUMINUM.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateDeepslateSapphireOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_SAPPHIRE.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateDeepslateRubyOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_RUBY.getFeature());
-		}
-
-		// Nether
-		if (StaticPowerConfig.SERVER.generateNetherSilverOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, NETHER_SILVER.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateNetherPlatinumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, NETHER_PLATINUM.getFeature());
-		}
-		if (StaticPowerConfig.SERVER.generateNetherTungstenOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, NETHER_TUNGSTEN.getFeature());
-		}
-	}
+//	public static void addOreGenFeatures(BiomeLoadingEvent event) {
+//		// Overworld
+//		if (StaticPowerConfig.SERVER.generateZincOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ZINC.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateMagnesiumOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MAGENSIUM.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateTinOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TIN.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateLeadOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, LEAD.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateSilverOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, SILVER.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateTungstenOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TUNGSTEN.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generatePlatinumOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, PLATINUM.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateAluminumOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ALUMINUM.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateSapphireOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, SAPPHIRE.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateRubyOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, RUBY.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateRustyIronOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, RUSTY_IRON_ORE.getFeature());
+//		}
+//
+//		// Deepslate
+//		if (StaticPowerConfig.SERVER.generateDeepslateZincOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_ZINC.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateDeepslateMagnesiumOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_MAGENSIUM.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateDeepslateTinOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_TIN.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateDeepslateLeadOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_LEAD.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateDeepslateSilverOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_SILVER.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateDeepslateTungstenOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_TUNGSTEN.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateDeepslatePlatinumOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_PLATINUM.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateDeepslateAluminumOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_ALUMINUM.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateDeepslateSapphireOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_SAPPHIRE.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateDeepslateRubyOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_RUBY.getFeature());
+//		}
+//
+//		// Nether
+//		if (StaticPowerConfig.SERVER.generateNetherSilverOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, NETHER_SILVER.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateNetherPlatinumOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, NETHER_PLATINUM.getFeature());
+//		}
+//		if (StaticPowerConfig.SERVER.generateNetherTungstenOre.get()) {
+//			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, NETHER_TUNGSTEN.getFeature());
+//		}
+//	}
 }

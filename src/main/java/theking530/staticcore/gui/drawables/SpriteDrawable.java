@@ -3,9 +3,9 @@ package theking530.staticcore.gui.drawables;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -70,7 +70,7 @@ public class SpriteDrawable implements IDrawable {
 			// Check to see if this is a REAL sprite, or just a texture. We could also just
 			// check for a file extension, but this seems safer.
 			@SuppressWarnings("deprecation")
-			TextureAtlasSprite atlasSprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(sprite);
+			TextureAtlasSprite atlasSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(sprite);
 			if (atlasSprite.getName().toString().equals("minecraft:missingno")) {
 				GuiDrawUtilities.drawTexture(pose, sprite, size.getX(), size.getY(), x, y, z, getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);
 			} else {

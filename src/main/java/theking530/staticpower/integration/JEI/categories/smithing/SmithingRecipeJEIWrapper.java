@@ -8,6 +8,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 
@@ -25,7 +26,7 @@ public class SmithingRecipeJEIWrapper implements Recipe<Container> {
 		this.input = input;
 		this.inputIng = Ingredient.of(input);
 		this.output = output;
-		this.id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + output.getItem().getRegistryName().getPath().replace(":", "/"));
+		this.id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + ForgeRegistries.ITEMS.getKey(output.getItem()).getPath().replace(":", "/"));
 	}
 
 	public AutoSmithRecipe getRecipe() {

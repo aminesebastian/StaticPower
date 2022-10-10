@@ -1,9 +1,7 @@
 package theking530.staticpower.init;
 
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -115,39 +113,5 @@ public class ModRecipeSerializers {
 
 	public static void init(IEventBus eventBus) {
 		SERIALIZERS.register(eventBus);
-	}
-
-	public static void onRegisterRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-		Registry.register(Registry.RECIPE_TYPE, AutoSmithRecipe.ID, AutoSmithRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, BottleRecipe.ID, BottleRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CastingRecipe.ID, CastingRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CauldronRecipe.ID, CauldronRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CentrifugeRecipe.ID, CentrifugeRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CondensationRecipe.ID, CondensationRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CoverRecipe.ID, CoverRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CrucibleRecipe.ID, CrucibleRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, EnchanterRecipe.ID, EnchanterRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, EvaporatorRecipe.ID, EvaporatorRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FermenterRecipe.ID, FermenterRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FertalizerRecipe.ID, FertalizerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FluidGeneratorRecipe.ID, FluidGeneratorRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FluidInfusionRecipe.ID, FluidInfusionRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FormerRecipe.ID, FormerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FusionFurnaceRecipe.ID, FusionFurnaceRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, GrinderRecipe.ID, GrinderRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, HammerRecipe.ID, HammerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, LatheRecipe.ID, LatheRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, LumberMillRecipe.ID, LumberMillRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, MixerRecipe.ID, MixerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, RefineryRecipe.ID, RefineryRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, Research.ID, Research.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, SolderingRecipe.ID, SolderingRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, SqueezerRecipe.ID, SqueezerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, ThermalConductivityRecipe.ID, ThermalConductivityRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, TumblerRecipe.ID, TumblerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, TurbineRecipe.ID, TurbineRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, VulcanizerRecipe.ID, VulcanizerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, AlloyFurnaceRecipe.ID, AlloyFurnaceRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, HydroponicFarmingRecipe.ID, HydroponicFarmingRecipe.RECIPE_TYPE);
 	}
 }

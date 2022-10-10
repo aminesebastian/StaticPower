@@ -6,10 +6,9 @@ import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.StaticPower;
@@ -27,8 +26,8 @@ import theking530.staticpower.entities.smeep.EntitySmeep;
 import theking530.staticpower.entities.smeep.TypeSmeep;
 
 public class ModEntities {
-	public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, StaticPower.MOD_ID);
-	public static final List<AbstractEntityBuilder<?>> ENTITIES = new ArrayList<>();
+	private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, StaticPower.MOD_ID);
+	private static final List<AbstractEntityBuilder<?>> ENTITIES = new ArrayList<>();
 
 	public static final AbstractEntityBuilder<EntitySmeep> Smeep = registerEntity("smeep", new TypeSmeep());
 	public static final AbstractEntityBuilder<EntityEnox> Enox = registerEntity("enox", new TypeEnox());
@@ -49,28 +48,19 @@ public class ModEntities {
 		return entity;
 	}
 
-	public static void addSpawns(BiomeLoadingEvent event) {
-		for (AbstractEntityBuilder<?> type : ENTITIES) {
-			if (type instanceof AbstractSpawnableMobType) {
-				((AbstractSpawnableMobType<?>) type).spawn(event);
-			}
-		}
-	}
-
 	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
 		for (AbstractEntityBuilder<?> entity : ENTITIES) {
 			entity.registerRenderers(event);
 		}
 	}
 
-	public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		// Register mobs.
+	public static void registerPlacements(FMLCommonSetupEvent event) {
 		for (AbstractEntityBuilder<?> entity : ENTITIES) {
-			event.getRegistry().register(entity.getType());
+			entity.registerPlacements(event);
 		}
 	}
 
-	public static void onRegisterEntityAttributes(EntityAttributeCreationEvent event) {
+	public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
 		// Register mobs.
 		for (AbstractEntityBuilder<?> type : ENTITIES) {
 			if (type instanceof AbstractSpawnableMobType) {

@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,8 +13,8 @@ import theking530.api.energy.CurrentType;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.MinecraftColor;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.client.gui.GuiTextures;
 
@@ -46,23 +46,23 @@ public class GuiPowerInfoTab extends AbstractInfoTab {
 		clear();
 
 		if (isHovered()) {
-			addKeyValueTwoLiner("Input", new TranslatableComponent(maxInputLabel), PowerTextFormatting.formatPowerRateToString(energyStorage.getMaximumPowerInput()),
+			addKeyValueTwoLiner("Input", Component.translatable(maxInputLabel), PowerTextFormatting.formatPowerRateToString(energyStorage.getMaximumPowerInput()),
 					ChatFormatting.YELLOW);
 		} else {
-			addKeyValueTwoLiner("Input", new TranslatableComponent(inputLabel), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerAddedPerTick()),
+			addKeyValueTwoLiner("Input", Component.translatable(inputLabel), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerAddedPerTick()),
 					ChatFormatting.GREEN);
 		}
 
 		if (isHovered()) {
-			addKeyValueTwoLiner("Output", new TranslatableComponent(maxOutputLabel), PowerTextFormatting.formatPowerRateToString(energyStorage.getMaximumPowerOutput()),
+			addKeyValueTwoLiner("Output", Component.translatable(maxOutputLabel), PowerTextFormatting.formatPowerRateToString(energyStorage.getMaximumPowerOutput()),
 					ChatFormatting.LIGHT_PURPLE);
 		} else {
-			addKeyValueTwoLiner("Output", new TranslatableComponent(outputLabel), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerUsedPerTick()),
+			addKeyValueTwoLiner("Output", Component.translatable(outputLabel), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerUsedPerTick()),
 					ChatFormatting.RED);
 		}
 		MutableComponent connPowerLine = PowerTextFormatting.formatVoltageToString(energyStorage.getLastRecievedVoltage());
 		connectedPowerLineWidth = Minecraft.getInstance().font.width(connPowerLine);
-		addKeyValueTwoLiner("Connection", new TranslatableComponent("gui.staticpower.power_tab.connected_power"), connPowerLine, ChatFormatting.AQUA);
+		addKeyValueTwoLiner("Connection", Component.translatable("gui.staticpower.power_tab.connected_power"), connPowerLine, ChatFormatting.AQUA);
 	}
 
 	@Override

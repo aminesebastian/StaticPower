@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
@@ -234,8 +234,8 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	 * purposes.
 	 */
 	@Override
-	public void getModelData(ModelDataMap.Builder builder) {
-		builder.withInitial(CABLE_RENDERING_STATE, getRenderingState());
+	public void getModelData(ModelData.Builder builder) {
+		builder.with(CABLE_RENDERING_STATE, getRenderingState());
 	}
 
 	public Collection<SparseCableLink> getSparseLinks() {

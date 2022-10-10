@@ -2,7 +2,6 @@ package theking530.staticpower.blockentities.machines.treefarmer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.ProcessingComponentStateWidget;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
@@ -48,7 +47,7 @@ public class GuiTreeFarmer extends StaticPowerTileEntityGui<ContainerTreeFarmer,
 		getTabManager().registerTab(new GuiAxeTab(this.menu, getTileEntity()).setTabSide(TabSide.LEFT));
 
 		registerWidget(drawPreviewButton = new SpriteButton(153, 71, 10, 10, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
-		drawPreviewButton.setTooltip(new TextComponent("Preview Range"));
+		drawPreviewButton.setTooltip(Component.literal("Preview Range"));
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
 
@@ -65,10 +64,10 @@ public class GuiTreeFarmer extends StaticPowerTileEntityGui<ContainerTreeFarmer,
 	public void updateData() {
 		infoTab.clear();
 		infoTab.addLine("desc1",
-				new TextComponent("Farms trees in a " + ChatFormatting.YELLOW + ((getTileEntity().getRadius() * 2) + 1) + "x" + ((getTileEntity().getRadius() * 2) + 1) + " radius."));
+				Component.literal("Farms trees in a " + ChatFormatting.YELLOW + ((getTileEntity().getRadius() * 2) + 1) + "x" + ((getTileEntity().getRadius() * 2) + 1) + " radius."));
 		infoTab.addLine("desc2",
-				new TextComponent("Requires " + ChatFormatting.DARK_AQUA + "water" + ChatFormatting.RESET + " to operate but other fluids may yield better growth results..."));
-		infoTab.addKeyValueTwoLiner("growth", new TextComponent("Current Growth Factor"),
+				Component.literal("Requires " + ChatFormatting.DARK_AQUA + "water" + ChatFormatting.RESET + " to operate but other fluids may yield better growth results..."));
+		infoTab.addKeyValueTwoLiner("growth", Component.literal("Current Growth Factor"),
 				GuiTextUtilities.formatNumberAsString(getTileEntity().getGrowthBonus() * 100).append("%"), ChatFormatting.GOLD);
 	}
 }

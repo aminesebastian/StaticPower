@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.cables.item.ItemRoutingParcelClient;
 import theking530.staticpower.cables.item.BlockEntityItemCable;
+import theking530.staticpower.cables.item.ItemRoutingParcelClient;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderItemCable extends AbstractCableTileEntityRenderer<BlockEntityItemCable> {

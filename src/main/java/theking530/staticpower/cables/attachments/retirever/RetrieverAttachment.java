@@ -9,8 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -52,8 +50,8 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(
-				new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalFilterSlots.get()));
+		int slots = !StaticPowerConfig.isConfigLoaded(tierType) ? 0 : StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalFilterSlots.get();
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots));
 	}
 
 	@Override
@@ -152,22 +150,22 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.retriever_tooltip"));
+		tooltip.add(Component.translatable("gui.staticpower.retriever_tooltip"));
 		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalFilterSlots.get(),
 				tooltip);
 	}
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent(""));
-		tooltip.add(new TranslatableComponent("gui.staticpower.retriever_rate_format",
+		tooltip.add(Component.literal(""));
+		tooltip.add(Component.translatable("gui.staticpower.retriever_rate_format",
 				ChatFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalRate.get()));
-		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.retriever_stack_size",
+		tooltip.add(Component.literal("� ").append(Component.translatable("gui.staticpower.retriever_stack_size",
 				ChatFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalStackSize.get())));
 
 		double blocksPerTick = StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievedItemInitialSpeed.get();
-		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.cable_transfer_rate",
-				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslatableComponent("gui.staticpower.blocks").getString())));
+		tooltip.add(Component.literal("� ").append(Component.translatable("gui.staticpower.cable_transfer_rate",
+				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), Component.translatable("gui.staticpower.blocks").getString())));
 	}
 
 	protected class FilterContainerProvider extends AbstractCableAttachmentContainerProvider {

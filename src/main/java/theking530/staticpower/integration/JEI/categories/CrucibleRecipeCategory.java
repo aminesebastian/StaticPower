@@ -12,13 +12,13 @@ import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -38,7 +38,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe> {
 	public static final RecipeType<CrucibleRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "crucible"), CrucibleRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -47,7 +47,7 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 
 	public CrucibleRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Crucible.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.Crucible.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Crucible.get()));
 	}
@@ -70,17 +70,12 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 	}
 
 	@Override
-	public Class<? extends CrucibleRecipe> getRecipeClass() {
-		return CrucibleRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(CrucibleRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CrucibleRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 50, 12, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 75, 32, 0);
 
@@ -97,10 +92,10 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(CrucibleRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(CrucibleRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX >= 8 && mouseX < 24 && mouseY < 54 && mouseY >= 4) {
-			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(Component.literal("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the heat bar tooltip.

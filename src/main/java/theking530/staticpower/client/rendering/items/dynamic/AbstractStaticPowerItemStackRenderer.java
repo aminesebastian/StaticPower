@@ -22,7 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
-import net.minecraftforge.client.RenderProperties;
 import theking530.staticpower.client.rendering.items.ItemCustomRendererPassthroughModel;
 
 public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWithoutLevelRenderer {
@@ -86,8 +85,8 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	public abstract void render(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
-			int combinedOverlay);
+	public abstract void render(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLight, int combinedOverlay);
 
 	/**
 	 * This method is exposed such that an implementer may need to change the
@@ -101,8 +100,8 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	public void renderBaseModel(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
-			int combinedOverlay) {
+	public void renderBaseModel(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLight, int combinedOverlay) {
 		renderItemModel(stack, transformType, true, matrixStack, buffer, Sheets.translucentCullBlockSheet(), combinedLight, combinedOverlay, defaultModel);
 	}
 
@@ -119,11 +118,12 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 	 * @param combinedOverlayIn
 	 * @param modelIn
 	 */
-	protected void renderItemModel(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn, RenderType renderType,
-			int combinedLightIn, int combinedOverlayIn, BakedModel modelIn) {
+	protected void renderItemModel(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn,
+			RenderType renderType, int combinedLightIn, int combinedOverlayIn, BakedModel modelIn) {
 		if (!itemStackIn.isEmpty()) {
 			matrixStackIn.pushPose();
-			boolean flag = transformTypeIn == ItemTransforms.TransformType.GUI || transformTypeIn == ItemTransforms.TransformType.GROUND || transformTypeIn == ItemTransforms.TransformType.FIXED;
+			boolean flag = transformTypeIn == ItemTransforms.TransformType.GUI || transformTypeIn == ItemTransforms.TransformType.GROUND
+					|| transformTypeIn == ItemTransforms.TransformType.FIXED;
 			if (itemStackIn.getItem() == Items.TRIDENT && flag) {
 				modelIn = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
 			}
@@ -138,38 +138,32 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 				} else {
 					flag1 = true;
 				}
-				if (modelIn.isLayered()) {
-					net.minecraftforge.client.ForgeHooksClient.drawItemLayered(Minecraft.getInstance().getItemRenderer(), modelIn, itemStackIn, matrixStackIn, bufferIn, combinedLightIn,
-							combinedOverlayIn, flag1);
-				} else {
-					RenderType rendertype = renderType;
-					VertexConsumer ivertexbuilder;
-					if (itemStackIn.getItem() == Items.COMPASS && itemStackIn.hasFoil()) {
-						matrixStackIn.pushPose();
-						PoseStack.Pose matrixstack$entry = matrixStackIn.last();
-						if (transformTypeIn == ItemTransforms.TransformType.GUI) {
-							matrixstack$entry.pose().multiply(0.5F);
-						} else if (transformTypeIn.firstPerson()) {
-							matrixstack$entry.pose().multiply(0.75F);
-						}
 
-						if (flag1) {
-							ivertexbuilder = ItemRenderer.getCompassFoilBufferDirect(bufferIn, rendertype, matrixstack$entry);
-						} else {
-							ivertexbuilder = ItemRenderer.getCompassFoilBuffer(bufferIn, rendertype, matrixstack$entry);
-						}
-
-						matrixStackIn.popPose();
-					} else if (flag1) {
-						ivertexbuilder = ItemRenderer.getFoilBufferDirect(bufferIn, rendertype, true, itemStackIn.hasFoil());
-					} else {
-						ivertexbuilder = ItemRenderer.getFoilBuffer(bufferIn, rendertype, true, itemStackIn.hasFoil());
+				RenderType rendertype = renderType;
+				VertexConsumer ivertexbuilder;
+				if (itemStackIn.getItem() == Items.COMPASS && itemStackIn.hasFoil()) {
+					matrixStackIn.pushPose();
+					PoseStack.Pose matrixstack$entry = matrixStackIn.last();
+					if (transformTypeIn == ItemTransforms.TransformType.GUI) {
+						matrixstack$entry.pose().multiply(0.5F);
+					} else if (transformTypeIn.firstPerson()) {
+						matrixstack$entry.pose().multiply(0.75F);
 					}
 
-					Minecraft.getInstance().getItemRenderer().renderModelLists(modelIn, itemStackIn, combinedLightIn, combinedOverlayIn, matrixStackIn, ivertexbuilder);
+					if (flag1) {
+						ivertexbuilder = ItemRenderer.getCompassFoilBufferDirect(bufferIn, rendertype, matrixstack$entry);
+					} else {
+						ivertexbuilder = ItemRenderer.getCompassFoilBuffer(bufferIn, rendertype, matrixstack$entry);
+					}
+
+					matrixStackIn.popPose();
+				} else if (flag1) {
+					ivertexbuilder = ItemRenderer.getFoilBufferDirect(bufferIn, rendertype, true, itemStackIn.hasFoil());
+				} else {
+					ivertexbuilder = ItemRenderer.getFoilBuffer(bufferIn, rendertype, true, itemStackIn.hasFoil());
 				}
-			} else {
-				RenderProperties.get(itemStackIn).getItemStackRenderer().renderByItem(itemStackIn, transformTypeIn, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+
+				Minecraft.getInstance().getItemRenderer().renderModelLists(modelIn, itemStackIn, combinedLightIn, combinedOverlayIn, matrixStackIn, ivertexbuilder);
 			}
 
 			matrixStackIn.popPose();

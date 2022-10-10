@@ -2,9 +2,11 @@ package theking530.staticpower.blockentities.components.loopingsound;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
@@ -41,7 +43,7 @@ public class LoopingSoundComponent extends AbstractBlockEntityComponent {
 
 	@Override
 	public void postProcessUpdate() {
-		if (!getLevel().isClientSide) {
+		if (!getLevel().isClientSide()) {
 			// Tick down the start cooldown so we don't spawn with start messages.
 			if (soundStartCooldown > 0) {
 				soundStartCooldown--;
@@ -61,13 +63,14 @@ public class LoopingSoundComponent extends AbstractBlockEntityComponent {
 		}
 	}
 
-	public void startPlayingSound(ResourceLocation soundIdIn, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
+	public void startPlayingSound(SoundEvent sound, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
 		isPlaying = true;
-		if (getLevel().isClientSide) {
-			proxy.startPlayingSound(getLevel(), soundIdIn, categoryIn, volumeIn, pitchIn, pos, blockRadius);
+		ResourceLocation soundId = ForgeRegistries.SOUND_EVENTS.getKey(sound);
+		if (getLevel().isClientSide()) {
+			proxy.startPlayingSound(getLevel(), soundId, categoryIn, volumeIn, pitchIn, pos, blockRadius);
 		} else {
 			if (soundStartCooldown == 0) {
-				LoopingSoundPacketStart syncPacket = new LoopingSoundPacketStart(this, soundIdIn, categoryIn, volumeIn, pitchIn, pos);
+				LoopingSoundPacketStart syncPacket = new LoopingSoundPacketStart(this, soundId, categoryIn, volumeIn, pitchIn, pos);
 				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), blockRadius, syncPacket);
 				shouldBeStopping = false;
 				soundStartCooldown = soundReactionTime;
@@ -80,7 +83,7 @@ public class LoopingSoundComponent extends AbstractBlockEntityComponent {
 			return;
 		}
 
-		if (getLevel().isClientSide) {
+		if (getLevel().isClientSide()) {
 			proxy.stopPlayingSound(getLevel());
 		} else {
 			if (!shouldBeStopping) {

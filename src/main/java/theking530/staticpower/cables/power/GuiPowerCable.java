@@ -6,8 +6,6 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.api.energy.metrics.MetricsTimeUnit;
 import theking530.api.energy.metrics.PowerTransferMetrics.PowerTransferMetricWrapper;
@@ -37,7 +35,7 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 		this.registerWidget(graphWidget = new DataGraphWidget(10, 20, 146, 78));
 
 		registerWidget(metricTypeButton = new TextButton(164, 102, 16, 16, "S", this::buttonPressed));
-		metricTypeButton.setTooltip(new TextComponent("Seconds"));
+		metricTypeButton.setTooltip(Component.literal("Seconds"));
 	}
 
 	@Override
@@ -74,19 +72,19 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
 		if (displayType == MetricsTimeUnit.TICKS) {
 			displayType = MetricsTimeUnit.SECONDS;
-			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_minutes"));
+			metricTypeButton.setTooltip(Component.translatable("gui.staticpower.metric_minutes"));
 			metricTypeButton.setText("S");
 		} else if (displayType == MetricsTimeUnit.SECONDS) {
 			displayType = MetricsTimeUnit.MINUTES;
-			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_minutes"));
+			metricTypeButton.setTooltip(Component.translatable("gui.staticpower.metric_minutes"));
 			metricTypeButton.setText("M");
 		} else if (displayType == MetricsTimeUnit.MINUTES) {
 			displayType = MetricsTimeUnit.HOURS;
-			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_hours"));
+			metricTypeButton.setTooltip(Component.translatable("gui.staticpower.metric_hours"));
 			metricTypeButton.setText("H");
 		} else if (displayType == MetricsTimeUnit.HOURS) {
 			displayType = MetricsTimeUnit.TICKS;
-			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_ticks"));
+			metricTypeButton.setTooltip(Component.translatable("gui.staticpower.metric_ticks"));
 			metricTypeButton.setText("T");
 		}
 	}

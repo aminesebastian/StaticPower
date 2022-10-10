@@ -12,8 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -128,28 +126,28 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 	@Override
 	public void getReaderOutput(List<Component> output, BlockPos pos) {
-		output.add(new TextComponent(String.format("Supplying: %1$d destinations.", destinations.size())));
-		output.add(new TranslatableComponent("gui.staticpower.voltage").append(": ")
+		output.add(Component.literal(String.format("Supplying: %1$d destinations.", destinations.size())));
+		output.add(Component.translatable("gui.staticpower.voltage").append(": ")
 				.append(ChatFormatting.BLUE.toString() + PowerTextFormatting.formatVoltageToString(lastProvidedVoltage).getString()));
 	}
 
 	public void getMultimeterOutput(List<Component> output, BlockPos startingLocation, BlockPos endingLocation) {
-		output.add(new TextComponent(""));
+		output.add(Component.literal(""));
 		getReaderOutput(output, null);
 		ElectricalPathProperties properties = getPropertiesBetweenPoints(startingLocation, endingLocation);
 
 		if (lastProvidedVoltage != 0) {
-			output.add(new TranslatableComponent("gui.staticpower.power_loss").append(": ").append(ChatFormatting.GOLD.toString() + PowerTextFormatting
+			output.add(Component.translatable("gui.staticpower.power_loss").append(": ").append(ChatFormatting.GOLD.toString() + PowerTextFormatting
 					.formatPowerToString(StaticPowerVoltage.adjustPowerLossByVoltage(StaticPowerVoltage.getVoltageClass(lastProvidedVoltage), properties.powerLoss)).getString()));
 		} else {
-			output.add(new TranslatableComponent("gui.staticpower.power_loss").append(": ")
+			output.add(Component.translatable("gui.staticpower.power_loss").append(": ")
 					.append(ChatFormatting.GOLD.toString() + PowerTextFormatting.formatPowerToString(properties.powerLoss).getString()).append(" @ ")
-					.append(new TranslatableComponent(StaticPowerVoltage.LOW.getShortName())));
+					.append(Component.translatable(StaticPowerVoltage.LOW.getShortName())));
 		}
 
-		output.add(new TranslatableComponent("gui.staticpower.max_power").append(": ")
+		output.add(Component.translatable("gui.staticpower.max_power").append(": ")
 				.append(ChatFormatting.GREEN.toString() + PowerTextFormatting.formatPowerRateToString(properties.maxPower).getString()));
-		output.add(new TranslatableComponent("gui.staticpower.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.cables().size()));
+		output.add(Component.translatable("gui.staticpower.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.cables().size()));
 	}
 
 	public ElectricalPathProperties getPropertiesBetweenPoints(BlockPos start, BlockPos end) {

@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.blockentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
@@ -221,7 +222,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 				// Skip items that don't match the filter.
 				if (filterString.length() > 0) {
 					if (filterString.startsWith("@") && filterString.length() > 1) {
-						if (!stack.getItem().getRegistryName().getNamespace().toLowerCase().contains(filterString.substring(1))) {
+						if (!ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace().toLowerCase().contains(filterString.substring(1))) {
 							stacks.remove(i);
 						}
 					} else if (filterString.startsWith("$") && filterString.length() > 1) {

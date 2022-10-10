@@ -7,8 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -51,8 +49,8 @@ public class WireCoil extends StaticPowerItem {
 		Component superCall = super.getName(item);
 		if (isPendingSecondLocation(item)) {
 			BlockPos initialLocation = getFirstLocation(item);
-			return new TranslatableComponent(superCall.getString()).append(": ")
-					.append(new TranslatableComponent("gui.staticpower.wire_coil_connecting", initialLocation.toShortString()));
+			return Component.translatable(superCall.getString()).append(": ")
+					.append(Component.translatable("gui.staticpower.wire_coil_connecting", initialLocation.toShortString()));
 		} else {
 			return superCall;
 		}
@@ -100,8 +98,8 @@ public class WireCoil extends StaticPowerItem {
 		}
 
 		stack.getOrCreateTag().putLong(INITIAL_LOCATOIN_TAG_NAME, pos.asLong());
-		MutableComponent message = new TextComponent(String.format("First connection position set to %1$s .", pos.toShortString()));
-		player.sendMessage(message, player.getUUID());
+		MutableComponent message = Component.literal(String.format("First connection position set to %1$s .", pos.toShortString()));
+		player.sendSystemMessage(message);
 		world.playSound(null, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.PLAYERS, 0.75f, 1.0f);
 		return true;
 	}
@@ -115,15 +113,15 @@ public class WireCoil extends StaticPowerItem {
 		BlockPos initialLocation = getFirstLocation(item);
 		if (!(world.getBlockState(initialLocation).getBlock() instanceof BlockWireConnector)) {
 			clearPendingLocation(item);
-			MutableComponent message = new TextComponent(String.format("Wire connector no longer exists at initial position %1$s .", initialLocation.toShortString()));
-			player.sendMessage(message, player.getUUID());
+			MutableComponent message = Component.literal(String.format("Wire connector no longer exists at initial position %1$s .", initialLocation.toShortString()));
+			player.sendSystemMessage(message);
 			return false;
 		}
 
 		// Check to make sure this wire coil will work on this component type.
 		if (!canApplyToTerminal(item, component)) {
-			MutableComponent message = new TextComponent(String.format("This wire is not useable on a terminal of this type!", initialLocation.toShortString()));
-			player.sendMessage(message, player.getUUID());
+			MutableComponent message = Component.literal(String.format("This wire is not useable on a terminal of this type!", initialLocation.toShortString()));
+			player.sendSystemMessage(message);
 			return false;
 		}
 
@@ -132,9 +130,9 @@ public class WireCoil extends StaticPowerItem {
 				item.shrink(1);
 			}
 
-			MutableComponent message = new TextComponent(
+			MutableComponent message = Component.literal(
 					String.format("Linked wire connector at location %1$s to position %2$s.", pos.toShortString(), initialLocation.toShortString()));
-			player.sendMessage(message, player.getUUID());
+			player.sendSystemMessage(message);
 			clearPendingLocation(item);
 			world.playSound(null, pos, SoundEvents.LEASH_KNOT_BREAK, SoundSource.PLAYERS, 0.75f, 1.0f);
 			return true;

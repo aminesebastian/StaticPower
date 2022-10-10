@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -45,6 +44,6 @@ public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachme
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.digistore_crafting_terminal_tooltip"));
+		tooltip.add(Component.translatable("gui.staticpower.digistore_crafting_terminal_tooltip"));
 	}
 }

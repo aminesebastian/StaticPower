@@ -1,8 +1,8 @@
 package theking530.staticpower.blockentities.components.control.processing;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.PowerStack;
@@ -95,7 +95,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		this.performedWorkLastTick = false;
 		this.processingSpeedUpgradeMultiplier = 1.0f;
 		this.powerUsageIncreaseMultiplier = 1.0f;
-		this.processingErrorMessage = new TextComponent("");
+		this.processingErrorMessage = Component.literal("");
 		this.processingStoppedDueToError = false;
 		this.powerMultiplier = 1.0f;
 		
@@ -539,13 +539,13 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		if (powerUsage > 0) {
 			if (powerComponent != null) {
 				if (powerComponent.getStoredPower() < getPowerUsage()) {
-					return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
+					return ProcessingCheckState.error(Component.literal("Not Enough Power!").getString());
 				}
 
 				// Check the processing power rate.
 				PowerStack drainedPower = powerComponent.drainPower(getPowerUsage(), true);
 				if (drainedPower.getPower() < getPowerUsage()) {
-					return ProcessingCheckState.error(new TextComponent("Recipe's power per tick requirement (")
+					return ProcessingCheckState.error(Component.literal("Recipe's power per tick requirement (")
 							.append(PowerTextFormatting.formatPowerRateToString(getPowerUsage())).append(") is larger than the amount this machine can handle!").getString());
 				}
 			}
@@ -558,7 +558,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	protected ProcessingCheckState checkRedstoneState() {
 		// Check the redstone control component.
 		if (redstoneControlComponent != null && !redstoneControlComponent.passesRedstoneCheck()) {
-			return ProcessingCheckState.error(new TextComponent("Redstone Control Mode Not Satisfied.").getString());
+			return ProcessingCheckState.error(Component.literal("Redstone Control Mode Not Satisfied.").getString());
 		}
 
 		return ProcessingCheckState.ok();

@@ -26,7 +26,6 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -302,7 +301,8 @@ public class StaticPowerRecipeRegistry {
 			ItemStack instance = new ItemStack(item);
 			// If this is a burnable, cache it.
 			if (ForgeHooks.getBurnTime(instance, null) > 0) {
-				ResourceLocation recipe = new ResourceLocation(item.getRegistryName().getNamespace(), item.getRegistryName().getPath() + "_solid_fuel_dynamic");
+				ResourceLocation itemRegistryName = ForgeRegistries.ITEMS.getKey(item);
+				ResourceLocation recipe = new ResourceLocation(itemRegistryName.getNamespace(), itemRegistryName.getPath() + "_solid_fuel_dynamic");
 				SolidFuelRecipe solidFuelRecipe = new SolidFuelRecipe(recipe, instance.copy());
 				newRecipes.put(solidFuelRecipe.getId(), solidFuelRecipe);
 			}
@@ -338,17 +338,21 @@ public class StaticPowerRecipeRegistry {
 					continue;
 				}
 
+				int bucketVolume = 1000;
+
 				// If we can't fill the container with the fluid, skip this container.
-				int filled = containerHandler.fill(new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME), FluidAction.EXECUTE);
-				if (filled != FluidAttributes.BUCKET_VOLUME) {
+				int filled = containerHandler.fill(new FluidStack(fluid, bucketVolume), FluidAction.EXECUTE);
+				if (filled != bucketVolume) {
 					continue;
 				}
 
 				// Create the recipe.
-				FluidActionResult result = FluidUtil.tryFillContainer(container, containerHandler, FluidAttributes.BUCKET_VOLUME, null, true);
-				FluidStack fluidStack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
-				ResourceLocation recipe = new ResourceLocation(item.getRegistryName().getNamespace(),
-						item.getRegistryName().getPath() + "_" + fluid.getRegistryName().getPath() + "_bottler_dynamic");
+				ResourceLocation itemRegistryName = ForgeRegistries.ITEMS.getKey(item);
+				ResourceLocation fluidRegistryName = ForgeRegistries.FLUIDS.getKey(fluid);
+				FluidActionResult result = FluidUtil.tryFillContainer(container, containerHandler, bucketVolume, null, true);
+				FluidStack fluidStack = new FluidStack(fluid, bucketVolume);
+				ResourceLocation recipe = new ResourceLocation(itemRegistryName.getNamespace(),
+						itemRegistryName.getPath() + "_" + fluidRegistryName.getPath() + "_bottler_dynamic");
 				BottleRecipe bucketRecipe = new BottleRecipe(recipe, result.result, new ItemStack(item), fluidStack);
 				newRecipes.put(bucketRecipe.getId(), bucketRecipe);
 			}

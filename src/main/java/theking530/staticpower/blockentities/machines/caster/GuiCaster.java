@@ -3,7 +3,6 @@ package theking530.staticpower.blockentities.machines.caster;
 import java.util.Optional;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
@@ -38,7 +37,7 @@ public class GuiCaster extends StaticPowerTileEntityGui<ContainerCaster, BlockEn
 				progressBar = (FluidProgressBar) new FluidProgressBar(108, 40, 36, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent).setAnimationStartAfter(0.5f));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine("desc1", new TextComponent("The former transforms items into other items=by shaping them against molds."));
+		infoTab.addLine("desc1", Component.literal("The former transforms items into other items=by shaping them against molds."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));

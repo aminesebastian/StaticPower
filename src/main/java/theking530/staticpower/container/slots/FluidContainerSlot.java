@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 public class FluidContainerSlot extends StaticPowerContainerSlot {
@@ -15,6 +15,6 @@ public class FluidContainerSlot extends StaticPowerContainerSlot {
 
 	@Override
 	public boolean mayPlace(@Nonnull ItemStack stack) {
-		return !stack.isEmpty() && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).isPresent();
+		return !stack.isEmpty() && stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).isPresent();
 	}
 }

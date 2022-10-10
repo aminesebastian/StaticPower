@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 
@@ -58,6 +59,7 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 	}
 
 	@Override
+	@SuppressWarnings({ "resource", "deprecation" })
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			// Make sure the position is loaded.
@@ -67,7 +69,7 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 
 				// If the component is found on the client, play the sound.
 				ComponentUtilities.getComponent(LoopingSoundComponent.class, componentName, rawTileEntity).ifPresent(comp -> {
-					comp.startPlayingSound(soundIdIn, categoryIn, volumeIn, pitchIn, soundPosition, 0);
+					comp.startPlayingSound(ForgeRegistries.SOUND_EVENTS.getValue(soundIdIn), categoryIn, volumeIn, pitchIn, soundPosition, 0);
 				});
 			}
 		});

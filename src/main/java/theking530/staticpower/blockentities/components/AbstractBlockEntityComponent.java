@@ -14,7 +14,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticpower.blockentities.BlockEntityBase;
@@ -142,7 +142,7 @@ public abstract class AbstractBlockEntityComponent {
 	 * 
 	 * @param builder
 	 */
-	public void getModelData(ModelDataMap.Builder builder) {
+	public void getModelData(ModelData.Builder builder) {
 
 	}
 

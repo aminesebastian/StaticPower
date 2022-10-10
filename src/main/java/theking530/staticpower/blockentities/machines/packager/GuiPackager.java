@@ -1,7 +1,6 @@
 package theking530.staticpower.blockentities.machines.packager;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
@@ -56,10 +55,10 @@ public class GuiPackager extends StaticPowerTileEntityGui<ContainerPackager, Blo
 	private void updateButtonSprite(int size) {
 		if (size == 2) {
 			recipeSizeButton.setRegularTexture(StaticPowerSprites.SIZE_TWO_CRAFTING);
-			recipeSizeButton.setTooltip(new TextComponent("Recipe Size: 2x2"));
+			recipeSizeButton.setTooltip(Component.literal("Recipe Size: 2x2"));
 		} else {
 			recipeSizeButton.setRegularTexture(StaticPowerSprites.SIZE_THREE_CRAFTING);
-			recipeSizeButton.setTooltip(new TextComponent("Recipe Size: 3x3"));
+			recipeSizeButton.setTooltip(Component.literal("Recipe Size: 3x3"));
 		}
 	}
 }

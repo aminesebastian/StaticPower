@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -49,8 +48,8 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.SERVER.digistoreCraftingInterfaceSlots.get()), (Direction) null)
+		int slots = !StaticPowerConfig.SERVER_SPEC.isLoaded() ? 0 : StaticPowerConfig.SERVER.digistoreCraftingInterfaceSlots.get();
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots), (Direction) null)
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 9));
 	}
 
@@ -123,7 +122,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 		}
 
 		// Get the current timer and the extraction rate.
-		int currentTimer =getAttachmentTag(attachment).getInt(CRAFTING_INTERFACE_TIMER_TAG);
+		int currentTimer = getAttachmentTag(attachment).getInt(CRAFTING_INTERFACE_TIMER_TAG);
 
 		// Increment the current timer.
 		currentTimer += 1;
@@ -239,7 +238,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.crafting_interface_tooltip"));
+		tooltip.add(Component.translatable("gui.staticpower.crafting_interface_tooltip"));
 		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.SERVER.digistoreCraftingInterfaceSlots.get(), tooltip);
 	}
 

@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:former_recipe",
+	"type": "staticpower:former",
 	"input": {
 		"item": "staticpower:rubber_bar"
 	},

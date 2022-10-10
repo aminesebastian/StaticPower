@@ -4,15 +4,14 @@ import java.util.Optional;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineHeatTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
-import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
@@ -84,12 +83,12 @@ public class GuiRefineryController extends StaticPowerTileEntityGui<ContainerRef
 		}
 
 		// Update the production data.
-		infoTab.addKeyValueTwoLiner("productivity", new TextComponent("Productivity"),
+		infoTab.addKeyValueTwoLiner("productivity", Component.literal("Productivity"),
 				GuiTextUtilities.formatNumberAsString(getTileEntity().getProductivity() * 100).append("% (")
 						.append(ChatFormatting.DARK_AQUA + GuiTextUtilities.formatNumberAsString(getTileEntity().getBoilers().size()).getString())
 						.append(" Boilers" + ChatFormatting.RESET + ")"),
 				ChatFormatting.GREEN);
-		infoTab.addKeyValueTwoLiner("heat_gen", new TextComponent("Heat Generation"), GuiTextUtilities.formatHeatRateToString(getTileEntity().getHeatGeneration()),
+		infoTab.addKeyValueTwoLiner("heat_gen", Component.literal("Heat Generation"), GuiTextUtilities.formatHeatRateToString(getTileEntity().getHeatGeneration()),
 				ChatFormatting.RED);
 	}
 }

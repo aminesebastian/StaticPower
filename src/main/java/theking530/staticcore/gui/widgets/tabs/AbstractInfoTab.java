@@ -12,7 +12,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -43,14 +42,14 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 
 	public AbstractInfoTab addLine(String key, ChatFormatting color, Component value) {
 		List<Component> list = new ArrayList<Component>();
-		list.add(new TextComponent(color.toString()).append(value));
+		list.add(Component.literal(color.toString()).append(value));
 		info.put(key, list);
 		return this;
 	}
 
 	public AbstractInfoTab addLineBreak() {
 		List<Component> list = new ArrayList<Component>();
-		list.add(new TextComponent("\n"));
+		list.add(Component.literal("\n"));
 		info.put("line_break_" + lineBreakIndex, list);
 		lineBreakIndex++;
 		return this;
@@ -58,15 +57,15 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 
 	public AbstractInfoTab addKeyValueLine(String key, Component label, Component value, ChatFormatting keyColor) {
 		List<Component> list = new ArrayList<Component>();
-		list.add(new TextComponent(keyColor.toString()).append(label).append(": ").append(value));
+		list.add(Component.literal(keyColor.toString()).append(label).append(": ").append(value));
 		info.put(key, list);
 		return this;
 	}
 
 	public AbstractInfoTab addKeyValueTwoLiner(String key, Component label, Component value, ChatFormatting keyColor) {
 		List<Component> list = new ArrayList<Component>();
-		list.add(new TextComponent(keyColor.toString()).append(label).append(": "));
-		list.add(new TextComponent(" ").append(value).setStyle(Style.EMPTY.withColor(keyColor)));
+		list.add(Component.literal(keyColor.toString()).append(label).append(": "));
+		list.add(Component.literal(" ").append(value).setStyle(Style.EMPTY.withColor(keyColor)));
 		info.put(key, list);
 		return this;
 	}

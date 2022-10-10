@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.TooltipFlag.Default;
 import theking530.api.digistore.IDigistoreInventory;
@@ -59,12 +58,12 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	public void updateData() {
 		// Update the info tab.
 		infoTab.clear();
-		infoTab.addLine("desc", new TextComponent("Stores a large amount of a single item."));
+		infoTab.addLine("desc", Component.literal("Stores a large amount of a single item."));
 		infoTab.addLineBreak();
 
 		// Pass the itemstack count through the metric converter.
 		MetricConverter count = new MetricConverter(inventory.getItemCapacity());
-		infoTab.addKeyValueLine("max", new TextComponent("Max Items"), new TextComponent(ChatFormatting.WHITE.toString()).append(new TextComponent(count.getValueAsString(true))), ChatFormatting.RED);
+		infoTab.addKeyValueLine("max", Component.literal("Max Items"), Component.literal(ChatFormatting.WHITE.toString()).append(Component.literal(count.getValueAsString(true))), ChatFormatting.RED);
 	}
 
 	@Override

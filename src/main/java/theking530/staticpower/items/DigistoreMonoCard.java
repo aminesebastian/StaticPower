@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.digistore.DigistoreInventoryCapabilityProvider;
 import theking530.api.digistore.IDigistoreInventory;
@@ -50,10 +50,13 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		int capacity = StaticPowerConfig.getTier(tierType).digistoreCardCapacity.get() * (StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get() / 8);
+		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
+			int capacity = StaticPowerConfig.getTier(tierType).digistoreCardCapacity.get() * (StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get() / 8);
 
-		// Cover in case of integer overflow, we max at int.max.
-		return new DigistoreInventoryCapabilityProvider(stack, 1, capacity < 0 ? Integer.MAX_VALUE : capacity, nbt);
+			// Cover in case of integer overflow, we max at int.max.
+			return new DigistoreInventoryCapabilityProvider(stack, 1, capacity < 0 ? Integer.MAX_VALUE : capacity, nbt);
+		}
+		return null;
 	}
 
 	@Override
@@ -63,7 +66,7 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new DigistoreMonoCardItemModel(existingModel);
 	}
 }

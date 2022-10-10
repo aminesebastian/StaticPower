@@ -6,7 +6,6 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.button.StandardButton;
@@ -36,9 +35,9 @@ public class GuiPowerMonitor extends StaticPowerTileEntityGui<ContainerPowerMoni
 
 		GuiInfoTab infoTab;
 		getTabManager().registerTab(infoTab = new GuiInfoTab("Battery", 120));
-		infoTab.addLine("desc1", new TextComponent("A Battery stores power for later usage."));
+		infoTab.addLine("desc1", Component.literal("A Battery stores power for later usage."));
 		infoTab.addLineBreak();
-		infoTab.addLine("desc2", new TextComponent("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
+		infoTab.addLine("desc2", Component.literal("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
@@ -79,13 +78,13 @@ public class GuiPowerMonitor extends StaticPowerTileEntityGui<ContainerPowerMoni
 
 		if (mouseX > leftPos + 28 - (font.width(inputRateString) / 2) && mouseX < leftPos + 28 + (font.width(inputRateString) / 2) && mouseY > this.topPos + 41
 				&& mouseY < this.topPos + 50) {
-			tooltips.add(new TextComponent(inputRateString));
+			tooltips.add(Component.literal(inputRateString));
 		}
 
 		// Add tooltip for the actual value of the output.
 		if (mouseX > leftPos + 149 - (font.width(outputRateString) / 2) && mouseX < leftPos + 149 + (font.width(outputRateString) / 2) && mouseY > this.topPos + 41
 				&& mouseY < this.topPos + 50) {
-			tooltips.add(new TextComponent(outputRateString));
+			tooltips.add(Component.literal(outputRateString));
 		}
 	}
 

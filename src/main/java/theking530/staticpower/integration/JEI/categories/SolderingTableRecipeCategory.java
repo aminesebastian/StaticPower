@@ -7,12 +7,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -24,13 +25,13 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<SolderingRecipe> {
 	public static final RecipeType<SolderingRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "soldering_table"), SolderingRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
 	public SolderingTableRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.SolderingTable.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.SolderingTable.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.SolderingTable.get()));
 	}
@@ -48,11 +49,6 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 	}
 
 	@Override
-	public Class<? extends SolderingRecipe> getRecipeClass() {
-		return SolderingRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
@@ -64,7 +60,7 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 	}
 
 	@Override
-	public void draw(SolderingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SolderingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 110, 21, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 8, 5, 0);
 

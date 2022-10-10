@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
@@ -71,15 +70,5 @@ public class MixerRecipeSerializer extends StaticPowerRecipeSerializer<MixerReci
 		buffer.writeFluidStack(recipe.getSecondaryFluidInput());
 		buffer.writeFluidStack(recipe.getOutput());
 		recipe.getProcessingSection().writeToBuffer(buffer);
-	}
-
-	@Override
-	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
-		return INSTANCE;
-	}
-
-	@Override
-	public ResourceLocation getRegistryName() {
-		return ID;
 	}
 }

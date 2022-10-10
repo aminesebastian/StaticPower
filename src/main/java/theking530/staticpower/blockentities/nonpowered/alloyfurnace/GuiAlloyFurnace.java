@@ -1,7 +1,6 @@
 package theking530.staticpower.blockentities.nonpowered.alloyfurnace;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
@@ -23,7 +22,7 @@ public class GuiAlloyFurnace extends StaticPowerTileEntityGui<ContainerAlloyFurn
 		registerWidget(fireBar = new FireProgressBar(47, 44));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine("desc1", new TextComponent("Combines basic items into their more complex constructions."));
+		infoTab.addLine("desc1", Component.literal("Combines basic items into their more complex constructions."));
 		setOutputSlotSize(20);
 	}
 

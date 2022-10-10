@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.StemGrownBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.SquareProgressBar;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
@@ -55,7 +55,7 @@ public class GuiHydroponicPod extends StaticPowerTileEntityGui<ContainierHydropo
 			CropBlock crop = (CropBlock) block.get();
 			int age = ((int) (getTileEntity().getGrowthPercentage() * crop.getMaxAge())) % crop.getMaxAge();
 			BlockState state = crop.getStateForAge(age);
-			GuiDrawUtilities.drawBlockState(stack, state, BlockPos.ZERO, EmptyModelData.INSTANCE, new Vector3D(72, 40, 1), new Vector3D(15, gameTime + partialTicks, 180),
+			GuiDrawUtilities.drawBlockState(stack, state, BlockPos.ZERO, ModelData.EMPTY, new Vector3D(72, 40, 1), new Vector3D(15, gameTime + partialTicks, 180),
 					new Vector3D(32, 32, -1));
 		} else if (block.get() instanceof StemBlock) {
 			float scale = getTileEntity().getGrowthPercentage() * 13.0f + 13.0f;
@@ -63,7 +63,7 @@ public class GuiHydroponicPod extends StaticPowerTileEntityGui<ContainierHydropo
 			StemBlock stem = (StemBlock) block.get();
 			StemGrownBlock fruit = stem.getFruit();
 			BlockState state = fruit.defaultBlockState();
-			GuiDrawUtilities.drawBlockState(stack, state, BlockPos.ZERO, EmptyModelData.INSTANCE, new Vector3D(88 - (scale / 2), 61 - (scale / 2), 1),
+			GuiDrawUtilities.drawBlockState(stack, state, BlockPos.ZERO, ModelData.EMPTY, new Vector3D(88 - (scale / 2), 61 - (scale / 2), 1),
 					new Vector3D(15, gameTime + partialTicks, 180), new Vector3D(scale, scale, -1));
 		}
 	}

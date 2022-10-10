@@ -445,7 +445,7 @@ public class ServerCable {
 		ListTag supportedModules = new ListTag();
 		supportedNetworkModules.forEach(moduleType -> {
 			CompoundTag moduleTag = new CompoundTag();
-			moduleTag.putString("module_type", moduleType.getRegistryName().toString());
+			moduleTag.putString("module_type", StaticPowerRegistries.CableModuleRegsitry().getKey(moduleType).toString());
 			supportedModules.add(moduleTag);
 		});
 		tag.put("supported_modules", supportedModules);
@@ -466,14 +466,14 @@ public class ServerCable {
 
 		// Serialize the destination types.
 		ListTag destinationList = NBTUtilities.serialize(supportedDestinationTypes, (dest) -> {
-			return StringTag.valueOf(dest.getRegistryName().toString());
+			return StringTag.valueOf(StaticPowerRegistries.CableDestinationRegistry().getKey(dest).toString());
 		});
 		tag.put("destination_types", destinationList);
 
 		// Serialize the capabilities.
 		ListTag capabilityList = NBTUtilities.serialize(capabilities.keySet(), (capType) -> {
 			CompoundTag capTag = new CompoundTag();
-			capTag.putString("type", capType.getRegistryName().toString());
+			capTag.putString("type", StaticPowerRegistries.CableCapabilityRegistry().getKey(capType).toString());
 			capabilities.get(capType).save(capTag);
 			return capTag;
 		});

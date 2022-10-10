@@ -3,43 +3,40 @@ package theking530.staticpower.client.rendering;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 
+import codechicken.lib.model.CachedFormat;
+import codechicken.lib.model.Quad;
+import codechicken.lib.model.pipeline.BakedPipeline;
+import codechicken.lib.model.pipeline.transformers.QuadAlphaOverride;
+import codechicken.lib.model.pipeline.transformers.QuadClamper;
+import codechicken.lib.model.pipeline.transformers.QuadCornerKicker;
+import codechicken.lib.model.pipeline.transformers.QuadFaceStripper;
+import codechicken.lib.model.pipeline.transformers.QuadReInterpolator;
+import codechicken.lib.model.pipeline.transformers.QuadTinter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.cablenetwork.CableRenderingState;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
-import theking530.thirdparty.codechicken.lib.model.CachedFormat;
-import theking530.thirdparty.codechicken.lib.model.Quad;
-import theking530.thirdparty.codechicken.lib.model.pipeline.BakedPipeline;
-import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadAlphaOverride;
-import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadClamper;
-import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadCornerKicker;
-import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadFaceStripper;
-import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadReInterpolator;
-import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadTinter;
 
 /**
  * The FacadeBuilder builds for facades..
@@ -78,7 +75,7 @@ public class CoverBuilder {
 	);
 	private final ThreadLocal<Quad> collectors = ThreadLocal.withInitial(Quad::new);
 
-	public void buildFacadeQuads(@Nullable BlockState state, CableRenderingState cableState, RenderType layer, Random rand, List<BakedQuad> quads, Direction dir) {
+	public void buildFacadeQuads(@Nullable BlockState state, CableRenderingState cableState, RenderType layer, RandomSource rand, List<BakedQuad> quads, Direction dir) {
 		if (!cableState.hasCover(dir)) {
 			return;
 		}
@@ -98,25 +95,17 @@ public class CoverBuilder {
 
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
 		BakedModel model = dispatcher.getBlockModel(coverBlockState);
-		IModelData modelData = model.getModelData(cableState.getLevel(), cableState.getCableBlockPos(), coverBlockState, EmptyModelData.INSTANCE);
+		ModelData modelData = model.getModelData(cableState.getLevel(), cableState.getCableBlockPos(), coverBlockState, ModelData.EMPTY);
 
 		List<BakedQuad> modelQuads = new ArrayList<>();
 		// If we are forcing transparent facades, fake the render layer, and grab all
 		// quads.
 		if (layer == null) {
 			for (RenderType forcedLayer : RenderType.chunkBufferLayers()) {
-				// Check if the block renders on the layer we want to force.
-				if (ItemBlockRenderTypes.canRenderInLayer(coverBlockState, forcedLayer)) {
-					// Force the layer and gather quads.
-					ForgeHooksClient.setRenderType(forcedLayer);
-					modelQuads.addAll(gatherQuads(model, coverBlockState, rand, modelData));
-				}
+				modelQuads.addAll(gatherQuads(model, coverBlockState, rand, modelData, forcedLayer));
 			}
-
-			// Reset.
-			ForgeHooksClient.setRenderType(layer);
 		} else {
-			modelQuads.addAll(gatherQuads(model, coverBlockState, rand, modelData));
+			modelQuads.addAll(gatherQuads(model, coverBlockState, rand, modelData, layer));
 		}
 
 		// Skip any empty quad lists.
@@ -174,7 +163,7 @@ public class CoverBuilder {
 				// Prepare the pipeline for a quad.
 				pipeline.prepare(collectorQuad);
 				// Pipe our quad into the pipeline.
-				quad.pipe(pipeline);
+				pipeline.put(quad);
 
 				// Handle the edge case where the orientation coming out of the pipeline is
 				// null.
@@ -194,10 +183,10 @@ public class CoverBuilder {
 	 *
 	 * @return The model.
 	 */
-	public List<BakedQuad> buildFacadeItemQuads(ItemStack textureItem, Direction side) {
+	public List<BakedQuad> buildFacadeItemQuads(ItemStack textureItem, Direction side, @Nullable RenderType renderType) {
 		List<BakedQuad> facadeQuads = new ArrayList<>();
 		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(textureItem, null, null, 0);
-		List<BakedQuad> modelQuads = gatherQuads(model, null, new Random(), EmptyModelData.INSTANCE);
+		List<BakedQuad> modelQuads = gatherQuads(model, null, RandomSource.create(), ModelData.EMPTY, renderType);
 
 		BakedPipeline pipeline = this.pipelines.get();
 		Quad collectorQuad = this.collectors.get();
@@ -233,7 +222,7 @@ public class CoverBuilder {
 			pipeline.prepare(collectorQuad);
 
 			// Pipe our quad into the pipeline.
-			quad.pipe(pipeline);
+			pipeline.put(quad);
 
 			// Check the collector for data and add the quad if there was.
 			if (collectorQuad.full) {
@@ -304,12 +293,12 @@ public class CoverBuilder {
 	}
 
 	// Helper to gather all quads from a model into a list.
-	private static List<BakedQuad> gatherQuads(BakedModel model, BlockState state, Random rand, IModelData data) {
+	private static List<BakedQuad> gatherQuads(BakedModel model, BlockState state, RandomSource rand, ModelData data, @Nullable RenderType renderType) {
 		List<BakedQuad> modelQuads = new ArrayList<>();
 		for (Direction face : Direction.values()) {
-			modelQuads.addAll(model.getQuads(state, face, rand, data));
+			modelQuads.addAll(model.getQuads(state, face, rand, data, renderType));
 		}
-		modelQuads.addAll(model.getQuads(state, null, rand, data));
+		modelQuads.addAll(model.getQuads(state, null, rand, data, renderType));
 		return modelQuads;
 	}
 }

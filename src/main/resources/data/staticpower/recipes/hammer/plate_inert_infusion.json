@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:hammer_recipe",
+	"type": "staticpower:hammer",
 	"input_item": {
 		"item": "staticpower:ingot_inert_infusion_heated"
 	},

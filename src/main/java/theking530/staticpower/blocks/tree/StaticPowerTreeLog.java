@@ -3,7 +3,7 @@ package theking530.staticpower.blocks.tree;
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -81,7 +81,7 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 					}
 				} else {
 					if (!worldIn.isClientSide()) {
-						player.sendMessage(new TranslatableComponent("gui.missing_research"), player.getUUID());
+						player.sendSystemMessage(Component.translatable("gui.missing_research"));
 					}
 				}
 			}

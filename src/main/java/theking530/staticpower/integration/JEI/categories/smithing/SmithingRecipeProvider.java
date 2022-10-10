@@ -6,10 +6,10 @@ import java.util.List;
 
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -23,6 +23,11 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	public SmithingRecipeProvider() {
 	}
 
+	@Override
+	public <V> List<RecipeType<?>> getRecipeTypes(IFocus<V> focus) {
+		return List.of(SmithingRecipeCategory.TYPE);
+	}
+
 	public static List<SmithingRecipeJEIWrapper> getRecipes() {
 		// Create the recipes array.
 		RECIPES = new ArrayList<SmithingRecipeJEIWrapper>();
@@ -34,27 +39,6 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		}
 
 		return RECIPES;
-	}
-
-	@Override
-	public <V> List<ResourceLocation> getRecipeCategoryUids(IFocus<V> focus) {
-		if (focus.getRole() == RecipeIngredientRole.OUTPUT && focus.getTypedValue().getIngredient() instanceof ItemStack) {
-			// Get the focused item.
-			ItemStack itemStack = (ItemStack) focus.getTypedValue().getIngredient();
-
-			// Check to see if it is a valid smithing output.
-			if (isValidSmithingOutput(itemStack)) {
-				return Collections.singletonList(SmithingRecipeCategory.TYPE.getUid());
-			}
-		} else if (focus.getRole() == RecipeIngredientRole.INPUT && focus.getTypedValue().getIngredient() instanceof ItemStack) {
-			// Check if the input is used in any smithing recipes or is itself smithable.
-			ItemStack itemStack = (ItemStack) focus.getTypedValue().getIngredient();
-			if (isValidSmithingInput(itemStack)) {
-				return Collections.singletonList(SmithingRecipeCategory.TYPE.getUid());
-			}
-		}
-
-		return Collections.emptyList();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -162,4 +146,5 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		// If none of the tests pass, return false.
 		return false;
 	}
+
 }

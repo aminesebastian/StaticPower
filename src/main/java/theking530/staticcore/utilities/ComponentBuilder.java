@@ -4,8 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class ComponentBuilder {
 	public String currentOutput;
@@ -20,12 +18,12 @@ public class ComponentBuilder {
 	}
 
 	public ComponentBuilder append(String string, ChatFormatting style) {
-		currentOutput += style.toString() + new TranslatableComponent(string).getString();
+		currentOutput += style.toString() + Component.translatable(string).getString();
 		return this;
 	}
 
 	public ComponentBuilder append(String string, Style style) {
-		currentOutput += new TranslatableComponent(string).setStyle(style).getString();
+		currentOutput += Component.translatable(string).setStyle(style).getString();
 		return this;
 	}
 
@@ -35,6 +33,6 @@ public class ComponentBuilder {
 	}
 
 	public MutableComponent build() {
-		return new TextComponent(currentOutput);
+		return Component.literal(currentOutput);
 	}
 }

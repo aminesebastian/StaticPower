@@ -9,8 +9,8 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.RedstoneCableSideConfiguration;
-import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 import theking530.staticpower.cables.redstone.basic.BlockEntityRedstoneCable;
+import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 
 public class ContainerBasicRedstoneIO extends StaticPowerTileEntityContainer<BlockEntityRedstoneCable> {

@@ -9,7 +9,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -50,7 +49,7 @@ public class BlockPump extends StaticPowerBlockEntityBlock {
 
 		// Format the pump rate and add it as a tooltip.
 		String pumpRate = decimalFormat.format(tierObject.pumpRate.get() / 20.0f);
-		tooltip.add(new TranslatableComponent("gui.staticpower.pump_rate_format", ChatFormatting.AQUA.toString() + pumpRate));
+		tooltip.add(Component.translatable("gui.staticpower.pump_rate_format", ChatFormatting.AQUA.toString() + pumpRate));
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -94,7 +93,7 @@ public class ResearchItem extends StaticPowerItem {
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (researchTier == 1) {
-			tooltip.add(new TranslatableComponent("Use to submit research!"));
+			tooltip.add(Component.translatable("Use to submit research!"));
 		}
 	}
 

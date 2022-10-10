@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.utilities.Vector3D;
@@ -39,31 +39,31 @@ public class BlockHeatCable extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		BakedModel extensionModel = null;
 		BakedModel straightModel = null;
 		BakedModel attachmentModel = null;
 
 		if (tier == StaticPowerTiers.COPPER) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_COPPER_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_COPPER_STRAIGHT);
-			attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_COPPER_ATTACHMENT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_COPPER_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_COPPER_STRAIGHT);
+			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_COPPER_ATTACHMENT);
 		} else if (tier == StaticPowerTiers.TIN) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_TIN_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_TIN_STRAIGHT);
-			attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_TIN_ATTACHMENT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_TIN_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_TIN_STRAIGHT);
+			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_TIN_ATTACHMENT);
 		} else if (tier == StaticPowerTiers.SILVER) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_SILVER_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_SILVER_STRAIGHT);
-			attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_SILVER_ATTACHMENT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_SILVER_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_SILVER_STRAIGHT);
+			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_SILVER_ATTACHMENT);
 		} else if (tier == StaticPowerTiers.GOLD) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_STRAIGHT);
-			attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_ATTACHMENT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_STRAIGHT);
+			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_ATTACHMENT);
 		} else if (tier == StaticPowerTiers.ALUMINUM) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_STRAIGHT);
-			attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_ATTACHMENT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_STRAIGHT);
+			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_ATTACHMENT);
 		}
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}

@@ -11,13 +11,13 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -35,7 +35,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderRecipe> {
 	public static final RecipeType<GrinderRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "grinder"), GrinderRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final GrinderProgressBar pBar;
@@ -45,7 +45,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 
 	public PoweredGrinderRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.PoweredGrinder.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.PoweredGrinder.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(150, 70);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.PoweredGrinder.get()));
 		pBar = new GrinderProgressBar(79, 26);
@@ -69,17 +69,12 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	}
 
 	@Override
-	public Class<? extends GrinderRecipe> getRecipeClass() {
-		return GrinderRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(GrinderRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(GrinderRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 80, 6, 0);
 
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 78, 46, 0);
@@ -94,10 +89,10 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(GrinderRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(GrinderRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(Component.literal("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.

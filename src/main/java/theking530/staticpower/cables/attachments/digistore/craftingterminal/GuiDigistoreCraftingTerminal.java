@@ -6,7 +6,6 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.widgets.EntityRenderWidget;
@@ -108,7 +107,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		if (getCableComponent().isManagerPresent()) {
 			progressBar.setErrorState(false);
 		} else {
-			progressBar.setErrorState(true).setErrorMessage(new TranslatableComponent("gui.staticpower.alert.digistore_manager_missing"));
+			progressBar.setErrorState(true).setErrorMessage(Component.translatable("gui.staticpower.alert.digistore_manager_missing"));
 		}
 
 		// Keep the last crafting recipes updated.

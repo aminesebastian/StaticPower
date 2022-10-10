@@ -5,7 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.cables.AbstractCableBlock;
@@ -29,7 +30,7 @@ import theking530.staticpower.client.rendering.items.CoverItemModelProvider;
 
 public class CableCover extends Item implements ICustomModelSupplier {
 	public static final String COVER_BLOCK_STATE_TAG = "target";
-	public static final TranslatableComponent COVER_TRANSLATION_COMPONENT = new TranslatableComponent("item.staticpower.cover");
+	public static final MutableComponent COVER_TRANSLATION_COMPONENT = Component.translatable("item.staticpower.cover");
 
 	public CableCover() {
 		super(new Item.Properties());
@@ -58,7 +59,7 @@ public class CableCover extends Item implements ICustomModelSupplier {
 		output.setTag(new CompoundTag());
 		CompoundTag blockStateTag = NbtUtils.writeBlockState(blockState);
 		output.getTag().put(COVER_BLOCK_STATE_TAG, blockStateTag);
-		output.setHoverName(new TranslatableComponent(blockState.getBlock().getDescriptionId()).append(" ").append(COVER_TRANSLATION_COMPONENT));
+		output.setHoverName(Component.translatable(blockState.getBlock().getDescriptionId()).append(" ").append(COVER_TRANSLATION_COMPONENT));
 		return output;
 	}
 
@@ -95,7 +96,7 @@ public class CableCover extends Item implements ICustomModelSupplier {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new CoverItemModelProvider(existingModel, new CoverBuilder());
 	}
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.utilities.Vector3D;
@@ -27,10 +27,10 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
-		BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_EXTENSION);
-		BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_STRAIGHT);
-		BakedModel attachmentModel = event.getModelRegistry()
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+		BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_EXTENSION);
+		BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_STRAIGHT);
+		BakedModel attachmentModel = event.getModels()
 				.get(StaticPowerAdditionalModels.CABLE_DIGISTORE_ATTACHMENT);
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);

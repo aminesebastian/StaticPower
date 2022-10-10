@@ -68,7 +68,7 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 		}
 
 		// Only do work on the server.
-		if (getLevel().isClientSide) {
+		if (getLevel().isClientSide()) {
 			return;
 		}
 
@@ -120,7 +120,7 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 
 				// If the container is empty, transfer it to the empty container slot.
 				if (containerHandler.getFluidInTank(0).getAmount() == containerHandler.getTankCapacity(0)) {
-					if (InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, container.getContainerItem())) {
+					if (InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, containerHandler.getContainer())) {
 						// Perform the insert.
 						ItemStack insertedItem = insertItem(1, containerHandler.getContainer(), false);
 						// If successfully, extract the item from the primary slot.

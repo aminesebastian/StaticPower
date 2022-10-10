@@ -5,8 +5,6 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
@@ -46,7 +44,7 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 		if (research != null) {
 			// Draw icon.
 			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 2, 4, 110, 1.0f);
-			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 21, 9, 0.0f, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringLeftAligned(pose, Component.translatable(research.getTitle()).getString(), 21, 9, 0.0f, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
 
 			// Draw progress bar.
 			progressBar.setPosition(20, 11);
@@ -58,7 +56,8 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 				GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 17 - xOffset, getSize().getY() - 16, 100, 8f, 8f);
 
 				int remainingCount = requirement.getCount();
-				GuiDrawUtilities.drawStringCentered(pose, Integer.toString(remainingCount), getSize().getX() - 9f - xOffset, getSize().getY() - 10, 101, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawStringCentered(pose, Integer.toString(remainingCount), getSize().getX() - 9f - xOffset, getSize().getY() - 10, 101, 0.5f,
+						SDColor.EIGHT_BIT_WHITE, true);
 
 				xOffset += 9;
 			}
@@ -75,7 +74,8 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 					xOffset += 9;
 				}
 
-				GuiDrawUtilities.drawRectangle(pose, unlocks.size() * 10f, 9.5f, getSize().getX() - 6.5f - (1f * unlocks.size())- xOffset, getSize().getY() - 12.85f, 10, new SDColor(0, 0, 0, 0.3f));
+				GuiDrawUtilities.drawRectangle(pose, unlocks.size() * 10f, 9.5f, getSize().getX() - 6.5f - (1f * unlocks.size()) - xOffset, getSize().getY() - 12.85f, 10,
+						new SDColor(0, 0, 0, 0.3f));
 			}
 		}
 	}
@@ -97,10 +97,10 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
 		if (this.research != null) {
-			String desc = new TranslatableComponent(research.getDescription()).getString();
+			String desc = Component.translatable(research.getDescription()).getString();
 			List<String> description = GuiDrawUtilities.wrapString(desc, 150);
 			for (String line : description) {
-				tooltips.add(new TextComponent(line));
+				tooltips.add(Component.literal(line));
 			}
 		}
 	}

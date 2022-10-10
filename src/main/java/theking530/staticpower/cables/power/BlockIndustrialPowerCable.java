@@ -9,7 +9,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.utilities.Vector3D;
@@ -49,34 +48,34 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 		PowerTooltips.addOutputVoltageTooltip(tooltip, tierObject.cablePowerConfiguration.cableMaxVoltage.get().getVoltage());
 		PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerMaxPower.get());
 		PowerTooltips.addPowerLossPerBlockTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerLossPerBlock.get());
-		tooltip.add(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
+		tooltip.add(Component.translatable("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		BakedModel extensionModel = null;
 		BakedModel straightModel = null;
-		BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_DEFAULT_ATTACHMENT);
+		BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_DEFAULT_ATTACHMENT);
 
 		if (tier == StaticPowerTiers.BASIC) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_BASIC_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_BASIC_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_BASIC_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_BASIC_STRAIGHT);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ADVANCED_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ADVANCED_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ADVANCED_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ADVANCED_STRAIGHT);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_STATIC_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_STATIC_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_STATIC_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_STATIC_STRAIGHT);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ENERGIZED_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ENERGIZED_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ENERGIZED_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ENERGIZED_STRAIGHT);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_LUMUM_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_LUMUM_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_LUMUM_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_LUMUM_STRAIGHT);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_CREATIVE_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_CREATIVE_STRAIGHT);
+			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_CREATIVE_EXTENSION);
+			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_CREATIVE_STRAIGHT);
 		}
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);

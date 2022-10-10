@@ -6,6 +6,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidUtilities {
+	public static int getFluidTemperature(FluidStack fluid) {
+		return fluid.getFluid().getFluidType().getTemperature(fluid);
+	}
 
 	public static int getFluidStackHash(FluidStack stack) {
 		CompoundTag serialized = new CompoundTag();

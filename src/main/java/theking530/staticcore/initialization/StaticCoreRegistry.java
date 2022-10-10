@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
@@ -47,8 +47,9 @@ public class StaticCoreRegistry {
 	protected static final List<BlockEntityTypeAllocator<? extends BlockEntity>> BLOCK_ENTITY_ALLOCATORS = new LinkedList<>();
 	protected static final List<ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen>> CONTAINER_ALLOCATORS = new LinkedList<>();
 
-	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, StaticPower.MOD_ID);
-	
+	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, StaticPower.MOD_ID);
+	public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, StaticPower.MOD_ID);
+
 	private static boolean preInitialized;
 	private static boolean initialized;
 
@@ -92,10 +93,11 @@ public class StaticCoreRegistry {
 		LOGGER.info("StaticCore Initialized.");
 	}
 
-	public static void registerBlockEntityTypes(RegistryEvent.Register<BlockEntityType<?>> event) {
+	public static void registerBlockEntityTypes(IEventBus eventBus) {
 		for (BlockEntityTypeAllocator<?> allocator : StaticCoreRegistry.BLOCK_ENTITY_ALLOCATORS) {
-			allocator.register(event);
+			BLOCK_ENTITIES.register(ForgeRegistries.BLOCKS.getKey(allocator.block.get()).getPath(), () -> allocator.getType());
 		}
+		BLOCK_ENTITIES.register(eventBus);
 	}
 
 	public static void registerAttributeDefenitions() throws Exception {
@@ -155,20 +157,19 @@ public class StaticCoreRegistry {
 		});
 	}
 
-	public static void registerContainerTypes(RegistryEvent.Register<MenuType<?>> event) {
-		for (ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen> container : CONTAINER_ALLOCATORS) {
-			container.registerContainer(event);
+	public static void registerContainerTypes(IEventBus eventBus) {
+		for (ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen> allocator : StaticCoreRegistry.CONTAINER_ALLOCATORS) {
+			MENU_TYPES.register(allocator.getName(), () -> allocator.getType());
 		}
+		MENU_TYPES.register(eventBus);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerScreenFactories(FMLClientSetupEvent event) {
-		event.enqueueWork(() -> {
-			for (ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen> container : CONTAINER_ALLOCATORS) {
-				container.registerScreen();
-			}
-			LOGGER.info("Registered all Static Power container types.");
-		});
+		for (ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen> container : CONTAINER_ALLOCATORS) {
+			container.registerScreen();
+		}
+		LOGGER.info("Registered all Static Power container types.");
 	}
 
 	@SuppressWarnings("unchecked")

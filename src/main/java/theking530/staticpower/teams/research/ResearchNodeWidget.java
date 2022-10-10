@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.TooltipFlag;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -51,12 +51,12 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		this.node = node;
 		registerWidget(progressBar = new SimpleProgressBar(28, 20, 86, 7).setMaxProgress(100).disableProgressTooltip());
 		progressBar.setVisible(false);
-		title = new TranslatableComponent(research.getTitle()).getString();
+		title = Component.translatable(research.getTitle()).getString();
 		this.collapsedSize = new Vector2D(width, height);
 		this.maxExpandedSize = new Vector2D(Math.min(getFontRenderer().width(title) + 15, 100), 100);
 		this.tileColor = new SDColor(1, 1, 1, 1);
 		this.bodyColor = new SDColor(1, 1, 1, 1);
-		wrappedDescription = GuiDrawUtilities.wrapString(new TranslatableComponent(research.getDescription()).getString(), maxExpandedSize.getXi() * 2 - 32);
+		wrappedDescription = GuiDrawUtilities.wrapString(Component.translatable(research.getDescription()).getString(), maxExpandedSize.getXi() * 2 - 32);
 	}
 
 	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {

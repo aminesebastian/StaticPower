@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:crucible_recipe",
+	"type": "staticpower:crucible",
 	"input": {
 		"tag": "forge:raw_materials/tungsten"
 	},

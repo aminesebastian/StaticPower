@@ -11,13 +11,13 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
@@ -25,8 +25,8 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
@@ -38,7 +38,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<SmeltingRecipe> {
 	public static final RecipeType<SmeltingRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "powered_furnace"), SmeltingRecipe.class);
 
-	private final TranslatableComponent locTitle;
+	private final MutableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
@@ -48,7 +48,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 
 	public PoweredFurnaceRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.PoweredFurnace.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.PoweredFurnace.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(120, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.PoweredFurnace.get()));
 		pBar = new ArrowProgressBar(62, 19);
@@ -72,17 +72,12 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 	}
 
 	@Override
-	public Class<? extends SmeltingRecipe> getRecipeClass() {
-		return SmeltingRecipe.class;
-	}
-
-	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void draw(SmeltingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 41, 19, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 89, 17, 0);
 
@@ -95,7 +90,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 
 		float experience = recipe.getExperience();
 		if (experience > 0) {
-			TranslatableComponent experienceString = new TranslatableComponent("gui.staticpower.experience", experience);
+			MutableComponent experienceString = Component.translatable("gui.staticpower.experience", experience);
 			GuiDrawUtilities.drawStringCentered(matrixStack, experienceString.getString(), 100, 10, 0.0f, 1f, SDColor.EIGHT_BIT_GREY, false);
 		}
 
@@ -104,10 +99,10 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(SmeltingRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(SmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ")
+			output.add(Component.literal("Usage: ")
 					.append(PowerTextFormatting.formatPowerToString(BlockEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
 		}
 
