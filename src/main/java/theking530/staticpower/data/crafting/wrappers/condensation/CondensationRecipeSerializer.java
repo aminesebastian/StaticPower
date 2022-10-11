@@ -33,7 +33,7 @@ public class CondensationRecipeSerializer extends StaticPowerRecipeSerializer<Co
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(BlockEntityCondenser.DEFAULT_PROCESSING_TIME, 0, json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(() -> BlockEntityCondenser.DEFAULT_PROCESSING_TIME, () -> 0.0, json);
 		// Create the recipe.
 		return new CondensationRecipe(recipeId, inputFluid, outputFluid, heatGeneration, processing);
 	}

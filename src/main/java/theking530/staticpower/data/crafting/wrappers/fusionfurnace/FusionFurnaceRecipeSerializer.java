@@ -33,8 +33,8 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get(),
-				StaticPowerConfig.SERVER.fusionFurnacePowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fusionFurnaceProcessingTime,
+				StaticPowerConfig.SERVER.fusionFurnacePowerUsage, json);
 
 		// Get the output.
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(json.getAsJsonObject("output"));

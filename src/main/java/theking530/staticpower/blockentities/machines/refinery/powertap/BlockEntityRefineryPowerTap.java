@@ -25,7 +25,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity implements IStaticPowerStorage {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRefineryPowerTap> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryPowerTap>(
+	public static final BlockEntityTypeAllocator<BlockEntityRefineryPowerTap> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryPowerTap>("refinery_power_tap",
 			(type, pos, state) -> new BlockEntityRefineryPowerTap(pos, state), ModBlocks.RefineryPowerTap);
 
 	public BlockEntityRefineryPowerTap(BlockPos pos, BlockState state) {

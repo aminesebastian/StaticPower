@@ -38,11 +38,11 @@ import theking530.staticpower.utilities.FluidUtilities;
 
 public class BlockEntityCauldron extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCauldron> RUSTY = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityCauldron(type, pos, state),
-			ModBlocks.RustyCauldron);
+	public static final BlockEntityTypeAllocator<BlockEntityCauldron> RUSTY = new BlockEntityTypeAllocator<>("cauldron_rusty",
+			(type, pos, state) -> new BlockEntityCauldron(type, pos, state), ModBlocks.RustyCauldron);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCauldron> CLEAN = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityCauldron(type, pos, state),
-			ModBlocks.CleanCauldron);
+	public static final BlockEntityTypeAllocator<BlockEntityCauldron> CLEAN = new BlockEntityTypeAllocator<>("cauldron_clean",
+			(type, pos, state) -> new BlockEntityCauldron(type, pos, state), ModBlocks.CleanCauldron);
 	public static final int BOILING_TEMP = 100;
 
 	static {

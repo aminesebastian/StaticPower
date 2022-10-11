@@ -29,13 +29,19 @@ public class BlockEntityTypeAllocator<T extends BlockEntityBase> {
 	@OnlyIn(Dist.CLIENT)
 	public BlockEntityRendererProvider<T> rendererFactory;
 
-	public final TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory;
-	public final RegistryObject<? extends Block> block;
+	private final String name;
+	private final TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory;
+	private final RegistryObject<? extends Block> block;
 	protected BlockEntityType<T> type;
 
-	public BlockEntityTypeAllocator(TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory, RegistryObject<? extends Block> block) {
+	public BlockEntityTypeAllocator(String name, TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory, RegistryObject<? extends Block> block) {
+		this.name = name;
 		this.factory = factory;
 		this.block = block;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -55,9 +61,9 @@ public class BlockEntityTypeAllocator<T extends BlockEntityBase> {
 	}
 
 	public BlockEntityType<T> getType() {
-		if(type == null) {
+		if (type == null) {
 			BlockEntityInitializer<T> initializer = new BlockEntityInitializer<T>(this);
-			type =  BlockEntityType.Builder.of(initializer, block.get()).build(null);
+			type = BlockEntityType.Builder.of(initializer, block.get()).build(null);
 		}
 		return type;
 	}

@@ -39,7 +39,7 @@ public class StaticPowerFluidBuilder implements IClientFluidTypeExtensions {
 		this.clientExtension.setFogColor(fogColor);
 	}
 
-	public StaticPowerFluidBuilder setTint(SDColor tint) {
+	public StaticPowerFluidBuilder setTint(int tint) {
 		clientExtension.setTint(tint);
 		return this;
 	}
@@ -68,8 +68,8 @@ public class StaticPowerFluidBuilder implements IClientFluidTypeExtensions {
 
 	public StaticPowerFluidBundle build() {
 		TagKey<Fluid> tag = ModTags.createFluidWrapper(new ResourceLocation(StaticPower.MOD_ID, name));
-		clientExtension.setFlowingTexture(new ResourceLocation(StaticPower.MOD_ID, "blocks/fluids/" + textureName + "flowing"));
-		clientExtension.setStillTexture(new ResourceLocation(StaticPower.MOD_ID, "blocks/fluids/" + textureName + "still"));
+		clientExtension.setFlowingTexture(new ResourceLocation(StaticPower.MOD_ID, "blocks/fluids/" + textureName + "_flowing"));
+		clientExtension.setStillTexture(new ResourceLocation(StaticPower.MOD_ID, "blocks/fluids/" + textureName + "_still"));
 
 		FluidType.Properties typeProperties = FluidType.Properties.create();
 		if (extraAttributes != null) {

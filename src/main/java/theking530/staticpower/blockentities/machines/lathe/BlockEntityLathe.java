@@ -34,7 +34,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProcessor<LatheRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityLathe> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityLathe(pos, state), ModBlocks.Lathe);
+	public static final BlockEntityTypeAllocator<BlockEntityLathe> TYPE = new BlockEntityTypeAllocator<>("lathe", (type, pos, state) -> new BlockEntityLathe(pos, state),
+			ModBlocks.Lathe);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;

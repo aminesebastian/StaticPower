@@ -26,19 +26,19 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityConveyorExtractor extends AbstractConveyorBlockEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_BASIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_BASIC = new BlockEntityTypeAllocator<>("conveyor_extractor_basic",
 			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.ConveyorExtractorBasic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>("conveyor_extractor_advanced",
 			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ConveyorExtractorAdvanced);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_STATIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_STATIC = new BlockEntityTypeAllocator<>("conveyor_extractor_static",
 			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.ConveyorExtractorStatic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>("conveyor_extractor_energized",
 			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ConveyorExtractorEnergized);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_LUMUM = new BlockEntityTypeAllocator<>("conveyor_extractor_lumum",
 			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorExtractorLumum);
 
 	public final InventoryComponent internalInventory;

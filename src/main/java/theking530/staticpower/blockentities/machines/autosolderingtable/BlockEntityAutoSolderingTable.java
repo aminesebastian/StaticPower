@@ -33,7 +33,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implements IRecipeProcessor<SolderingRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityAutoSolderingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoSolderingTable>(
+	public static final BlockEntityTypeAllocator<BlockEntityAutoSolderingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoSolderingTable>("soldering_table_auto",
 			(type, pos, state) -> new BlockEntityAutoSolderingTable(pos, state), ModBlocks.AutoSolderingTable);
 
 	static {

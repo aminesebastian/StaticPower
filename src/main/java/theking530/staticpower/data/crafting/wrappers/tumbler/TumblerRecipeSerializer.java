@@ -27,8 +27,8 @@ public class TumblerRecipeSerializer extends StaticPowerRecipeSerializer<Tumbler
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.tumblerProcessingTime.get(),
-				StaticPowerConfig.SERVER.tumblerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.tumblerProcessingTime,
+				StaticPowerConfig.SERVER.tumblerPowerUsage, json);
 
 		return new TumblerRecipe(recipeId, input, output, processing);
 	}

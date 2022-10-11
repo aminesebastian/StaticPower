@@ -32,8 +32,8 @@ public class FormerRecipeSerializer extends StaticPowerRecipeSerializer<FormerRe
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.formerProcessingTime.get(),
-				StaticPowerConfig.SERVER.formerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.formerProcessingTime,
+				StaticPowerConfig.SERVER.formerPowerUsage, json);
 
 		// Create the recipe.
 		return new FormerRecipe(recipeId, output, input, mold, processing);

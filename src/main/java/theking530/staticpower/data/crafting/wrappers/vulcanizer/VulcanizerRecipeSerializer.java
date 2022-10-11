@@ -20,8 +20,8 @@ public class VulcanizerRecipeSerializer extends StaticPowerRecipeSerializer<Vulc
 	@Override
 	public VulcanizerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(),
-				StaticPowerConfig.SERVER.vulcanizerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.vulcanizerProcessingTime,
+				StaticPowerConfig.SERVER.vulcanizerPowerUsage, json);
 
 		// Get the input fluid.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");

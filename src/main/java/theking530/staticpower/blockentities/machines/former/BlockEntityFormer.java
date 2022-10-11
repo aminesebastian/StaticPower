@@ -29,7 +29,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProcessor<FormerRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFormer> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityFormer(pos, state),
+	public static final BlockEntityTypeAllocator<BlockEntityFormer> TYPE = new BlockEntityTypeAllocator<>("former", (type, pos, state) -> new BlockEntityFormer(pos, state),
 			ModBlocks.Former);
 
 	public final InventoryComponent inputInventory;

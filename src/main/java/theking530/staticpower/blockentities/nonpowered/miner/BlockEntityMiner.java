@@ -27,7 +27,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityMiner extends AbstractTileEntityMiner {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityMiner> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityMiner(pos, state), ModBlocks.Miner);
+	public static final BlockEntityTypeAllocator<BlockEntityMiner> TYPE = new BlockEntityTypeAllocator<>("miner", (type, pos, state) -> new BlockEntityMiner(pos, state),
+			ModBlocks.Miner);
 
 	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;

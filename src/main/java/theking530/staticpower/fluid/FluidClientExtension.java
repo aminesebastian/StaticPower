@@ -10,10 +10,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import theking530.staticcore.utilities.SDColor;
 
@@ -31,8 +28,8 @@ public class FluidClientExtension implements IClientFluidTypeExtensions {
 		this.fogColor = fogColor;
 	}
 
-	public void setTint(SDColor tint) {
-		this.tint = tint.encodeInInteger();
+	public void setTint(int tint) {
+		this.tint = tint;
 	}
 
 	public void setStillTexture(ResourceLocation stillTexture) {
@@ -65,7 +62,7 @@ public class FluidClientExtension implements IClientFluidTypeExtensions {
 	}
 
 	@Override
-	public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+	public int getTintColor() {
 		return tint;
 	}
 

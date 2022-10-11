@@ -71,7 +71,7 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockEntityTreeFarm extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTreeFarm> TYPE = new BlockEntityTypeAllocator<BlockEntityTreeFarm>(
+	public static final BlockEntityTypeAllocator<BlockEntityTreeFarm> TYPE = new BlockEntityTypeAllocator<BlockEntityTreeFarm>("tree_farm",
 			(type, pos, state) -> new BlockEntityTreeFarm(pos, state), ModBlocks.TreeFarmer);
 
 	static {

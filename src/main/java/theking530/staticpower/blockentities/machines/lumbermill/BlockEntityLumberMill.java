@@ -37,8 +37,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipeProcessor<LumberMillRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityLumberMill> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityLumberMill(pos, state),
-			ModBlocks.LumberMill);
+	public static final BlockEntityTypeAllocator<BlockEntityLumberMill> TYPE = new BlockEntityTypeAllocator<>("lumber_mill",
+			(type, pos, state) -> new BlockEntityLumberMill(pos, state), ModBlocks.LumberMill);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;

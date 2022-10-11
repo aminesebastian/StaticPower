@@ -8,7 +8,6 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,7 +16,6 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
-import theking530.staticpower.entities.enox.EntityEnox;
 
 public class TypeSmeep extends AbstractSpawnableMobType<EntitySmeep> {
 	public TypeSmeep() {
@@ -38,11 +36,11 @@ public class TypeSmeep extends AbstractSpawnableMobType<EntitySmeep> {
 
 	@Override
 	public void registerPlacements(FMLCommonSetupEvent event) {
-		SpawnPlacements.register(getType(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, null);
+		SpawnPlacements.register(getType(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE, this::canSpawn);
 	}
 
 	@Override
-	protected boolean canSpawn(EntityType<EntityEnox> type, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
-		return Animal.checkAnimalSpawnRules(type, level, spawnType, pos, random) && level.getBlockState(pos).is(Blocks.GRASS_BLOCK);
+	protected boolean canSpawn(EntityType<EntitySmeep> type, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+		return Animal.checkAnimalSpawnRules(type, level, spawnType, pos, random);
 	}
 }

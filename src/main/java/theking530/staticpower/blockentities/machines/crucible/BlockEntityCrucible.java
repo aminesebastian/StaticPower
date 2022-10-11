@@ -39,7 +39,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityCrucible extends BlockEntityMachine implements IRecipeProcessor<CrucibleRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCrucible> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityCrucible(pos, state),
+	public static final BlockEntityTypeAllocator<BlockEntityCrucible> TYPE = new BlockEntityTypeAllocator<>("crucible", (type, pos, state) -> new BlockEntityCrucible(pos, state),
 			ModBlocks.Crucible);
 
 	public final InventoryComponent inputInventory;

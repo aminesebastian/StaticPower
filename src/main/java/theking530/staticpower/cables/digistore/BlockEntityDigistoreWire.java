@@ -9,7 +9,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityDigistoreWire extends BaseDigistoreTileEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityDigistoreWire> TYPE = new BlockEntityTypeAllocator<BlockEntityDigistoreWire>(
+	public static final BlockEntityTypeAllocator<BlockEntityDigistoreWire> TYPE = new BlockEntityTypeAllocator<BlockEntityDigistoreWire>("cable_digistore_wire",
 			(type, pos, state) -> new BlockEntityDigistoreWire(pos, state), ModBlocks.DigistoreWire);
 
 	public BlockEntityDigistoreWire(BlockPos pos, BlockState state) {

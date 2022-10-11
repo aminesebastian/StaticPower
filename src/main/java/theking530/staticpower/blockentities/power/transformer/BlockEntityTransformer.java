@@ -24,7 +24,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityTransformer extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTransformer> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityTransformer>(
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_basic",
 			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerBasic);
 
 	public final PowerStorageComponent powerStorage;
@@ -39,7 +39,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		// Enable face interaction.
 		enableFaceInteraction();
 		ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.FRONT_BACK_INPUT_OUTPUT, true);
-		
+
 		// Capture the current and voltage ranges.
 		possibleOutputVoltageRange = getTierObject().powerConfiguration.getTransformerVoltageRange();
 		maximumPossibleOutputCurrent = getTierObject().powerConfiguration.defaultMaximumPowerOutput.get();

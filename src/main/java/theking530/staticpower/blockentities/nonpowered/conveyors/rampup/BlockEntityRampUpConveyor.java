@@ -16,19 +16,19 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRampUpConveyor extends AbstractConveyorBlockEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_BASIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_BASIC = new BlockEntityTypeAllocator<>("conveyor_ramp_up_basic",
 			(type, pos, state) -> new BlockEntityRampUpConveyor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.RampUpConveyorBasic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>("conveyor_ramp_up_advanced",
 			(type, pos, state) -> new BlockEntityRampUpConveyor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.RampUpConveyorAdvanced);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_STATIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_STATIC = new BlockEntityTypeAllocator<>("conveyor_ramp_up_static",
 			(type, pos, state) -> new BlockEntityRampUpConveyor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.RampUpConveyorStatic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>("conveyor_ramp_up_energized",
 			(type, pos, state) -> new BlockEntityRampUpConveyor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.RampUpConveyorEnergized);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityRampUpConveyor> TYPE_LUMUM = new BlockEntityTypeAllocator<>("conveyor_ramp_up_lumum",
 			(type, pos, state) -> new BlockEntityRampUpConveyor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.RampUpConveyorLumum);
 
 	public BlockEntityRampUpConveyor(BlockEntityTypeAllocator<BlockEntityRampUpConveyor> type, BlockPos pos, BlockState state, ResourceLocation tier) {

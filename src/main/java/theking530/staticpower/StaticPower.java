@@ -33,6 +33,7 @@ import theking530.staticpower.data.tiers.wood.StaticPowerTierWood;
 import theking530.staticpower.data.tiers.zinc.StaticPowerTierZinc;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
+import theking530.staticpower.init.ModFeatures;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModLootSerializers;
@@ -43,7 +44,6 @@ import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.cables.ModCableCapabilities;
 import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
-import theking530.staticpower.world.trees.ModTrees;
 
 @Mod(StaticPower.MOD_ID)
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
@@ -53,60 +53,55 @@ public class StaticPower {
 	public static final CreativeModeTab CREATIVE_TAB = new StaticPowerItemGroup();
 
 	public StaticPower() {
-		try {
-			IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-			// Enable forge's milk.
-			ForgeMod.enableMilkFluid();
+		// Enable forge's milk.
+		ForgeMod.enableMilkFluid();
 
-			StaticPowerConfig.preInitialize();
+		StaticPowerConfig.preInitialize();
 
-			StaticPowerConfig.registerTier(StaticPowerTiers.WOOD, StaticPowerTierWood::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.BASIC, StaticPowerTierBasic::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.ADVANCED, StaticPowerTierAdvanced::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.STATIC, StaticPowerTierStatic::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.ENERGIZED, StaticPowerTierEnergized::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.LUMUM, StaticPowerTierLumum::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.CREATIVE, StaticPowerTierCreative::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.WOOD, StaticPowerTierWood::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.BASIC, StaticPowerTierBasic::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.ADVANCED, StaticPowerTierAdvanced::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.STATIC, StaticPowerTierStatic::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.ENERGIZED, StaticPowerTierEnergized::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.LUMUM, StaticPowerTierLumum::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.CREATIVE, StaticPowerTierCreative::new);
 
-			StaticPowerConfig.registerTier(StaticPowerTiers.ALUMINUM, StaticPowerTierAluminum::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.ZINC, StaticPowerTierZinc::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.BRONZE, StaticPowerTierBronze::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.COPPER, StaticPowerTierCopper::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.GOLD, StaticPowerTierGold::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.IRON, StaticPowerTierIron::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.SILVER, StaticPowerTierSilver::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.TIN, StaticPowerTierTin::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.TUNGSTEN, StaticPowerTierTungsten::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.ALUMINUM, StaticPowerTierAluminum::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.ZINC, StaticPowerTierZinc::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.BRONZE, StaticPowerTierBronze::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.COPPER, StaticPowerTierCopper::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.GOLD, StaticPowerTierGold::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.IRON, StaticPowerTierIron::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.SILVER, StaticPowerTierSilver::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.TIN, StaticPowerTierTin::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.TUNGSTEN, StaticPowerTierTungsten::new);
 
-			StaticPowerConfig.registerTier(StaticPowerTiers.DIAMOND, StaticPowerTierDiamond::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.RUBY, StaticPowerTierRuby::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.SAPPHIRE, StaticPowerTierSapphire::new);
-			StaticPowerConfig.registerTier(StaticPowerTiers.EMERALD, StaticPowerTierEmerald::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.DIAMOND, StaticPowerTierDiamond::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.RUBY, StaticPowerTierRuby::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.SAPPHIRE, StaticPowerTierSapphire::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.EMERALD, StaticPowerTierEmerald::new);
 
-			StaticCoreRegistry.preInitialize();
-			ModRecipeTypes.init(eventBus);
-			ModRecipeSerializers.init(eventBus);
-			ModBlocks.init(eventBus);
-			ModItems.init(eventBus);
-			ModFluids.init(eventBus);
-			ModNetworkMessages.init();
-			ModTrees.init();
-			ModEntities.init(eventBus);
+		StaticCoreRegistry.preInitialize();
+		ModRecipeTypes.init(eventBus);
+		ModRecipeSerializers.init(eventBus);
+		ModBlocks.init(eventBus);
+		ModItems.init(eventBus);
+		ModFluids.init(eventBus);
+		ModNetworkMessages.init();
+		ModEntities.init(eventBus);
 
-			ModCableDestinations.init(eventBus);
-			ModCableModules.init(eventBus);
-			ModCableCapabilities.init(eventBus);
-			ModLootSerializers.init(eventBus);
+		ModCableDestinations.init(eventBus);
+		ModCableModules.init(eventBus);
+		ModCableCapabilities.init(eventBus);
+		ModLootSerializers.init(eventBus);
+		ModFeatures.init(eventBus);
 
-			StaticCoreRegistry.registerBlockEntityTypes(eventBus);
-			StaticCoreRegistry.registerContainerTypes(eventBus);
+		StaticCoreRegistry.postInitialize();
+		StaticCoreRegistry.registerBlockEntityTypes(eventBus);
+		StaticCoreRegistry.registerContainerTypes(eventBus);
 
-			ModProducts.init(eventBus);
-
-			StaticCoreRegistry.postInitialize();
-		} catch (Exception e) {
-			LOGGER.error("An error occured during Static Power initialization.", e);
-		}
+		ModProducts.init(eventBus);
 	}
 }

@@ -18,7 +18,7 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockEntityLightSocket extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityLightSocket> TYPE = new BlockEntityTypeAllocator<BlockEntityLightSocket>(
+	public static final BlockEntityTypeAllocator<BlockEntityLightSocket> TYPE = new BlockEntityTypeAllocator<BlockEntityLightSocket>("light_socket",
 			(allocator, pos, state) -> new BlockEntityLightSocket(allocator, pos, state), ModBlocks.LightSocket);
 
 	public static final ModelProperty<LightSocketRenderingState> LIGHT_SOCKET_RENDERING_STATE = new ModelProperty<LightSocketRenderingState>();

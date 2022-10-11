@@ -28,7 +28,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowerMetricsSyncConsumer {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerMonitor> TYPE = new BlockEntityTypeAllocator<BlockEntityPowerMonitor>(
+	public static final BlockEntityTypeAllocator<BlockEntityPowerMonitor> TYPE = new BlockEntityTypeAllocator<BlockEntityPowerMonitor>("power_monitor",
 			(allocator, pos, state) -> new BlockEntityPowerMonitor(allocator, pos, state), ModBlocks.PowerMonitor);
 
 	static {

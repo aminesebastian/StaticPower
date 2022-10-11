@@ -36,7 +36,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRecipeProcessor<SolidFuelRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntitySolidGenerator(pos, state),
+	public static final BlockEntityTypeAllocator<BlockEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>("solid_generator", (type, pos, state) -> new BlockEntitySolidGenerator(pos, state),
 			ModBlocks.SolidGenerator);
 
 	public final InventoryComponent inputInventory;

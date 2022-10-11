@@ -40,8 +40,8 @@ public class MixerRecipeSerializer extends StaticPowerRecipeSerializer<MixerReci
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.mixerProcessingTime.get(),
-				StaticPowerConfig.SERVER.mixerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.mixerProcessingTime, StaticPowerConfig.SERVER.mixerPowerUsage,
+				json);
 
 		// Get the fluid result.
 		FluidStack output = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("result"));

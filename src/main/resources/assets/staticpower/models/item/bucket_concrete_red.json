@@ -1,3 +1,9 @@
 {
-	"parent": "minecraft:item/bucket"
+	"parent": "forge:item/bucket",
+	"loader": "forge:bucket",
+	"textures": {
+		"base": "item/bucket",
+		"fluid": "staticpower:items/buckets/bucket_concrete_mask"
+	},
+	"fluid": "staticpower:concrete_red"
 }

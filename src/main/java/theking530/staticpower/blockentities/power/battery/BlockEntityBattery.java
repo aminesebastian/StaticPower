@@ -27,27 +27,27 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityBattery extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityBattery>(
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_basic",
 			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryBasic);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityBattery>(
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_advanced",
 			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryAdvanced);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityBattery>(
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_static",
 			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryStatic);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityBattery>(
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_energized",
 			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryEnergized);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityBattery>(
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_lumum",
 			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryLumum);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityBattery>(
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_creative",
 			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryCreative);
 
 	public static final DefaultSideConfiguration DEFAULT_SIDE_CONFIGURATION = new DefaultSideConfiguration();
@@ -73,7 +73,7 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		// Enable face interaction.
 		enableFaceInteraction();
 		this.ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION, true);
-		
+
 		// Add the power distributor.
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", powerStorage));
 		powerStorage.setSideConfiguration(ioSideConfiguration);
@@ -82,8 +82,8 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
 		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
 		powerStorage.setInputCurrentTypes(CurrentType.DIRECT, CurrentType.ALTERNATING);
-		
-		if(this.getTier() == StaticPowerTiers.CREATIVE) {
+
+		if (this.getTier() == StaticPowerTiers.CREATIVE) {
 			powerStorage.setMaximumInputPower(Double.MAX_VALUE);
 			powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
 		}

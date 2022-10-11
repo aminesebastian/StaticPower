@@ -18,7 +18,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityInverter extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityInverter> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityInverter>(
+	public static final BlockEntityTypeAllocator<BlockEntityInverter> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityInverter>("inverted_basic",
 			(allocator, pos, state) -> new BlockEntityInverter(allocator, pos, state), ModBlocks.InverterBasic);
 
 	public final PowerStorageComponent powerStorage;

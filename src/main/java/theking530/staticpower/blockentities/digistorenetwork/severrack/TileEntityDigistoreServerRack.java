@@ -20,7 +20,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new BlockEntityTypeAllocator<TileEntityDigistoreServerRack>(
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new BlockEntityTypeAllocator<TileEntityDigistoreServerRack>("digistore_server_rack",
 			(type, pos, state) -> new TileEntityDigistoreServerRack(pos, state), ModBlocks.DigistoreServerRack);
 
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */

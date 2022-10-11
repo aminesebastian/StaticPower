@@ -29,7 +29,7 @@ import theking530.staticpower.init.ModTags;
 
 public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHydroponicFarmer> TYPE = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityHydroponicFarmer> TYPE = new BlockEntityTypeAllocator<>("hydroponic_farmer",
 			(type, pos, state) -> new BlockEntityHydroponicFarmer(pos, state), ModBlocks.HydroponicFarmer);
 	public static final int MAX_PODS = 4;
 

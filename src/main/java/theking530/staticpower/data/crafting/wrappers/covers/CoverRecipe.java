@@ -20,7 +20,7 @@ import theking530.staticpower.items.tools.CoverSaw;
 
 public class CoverRecipe extends CustomRecipe {
 	public static final SimpleRecipeSerializer<CoverRecipe> SERIALIZER_INSTANCE;
-	public static final String ID = "cover_recipe";
+	public static final String ID = "cover";
 	public static final RecipeType<CoverRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CoverRecipe>();
 
 	static {

@@ -19,7 +19,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityDirectDropper extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityDirectDropper> TYPE = new BlockEntityTypeAllocator<BlockEntityDirectDropper>(
+	public static final BlockEntityTypeAllocator<BlockEntityDirectDropper> TYPE = new BlockEntityTypeAllocator<BlockEntityDirectDropper>("direct_dropper",
 			(type, pos, state) -> new BlockEntityDirectDropper(pos, state), ModBlocks.DirectDropper);
 	public static final int DROP_DELAY = 4;
 

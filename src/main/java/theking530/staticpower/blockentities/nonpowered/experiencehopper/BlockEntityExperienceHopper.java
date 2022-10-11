@@ -29,8 +29,8 @@ import theking530.staticpower.init.ModFluids;
 
 public class BlockEntityExperienceHopper extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityExperienceHopper> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityExperienceHopper(pos, state),
-			ModBlocks.ExperienceHopper);
+	public static final BlockEntityTypeAllocator<BlockEntityExperienceHopper> TYPE = new BlockEntityTypeAllocator<>("experience_hopper",
+			(type, pos, state) -> new BlockEntityExperienceHopper(pos, state), ModBlocks.ExperienceHopper);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipeProcessor<VulcanizerRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityVulcanizer> TYPE = new BlockEntityTypeAllocator<BlockEntityVulcanizer>(
+	public static final BlockEntityTypeAllocator<BlockEntityVulcanizer> TYPE = new BlockEntityTypeAllocator<BlockEntityVulcanizer>("vulcanizer",
 			(type, pos, state) -> new BlockEntityVulcanizer(pos, state), ModBlocks.Vulcanizer);
 
 	public final InventoryComponent outputInventory;

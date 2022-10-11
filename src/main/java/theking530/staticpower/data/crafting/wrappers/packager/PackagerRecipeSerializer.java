@@ -23,8 +23,8 @@ public class PackagerRecipeSerializer extends StaticPowerRecipeSerializer<Packag
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.packagerProcessingTime.get(),
-				StaticPowerConfig.SERVER.packagerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.packagerProcessingTime,
+				StaticPowerConfig.SERVER.packagerPowerUsage, json);
 
 		// Get the recipe size.
 		int size = json.get("size").getAsInt();

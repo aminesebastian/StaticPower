@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:hydroponic_farmer",
+	"type": "staticpower:hydroponic_farming",
 	"input": {
 		"item": "staticpower:seed_lumum"
 	}

@@ -35,8 +35,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRecipeProcessor<GrinderRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPoweredGrinder> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityPoweredGrinder(pos, state),
-			ModBlocks.PoweredGrinder);
+	public static final BlockEntityTypeAllocator<BlockEntityPoweredGrinder> TYPE = new BlockEntityTypeAllocator<>("grinder",
+			(type, pos, state) -> new BlockEntityPoweredGrinder(pos, state), ModBlocks.PoweredGrinder);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;

@@ -65,7 +65,7 @@ public class StaticPowerConfig {
 		public final ConfigValue<Boolean> generateRubberTrees;
 		public final ConfigValue<Integer> minRubberTreeCount;
 		public final ConfigValue<Integer> maxRubberTreeCount;
-		public final ConfigValue<Double> rubberTreeSpawnChance;
+		public final ConfigValue<Float> rubberTreeSpawnChance;
 		public final ConfigValue<Boolean> disableRubberTreesInSnowyBiomes;
 
 		public final BooleanValue generateTinOre;
@@ -94,10 +94,6 @@ public class StaticPowerConfig {
 		public final BooleanValue generateNetherSilverOre;
 		public final BooleanValue generateNetherPlatinumOre;
 		public final BooleanValue generateNetherTungstenOre;
-
-		public final ConfigValue<Integer> smeepSpawnWeight;
-		public final ConfigValue<Integer> smeepMinCount;
-		public final ConfigValue<Integer> smeepMaxCount;
 
 		public final ConfigValue<Integer> minRubberWoodBarkPerStrip;
 		public final ConfigValue<Integer> maxRubberWoodBarkPerStrip;
@@ -333,23 +329,8 @@ public class StaticPowerConfig {
 							.translation(StaticPower.MOD_ID + ".config." + "maxRubberTreeCount").define("MaxRubberTreeCount", 4);
 					rubberTreeSpawnChance = builder.comment(
 							"When a biome is created, the MinRuberTreeCount amount of trees is allocated. This value represents the chance the number of trees between min and max tree counts will be added in addition. Setting this value to 0 would force all biomes to only contain the MinRubberTreeCount amount of trees, and setting it to 1 will force all biomes to contain MaxRubberTreeCount + RandomNumberBetween(MinRubberTreeCount, MaxRubberTreeCount) trees.")
-							.translation(StaticPower.MOD_ID + ".config." + "rubberTreeSpawnChance").define("RubberTreeSpawnChance", 0.15);
+							.translation(StaticPower.MOD_ID + ".config." + "rubberTreeSpawnChance").define("RubberTreeSpawnChance", 0.15f);
 
-				}
-				builder.pop();
-				builder.push("Mobs");
-				{
-					builder.push("Smeep");
-					{
-						smeepSpawnWeight = builder.comment(
-								"Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.")
-								.translation(StaticPower.MOD_ID + ".config." + "smeepSpawnWeight").define("SmeepSpawnWeight", 4);
-						smeepMinCount = builder.comment("Controls how many slots the regulator has.").translation(StaticPower.MOD_ID + ".config." + "SmeepMinCount")
-								.define("smeepMinCount", 2);
-						smeepMaxCount = builder.comment("Controls how many items can be transfered for each item type during a regulation.")
-								.translation(StaticPower.MOD_ID + ".config." + "smeepMaxCount").define("SmeepMaxCount", 5);
-					}
-					builder.pop();
 				}
 				builder.pop();
 			}

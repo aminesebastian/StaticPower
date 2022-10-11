@@ -55,7 +55,7 @@ import theking530.staticpower.init.ModTags;
 
 public class BlockEntityRefineryController extends BlockEntityMachine implements IRecipeProcessor<RefineryRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRefineryController> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryController>(
+	public static final BlockEntityTypeAllocator<BlockEntityRefineryController> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryController>("refinery_controller",
 			(type, pos, state) -> new BlockEntityRefineryController(pos, state), ModBlocks.RefineryController);
 	public static final int MAX_EFFICIENCY_TOWER_HEIGHT = 4;
 

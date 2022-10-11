@@ -32,8 +32,8 @@ public class CastingRecipeSerializer extends StaticPowerRecipeSerializer<Casting
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.casterProcessingTime.get(),
-				StaticPowerConfig.SERVER.casterPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.casterProcessingTime,
+				StaticPowerConfig.SERVER.casterPowerUsage, json);
 
 		// Create the recipe.
 		return new CastingRecipe(recipeId, output, fluidInput, mold, processing);

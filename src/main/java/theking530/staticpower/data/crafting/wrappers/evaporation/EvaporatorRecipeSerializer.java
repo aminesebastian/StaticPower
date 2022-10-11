@@ -30,7 +30,8 @@ public class EvaporatorRecipeSerializer extends StaticPowerRecipeSerializer<Evap
 		int heatCost = BlockEntityEvaporator.DEFAULT_EVAPORATION_HEAT;
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(BlockEntityEvaporator.DEFAULT_PROCESSING_TIME, 0, json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(() -> BlockEntityEvaporator.DEFAULT_PROCESSING_TIME, () -> 0.0, json);
+
 		// Capture the heat cost.
 		if (GsonHelper.isValidNode(json, "heat")) {
 			heatCost = json.get("heat").getAsInt();

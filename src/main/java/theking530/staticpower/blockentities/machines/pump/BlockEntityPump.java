@@ -51,22 +51,22 @@ public class BlockEntityPump extends BlockEntityMachine {
 //	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_IRON = new BlockEntityTypeAllocator<BlockEntityPump>(
 //			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.IronPump);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityPump>(
+	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityPump>("pump_basic",
 			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.BasicPump);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityPump>(
+	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityPump>("pump_advanced",
 			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.AdvancedPump);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityPump>(
+	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityPump>("pump_static",
 			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.StaticPump);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityPump>(
+	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityPump>("pump_energized",
 			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.EnergizedPump);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityPump>(
+	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityPump>("pump_lumum",
 			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.LumumPump);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityPump>(
+	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityPump>("pump_creative",
 			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.CreativePump);
 
 	static {
@@ -143,9 +143,8 @@ public class BlockEntityPump extends BlockEntityMachine {
 	 * @return
 	 */
 	public ProcessingCheckState canProcess() {
-		if (!this.powerStorage.canSupplyPower(StaticPowerConfig.SERVER.pumpPowerUsage.get())) {
+		if (this.powerStorage.getStoredPower() < StaticPowerConfig.SERVER.pumpPowerUsage.get()) {
 			return ProcessingCheckState.notEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get());
-
 		}
 		if ((fluidTankComponent.getFluidAmount() + 1000) > fluidTankComponent.getCapacity()) {
 			return ProcessingCheckState.fluidOutputFull();

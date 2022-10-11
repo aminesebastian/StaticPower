@@ -29,11 +29,11 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implements IFluidHandler {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRefineryFluidIO> INPUT_TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryFluidIO>(
+	public static final BlockEntityTypeAllocator<BlockEntityRefineryFluidIO> INPUT_TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryFluidIO>("refinery_fluid_input",
 			(type, pos, state) -> new BlockEntityRefineryFluidIO(type, pos, state, false), ModBlocks.RefineryFluidInput);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRefineryFluidIO> OUTPUT_TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryFluidIO>(
+	public static final BlockEntityTypeAllocator<BlockEntityRefineryFluidIO> OUTPUT_TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryFluidIO>("refinery_fluid_output",
 			(type, pos, state) -> new BlockEntityRefineryFluidIO(type, pos, state, true), ModBlocks.RefineryFluidOutput);
 
 	private final RefineryFluidInterface[] tankInterfaces;
@@ -73,12 +73,14 @@ public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implemen
 			ioSideConfiguration.setDefaultConfiguration(
 					new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Output2).setSide(BlockSide.RIGHT, true, MachineSideMode.Output3)
 							.setSide(BlockSide.FRONT, true, MachineSideMode.Output4).setSide(BlockSide.BOTTOM, true, MachineSideMode.Output2)
-							.setSide(BlockSide.LEFT, true, MachineSideMode.Output3).setSide(BlockSide.BACK, true, MachineSideMode.Output4), true);
+							.setSide(BlockSide.LEFT, true, MachineSideMode.Output3).setSide(BlockSide.BACK, true, MachineSideMode.Output4),
+					true);
 		} else {
 			ioSideConfiguration.setDefaultConfiguration(
 					new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input2).setSide(BlockSide.RIGHT, true, MachineSideMode.Input2)
 							.setSide(BlockSide.FRONT, true, MachineSideMode.Input2).setSide(BlockSide.BOTTOM, true, MachineSideMode.Input3)
-							.setSide(BlockSide.LEFT, true, MachineSideMode.Input3).setSide(BlockSide.BACK, true, MachineSideMode.Input3), true);
+							.setSide(BlockSide.LEFT, true, MachineSideMode.Input3).setSide(BlockSide.BACK, true, MachineSideMode.Input3),
+					true);
 		}
 	}
 

@@ -31,8 +31,8 @@ public class LatheRecipeSerializer extends StaticPowerRecipeSerializer<LatheReci
 		NonNullList<StaticPowerIngredient> inputs = LatheRecipe.deserializeIngredients(astring, map, width, height);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.latheProcessingTime.get(),
-				StaticPowerConfig.SERVER.lathePowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.latheProcessingTime, StaticPowerConfig.SERVER.lathePowerUsage,
+				json);
 
 		// Get the outputs.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");

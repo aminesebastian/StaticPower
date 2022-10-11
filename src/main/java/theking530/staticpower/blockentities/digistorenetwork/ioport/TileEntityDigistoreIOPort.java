@@ -18,8 +18,8 @@ import theking530.staticpower.init.cables.ModCableModules;
 
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityDigistoreIOPort(pos, state),
-			ModBlocks.DigistoreIOPort);
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>("digistore_io_port",
+			(type, pos, state) -> new TileEntityDigistoreIOPort(pos, state), ModBlocks.DigistoreIOPort);
 
 	public TileEntityDigistoreIOPort(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 5);

@@ -30,19 +30,19 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityConveyorSupplier extends AbstractConveyorBlockEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_BASIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_BASIC = new BlockEntityTypeAllocator<>("conveyor_supplier_basic",
 			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.ConveyorSupplierBasic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_ADVANCED = new BlockEntityTypeAllocator<>("conveyor_supplier_advanced",
 			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ConveyorSupplierAdvanced);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_STATIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_STATIC = new BlockEntityTypeAllocator<>("conveyor_supplier_static",
 			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.ConveyorSupplierStatic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>("conveyor_supplier_energized",
 			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ConveyorSupplierEnergized);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_LUMUM = new BlockEntityTypeAllocator<>("conveyor_supplier_lumum",
 			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorSupplierLumum);
 
 	public final InventoryComponent internalInventory;

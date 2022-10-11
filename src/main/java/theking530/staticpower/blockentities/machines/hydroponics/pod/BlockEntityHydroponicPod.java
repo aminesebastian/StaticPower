@@ -51,8 +51,8 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements IRecipeProcessor<HydroponicFarmingRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHydroponicPod> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityHydroponicPod(pos, state),
-			ModBlocks.HydroponicPod);
+	public static final BlockEntityTypeAllocator<BlockEntityHydroponicPod> TYPE = new BlockEntityTypeAllocator<>("hydroponic_farmer_pod",
+			(type, pos, state) -> new BlockEntityHydroponicPod(pos, state), ModBlocks.HydroponicPod);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;

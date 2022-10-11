@@ -32,7 +32,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityEvaporator extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityEvaporator> TYPE = new BlockEntityTypeAllocator<BlockEntityEvaporator>(
+	public static final BlockEntityTypeAllocator<BlockEntityEvaporator> TYPE = new BlockEntityTypeAllocator<BlockEntityEvaporator>("evaporator",
 			(type, pos, state) -> new BlockEntityEvaporator(pos, state), ModBlocks.Evaporator);
 
 	static {

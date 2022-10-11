@@ -36,7 +36,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class BlockEntityPackager extends BlockEntityMachine implements IRecipeProcessor<PackagerRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPackager> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityPackager(pos, state),
+	public static final BlockEntityTypeAllocator<BlockEntityPackager> TYPE = new BlockEntityTypeAllocator<>("packager", (type, pos, state) -> new BlockEntityPackager(pos, state),
 			ModBlocks.Packager);
 
 	/** The input inventory containing the items to pack. */

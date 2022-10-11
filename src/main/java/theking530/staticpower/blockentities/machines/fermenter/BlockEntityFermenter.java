@@ -36,8 +36,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeProcessor<FermenterRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFermenter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityFermenter(pos, state),
-			ModBlocks.Fermenter);
+	public static final BlockEntityTypeAllocator<BlockEntityFermenter> TYPE = new BlockEntityTypeAllocator<>("fermenter",
+			(type, pos, state) -> new BlockEntityFermenter(pos, state), ModBlocks.Fermenter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;

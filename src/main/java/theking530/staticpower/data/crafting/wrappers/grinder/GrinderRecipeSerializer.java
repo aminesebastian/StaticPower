@@ -25,8 +25,8 @@ public class GrinderRecipeSerializer extends StaticPowerRecipeSerializer<Grinder
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(),
-				StaticPowerConfig.SERVER.poweredGrinderPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.poweredGrinderProcessingTime,
+				StaticPowerConfig.SERVER.poweredGrinderPowerUsage, json);
 
 		// Check the outputs. If it is an array, get all the outputs and make a new
 		// recipe. Otherwise, just get the single output and make a new recipe.

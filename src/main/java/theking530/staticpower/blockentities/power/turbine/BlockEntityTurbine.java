@@ -50,7 +50,7 @@ import theking530.staticpower.items.tools.TurbineBlades;
 
 public class BlockEntityTurbine extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTurbine> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityTurbine(pos, state),
+	public static final BlockEntityTypeAllocator<BlockEntityTurbine> TYPE = new BlockEntityTypeAllocator<>("turbine", (type, pos, state) -> new BlockEntityTurbine(pos, state),
 			ModBlocks.Turbine);
 
 	static {

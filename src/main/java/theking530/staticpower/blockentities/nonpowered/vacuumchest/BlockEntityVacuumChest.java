@@ -51,8 +51,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityVacuumChest extends BlockEntityConfigurable implements MenuProvider {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityVacuumChest> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityVacuumChest(pos, state),
-			ModBlocks.VacuumChest);
+	public static final BlockEntityTypeAllocator<BlockEntityVacuumChest> TYPE = new BlockEntityTypeAllocator<>("vacuum_chest",
+			(type, pos, state) -> new BlockEntityVacuumChest(pos, state), ModBlocks.VacuumChest);
 
 	public static final int DEFAULT_RANGE = 6;
 	public static final int DEFAULT_TANK_SIZE = 5000;

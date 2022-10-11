@@ -42,7 +42,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeProcessor<AutoSmithRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityAutoSmith> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoSmith>(
+	public static final BlockEntityTypeAllocator<BlockEntityAutoSmith> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoSmith>("auto_smith",
 			(allocator, pos, state) -> new BlockEntityAutoSmith(pos, state), ModBlocks.AutoSmith);
 
 	public final InventoryComponent inputInventory;

@@ -24,10 +24,10 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityRandomItemGenerator extends BlockEntityConfigurable implements MenuProvider {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> ANY_ITEM = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> ANY_ITEM = new BlockEntityTypeAllocator<>("random_item_generator",
 			(type, pos, state) -> new BlockEntityRandomItemGenerator(type, pos, state, null), ModBlocks.RandomItemGenerator);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> ORE = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> ORE = new BlockEntityTypeAllocator<>("random_ore_generator",
 			(type, pos, state) -> new BlockEntityRandomItemGenerator(type, pos, state, ModTags.ORE), ModBlocks.RandomOreGenerator);
 
 	private static final float GENERATION_RATE = 4;

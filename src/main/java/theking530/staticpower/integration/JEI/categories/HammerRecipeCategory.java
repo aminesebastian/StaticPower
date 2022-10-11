@@ -88,7 +88,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, HammerRecipe recipe, IFocusGroup ingredients) {
 		// Create the input ingredients.
-		List<Ingredient> input = new ArrayList<Ingredient>();
+		List<ItemStack> input = new ArrayList<ItemStack>();
 
 		if (recipe.isBlockType()) {
 			// Allocate the inputs block array.
@@ -99,12 +99,16 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 				inputBlocks[index] = new ItemStack(block);
 				index++;
 			}
-			input.add(Ingredient.of(inputBlocks));
+			for (ItemStack stack : Ingredient.of(inputBlocks).getItems()) {
+				input.add(stack);
+			}
 		} else {
-			input.add(recipe.getInputItem().getIngredient());
+			for (ItemStack stack : recipe.getInputItem().getIngredient().getItems()) {
+				input.add(stack);
+			}
 		}
 
-		builder.addSlot(RecipeIngredientRole.INPUT, 3, 15).addIngredientsUnsafe(input);
+		builder.addSlot(RecipeIngredientRole.INPUT, 3, 15).addIngredients(VanillaTypes.ITEM_STACK, input);
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 16).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 	}
 }

@@ -35,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityFluidInfuser extends BlockEntityMachine implements IRecipeProcessor<FluidInfusionRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidInfuser> TYPE = new BlockEntityTypeAllocator<BlockEntityFluidInfuser>(
+	public static final BlockEntityTypeAllocator<BlockEntityFluidInfuser> TYPE = new BlockEntityTypeAllocator<BlockEntityFluidInfuser>("fluid_infuser",
 			(type, pos, state) -> new BlockEntityFluidInfuser(pos, state), ModBlocks.FluidInfuser);
 
 	static {

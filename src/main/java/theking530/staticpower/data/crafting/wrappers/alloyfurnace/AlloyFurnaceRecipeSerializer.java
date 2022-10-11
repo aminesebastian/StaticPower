@@ -26,7 +26,7 @@ public class AlloyFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<Al
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.alloyFurnaceProcessingTime, json);
 
 		// Get the output.
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(json.getAsJsonObject("output"));

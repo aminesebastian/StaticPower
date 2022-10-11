@@ -9,7 +9,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityBundledRedstoneCable extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBundledRedstoneCable> TYPE = new BlockEntityTypeAllocator<BlockEntityBundledRedstoneCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityBundledRedstoneCable> TYPE = new BlockEntityTypeAllocator<BlockEntityBundledRedstoneCable>("cable_bundled_redstone",
 			(allocator, pos, state) -> new BlockEntityBundledRedstoneCable(allocator, pos, state), ModBlocks.BundledRedstoneCable);
 
 	public final BundledRedstoneCableComponent cableComponent;

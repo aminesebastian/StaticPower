@@ -32,25 +32,25 @@ import theking530.staticpower.items.upgrades.VoidUpgrade;
 
 public class BlockEntityTank extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_IRON = new BlockEntityTypeAllocator<BlockEntityTank>(
+	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_IRON = new BlockEntityTypeAllocator<BlockEntityTank>("tank_iron",
 			(type, pos, state) -> new BlockEntityTank(type, pos, state), ModBlocks.IronTank);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityTank>(
+	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityTank>("tank_basic",
 			(type, pos, state) -> new BlockEntityTank(type, pos, state), ModBlocks.BasicTank);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityTank>(
+	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityTank>("tank_advanced",
 			(type, pos, state) -> new BlockEntityTank(type, pos, state), ModBlocks.AdvancedTank);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityTank>(
+	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityTank>("tank_static",
 			(type, pos, state) -> new BlockEntityTank(type, pos, state), ModBlocks.StaticTank);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityTank>(
+	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityTank>("tank_energized",
 			(type, pos, state) -> new BlockEntityTank(type, pos, state), ModBlocks.EnergizedTank);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityTank>(
+	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityTank>("tank_lumum",
 			(type, pos, state) -> new BlockEntityTank(type, pos, state), ModBlocks.LumumTank);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityTank>(
+	public static final BlockEntityTypeAllocator<BlockEntityTank> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityTank>("tank_creative",
 			(type, pos, state) -> new BlockEntityTank(type, pos, state), ModBlocks.CreativeTank);
 
 	public static final int MACHINE_TANK_CAPACITY_MULTIPLIER = 4;

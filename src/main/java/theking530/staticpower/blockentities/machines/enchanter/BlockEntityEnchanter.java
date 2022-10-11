@@ -37,8 +37,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityEnchanter extends BlockEntityMachine implements IRecipeProcessor<EnchanterRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityEnchanter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityEnchanter(pos, state),
-			ModBlocks.Enchanter);
+	public static final BlockEntityTypeAllocator<BlockEntityEnchanter> TYPE = new BlockEntityTypeAllocator<>("enchanter",
+			(type, pos, state) -> new BlockEntityEnchanter(pos, state), ModBlocks.Enchanter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent enchantableInventory;

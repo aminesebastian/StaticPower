@@ -23,7 +23,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity implements IHeatStorage {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRefineryHeatVent> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryHeatVent>(
+	public static final BlockEntityTypeAllocator<BlockEntityRefineryHeatVent> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryHeatVent>("refinery_heat_vent",
 			(type, pos, state) -> new BlockEntityRefineryHeatVent(pos, state), ModBlocks.RefineryHeatVent);
 
 	public BlockEntityRefineryHeatVent(BlockPos pos, BlockState state) {

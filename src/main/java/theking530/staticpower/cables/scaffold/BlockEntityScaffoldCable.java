@@ -9,7 +9,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityScaffoldCable extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityScaffoldCable> TYPE = new BlockEntityTypeAllocator<BlockEntityScaffoldCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityScaffoldCable> TYPE = new BlockEntityTypeAllocator<BlockEntityScaffoldCable>("cable_scaffold",
 			(allocator, pos, state) -> new BlockEntityScaffoldCable(allocator, pos, state), ModBlocks.ScaffoldCable);
 
 	public BlockEntityScaffoldCable(BlockEntityTypeAllocator<BlockEntityScaffoldCable> allocator, BlockPos pos, BlockState state) {

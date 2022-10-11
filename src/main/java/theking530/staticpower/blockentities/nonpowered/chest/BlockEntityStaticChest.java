@@ -20,19 +20,19 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityStaticChest extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> BASIC_TYPE = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> BASIC_TYPE = new BlockEntityTypeAllocator<>("chest_basic",
 			(type, pos, state) -> new BlockEntityStaticChest(type, 36, pos, state), ModBlocks.BasicChest);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> ADVANCED_TYPE = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> ADVANCED_TYPE = new BlockEntityTypeAllocator<>("chest_advanced",
 			(type, pos, state) -> new BlockEntityStaticChest(type, 45, pos, state), ModBlocks.AdvancedChest);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> STATIC_TYPE = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> STATIC_TYPE = new BlockEntityTypeAllocator<>("chest_static",
 			(type, pos, state) -> new BlockEntityStaticChest(type, 54, pos, state), ModBlocks.StaticChest);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> ENERGIZED_TYPE = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> ENERGIZED_TYPE = new BlockEntityTypeAllocator<>("chest_energized",
 			(type, pos, state) -> new BlockEntityStaticChest(type, 72, pos, state), ModBlocks.EnergizedChest);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> LUMUM_TYPE = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStaticChest> LUMUM_TYPE = new BlockEntityTypeAllocator<>("chest_lumum",
 			(type, pos, state) -> new BlockEntityStaticChest(type, 81, pos, state), ModBlocks.LumumChest);
 
 	static {

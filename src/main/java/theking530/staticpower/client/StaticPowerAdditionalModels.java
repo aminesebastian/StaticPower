@@ -270,7 +270,7 @@ public class StaticPowerAdditionalModels {
 	public static void registerModels(ModelEvent.RegisterAdditional event) {
 		for (ResourceLocation model : MODELS) {
 			event.register(model);
-			StaticPower.LOGGER.info(String.format("Loading additional model: %1$s.", model.toString()));
+			StaticPower.LOGGER.trace(String.format("Loading additional model: %1$s.", model.toString()));
 		}
 	}
 

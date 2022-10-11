@@ -49,8 +49,8 @@ public class EnchanterRecipeSerializer extends StaticPowerRecipeSerializer<Encha
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.enchanterProcessingTime.get(),
-				StaticPowerConfig.SERVER.enchanterPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.enchanterProcessingTime,
+				StaticPowerConfig.SERVER.enchanterPowerUsage, json);
 
 		// Create the recipe.
 		return new EnchanterRecipe(recipeId, inputs, fluidInput, enchantments, processing);

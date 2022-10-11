@@ -27,8 +27,8 @@ public class CentrifugeRecipeSerializer extends StaticPowerRecipeSerializer<Cent
 		int minimumSpeed = json.get("minimum_speed").getAsInt();
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.centrifugeProcessingTime.get(),
-				StaticPowerConfig.SERVER.centrifugePowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.centrifugeProcessingTime,
+				StaticPowerConfig.SERVER.centrifugePowerUsage, json);
 
 		// Get the outputs.
 		JsonArray outputs = json.getAsJsonArray("outputs");

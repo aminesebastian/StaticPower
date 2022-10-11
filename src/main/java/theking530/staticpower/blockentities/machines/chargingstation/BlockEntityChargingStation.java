@@ -27,7 +27,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityChargingStation extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityChargingStation> TYPE = new BlockEntityTypeAllocator<BlockEntityChargingStation>(
+	public static final BlockEntityTypeAllocator<BlockEntityChargingStation> TYPE = new BlockEntityTypeAllocator<BlockEntityChargingStation>("charging_station",
 			(type, pos, state) -> new BlockEntityChargingStation(pos, state), ModBlocks.ChargingStation);
 
 	static {

@@ -113,7 +113,6 @@ import theking530.staticpower.cables.redstone.basic.BlockRedstoneCable;
 import theking530.staticpower.cables.redstone.bundled.BlockBundledRedstoneCable;
 import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.world.trees.rubbertree.RubberTreePlacer;
 
 public class ModBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StaticPower.MOD_ID);
@@ -567,7 +566,7 @@ public class ModBlocks {
 	public static final RegistryObject<StaticPowerTreeLeaves> RubberTreeLeaves = registerBlock("rubber_tree_leaves",
 			() -> new StaticPowerTreeLeaves(Block.Properties.copy(Blocks.OAK_LEAVES)));
 	public static final RegistryObject<StaticPowerSapling> RubberTreeSapling = registerBlock("rubber_tree_sapling",
-			() -> new StaticPowerSapling(() -> new RubberTreePlacer(), Block.Properties.copy(Blocks.OAK_SAPLING)));
+			() -> new StaticPowerSapling(() -> ModFeatures.RUBBER_TREE.getTreeGrower(), Block.Properties.copy(Blocks.OAK_SAPLING)));
 
 	public static void init(IEventBus eventBus) {
 		BLOCKS.register(eventBus);

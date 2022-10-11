@@ -32,8 +32,8 @@ public class HydroponicFarmingRecipeSerializer extends StaticPowerRecipeSerializ
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.hydroponicFarmerProcessingTime.get(),
-				StaticPowerConfig.SERVER.hydroponicFarmerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.hydroponicFarmerProcessingTime,
+				StaticPowerConfig.SERVER.hydroponicFarmerPowerUsage, json);
 
 		// Create the recipe.
 		return new HydroponicFarmingRecipe(recipeId, input, processing);

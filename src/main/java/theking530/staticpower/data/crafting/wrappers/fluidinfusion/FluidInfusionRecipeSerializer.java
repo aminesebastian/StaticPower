@@ -35,8 +35,8 @@ public class FluidInfusionRecipeSerializer extends StaticPowerRecipeSerializer<F
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fluidInfuserProcessingTime.get(),
-				StaticPowerConfig.SERVER.fluidInfuserPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fluidInfuserProcessingTime,
+				StaticPowerConfig.SERVER.fluidInfuserPowerUsage, json);
 
 		// Get the item output.
 		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(GsonHelper.getAsJsonObject(json, "result"));

@@ -23,19 +23,19 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockEntityStraightConveyor extends AbstractConveyorBlockEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_BASIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_BASIC = new BlockEntityTypeAllocator<>("conveyor_straight_basic",
 			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.StraightConveyorBasic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>("conveyor_straight_advanced",
 			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.StraightConveyorAdvanced);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_STATIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_STATIC = new BlockEntityTypeAllocator<>("conveyor_straight_static",
 			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StraightConveyorStatic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>("conveyor_straight_energized",
 			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.StraightConveyorEnergized);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_LUMUM = new BlockEntityTypeAllocator<>("conveyor_straight_lumum",
 			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.StraightConveyorLumum);
 
 	public final InventoryComponent inventory;

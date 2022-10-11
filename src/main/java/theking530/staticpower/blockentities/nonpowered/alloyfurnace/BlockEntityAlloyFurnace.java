@@ -36,8 +36,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements IRecipeProcessor<AlloyFurnaceRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityAlloyFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityAlloyFurnace(pos, state),
-			ModBlocks.AlloyFurnace);
+	public static final BlockEntityTypeAllocator<BlockEntityAlloyFurnace> TYPE = new BlockEntityTypeAllocator<>("alloy_furnace",
+			(type, pos, state) -> new BlockEntityAlloyFurnace(pos, state), ModBlocks.AlloyFurnace);
 
 	public static final DefaultSideConfiguration SIDE_CONFIGURATION = new DefaultSideConfiguration();
 	static {

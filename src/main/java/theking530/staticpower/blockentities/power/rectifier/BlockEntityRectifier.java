@@ -17,7 +17,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRectifier extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRectifier> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityRectifier>(
+	public static final BlockEntityTypeAllocator<BlockEntityRectifier> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityRectifier>("rectifier_basic",
 			(allocator, pos, state) -> new BlockEntityRectifier(allocator, pos, state), ModBlocks.RectifierBasic);
 
 	public final PowerStorageComponent powerStorage;

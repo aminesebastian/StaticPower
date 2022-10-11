@@ -23,8 +23,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityElectricMiner extends AbstractTileEntityMiner {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityElectricMiner> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityElectricMiner(pos, state),
-			ModBlocks.ElectricMiner);
+	public static final BlockEntityTypeAllocator<BlockEntityElectricMiner> TYPE = new BlockEntityTypeAllocator<>("electric_miner",
+			(type, pos, state) -> new BlockEntityElectricMiner(pos, state), ModBlocks.ElectricMiner);
 
 	public final PowerStorageComponent powerStorage;
 	public final BatteryInventoryComponent batteryInventory;

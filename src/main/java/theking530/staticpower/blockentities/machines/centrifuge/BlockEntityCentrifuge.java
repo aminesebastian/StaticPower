@@ -39,8 +39,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipeProcessor<CentrifugeRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityCentrifuge(pos, state),
-			ModBlocks.Centrifuge);
+	public static final BlockEntityTypeAllocator<BlockEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>("centrifuge",
+			(type, pos, state) -> new BlockEntityCentrifuge(pos, state), ModBlocks.Centrifuge);
 
 	public final InventoryComponent inputInventory;
 	public final List<InventoryComponent> outputInventories;

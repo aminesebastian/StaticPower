@@ -13,42 +13,42 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityPowerCable extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_basic",
 			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableBasic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_advanced",
 			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableAdvanced);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_static",
 			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableStatic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_energized",
 			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableEnergized);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_lumum",
 			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableLumum);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_creative",
 			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableCreative);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_BASIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_BASIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_industrial_basic",
 			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableBasic);
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_ADVANCED = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableAdvanced);
+			"cable_power_industrial_advanced", (allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableAdvanced);
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_STATIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableStatic);
+			"cable_power_industrial_static", (allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableStatic);
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableEnergized);
+			"cable_power_industrial_energized", (allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableEnergized);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_LUMUM = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_LUMUM = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_industrial_lumum",
 			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableLumum);
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_CREATIVE = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableCreative);
+			"cable_power_industrial_creative", (allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableCreative);
 
 	public final PowerCableComponent powerCableComponent;
 

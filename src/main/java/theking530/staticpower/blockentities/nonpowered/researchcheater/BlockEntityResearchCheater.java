@@ -18,8 +18,8 @@ import theking530.staticpower.init.ModItems;
 
 public class BlockEntityResearchCheater extends BlockEntityConfigurable implements MenuProvider {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityResearchCheater> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityResearchCheater(pos, state),
-			ModBlocks.ResearchCheater);
+	public static final BlockEntityTypeAllocator<BlockEntityResearchCheater> TYPE = new BlockEntityTypeAllocator<>("research_cheater",
+			(type, pos, state) -> new BlockEntityResearchCheater(pos, state), ModBlocks.ResearchCheater);
 	private static final float GENERATION_RATE = 1;
 	public final InventoryComponent inventory;
 	private float timer;

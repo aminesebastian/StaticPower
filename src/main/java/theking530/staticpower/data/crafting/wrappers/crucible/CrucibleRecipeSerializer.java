@@ -35,8 +35,8 @@ public class CrucibleRecipeSerializer extends StaticPowerRecipeSerializer<Crucib
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.crucibleProcessingTime.get(),
-				StaticPowerConfig.SERVER.cruciblePowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.crucibleProcessingTime,
+				StaticPowerConfig.SERVER.cruciblePowerUsage, json);
 
 		// Get the outputs object.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");

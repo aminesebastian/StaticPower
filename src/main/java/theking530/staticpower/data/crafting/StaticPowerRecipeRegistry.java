@@ -263,7 +263,7 @@ public class StaticPowerRecipeRegistry {
 				CraftingRecipe recipe = twoRecipe.get();
 				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
 				return Optional.of(new PackagerRecipe(id, 2, new StaticPowerIngredient(stack.copy(), 4), new ProbabilityItemStackOutput(recipe.getResultItem()),
-						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 0, 0)));
+						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime, StaticPowerConfig.SERVER.packagerPowerUsage, () -> 0, () -> 0)));
 			}
 		} else if (size == 3) {
 			FakeCraftingInventory sizeThreeInv = new FakeCraftingInventory(3, 3);
@@ -276,7 +276,7 @@ public class StaticPowerRecipeRegistry {
 				CraftingRecipe recipe = threeRecipe.get();
 				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
 				return Optional.of(new PackagerRecipe(id, 3, new StaticPowerIngredient(stack.copy(), 9), new ProbabilityItemStackOutput(recipe.getResultItem()),
-						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 0, 0)));
+						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime, StaticPowerConfig.SERVER.packagerPowerUsage, () -> 0, () -> 0)));
 			}
 		}
 

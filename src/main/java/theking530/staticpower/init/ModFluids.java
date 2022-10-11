@@ -150,7 +150,7 @@ public class ModFluids {
 		for (MinecraftColor color : MinecraftColor.values()) {
 			StaticPowerFluidBundle bundle = new StaticPowerFluidBuilder("concrete_" + color.getId(), color.getColor()).setTextureName("concrete").addProperties(builder -> {
 				builder.viscosity(2500).density(64).sound(SoundActions.BUCKET_EMPTY, SoundEvents.HONEY_BLOCK_STEP);
-			}).build();
+			}).setTint(color.getColor().fromFloatToEightBit().encodeInInteger()).build();
 			ColoredConrete.put(color, bundle);
 		}
 
@@ -158,7 +158,7 @@ public class ModFluids {
 		for (MinecraftColor color : MinecraftColor.values()) {
 			StaticPowerFluidBundle bundle = new StaticPowerFluidBuilder("dye_" + color.getId(), color.getColor()).setTextureName("dye").addProperties(builder -> {
 				builder.sound(SoundActions.BUCKET_EMPTY, SoundEvents.HONEY_BLOCK_STEP);
-			}).build();
+			}).setTint(color.getColor().fromFloatToEightBit().encodeInInteger()).build();
 			Dyes.put(color, bundle);
 		}
 	}

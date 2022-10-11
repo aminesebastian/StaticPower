@@ -16,8 +16,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityDigistoreManager(pos, state),
-			ModBlocks.DigistoreManager);
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new BlockEntityTypeAllocator<>("digistore_manager",
+			(type, pos, state) -> new TileEntityDigistoreManager(pos, state), ModBlocks.DigistoreManager);
 
 	public final PowerStorageComponent energyStorage;
 	public final UpgradeInventoryComponent upgradesInventory;

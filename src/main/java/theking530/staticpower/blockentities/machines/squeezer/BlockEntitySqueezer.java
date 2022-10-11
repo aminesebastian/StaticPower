@@ -38,7 +38,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipeProcessor<SqueezerRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySqueezer> TYPE = new BlockEntityTypeAllocator<BlockEntitySqueezer>(
+	public static final BlockEntityTypeAllocator<BlockEntitySqueezer> TYPE = new BlockEntityTypeAllocator<BlockEntitySqueezer>("squeezer",
 			(type, pos, state) -> new BlockEntitySqueezer(pos, state), ModBlocks.Squeezer);
 
 	static {

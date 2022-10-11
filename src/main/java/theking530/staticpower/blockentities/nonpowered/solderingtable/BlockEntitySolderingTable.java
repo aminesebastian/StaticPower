@@ -14,7 +14,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntitySolderingTable extends AbstractSolderingTable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySolderingTable> TYPE = new BlockEntityTypeAllocator<BlockEntitySolderingTable>(
+	public static final BlockEntityTypeAllocator<BlockEntitySolderingTable> TYPE = new BlockEntityTypeAllocator<BlockEntitySolderingTable>("soldering_table",
 			(type, pos, state) -> new BlockEntitySolderingTable(pos, state), ModBlocks.SolderingTable);
 
 	static {

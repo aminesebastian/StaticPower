@@ -3,7 +3,7 @@
 	"biomes": "#minecraft:is_overworld",
 	"spawners": {
 		"type": "staticpower:smeep",
-		"weight": 100,
+		"weight": 50,
 		"minCount": 3,
 		"maxCount": 10
 	}

@@ -30,7 +30,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityAutomaticPlacer extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityAutomaticPlacer> TYPE = new BlockEntityTypeAllocator<BlockEntityAutomaticPlacer>(
+	public static final BlockEntityTypeAllocator<BlockEntityAutomaticPlacer> TYPE = new BlockEntityTypeAllocator<BlockEntityAutomaticPlacer>("automatic_placer",
 			(type, pos, state) -> new BlockEntityAutomaticPlacer(pos, state), ModBlocks.AutomaticPlacer);
 	public static final int PLACE_DELAY = 4;
 

@@ -3,7 +3,7 @@
 	"biomes": "#minecraft:is_overworld",
 	"spawners": {
 		"type": "staticpower:enox",
-		"weight": 75,
+		"weight": 35,
 		"minCount": 1,
 		"maxCount": 5
 	}

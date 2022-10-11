@@ -17,19 +17,19 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityWireConnector extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityWireConnector>(
+	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityWireConnector>("wire_connector_lv",
 			(allocator, pos, state) -> new BlockEntityWireConnector(allocator, pos, state), ModBlocks.WireConnectorLV);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityWireConnector>(
+	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityWireConnector>("wire_connector_mv",
 			(allocator, pos, state) -> new BlockEntityWireConnector(allocator, pos, state), ModBlocks.WireConnectorMV);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityWireConnector>(
+	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityWireConnector>("wire_connector_hv",
 			(allocator, pos, state) -> new BlockEntityWireConnector(allocator, pos, state), ModBlocks.WireConnectorHV);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityWireConnector>(
+	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityWireConnector>("wire_connector_ev",
 			(allocator, pos, state) -> new BlockEntityWireConnector(allocator, pos, state), ModBlocks.WireConnectorEV);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityWireConnector>(
+	public static final BlockEntityTypeAllocator<BlockEntityWireConnector> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityWireConnector>("wire_connector_bv",
 			(allocator, pos, state) -> new BlockEntityWireConnector(allocator, pos, state), ModBlocks.WireConnectorBV);
 
 	public final WirePowerCableComponent wireComponent;

@@ -33,7 +33,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityCaster extends BlockEntityMachine implements IRecipeProcessor<CastingRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCaster> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityCaster(pos, state),
+	public static final BlockEntityTypeAllocator<BlockEntityCaster> TYPE = new BlockEntityTypeAllocator<>("caster", (type, pos, state) -> new BlockEntityCaster(pos, state),
 			ModBlocks.Caster);
 
 	public final InventoryComponent inputInventory;

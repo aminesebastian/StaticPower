@@ -2,22 +2,24 @@ package theking530.staticcore.world;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
-import net.minecraft.core.Holder;
-import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.OreFeatures;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
+import net.minecraft.world.level.levelgen.placement.BiomeFilter;
+import net.minecraft.world.level.levelgen.placement.CountPlacement;
 import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
-import theking530.staticpower.world.ore.ModOrePlacement;
+import net.minecraftforge.registries.RegistryObject;
+import theking530.staticpower.init.ModFeatures;
 
 public class OreRegistrationBuilder {
 	private final String name;
@@ -25,7 +27,7 @@ public class OreRegistrationBuilder {
 	private int maxVeinSize = 10;
 	private int minLevel = 0;
 	private int maxLevel = 128;
-	private int rarity = 20;
+	private int veinsPerChunk = 20;
 
 	public static OreRegistrationBuilder createOre(String name) {
 		return new OreRegistrationBuilder(name);
@@ -36,20 +38,20 @@ public class OreRegistrationBuilder {
 		pairs = new ArrayList<OreGenerationPair>();
 	}
 
-	public OreRegistrationBuilder source(BlockState blockState) {
-		return source(blockState, OreFeatures.STONE_ORE_REPLACEABLES);
+	public <T extends Block> OreRegistrationBuilder blockSource(Supplier<T> block) {
+		return blockSource(block, OreFeatures.STONE_ORE_REPLACEABLES);
 	}
 
-	public OreRegistrationBuilder source(Block block) {
-		return source(block, OreFeatures.STONE_ORE_REPLACEABLES);
+	public OreRegistrationBuilder source(Supplier<BlockState> blockState) {
+		return blockStateSource(blockState, OreFeatures.STONE_ORE_REPLACEABLES);
 	}
 
-	public OreRegistrationBuilder source(Block block, RuleTest rule) {
-		pairs.add(new OreGenerationPair(rule, block.defaultBlockState()));
+	public <T extends Block> OreRegistrationBuilder blockSource(Supplier<T> block, RuleTest rule) {
+		pairs.add(new OreGenerationPair(rule, () -> block.get().defaultBlockState()));
 		return this;
 	}
 
-	public OreRegistrationBuilder source(BlockState blockState, RuleTest rule) {
+	public OreRegistrationBuilder blockStateSource(Supplier<BlockState> blockState, RuleTest rule) {
 		pairs.add(new OreGenerationPair(rule, blockState));
 		return this;
 	}
@@ -65,54 +67,51 @@ public class OreRegistrationBuilder {
 		return this;
 	}
 
-	public OreRegistrationBuilder rarity(int rarity) {
-		this.rarity = rarity;
+	public OreRegistrationBuilder veinsPerChunk(int veinsPerChunk) {
+		this.veinsPerChunk = veinsPerChunk;
 		return this;
 	}
 
-	public OreGenerationResult register() {
-		List<OreConfiguration.TargetBlockState> targets = new ArrayList<>();
-		for (OreGenerationPair pair : pairs) {
-			targets.add(OreConfiguration.target(pair.getLocation(), pair.getBlockState()));
-		}
-
-		Holder<ConfiguredFeature<OreConfiguration, ?>> configuration = FeatureUtils.register(name, Feature.ORE, new OreConfiguration(targets, maxVeinSize));
-
-		Holder<PlacedFeature> feature = PlacementUtils.register(name + "_placed", configuration,
-				ModOrePlacement.commonOrePlacement(rarity, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(minLevel), VerticalAnchor.aboveBottom(maxLevel))));
-
-		return new OreGenerationResult(targets, configuration, feature);
+	public static List<PlacementModifier> commonOrePlacement(int p_195344_, PlacementModifier p_195345_) {
+		return orePlacement(CountPlacement.of(p_195344_), p_195345_);
 	}
 
-	public class OreGenerationResult {
-		private final List<OreConfiguration.TargetBlockState> targets;
-		private final Holder<ConfiguredFeature<OreConfiguration, ?>> configuration;
-		private final Holder<PlacedFeature> feature;
+	public static List<PlacementModifier> orePlacement(PlacementModifier p_195347_, PlacementModifier p_195348_) {
+		return List.of(p_195347_, InSquarePlacement.spread(), p_195348_, BiomeFilter.biome());
+	}
 
-		public OreGenerationResult(List<TargetBlockState> targets, Holder<ConfiguredFeature<OreConfiguration, ?>> configuration, Holder<PlacedFeature> feature) {
-			this.targets = targets;
+	public OreRegistrationResult register() {
+		Supplier<ConfiguredFeature<OreConfiguration, ?>> configuration = () -> {
+			List<OreConfiguration.TargetBlockState> targets = new ArrayList<>();
+			for (OreGenerationPair pair : pairs) {
+				targets.add(OreConfiguration.target(pair.getLocation(), pair.getBlockState().get()));
+			}
+			return new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(targets, maxVeinSize));
+		};
+		RegistryObject<ConfiguredFeature<?, ?>> registeredConfiguredFeature = ModFeatures.CONFIGURED_FEATURES.register(name, configuration);
+
+		Supplier<PlacedFeature> testFeature = () -> new PlacedFeature(registeredConfiguredFeature.getHolder().get(),
+				commonOrePlacement(veinsPerChunk, HeightRangePlacement.uniform(VerticalAnchor.absolute(minLevel), VerticalAnchor.absolute(maxLevel))));
+		RegistryObject<PlacedFeature> registeredPlacedFeatue = ModFeatures.PLACED_FEATURES.register(name + "_placed", testFeature);
+
+		return new OreRegistrationResult(registeredConfiguredFeature, registeredPlacedFeatue);
+	}
+
+	public class OreRegistrationResult {
+		public final RegistryObject<ConfiguredFeature<?, ?>> configuration;
+		public final RegistryObject<PlacedFeature> feature;
+
+		public OreRegistrationResult(RegistryObject<ConfiguredFeature<?, ?>> configuration, RegistryObject<PlacedFeature> feature) {
 			this.configuration = configuration;
 			this.feature = feature;
-		}
-
-		public List<OreConfiguration.TargetBlockState> getTargets() {
-			return targets;
-		}
-
-		public Holder<ConfiguredFeature<OreConfiguration, ?>> getConfiguration() {
-			return configuration;
-		}
-
-		public Holder<PlacedFeature> getFeature() {
-			return feature;
 		}
 	}
 
 	protected class OreGenerationPair {
 		private final RuleTest location;
-		private final BlockState blockState;
+		private final Supplier<BlockState> blockState;
 
-		public OreGenerationPair(RuleTest location, BlockState blockState) {
+		public OreGenerationPair(RuleTest location, Supplier<BlockState> blockState) {
 			this.location = location;
 			this.blockState = blockState;
 		}
@@ -121,7 +120,7 @@ public class OreRegistrationBuilder {
 			return location;
 		}
 
-		public BlockState getBlockState() {
+		public Supplier<BlockState> getBlockState() {
 			return blockState;
 		}
 	}

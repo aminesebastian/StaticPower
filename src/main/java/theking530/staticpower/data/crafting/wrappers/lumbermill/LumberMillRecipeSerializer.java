@@ -25,8 +25,8 @@ public class LumberMillRecipeSerializer extends StaticPowerRecipeSerializer<Lumb
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.lumberMillProcessingTime.get(),
-				StaticPowerConfig.SERVER.lumberMillPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.lumberMillProcessingTime,
+				StaticPowerConfig.SERVER.lumberMillPowerUsage, json);
 
 		// Get the outputs.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");

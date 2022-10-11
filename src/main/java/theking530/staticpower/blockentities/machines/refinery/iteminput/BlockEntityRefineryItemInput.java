@@ -21,7 +21,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryItemInput extends BaseRefineryBlockEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRefineryItemInput> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryItemInput>(
+	public static final BlockEntityTypeAllocator<BlockEntityRefineryItemInput> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryItemInput>("refinery_item_input",
 			(type, pos, state) -> new BlockEntityRefineryItemInput(pos, state), ModBlocks.RefineryItemInput);
 
 	public BlockEntityRefineryItemInput(BlockPos pos, BlockState state) {

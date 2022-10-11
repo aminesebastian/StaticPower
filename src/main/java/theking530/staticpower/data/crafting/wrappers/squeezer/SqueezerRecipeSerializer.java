@@ -35,8 +35,8 @@ public class SqueezerRecipeSerializer extends StaticPowerRecipeSerializer<Squeez
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.squeezerProcessingTime.get(),
-				StaticPowerConfig.SERVER.squeezerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.squeezerProcessingTime,
+				StaticPowerConfig.SERVER.squeezerPowerUsage, json);
 
 		// Get the outputs object.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");

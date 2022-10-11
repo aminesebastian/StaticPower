@@ -36,7 +36,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityBottler extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBottler> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityBottler(pos, state),
+	public static final BlockEntityTypeAllocator<BlockEntityBottler> TYPE = new BlockEntityTypeAllocator<>("bottler", (type, pos, state) -> new BlockEntityBottler(pos, state),
 			ModBlocks.Bottler);
 
 	public final InventoryComponent inputInventory;

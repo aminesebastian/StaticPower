@@ -36,8 +36,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRecipeProcessor<SmeltingRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityPoweredFurnace(pos, state),
-			ModBlocks.PoweredFurnace);
+	public static final BlockEntityTypeAllocator<BlockEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>("powered_furnace",
+			(type, pos, state) -> new BlockEntityPoweredFurnace(pos, state), ModBlocks.PoweredFurnace);
 
 	/**
 	 * Indicates how many times faster this block will perform compared to the

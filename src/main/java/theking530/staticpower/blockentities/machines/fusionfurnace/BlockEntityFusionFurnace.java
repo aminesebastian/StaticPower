@@ -26,8 +26,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRecipeProcessor<FusionFurnaceRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFusionFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityFusionFurnace(pos, state),
-			ModBlocks.FusionFurnace);
+	public static final BlockEntityTypeAllocator<BlockEntityFusionFurnace> TYPE = new BlockEntityTypeAllocator<>("fusion_furnace",
+			(type, pos, state) -> new BlockEntityFusionFurnace(pos, state), ModBlocks.FusionFurnace);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;

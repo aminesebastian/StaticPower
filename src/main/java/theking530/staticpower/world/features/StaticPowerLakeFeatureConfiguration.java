@@ -12,23 +12,23 @@ public class StaticPowerLakeFeatureConfiguration implements FeatureConfiguration
 		return builder.group(BlockStateProvider.CODEC.fieldOf("fluid").forGetter(StaticPowerLakeFeatureConfiguration::getFluid),
 
 				BlockStateProvider.CODEC.fieldOf("barrier").forGetter(StaticPowerLakeFeatureConfiguration::getBarrier),
-				IntProvider.CODEC.fieldOf("size").forGetter(StaticPowerLakeFeatureConfiguration::getSizeProvider),
+				IntProvider.CODEC.fieldOf("size").forGetter(StaticPowerLakeFeatureConfiguration::getRadiusProvider),
 				IntProvider.CODEC.fieldOf("depth").forGetter(StaticPowerLakeFeatureConfiguration::getDepthProvider)).apply(builder, StaticPowerLakeFeatureConfiguration::new);
 	});
 	private final BlockStateProvider fluidBlockState;
 	private final BlockStateProvider barrier;
-	private final IntProvider sizeProvider;
+	private final IntProvider radiusProvider;
 	private final IntProvider depthProvider;
 
-	public StaticPowerLakeFeatureConfiguration(BlockStateProvider fluidBlockState, BlockStateProvider barrier, IntProvider sizeProvider, IntProvider depthProvider) {
+	public StaticPowerLakeFeatureConfiguration(BlockStateProvider fluidBlockState, BlockStateProvider barrier, IntProvider radiusProvider, IntProvider depthProvider) {
 		this.fluidBlockState = fluidBlockState;
 		this.barrier = barrier;
-		this.sizeProvider = sizeProvider;
+		this.radiusProvider = radiusProvider;
 		this.depthProvider = depthProvider;
 	}
 
-	public IntProvider getSizeProvider() {
-		return sizeProvider;
+	public IntProvider getRadiusProvider() {
+		return radiusProvider;
 	}
 
 	public IntProvider getDepthProvider() {

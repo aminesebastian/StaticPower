@@ -33,8 +33,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProcessor<MixerRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityMixer> TYPE = new BlockEntityTypeAllocator<BlockEntityMixer>((type, pos, state) -> new BlockEntityMixer(pos, state),
-			ModBlocks.Mixer);
+	public static final BlockEntityTypeAllocator<BlockEntityMixer> TYPE = new BlockEntityTypeAllocator<BlockEntityMixer>("mixer",
+			(type, pos, state) -> new BlockEntityMixer(pos, state), ModBlocks.Mixer);
 
 	public final InventoryComponent input1Inventory;
 	public final InventoryComponent input2Inventory;

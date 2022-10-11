@@ -11,7 +11,6 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.entities.enox.EntityEnox;
 
 public abstract class AbstractEntityBuilder<T extends Entity> {
 	private final EntityType.Builder<T> builder;
@@ -29,7 +28,7 @@ public abstract class AbstractEntityBuilder<T extends Entity> {
 	public void registerPlacements(FMLCommonSetupEvent event) {
 	}
 
-	protected boolean canSpawn(EntityType<EntityEnox> type, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+	protected boolean canSpawn(EntityType<T> type, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		return false;
 	}
 

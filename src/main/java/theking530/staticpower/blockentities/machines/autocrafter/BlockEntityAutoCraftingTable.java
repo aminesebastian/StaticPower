@@ -37,7 +37,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements IRecipeProcessor<CraftingRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoCraftingTable>(
+	public static final BlockEntityTypeAllocator<BlockEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoCraftingTable>("crafting_table_auto",
 			(type, pos, state) -> new BlockEntityAutoCraftingTable(pos, state), ModBlocks.AutoCraftingTable);
 
 	static {

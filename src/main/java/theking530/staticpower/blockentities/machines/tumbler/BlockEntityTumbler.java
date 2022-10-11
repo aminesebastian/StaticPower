@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityTumbler extends BlockEntityMachine implements IRecipeProcessor<TumblerRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTumbler> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityTumbler(pos, state),
+	public static final BlockEntityTypeAllocator<BlockEntityTumbler> TYPE = new BlockEntityTypeAllocator<>("tumbler", (type, pos, state) -> new BlockEntityTumbler(pos, state),
 			ModBlocks.Tumbler);
 
 	public final InventoryComponent inputInventory;

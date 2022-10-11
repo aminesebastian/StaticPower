@@ -38,8 +38,8 @@ import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 
 public class BlockEntityLaboratory extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityLaboratory> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityLaboratory(pos, state),
-			ModBlocks.Laboratory);
+	public static final BlockEntityTypeAllocator<BlockEntityLaboratory> TYPE = new BlockEntityTypeAllocator<>("laboratory",
+			(type, pos, state) -> new BlockEntityLaboratory(pos, state), ModBlocks.Laboratory);
 
 	/**
 	 * Indicates how many times faster this block will perform compared to the

@@ -55,7 +55,7 @@ public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoS
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.autoSmithProcessingTime.get(), StaticPowerConfig.SERVER.autoSmithPowerUsage.get(),
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.autoSmithProcessingTime, StaticPowerConfig.SERVER.autoSmithPowerUsage,
 				json);
 
 		// Capture the repair amount if provided.

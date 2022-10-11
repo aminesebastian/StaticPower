@@ -34,7 +34,7 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRecipeProcessor<FluidGeneratorRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidGenerator> TYPE = new BlockEntityTypeAllocator<BlockEntityFluidGenerator>(
+	public static final BlockEntityTypeAllocator<BlockEntityFluidGenerator> TYPE = new BlockEntityTypeAllocator<BlockEntityFluidGenerator>("fluid_generator",
 			(type, pos, state) -> new BlockEntityFluidGenerator(pos, state), ModBlocks.FluidGenerator);
 
 	static {

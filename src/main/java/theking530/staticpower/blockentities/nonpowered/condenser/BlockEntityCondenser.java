@@ -29,8 +29,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityCondenser extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCondenser> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityCondenser(pos, state),
-			ModBlocks.Condenser);
+	public static final BlockEntityTypeAllocator<BlockEntityCondenser> TYPE = new BlockEntityTypeAllocator<>("condenser",
+			(type, pos, state) -> new BlockEntityCondenser(pos, state), ModBlocks.Condenser);
 
 	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final int DEFAULT_HEAT_GENERATION = 50;

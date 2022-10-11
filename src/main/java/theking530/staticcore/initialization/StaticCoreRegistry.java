@@ -53,7 +53,7 @@ public class StaticCoreRegistry {
 	private static boolean preInitialized;
 	private static boolean initialized;
 
-	public static void preInitialize() throws Exception {
+	public static void preInitialize() {
 		// Don't preinitialize more than once.
 		if (preInitialized) {
 			throw new RuntimeException("Attempted to pre-initialize StaticCore more than once!");
@@ -63,8 +63,12 @@ public class StaticCoreRegistry {
 
 		// Register first the modifiers, then the defenitions.
 		LOGGER.info("Pre-Initializing Registry Attributes and Modifiers.");
-		registerAttributeModifiers();
-		registerAttributeDefenitions();
+		try {
+			registerAttributeModifiers();
+			registerAttributeDefenitions();
+		} catch (Exception e) {
+			throw new RuntimeException("An error occured when attempting to register attribute modifiers or defenitions!", e);
+		}
 		LOGGER.info(String.format("Pre-Initialized: %1$d Attribute Defenitions and %2$d Attribute Modifiers.", AttributeRegistry.getRegisteredAttributeCount(),
 				AttributeModifierRegistry.getRegisteredAttributeModifierCount()));
 
@@ -72,7 +76,7 @@ public class StaticCoreRegistry {
 		LOGGER.info("StaticCore Pre-Initialized.");
 	}
 
-	public static void postInitialize() throws Exception {
+	public static void postInitialize() {
 		// Don't initialize more than once.
 		if (initialized) {
 			throw new RuntimeException("Attempted to initialize StaticCore more than once!");
@@ -80,12 +84,16 @@ public class StaticCoreRegistry {
 
 		LOGGER.info("Initializing StaticCore.");
 
-		processBlockEntityTypeAllocators((beAllocator) -> {
-			BLOCK_ENTITY_ALLOCATORS.add(beAllocator);
-		});
-		processContainerTypeAllocators((containerAllocator) -> {
-			CONTAINER_ALLOCATORS.add(containerAllocator);
-		});
+		try {
+			processBlockEntityTypeAllocators((beAllocator) -> {
+				BLOCK_ENTITY_ALLOCATORS.add(beAllocator);
+			});
+			processContainerTypeAllocators((containerAllocator) -> {
+				CONTAINER_ALLOCATORS.add(containerAllocator);
+			});
+		} catch (Exception e) {
+			throw new RuntimeException("An error occured when attempting to process block entity type or menu type allocators!", e);
+		}
 
 		LOGGER.info(String.format("Initialized: %1$d Block Entity Allocators and %2$d Container Type Allocators.", BLOCK_ENTITY_ALLOCATORS.size(), CONTAINER_ALLOCATORS.size()));
 
@@ -95,7 +103,7 @@ public class StaticCoreRegistry {
 
 	public static void registerBlockEntityTypes(IEventBus eventBus) {
 		for (BlockEntityTypeAllocator<?> allocator : StaticCoreRegistry.BLOCK_ENTITY_ALLOCATORS) {
-			BLOCK_ENTITIES.register(ForgeRegistries.BLOCKS.getKey(allocator.block.get()).getPath(), () -> allocator.getType());
+			BLOCK_ENTITIES.register(allocator.getName(), () -> allocator.getType());
 		}
 		BLOCK_ENTITIES.register(eventBus);
 	}

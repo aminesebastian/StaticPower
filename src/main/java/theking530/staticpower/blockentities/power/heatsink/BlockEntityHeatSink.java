@@ -30,13 +30,13 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvider {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_ALUMINUM = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
+	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_ALUMINUM = new BlockEntityTypeAllocator<BlockEntityHeatSink>("heat_sink_aluminum",
 			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.ALUMINUM), ModBlocks.AluminumHeatSink);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_COPPER = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
+	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_COPPER = new BlockEntityTypeAllocator<BlockEntityHeatSink>("heat_sink_copper",
 			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.COPPER), ModBlocks.CopperHeatSink);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_GOLD = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
+	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_GOLD = new BlockEntityTypeAllocator<BlockEntityHeatSink>("heat_sink_gold",
 			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.GOLD), ModBlocks.GoldHeatSink);
 
 	public final HeatStorageComponent heatStorage;

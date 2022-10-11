@@ -35,35 +35,35 @@ import theking530.staticpower.items.itemfilter.ItemFilter;
 public class BlockEntityConveyorHopper extends AbstractConveyorBlockEntity {
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_BASIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_BASIC = new BlockEntityTypeAllocator<>("conveyor_hopper_basic",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.BASIC, false), ModBlocks.ConveyorHopperBasic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_ADVANCED = new BlockEntityTypeAllocator<>("conveyor_hopper_advanced",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.ADVANCED, false), ModBlocks.ConveyorHopperAdvanced);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_STATIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_STATIC = new BlockEntityTypeAllocator<>("conveyor_hopper_static",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.STATIC, false), ModBlocks.ConveyorHopperStatic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>("conveyor_hopper_energized",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.ENERGIZED, false), ModBlocks.ConveyorHopperEnergized);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> TYPE_LUMUM = new BlockEntityTypeAllocator<>("conveyor_hopper_lumum",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.LUMUM, false), ModBlocks.ConveyorHopperLumum);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_BASIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_BASIC = new BlockEntityTypeAllocator<>("conveyor_filtered_hopper_basic",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.BASIC, true), ModBlocks.ConveyorFilteredHopperBasic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_ADVANCED = new BlockEntityTypeAllocator<>("conveyor_filtered_hopper_advanced",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.ADVANCED, true), ModBlocks.ConveyorFilteredHopperAdvanced);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_STATIC = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_STATIC = new BlockEntityTypeAllocator<>("conveyor_filtered_hopper_static",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.STATIC, true), ModBlocks.ConveyorFilteredHopperStatic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_ENERGIZED = new BlockEntityTypeAllocator<>("conveyor_filtered_hopper_energized",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.ENERGIZED, true), ModBlocks.ConveyorFilteredHopperEnergized);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorHopper> FILTERED_TYPE_LUMUM = new BlockEntityTypeAllocator<>("conveyor_filtered_hopper_lumum",
 			(type, pos, state) -> new BlockEntityConveyorHopper(type, pos, state, StaticPowerTiers.LUMUM, true), ModBlocks.ConveyorFilteredHopperLumum);
 
 	public final InventoryComponent internalInventory;

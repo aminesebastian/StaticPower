@@ -19,9 +19,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
@@ -40,7 +40,7 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity implements IItemHandler {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistore> TYPE = new BlockEntityTypeAllocator<TileEntityDigistore>(
+	public static final BlockEntityTypeAllocator<TileEntityDigistore> TYPE = new BlockEntityTypeAllocator<TileEntityDigistore>("digistore",
 			(type, pos, state) -> new TileEntityDigistore(pos, state), ModBlocks.Digistore);
 
 	static {
@@ -276,7 +276,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+		if (cap == ForgeCapabilities.ITEM_HANDLER) {
 			return LazyOptional.of(() -> {
 				return this;
 			}).cast();
