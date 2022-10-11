@@ -8,29 +8,29 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import theking530.staticcore.cablenetwork.CableBoundsCache;
+import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableBoundsCache;
-import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 
 public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
-	public BlockDigistoreNetworkWire(String name) {
-		super(name, new CableBoundsCache(1.5D, new Vector3D(4.0f, 4.0f, 1.0f)), 1.75f);
+	public BlockDigistoreNetworkWire() {
+		super(new CableBoundsCache(1.5D, new Vector3D(4.0f, 4.0f, 1.0f)), 1.75f);
 
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
-		BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_EXTENSION);
-		BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_STRAIGHT);
-		BakedModel attachmentModel = event.getModelRegistry()
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+		BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_EXTENSION);
+		BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_STRAIGHT);
+		BakedModel attachmentModel = event.getModels()
 				.get(StaticPowerAdditionalModels.CABLE_DIGISTORE_ATTACHMENT);
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
@@ -44,7 +44,7 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return TileEntityDigistoreWire.TYPE.create(pos, state);
+		return BlockEntityDigistoreWire.TYPE.create(pos, state);
 	}
 
 	@Override

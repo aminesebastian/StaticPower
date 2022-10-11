@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:soldering_recipe",
+	"type": "staticpower:soldering",
 	"pattern": [
 		" t ",
 		"tcw",
@@ -10,7 +10,7 @@
 			"tag": "forge:ingots/tin"
 		},
 		"c": {
-			"item": "staticpower:coil_copper"
+			"item": "staticpower:wire_coil_copper"
 		},
 		"w": {
 			"tag": "forge:nuggets/tin"

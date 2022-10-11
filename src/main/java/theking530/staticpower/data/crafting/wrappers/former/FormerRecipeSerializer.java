@@ -6,20 +6,16 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class FormerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FormerRecipe> {
+public class FormerRecipeSerializer extends StaticPowerRecipeSerializer<FormerRecipe> {
 	public static final FormerRecipeSerializer INSTANCE = new FormerRecipeSerializer();
-
-	private FormerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "former_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "former_recipe");
 
 	@Override
 	public FormerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -36,7 +32,8 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.formerProcessingTime.get(), StaticPowerConfig.SERVER.formerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.formerProcessingTime,
+				StaticPowerConfig.SERVER.formerPowerUsage, json);
 
 		// Create the recipe.
 		return new FormerRecipe(recipeId, output, input, mold, processing);

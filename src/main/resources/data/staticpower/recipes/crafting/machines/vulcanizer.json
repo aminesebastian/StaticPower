@@ -10,7 +10,7 @@
 			"item": "staticpower:machine_block_basic"
 		},
 		"u": {
-			"item": "staticpower:coil_copper"
+			"item": "staticpower:wire_coil_copper"
 		},
 		"g": {
 			"tag": "forge:storage_blocks/copper"

@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion",
+	"input": {
+		"item": "staticpower:ingot_inert_infusion"
+	},
+	"fluid": {
+		"fluid": "staticpower:fluid_static",
+		"volume": 250
+	},
+	"result": {
+		"item": "staticpower:ingot_static"
+	}
+}

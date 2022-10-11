@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +22,8 @@ public class TurbineBlades extends StaticPowerItem {
 	protected final ResourceLocation tier;
 	protected final ResourceLocation inWorldModel;
 
-	public TurbineBlades(String name, ResourceLocation tierId, ResourceLocation inWorldModel) {
-		super(name, new Item.Properties().stacksTo(1).durability(1).setNoRepair());
+	public TurbineBlades(ResourceLocation tierId, ResourceLocation inWorldModel) {
+		super(new Item.Properties().stacksTo(1).durability(1).setNoRepair());
 		this.tier = tierId;
 		this.inWorldModel = inWorldModel;
 	}
@@ -54,16 +53,16 @@ public class TurbineBlades extends StaticPowerItem {
 
 		// Add the generation time.
 		String generationTime = SDTime.ticksToTimeString(getMaxDamage(stack) - getDamage(stack));
-		tooltip.add(new TextComponent("Generation Time: " + generationTime));
+		tooltip.add(Component.literal("Generation Time: " + generationTime));
 
 		// Add the generation boost.
 		double generationBoost = tierObject.turbineBladeGenerationBoost.get();
 		if (generationBoost > 1) {
-			tooltip.add(new TextComponent(
-					ChatFormatting.WHITE + new java.text.DecimalFormat("#").format(tierObject.turbineBladeGenerationBoost.get() * 100) + "%" + ChatFormatting.GREEN + " Power Generation"));
+			tooltip.add(Component.literal(ChatFormatting.WHITE + new java.text.DecimalFormat("#").format(tierObject.turbineBladeGenerationBoost.get() * 100) + "%"
+					+ ChatFormatting.GREEN + " Power Generation"));
 		} else {
-			tooltip.add(new TextComponent(
-					ChatFormatting.WHITE + new java.text.DecimalFormat("#").format(tierObject.turbineBladeGenerationBoost.get() * 100) + "%" + ChatFormatting.RED + " Power Generation"));
+			tooltip.add(Component.literal(ChatFormatting.WHITE + new java.text.DecimalFormat("#").format(tierObject.turbineBladeGenerationBoost.get() * 100) + "%"
+					+ ChatFormatting.RED + " Power Generation"));
 		}
 	}
 }

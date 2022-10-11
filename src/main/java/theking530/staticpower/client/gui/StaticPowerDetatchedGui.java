@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.gui.widgets.TopLevelWidget;
@@ -31,7 +31,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	protected boolean visible;
 
 	public StaticPowerDetatchedGui(int width, int height) {
-		super(new TextComponent(""));
+		super(Component.literal(""));
 		drawDefaultDarkBackground = true;
 		widgetContainer = new TopLevelWidget();
 		visible = true;

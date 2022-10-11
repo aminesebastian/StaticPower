@@ -6,9 +6,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 

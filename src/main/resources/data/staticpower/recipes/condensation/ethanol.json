@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:condensation_recipe",
+	"type": "staticpower:condensation",
 	"input_fluid": {
 		"fluid": "staticpower:evaporated_mash",
 		"volume": 10

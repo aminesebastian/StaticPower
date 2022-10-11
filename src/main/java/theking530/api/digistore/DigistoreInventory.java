@@ -10,7 +10,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreStack;
+import theking530.staticpower.blockentities.digistorenetwork.digistore.DigistoreStack;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreInventory implements Iterable<DigistoreStack>, IDigistoreInventory, IItemHandler {

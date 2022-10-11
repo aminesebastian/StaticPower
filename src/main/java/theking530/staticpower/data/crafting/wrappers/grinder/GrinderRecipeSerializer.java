@@ -7,20 +7,16 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class GrinderRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GrinderRecipe> {
+public class GrinderRecipeSerializer extends StaticPowerRecipeSerializer<GrinderRecipe> {
 	public static final GrinderRecipeSerializer INSTANCE = new GrinderRecipeSerializer();
-
-	private GrinderRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "grinder_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "grinder_recipe");
 
 	@Override
 	public GrinderRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -29,8 +25,8 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(),
-				StaticPowerConfig.SERVER.poweredGrinderPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.poweredGrinderProcessingTime,
+				StaticPowerConfig.SERVER.poweredGrinderPowerUsage, json);
 
 		// Check the outputs. If it is an array, get all the outputs and make a new
 		// recipe. Otherwise, just get the single output and make a new recipe.

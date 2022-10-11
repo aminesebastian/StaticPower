@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:soldering_recipe",
+	"type": "staticpower:soldering",
 	"pattern": [
 		"www",
 		"psp",

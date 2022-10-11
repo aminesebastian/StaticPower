@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion",
+	"input": {
+		"tag": "forge:ingots/platinum"
+	},
+	"fluid": {
+		"fluid": "staticpower:fluid_lumum",
+		"volume": 250
+	},
+	"result": {
+		"item": "staticpower:ingot_lumum"
+	}
+}

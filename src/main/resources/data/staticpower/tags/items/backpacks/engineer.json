@@ -1,0 +1,12 @@
+{
+	"replace": false,
+	"values": [
+		"#staticpower:machines",
+		"#staticpower:cables",
+		"#staticpower:heatsinks",
+		"#staticpower:machine_blocks",
+		"#staticpower:pumps",
+		"#staticpower:solar_panels",
+		"#staticpower:tanks"
+	]
+}

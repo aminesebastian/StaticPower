@@ -1,0 +1,9 @@
+{
+	"type": "staticpower:alloy_furnace",
+	"input1": { "tag": "forge:storage_blocks/copper" },
+	"input2": { "tag": "forge:storage_blocks/zinc" },
+	"output": {
+		"item": "staticpower:block_brass",
+		"count": 2
+	}
+}

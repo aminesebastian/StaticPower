@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.items.StaticPowerItem;
 
 public abstract class AbstractMultiPartItem extends StaticPowerItem {
-	public AbstractMultiPartItem(String name, Item.Properties properties) {
-		super(name, properties.stacksTo(1));
+	public AbstractMultiPartItem(Item.Properties properties) {
+		super(properties.stacksTo(1));
 	}
 
 	public abstract List<AbstractMultiPartSlot> getSlots(ItemStack stack);

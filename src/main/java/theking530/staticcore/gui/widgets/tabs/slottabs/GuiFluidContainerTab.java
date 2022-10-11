@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -15,16 +15,16 @@ import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
+import theking530.staticpower.blockentities.components.fluids.PacketFluidContainerComponent;
+import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
+import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
+import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.FluidContainerSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
-import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
-import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiFluidContainerTab extends BaseGuiTab {
@@ -44,7 +44,7 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	}
 
 	public GuiFluidContainerTab(StaticPowerContainer container, FluidContainerInventoryComponent fluidContainerComponent, Item emptyBucketPreview, Item filledBucketPreview) {
-		super("Fluid Containers", Color.EIGHT_BIT_WHITE, 26, 83, new Color(1, 0, 1, 1), Items.BUCKET);
+		super("Fluid Containers", SDColor.EIGHT_BIT_WHITE, 26, 73, new SDColor(1, 0, 1, 1), Items.BUCKET);
 		this.container = container;
 		this.fluidConatinerInventoryIndecies = new ArrayList<Integer>();
 		this.fluidContainerComponent = fluidContainerComponent;
@@ -54,15 +54,15 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 
 		// Initialize the button.
 		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
-			registerWidget(fillDirectionButton = new SpriteButton(4, 40, 20, 20, StaticPowerSprites.EMPTY_BUCKET, StaticPowerSprites.EMPTY_BUCKET_HOVERED, this::buttonPressed));
+			registerWidget(fillDirectionButton = new SpriteButton(9, 40, 10, 10, StaticPowerSprites.IMPORT, StaticPowerSprites.IMPORT, this::buttonPressed));
 			this.topSlotPreview = filledBucketPreview;
 			this.bottomSlotPreview = emptyBucketPreview;
-			fillDirectionButton.setTooltip(new TextComponent("Fill Machine with Container Contents"));
+			fillDirectionButton.setTooltip(Component.literal("Fill Machine with Container Contents"));
 		} else {
-			registerWidget(fillDirectionButton = new SpriteButton(4, 40, 20, 20, StaticPowerSprites.FILL_BUCKET, StaticPowerSprites.FILL_BUCKET_HOVERED, this::buttonPressed));
+			registerWidget(fillDirectionButton = new SpriteButton(9, 40, 10, 10, StaticPowerSprites.EXPORT, StaticPowerSprites.EXPORT, this::buttonPressed));
 			this.topSlotPreview = emptyBucketPreview;
 			this.bottomSlotPreview = filledBucketPreview;
-			fillDirectionButton.setTooltip(new TextComponent("Fill Container with Machine Contents"));
+			fillDirectionButton.setTooltip(Component.literal("Fill Container with Machine Contents"));
 		}
 
 		// Disable the default button background rendering.
@@ -93,9 +93,15 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
 		topSlot.y = (int) (this.getYPosition() + 24);
-		bottomSlot.y = (int) (this.getYPosition() + 60);
+		bottomSlot.y = (int) (this.getYPosition() + 51);
 		topSlot.x = (int) (getXPosition() + 6);
 		bottomSlot.x = (int) (getXPosition() + 6);
+		
+		if(!topSlot.getItem().isEmpty() || !bottomSlot.getItem().isEmpty()) {
+			showNotificationBadge = true;
+		}else {
+			showNotificationBadge = false;
+		}
 	}
 
 	@Override
@@ -126,15 +132,15 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 
 		// Update the button and the slot icons.
 		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
-			fillDirectionButton.setRegularTexture(StaticPowerSprites.EMPTY_BUCKET);
-			fillDirectionButton.setHoveredTexture(StaticPowerSprites.EMPTY_BUCKET_HOVERED);
-			fillDirectionButton.setTooltip(new TextComponent("Fill Machine with Container Contents"));
+			fillDirectionButton.setRegularTexture(StaticPowerSprites.IMPORT);
+			fillDirectionButton.setHoveredTexture(StaticPowerSprites.IMPORT);
+			fillDirectionButton.setTooltip(Component.literal("Fill Machine with Container Contents"));
 			topSlot.setPreviewItem(new ItemStack(filledBucketPreview));
 			bottomSlot.setPreviewItem(new ItemStack(emptyBucketPreview));
 		} else {
-			fillDirectionButton.setRegularTexture(StaticPowerSprites.FILL_BUCKET);
-			fillDirectionButton.setHoveredTexture(StaticPowerSprites.FILL_BUCKET_HOVERED);
-			fillDirectionButton.setTooltip(new TextComponent("Fill Container with Machine Contents"));
+			fillDirectionButton.setRegularTexture(StaticPowerSprites.EXPORT);
+			fillDirectionButton.setHoveredTexture(StaticPowerSprites.EXPORT);
+			fillDirectionButton.setTooltip(Component.literal("Fill Container with Machine Contents"));
 			topSlot.setPreviewItem(new ItemStack(emptyBucketPreview));
 			bottomSlot.setPreviewItem(new ItemStack(filledBucketPreview));
 		}

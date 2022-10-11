@@ -24,9 +24,12 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.gui.widgets.TopLevelWidget;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.GuiTabManager;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -34,9 +37,6 @@ import theking530.staticpower.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModKeyBindings;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 /**
  * Base GUI class containing useful features including tabs, button management,
@@ -64,6 +64,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	protected int inputSlotSize;
 	protected boolean isInitialized;
 	private boolean shouldDrawInventoryLabel;
+	private boolean shouldDrawSlotModeBorders;
 
 	private final SpriteDrawable lockedSprite;
 
@@ -84,12 +85,13 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		imageWidth = guiXSize;
 		imageHeight = guiYSize;
 		shouldDrawInventoryLabel = true;
+		shouldDrawSlotModeBorders = true;
 		sizeTarget = new Vector2D(imageWidth, imageHeight);
 		outputSlotSize = 24;
 		inputSlotSize = 16;
 		isScreenSizeChanging = false;
-		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
-		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
+		lockedSprite = new SpriteDrawable(StaticPowerSprites.ITEM_ICON_LOCKED, 12, 12);
+		lockedSprite.setTint(new SDColor(1.0f, 1.0f, 1.0f, 0.95f));
 		registerWidget(tabManager = new GuiTabManager());
 		container.setName(title);
 	}
@@ -146,7 +148,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 				if (itemHandlerSlot.getItemHandler() instanceof InventoryComponent) {
 					InventoryComponent component = (InventoryComponent) itemHandlerSlot.getItemHandler();
 					if (component.isSlotLocked(slot.getSlotIndex())) {
-						lockedSprite.draw(stack, slot.x + 4, slot.y + 4);
+						lockedSprite.draw(stack, slot.x + 2f, slot.y + 2f);
 					}
 				}
 			}
@@ -320,7 +322,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 			Vector2D containerLabelLocation = getContainerLabelDrawLocation();
 			Component containerName = getTitle();
 			String containerString = containerName.getString();
-			GuiDrawUtilities.drawStringCentered(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 1, 1.0f, Color.EIGHT_BIT_DARK_GREY, false);
+			GuiDrawUtilities.drawStringCentered(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 1, 1.0f, SDColor.EIGHT_BIT_DARK_GREY, false);
 		}
 
 		// Draw the inventory label if requested at the designated location.
@@ -379,6 +381,14 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 */
 	protected void setShouldDrawInventoryLabel(boolean shouldDrawInventoryLabel) {
 		this.shouldDrawInventoryLabel = shouldDrawInventoryLabel;
+	}
+
+	protected boolean shouldDrawSlotModeBorders() {
+		return shouldDrawSlotModeBorders;
+	}
+
+	protected void setShouldDrawSlotModeBorders(boolean shouldDrawSlotModeBorders) {
+		this.shouldDrawSlotModeBorders = shouldDrawSlotModeBorders;
 	}
 
 	/**
@@ -476,7 +486,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param borderTint      The tint to apply to the border (the two pixel rounded
 	 *                        corner border).
 	 */
-	public void drawGenericBackground(PoseStack stack, int xPos, int yPos, int width, int height, Color backgroundColor, Color borderTint) {
+	public void drawGenericBackground(PoseStack stack, int xPos, int yPos, int width, int height, SDColor backgroundColor, SDColor borderTint) {
 		GuiDrawUtilities.drawGenericBackground(stack, width, height, xPos + leftPos, yPos + topPos, 0.0f, backgroundColor);
 	}
 
@@ -516,10 +526,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 *                 border).
 	 */
 	public void drawEmptySlot(PoseStack matrixStack, int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
+		// Important we draw the slots on a zlevel >= 1. 0 is reserved for GUI
+		// backgrounds and < 0 clips behind the GUI.
 		if (slotMode == MachineSideMode.NA) {
-			GuiDrawUtilities.drawSlot(matrixStack, width, height, xPos, yPos, 0);
+			GuiDrawUtilities.drawSlot(matrixStack, width, height, xPos, yPos, 1);
 		} else {
-			GuiDrawUtilities.drawSlotWithBorder(matrixStack, width, height, xPos, yPos, 0, slotMode.getColor());
+			GuiDrawUtilities.drawSlotWithBorder(matrixStack, width, height, xPos, yPos, 1, slotMode.getColor());
 		}
 	}
 
@@ -582,7 +594,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 				int sizePosOffset = (slotSize - 16) / 2;
 
 				// If side configuration is present, draw the slow with a border.
-				if (sideConfiguration != null) {
+				if (sideConfiguration != null && shouldDrawSlotModeBorders) {
 					if (intendedMode != MachineSideMode.NA && intendedMode != MachineSideMode.Never) {
 						// Get the side mode to draw with.
 						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.NA;
@@ -612,12 +624,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 					if (component.areSlotsLockable()) {
 						// If the slot is locked, render the phantom item & the lock indicator.
 						if (component.isSlotLocked(slot.getSlotIndex())) {
-							GuiDrawUtilities.drawItem(matrixStack, component.getLockedSlotFilter(slot.getSlotIndex()), slot.x, slot.y, 0.5f);
+							GuiDrawUtilities.drawItem(matrixStack, component.getLockedSlotFilter(slot.getSlotIndex()), slot.x, slot.y, 10, 0.5f);
 							RenderSystem.enableDepthTest();
 						}
 
 						// Draw the yellow line lockable indicator.
-						GuiDrawUtilities.drawRectangle(matrixStack, slotSize, 1.0f, slot.x - sizePosOffset, slot.y - sizePosOffset + slotSize, 1.0f, new Color(0.9f, 0.8f, 0));
+						GuiDrawUtilities.drawRectangle(matrixStack, slotSize, 1.0f, slot.x - sizePosOffset, slot.y - sizePosOffset + slotSize, 1.0f, new SDColor(0.9f, 0.8f, 0));
 					}
 				}
 

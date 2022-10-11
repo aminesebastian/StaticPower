@@ -11,17 +11,20 @@ import javax.annotation.Nullable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticpower.blockentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
-import theking530.staticpower.tileentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
+import theking530.staticpower.init.ModTags;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -219,7 +222,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 				// Skip items that don't match the filter.
 				if (filterString.length() > 0) {
 					if (filterString.startsWith("@") && filterString.length() > 1) {
-						if (!stack.getItem().getRegistryName().getNamespace().toLowerCase().contains(filterString.substring(1))) {
+						if (!ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace().toLowerCase().contains(filterString.substring(1))) {
 							stacks.remove(i);
 						}
 					} else if (filterString.startsWith("$") && filterString.length() > 1) {
@@ -227,8 +230,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 						boolean found = false;
 
 						// Loop through the tags and indicate if we find a match.
-						for (ResourceLocation tag : stack.getItem().getTags()) {
-							if (tag.getPath().toLowerCase().contains(filterString.substring(1))) {
+						for (TagKey<Item> tag : ModTags.getTags(stack)) {
+							if (tag.toString().contains(filterString.substring(1))) {
 								found = true;
 								break;
 							}
@@ -336,8 +339,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 			if (ItemUtilities.areItemStacksStackable(cache.item, item)) {
 				return cache.recipes;
 			} else {
-				for (ResourceLocation resource : item.getItem().getTags()) {
-					if (cache.item.getItem().getTags().contains(resource)) {
+				for (TagKey<Item> tag : ModTags.getTags(item)) {
+					if (ModTags.getTags(cache.item).contains(tag)) {
 						return cache.recipes;
 					}
 				}

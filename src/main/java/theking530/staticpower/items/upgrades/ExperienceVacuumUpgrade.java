@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,19 +14,19 @@ import theking530.api.IUpgradeItem;
 
 public class ExperienceVacuumUpgrade extends BaseUpgrade implements IUpgradeItem {
 
-	public ExperienceVacuumUpgrade(String name) {
-		super(name, new Properties().stacksTo(1));
+	public ExperienceVacuumUpgrade() {
+		super(new Properties().stacksTo(1));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		if(showAdvanced) {
-			tooltip.add(new TextComponent(ChatFormatting.GREEN + "Allows objects with"));
-			tooltip.add(new TextComponent(ChatFormatting.GREEN + "vacuum effects to"));
-			tooltip.add(new TextComponent(ChatFormatting.GREEN + "vacuum experience."));
+			tooltip.add(Component.literal(ChatFormatting.GREEN + "Allows objects with"));
+			tooltip.add(Component.literal(ChatFormatting.GREEN + "vacuum effects to"));
+			tooltip.add(Component.literal(ChatFormatting.GREEN + "vacuum experience."));
 
-			tooltip.add(new TextComponent(ChatFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize()));
+			tooltip.add(Component.literal(ChatFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize()));
 		}
 	}
 }

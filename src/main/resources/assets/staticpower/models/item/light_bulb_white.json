@@ -1,0 +1,153 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"base": "staticpower:blocks/power/light_bulb/base",
+		"glass": "staticpower:blocks/power/light_bulb/white_bulb",
+		"filament": "staticpower:blocks/power/light_bulb/filament"
+	},
+	"elements": [
+		{
+			"name": "Filament",
+			"from": [7.625, 2.25, 7.625],
+			"to": [8.375, 4.25, 8.375],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [13, 0, 16, 8], "texture": "#filament"},
+				"east": {"uv": [13, 0, 16, 8], "texture": "#filament"},
+				"south": {"uv": [13, 0, 16, 8], "texture": "#filament"},
+				"west": {"uv": [13, 0, 16, 8], "texture": "#filament"},
+				"up": {"uv": [13, 8, 16, 11], "texture": "#filament"},
+				"down": {"uv": [13, 8, 16, 11], "texture": "#filament"}
+			}
+		},
+		{
+			"name": "Nub",
+			"from": [7.25, 0, 7.25],
+			"to": [8.75, 1.75, 8.75],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [10, 6, 16, 13], "rotation": 180, "texture": "#base"},
+				"east": {"uv": [10, 6, 16, 13], "rotation": 180, "texture": "#base"},
+				"south": {"uv": [10, 6, 16, 13], "rotation": 180, "texture": "#base"},
+				"west": {"uv": [10, 6, 16, 13], "rotation": 180, "texture": "#base"},
+				"up": {"uv": [10, 0, 16, 6], "texture": "#base"},
+				"down": {"uv": [10, 0, 16, 6], "texture": "#base"}
+			}
+		},
+		{
+			"name": "FilamentBase",
+			"from": [7, 1.75, 7],
+			"to": [9, 2.25, 9],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [8, 14, 16, 16], "texture": "#base"},
+				"east": {"uv": [8, 14, 16, 16], "texture": "#base"},
+				"south": {"uv": [8, 14, 16, 16], "texture": "#base"},
+				"west": {"uv": [8, 14, 16, 16], "texture": "#base"},
+				"up": {"uv": [0, 0, 8, 8], "texture": "#base"},
+				"down": {"uv": [0, 8, 8, 16], "texture": "#base"}
+			}
+		},
+		{
+			"name": "GlassTop",
+			"from": [6.5, 6.5, 6.5],
+			"to": [9.5, 7, 9.5],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 9, 6, 10], "texture": "#glass"},
+				"east": {"uv": [0, 9, 6, 10], "texture": "#glass"},
+				"south": {"uv": [0, 9, 6, 10], "texture": "#glass"},
+				"west": {"uv": [0, 9, 6, 10], "texture": "#glass"},
+				"up": {"uv": [0, 10, 6, 16], "texture": "#glass"},
+				"down": {"uv": [6, 11, 11, 16], "texture": "#glass"}
+			}
+		},
+		{
+			"name": "GlassBottom",
+			"from": [6.75, 2, 6.75],
+			"to": [9.25, 3.5, 9.25],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [11, 13, 16, 16], "texture": "#glass"},
+				"east": {"uv": [11, 13, 16, 16], "texture": "#glass"},
+				"south": {"uv": [11, 13, 16, 16], "texture": "#glass"},
+				"west": {"uv": [11, 13, 16, 16], "texture": "#glass"},
+				"up": {"uv": [6, 8, 11, 13], "texture": "#glass"},
+				"down": {"uv": [11, 8, 16, 13], "texture": "#glass"}
+			}
+		},
+		{
+			"name": "GlassMiddle",
+			"from": [6.25, 3.5, 6.25],
+			"to": [9.75, 6.5, 9.75],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 7, 7], "texture": "#glass"},
+				"east": {"uv": [0, 0, 7, 7], "texture": "#glass"},
+				"south": {"uv": [0, 0, 7, 7], "texture": "#glass"},
+				"west": {"uv": [0, 0, 7, 7], "texture": "#glass"},
+				"up": {"uv": [7, 0, 14, 7], "texture": "#glass"},
+				"down": {"uv": [7, 0, 14, 7], "texture": "#glass"}
+			}
+		}
+	],
+	"gui_light": "front",
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [12, 45, 0],
+			"translation": [0, 4, 0.75],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [12, 45, 0],
+			"translation": [0, 4, 0.75],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 135, 0],
+			"translation": [0, 5.75, 0],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 135, 0],
+			"translation": [0, 5.75, 0],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [0, 6.25, 0],
+			"scale": [1.75, 1.75, 1.75]
+		},
+		"head": {
+			"translation": [0, 10.5, 0]
+		},
+		"fixed": {
+			"translation": [0, 9.75, 0],
+			"scale": [2, 2, 2]
+		}
+	},
+	"groups": [
+		{
+			"name": "Filament",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0]
+		},
+		{
+			"name": "Base",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [1, 2]
+		},
+		{
+			"name": "Glass",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [3, 4, 5]
+		}
+	]
+}

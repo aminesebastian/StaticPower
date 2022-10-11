@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"uau",
+		"aua",
 		"gbg",
 		"rlr"
 	],
@@ -22,7 +22,7 @@
 			"item": "staticpower:plug"
 		},
 		"r": {
-			"tag": "forge:storage_blocks/bronze"
+			"item": "minecraft:composter"
 		}
 	},
 	"result": {

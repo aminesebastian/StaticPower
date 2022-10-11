@@ -3,7 +3,7 @@ package theking530.staticpower.blocks.tree;
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -15,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
@@ -26,25 +25,25 @@ import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
-	private final Block strippedVariant;
+	private final Supplier<Block> strippedVariant;
 	private final Supplier<Integer> minBark;
 	private final Supplier<Integer> maxBark;
 	private final Supplier<Item> barkItemSupplier;
 
-	public StaticPowerTreeLog(String name, Block strippedVariant, Properties properties, Supplier<Integer> minBark, Supplier<Integer> maxBark, Supplier<Item> barkItem) {
-		super(name, properties);
+	public StaticPowerTreeLog(Supplier<Block> strippedVariant, Properties properties, Supplier<Integer> minBark, Supplier<Integer> maxBark, Supplier<Item> barkItem) {
+		super(properties);
 		this.strippedVariant = strippedVariant;
 		this.minBark = minBark;
 		this.maxBark = maxBark;
 		this.barkItemSupplier = barkItem;
 	}
 
-	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant, Properties properties) {
-		this(name, strippedVariant, properties, () -> 0, () -> 0, () -> null);
+	public StaticPowerTreeLog(Supplier<Block> strippedVariant, Properties properties) {
+		this(strippedVariant, properties, () -> 0, () -> 0, () -> null);
 	}
 
-	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Properties properties) {
-		this(name, null, properties, () -> 0, () -> 0, () -> null);
+	public StaticPowerTreeLog(Properties properties) {
+		this(null, properties, () -> 0, () -> 0, () -> null);
 	}
 
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -56,7 +55,7 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 					// If the player is holding an axe.
 					if (player.getItemInHand(handIn).isCorrectToolForDrops(state)) {
 						// Update to the stripped variant.
-						worldIn.setBlockAndUpdate(pos, strippedVariant.defaultBlockState());
+						worldIn.setBlockAndUpdate(pos, strippedVariant.get().defaultBlockState());
 
 						// Play the strip sound.
 						worldIn.playSound(player, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -82,7 +81,7 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 					}
 				} else {
 					if (!worldIn.isClientSide()) {
-						player.sendMessage(new TranslatableComponent("gui.missing_research"), player.getUUID());
+						player.sendSystemMessage(Component.translatable("gui.missing_research"));
 					}
 				}
 			}

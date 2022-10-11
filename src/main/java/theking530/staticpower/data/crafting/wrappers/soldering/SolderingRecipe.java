@@ -24,9 +24,11 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class SolderingRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<SolderingRecipe> RECIPE_TYPE = RecipeType.register("soldering");
+	public static final String ID = "soldering";
+	public static final RecipeType<SolderingRecipe> RECIPE_TYPE = new StaticPowerRecipeType<SolderingRecipe>();
 
 	protected static final int MAX_WIDTH = 3;
 	protected static final int MAX_HEIGHT = 3;

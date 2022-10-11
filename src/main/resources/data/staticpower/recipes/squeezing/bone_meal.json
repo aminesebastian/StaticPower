@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:squeezer_recipe",
+	"type": "staticpower:squeezer",
 	"input": {
 		"item": "minecraft:bone_meal"
 	},

@@ -15,23 +15,19 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
 public class ItemTankSpecialRenderer extends AbstractStaticPowerItemStackRenderer {
-
-	/** Default basic cube renderer. */
-	protected static final BlockModel CUBE_MODEL = new BlockModel();
-
 	public ItemTankSpecialRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
 		super(p_172550_, p_172551_);
 	}
 
 	@Override
-	public void render(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType,
-			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void render(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+			int combinedOverlay) {
 		// Check to see if the stack has the serialized nbt.
 		if (stack.hasTag() && stack.getTag().contains("SerializableNbt")) {
 			// If it does, get the tank tag and then the subsequent fluid tag.
@@ -43,18 +39,17 @@ public class ItemTankSpecialRenderer extends AbstractStaticPowerItemStackRendere
 
 			// Get the fluid attributes.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
-			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+			SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 
 			// Calculate the height and determine if we should raise the fluid to the top
 			// if it is a gas.
 			float height = (float) fluid.getAmount() / fluidTank.getInt("capacity");
-			boolean isGas = fluid.getFluid().getAttributes().isGaseous();
+			boolean isGas = fluid.getFluid().getFluidType().isLighterThanAir();
 			float yPosition = isGas ? 14.0f * TEXEL - (11.98f * TEXEL * height) : 2.01f * TEXEL;
 
 			// Render the fluid.
-			CUBE_MODEL.drawPreviewCube(new Vector3f(TEXEL * 2.01f, yPosition, TEXEL * 2.01f),
-					new Vector3f(TEXEL * 11.98f, TEXEL * 11.98f * height, TEXEL * 11.98f), fluidColor, matrixStack,
-					sprite, new Vector3D(1.0f, height, 1.0f));
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(TEXEL * 2.01f, yPosition, TEXEL * 2.01f), new Vector3f(TEXEL * 11.98f, TEXEL * 11.98f * height, TEXEL * 11.98f),
+					fluidColor, sprite, new Vector3D(1.0f, height, 1.0f));
 		}
 	}
 }

@@ -1,21 +1,21 @@
 package theking530.staticcore.gui.widgets.tabs;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
+import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiMachineHeatTab extends AbstractInfoTab {
 	protected HeatStorageComponent heatStorage;
 
 	public GuiMachineHeatTab(HeatStorageComponent storage) {
-		super("Heat I/O", new Color(100, 255, 255), 105,  new Color(1, 0.5f, 0.1f, 1.0f), new ItemDrawable(Items.CAMPFIRE));
+		super("Heat I/O", new SDColor(100, 255, 255), 105, new SDColor(1, 0.5f, 0.1f, 1.0f), new ItemDrawable(Items.CAMPFIRE));
 		heatStorage = storage;
 	}
 
@@ -23,9 +23,11 @@ public class GuiMachineHeatTab extends AbstractInfoTab {
 	public void tick() {
 		super.tick();
 		clear();
-		addKeyValueTwoLiner("Generating", new TextComponent("Generating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getHeatPerTick()), ChatFormatting.RED);
-		addKeyValueTwoLiner("Dissipating", new TextComponent("Dissipating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getCooledPerTick()), ChatFormatting.AQUA);
-		addKeyValueTwoLiner("Conductivity", new TextComponent("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getStorage().getConductivity()),
-				ChatFormatting.GREEN);
+		addKeyValueTwoLiner("Heating", Component.literal("Heating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick()), ChatFormatting.RED);
+		addKeyValueTwoLiner("Cooling", Component.literal("Cooling"), GuiTextUtilities.formatHeatRateToString(heatStorage.getCooledPerTick()), ChatFormatting.AQUA);
+		if (heatStorage.getConductivity() != 1) {
+			addKeyValueTwoLiner("Conductivity", Component.literal("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getConductivity()),
+					ChatFormatting.GREEN);
+		}
 	}
 }

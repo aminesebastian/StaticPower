@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"staticpower:fuel"
+		"staticpower:fuel",
+		"staticpower:fuel_flowing"
 	]
 }

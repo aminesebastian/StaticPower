@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:tumbler_recipe",
+	"type": "staticpower:tumbler",
 	"input": {
 		"tag": "forge:ores/quartz"
 	},

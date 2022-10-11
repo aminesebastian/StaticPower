@@ -49,7 +49,7 @@ public class ContainerOpener<T extends StaticPowerContainer> implements MenuProv
 	}
 
 	public void open(ServerPlayer player, Consumer<FriendlyByteBuf> extraDataWriter) {
-		NetworkGUI.openGui(player, this, extraDataWriter);
+		NetworkGUI.openScreen(player, this, extraDataWriter);
 	}
 
 	public void open(ServerPlayer player) {

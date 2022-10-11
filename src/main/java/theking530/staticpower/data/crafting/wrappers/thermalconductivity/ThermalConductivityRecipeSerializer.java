@@ -9,19 +9,15 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ThermalConductivityRecipe> {
+public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerializer<ThermalConductivityRecipe> {
 	public static final ThermalConductivityRecipeSerializer INSTANCE = new ThermalConductivityRecipeSerializer();
-
-	private ThermalConductivityRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "thermal_conducitity"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "thermal_conducitity");
 
 	@Override
 	public ThermalConductivityRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -56,59 +52,90 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<Reci
 			throw new RuntimeException(String.format("Recipe: %1$s cannot define both blocks and fluids in the same recipe.", recipeId.toString()));
 		}
 
-		// Capture the conductivity.
-		float thermalConductivity = json.get("conductivity").getAsFloat();
-
 		// Capture the heating amount.
-		float heatAmount = 0.0f;
-		if (json.has("heating_amount")) {
-			heatAmount = json.get("heating_amount").getAsFloat();
+		int temperature = 0;
+		boolean hasActiveTemperature = false;
+		if (json.has("temperature")) {
+			temperature = json.get("temperature").getAsInt();
+			hasActiveTemperature = true;
 		}
 
 		// Allocate the overheating values.
 		BlockState overheatedBlock = Blocks.VOID_AIR.defaultBlockState();
 		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.EMPTY;
-		float overheatTemperature = Integer.MAX_VALUE;
+		int overheatTemperature = Integer.MAX_VALUE;
 
 		// Read the overheating values if they are defined.
 		if (json.has("overheating")) {
-			// Get the overheating object.
 			JsonObject overheatingElement = json.get("overheating").getAsJsonObject();
-
-			// Handle the block.
 			if (overheatingElement.has("block")) {
 				CompoundTag blockNBT = null;
 				try {
 					blockNBT = TagParser.parseTag(overheatingElement.get("block").toString());
 					overheatedBlock = NbtUtils.readBlockState(blockNBT);
 				} catch (CommandSyntaxException e) {
-					StaticPower.LOGGER.error(String.format("An error occured when attempting to deserialize the value: %1$s into a BlockState.", overheatingElement.get("block").toString()),
-							e);
+					StaticPower.LOGGER.error(
+							String.format("An error occured when attempting to deserialize the value: %1$s into a BlockState.", overheatingElement.get("block").toString()), e);
 				}
 			}
-
-			// Handle the item.
 			if (overheatingElement.has("item")) {
 				overheatedItemStack = ProbabilityItemStackOutput.parseFromJSON(overheatingElement.get("item").getAsJsonObject());
 			}
+			overheatTemperature = overheatingElement.get("temperature").getAsInt();
+		}
 
-			// Get the temperature.
-			overheatTemperature = overheatingElement.get("temperature").getAsFloat();
+		// Allocate the freezing values.
+		BlockState freezingBlock = Blocks.VOID_AIR.defaultBlockState();
+		ProbabilityItemStackOutput freezingItemStack = ProbabilityItemStackOutput.EMPTY;
+		int freezingTemperature = Integer.MAX_VALUE;
+
+		// Read the freezing values if they are defined.
+		if (json.has("freezing")) {
+			JsonObject freezingElement = json.get("overheating").getAsJsonObject();
+			if (freezingElement.has("block")) {
+				CompoundTag blockNBT = null;
+				try {
+					blockNBT = TagParser.parseTag(freezingElement.get("block").toString());
+					freezingBlock = NbtUtils.readBlockState(blockNBT);
+				} catch (CommandSyntaxException e) {
+					StaticPower.LOGGER
+							.error(String.format("An error occured when attempting to deserialize the value: %1$s into a BlockState.", freezingElement.get("block").toString()), e);
+				}
+			}
+			if (freezingElement.has("item")) {
+				freezingItemStack = ProbabilityItemStackOutput.parseFromJSON(freezingElement.get("item").getAsJsonObject());
+			}
+			freezingTemperature = freezingElement.get("temperature").getAsInt();
+		}
+
+		float conductivity = 1.0f;
+		if (json.has("conductivity")) {
+			conductivity = json.get("conductivity").getAsFloat();
 		}
 
 		// Create the recipe.
-		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatedBlock, overheatedItemStack, overheatTemperature, thermalConductivity, heatAmount);
+		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatTemperature, overheatedBlock, overheatedItemStack, freezingTemperature, freezingBlock,
+				freezingItemStack, temperature, hasActiveTemperature, conductivity);
 	}
 
 	@Override
 	public ThermalConductivityRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+		// Read the int values.
+		int temperature = buffer.readInt();
+		boolean hasActiveTemperature = buffer.readBoolean();
+
 		// Read the float values.
 		float conductivity = buffer.readFloat();
-		float supply = buffer.readFloat();
+
 		// Read the over heat values.
-		float overheatTemp = buffer.readFloat();
-		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		int overheatTemperature = buffer.readInt();
 		BlockState overheatedBlock = NbtUtils.readBlockState(buffer.readNbt());
+		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.readFromBuffer(buffer);
+
+		// Read the freeze values.
+		int freezingTemperature = buffer.readInt();
+		BlockState freezingBlock = NbtUtils.readBlockState(buffer.readNbt());
+		ProbabilityItemStackOutput freezingItemStack = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Read Blocks
 		byte blockTagCount = buffer.readByte();
@@ -124,19 +151,28 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<Reci
 			fluids[i] = new ResourceLocation(buffer.readUtf());
 		}
 
-		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatedBlock, overheatedItemStack, overheatTemp, conductivity, supply);
+		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatTemperature, overheatedBlock, overheatedItemStack, freezingTemperature, freezingBlock,
+				freezingItemStack, temperature, hasActiveTemperature, conductivity);
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, ThermalConductivityRecipe recipe) {
+		// Write the int values.
+		buffer.writeInt(recipe.getTemperature());
+		buffer.writeBoolean(recipe.hasActiveTemperature());
+
 		// Write the float values.
-		buffer.writeFloat(recipe.getThermalConductivity());
-		buffer.writeFloat(recipe.getHeatAmount());
+		buffer.writeFloat(recipe.getConductivity());
 
 		// Write the over heat values.
-		buffer.writeFloat(recipe.getOverheatedTemperature());
-		recipe.getOverheatedItem().writeToBuffer(buffer);
+		buffer.writeInt(recipe.getOverheatedTemperature());
 		buffer.writeNbt(NbtUtils.writeBlockState(recipe.getOverheatedBlock()));
+		recipe.getOverheatedItem().writeToBuffer(buffer);
+
+		// Write the freeze values.
+		buffer.writeInt(recipe.getFreezingTemperature());
+		buffer.writeNbt(NbtUtils.writeBlockState(recipe.getFreezingBlock()));
+		recipe.getFreezingItem().writeToBuffer(buffer);
 
 		// Write Blocks
 		buffer.writeByte(recipe.getBlockTags().length);

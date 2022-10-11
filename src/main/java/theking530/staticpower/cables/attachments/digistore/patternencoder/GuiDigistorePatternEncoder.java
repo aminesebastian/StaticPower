@@ -3,7 +3,6 @@ package theking530.staticpower.cables.attachments.digistore.patternencoder;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
@@ -37,15 +36,15 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 
 		// Add recipe type button.
 		registerWidget(recipeTypeButton = new SpriteButton(67, 154, 16, 16, StaticPowerSprites.CRAFTING_TABLE_ICON, null, this::onRecipeTypeButtonPressed));
-		recipeTypeButton.setTooltip(new TextComponent("Crafting Table Recipe"));
+		recipeTypeButton.setTooltip(Component.literal("Crafting Table Recipe"));
 
 		// Add clear recipe button.
 		registerWidget(clearRecipeButton = new SpriteButton(65, 117, 8, 8, StaticPowerSprites.CLOSE, null, this::onClearRecipePressed));
-		clearRecipeButton.setTooltip(new TextComponent("Clear Recipe"));
+		clearRecipeButton.setTooltip(Component.literal("Clear Recipe"));
 
 		// Add encode button.
 		registerWidget(encodeButton = new SpriteButton(145, 134, 16, 16, StaticPowerSprites.ARROW_DOWN, null, this::onEncodePressed));
-		encodeButton.setTooltip(new TextComponent("Encode Recipe"));
+		encodeButton.setTooltip(Component.literal("Encode Recipe"));
 	}
 
 	@Override
@@ -88,7 +87,7 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 		if (getCableComponent().isManagerPresent()) {
 			progressBar.setErrorState(false);
 		} else {
-			progressBar.setErrorState(true).setErrorMessage("Digistore Manager not present or out of power!");
+			progressBar.setErrorState(true).setErrorMessage(Component.translatable("gui.staticpower.alert.digistore_manager_missing"));
 		}
 	}
 
@@ -107,11 +106,11 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 		if (getMenu().getCurrentRecipeType() == RecipeEncodingType.CRAFTING_TABLE) {
 			getMenu().setCurrentRecipeType(RecipeEncodingType.MACHINE);
 			recipeTypeButton.setRegularTexture(StaticPowerSprites.FURNACE_ICON);
-			recipeTypeButton.setTooltip(new TextComponent("Free-form Recipe"));
+			recipeTypeButton.setTooltip(Component.literal("Free-form Recipe"));
 		} else {
 			getMenu().setCurrentRecipeType(RecipeEncodingType.CRAFTING_TABLE);
 			recipeTypeButton.setRegularTexture(StaticPowerSprites.CRAFTING_TABLE_ICON);
-			recipeTypeButton.setTooltip(new TextComponent("Crafting Table Recipe"));
+			recipeTypeButton.setTooltip(Component.literal("Crafting Table Recipe"));
 		}
 
 		// Send sync packet to the server.

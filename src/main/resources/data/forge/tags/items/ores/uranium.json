@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:ore_uranium",
+	"staticpower:ore_deepslate_uranium"
+  ]
+}

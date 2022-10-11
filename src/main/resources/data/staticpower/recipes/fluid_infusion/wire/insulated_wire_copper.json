@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion",
+	"input": {
+		"tag": "forge:wires/copper"
+	},
+	"fluid": {
+		"fluid": "staticpower:latex",
+		"volume": 100
+	},
+	"result": {
+		"item": "staticpower:wire_insulated_copper"
+	}
+}

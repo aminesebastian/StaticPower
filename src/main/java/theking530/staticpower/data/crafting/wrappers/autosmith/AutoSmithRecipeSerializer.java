@@ -6,22 +6,18 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeModifierWrapper;
 
-public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AutoSmithRecipe> {
+public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoSmithRecipe> {
 	public static final AutoSmithRecipeSerializer INSTANCE = new AutoSmithRecipeSerializer();
-
-	private AutoSmithRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "auto_smith_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "auto_smith_recipe");
 
 	@Override
 	public AutoSmithRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -59,7 +55,7 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.autoSmithProcessingTime.get(), StaticPowerConfig.SERVER.autoSmithPowerUsage.get(),
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.autoSmithProcessingTime, StaticPowerConfig.SERVER.autoSmithPowerUsage,
 				json);
 
 		// Capture the repair amount if provided.

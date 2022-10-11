@@ -3,6 +3,5 @@
 	"blocks": [
 		"minecraft:fire"
 	],
-	"conductivity": "0.0",
-	"heating_amount": 5
+	"temperature": 400000
 }

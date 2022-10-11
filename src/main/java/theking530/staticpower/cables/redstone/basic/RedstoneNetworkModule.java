@@ -5,21 +5,21 @@ import java.util.Set;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import theking530.staticpower.cables.network.CableNetwork;
-import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.NetworkMapper;
-import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticcore.cablenetwork.CableNetwork;
+import theking530.staticcore.cablenetwork.CableNetworkManager;
+import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
+import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModule;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 
-	public RedstoneNetworkModule(ResourceLocation name) {
-		super(name);
+	public RedstoneNetworkModule(CableNetworkModuleType type) {
+		super(type);
 	}
 
 	@Override
@@ -77,15 +77,15 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 			// skip it.
 			if (CableNetworkManager.get(world).isTrackingCable(targetPos)) {
 				ServerCable otherCable = CableNetworkManager.get(world).getCable(targetPos);
-				if (otherCable.containsProperty(RedstoneCableComponent.CONFIGURATION_KEY)) {
+				if (otherCable.getDataTag().contains(RedstoneCableComponent.CONFIGURATION_KEY)) {
 					// Get the configuration for the other cable
 					RedstoneCableConfiguration otherConfiguration = getConfigurationForCable(otherCable);
 					String otherSelector = otherConfiguration.getSideConfig(side.getOpposite()).getSelector();
 					if (!selector.equals("naked") && !otherSelector.equals("naked") && !otherSelector.equals(selector)) {
 						checkWorld = false;
 					}
-				} else if (otherCable.getNetwork().hasModule(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE)) {
-					power = otherCable.getNetwork().<BundledRedstoneNetworkModule>getModule(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE).getNetworkSignalStrength(selector);
+				} else if (otherCable.getNetwork().hasModule(ModCableModules.BundledRedstone.get())) {
+					power = otherCable.getNetwork().<BundledRedstoneNetworkModule>getModule(ModCableModules.BundledRedstone.get()).getNetworkSignalStrength(selector);
 					checkWorld = false;
 				}
 			}

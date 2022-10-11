@@ -2,22 +2,27 @@ package theking530.staticpower.entities;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import theking530.staticcore.utilities.Color;
-import theking530.staticpower.StaticPowerRegistry;
+import net.minecraftforge.registries.RegistryObject;
+import theking530.staticcore.utilities.SDColor;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.StaticPowerMobSpawnEgg;
 
-public abstract class AbstractSpawnableMobType<T extends Mob> extends AbstractEntityType<T> {
-	private final StaticPowerMobSpawnEgg spawnEgg;
+public abstract class AbstractSpawnableMobType<T extends Mob> extends AbstractEntityBuilder<T> {
+	private RegistryObject<StaticPowerMobSpawnEgg> spawnEgg;
+	private SDColor primaryEggColor;
+	private SDColor secondaryEggColor;
 
-	public AbstractSpawnableMobType(String name, Color primaryEggColor, Color secondaryEggColor, EntityType.Builder<T> builder) {
-		super(name, builder);
-		StaticPowerRegistry.preRegisterItem(spawnEgg = new StaticPowerMobSpawnEgg("egg_" + name, getType(), primaryEggColor, secondaryEggColor));
+	public AbstractSpawnableMobType(SDColor primaryEggColor, SDColor secondaryEggColor, EntityType.Builder<T> builder) {
+		super(builder);
+		this.primaryEggColor = primaryEggColor;
+		this.secondaryEggColor = secondaryEggColor;
 	}
 
-	public abstract void spawn(BiomeLoadingEvent event);
+	public void registerSpawnEgg(String name) {
+		spawnEgg = ModItems.ITEMS.register("egg_" + name, () -> new StaticPowerMobSpawnEgg(getType(), primaryEggColor, secondaryEggColor));
+	}
 
 	public StaticPowerMobSpawnEgg getEgg() {
-		return spawnEgg;
+		return spawnEgg.get();
 	}
 }

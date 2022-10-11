@@ -11,7 +11,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials.RequiredAutoCraftingMaterial;
@@ -96,18 +96,18 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget<AutoCraftingStepWi
 		// render the crafting scenario. If we have all the items, render the we have
 		// all
 		// the items scenario.
-		Color textColor = isBlockingStep() ? Color.EIGHT_BIT_RED : Color.EIGHT_BIT_WHITE;
+		SDColor textColor = isBlockingStep() ? SDColor.EIGHT_BIT_RED : SDColor.EIGHT_BIT_WHITE;
 		if (material.getMissingAmount() > 0) {
 			GuiDrawUtilities.drawString(matrix, "Required: " + material.getAmountRequired(), 53, 7, 0.0f, 0.5f, textColor, true);
 			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountStored(), 53, 12, 0.0f, 0.5f, textColor, true);
-			GuiDrawUtilities.drawRectangle(matrix, 35.0f, 0.5f, 21, 14, 1.0f, Color.GREY);
-			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53.5f, 19.5f, 0.0f, 0.5f, new Color(75.0f, 25.0f, 0.0f, 255.0f), false);
-			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53, 19, 0.0f, 0.5f, new Color(255.0f, 150.0f, 50.0f, 255.0f), false);
+			GuiDrawUtilities.drawRectangle(matrix, 35.0f, 0.5f, 21, 14, 1.0f, SDColor.GREY);
+			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53.5f, 19.5f, 0.0f, 0.5f, new SDColor(75.0f, 25.0f, 0.0f, 255.0f), false);
+			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53, 19, 0.0f, 0.5f, new SDColor(255.0f, 150.0f, 50.0f, 255.0f), false);
 			MISSING_INGREDIENT_RENDERABLE.draw(matrix, 2, 3, 200);
 		} else if (material.getAmountToCraft() > 0) {
 			GuiDrawUtilities.drawString(matrix, "Required: " + material.getAmountRequired(), 53, 7, 0.0f, 0.5f, textColor, true);
 			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountStored(), 53, 12, 0.0f, 0.5f, textColor, true);
-			GuiDrawUtilities.drawRectangle(matrix, 35.0f, 0.5f, 21, 14, 1.0f, Color.GREY);
+			GuiDrawUtilities.drawRectangle(matrix, 35.0f, 0.5f, 21, 14, 1.0f, SDColor.GREY);
 			GuiDrawUtilities.drawString(matrix, "To Craft: " + material.getAmountToCraft(), 53, 19, 0.0f, 0.5f, textColor, true);
 		} else {
 			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountRequired(), 53, 11, 0.0f, 0.5f, textColor, true);
@@ -118,7 +118,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget<AutoCraftingStepWi
 		}
 
 		// Draw the bottom divider.
-		GuiDrawUtilities.drawRectangle(matrix, getSize().getX(), 0.75f, 0, getSize().getY(), 1.0f, Color.GREY);
+		GuiDrawUtilities.drawRectangle(matrix, getSize().getX(), 0.75f, 0, getSize().getY(), 1.0f, SDColor.GREY);
 	}
 
 	protected boolean isBlockingStep() {

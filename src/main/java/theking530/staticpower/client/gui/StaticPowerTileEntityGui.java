@@ -2,8 +2,8 @@ package theking530.staticpower.client.gui;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.tileentities.TileEntityBase;
 
 /**
  * Base GUI class for tile entities.
@@ -12,7 +12,7 @@ import theking530.staticpower.tileentities.TileEntityBase;
  *
  * @param <T> The container type.
  */
-public abstract class StaticPowerTileEntityGui<T extends StaticPowerTileEntityContainer<K>, K extends TileEntityBase> extends StaticPowerContainerGui<T> {
+public abstract class StaticPowerTileEntityGui<T extends StaticPowerTileEntityContainer<K>, K extends BlockEntityBase> extends StaticPowerContainerGui<T> {
 	private final K owningTileEntity;
 
 	public StaticPowerTileEntityGui(T container, final Inventory playerInventory, Component title, int guiXSize, int guiYSize) {

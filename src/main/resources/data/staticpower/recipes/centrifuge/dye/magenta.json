@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:centrifuge_recipe",
+	"type": "staticpower:centrifuge",
 	"input": {
 		"tag": "forge:dyes/magenta",
 		"count": 2

@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:grinder_recipe",
+	"type": "staticpower:grinder",
 	"input": {
 		"item": "staticpower:ingot_redstone_alloy"
 	},

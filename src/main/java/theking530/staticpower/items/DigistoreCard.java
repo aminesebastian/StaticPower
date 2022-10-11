@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,12 +24,12 @@ public class DigistoreCard extends StaticPowerItem {
 	public final ResourceLocation model;
 	private final boolean shouldGlow;
 
-	public DigistoreCard(String name, ResourceLocation tierType, ResourceLocation model) {
-		this(name, tierType, model, false);
+	public DigistoreCard(ResourceLocation tierType, ResourceLocation model) {
+		this(tierType, model, false);
 	}
 
-	public DigistoreCard(String name, ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
-		super(name, new Item.Properties().stacksTo(1));
+	public DigistoreCard(ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
+		super(new Item.Properties().stacksTo(1));
 		this.tierType = tierType;
 		this.model = model;
 		this.shouldGlow = shouldGlow;
@@ -42,7 +41,11 @@ public class DigistoreCard extends StaticPowerItem {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		return new DigistoreInventoryCapabilityProvider(stack, StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get(), StaticPowerConfig.getTier(tierType).digistoreCardCapacity.get(), nbt);
+		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
+			return new DigistoreInventoryCapabilityProvider(stack, StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get(),
+					StaticPowerConfig.getTier(tierType).digistoreCardCapacity.get(), nbt);
+		}
+		return null;
 	}
 
 	public static IDigistoreInventory getInventory(ItemStack stack) {
@@ -53,16 +56,16 @@ public class DigistoreCard extends StaticPowerItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TextComponent("Stores: ").append(String.valueOf(getInventory(stack).getItemCapacity() / 64)).append(" Stacks"));
-		tooltip.add(new TextComponent("Max Types: ").append(String.valueOf(getInventory(stack).getUniqueItemCapacity())));
+		tooltip.add(Component.literal("Stores: ").append(String.valueOf(getInventory(stack).getItemCapacity() / 64)).append(" Stacks"));
+		tooltip.add(Component.literal("Max Types: ").append(String.valueOf(getInventory(stack).getUniqueItemCapacity())));
 
 		if (showAdvanced) {
 			int storedAmount = getInventory(stack).getTotalContainedCount();
 			float filledPercentage = (float) storedAmount / getInventory(stack).getItemCapacity();
 			MetricConverter converter = new MetricConverter(storedAmount);
-			tooltip.add(new TextComponent("Stored: ").append(converter.getValueAsString(true)).append(" Items (")
-					.append(String.valueOf((int) (100 * filledPercentage))).append("%)"));
-			tooltip.add(new TextComponent("Types: ").append(String.valueOf(getInventory(stack).getCurrentUniqueItemTypeCount())));
+			tooltip.add(
+					Component.literal("Stored: ").append(converter.getValueAsString(true)).append(" Items (").append(String.valueOf((int) (100 * filledPercentage))).append("%)"));
+			tooltip.add(Component.literal("Types: ").append(String.valueOf(getInventory(stack).getCurrentUniqueItemTypeCount())));
 		}
 	}
 

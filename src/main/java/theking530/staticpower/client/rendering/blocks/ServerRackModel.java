@@ -3,7 +3,6 @@ package theking530.staticpower.client.rendering.blocks;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,11 +11,18 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.math.Vector3f;
 
+import codechicken.lib.model.CachedFormat;
+import codechicken.lib.model.Quad;
+import codechicken.lib.model.pipeline.BakedPipeline;
+import codechicken.lib.model.pipeline.transformers.QuadClamper;
+import codechicken.lib.model.pipeline.transformers.QuadReInterpolator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,22 +30,15 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+import theking530.staticpower.blockentities.digistorenetwork.severrack.TileEntityDigistoreServerRack;
+import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.DigistoreStackedCard;
-import theking530.staticpower.tileentities.digistorenetwork.severrack.TileEntityDigistoreServerRack;
-import theking530.thirdparty.codechicken.lib.model.CachedFormat;
-import theking530.thirdparty.codechicken.lib.model.Quad;
-import theking530.thirdparty.codechicken.lib.model.pipeline.BakedPipeline;
-import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadClamper;
-import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadReInterpolator;
 
 @OnlyIn(Dist.CLIENT)
 public class ServerRackModel extends AbstractBakedModel {
@@ -58,26 +57,26 @@ public class ServerRackModel extends AbstractBakedModel {
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public ModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull ModelData tileData) {
 		return tileData;
 	}
 
 	@Override
-	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
+	protected List<BakedQuad> getBakedQuadsFromModelData(@Nullable BlockState state, Direction side, @Nonnull RandomSource rand, @Nonnull ModelData data, RenderType renderLayer) {
 		// If the property is not there, return early.
-		if (!data.hasProperty(TileEntityDigistoreServerRack.CARD_RENDERING_STATE)) {
+		if (!data.has(TileEntityDigistoreServerRack.CARD_RENDERING_STATE)) {
 			return Collections.emptyList();
 		}
 
 		// Get the data used in rendering.
-		Direction facing = state.getValue(StaticPowerTileEntityBlock.FACING);
-		ItemStack[] cards = data.getData(TileEntityDigistoreServerRack.CARD_RENDERING_STATE).cards;
+		Direction facing = state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
+		ItemStack[] cards = data.get(TileEntityDigistoreServerRack.CARD_RENDERING_STATE).cards;
 
 		// Create the output array.
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
 
 		// Add all the base quads for the server rack to the output.
-		List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
+		List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data, renderLayer);
 		newQuads.addAll(baseQuads);
 
 		for (int i = 0; i < 8; i++) {
@@ -106,7 +105,7 @@ public class ServerRackModel extends AbstractBakedModel {
 			}
 
 			// Transform the card's quads.
-			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, scale, FACING_ROTATIONS.get(facing), side, state, rand);
+			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, scale, FACING_ROTATIONS.get(facing), side, state, rand, renderLayer);
 			newQuads.addAll(bakedCardQuads);
 
 			// If we are rendering a mono card, render the filled bar.
@@ -129,12 +128,12 @@ public class ServerRackModel extends AbstractBakedModel {
 				filledPercentage *= (4.75f / 16.0f);
 
 				// If there are quads for the bar model, render them.
-				if (barModel.getQuads(state, side, rand, EmptyModelData.INSTANCE).size() > 0) {
+				if (barModel.getQuads(state, side, rand, ModelData.EMPTY, renderLayer).size() > 0) {
 					// Create an array that we will populate with the bar's quad.
 					List<BakedQuad> barQuadList = new ArrayList<BakedQuad>();
 
 					// Since we know that the bar will be one quad, we just fetch it.
-					BakedQuad barQuad = barModel.getQuads(state, side, rand, EmptyModelData.INSTANCE).get(0);
+					BakedQuad barQuad = barModel.getQuads(state, side, rand, ModelData.EMPTY, renderLayer).get(0);
 
 					// Get the pipeline
 					BakedPipeline pipeline = this.pipelines.get();
@@ -150,7 +149,8 @@ public class ServerRackModel extends AbstractBakedModel {
 					// Reset our collector.
 					collectorQuad.reset(BAR_FORMAT);
 					pipeline.prepare(collectorQuad);
-					barQuad.pipe(pipeline);
+					pipeline.put(barQuad);
+					//barQuad.pipe(pipeline);
 
 					// Add the transformed quad.
 					if (collectorQuad.full) {
@@ -168,12 +168,6 @@ public class ServerRackModel extends AbstractBakedModel {
 		}
 
 		return newQuads.build();
-	}
-
-	protected ModelDataMap getEmptyIModelData() {
-		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		ModelDataMap modelDataMap = builder.build();
-		return modelDataMap;
 	}
 
 	@Override

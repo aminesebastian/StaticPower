@@ -5,27 +5,23 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<VulcanizerRecipe> {
+public class VulcanizerRecipeSerializer extends StaticPowerRecipeSerializer<VulcanizerRecipe> {
 	public static final VulcanizerRecipeSerializer INSTANCE = new VulcanizerRecipeSerializer();
-
-	private VulcanizerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "vulcanizer_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "vulcanizer_recipe");
 
 	@Override
 	public VulcanizerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(),
-				StaticPowerConfig.SERVER.vulcanizerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.vulcanizerProcessingTime,
+				StaticPowerConfig.SERVER.vulcanizerPowerUsage, json);
 
 		// Get the input fluid.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");

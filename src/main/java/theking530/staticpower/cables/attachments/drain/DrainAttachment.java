@@ -5,23 +5,26 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
-import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticpower.cables.fluid.FluidNetworkModule;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class DrainAttachment extends AbstractCableAttachment {
@@ -30,8 +33,8 @@ public class DrainAttachment extends AbstractCableAttachment {
 	private final ResourceLocation model;
 	private final ResourceLocation tierType;
 
-	public DrainAttachment(String name, ResourceLocation tierType, ResourceLocation model) {
-		super(name);
+	public DrainAttachment(ResourceLocation tierType, ResourceLocation model) {
+		super();
 		this.model = model;
 		this.tierType = tierType;
 	}
@@ -39,12 +42,8 @@ public class DrainAttachment extends AbstractCableAttachment {
 	@Override
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		super.onAddedToCable(attachment, side, cable);
-		attachment.getTag().putInt("redstone_mode", RedstoneMode.Low.ordinal());
-		attachment.getTag().putInt(DRAINER_TIMER_TAG, 0);
-	}
-
-	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		attachment.getTag().remove(DRAINER_TIMER_TAG);
+		getAttachmentTag(attachment).putInt("redstone_mode", RedstoneMode.Low.ordinal());
+		getAttachmentTag(attachment).putInt(DRAINER_TIMER_TAG, 0);
 	}
 
 	@Override
@@ -56,7 +55,7 @@ public class DrainAttachment extends AbstractCableAttachment {
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		// Check redstone signal.
-		if (cable.getWorld().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+		if (cable.getLevel().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
 			return;
 		}
 
@@ -70,20 +69,20 @@ public class DrainAttachment extends AbstractCableAttachment {
 		if (!attachment.hasTag()) {
 			attachment.setTag(new CompoundTag());
 		}
-		if (!attachment.getTag().contains(DRAINER_TIMER_TAG)) {
-			attachment.getTag().putInt(DRAINER_TIMER_TAG, 0);
+		if (!getAttachmentTag(attachment).contains(DRAINER_TIMER_TAG)) {
+			getAttachmentTag(attachment).putInt(DRAINER_TIMER_TAG, 0);
 		}
 
 		// Get the current timer and the extraction rate.
-		int currentTimer = attachment.getTag().getInt(DRAINER_TIMER_TAG);
+		int currentTimer = getAttachmentTag(attachment).getInt(DRAINER_TIMER_TAG);
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableExtractorRate.get()) {
-			attachment.getTag().putInt(DRAINER_TIMER_TAG, 0);
+		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractorRate.get()) {
+			getAttachmentTag(attachment).putInt(DRAINER_TIMER_TAG, 0);
 			return true;
 		} else {
-			attachment.getTag().putInt(DRAINER_TIMER_TAG, currentTimer);
+			getAttachmentTag(attachment).putInt(DRAINER_TIMER_TAG, currentTimer);
 			return false;
 		}
 	}
@@ -96,7 +95,23 @@ public class DrainAttachment extends AbstractCableAttachment {
 		if (fluid.isEmpty()) {
 			return false;
 		}
-		return WorldUtilities.tryPlaceFluid(fluid, null, cable.getWorld(), cable.getPos().relative(side), null);
+
+		FluidNetworkModule module = fluidCable.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).orElse(null);
+		if (module == null) {
+			return false;
+		}
+
+		FluidStack drained = module.supply(cable.getPos(), 1000, FluidAction.SIMULATE);
+		if (drained.getAmount() < 1000) {
+			return false;
+		}
+
+		if (!WorldUtilities.tryPlaceFluid(fluid, null, cable.getLevel(), cable.getPos().relative(side), null)) {
+			return false;
+		}
+
+		module.supply(cable.getPos(), 1000, FluidAction.EXECUTE);
+		return false;
 	}
 
 	@Override
@@ -105,7 +120,7 @@ public class DrainAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+	public ResourceLocation getModel(ItemStack attachment, BlockAndTintGetter level, BlockPos pos) {
 		return model;
 	}
 
@@ -117,7 +132,7 @@ public class DrainAttachment extends AbstractCableAttachment {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
-			tooltip.add(new TranslatableComponent("gui.staticpower.drain_tooltip").withStyle(ChatFormatting.DARK_AQUA));
+			tooltip.add(Component.translatable("gui.staticpower.drain_tooltip").withStyle(ChatFormatting.DARK_AQUA));
 		}
 	}
 

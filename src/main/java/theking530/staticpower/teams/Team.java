@@ -1,5 +1,6 @@
 package theking530.staticpower.teams;
 
+import java.sql.Connection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.UUID;
@@ -9,29 +10,43 @@ import java.util.function.Function;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.productivity.ProductionManager;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.research.ResearchManager;
 import theking530.staticpower.utilities.NBTUtilities;
 
 public class Team {
+	private final Connection db;
 	private String id;
 	private String name;
 	private final HashSet<String> players;
-	private final ResearchManager researchContainer;
+	private final ResearchManager researchManager;
+	private final ProductionManager productionManager;
 	private boolean dirty;
 
-	public Team(String name) {
+	public Team(String name, String id) {
+		this.id = id.replace("-", "");
+		this.db = StaticPowerGameDataManager.getDatabaseConnection(new ResourceLocation(StaticPower.MOD_ID, id));
 		players = new LinkedHashSet<String>();
-		researchContainer = new ResearchManager(this);
+		researchManager = new ResearchManager(this);
+		productionManager = new ProductionManager(this);
 		this.name = name;
-		this.id = UUID.randomUUID().toString();
+	}
+
+	public void tick(Level level) {
+		level.getProfiler().push("ProductionManager.Tick");
+		productionManager.tick(level.getGameTime());
+		level.getProfiler().pop();
 	}
 
 	public String getName() {
@@ -59,7 +74,15 @@ public class Team {
 	}
 
 	public ResearchManager getResearchManager() {
-		return researchContainer;
+		return researchManager;
+	}
+
+	public ProductionManager getProductionManager() {
+		return productionManager;
+	}
+
+	public Connection getDatabaseConnection() {
+		return db;
 	}
 
 	/**
@@ -131,7 +154,7 @@ public class Team {
 	}
 
 	public static Team fromTag(CompoundTag tag) {
-		Team output = new Team(tag.getString("name"));
+		Team output = new Team(tag.getString("name"), tag.getString("id"));
 		output.deserialize(tag);
 		return output;
 	}
@@ -142,17 +165,17 @@ public class Team {
 
 		ListTag playersTag = tag.getList("players", Tag.TAG_COMPOUND);
 		players.addAll(NBTUtilities.deserialize(playersTag, (playerTag) -> {
-			return playerTag.getString("id");
+			return ((CompoundTag) playerTag).getString("id");
 		}));
 
-		researchContainer.deserialize(tag.getCompound("research"), this);
+		researchManager.deserialize(tag.getCompound("research"), this);
 	}
 
 	public CompoundTag serialize() {
 		CompoundTag output = new CompoundTag();
 		output.putString("name", name);
 		output.putString("id", id.toString());
-		output.put("research", researchContainer.serialize());
+		output.put("research", researchManager.serialize());
 		output.put("players", NBTUtilities.serialize(players, (player, tag) -> {
 			tag.putString("id", player);
 		}));
@@ -162,6 +185,6 @@ public class Team {
 
 	@Override
 	public String toString() {
-		return "Team [name=" + name + ", id=" + id + ", players=" + players + ", researchContainer=" + researchContainer + ", dirty=" + dirty + "]";
+		return "Team [id=" + id + ", name=" + name + ", players=" + players + ", researchManager=" + researchManager + ", productionManager=" + productionManager + "]";
 	}
 }

@@ -9,19 +9,18 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -32,15 +31,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.IBreakSerializeable;
 import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.utilities.ITooltipProvider;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.items.tools.StaticWrench;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 
 /**
  * Basic implementation of a static power block.
@@ -50,25 +49,55 @@ import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
  */
 public class StaticPowerBlock extends Block implements IItemBlockProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider {
 	/**
+	 * Rotation property used by blocks who don't use {@link #HORIZONTAL_FACING} but
+	 * still need the option to rotate to either face X, Y, or Z. (Does not have to
+	 * be used).
+	 */
+	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
+	/**
 	 * Facing property used by blocks that require keeping track of the direction
 	 * they face (does not have to be used).
 	 */
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
 	/**
-	 * Rotation property used by blocks who don't use {@link #FACING} but still need
-	 * the option to rotate to either face X, Y, or Z. (Does not have to be used).
+	 * Facing property used by blocks that require keeping track of the direction
+	 * they face including up and down (does not have to be used).
 	 */
-	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
+	public static final DirectionProperty FACING = BlockStateProperties.FACING;
+
+	public enum FacingType {
+		NONE, AXIS, HORIZONTAL_FACING, FACING
+	}
 
 	/**
 	 * Constructor for a static power block.
 	 * 
-	 * @param name       The registry name of this block sans namespace.
 	 * @param properties The block properties to be used when defining this block.
 	 */
-	public StaticPowerBlock(String name, Block.Properties properties) {
+	public StaticPowerBlock(Block.Properties properties) {
 		super(properties);
-		setRegistryName(name);
+	}
+
+	/**
+	 * Basic constructor for a static power block with a specific material type.
+	 * 
+	 * @param material The {@link Material} this block is made of.
+	 */
+	public StaticPowerBlock(Material material) {
+		this(material, 1.0f);
+	}
+
+	/**
+	 * Basic constructor for a static power block with a specific material type,
+	 * tool type, harvest level, and hardness/resistance.
+	 * 
+	 * @param material              The {@link Material} this block is made of.
+	 * @param tool                  The {@link ToolType} this block should be
+	 *                              harvested by.
+	 * @param hardnessAndResistance The hardness and resistance of this block.
+	 */
+	public StaticPowerBlock(Material material, float hardnessAndResistance) {
+		this(Block.Properties.of(material).strength(hardnessAndResistance));
 	}
 
 	@Override
@@ -82,31 +111,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	}
 
 	public Component getDisplayName(ItemStack stack) {
-		return new TranslatableComponent(getDescriptionId());
-	}
-
-	/**
-	 * Basic constructor for a static power block with a specific material type.
-	 * 
-	 * @param name     The registry name of this block sans namespace.
-	 * @param material The {@link Material} this block is made of.
-	 */
-	public StaticPowerBlock(String name, Material material) {
-		this(name, material, 1.0f);
-	}
-
-	/**
-	 * Basic constructor for a static power block with a specific material type,
-	 * tool type, harvest level, and hardness/resistance.
-	 * 
-	 * @param name                  The registry name of this block sans namespace.
-	 * @param material              The {@link Material} this block is made of.
-	 * @param tool                  The {@link ToolType} this block should be
-	 *                              harvested by.
-	 * @param hardnessAndResistance The hardness and resistance of this block.
-	 */
-	public StaticPowerBlock(String name, Material material, float hardnessAndResistance) {
-		this(name, Block.Properties.of(material).strength(hardnessAndResistance));
+		return Component.translatable(getDescriptionId());
 	}
 
 	/**
@@ -153,7 +158,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 		return InteractionResult.PASS;
 	}
 
-	public void onStaticPowerBlockPlaced(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void onStaticPowerBlockPlaced(BlockPlaceContext context, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 
 	}
 
@@ -229,16 +234,16 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 
 		if (state.getBlock() != newState.getBlock()) {
 			// Raise the tile entity's broken method.
-			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-				((TileEntityBase) world.getBlockEntity(pos)).onBlockBroken(state, newState, isMoving);
+			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+				((BlockEntityBase) world.getBlockEntity(pos)).onBlockBroken(state, newState, isMoving);
 			}
 
 			// Only call the super if the blocks are not equal.
 			super.onRemove(state, world, pos, newState, isMoving);
 		} else {
 			// Raise the tile entity's changed method.
-			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-				((TileEntityBase) world.getBlockEntity(pos)).onBlockReplaced(state, newState, isMoving);
+			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+				((BlockEntityBase) world.getBlockEntity(pos)).onBlockReplaced(state, newState, isMoving);
 			}
 		}
 	}
@@ -254,8 +259,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 
 		// Raise the tile entity's activated method and return here if it does not
 		// pass.
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			InteractionResult teResult = ((TileEntityBase) world.getBlockEntity(pos)).onBlockActivated(state, player, hand, hit);
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			InteractionResult teResult = ((BlockEntityBase) world.getBlockEntity(pos)).onBlockActivated(state, player, hand, hit);
 			if (teResult != InteractionResult.PASS) {
 				return teResult;
 			}
@@ -273,18 +278,22 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	@Override
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(world, pos, state, placer, stack);
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getBlockEntity(pos)).onPlaced(state, placer, stack);
+
+	}
+
+	public void onPlacedInWorld(BlockPlaceContext context, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			((BlockEntityBase) world.getBlockEntity(pos)).onPlaced(context, state, placer, stack);
 		}
-		onStaticPowerBlockPlaced(world, pos, state, placer, stack);
+		onStaticPowerBlockPlaced(context, world, pos, state, placer, stack);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void attack(BlockState state, Level world, BlockPos pos, Player player) {
 		super.attack(state, world, pos, player);
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getBlockEntity(pos)).onBlockLeftClicked(state, player);
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			((BlockEntityBase) world.getBlockEntity(pos)).onBlockLeftClicked(state, player);
 		}
 		onStaticPowerBlockClicked(state, world, pos, player);
 	}
@@ -293,8 +302,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	@Override
 	public BlockState updateShape(BlockState state, Direction dir, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
 		super.updateShape(state, dir, facingState, world, pos, facingPos);
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getBlockEntity(pos)).onNeighborReplaced(state, dir, facingState, facingPos);
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			((BlockEntityBase) world.getBlockEntity(pos)).onNeighborReplaced(state, dir, facingState, facingPos);
 		}
 		onNeighborReplaced(state, dir, facingState, world, pos, facingPos);
 		return state;
@@ -304,8 +313,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	@SuppressWarnings("deprecation")
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getBlockEntity(pos)).onNeighborChanged(state, fromPos, isMoving);
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			((BlockEntityBase) world.getBlockEntity(pos)).onNeighborChanged(state, fromPos, isMoving);
 		}
 		onStaticPowerNeighborChanged(state, world, pos, fromPos, isMoving);
 	}

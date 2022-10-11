@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:squeezer_recipe",
+	"type": "staticpower:squeezer",
 	"input": {
 		"tag": "forge:crops/carrot"
 	},

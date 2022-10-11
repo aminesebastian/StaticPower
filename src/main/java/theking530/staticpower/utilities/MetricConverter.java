@@ -4,13 +4,13 @@ import java.text.DecimalFormat;
 
 public class MetricConverter {
 	private static final DecimalFormat FORMATTER = new DecimalFormat("#.##");
-	private static final String[] SUFFIXES = { "y", "z", "a", "f", "p", "n", "•", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" };
+	private static final String[] SUFFIXES = { "y", "z", "a", "f", "p", "n", "u", "m", "", "K", "M", "G", "T", "P", "E", "Z", "Y" };
 	private double Value;
 	private String Suffix;
 
 	public MetricConverter(double value, int initialOffset) {
-		if (value == 0) {
-			Value = 0;
+		if (value == 0 || Double.isInfinite(Value) || value == Double.MAX_VALUE) {
+			Value = value;
 			Suffix = "";
 			return;
 		}
@@ -20,12 +20,25 @@ public class MetricConverter {
 		int suffixIndex = 8 + initialOffset;
 		this.Value = Math.abs(value);
 
-		while (Value / 1000 >= 1) {
-			Value /= 1000;
-			suffixIndex++;
+		if (Value > 1) {
+			while (Value / 1000 >= 1) {
+				Value /= 1000;
+				suffixIndex++;
+				if (suffixIndex > 16) {
+					break;
+				}
+			}
+		} else if(Value < 1){
+			while (Value < 1) {
+				Value *= 1000;
+				suffixIndex--;
+				if (suffixIndex < 0) {
+					break;
+				}
+			}
 		}
 
-		// Correct for negatives.
+		// Adjust the updated value if the original value was negative.
 		if (value < 0) {
 			Value *= -1;
 		}

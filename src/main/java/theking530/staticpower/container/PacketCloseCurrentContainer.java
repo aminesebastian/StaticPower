@@ -33,6 +33,7 @@ public class PacketCloseCurrentContainer extends NetworkMessage {
 	}
 
 	@Override
+	@SuppressWarnings("resource")
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;

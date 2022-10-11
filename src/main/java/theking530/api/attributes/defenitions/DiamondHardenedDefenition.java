@@ -21,11 +21,11 @@ public class DiamondHardenedDefenition extends AbstractHardenedDefenition {
 		}
 
 		// Get the modifier amount.
-		double modifier = StaticPowerConfig.getTier(StaticPowerTiers.DIAMOND).hardenedDurabilityBoost.get();
+		double modifier = StaticPowerConfig.getTier(StaticPowerTiers.DIAMOND).toolConfiguration.hardenedDurabilityBoost.get();
 
 		// Apply the modification depending on whether or not this is an additive
 		// durability boost.
-		if (StaticPowerConfig.getTier(StaticPowerTiers.DIAMOND).hardenedDurabilityBoostAdditive.get()) {
+		if (StaticPowerConfig.getTier(StaticPowerTiers.DIAMOND).toolConfiguration.hardenedDurabilityBoostAdditive.get()) {
 			value += modifier;
 		} else {
 			value *= modifier;

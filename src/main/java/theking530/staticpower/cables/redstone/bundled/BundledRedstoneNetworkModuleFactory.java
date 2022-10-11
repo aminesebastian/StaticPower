@@ -1,13 +1,12 @@
 package theking530.staticpower.cables.redstone.bundled;
 
-import net.minecraft.resources.ResourceLocation;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
-import theking530.staticpower.cables.network.ICableNetworkModuleFactory;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 
-public class BundledRedstoneNetworkModuleFactory implements ICableNetworkModuleFactory {
+public class BundledRedstoneNetworkModuleFactory extends CableNetworkModuleType {
 
 	@Override
-	public AbstractCableNetworkModule create(ResourceLocation moduleName) {
+	public CableNetworkModule create() {
 		return new BundledRedstoneNetworkModule();
 	}
 }

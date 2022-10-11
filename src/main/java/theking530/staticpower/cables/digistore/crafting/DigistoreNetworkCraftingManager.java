@@ -13,9 +13,10 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
@@ -26,7 +27,6 @@ import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBun
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsGenerator;
 import theking530.staticpower.cables.digistore.crafting.recipes.RecipeTreeGenerator;
 import theking530.staticpower.cables.digistore.crafting.recipes.RecipeTreeGenerator.AutoCraftingTree;
-import theking530.staticpower.cables.network.CableNetworkManager;
 
 public class DigistoreNetworkCraftingManager {
 	public static final int MAX_CRAFT_QUERY_DEPTH = 128;
@@ -167,7 +167,7 @@ public class DigistoreNetworkCraftingManager {
 			for (EncodedIngredient requiredItem : request.peekTopStep().getCraftingPattern().getRequiredItems()) {
 				int simulatedExtract = snapshot.extractWithIngredient(requiredItem.getIngredient(), requiredItem.getCount(), false);
 				if (simulatedExtract != requiredItem.getCount()) {
-					request.setBlocker(new TranslatableComponent("gui.staticpower.digistore_crafting_missing_items"));
+					request.setBlocker(Component.translatable("gui.staticpower.digistore_crafting_missing_items"));
 					return false;
 				}
 			}
@@ -176,7 +176,7 @@ public class DigistoreNetworkCraftingManager {
 			// the recipe. If there is no crafting interface for this recipe, return false.
 			if (step.getCraftingPattern().getRecipeType() == RecipeEncodingType.MACHINE) {
 				if (getCraftingInterfaceForIngredient(step.getIngredientToCraft()) == null) {
-					request.setBlocker(new TranslatableComponent("gui.staticpower.digistore_crafting_missing_interface"));
+					request.setBlocker(Component.translatable("gui.staticpower.digistore_crafting_missing_interface"));
 					return false;
 				}
 			}
@@ -184,7 +184,7 @@ public class DigistoreNetworkCraftingManager {
 			// Check to see if we have space to insert the crafted item.
 			ItemStack remaining = module.insertItem(request.peekTopStep().getCraftingPattern().getOutput().copy(), true);
 			if (!remaining.isEmpty()) {
-				request.setBlocker(new TranslatableComponent("gui.staticpower.digistore_crafting_out_of_storage"));
+				request.setBlocker(Component.translatable("gui.staticpower.digistore_crafting_out_of_storage"));
 				return false;
 			}
 
@@ -212,7 +212,7 @@ public class DigistoreNetworkCraftingManager {
 						}
 					}
 				}
-				request.setBlocker(new TranslatableComponent("gui.staticpower.digistore_crafting_missing_items"));
+				request.setBlocker(Component.translatable("gui.staticpower.digistore_crafting_missing_items"));
 				return false;
 			} else {
 				return true;

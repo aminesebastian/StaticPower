@@ -3,10 +3,10 @@ package theking530.staticpower.cables.redstone.basic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
+import theking530.staticcore.cablenetwork.CableBoundsCache;
+import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableBoundsCache;
-import theking530.staticpower.cables.CableUtilities;
 
 public class BasicRedstoneCableBoundsCache extends CableBoundsCache {
 	private final Vector3D inputDefaultAttachmentBounds;

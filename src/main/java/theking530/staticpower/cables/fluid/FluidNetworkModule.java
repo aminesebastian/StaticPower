@@ -1,240 +1,312 @@
 package theking530.staticpower.cables.fluid;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
-import theking530.staticpower.cables.network.CableNetwork;
-import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.DestinationWrapper;
-import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
-import theking530.staticpower.cables.network.NetworkMapper;
-import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.data.DestinationWrapper;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
+import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.init.cables.ModCableCapabilities;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.utilities.MetricConverter;
 
-public class FluidNetworkModule extends AbstractCableNetworkModule {
-	private final FluidTank networkTank;
+public class FluidNetworkModule extends CableNetworkModule {
+	protected record CachedFluidDestination(Direction connectedSide, ServerCable cable, BlockPos desintationPos) {
+	}
+
+	// Map of cable pos to connected destinations.
+	private final Map<BlockPos, List<CachedFluidDestination>> destinations;
+	private final List<FluidCableCapability> fluidCapabilities;
 
 	public FluidNetworkModule() {
-		super(CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
-		networkTank = new FluidTank(FluidAttributes.BUCKET_VOLUME);
+		super(ModCableModules.Fluid.get());
+		destinations = new HashMap<>();
+		fluidCapabilities = new LinkedList<>();
+	}
+
+	@Override
+	public void preWorldTick(Level world) {
+		world.getProfiler().push("FluidNetworkModule.Balancing");
+		{
+			world.getProfiler().push("FluidNetworkModule.Balancing.Fluid");
+			simulateFlow();
+			world.getProfiler().pop();
+		}
+		world.getProfiler().pop();
+
 	}
 
 	@Override
 	public void tick(Level world) {
-		// If we have no fluid, do nothing.
-		if (networkTank.getFluid().isEmpty()) {
+	}
+
+	protected void simulateFlow() {
+		// Sort so we flow from high to low pressure.
+		if (!fluidCapabilities.isEmpty()) {
+			List<FluidCableCapability> storedCables = fluidCapabilities.stream()
+					.sorted((first, second) -> (int) Math.signum(second.getFluidStorage().getFluidAmount() - first.getFluidStorage().getFluidAmount())).toList();
+
+			simulate(storedCables.get(0), new HashSet<BlockPos>());
+
+			for (FluidCableCapability cap : fluidCapabilities) {
+				cap.getFluidStorage().captureFluidMetrics();
+			}
+		}
+	}
+
+	protected void simulate(FluidCableCapability cable, Set<BlockPos> visited) {
+		if (visited.contains(cable.getPos())) {
+			return;
+		}
+		visited.add(cable.getPos());
+
+		Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
+		if (adjacents.isEmpty()) {
 			return;
 		}
 
-		// Get a map of all the applicable destination that support the fluid we have in
-		// our tank and are not full.
-		HashMap<BlockPos, DestinationWrapper> destinations = new HashMap<BlockPos, DestinationWrapper>();
-		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
-			if (wrapper.supportsType(DestinationType.FLUID)) {
-				IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, wrapper.getFirstConnectedDestinationSide()).orElse(null);
-				if (handler != null && handler.fill(networkTank.getFluid(), FluidAction.SIMULATE) > 0) {
-					destinations.put(pos, wrapper);
+		// If the cable is empty, just recurse and leave.
+		if (cable.getFluidStorage().isEmpty()) {
+			for (Direction dir : Direction.values()) {
+				if (adjacents.containsKey(dir)) {
+					simulate(adjacents.get(dir), visited);
 				}
 			}
-		});
-
-		// If the list of destinations is empty, do nothing.
-		if (destinations.isEmpty()) {
 			return;
 		}
 
-		// Allocate a list of all the fluid handlers to fill.
-		List<FluidInterfaceWrapper> fluidHandlers = new ArrayList<FluidInterfaceWrapper>();
+		Map<Direction, CachedFluidDestination> destinations = getAdjacentCableDestinations(cable.getPos());
 
-		// Iterate through all the destinations.
-		for (DestinationWrapper destination : destinations.values()) {
-			// Iterate through all the connected cables.
-			for (BlockPos cablePos : destination.getConnectedCables().keySet()) {
-				// Get the connected side.
-				Direction cableSide = destination.getConnectedCables().get(cablePos);
-
-				// Skip NON tile entity destinations.
-				if (!destination.hasTileEntity()) {
-					continue;
+		// Get the total amount of fluid we could possibly output.
+		FluidStack maxOutput = cable.getFluidStorage().getFluid().copy();
+		float totalPotentialOutput = 0;
+		Map<Direction, Integer> outputRatios = new HashMap<>();
+		for (Direction dir : Direction.values()) {
+			if (!visited.contains(cable.getPos().relative(dir))) {
+				int simulateSupply = 0;
+				if (destinations.containsKey(dir)) {
+					simulateSupply = supplyToDestination(cable, cable.getTransferRate(), destinations.get(dir), FluidAction.SIMULATE);
+					outputRatios.put(dir, simulateSupply);
+				} else if (adjacents.containsKey(dir)) {
+					simulateSupply = adjacents.get(dir).fill(dir, 16, maxOutput, FluidAction.SIMULATE);
+					outputRatios.put(dir, simulateSupply);
 				}
+				totalPotentialOutput += simulateSupply;
+			}
+		}
 
-				// Skip destinations that don't support fluid interaction.
-				if (!destination.supportsTypeOnSide(cableSide, DestinationType.FLUID)) {
-					continue;
+		int initialAmount = cable.getFluidStorage().getFluidAmount();
+		for (Direction dir : Direction.values()) {
+			if (!outputRatios.containsKey(dir)) {
+				continue;
+			}
+
+			float supplyRatio = outputRatios.get(dir) / totalPotentialOutput;
+			int maxSupply = (int) (initialAmount * supplyRatio);
+			if (maxSupply == 0 && supplyRatio != 0 && cable.getFluidStorage().getFluidAmount() > 0) {
+				maxSupply = cable.getFluidStorage().getFluidAmount();
+			}
+
+			if (destinations.containsKey(dir)) {
+				if (!cable.getFluidStorage().isEmpty()) {
+					supplyToDestination(cable, maxSupply, destinations.get(dir), FluidAction.EXECUTE);
 				}
+			} else if (adjacents.containsKey(dir)) {
+				FluidCableCapability adjacent = adjacents.get(dir);
+				if (!visited.contains(adjacent.getPos())) {
+					int delta = cable.getFluidStorage().getFluidAmount() - adjacent.getFluidStorage().getFluidAmount();
+					if (delta > 0) {
+						delta = Math.min(delta, maxSupply);
 
-				// Get the destination tile and skip if it is null.
-				BlockEntity tile = destination.getTileEntity();
-				if (tile == null) {
-					continue;
-				}
-
-				// Get the target fluid handler, skip if it is null.
-				IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, cableSide).orElse(null);
-				if (handler == null) {
-					continue;
-				}
-
-				// Get the cable and skip if its industrial.
-				ServerCable cable = CableNetworkManager.get(world).getCable(cablePos);
-				if (cable.getBooleanProperty(FluidCableComponent.FLUID_INDUSTRIAL_DATA_TAG_KEY)) {
-					continue;
-				}
-
-				// Don't insert on block sides that have an extractor.
-				if (cable.getAttachmentDataContainerForSide(cableSide.getOpposite()).hasProperty(ExtractorAttachment.INPUT_BLOCKED)) {
-					if (cable.getAttachmentDataContainerForSide(cableSide.getOpposite()).getBooleanProperty(ExtractorAttachment.INPUT_BLOCKED)) {
-						continue;
+						FluidStack simulatedDrain = cable.drain(delta, FluidAction.SIMULATE);
+						int supplied = adjacent.fill(dir, 16, simulatedDrain, FluidAction.EXECUTE);
+						cable.drain(supplied, FluidAction.EXECUTE);
 					}
+					simulate(adjacent, visited);
 				}
-
-				// If we made it this far, add the handler to the list.
-				fluidHandlers.add(new FluidInterfaceWrapper(handler, cable));
-			}
-		}
-
-		// If we found no valid fluid handlers, return.
-		if (fluidHandlers.isEmpty()) {
-			return;
-		}
-
-		// Calculate how we should split the output amount.
-		int outputPerDestination = Math.max(1, networkTank.getFluidAmount() / fluidHandlers.size());
-
-		// Supply the fluid.
-		for (FluidInterfaceWrapper tank : fluidHandlers) {
-			// Get the transfer rate.
-			int transferRate = tank.cable.getIntProperty(FluidCableComponent.FLUID_RATE_DATA_TAG_KEY);
-
-			// Calculate how much fluid we can offer. If it is less than or equal to 0, do
-			// nothing.
-			int toOfferAmount = Math.min(transferRate, networkTank.getFluidAmount());
-			toOfferAmount = Math.min(outputPerDestination, toOfferAmount);
-			if (toOfferAmount <= 0) {
-				break;
-			}
-
-			// Drain the fluid stack from our tank.
-			FluidStack toOffer = networkTank.drain(toOfferAmount, IFluidHandler.FluidAction.EXECUTE);
-			if (toOffer.isEmpty()) {
-				break;
-			}
-
-			// Insert it into the destination.
-			int accepted = tank.fluidHandler.fill(toOffer, IFluidHandler.FluidAction.EXECUTE);
-
-			// If there is any left over, put it back into our tank.
-			int remainder = toOffer.getAmount() - accepted;
-			if (remainder > 0) {
-				FluidStack remainderStack = toOffer.copy();
-				remainderStack.setAmount(remainder);
-
-				networkTank.fill(remainderStack, IFluidHandler.FluidAction.EXECUTE);
 			}
 		}
 	}
 
-	@Override
-	public void onAddedToNetwork(CableNetwork other) {
-		super.onAddedToNetwork(other);
-		if (other.hasModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE)) {
-			FluidNetworkModule module = (FluidNetworkModule) other.getModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
-			module.getFluidStorage().fill(getFluidStorage().getFluid(), FluidAction.EXECUTE);
+	protected int supplyToDestination(FluidCableCapability cable, int maxSupply, CachedFluidDestination destination, FluidAction action) {
+		if (cable.getFluidStorage().isEmpty()) {
+			return 0;
 		}
+
+		IFluidHandler handler = cable.getOwningCable().getWorld().getBlockEntity(destination.desintationPos())
+				.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, destination.connectedSide()).orElse(null);
+		if (handler != null) {
+			// Create the stack to supply.
+			FluidStack toSupply = cable.getFluidStorage().getFluid().copy();
+			toSupply.setAmount(Math.min(toSupply.getAmount(), cable.getTransferRate()));
+			toSupply.setAmount(Math.min(toSupply.getAmount(), maxSupply));
+
+			int simulatedFill = handler.fill(toSupply, FluidAction.SIMULATE);
+			FluidStack actualDrain = cable.drain(simulatedFill, action);
+			return handler.fill(actualDrain, action);
+		}
+		return 0;
 	}
 
-	@Override
-	public void onNetworksSplitOff(List<CableNetwork> newNetworks) {
-		// Iterate through all the new networks and capture any new fluid modules.
-		List<FluidNetworkModule> newModules = new ArrayList<FluidNetworkModule>();
-		for (CableNetwork newNetwork : newNetworks) {
-			if (newNetwork.hasModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE)) {
-				FluidNetworkModule module = (FluidNetworkModule) newNetwork.getModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
-				newModules.add(module);
-			}
+	public int fill(BlockPos fromPos, Direction fromSide, FluidStack resource, FluidAction action) {
+		Optional<FluidCableCapability> capability = this.getFluidCableCapability(fromPos);
+		if (capability.isEmpty()) {
+			return 0;
+		}
+		int filled = capability.get().fill(fromSide, 32, resource, action);
+		return filled;
+	}
+
+	public FluidStack supply(BlockPos fromPos, int amount, FluidAction action) {
+		if (amount == 0) {
+			return FluidStack.EMPTY;
 		}
 
-		// If there were any new fluid modules.
-		if (newModules.size() > 0) {
-			// Calculate the amount to spread to each (equally).
-			int amountToSpread = getFluidStorage().getFluidAmount() / newModules.size();
-
-			// Then, attempt to spread the fluid around. For any fluid that is successfully
-			// spread,
-			// drain it from this module.
-			for (FluidNetworkModule module : newModules) {
-				FluidStack toFill = getFluidStorage().getFluid().copy();
-				toFill.setAmount(Math.min(amountToSpread, module.getFluidStorage().getCapacity()));
-				int spreadAmount = module.getFluidStorage().fill(toFill, FluidAction.EXECUTE);
-				getFluidStorage().drain(spreadAmount, FluidAction.EXECUTE);
-			}
+		Optional<FluidCableCapability> capability = this.getFluidCableCapability(fromPos);
+		if (capability.isEmpty()) {
+			return FluidStack.EMPTY;
 		}
+
+		return capability.get().drain(amount, action);
+	}
+
+	public Optional<FluidCableCapability> getFluidCableCapability(BlockPos pos) {
+		ServerCable cable = Network.getGraph().getCables().get(pos);
+		if (cable == null) {
+			return Optional.empty();
+		}
+
+		return cable.getCapability(ModCableCapabilities.Fluid.get());
+	}
+
+	protected Map<Direction, FluidCableCapability> getAdjacentFluidCapabilities(BlockPos pos) {
+		Map<Direction, FluidCableCapability> output = new HashMap<>();
+		for (Direction dir : Direction.values()) {
+			BlockPos testPos = pos.relative(dir);
+			Optional<FluidCableCapability> adjacentCable = getFluidCableCapability(testPos);
+			if (adjacentCable.isEmpty()) {
+				continue;
+			}
+
+			if (adjacentCable.get().getOwningCable().isDisabledOnSide(dir.getOpposite())) {
+				continue;
+			}
+
+			if (Network.getGraph().getCables().get(testPos).isDisabledOnSide(dir.getOpposite())) {
+				continue;
+			}
+
+			output.put(dir, adjacentCable.get());
+		}
+		return output;
+	}
+
+	protected Map<Direction, CachedFluidDestination> getAdjacentCableDestinations(BlockPos pos) {
+		List<CachedFluidDestination> adjacentDestinations = destinations.get(pos);
+		if (adjacentDestinations == null || adjacentDestinations.isEmpty()) {
+			return new HashMap<>();
+		}
+
+		Map<Direction, CachedFluidDestination> adjacencyMap = new HashMap<>();
+		for (CachedFluidDestination adjacent : adjacentDestinations) {
+			adjacencyMap.put(adjacent.connectedSide().getOpposite(), adjacent);
+		}
+		return adjacencyMap;
 	}
 
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
-		// Allocate the total capacity.
-		int total = 0;
+		fluidCapabilities.clear();
+		destinations.clear();
 
-		// Get all the cables in the network and get their cable components.
-		for (ServerCable cable : mapper.getDiscoveredCables()) {
-			// If they have a fluid cable component, get the capacity.
-			if (cable.containsProperty(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY)) {
-				total += cable.getIntProperty(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY);
+		for (ServerCable cable : Network.getGraph().getCables().values()) {
+			Optional<FluidCableCapability> capability = cable.getCapability(ModCableCapabilities.Fluid.get());
+			if (capability.isPresent()) {
+				fluidCapabilities.add(capability.get());
+
+				// Cache all the destinations adjacent to this cable.
+				List<CachedFluidDestination> fluidDest = new LinkedList<>();
+				for (Direction dir : Direction.values()) {
+					BlockPos testPos = cable.getPos().relative(dir);
+
+					if (mapper.getDestinations().containsKey(testPos)) {
+						CachedFluidDestination dest = getInterfaceForDesination(cable, mapper.getDestinations().get(testPos));
+						if (dest != null) {
+							fluidDest.add(dest);
+						}
+					}
+				}
+				destinations.put(cable.getPos(), fluidDest);
 			}
 		}
-
-		// Set the capacity of the tank to the provided capacity.
-		networkTank.setCapacity(total);
 	}
 
 	@Override
-	public void getReaderOutput(List<Component> output) {
-		String storedFluid = new MetricConverter(networkTank.getFluidAmount()).getValueAsString(true);
-		String maximumFluid = new MetricConverter(networkTank.getCapacity()).getValueAsString(true);
-		output.add(new TextComponent(
-				String.format("Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluid, networkTank.getFluid().getDisplayName().getString(), maximumFluid)));
-	}
-
-	@Override
-	public void readFromNbt(CompoundTag tag) {
-		networkTank.readFromNBT(tag);
-	}
-
-	@Override
-	public CompoundTag writeToNbt(CompoundTag tag) {
-		networkTank.writeToNBT(tag);
-		return tag;
-	}
-
-	public FluidTank getFluidStorage() {
-		return networkTank;
-	}
-
-	protected class FluidInterfaceWrapper {
-		protected IFluidHandler fluidHandler;
-		protected ServerCable cable;
-
-		protected FluidInterfaceWrapper(IFluidHandler fluidHandler, ServerCable cable) {
-			this.fluidHandler = fluidHandler;
-			this.cable = cable;
+	public void getReaderOutput(List<Component> output, BlockPos pos) {
+		Optional<FluidCableCapability> capability = this.getFluidCableCapability(pos);
+		if (capability.isEmpty()) {
+			return;
 		}
+
+		String storedFluidAtPos = new MetricConverter(capability.get().getFluidStorage().getFluidAmount()).getValueAsString(true);
+		String capacityAtPos = new MetricConverter(capability.get().getFluidStorage().getCapacity()).getValueAsString(true);
+		String gainedPerTick = GuiTextUtilities.formatFluidRateToString(capability.get().getFluidStorage().getFilledPerTick()).getString();
+		String drainedPerTick = GuiTextUtilities.formatFluidRateToString(capability.get().getFluidStorage().getDrainedPerTick()).getString();
+
+		output.add(Component.literal(String.format("Pipe Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluidAtPos,
+				capability.get().getFluidStorage().getFluid().getDisplayName().getString(), capacityAtPos)));
+		output.add(Component.literal(String.format("Gained: %1$smB Drained: %2$s", drainedPerTick, gainedPerTick)));
+	}
+
+	@Nullable
+	public CachedFluidDestination getInterfaceForDesination(ServerCable connectedCable, DestinationWrapper wrapper) {
+		if (!wrapper.getConnectedCables().containsKey(connectedCable.getPos())) {
+			return null;
+		}
+		// Skip NON tile entity destinations.
+		if (!wrapper.hasTileEntity()) {
+			return null;
+		}
+
+		// Get the cable pos.
+		Direction connectedSide = wrapper.getConnectedCables().get(connectedCable.getPos());
+
+		if (wrapper.supportsType(ModCableDestinations.Fluid.get())) {
+			IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, connectedSide).orElse(null);
+			if (handler != null) {
+				return new CachedFluidDestination(connectedSide, Network.getGraph().getCables().get(connectedCable.getPos()), wrapper.getPos());
+			}
+		}
+		return null;
+	}
+
+	protected float calculateDeltaPressure(float currentPressure, float targetPressure) {
+		float deltaPressure = targetPressure - currentPressure;
+		if (deltaPressure == 0) {
+			return 0;
+		}
+
+		int sign = (int) Math.signum(deltaPressure);
+		float absoluteDeltaPressure = Math.abs(deltaPressure);
+		float deltaToApply = Math.min(absoluteDeltaPressure, 1);
+		return deltaToApply * sign;
 	}
 }

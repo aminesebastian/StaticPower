@@ -13,8 +13,8 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.ItemCustomRendererPassthroughModel;
 
@@ -28,10 +28,10 @@ public class StaticPowerItemBlockCustomRenderer extends StaticPowerItemBlock imp
 	}
 
 	@Override
-	public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.IItemRenderProperties> consumer) {
-		consumer.accept(new IItemRenderProperties() {
+	public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+		consumer.accept(new IClientItemExtensions() {
 			@Override
-			public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
 				return renderer.apply(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
 			}
 		});
@@ -43,7 +43,7 @@ public class StaticPowerItemBlockCustomRenderer extends StaticPowerItemBlock imp
 	}
 
 	@Override
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new ItemCustomRendererPassthroughModel(existingModel);
 	}
 }

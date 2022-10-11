@@ -1,0 +1,6 @@
+{
+    "parent": "staticpower:block/machines/machine_refinery_item_input",
+    "textures": {
+		"side_overlay": "staticpower:blocks/machines/machine_refinery_item_input"
+    }
+}

@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,8 +19,8 @@ import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
@@ -71,9 +71,9 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	}
 
 	protected String title;
-	protected Color titleColor;
+	protected SDColor titleColor;
 	protected RectangleBounds cachedIconBounds;
-	protected Color tabColor;
+	protected SDColor tabColor;
 	protected IDrawable icon;
 	private int tabIndex;
 	private float animationTimer = 0;
@@ -95,12 +95,12 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, Color tabColor, IDrawable icon) {
+	public BaseGuiTab(String title, SDColor titleColor, int tabWidth, int tabHeight, SDColor tabColor, IDrawable icon) {
 		super(0, 0, COLLAPSED_SIZE.getX(), COLLAPSED_SIZE.getY());
 		this.expandedSize = new Vector2D(tabWidth, tabHeight);
 		this.tabColor = tabColor;
 		this.icon = icon;
-		this.title = new TranslatableComponent(title).getString();
+		this.title = Component.translatable(title).getString();
 		this.titleColor = titleColor;
 		cachedIconBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
 		tabState = TabState.CLOSED;
@@ -119,7 +119,7 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, Color tabColor, Item item) {
+	public BaseGuiTab(String title, SDColor titleColor, int tabWidth, int tabHeight, SDColor tabColor, Item item) {
 		this(title, titleColor, tabWidth, tabHeight, tabColor, new ItemDrawable(item));
 	}
 
@@ -131,7 +131,7 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	 * @param texture   The background texture of the tab.
 	 * @param block     The block that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, Color tabColor, Block block) {
+	public BaseGuiTab(String title, SDColor titleColor, int tabWidth, int tabHeight, SDColor tabColor, Block block) {
 		this(title, titleColor, tabWidth, tabHeight, tabColor, new ItemDrawable(block));
 	}
 
@@ -251,18 +251,18 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	@Override
 	protected void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		updateAnimation(partialTicks);
-		float width = getWidth() + 4;
+		float width = getWidth() + 16;
 		float xPos = 0;
 		if (tabSide == TabSide.RIGHT) {
-			xPos -= 4;
+			xPos -= 16;
 		}
 		GuiDrawUtilities.drawGenericBackground(matrix, width, getHeight(), xPos, 0, -10 * tabIndex, tabColor);
 
 		if (icon != null) {
 			if (this.tabSide == TabSide.LEFT) {
-				icon.draw(matrix, getWidth() - 20.25f, 5f, -tabIndex * 5);
+				icon.draw(getParent().getLastRenderMatrix(), -18.5f, this.getPosition().getY() + 5, -tabIndex * 13);
 			} else {
-				icon.draw(matrix, 4f, 5f, -tabIndex * 5);
+				icon.draw(matrix, 4f, 5f, -tabIndex * 13);
 			}
 
 			if (showNotificationBadge && tabState == TabState.CLOSED) {

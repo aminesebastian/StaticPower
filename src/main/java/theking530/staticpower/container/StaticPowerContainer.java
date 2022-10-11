@@ -23,13 +23,13 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.TriFunction;
+import theking530.staticpower.blockentities.components.items.InventoryComponent;
+import theking530.staticpower.blockentities.components.items.PacketLockInventorySlot;
 import theking530.staticpower.container.slots.DummySlot;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
-import theking530.staticpower.tileentities.components.items.PacketLockInventorySlot;
 
 public abstract class StaticPowerContainer extends AbstractContainerMenu {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerContainer.class);
@@ -127,10 +127,11 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 	public void revertToParent() {
 		// Open prompt for crafting if we can actually craft some.
 		// Create the container opener.
-		ContainerOpener<?> requestUi = new ContainerOpener<>(opener.getParent().getName(), (x, y, z) -> opener.getParent().duplicateForRevert(x, y, opener.getParent().getRevertDataPacket()));
+		ContainerOpener<?> requestUi = new ContainerOpener<>(opener.getParent().getName(),
+				(x, y, z) -> opener.getParent().duplicateForRevert(x, y, opener.getParent().getRevertDataPacket()));
 
 		// Open the UI.
-		NetworkGUI.openGui((ServerPlayer) getPlayerInventory().player, requestUi, buff -> {
+		NetworkGUI.openScreen((ServerPlayer) getPlayerInventory().player, requestUi, buff -> {
 			FriendlyByteBuf parent = opener.getParent().getRevertDataPacket();
 			if (parent != null) {
 				parent.resetReaderIndex();
@@ -210,7 +211,8 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 		return addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, 16, slotFactory);
 	}
 
-	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		return addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, slotSize, slotFactory);
 	}
 
@@ -221,7 +223,7 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int slotCount, int xPos, int yPos, int maxPerRow, int slotSize,
 			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		List<Slot> outputs = new ArrayList<Slot>();
-		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
+		maxPerRow = Math.min(slotCount, maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
 		int offset = (maxPerRow * adjustedSlotSize) / 2;
 		for (int i = 0; i < slotCount; i++) {
@@ -232,7 +234,8 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 		return outputs;
 	}
 
-	protected List<Slot> addSlotsInGrid(Container inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(Container inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		List<Slot> outputs = new ArrayList<Slot>();
 		maxPerRow = Math.min(inventory.getContainerSize(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
@@ -245,7 +248,8 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 		return outputs;
 	}
 
-	protected void addSlotsInPerfectSquare(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected void addSlotsInPerfectSquare(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, slotSize, slotFactory);
 		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
@@ -276,6 +280,7 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 		return moveItemStackTo(stack, index, index + 1, false);
 	}
 
+	@Override
 	public ItemStack quickMoveStack(Player player, int invSlot) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = (Slot) this.slots.get(invSlot);
@@ -322,18 +327,20 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 					InventoryComponent invComponent = ((InventoryComponent) ((StaticPowerContainerSlot) slot).getItemHandler());
 
 					// If they held control, toggle the locked state of the slot.
-					if (ModKeyBindings.SLOT_LOCK.isDown()) {
-						if (invComponent.isSlotLocked(slot.getSlotIndex())) {
-							invComponent.unlockSlot(slot.getSlotIndex());
-						} else {
-							invComponent.lockSlot(slot.getSlotIndex(), invComponent.getStackInSlot(slot.getSlotIndex()));
+					if (invComponent.areSlotsLockable()) {
+						if (ModKeyBindings.SLOT_LOCK.isDown()) {
+							if (invComponent.isSlotLocked(slot.getSlotIndex())) {
+								invComponent.unlockSlot(slot.getSlotIndex());
+							} else {
+								invComponent.lockSlot(slot.getSlotIndex(), invComponent.getStackInSlot(slot.getSlotIndex()));
+							}
+
+							// Send a packet to the server with the updated values.
+							NetworkMessage msg = new PacketLockInventorySlot(invComponent, slot.getSlotIndex(), invComponent.isSlotLocked(slot.getSlotIndex()),
+									invComponent.getStackInSlot(slot.getSlotIndex()));
+							StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
+
 						}
-
-						// Send a packet to the server with the updated values.
-						NetworkMessage msg = new PacketLockInventorySlot(invComponent, slot.getSlotIndex(), invComponent.isSlotLocked(slot.getSlotIndex()),
-								invComponent.getStackInSlot(slot.getSlotIndex()));
-						StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
-
 					}
 				}
 			}

@@ -6,18 +6,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class BottlerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<BottleRecipe> {
+public class BottlerRecipeSerializer extends StaticPowerRecipeSerializer<BottleRecipe> {
 	public static final BottlerRecipeSerializer INSTANCE = new BottlerRecipeSerializer();
-
-	private BottlerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "bottler_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "bottler_recipe");
 
 	@Override
 	public BottleRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

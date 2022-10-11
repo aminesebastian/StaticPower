@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -22,8 +21,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class EnergizedGrass extends StaticPowerBlock {
 
-	public EnergizedGrass(String name) {
-		super(name, Block.Properties.of(Material.DIRT).strength(0.6f).sound(SoundType.GRAVEL)
+	public EnergizedGrass() {
+		super(Block.Properties.of(Material.DIRT).strength(0.6f).sound(SoundType.GRAVEL)
 				.lightLevel((state) -> 8).randomTicks());
 	}
 
@@ -31,8 +30,8 @@ public class EnergizedGrass extends StaticPowerBlock {
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
 			boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent("Walk On Top."));
-		tooltip.add(new TextComponent("I Dare You."));
+		tooltip.add(Component.literal("Walk On Top."));
+		tooltip.add(Component.literal("I Dare You."));
 	}
 
 	@Override

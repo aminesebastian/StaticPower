@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "staticpower:blocks/machines/alloy_furnace/alloy_furnace_front_on",
+    "north": "staticpower:blocks/machines/alloy_furnace/alloy_furnace_front_on",
+    "south": "staticpower:blocks/machines/alloy_furnace/alloy_furnace_side",
+    "east": "staticpower:blocks/machines/alloy_furnace/alloy_furnace_side",
+    "west": "staticpower:blocks/machines/alloy_furnace/alloy_furnace_side",
+    "up": "staticpower:blocks/machines/alloy_furnace/alloy_furnace_top",
+    "down": "staticpower:blocks/machines/alloy_furnace/alloy_furnace_bottom"
+  }
+}

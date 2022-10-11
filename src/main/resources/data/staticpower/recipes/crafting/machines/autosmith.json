@@ -1,9 +1,9 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		" i ",
-		"hbh",
-		"ala"
+		" p ",
+		"hba",
+		"ili"
 	],
 	"key": {
 		"b": {
@@ -20,6 +20,9 @@
 		},
 		"l": {
 			"item": "staticpower:plug"
+		},
+		"p": {
+			"item": "staticpower:processor_advanced"
 		}
 	},
 	"result": {

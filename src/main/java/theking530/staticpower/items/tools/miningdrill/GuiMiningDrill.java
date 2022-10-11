@@ -4,14 +4,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.StaticVoltHandler;
+import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.IStaticPowerStorage;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticpower.client.gui.StaticPowerItemStackGui;
 
 public class GuiMiningDrill extends StaticPowerItemStackGui<ContainerMiningDrill, MiningDrill> {
@@ -23,9 +22,9 @@ public class GuiMiningDrill extends StaticPowerItemStackGui<ContainerMiningDrill
 
 	public GuiMiningDrill(ContainerMiningDrill container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 152);
-		StaticVoltHandler svHandler = (StaticVoltHandler) getItemStack().getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
+		IStaticPowerStorage svHandler = getItemStack().getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).orElse(null);
 		if (svHandler != null) {
-			registerWidget(new GuiPowerBarFromEnergyStorage(svHandler, 8, 8, 16, 46));
+			registerWidget(new GuiPowerBarFromStorage(svHandler, 8, 8, 16, 46));
 		}
 	}
 
@@ -38,7 +37,7 @@ public class GuiMiningDrill extends StaticPowerItemStackGui<ContainerMiningDrill
 
 		// Update the info tab label.
 		getTabManager().registerTab(infoTab = new GuiInfoTab(110));
-		infoTab.addLine("desc", new TextComponent("Filter items going into an inventory."));
+		infoTab.addLine("desc", Component.literal("Filter items going into an inventory."));
 	}
 
 	protected MiningDrill getMiningDrill() {

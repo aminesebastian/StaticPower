@@ -1,13 +1,12 @@
 package theking530.staticpower.cables.fluid;
 
-import net.minecraft.resources.ResourceLocation;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
-import theking530.staticpower.cables.network.ICableNetworkModuleFactory;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 
-public class FluidNetworkModuleFactory implements ICableNetworkModuleFactory {
+public class FluidNetworkModuleFactory extends CableNetworkModuleType {
 
 	@Override
-	public AbstractCableNetworkModule create(ResourceLocation moduleName) {
+	public CableNetworkModule create() {
 		return new FluidNetworkModule();
 	}
 }

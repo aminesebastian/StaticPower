@@ -1,0 +1,6 @@
+{
+	"parent": "staticpower:item/light_bulb_white",
+	"textures": {
+		"glass": "staticpower:blocks/power/light_bulb/light_blue_bulb"
+	}
+}

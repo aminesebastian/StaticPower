@@ -4,21 +4,17 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class MixerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixerRecipe> {
+public class MixerRecipeSerializer extends StaticPowerRecipeSerializer<MixerRecipe> {
 	public static final MixerRecipeSerializer INSTANCE = new MixerRecipeSerializer();
-
-	private MixerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "mixer_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "mixer_recipe");
 
 	@Override
 	public MixerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -44,7 +40,8 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.mixerProcessingTime.get(), StaticPowerConfig.SERVER.mixerPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.mixerProcessingTime, StaticPowerConfig.SERVER.mixerPowerUsage,
+				json);
 
 		// Get the fluid result.
 		FluidStack output = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("result"));

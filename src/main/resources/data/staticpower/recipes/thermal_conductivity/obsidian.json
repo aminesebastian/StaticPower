@@ -3,11 +3,11 @@
 	"blocks": [
 		"forge:obsidian"
 	],
-	"conductivity": "6.0",
+	"conductivity": 2,
 	"overheating": {
 		"block": {
 			"Name": "minecraft:lava"
 		},
-		"temperature": 1000
+		"temperature": 1000000
 	}
 }

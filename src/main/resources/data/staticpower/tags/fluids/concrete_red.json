@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"staticpower:concrete_red"
+		"staticpower:concrete_red",
+		"staticpower:concrete_red_flowing"
 	]
 }

@@ -6,6 +6,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import theking530.staticcore.cablenetwork.CableNetwork;
+import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
@@ -13,10 +15,8 @@ import theking530.staticpower.cables.digistore.crafting.network.PacketRequestDig
 import theking530.staticpower.cables.digistore.crafting.network.PacketSimulateDigistoreCraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
-import theking530.staticpower.cables.network.CableNetwork;
-import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.container.StaticPowerContainer;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ContainerCraftingAmount extends StaticPowerContainer {
@@ -50,7 +50,7 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 		// client. If on the client, send a packet to trigger the recalculation.
 		if (!getPlayerInventory().player.level.isClientSide) {
 			CableNetwork network = CableNetworkManager.get(getPlayerInventory().player.level).getNetworkById(networkId);
-			DigistoreNetworkModule digistoreModule = network.getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+			DigistoreNetworkModule digistoreModule = network.getModule(ModCableModules.Digistore.get());
 			if (digistoreModule != null && digistoreModule.isManagerPresent()) {
 				CraftingStepsBundleContainer newBundles = digistoreModule.getCraftingManager().calculateAllPossibleCraftingTrees(target, amount);
 				PacketSimulateDigistoreCraftingRequestResponse newCraftingRequest = new PacketSimulateDigistoreCraftingRequestResponse(containerId, newBundles);
@@ -67,7 +67,7 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 		if (!getPlayerInventory().player.level.isClientSide) {
 			// Get the network and the digistore module.
 			CableNetwork network = CableNetworkManager.get(getPlayerInventory().player.level).getNetworkById(networkId);
-			DigistoreNetworkModule digistoreModule = network.getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+			DigistoreNetworkModule digistoreModule = network.getModule(ModCableModules.Digistore.get());
 
 			// If the module is valid and we still have the manager present, add the
 			// request.

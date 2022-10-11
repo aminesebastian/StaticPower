@@ -5,20 +5,16 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class TumblerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<TumblerRecipe> {
+public class TumblerRecipeSerializer extends StaticPowerRecipeSerializer<TumblerRecipe> {
 	public static final TumblerRecipeSerializer INSTANCE = new TumblerRecipeSerializer();
-
-	private TumblerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "tumbler_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "tumbler_recipe");
 
 	@Override
 	public TumblerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -31,8 +27,8 @@ public class TumblerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.tumblerProcessingTime.get(), StaticPowerConfig.SERVER.tumblerPowerUsage.get(),
-				json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.tumblerProcessingTime,
+				StaticPowerConfig.SERVER.tumblerPowerUsage, json);
 
 		return new TumblerRecipe(recipeId, input, output, processing);
 	}

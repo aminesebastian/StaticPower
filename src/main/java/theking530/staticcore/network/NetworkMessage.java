@@ -43,9 +43,7 @@ public abstract class NetworkMessage {
 	 * @param ctx The context of the message.
 	 */
 	public void _handle(Supplier<Context> ctx) {
-		ctx.get().enqueueWork(() -> {
-			handle(ctx);
-		});
+		handle(ctx);
 		ctx.get().setPacketHandled(true);
 	}
 }

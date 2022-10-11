@@ -1,31 +1,46 @@
 package theking530.staticcore.gui.widgets.tabs;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import java.util.List;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.gui.drawables.SpriteDrawable;
-import theking530.staticcore.utilities.Color;
-import theking530.staticpower.client.gui.GuiTextures;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
+import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiMachinePowerInfoTab extends AbstractInfoTab {
+public class GuiMachinePowerInfoTab extends GuiPowerInfoTab {
 
-	private EnergyStorageComponent energyStorage;
-
-	public GuiMachinePowerInfoTab(EnergyStorageComponent storage) {
-		super("Power I/O", new Color(242, 0, 255), 105, new Color(0.6f, 0.1f, 1.0f), new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
-		this.energyStorage = storage;
+	public GuiMachinePowerInfoTab(PowerStorageComponent storage) {
+		super(storage);
+		this.setOutputLabel("gui.staticpower.power_tab.power_usage");
+		this.setMaxOutputLabel("gui.staticpower.power_tab.max_power_usage");
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-		clear();
-		addKeyValueTwoLiner("Input", new TextComponent("Current Input"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getReceivedPerTick()), ChatFormatting.GREEN);
-		addKeyValueTwoLiner("Usage", new TextComponent("Current Usage"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getExtractedPerTick()), ChatFormatting.RED);
-		addKeyValueTwoLiner("I/O", new TextComponent("Max I/O"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getMaxDrain()), ChatFormatting.AQUA);
+	protected void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
+		if (isOpen()) {
+//			float topOffset = 2;
+//
+//			String avgAdded = PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerAddedPerTick()).getString();
+//			GuiDrawUtilities.drawTexture(matrix, GuiTextures.DOWN_INDICATOR, 12, 12, 12, topOffset + 25f, Color.GREEN);
+//			GuiDrawUtilities.drawStringLeftAligned(matrix, avgAdded, 25, topOffset + 34f, 1, 1, Color.EIGHT_BIT_WHITE, true);
+//
+//			String avgUsed = PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerUsedPerTick()).getString();
+//			GuiDrawUtilities.drawTexture(matrix, GuiTextures.UP_INDICATOR, 12, 12, 57, topOffset + 25f, Color.RED);
+//			GuiDrawUtilities.drawStringLeftAligned(matrix, avgUsed, 70, topOffset + 34f, 1, 1, Color.EIGHT_BIT_WHITE, true);
+		}
+	}
+
+	@Override
+	protected void renderWidgetForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+
+	}
+
+	@Override
+	protected void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 	}
 }

@@ -1,6 +1,5 @@
 package theking530.staticpower.blocks.crops;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -21,6 +21,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -34,6 +35,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.IPlantable;
+import theking530.staticpower.blocks.StaticPowerFarmland;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
 /**
@@ -56,9 +58,8 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 * 
 	 * @param name The registry name for this block sans namespace.
 	 */
-	public BaseSimplePlant(String name, Supplier<Item> seedSupplier) {
+	public BaseSimplePlant(Supplier<Item> seedSupplier) {
 		super(Block.Properties.of(Material.PLANT).noCollission().randomTicks().strength(0.0f).sound(SoundType.CROP));
-		setRegistryName(name);
 		SHAPES = getShapesByAge();
 		this.seedSupplier = seedSupplier;
 	}
@@ -68,7 +69,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
 		super.tick(state, worldIn, pos, rand);
 		if (!worldIn.isAreaLoaded(pos, 1)) {
 			return; // Forge: prevent loading unloaded chunks when checking neighbor's light
@@ -186,7 +187,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 */
 	@Override
 	protected boolean mayPlaceOn(BlockState state, BlockGetter worldIn, BlockPos pos) {
-		return true;
+		return state.is(Blocks.FARMLAND) || state.getBlock() instanceof StaticPowerFarmland;
 	}
 
 	/**
@@ -272,7 +273,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 */
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-		return true;
+		return (worldIn.getRawBrightness(pos, 0) >= 8 || worldIn.canSeeSky(pos)) && super.canSurvive(state, worldIn, pos);
 	}
 
 	/**
@@ -299,7 +300,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 * Indicates that this plant can be bonemealed.
 	 */
 	@Override
-	public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
+	public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
 		return true;
 	}
 
@@ -307,7 +308,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 * This method is called when an external item/block wants to grow this item.
 	 */
 	@Override
-	public void performBonemeal(ServerLevel worldIn, Random rand, BlockPos pos, BlockState state) {
+	public void performBonemeal(ServerLevel worldIn, RandomSource rand, BlockPos pos, BlockState state) {
 		this.growUsingBonemeal(worldIn, pos, state);
 	}
 

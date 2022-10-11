@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -27,16 +26,16 @@ import net.minecraftforge.common.PlantType;
 public class StaticPowerFarmland extends StaticPowerBlock {
 	protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
-	public StaticPowerFarmland(String name) {
-		super(name, Block.Properties.of(Material.DIRT).dynamicShape().randomTicks());
+	public StaticPowerFarmland() {
+		super(Block.Properties.of(Material.DIRT).dynamicShape().randomTicks());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
 			boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent("This isn't just regular dirt."));
-		tooltip.add(new TextComponent("This is " + ChatFormatting.ITALIC + "Advanced " + ChatFormatting.RESET
+		tooltip.add(Component.literal("This isn't just regular dirt."));
+		tooltip.add(Component.literal("This is " + ChatFormatting.ITALIC + "Advanced " + ChatFormatting.RESET
 				+ ChatFormatting.GRAY + "dirt."));
 	}
 

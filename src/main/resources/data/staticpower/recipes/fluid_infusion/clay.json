@@ -1,7 +1,7 @@
 {
-	"type": "staticpower:fluid_infusion_recipe",
+	"type": "staticpower:fluid_infusion",
 	"input": {
-		"tag": "forge:sand"
+		"tag": "forge:gravel"
 	},
 	"fluid": {
 		"fluid": "minecraft:water",

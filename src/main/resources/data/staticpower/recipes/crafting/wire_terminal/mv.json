@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"wiw",
+		"wiw",
+		"bbb"
+	],
+	"key": {
+		"b": {
+			"tag": "forge:rubber"
+		},
+		"i": {
+			"tag": "forge:ingots/iron"
+		},
+		"w": {
+			"tag": "forge:wire/brass"
+		}
+	},
+	"result": {
+		"item": "staticpower:wire_terminal_mv",
+		"count": 2
+	}
+}

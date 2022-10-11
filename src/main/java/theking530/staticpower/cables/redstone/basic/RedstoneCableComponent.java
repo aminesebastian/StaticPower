@@ -1,6 +1,7 @@
 package theking530.staticpower.cables.redstone.basic;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
@@ -9,6 +10,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -16,15 +20,20 @@ import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.cablenetwork.CableNetworkManager;
+import theking530.staticcore.cablenetwork.CableUtilities;
+import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
+import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.destinations.CableDestination;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.network.PacketUpdateRedstoneCableConfiguration;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class RedstoneCableComponent extends AbstractCableProviderComponent {
@@ -37,50 +46,54 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	/**
 	 * The name of the network module this cable is a part of.
 	 */
-	private ResourceLocation moduleName;
+	private CableNetworkModuleType moduleType;
 	/**
 	 * This value ONLY represents the client side power level for this cable.
 	 */
 	private int clientSidePowerLevel;
 
-	public RedstoneCableComponent(String name, String selector) {
-		super(name, getModuleType(selector));
-		this.moduleName = this.getSupportedNetworkModuleTypes().stream().findFirst().get();
+	public RedstoneCableComponent(String name, @Nullable MinecraftColor color) {
+		super(name, getModuleType(color));
+		this.moduleType = this.getSupportedNetworkModuleTypes().stream().findFirst().get();
 
 		// Initialize the side configuration.
 		configuration = new RedstoneCableConfiguration();
 		for (Direction dir : Direction.values()) {
-			configuration.getSideConfig(dir).setSelector(selector);
+			configuration.getSideConfig(dir).setSelector(color.getName());
 		}
 	}
 
-	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+	protected CableConnectionType getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 		if (otherProvider != null) {
 			if (otherProvider.areCableCompatible(this, side)) {
 				if (!otherProvider.isSideDisabled(side.getOpposite())) {
-					return CableConnectionState.CABLE;
+					return CableConnectionType.CABLE;
 				}
 			} else {
-				return getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE)
-						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE)
-						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE) ? CableConnectionState.TILE_ENTITY : CableConnectionState.NONE;
+				return getSupportedNetworkModuleTypes().contains(ModCableModules.NakedRedstone.get())
+						|| otherProvider.getSupportedNetworkModuleTypes().contains(ModCableModules.BundledRedstone.get())
+						|| otherProvider.getSupportedNetworkModuleTypes().contains(ModCableModules.NakedRedstone.get()) ? CableConnectionType.TILE_ENTITY
+								: CableConnectionType.NONE;
 			}
 		} else if (!firstWorldLoaded && otherProvider == null) {
-			if (canConnectTo(getWorld(), getPos(), side.getOpposite())) {
-				return CableConnectionState.TILE_ENTITY;
+			if (canConnectTo(getLevel(), getPos(), side.getOpposite())) {
+				return CableConnectionType.TILE_ENTITY;
 			}
 		}
-		return CableConnectionState.NONE;
+		return CableConnectionType.NONE;
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable) {
-		cable.setProperty(CONFIGURATION_KEY, configuration.serializeNBT());
+	protected void getSupportedDestinationTypes(Set<CableDestination> types) {
+		types.add(ModCableDestinations.Redstone.get());
 	}
 
-	@SuppressWarnings("deprecation")
+	@Override
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		cable.getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());
+	}
+
 	public static boolean canConnectTo(Level world, BlockPos blockPos, @Nullable Direction side) {
 		BlockState blockState = world.getBlockState(blockPos.relative(side.getOpposite()));
 		if (blockState.is(Blocks.REDSTONE_WIRE)) {
@@ -131,7 +144,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	 * @return
 	 */
 	public Optional<RedstoneNetworkModule> getRedstoneNetworkModule() {
-		return getNetworkModule(moduleName);
+		return getNetworkModule(moduleType);
 	}
 
 	public RedstoneCableConfiguration getConfiguration() {
@@ -140,15 +153,15 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 
 	public void updateConfiguration(RedstoneCableConfiguration configuration) {
 		this.configuration = configuration;
-		if (getWorld().isClientSide) {
+		if (isClientSide()) {
 			// Send a packet to the server with the updated values.
 			PacketUpdateRedstoneCableConfiguration msg = new PacketUpdateRedstoneCableConfiguration(getPos(), configuration);
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 			getTileEntity().addRenderingUpdateRequest();
 		} else {
-			if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
-				CableNetworkManager.get(getWorld()).getCable(getPos()).setProperty(CONFIGURATION_KEY, configuration.serializeNBT());
-				getWorld().updateNeighborsAt(this.getPos(), getWorld().getBlockState(getPos()).getBlock());
+			if (CableNetworkManager.get(getLevel()).isTrackingCable(getPos())) {
+				CableNetworkManager.get(getLevel()).getCable(getPos()).getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());
+				getLevel().updateNeighborsAt(this.getPos(), getLevel().getBlockState(getPos()).getBlock());
 			}
 		}
 	}
@@ -161,7 +174,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 		nbt.put("config", configuration.serializeNBT());
 
 		// Use this as a way to sync the client side value of the power level.
-		if (getWorld() != null && !getWorld().isClientSide) {
+		if (getLevel() != null && !getLevel().isClientSide) {
 			nbt.putByte("power", (byte) clientSidePowerLevel);
 		}
 
@@ -178,14 +191,14 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 		configuration = sideConfig;
 
 		// Use this as a way to sync the client side value of the power level.
-		if (getWorld() != null && getWorld().isClientSide) {
+		if (getLevel() != null && getLevel().isClientSide) {
 			clientSidePowerLevel = (int) nbt.getByte("power");
 		}
 	}
 
 	@Override
-	protected ResourceLocation getAttachmentModelForSide(Direction side) {
-		if (getConnectionState(side) == CableConnectionState.TILE_ENTITY) {
+	protected ResourceLocation getAttachmentModel(Direction side, CableSideConnectionState connectionState) {
+		if (connectionState.getConnectionType() == CableConnectionType.TILE_ENTITY) {
 			if (configuration.getSideConfig(side).isInputSide()) {
 				return StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT;
 			} else if (configuration.getSideConfig(side).isOutputSide()) {
@@ -194,47 +207,14 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 				return StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT_OUTPUT;
 			}
 		} else {
-			return super.getAttachmentModelForSide(side);
+			return super.getAttachmentModel(side, connectionState);
 		}
 	}
 
-	protected static ResourceLocation getModuleType(String selector) {
-		switch (selector) {
-		case "black":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLACK;
-		case "dark_blue":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_BLUE;
-		case "dark_green":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GREEN;
-		case "dark_aqua":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_AQUA;
-		case "dark_red":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_RED;
-		case "dark_purple":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_PURPLE;
-		case "gold":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GOLD;
-		case "gray":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GRAY;
-		case "dark_gray":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GRAY;
-		case "blue":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLUE;
-		case "green":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GREEN;
-		case "aqua":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_AQUA;
-		case "red":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_RED;
-		case "light_purple":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_LIGHT_PURPLE;
-		case "yellow":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_YELLOW;
-		case "white":
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_WHITE;
-		default:
-			return CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE;
+	protected static CableNetworkModuleType getModuleType(@Nullable MinecraftColor color) {
+		if (color == null) {
+			return ModCableModules.NakedRedstone.get();
 		}
+		return ModCableModules.RedstoneModules.get(color).get();
 	}
-
 }

@@ -1,13 +1,12 @@
 package theking530.staticpower.cables.heat;
 
-import net.minecraft.resources.ResourceLocation;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
-import theking530.staticpower.cables.network.ICableNetworkModuleFactory;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 
-public class HeatNetworkModuleFactory implements ICableNetworkModuleFactory {
+public class HeatNetworkModuleFactory extends CableNetworkModuleType {
 
 	@Override
-	public AbstractCableNetworkModule create(ResourceLocation moduleName) {
+	public CableNetworkModule create() {
 		return new HeatNetworkModule();
 	}
 }

@@ -1,12 +1,12 @@
 package theking530.api.attributes.defenitions;
 
+import java.awt.TextComponent;
 import java.util.List;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
@@ -54,7 +54,7 @@ public class PromotedAttributeDefenition extends AbstractAttributeDefenition<Boo
 
 	public void addAdditionalTooltipValues(List<Component> tooltip, boolean showAdvanced) {
 		if (showAdvanced) {
-			tooltip.add(new TextComponent(ChatFormatting.GRAY + "Mining Tier +1"));
+			tooltip.add(Component.literal(ChatFormatting.GRAY + "Mining Tier +1"));
 		}
 	}
 

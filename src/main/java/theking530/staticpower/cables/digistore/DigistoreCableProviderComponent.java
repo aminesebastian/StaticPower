@@ -1,16 +1,20 @@
 package theking530.staticpower.cables.digistore;
 
-import javax.annotation.Nullable;
+import java.util.Set;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.cablenetwork.CableNetworkManager;
+import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
+import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
 import theking530.staticpower.cables.attachments.digistore.DigistoreScreen;
@@ -22,13 +26,8 @@ import theking530.staticpower.cables.attachments.digistore.iobus.DigistoreIOBusA
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder;
 import theking530.staticpower.cables.attachments.digistore.regulator.DigistoreRegulatorAttachment;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
-import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.TileEntityUpdateRequest;
-import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
 	public static final String POWER_USAGE_TAG = "power_usage";
@@ -37,7 +36,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	private boolean managerPresent;
 	private int managerPresenceUpdateTimer;
 	private boolean shouldControlOnBlockState;
-	private long powerUsage;
+	private double powerUsage;
 
 	/**
 	 * This is for any tile entities or blocks that must attach to the digistore
@@ -56,8 +55,8 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	 * @param name
 	 * @param powerUsage
 	 */
-	public DigistoreCableProviderComponent(String name, long powerUsage) {
-		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+	public DigistoreCableProviderComponent(String name, double powerUsage) {
+		super(name, ModCableModules.Digistore.get());
 		shouldControlOnBlockState = false;
 		this.powerUsage = powerUsage;
 		addValidAttachmentClass(DigistoreTerminal.class);
@@ -75,11 +74,11 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
 		// Check to see if the manager is present. If not, update the tile entity.
-		if (!getWorld().isClientSide) {
-			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
+		if (!getLevel().isClientSide) {
+			this.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
-					getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), false);
+					getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.syncDataOnly(true), false);
 				}
 
 				// Update the on/off state of the block.
@@ -112,7 +111,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		boolean superResult = super.attachAttachment(attachment, side);
 
 		// Update the power usage on the server.
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			updatePowerUsage();
 		}
 
@@ -122,7 +121,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	@Override
 	public ItemStack removeAttachment(Direction side) {
 		ItemStack superResult = super.removeAttachment(side);
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			updatePowerUsage();
 		}
 		return superResult;
@@ -130,13 +129,13 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	public void updatePowerUsage() {
 		// Update the power usage on the server.
-		if (!getWorld().isClientSide()) {
-			if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
-				updatePowerUsage(CableNetworkManager.get(getWorld()).getCable(getPos()));
+		if (!getLevel().isClientSide()) {
+			if (CableNetworkManager.get(getLevel()).isTrackingCable(getPos())) {
+				updatePowerUsage(CableNetworkManager.get(getLevel()).getCable(getPos()));
 			}
 		} else {
-			StaticPower.LOGGER
-					.warn(String.format("Updating the power usage should only be performed on the server! A call from the client was made at position: %1$s.", getPos().toString()));
+			StaticPower.LOGGER.warn(
+					String.format("Updating the power usage should only be performed on the server! A call from the client was made at position: %1$s.", getPos().toString()));
 		}
 	}
 
@@ -144,28 +143,31 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		// Throw this in a try catch because I'm skeptical about doing this.
 		try {
 			// Update the cable value on the server.
-			long attachmentPowerUsage = 0;
-			for (ItemStack attachment : attachments) {
-				if (attachment.getItem() instanceof AbstractDigistoreCableAttachment) {
-					AbstractDigistoreCableAttachment attachmentItem = (AbstractDigistoreCableAttachment) attachment.getItem();
-					attachmentPowerUsage += attachmentItem.getPowerUsage(attachment);
+			double attachmentPowerUsage = 0;
+			for (Direction dir : Direction.values()) {
+				if (hasAttachment(dir)) {
+					ItemStack attachment = getAttachment(dir);
+					if (attachment.getItem() instanceof AbstractDigistoreCableAttachment) {
+						AbstractDigistoreCableAttachment attachmentItem = (AbstractDigistoreCableAttachment) attachment.getItem();
+						attachmentPowerUsage += attachmentItem.getPowerUsage(attachment);
+					}
 				}
 			}
 
 			// Update the power usage on the server.
-			cable.setProperty(POWER_USAGE_TAG, attachmentPowerUsage + powerUsage);
+			cable.getDataTag().putDouble(POWER_USAGE_TAG, attachmentPowerUsage + powerUsage);
 		} catch (Exception e) {
-			StaticPower.LOGGER
-					.error(String.format("An error occured when attempting to update the power usage of a digistore cable provider owned by a tile entity at location: %1$s of type: %2$s",
+			StaticPower.LOGGER.error(
+					String.format("An error occured when attempting to update the power usage of a digistore cable provider owned by a tile entity at location: %1$s of type: %2$s",
 							getPos(), getTileEntity().getClass()));
 		}
 	}
 
-	public long getBasePowerUsage() {
+	public double getBasePowerUsage() {
 		return powerUsage;
 	}
 
-	public DigistoreCableProviderComponent setBasePowerUsage(long usage) {
+	public DigistoreCableProviderComponent setBasePowerUsage(double usage) {
 		this.powerUsage = usage;
 		return this;
 	}
@@ -180,34 +182,22 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable) {
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		// Update the power usage.
 		updatePowerUsage(cable);
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
-
-		if (te instanceof TileEntityDigistoreWire && otherProvider != null && otherProvider.areCableCompatible(this, side)) {
-			if (!otherProvider.isSideDisabled(side.getOpposite())) {
-				return CableConnectionState.CABLE;
-			}
-		} else if (te instanceof TileEntityBase) {
-			TileEntityBase baseTe = (TileEntityBase) te;
-			if (baseTe.hasComponentOfType(DigistoreCableProviderComponent.class)) {
-				return CableConnectionState.TILE_ENTITY;
-			}
-		}
-		return CableConnectionState.NONE;
+	protected void getSupportedDestinationTypes(Set<CableDestination> types) {
+		types.add(ModCableDestinations.Digistore.get());
 	}
 
 	protected void setIsOnBlockState(boolean on) {
-		if (!getWorld().isClientSide && shouldControlOnBlockState) {
-			BlockState currentState = getWorld().getBlockState(getPos());
+		if (!getLevel().isClientSide && shouldControlOnBlockState) {
+			BlockState currentState = getLevel().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != on) {
-					getWorld().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, on), 2);
+					getLevel().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, on), 2);
 				}
 			}
 		}
@@ -217,7 +207,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		if (!shouldControlOnBlockState) {
 			return false;
 		}
-		BlockState currentState = getWorld().getBlockState(getPos());
+		BlockState currentState = getLevel().getBlockState(getPos());
 		if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 			return currentState.getValue(StaticPowerMachineBlock.IS_ON);
 		}

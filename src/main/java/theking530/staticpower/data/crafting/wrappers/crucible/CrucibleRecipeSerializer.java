@@ -8,23 +8,19 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class CrucibleRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CrucibleRecipe> {
+public class CrucibleRecipeSerializer extends StaticPowerRecipeSerializer<CrucibleRecipe> {
 	public static final CrucibleRecipeSerializer INSTANCE = new CrucibleRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "crucible_recipe");
 	private static final Logger LOGGER = LogManager.getLogger(CrucibleRecipeSerializer.class);
-
-	private CrucibleRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "crucible_recipe"));
-	}
 
 	@Override
 	public CrucibleRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -39,8 +35,8 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.crucibleProcessingTime.get(), StaticPowerConfig.SERVER.cruciblePowerUsage.get(),
-				json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.crucibleProcessingTime,
+				StaticPowerConfig.SERVER.cruciblePowerUsage, json);
 
 		// Get the outputs object.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
@@ -62,7 +58,7 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		if (json.has("minimum_temperature")) {
 			minimumTemperature = json.get("minimum_temperature").getAsInt();
 		} else {
-			minimumTemperature = fluidOutput.getFluid().getAttributes().getTemperature(fluidOutput);
+			minimumTemperature = fluidOutput.getFluid().getFluidType().getTemperature(fluidOutput);
 		}
 
 		// Return null if the output fluid is null.

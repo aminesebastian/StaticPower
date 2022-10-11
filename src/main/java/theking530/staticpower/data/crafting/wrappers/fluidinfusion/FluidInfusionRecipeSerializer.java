@@ -8,23 +8,19 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class FluidInfusionRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FluidInfusionRecipe> {
+public class FluidInfusionRecipeSerializer extends StaticPowerRecipeSerializer<FluidInfusionRecipe> {
 	public static final FluidInfusionRecipeSerializer INSTANCE = new FluidInfusionRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "fluid_infusion_recipe");
 	private static final Logger LOGGER = LogManager.getLogger(FluidInfusionRecipeSerializer.class);
-
-	private FluidInfusionRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "fluid_infusion_recipe"));
-	}
 
 	@Override
 	public FluidInfusionRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -39,8 +35,8 @@ public class FluidInfusionRecipeSerializer extends ForgeRegistryEntry<RecipeSeri
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fluidInfuserProcessingTime.get(),
-				StaticPowerConfig.SERVER.fluidInfuserPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fluidInfuserProcessingTime,
+				StaticPowerConfig.SERVER.fluidInfuserPowerUsage, json);
 
 		// Get the item output.
 		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(GsonHelper.getAsJsonObject(json, "result"));

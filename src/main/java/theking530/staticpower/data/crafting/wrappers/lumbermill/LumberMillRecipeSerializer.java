@@ -5,22 +5,18 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class LumberMillRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<LumberMillRecipe> {
+public class LumberMillRecipeSerializer extends StaticPowerRecipeSerializer<LumberMillRecipe> {
 	public static final LumberMillRecipeSerializer INSTANCE = new LumberMillRecipeSerializer();
-
-	private LumberMillRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "lumber_mill_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "lumber_mill_recipe");
 
 	@Override
 	public LumberMillRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -29,8 +25,8 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.lumberMillProcessingTime.get(),
-				StaticPowerConfig.SERVER.lumberMillPowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.lumberMillProcessingTime,
+				StaticPowerConfig.SERVER.lumberMillPowerUsage, json);
 
 		// Get the outputs.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");

@@ -35,8 +35,10 @@ public class StaticPowerGameDataSyncPacket extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
-		StaticPowerGameData gameData = StaticPowerGameDataManager.getOrCreateaGameData(id);
-		gameData.deserialize(serializedData);
-		gameData.onSyncedFromServer(serializedData);
+		ctx.get().enqueueWork(() -> {
+			StaticPowerGameData gameData = StaticPowerGameDataManager.getOrCreateaGameData(id);
+			gameData.deserialize(serializedData);
+			gameData.onSyncedFromServer(serializedData);
+		});
 	}
 }

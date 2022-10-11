@@ -28,6 +28,10 @@ public abstract class AbstractVector<T extends AbstractVector> implements Clonea
 		return values[index];
 	}
 
+	public float setScalar(int index, float value) {
+		return values[index] = value;
+	}
+
 	public int getDimensions() {
 		return values.length;
 	}
@@ -78,6 +82,13 @@ public abstract class AbstractVector<T extends AbstractVector> implements Clonea
 		float length = getLength();
 		for (int i = 0; i < values.length; i++) {
 			values[i] /= length;
+		}
+		return (T) this;
+	}
+
+	public T negate() {
+		for (int i = 0; i < values.length; i++) {
+			values[i] /= -1;
 		}
 		return (T) this;
 	}

@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder",
+	"input": {
+		"item": "staticpower:dust_charcoal"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_charcoal_small",
+			"count": 9
+		}
+	]
+}

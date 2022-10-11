@@ -20,9 +20,9 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.TimeOfDayDrawable;
 import theking530.staticcore.gui.widgets.containers.PanBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
-import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StringUtilities;
 import theking530.staticcore.utilities.Vector2D;
@@ -68,20 +68,32 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		// Initialize the selected research widget.
 		registerWidget(selectedResearchWidget = new SelectedResearchWidget(0, 0, 109, 0).setZLevel(500));
+		Research research = getResearchManager().getLastCompletedResearch();
+		ResearchInstance researchInstance = null;
+
 		if (getResearchManager().hasSelectedResearch()) {
-			selectedResearchWidget.setResearch(getResearchManager().getSelectedResearch().getTrackedResearch(), getResearchManager().getSelectedResearch());
-			currentResearch = getResearchManager().getSelectedResearch().getId();
+			researchInstance = getResearchManager().getSelectedResearch();
+			research = researchInstance.getTrackedResearch();
 		} else {
 			Collection<ResearchInstance> activeResearch = getResearchManager().getAllActiveResearch().values();
-			selectedResearchWidget.setResearch(getResearchManager().getLastCompletedResearch(), activeResearch.size() > 0 ? Iterables.getLast(activeResearch) : null);
-			currentResearch = getResearchManager().getLastCompletedResearch().getId();
+			ResearchInstance lastInstance = activeResearch.size() > 0 ? Iterables.getLast(activeResearch) : null;
+			if (lastInstance != null) {
+				researchInstance = lastInstance;
+				research = researchInstance.getTrackedResearch();
+			} else {
+				researchInstance = null;
+				research = getResearchManager().getLastCompletedResearch();
+			}
 		}
+
+		selectedResearchWidget.setResearch(research, researchInstance);
+		currentResearch = research.getId();
 
 		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
-		nodePanBox.setMaxZoom(2.0f);
+		nodePanBox.setMaxZoom(4.0f);
 
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 
@@ -180,7 +192,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		Vector2D targetPan = new Vector2D(0, 0);
 		boolean lockTargetPan = false;
 
-		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
+		ResearchLevels levels = ResearchLevels.getAllResearchLevels(Minecraft.getInstance().level);
 		for (int y = 0; y < levels.getLevels().size(); y++) {
 			ResearchLevel level = levels.getLevels().get(y);
 			for (int i = 0; i < level.getResearch().size(); i++) {
@@ -242,7 +254,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				Research research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completed.get(i)).orElse(null);
 				if (research != null) {
 					float tint = index % 2 == 0 ? 0.5f : 0.0f;
-					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, 0, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f)).setDrawBackground(true);
+					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, 0, 105, HISTORY_HEIGHT).setBackgroundColor(new SDColor(tint, tint, tint, 0.35f))
+							.setDrawBackground(true);
 					historyWidgets.add(historyWidget);
 					sideBarScrollBox.registerWidget(historyWidget);
 					index++;
@@ -274,9 +287,9 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		// Draw the sidebar and background bar.
-		GuiDrawUtilities.drawRectangle(pose, getMinecraft().screen.width, getMinecraft().screen.height, 0, 0, -100.1f, new Color(0, 0, 0, 0.8f));
-		GuiDrawUtilities.drawGenericBackground(pose, 110, getMinecraft().screen.height + 8, -5, -4, 0.0f, new Color(0.75f, 0.5f, 1.0f, 0.95f));
-		GuiDrawUtilities.drawGenericBackground(pose, getMinecraft().screen.width, 28, 108, -4, 500.0f, new Color(0.75f, 0.5f, 1.0f, 0.95f));
+		GuiDrawUtilities.drawRectangle(pose, getMinecraft().screen.width, getMinecraft().screen.height, 0, 0, -100.1f, new SDColor(0, 0, 0, 0.8f));
+		GuiDrawUtilities.drawGenericBackground(pose, 110, getMinecraft().screen.height + 8, -5, -4, 0.0f, new SDColor(0.75f, 0.5f, 1.0f, 0.95f));
+		GuiDrawUtilities.drawGenericBackground(pose, getMinecraft().screen.width, 28, 108, -4, 500.0f, new SDColor(0.75f, 0.5f, 1.0f, 0.95f));
 		drawConnectingLines(pose, partialTicks, mouseX, mouseY);
 	}
 
@@ -289,7 +302,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		// Color.EIGHT_BIT_WHITE, true);
 
 		String dimensionName = StringUtilities.prettyFormatCamelCase(getMinecraft().player.getLevel().dimensionType().effectsLocation().getPath());
-		GuiDrawUtilities.drawStringCentered(pose, dimensionName, getMinecraft().getWindow().getGuiScaledWidth() / 2 + 62, 11f, 0, 1, Color.EIGHT_BIT_WHITE, true);
+		GuiDrawUtilities.drawStringCentered(pose, dimensionName, getMinecraft().getWindow().getGuiScaledWidth() / 2 + 62, 11f, 0, 1, SDColor.EIGHT_BIT_WHITE, true);
 
 		// Draw the current time.
 		long time = (getMinecraft().player.getLevel().dayTime() + 6000) % 24000;
@@ -301,7 +314,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		String formattedMinute = minute < 10 ? "0" + minute : Long.toString(minute);
 
 		String formattedTime = String.format("%1$s:%2$s", formattedHour, formattedMinute);
-		GuiDrawUtilities.drawStringCentered(pose, formattedTime, getMinecraft().getWindow().getGuiScaledWidth() / 2 + 62, 18f, 0, 0.5f, Color.EIGHT_BIT_WHITE, true);
+		GuiDrawUtilities.drawStringCentered(pose, formattedTime, getMinecraft().getWindow().getGuiScaledWidth() / 2 + 62, 18f, 0, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
 	}
 
 	protected void drawConnectingLines(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
@@ -326,13 +339,13 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				index++;
 
 				Vector3D expandedPosition = outerNode.getPosition().promote();
-				expandedPosition.add(11, 2, 100);
+				expandedPosition.add(12.5f, 2, 100);
 
 				Vector3D preReqPosition = node.getPosition().promote();
-				preReqPosition.add(11, 20f, 100);
+				preReqPosition.add(12.5f, 20f, 100);
 
-				Color startLineColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
-				Color endLineColor = startLineColor;
+				SDColor startLineColor = new SDColor(1.0f, 1.0f, 1.0f, 0.5f);
+				SDColor endLineColor = startLineColor;
 
 				// Draw the line ALWAYS black. We'll color on top of it in the next step if
 				// something is expanded.
@@ -346,11 +359,11 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 					float timeHovered = SDMath.clamp((this.hoveredNode.getTicksHovered() - (index * 2)) / 1f, 0, 1);
 
 					if (!getResearchManager().hasCompletedResearch(node.getResearch().getId())) {
-						startLineColor = new Color(0.8f, 0.15f, 0.15f, 1.0f);
-						endLineColor = new Color(0.8f, 0.15f, 0.15f, 1.0f);
+						startLineColor = new SDColor(0.8f, 0.15f, 0.15f, 1.0f);
+						endLineColor = new SDColor(0.8f, 0.15f, 0.15f, 1.0f);
 					} else {
-						startLineColor = new Color(0.0f, 0.9f, 0.2f, 1.0f);
-						endLineColor = new Color(0.0f, 0.9f, 0.2f, 1.0f);
+						startLineColor = new SDColor(0.0f, 0.9f, 0.2f, 1.0f);
+						endLineColor = new SDColor(0.0f, 0.9f, 0.2f, 1.0f);
 					}
 
 					startLineColor = startLineColor.multiply(timeHovered);

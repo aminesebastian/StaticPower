@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:former",
+	"input": {
+		"item": "staticpower:ingot_static"
+	},
+	"mold": {
+		"item": "staticpower:mold_wire"
+	},
+	"output": {
+		"item": "staticpower:wire_static",
+		"count": 9
+	}
+}

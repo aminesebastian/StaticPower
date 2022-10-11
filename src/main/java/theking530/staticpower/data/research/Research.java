@@ -8,18 +8,22 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipe;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.ResearchItem;
 
 public class Research extends AbstractStaticPowerRecipe {
-	public static final RecipeType<Research> RECIPE_TYPE = RecipeType.register("research");
+	public static final String ID = "research";
+	public static final RecipeType<Research> RECIPE_TYPE = new StaticPowerRecipeType<Research>();
+
 	private final String title;
 	private final String description;
 	private final Vector2D visualOffset;
@@ -31,10 +35,11 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final List<ItemStack> rewards;
 	private final List<ResourceLocation> advancements;
 	private final boolean hiddenUntilAvailable;
-	private final Color color;
+	private SDColor color;
 
-	public Research(ResourceLocation name, String title, String description, Vector2D visualOffset, int sortOrder, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements,
-			List<ItemStack> rewards, List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon, boolean hiddenUntilAvailable, Color color) {
+	public Research(ResourceLocation name, String title, String description, Vector2D visualOffset, int sortOrder, List<ResourceLocation> prerequisites,
+			List<StaticPowerIngredient> requirements, List<ItemStack> rewards, List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon,
+			boolean hiddenUntilAvailable, SDColor color) {
 		super(name);
 		this.title = title;
 		this.description = description;
@@ -47,11 +52,7 @@ public class Research extends AbstractStaticPowerRecipe {
 		this.advancements = advancements;
 		this.hiddenUntilAvailable = hiddenUntilAvailable;
 		this.sortOrder = sortOrder;
-		if (color == null) {
-			this.color = calculateColor();
-		} else {
-			this.color = color;
-		}
+		this.color = color;
 	}
 
 	public List<ResourceLocation> getAdvancements() {
@@ -98,7 +99,11 @@ public class Research extends AbstractStaticPowerRecipe {
 		return hiddenUntilAvailable;
 	}
 
-	public Color getColor() {
+	public SDColor getColor() {
+		if (color == null) {
+			// We have to lazy load like this to not break tags.
+			color = calculateColor();
+		}
 		return color;
 	}
 
@@ -161,9 +166,9 @@ public class Research extends AbstractStaticPowerRecipe {
 		return true;
 	}
 
-	private Color calculateColor() {
+	private SDColor calculateColor() {
 		int maxTier = 0;
-		Color color = Color.WHITE;
+		SDColor color = SDColor.WHITE;
 		for (StaticPowerIngredient input : requirements) {
 			if (input.getIngredient().getItems()[0].getItem() instanceof ResearchItem) {
 				ResearchItem item = (ResearchItem) input.getIngredient().getItems()[0].getItem();
@@ -185,7 +190,7 @@ public class Research extends AbstractStaticPowerRecipe {
 		private int sortOrder;
 		private ResearchIcon icon;
 		private boolean hiddenUntilAvailable;
-		private Color color;
+		private SDColor color;
 
 		private final List<ResourceLocation> prerequisites;
 		private final List<StaticPowerIngredient> requirements;
@@ -243,7 +248,7 @@ public class Research extends AbstractStaticPowerRecipe {
 			return this;
 		}
 
-		public ResearchBuilder color(Color color) {
+		public ResearchBuilder color(SDColor color) {
 			this.color = color;
 			return this;
 		}
@@ -273,37 +278,37 @@ public class Research extends AbstractStaticPowerRecipe {
 		}
 
 		public ResearchBuilder tier1(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier1), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier1.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier2(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier2), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier2.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier3(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier3), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier3.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier4(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier4), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier4.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier5(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier5), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier5.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier6(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier6), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier6.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier7(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier7), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier7.get()), count));
 			return this;
 		}
 

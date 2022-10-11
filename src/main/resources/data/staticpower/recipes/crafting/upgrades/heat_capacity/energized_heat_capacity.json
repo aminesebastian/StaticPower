@@ -10,7 +10,7 @@
 			"tag": "forge:plates/lead"
 		},
 		"r": {
-			"item": "staticpower:heat_sink_silver"
+			"item": "staticpower:heat_sink_gold"
 		},
 		"p": {
 			"item": "staticpower:upgrade_plate_energized"

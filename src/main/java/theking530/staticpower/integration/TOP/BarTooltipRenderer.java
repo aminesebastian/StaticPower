@@ -1,18 +1,18 @@
 package theking530.staticpower.integration.TOP;
 
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 
 public class BarTooltipRenderer {
-	protected Color borderColor;
-	protected Color mainColor;
-	protected Color alternateColor;
+	protected SDColor borderColor;
+	protected SDColor mainColor;
+	protected SDColor alternateColor;
 
 	protected float width;
 	protected float height;
 	protected int border;
 	protected int topOffset;
 
-	public BarTooltipRenderer(float width, float height, Color mainColor, Color alternateColor, Color borderColor) {
+	public BarTooltipRenderer(float width, float height, SDColor mainColor, SDColor alternateColor, SDColor borderColor) {
 		this.width = width;
 		this.height = height;
 		this.mainColor = mainColor;

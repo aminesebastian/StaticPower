@@ -10,7 +10,7 @@
 			"item": "staticpower:plate_static"
 		},
 		"w": {
-			"tag": "forge:wires/silver"
+			"tag": "forge:nuggets/iron"
 		},
 		"r": {
 			"item": "staticpower:crystal_static"

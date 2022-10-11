@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,6 +15,8 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import theking530.staticcore.cablenetwork.CableNetworkManager;
+import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.container.ContainerOpener;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -34,11 +36,9 @@ import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.network.PacketCancelDigistoreCraftingRequest;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
-import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -158,7 +158,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 	@Override
 	public ItemStack quickMoveStack(Player player, int slotIndex) {
-		if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
+		if (!getCableComponent().getLevel().isClientSide && getCableComponent().isManagerPresent()) {
 			AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				// Get the targeted item.
@@ -241,7 +241,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 						// Open prompt for crafting if we can actually craft some.
 						// Create the container opener.
-						ContainerOpener<?> requestUi = new ContainerOpener<>(new TextComponent("Crafting Request"), (id, inv, data) -> {
+						ContainerOpener<?> requestUi = new ContainerOpener<>(Component.literal("Crafting Request"), (id, inv, data) -> {
 							return new ContainerCraftingAmount(id, inv, newBundles, network.getNetwork().getId());
 						}).fromParent(this);
 
@@ -303,7 +303,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		DigistoreTerminal.setSearchMode(getAttachment(), mode);
 
 		// If on the client, send an update to the server to update these values too.
-		if (getCableComponent().getWorld().isClientSide) {
+		if (getCableComponent().getLevel().isClientSide) {
 			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreTerminalFilters(containerId, filter, mode, sortType, sortDescending));
 		}
 	}
@@ -377,12 +377,12 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 	 */
 	public Optional<DigistoreNetworkModule> getDigistoreNetwork() {
 		// Make sure we only call this on the server.
-		if (getCableComponent().getWorld().isClientSide) {
+		if (getCableComponent().getLevel().isClientSide) {
 			throw new RuntimeException("Attempted to get the Digistore Network from client code.");
 		}
 
 		// Get the server cable for this manager.
-		ServerCable cable = CableNetworkManager.get(getCableComponent().getWorld()).getCable(getCableComponent().getPos());
+		ServerCable cable = CableNetworkManager.get(getCableComponent().getLevel()).getCable(getCableComponent().getPos());
 
 		// If it or it's network are null, return null.
 		if (cable == null || cable.getNetwork() == null) {
@@ -390,7 +390,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		}
 
 		// Return the module.
-		return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE));
+		return Optional.of(cable.getNetwork().getModule(ModCableModules.Digistore.get()));
 	}
 
 	protected void onManagerStateChanged(boolean isPresent) {

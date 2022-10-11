@@ -6,11 +6,14 @@ import java.util.Queue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag>, Cloneable {
+public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
-	protected double currentHeat;
-	protected double maximumHeat;
-	protected double conductivity;
+
+	protected int currentHeat;
+	protected int minimumThreshold;
+	protected int overheatThreshold;
+	protected int maximumHeat;
+	protected float conductivity;
 
 	protected boolean canHeat;
 	protected boolean canCool;
@@ -23,8 +26,18 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag>,
 	protected float averageRecieved;
 	protected float averageExtracted;
 
-	public HeatStorage(double maximumHeat, double conductivity) {
+	public HeatStorage(int overheatThreshold, int maximumHeat, float conductivity) {
+		this(IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maximumHeat, conductivity, 0);
+	}
+
+	public HeatStorage(int minimumThreshold, int overheatThreshold, int maximumHeat, float conductivity) {
+		this(minimumThreshold, overheatThreshold, maximumHeat, conductivity, 0);
+	}
+
+	public HeatStorage(int minimumThreshold, int overheatThreshold, int maximumHeat, float conductivity, int meltdownRecoveryTicks) {
 		this.maximumHeat = maximumHeat;
+		this.minimumThreshold = minimumThreshold;
+		this.overheatThreshold = overheatThreshold;
 		this.conductivity = conductivity;
 		canHeat = true;
 		canCool = true;
@@ -34,37 +47,55 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag>,
 	}
 
 	@Override
-	public double getCurrentHeat() {
+	public int getCurrentHeat() {
 		return currentHeat;
 	}
 
 	@Override
-	public double getMaximumHeat() {
+	public int getMinimumHeatThreshold() {
+		return minimumThreshold;
+	}
+
+	public void setMinimumHeatThreshold(int minimumThreshold) {
+		this.minimumThreshold = minimumThreshold;
+	}
+
+	@Override
+	public int getOverheatThreshold() {
+		return overheatThreshold;
+	}
+
+	@Override
+	public int getMaximumHeat() {
 		return maximumHeat;
 	}
 
-	public void setMaximumHeat(double newMax) {
+	public void setMaximumHeat(int newMax) {
 		maximumHeat = newMax;
 		currentHeat = Math.min(maximumHeat, currentHeat);
 	}
 
 	@Override
-	public double getConductivity() {
+	public float getConductivity() {
 		return conductivity;
 	}
 
-	public void setConductivity(double conductivity) {
+	public void setConductivity(float conductivity) {
 		this.conductivity = conductivity;
 	}
 
+	public void setCurrentHeat(int heat) {
+		currentHeat = heat;
+	}
+
 	@Override
-	public double heat(double amountToHeat, boolean simulate) {
+	public int heat(int amountToHeat, HeatTransferAction action) {
 		if (!canHeat) {
-			return 0.0f;
+			return 0;
 		}
-		double remainingHeatCapacity = maximumHeat - currentHeat;
-		double actualHeatAmount = Math.min(remainingHeatCapacity, amountToHeat);
-		if (!simulate) {
+		int remainingHeatCapacity = maximumHeat - currentHeat;
+		int actualHeatAmount = Math.min(remainingHeatCapacity, amountToHeat);
+		if (action == HeatTransferAction.EXECUTE) {
 			currentHeat += actualHeatAmount;
 			currentFrameEnergyReceived += actualHeatAmount;
 		}
@@ -73,12 +104,12 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag>,
 	}
 
 	@Override
-	public double cool(double amountToCool, boolean simulate) {
+	public int cool(int amountToCool, HeatTransferAction action) {
 		if (!canCool) {
-			return 0.0f;
+			return 0;
 		}
-		double actualCoolAmount = Math.min(currentHeat, amountToCool);
-		if (!simulate) {
+		int actualCoolAmount = amountToCool;
+		if (action == HeatTransferAction.EXECUTE) {
 			currentHeat -= actualCoolAmount;
 			currentFrameEnergyExtracted -= actualCoolAmount;
 		}
@@ -93,9 +124,6 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag>,
 		return currentHeat == 0.0f;
 	}
 
-	public boolean canFullyAbsorbHeat(double heatAmount) {
-		return currentHeat + heatAmount <= maximumHeat;
-	}
 
 	public boolean isCanHeat() {
 		return canHeat;
@@ -195,9 +223,11 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag>,
 			currentHeat = maximumHeat;
 		}
 
-		currentHeat = nbt.getDouble("current_heat");
-		maximumHeat = nbt.getDouble("maximum_heat");
-		conductivity = nbt.getDouble("maximum_transfer_rate");
+		currentHeat = nbt.getInt("current_heat");
+		minimumThreshold = nbt.getInt("minimum_heat");
+		overheatThreshold = nbt.getInt("overheat_threshold");
+		maximumHeat = nbt.getInt("maximum_heat");
+		conductivity = nbt.getFloat("maximum_transfer_rate");
 		averageRecieved = nbt.getFloat("recieved");
 		averageExtracted = nbt.getFloat("extracted");
 	}
@@ -206,22 +236,13 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag>,
 	public CompoundTag serializeNBT() {
 		CompoundTag output = new CompoundTag();
 
-		if (currentHeat < 0) {
-			currentHeat = 0;
-		}
-
-		output.putDouble("current_heat", currentHeat);
-		output.putDouble("maximum_heat", maximumHeat);
-		output.putDouble("maximum_transfer_rate", conductivity);
+		output.putInt("current_heat", currentHeat);
+		output.putInt("minimum_heat", minimumThreshold);
+		output.putInt("overheat_threshold", overheatThreshold);
+		output.putInt("maximum_heat", maximumHeat);
+		output.putFloat("maximum_transfer_rate", conductivity);
 		output.putFloat("recieved", averageRecieved);
 		output.putFloat("extracted", averageExtracted);
-		return output;
-	}
-
-	@Override
-	public HeatStorage clone() {
-		HeatStorage output = new HeatStorage(this.getMaximumHeat(), this.getConductivity());
-		output.deserializeNBT(serializeNBT());
 		return output;
 	}
 }

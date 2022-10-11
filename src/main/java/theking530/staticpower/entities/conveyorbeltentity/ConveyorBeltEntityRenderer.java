@@ -11,11 +11,11 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -35,16 +35,14 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 	private final net.minecraft.client.renderer.entity.ItemRenderer itemRenderer;
 	private final Random random = new Random();
 
-	public ConveyorBeltEntityRenderer(Context context,
-			net.minecraft.client.renderer.entity.ItemRenderer itemRendererIn) {
+	public ConveyorBeltEntityRenderer(Context context, net.minecraft.client.renderer.entity.ItemRenderer itemRendererIn) {
 		super(context);
 		this.itemRenderer = itemRendererIn;
 		this.shadowRadius = 0.15F;
 		this.shadowStrength = 0.75F;
 	}
 
-	public void render(ItemEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn,
-			MultiBufferSource bufferIn, int packedLightIn) {
+	public void render(ItemEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
 		matrixStackIn.pushPose();
 		ItemStack itemstack = entityIn.getItem();
 		int i = itemstack.isEmpty() ? 187 : Item.getId(itemstack.getItem()) + itemstack.getDamageValue();
@@ -70,8 +68,8 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 		}
 
 		// Rotate to face the y velocity and bias a bit down.
-		matrixStackIn.mulPose(new Quaternion((float) (velocityFacingRotation * -normalizedDirection.z()), (float) 0,
-				(float) (velocityFacingRotation * normalizedDirection.x()), true));
+		matrixStackIn
+				.mulPose(new Quaternion((float) (velocityFacingRotation * -normalizedDirection.z()), (float) 0, (float) (velocityFacingRotation * normalizedDirection.x()), true));
 		if (angleSign < 0) {
 			matrixStackIn.translate(0.0, normalizedDirection.y() * 0.2f, 0.0);
 		} else {
@@ -104,8 +102,7 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 					float f11 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
 					float f13 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
 					float f10 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
-					matrixStackIn.translate(shouldSpreadItems() ? f11 : 0, shouldSpreadItems() ? f13 : 0,
-							shouldSpreadItems() ? f10 : 0);
+					matrixStackIn.translate(shouldSpreadItems() ? f11 : 0, shouldSpreadItems() ? f13 : 0, shouldSpreadItems() ? f10 : 0);
 				} else {
 					float f12 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
 					float f14 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
@@ -113,8 +110,7 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 				}
 			}
 
-			this.itemRenderer.render(itemstack, ItemTransforms.TransformType.GROUND, false, matrixStackIn, bufferIn,
-					packedLightIn, OverlayTexture.NO_OVERLAY, ibakedmodel);
+			this.itemRenderer.render(itemstack, ItemTransforms.TransformType.GROUND, false, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, ibakedmodel);
 			matrixStackIn.popPose();
 			if (!flag) {
 				matrixStackIn.translate(0.0, 0.0, 0.03F);
@@ -143,9 +139,8 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 	/**
 	 * Returns the location of an entity's texture.
 	 */
-	@SuppressWarnings("deprecation")
 	public ResourceLocation getTextureLocation(ItemEntity entity) {
-		return TextureAtlas.LOCATION_BLOCKS;
+		return InventoryMenu.BLOCK_ATLAS;
 	}
 
 	/**

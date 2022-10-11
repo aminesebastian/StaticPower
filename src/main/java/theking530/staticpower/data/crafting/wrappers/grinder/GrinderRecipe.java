@@ -9,9 +9,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class GrinderRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<GrinderRecipe> RECIPE_TYPE = RecipeType.register("grinder");
+	public static final String ID = "grinder";
+	public static final RecipeType<GrinderRecipe> RECIPE_TYPE = new StaticPowerRecipeType<GrinderRecipe>();
 
 	private final ProbabilityItemStackOutput[] outputs;
 	/**

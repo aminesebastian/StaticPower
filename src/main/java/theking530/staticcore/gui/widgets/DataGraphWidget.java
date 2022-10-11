@@ -14,7 +14,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -56,17 +56,17 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		matrix.translate(0.1f + getPosition().getX(), getSize().getY() - 0.5f - ((xAxisDifference * valueScale) / 2) + getPosition().getY(), 0);
 
 		// Draw the 0 line.
-		GuiDrawUtilities.drawRectangle(matrix, getSize().getX(), 0.5f, 0, 0, 1, Color.GREY);
+		GuiDrawUtilities.drawRectangle(matrix, getSize().getX(), 0.5f, 0, 0, 1, SDColor.GREY);
 
 		// Draw the grids.
 		for (int i = 0; i < maxSegmentCount; i++) {
-			GuiDrawUtilities.drawRectangle(matrix, 0.5f, getSize().getY() - 0.5f, i * segmentLength, 0.25f - getSize().getY() / 2, 1, Color.GREY);
+			GuiDrawUtilities.drawRectangle(matrix, 0.5f, getSize().getY() - 0.5f, i * segmentLength, 0.25f - getSize().getY() / 2, 1, SDColor.GREY);
 
 			if (xAxisLabels != null && (i == 0 || i == maxSegmentCount - 1) && i < xAxisLabels.size()) {
 				if (i == 0) {
-					GuiDrawUtilities.drawStringCentered(matrix, xAxisLabels.get(i), 8, 5 + getSize().getY() / 2, 0.0f, 0.45f, Color.EIGHT_BIT_DARK_GREY, false);
+					GuiDrawUtilities.drawStringCentered(matrix, xAxisLabels.get(i), 8, 5 + getSize().getY() / 2, 0.0f, 0.45f, SDColor.EIGHT_BIT_DARK_GREY, false);
 				} else if (i == maxSegmentCount - 1) {
-					GuiDrawUtilities.drawStringCentered(matrix, xAxisLabels.get(i), getSize().getX() - 8, 5 + getSize().getY() / 2, 0.0f, 0.45f, Color.EIGHT_BIT_DARK_GREY, false);
+					GuiDrawUtilities.drawStringCentered(matrix, xAxisLabels.get(i), getSize().getX() - 8, 5 + getSize().getY() / 2, 0.0f, 0.45f, SDColor.EIGHT_BIT_DARK_GREY, false);
 				}
 			}
 		}
@@ -93,10 +93,10 @@ public class DataGraphWidget extends AbstractGuiWidget {
 
 		// Draw y axis values.
 		GuiDrawUtilities.drawStringLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 1.5f, getSize().getY() / 2 - 2, 0.0f, 0.55f,
-				Color.EIGHT_BIT_DARK_GREY, false);
+				SDColor.EIGHT_BIT_DARK_GREY, false);
 		GuiDrawUtilities.drawStringLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 1.5f, -getSize().getY() / 2 + 5, 0.0f, 0.55f,
-				Color.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringLeftAligned(matrix, "0", 1.5f, -2f, 0.0f, 0.55f, Color.EIGHT_BIT_DARK_GREY, false);
+				SDColor.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawStringLeftAligned(matrix, "0", 1.5f, -2f, 0.0f, 0.55f, SDColor.EIGHT_BIT_DARK_GREY, false);
 
 		matrix.popPose();
 	}
@@ -164,7 +164,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 	}
 
 	protected void drawDataSet(PoseStack matrix, IGraphDataSet data, float valueScale, float segmentLength, float maxDataHeight) {
-		Color lineColor = data.getLineColor();
+		SDColor lineColor = data.getLineColor();
 		// GL11.glColor4d(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue(),
 		// lineColor.getAlpha());
 		// GL11.glLineWidth(data.getLineThickness());
@@ -213,7 +213,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		private Supplier<double[]> dataSupplier;
 		private Vector2D minMaxValues;
 
-		public SupplierGraphDataSet(Color color, Supplier<double[]> dataSupplier) {
+		public SupplierGraphDataSet(SDColor color, Supplier<double[]> dataSupplier) {
 			super(color);
 			this.minMaxValues = new Vector2D();
 			this.dataSupplier = dataSupplier;
@@ -242,7 +242,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		private double[] data;
 		private Vector2D minMaxValues;
 
-		public DoubleGraphDataSet(Color color, Collection<Double> data) {
+		public DoubleGraphDataSet(SDColor color, Collection<Double> data) {
 			super(color);
 
 			this.minMaxValues = new Vector2D();
@@ -276,7 +276,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		private double[] data;
 		private Vector2D minMaxValues;
 
-		public FloatGraphDataSet(Color color, Collection<Float> data) {
+		public FloatGraphDataSet(SDColor color, Collection<Float> data) {
 			super(color);
 
 			this.minMaxValues = new Vector2D();
@@ -311,7 +311,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		private int maxDataLength;
 		private Vector2D minMaxValues;
 
-		public DynamicGraphDataSet(Color color) {
+		public DynamicGraphDataSet(SDColor color) {
 			super(color);
 			this.data = new ArrayList<Double>();
 			this.maxDataLength = 0;
@@ -353,20 +353,20 @@ public class DataGraphWidget extends AbstractGuiWidget {
 	}
 
 	public static abstract class AbstractGraphDataSet implements IGraphDataSet {
-		protected Color color;
+		protected SDColor color;
 		protected float lineThickness;
 
-		public AbstractGraphDataSet(Color color) {
+		public AbstractGraphDataSet(SDColor color) {
 			this(color, 3);
 		}
 
-		public AbstractGraphDataSet(Color color, float lineThickness) {
+		public AbstractGraphDataSet(SDColor color, float lineThickness) {
 			this.lineThickness = lineThickness;
 			this.color = color;
 		}
 
 		@Override
-		public Color getLineColor() {
+		public SDColor getLineColor() {
 			return color;
 		}
 
@@ -377,7 +377,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 	}
 
 	public static interface IGraphDataSet {
-		public Color getLineColor();
+		public SDColor getLineColor();
 
 		public float getLineThickness();
 

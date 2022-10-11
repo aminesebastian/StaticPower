@@ -1,81 +1,122 @@
 package theking530.staticpower.world.features;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticcore.utilities.Vector2D;
 
 public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfiguration> {
-	public StaticPowerLakeFeature(ResourceLocation registryName, Codec<StaticPowerLakeFeatureConfiguration> codec) {
+	private static final BlockState AIR = Blocks.CAVE_AIR.defaultBlockState();
+
+	public StaticPowerLakeFeature(Codec<StaticPowerLakeFeatureConfiguration> codec) {
 		super(codec);
-		this.setRegistryName(registryName);
 	}
 
+	@Override
 	public boolean place(FeaturePlaceContext<StaticPowerLakeFeatureConfiguration> configContext) {
-		BlockPos blockpos = configContext.origin();
 		WorldGenLevel worldgenlevel = configContext.level();
-		Random random = configContext.random();
+		RandomSource random = configContext.random();
 		StaticPowerLakeFeatureConfiguration config = configContext.config();
-
 		int depth = SDMath.getRandomIntInRange(config.getDepthProvider().getMinValue(), config.getDepthProvider().getMaxValue());
-		int xSize = SDMath.getRandomIntInRange(config.getSizeProvider().getMinValue(), config.getSizeProvider().getMaxValue());
-		int zSize = SDMath.getRandomIntInRange(config.getSizeProvider().getMinValue(), config.getSizeProvider().getMaxValue());
+		int xSize = SDMath.getRandomIntInRange(config.getRadiusProvider().getMinValue(), config.getRadiusProvider().getMaxValue());
+		int bulbStartDepth = 10;
+		int bulbRadius = depth - bulbStartDepth;
 
-		for (int y = 0; y < depth; y++) {
-			// For the first 20 levels, just place the central block.
-			if (y < 20) {
-				blockpos = configContext.origin().offset(0, -y, 0);
-				if (shouldPlaceHere(worldgenlevel, config, blockpos)) {
-					BlockState fluidBlock = config.getFluid().getState(random, blockpos);
-					BlockState existingState = worldgenlevel.getBlockState(blockpos);
-					if (!existingState.isAir()) {
-						worldgenlevel.setBlock(blockpos, fluidBlock, 2);
-						worldgenlevel.scheduleTick(blockpos, fluidBlock.getBlock(), 0);
-						this.markAboveForPostProcessing(worldgenlevel, blockpos);
-					}
-				}
-				continue;
+		placeSpout(5, worldgenlevel, configContext.origin(), random, config);
+
+		placeCenterColumn(depth, worldgenlevel, configContext.origin(), random, config);
+
+		placeBulb(xSize, bulbRadius, worldgenlevel, configContext.origin().relative(Direction.DOWN, bulbStartDepth), random, config);
+
+		return true;
+	}
+
+	private void placeSpout(int height, WorldGenLevel worldgenlevel, BlockPos origin, RandomSource random, StaticPowerLakeFeatureConfiguration config) {
+		for (int i = 0; i < height; i++) {
+			BlockPos pos = origin.relative(Direction.UP, i);
+			if (worldgenlevel.getBlockState(pos).isAir()) {
+				BlockState fluidBlockState = config.getFluid().getState(random, pos);
+				worldgenlevel.setBlock(pos, fluidBlockState, 2);
+				worldgenlevel.scheduleTick(pos, fluidBlockState.getBlock(), 0);
+				markAboveForPostProcessing(worldgenlevel, pos);
 			}
+		}
+	}
 
+	private void placeCenterColumn(int depth, WorldGenLevel worldgenlevel, BlockPos origin, RandomSource random, StaticPowerLakeFeatureConfiguration config) {
+		for (int i = 0; i < depth; i++) {
+			BlockPos pos = origin.relative(Direction.DOWN, i);
 			// Don't let it go below the world.
-			if (configContext.origin().getY() - y <= worldgenlevel.getMinBuildHeight()) {
+			if (pos.getY() >= worldgenlevel.getMaxBuildHeight() || pos.getY() <= worldgenlevel.getMinBuildHeight() + 2) {
 				break;
 			}
 
-			int noisyX = (int) (random.nextDouble() * 5 + xSize);
-			int noisyZ = (int) (random.nextDouble() * 5 + zSize);
-			for (int x = -noisyX; x < noisyX; x++) {
-				for (int z = -noisyZ; z < noisyZ; z++) {
-					// Get the position to place at and the existing block.
-					blockpos = configContext.origin().offset(x, -y, z);
+			if (shouldPlaceHere(worldgenlevel, config, pos)) {
+				BlockState fluidBlockState = config.getFluid().getState(random, pos);
+				worldgenlevel.setBlock(pos, fluidBlockState, 2);
+				worldgenlevel.scheduleTick(pos, fluidBlockState.getBlock(), 0);
+				markAboveForPostProcessing(worldgenlevel, pos);
+			}
+		}
+	}
 
-					// If this is an air block, ignore it.
-					if (!shouldPlaceHere(worldgenlevel, config, blockpos)) {
+	private void placeBulb(int radius, int bulbHeight, WorldGenLevel worldgenlevel, BlockPos origin, RandomSource random, StaticPowerLakeFeatureConfiguration config) {
+		int bulbRadius = bulbHeight / 2;
+		for (int y = 0; y < bulbHeight; y++) {
+			int distanceFromCenter = Math.abs(bulbRadius - y);
+			float normalizedDistanceFromCenter = (float) distanceFromCenter / bulbRadius;
+			normalizedDistanceFromCenter = 1.0f - normalizedDistanceFromCenter;
+			int sliceRadius = Math.max(1, (int) (normalizedDistanceFromCenter * radius));
+			System.out.println(sliceRadius);
+			for (int x = -sliceRadius - 1; x < sliceRadius + 1; x++) {
+				for (int z = -sliceRadius + 1; z < sliceRadius - 1; z++) {
+					float currentRadius = new Vector2D(x, z).getLength();
+					if (currentRadius > sliceRadius + 2) {
 						continue;
 					}
 
-					BlockState fluidBlock = config.getFluid().getState(random, blockpos);
-					worldgenlevel.setBlock(blockpos, fluidBlock, 2);
-					worldgenlevel.scheduleTick(blockpos, fluidBlock.getBlock(), 0);
-					markAboveForPostProcessing(worldgenlevel, blockpos);
+					// Get the position to place at and the existing block.
+					BlockPos placePos = origin.offset(x, -y, z);
+
+					// Don't let it go below the world.
+					if (placePos.getY() >= worldgenlevel.getMaxBuildHeight() || placePos.getY() <= worldgenlevel.getMinBuildHeight() + 2) {
+						break;
+					}
+
+					// If we can't place here, skip it.
+					if (!shouldPlaceHere(worldgenlevel, config, placePos)) {
+						continue;
+					}
+
+					// Set the barrier block if we're larger than the slice radius.
+					if (currentRadius > sliceRadius) {
+						BlockState wallState = config.getBarrier().getState(random, placePos);
+						worldgenlevel.setBlock(placePos, wallState, 2);
+						worldgenlevel.scheduleTick(placePos, wallState.getBlock(), 0);
+						markAboveForPostProcessing(worldgenlevel, placePos);
+					} else {
+						BlockState fluidBlockState = config.getFluid().getState(random, placePos);
+						worldgenlevel.setBlock(placePos, fluidBlockState, 2);
+						worldgenlevel.scheduleTick(placePos, fluidBlockState.getBlock(), 0);
+						markAboveForPostProcessing(worldgenlevel, placePos);
+					}
 				}
 			}
 		}
-		return true;
 	}
 
 	private boolean shouldPlaceHere(WorldGenLevel level, StaticPowerLakeFeatureConfiguration config, BlockPos pos) {
 		BlockState existingState = level.getBlockState(pos);
-		if (!canReplaceBlock(existingState)) {
+		if (existingState.is(BlockTags.FEATURES_CANNOT_REPLACE)) {
 			return false;
 		}
 
@@ -83,10 +124,9 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 			if (dir == Direction.UP) {
 				continue;
 			}
-			
-			BlockPos offsetPos = pos.relative(dir);
-			BlockState state = level.getBlockState(offsetPos);
-			if (state.isAir()) {
+
+			// Do the check like this so void air/cave air are still okay.
+			if (level.getBlockState(pos.relative(dir)).is(Blocks.AIR)) {
 				return false;
 			}
 		}

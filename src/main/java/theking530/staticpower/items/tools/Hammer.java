@@ -2,6 +2,7 @@ package theking530.staticpower.items.tools;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -13,11 +14,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -42,26 +43,26 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class Hammer extends StaticPowerItem {
 	private final ResourceLocation tier;
-	private final Item repairItem;
+	private final Supplier<Item> repairItem;
 
-	public Hammer(String name, ResourceLocation tier, Item repairItem) {
-		super(name, new Item.Properties().stacksTo(1));
+	public Hammer(ResourceLocation tier, Supplier<Item> repairItem) {
+		super(new Item.Properties().stacksTo(1));
 		this.tier = tier;
 		this.repairItem = repairItem;
 	}
 
 	@Override
 	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-		if (repair.getItem() == repairItem) {
+		if (repair.getItem() == repairItem.get()) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public ItemStack getContainerItem(ItemStack stack) {
+	public ItemStack getCraftingRemainingItem(ItemStack stack) {
 		ItemStack stackCopy = stack.copy();
-		if (stackCopy.hurt(1, RANDOM, null)) {
+		if (stackCopy.hurt(1, RandomSource.create(), null)) {
 			stackCopy.shrink(1);
 			stackCopy.setDamageValue(0);
 		}
@@ -75,7 +76,7 @@ public class Hammer extends StaticPowerItem {
 
 	@Override
 	public int getMaxDamage(ItemStack stack) {
-		return StaticPowerConfig.getTier(tier).hammerUses.get();
+		return StaticPowerConfig.getTier(tier).toolConfiguration.hammerUses.get();
 	}
 
 	@Override
@@ -91,8 +92,10 @@ public class Hammer extends StaticPowerItem {
 
 		// Add the swinging speed modifier.
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", tier.hammerDamage.get(), AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", tier.hammerSwingSpeed.get(), AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE,
+				new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", tier.toolConfiguration.hammerDamage.get(), AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED,
+				new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", tier.toolConfiguration.hammerSwingSpeed.get(), AttributeModifier.Operation.ADDITION));
 
 		return equipmentSlot == EquipmentSlot.MAINHAND ? builder.build() : super.getDefaultAttributeModifiers(equipmentSlot);
 	}
@@ -120,13 +123,16 @@ public class Hammer extends StaticPowerItem {
 				if (recipe.isPresent() && !recipe.get().isBlockType()) {
 
 					// Perform the crafting only on the server.
-					if (!player.getCommandSenderWorld().isClientSide) {
+					if (!player.getCommandSenderWorld().isClientSide()) {
 						if (craftRecipe(stack, (Player) player, pos, recipe.get())) {
 							entity.getItem().shrink(recipe.get().getInputItem().getCount());
 							entity.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.5F, (float) (0.8F + Math.random() * 0.3));
-							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.00D);
-							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.00D);
-							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.LAVA, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.1D);
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
+									0.00D);
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D,
+									0.0D, 0.00D);
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.LAVA, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
+									0.1D);
 							crafted = true;
 							break;
 						}
@@ -135,13 +141,13 @@ public class Hammer extends StaticPowerItem {
 			}
 
 			// If we haven't crafted, still play a sound on the server.
-			if (!player.getCommandSenderWorld().isClientSide) {
+			if (!player.getCommandSenderWorld().isClientSide()) {
 				if (crafted) {
 					// Get the tier.
 					StaticPowerTier tier = StaticPowerConfig.getTier(this.tier);
 
 					// Set the cooldown before the player can hammer again.
-					player.getCooldowns().addCooldown(stack.getItem(), tier.hammerCooldown.get());
+					player.getCooldowns().addCooldown(stack.getItem(), tier.toolConfiguration.hammerCooldown.get());
 				} else {
 					player.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.5F, (float) (1.2F + Math.random() * 0.3));
 					player.getCooldowns().addCooldown(stack.getItem(), 5);
@@ -152,11 +158,10 @@ public class Hammer extends StaticPowerItem {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
 		// Only perform on server.
-		if (player.getCommandSenderWorld().isClientSide) {
+		if (player.getCommandSenderWorld().isClientSide()) {
 			return super.onBlockStartBreak(itemstack, pos, player);
 		}
 
@@ -188,8 +193,8 @@ public class Hammer extends StaticPowerItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent("Max Uses: " + getMaxDamage(stack)));
-		tooltip.add(new TextComponent("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
+		tooltip.add(Component.literal("Max Uses: " + getMaxDamage(stack)));
+		tooltip.add(Component.literal("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
 	}
 
 	protected boolean craftRecipe(ItemStack hammer, Player player, BlockPos pos, HammerRecipe recipe) {
@@ -204,7 +209,7 @@ public class Hammer extends StaticPowerItem {
 			}
 
 			// Damage the item.
-			if (hammer.hurt(1, RANDOM, null)) {
+			if (hammer.hurt(1, RandomSource.create(), null)) {
 				hammer.shrink(1);
 				hammer.setDamageValue(0);
 			}

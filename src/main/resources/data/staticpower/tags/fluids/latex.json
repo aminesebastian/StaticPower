@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "staticpower:latex"
+    "staticpower:latex",
+    "staticpower:latex_flowing"
   ]
 }

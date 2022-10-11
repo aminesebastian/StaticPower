@@ -1,6 +1,6 @@
 package theking530.staticpower.cables.item;
 
-import theking530.staticpower.cables.network.DestinationWrapper;
+import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 
 public class RetrivalSourceWrapper {
 	private final DestinationWrapper destinationWrapper;

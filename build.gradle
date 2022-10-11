@@ -9,6 +9,11 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
@@ -30,7 +35,7 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle' 
 
 minecraft {
-	mappings channel: 'official', version: '1.18.1'
+	mappings channel: 'official', version: '1.19.2'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
@@ -100,6 +105,19 @@ minecraft {
     }
 }
 
+configurations {
+	// Create the library configuration, where our non-mod libraries will be added to
+	library
+	// Any dependency in the library configuration will also be added to the implementation configuration
+	implementation.extendsFrom library
+}
+
+minecraft.runs.all {
+	lazyToken('minecraft_classpath') {
+		configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+	}
+}
+
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
@@ -107,9 +125,10 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
 	// compile against the JEI API but do not include it at runtime
-	compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
-	// at runtime, use the full JEI jar
-	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+	compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
+	compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+	// at runtime, use the full JEI jar for Forge
+	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 	
 	compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
@@ -117,6 +136,13 @@ dependencies {
 	// Visit https://www.curseforge.com/minecraft/mc-mods/jade/files/all
     // to get the latest version
     implementation fg.deobf("curse.maven:jade-324717:${jade_version}")
+	
+	implementation fg.deobf("codechicken:CodeChickenLib:${mc_version}-${ccl_version}:universal")
+	
+	// SQL driver
+	library ('org.xerial:sqlite-jdbc:3.39.3.0') {
+        transitive = false
+    }
 }
 
 repositories {
@@ -124,14 +150,6 @@ repositories {
 		// location of the maven that hosts JEI files
 		name = "Progwml6 maven"
 		url = "https://dvs1.progwml6.com/files/maven/"
-	}
-	maven {
-		name = "tterrag maven"
-		url = "https://maven.tterrag.com/"
-	}	
-	maven {
-		name = "ftb maven"
-		url = "https://maven.latmod.com/"
 	}
 	maven { 
 		name = "Patchouli Maven"
@@ -143,46 +161,40 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+	maven { 
+		url 'https://oss.sonatype.org/content/repositories/snapshots' 
+	}
+	maven {
+		url 'https://maven.covers1624.net'
+	}
 }
 
-// Example for how to get properties into the manifest for reading by the runtime..
 jar {
+	archiveClassifier = 'slim'
     manifest {
         attributes([
-            "Specification-Title": "examplemod",
-            "Specification-Vendor": "examplemodsareus",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"examplemodsareus",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+			"Specification-Title"     : "staticpower",
+			"Specification-Vendor"    : "theking530",
+			"Specification-Version"   : "1", // We are version 1 of ourselves
+			"Implementation-Title"    : project.name,
+			"Implementation-Version"  : project.jar.archiveVersion,
+			"Implementation-Vendor"   : "theking530",
+			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
 
-task buildApiJar(type: Jar) {
-    baseName = archivesBaseName+'-'+apiVersion+'-api'
-
-    from zipTree(jar.outputs.getFiles().getSingleFile()).matching {
-        include 'theking530/api/**'
-    }
+shadowJar {
+   archiveFileName = jar.archiveFileName
+   configurations = [project.configurations.library]
+   relocate 'org.xerial:sqlite-jdbc', "${project.group}.relocated.sqlite-jdbc"
+   finalizedBy 'reobfShadowJar'
 }
 
-task buildCoreJar(type: Jar) {
-    baseName = archivesBaseName+'-'+coreVersion+'-api'
-
-    from zipTree(jar.outputs.getFiles().getSingleFile()).matching {
-        include 'theking530/staticcore/**'
-    }
-}
 
 task deobfJar(type: Jar, dependsOn: 'jar') {
     from "build/source/main"
     classifier "dev"
-}
-
-artifacts {
-    archives deobfJar
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -191,27 +203,15 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 build.dependsOn sourcesJar
-buildApiJar.dependsOn sourcesJar
+jar.finalizedBy('reobfJar')
 
 artifacts {
+	archives deobfJar
 	archives sourcesJar
 }
 
-// Example configuration to allow publishing using the maven-publish task
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar') 
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-//publish.dependsOn('reobfJar')
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
-    }
+reobf {
+    shadowJar {}
 }
+
+jar.dependsOn("shadowJar")

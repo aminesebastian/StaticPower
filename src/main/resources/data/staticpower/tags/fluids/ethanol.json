@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "staticpower:ethanol"
+    "staticpower:ethanol",
+    "staticpower:ethanol_flowing"
   ]
 }

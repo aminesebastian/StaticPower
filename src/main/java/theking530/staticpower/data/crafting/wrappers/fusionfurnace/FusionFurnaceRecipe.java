@@ -12,9 +12,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class FusionFurnaceRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<FusionFurnaceRecipe> RECIPE_TYPE = RecipeType.register("fusion_furnace");
+	public static final String ID = "fusion_furnace";
+	public static final RecipeType<FusionFurnaceRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FusionFurnaceRecipe>();
 
 	private final List<StaticPowerIngredient> inputs;
 	private final ProbabilityItemStackOutput output;

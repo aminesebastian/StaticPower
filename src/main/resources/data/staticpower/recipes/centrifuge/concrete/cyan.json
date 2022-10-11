@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:centrifuge_recipe",
+	"type": "staticpower:centrifuge",
 	"input": {
 		"item": "minecraft:cyan_concrete_powder",
 		"count": 8

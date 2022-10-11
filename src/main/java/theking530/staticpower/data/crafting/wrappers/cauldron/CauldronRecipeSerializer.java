@@ -8,21 +8,17 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class CauldronRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CauldronRecipe> {
+public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<CauldronRecipe> {
 	public static final CauldronRecipeSerializer INSTANCE = new CauldronRecipeSerializer();
 	private static final Logger LOGGER = LogManager.getLogger(CauldronRecipeSerializer.class);
-
-	private CauldronRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "cauldron_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "cauldron_recipe");
 
 	@Override
 	public CauldronRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -83,5 +79,6 @@ public class CauldronRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		recipe.getOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getRequiredFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());
+	
 	}
 }

@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"staticpower:oil_light"
+		"staticpower:oil_light",
+		"staticpower:oil_light_flowing"
 	]
 }

@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder",
+	"input": {
+		"tag": "forge:ores/uranium"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_uranium",
+			"count": 2
+		}
+	]
+}

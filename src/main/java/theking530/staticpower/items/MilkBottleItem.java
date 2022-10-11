@@ -18,8 +18,8 @@ import net.minecraft.world.level.Level;
 public class MilkBottleItem extends StaticPowerItem {
 	public final int drinkDuration;
 
-	public MilkBottleItem(String name, int drinkDuration) {
-		super(name, new Item.Properties().stacksTo(16));
+	public MilkBottleItem(int drinkDuration) {
+		super(new Item.Properties().stacksTo(16));
 		this.drinkDuration = drinkDuration;
 	}
 

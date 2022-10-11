@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,9 +18,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.PowerEnergyInterface;
+import net.minecraftforge.client.event.ModelEvent;
+import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.IStaticPowerStorage;
+import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
+import theking530.api.energy.StaticVoltageRange;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -31,8 +34,7 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 	private static final String ACTIVATED_TAG = "activated";
 	public final ResourceLocation tier;
 
-	public BatteryPack(String name, ResourceLocation tier) {
-		super(name, 0);
+	public BatteryPack(ResourceLocation tier) {
 		this.tier = tier;
 	}
 
@@ -82,59 +84,58 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 
 		// If we're in a player's inventory.
-		if (isActivated(stack) && entityIn instanceof Player) {
+		if (isActivated(stack) && entityIn instanceof Player && !worldIn.isClientSide()) {
 			// Get the power capability.
-			stack.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
-				// If power is stored, attempt to charge items.
-				if (powerStorage.getStoredPower() > 0) {
-					// Get the player.
-					Player player = (Player) entityIn;
+			IStaticPowerStorage powerStorage = stack.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).orElse(null);
+			if (powerStorage == null) {
+				return;
+			}
+			
+			// If power is stored, attempt to charge items.
+			if (powerStorage.getStoredPower() > 0) {
+				// Get the player.
+				Player player = (Player) entityIn;
 
-					// Get all the chargeable items.
-					List<PowerEnergyInterface> items = new ArrayList<PowerEnergyInterface>();
+				// Get all the chargeable items.
+				List<IStaticPowerStorage> items = new ArrayList<IStaticPowerStorage>();
 
-					// Iterate through the inventory.
-					for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-						// Get the stack in the slot. Skip if its empty.
-						ItemStack inventoryStack = player.getInventory().getItem(i);
-						if (inventoryStack.isEmpty() || inventoryStack == stack || inventoryStack.getItem() instanceof BatteryPack) {
-							continue;
-						}
-
-						// Capture the energy interface as needed.
-						PowerEnergyInterface energyInterface = PowerEnergyInterface.getFromItemStack(inventoryStack);
-						if (energyInterface != null) {
-							if (energyInterface.getEnergyStored() < energyInterface.getMaxEnergyStored()) {
-								items.add(energyInterface);
-							}
-						}
+				// Iterate through the inventory.
+				for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+					// Get the stack in the slot. Skip if its empty.
+					ItemStack inventoryStack = player.getInventory().getItem(i);
+					if (inventoryStack.isEmpty() || inventoryStack == stack || inventoryStack.getItem() instanceof BatteryPack) {
+						continue;
 					}
 
-					// How much power should we distribute?
-					if (items.size() > 0) {
-						long perItemDistribute = powerStorage.getStoredPower() / items.size();
-						perItemDistribute = SDMath.clamp(perItemDistribute, 1, powerStorage.getCapacity() / 100);
+					if (EnergyHandlerItemStackUtilities.isEnergyContainer(inventoryStack)) {
+						items.add(EnergyHandlerItemStackUtilities.getEnergyContainer(inventoryStack).orElse(null));
+					}
+				}
 
-						for (PowerEnergyInterface powerInterface : items) {
-							long charged = powerInterface.receivePower(perItemDistribute, true);
-							long drained = powerStorage.drainPower(charged, false);
-							powerInterface.receivePower(drained, false);
+				// How much power should we distribute?
+				if (items.size() > 0) {
+					double perItemDistribute = powerStorage.getStoredPower() / items.size();
+					perItemDistribute = SDMath.clamp(perItemDistribute, 1, powerStorage.getCapacity() / 100);
+					perItemDistribute = Math.min(perItemDistribute, powerStorage.getMaximumPowerOutput());
 
-							// Break out if we used all the power.
-							if (powerStorage.getStoredPower() <= 0) {
-								break;
-							}
+					for (IStaticPowerStorage otherItem : items) {
+						double charged = otherItem.addPower(new PowerStack(perItemDistribute, powerStorage.getOutputVoltage()), false);
+						powerStorage.drainPower(charged, false);
+
+						// Break out if we used all the power.
+						if (powerStorage.getStoredPower() <= 0) {
+							break;
 						}
 					}
 				}
-			});
+			}
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive"));
+		tooltip.add(Component.translatable(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 
@@ -145,12 +146,32 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new BatteryPackItemModel(existingModel);
 	}
 
 	@Override
-	public long getCapacity() {
-		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 3;
+	public double getCapacity() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get() * 3;
+	}
+
+	@Override
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
+	}
+
+	@Override
+	public double getMaximumInputPower() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
+	}
+
+	@Override
+	public StaticPowerVoltage getOutputVoltage() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
+	}
+
+	@Override
+	public double getMaximumOutputPower() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
 }

@@ -1,7 +1,6 @@
 package theking530.staticpower.cables.attachments.digistore.iobus;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.DrawableWidget;
@@ -23,8 +22,8 @@ public class GuiDigistoreIOBus extends AbstractCableAttachmentGui<ContainerDigis
 		SpriteDrawable importDrawable = new SpriteDrawable(StaticPowerSprites.IMPORT, 16, 16);
 		SpriteDrawable exportDrawable = new SpriteDrawable(StaticPowerSprites.EXPORT, 16, 16);
 
-		registerWidget(new DrawableWidget<SpriteDrawable>(6, 20, 16, 16, importDrawable).setTooltip(new TextComponent("Imports")));
-		registerWidget(new DrawableWidget<SpriteDrawable>(6, 45, 16, 16, exportDrawable).setTooltip(new TextComponent("Exports")));
+		registerWidget(new DrawableWidget<SpriteDrawable>(6, 20, 16, 16, importDrawable).setTooltip(Component.literal("Imports")));
+		registerWidget(new DrawableWidget<SpriteDrawable>(6, 45, 16, 16, exportDrawable).setTooltip(Component.literal("Exports")));
 
 		// Add island for the upgrades.
 		registerWidget(new GuiIslandWidget(-25, 8, 30, 64));

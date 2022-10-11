@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+		"item": "staticpower:plate_energized"
+		},
+		{
+			"tag": "staticpower:wire_cutters"
+		}
+	],
+	"result": {
+		"item": "staticpower:wire_energized",
+		"count": 3
+	}
+}

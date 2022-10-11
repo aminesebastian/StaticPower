@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:auto_smith_recipe",
+	"type": "staticpower:auto_smith",
 	"smith_target": {
 			"tag": "staticpower:repairable/gold_repairable"
 	},

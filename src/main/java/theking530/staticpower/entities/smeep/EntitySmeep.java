@@ -40,7 +40,7 @@ public class EntitySmeep extends Sheep {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(3, new TemptGoal(this, 1.1D, Ingredient.of(ModItems.StaticCrop), false));
+		this.goalSelector.addGoal(3, new TemptGoal(this, 1.1D, Ingredient.of(ModItems.StaticCrop.get()), false));
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class EntitySmeep extends Sheep {
 
 			java.util.List<ItemStack> items = new java.util.ArrayList<>();
 			for (int j = 0; j < i; ++j) {
-				items.add(new ItemStack(ModBlocks.SmeepWool));
+				items.add(new ItemStack(ModBlocks.SmeepWool.get()));
 			}
 			return items;
 		}
@@ -67,7 +67,7 @@ public class EntitySmeep extends Sheep {
 
 	@Override
 	public boolean isFood(ItemStack stack) {
-		return stack.getItem() == ModItems.StaticCrop;
+		return stack.getItem() == ModItems.StaticCrop.get();
 	}
 
 }

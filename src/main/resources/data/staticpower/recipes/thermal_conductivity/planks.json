@@ -3,11 +3,10 @@
 	"blocks": [
 		"minecraft:planks"
 	],
-	"conductivity": "0.1",
 	"overheating": {
 		"block": {
 			"Name": "minecraft:fire"
 		},
-		"temperature": 300
+		"temperature": 300000
 	}
 }

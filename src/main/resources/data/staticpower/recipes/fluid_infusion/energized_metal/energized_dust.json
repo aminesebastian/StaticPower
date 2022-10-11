@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion",
+	"input": {
+		"tag": "forge:dusts/gold"
+	},
+	"fluid": {
+		"fluid": "staticpower:fluid_energized",
+		"volume": 250
+	},
+	"result": {
+		"item": "staticpower:ingot_energized"
+	}
+}

@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -42,8 +41,8 @@ public class ItemFilter extends StaticPowerItem {
 
 	public ResourceLocation filterTier;
 
-	public ItemFilter(String name, ResourceLocation tier) {
-		super(name, new Properties().stacksTo(1));
+	public ItemFilter(ResourceLocation tier) {
+		super(new Properties().stacksTo(1));
 		filterTier = tier;
 	}
 
@@ -53,28 +52,30 @@ public class ItemFilter extends StaticPowerItem {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		// Initialize the tag.
-		if (!stack.hasTag()) {
-			stack.setTag(new CompoundTag());
-			stack.getTag().putBoolean(WHITE_LIST_MOD_KEY, false);
-			stack.getTag().putBoolean(MATCH_NBT_KEY, false);
-			stack.getTag().putBoolean(MATCH_TAGS_DICT_KEY, false);
-			stack.getTag().putBoolean(MATCH_MOD_KEY, false);
-		}
+		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
+			// Initialize the tag.
+			if (!stack.hasTag()) {
+				stack.setTag(new CompoundTag());
+				stack.getTag().putBoolean(WHITE_LIST_MOD_KEY, false);
+				stack.getTag().putBoolean(MATCH_NBT_KEY, false);
+				stack.getTag().putBoolean(MATCH_TAGS_DICT_KEY, false);
+				stack.getTag().putBoolean(MATCH_MOD_KEY, false);
+			}
 
-		// Add the inventory.
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory(
-				"default", stack, StaticPowerConfig.getTier(filterTier).itemFilterSlots.get()));
+			// Add the inventory.
+			return new ItemStackMultiCapabilityProvider(stack, nbt)
+					.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(filterTier).itemFilterSlots.get()));
+		}
+		return null;
 	}
 
 	/**
 	 * When right clicked, open the filter UI.
 	 */
 	@Override
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
-			InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
 		if (!world.isClientSide && !player.isShiftKeyDown()) {
-			NetworkGUI.openGui((ServerPlayer) player, new ItemFilterContainerProvider(item), buff -> {
+			NetworkGUI.openScreen((ServerPlayer) player, new ItemFilterContainerProvider(item), buff -> {
 				buff.writeInt(player.getInventory().selected);
 			});
 			return InteractionResultHolder.success(item);
@@ -159,13 +160,12 @@ public class ItemFilter extends StaticPowerItem {
 				boolean empty = true;
 				for (int i = 0; i < inv.getSlots(); i++) {
 					if (!inv.getStackInSlot(i).isEmpty()) {
-						tooltip.add(new TextComponent("Slot " + (i + 1) + ": ")
-								.append(inv.getStackInSlot(i).getHoverName()));
+						tooltip.add(Component.literal("Slot " + (i + 1) + ": ").append(inv.getStackInSlot(i).getHoverName()));
 						empty = false;
 					}
 				}
 				if (empty) {
-					tooltip.add(new TextComponent(ChatFormatting.ITALIC + "Empty"));
+					tooltip.add(Component.literal(ChatFormatting.ITALIC + "Empty"));
 				}
 			}
 		}

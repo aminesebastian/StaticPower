@@ -16,24 +16,24 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.digistorenetwork.digistore.TileEntityDigistore;
 
 public class WorldRenderingUtilities {
-	public static void drawItemInWorld(TileEntityBase tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, PoseStack matrixStack,
-			MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public static void drawItemInWorld(BlockEntityBase tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks,
+			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		drawItemInWorld(tileEntity, item, transformType, offset, scale, Vector3D.ZERO, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 	}
 
@@ -49,13 +49,14 @@ public class WorldRenderingUtilities {
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	public static void drawItemInWorld(TileEntityBase tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, Vector3D rotation, float partialTicks,
-			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public static void drawItemInWorld(BlockEntityBase tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, Vector3D rotation,
+			float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		matrixStack.pushPose();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
 		matrixStack.mulPose(new Quaternion(rotation.getX(), rotation.getY(), rotation.getZ(), true));
-		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(item, tileEntity.getLevel(), null, combinedLight); // TODO: Figure out if the last parameter here is correct.
+		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(item, tileEntity.getLevel(), null, combinedLight); // TODO: Figure out if the last parameter here
+																																		// is correct.
 		Minecraft.getInstance().getItemRenderer().render(item, transformType, false, matrixStack, buffer, combinedLight, combinedOverlay, itemModel);
 		matrixStack.popPose();
 	}
@@ -120,8 +121,8 @@ public class WorldRenderingUtilities {
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	public static void drawTextInWorld(BlockEntityRenderDispatcher renderDispatcher, String text, TileEntityBase tileEntity, Color color, Vector3D offset, float scale, float partialTicks,
-			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public static void drawTextInWorld(BlockEntityRenderDispatcher renderDispatcher, String text, BlockEntityBase tileEntity, SDColor color, Vector3D offset, float scale,
+			float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (text == null || text.isEmpty())
 			return;
 
@@ -149,11 +150,11 @@ public class WorldRenderingUtilities {
 	 * @param tint          The tint to apply.
 	 * @param combinedLight The combined light level at the block.
 	 */
-	public static void drawTexturedQuadLit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint, int combinedLight) {
+	public static void drawTexturedQuadLit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, SDColor tint,
+			int combinedLight) {
 		matrixStack.pushPose();
 		VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
-		@SuppressWarnings("deprecation")
-		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
+		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(texture);
 
 		float uDelta = sprite.getU1() - sprite.getU0();
 		float vDelta = sprite.getV1() - sprite.getV0();
@@ -171,33 +172,38 @@ public class WorldRenderingUtilities {
 		matrixStack.popPose();
 	}
 
-	public static void drawTexturedQuadUnlit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint) {
+	public static void drawTexturedQuadUnlit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv,
+			SDColor tint) {
 		drawTexturedQuadLit(texture, matrixStack, buffer, offset, scale, uv, tint, 15728880);
 	}
 
-	public static void drawRectangleLit(PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Color tint, int combinedLight) {
+	public static void drawRectangleLit(PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, SDColor tint, int combinedLight) {
 		matrixStack.pushPose();
 		VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
 
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
-		builder.vertex(matrixStack.last().pose(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0).endVertex();
-		builder.vertex(matrixStack.last().pose(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0).endVertex();
-		builder.vertex(matrixStack.last().pose(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0).endVertex();
-		builder.vertex(matrixStack.last().pose(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0).endVertex();
+		builder.vertex(matrixStack.last().pose(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0)
+				.endVertex();
+		builder.vertex(matrixStack.last().pose(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0)
+				.endVertex();
+		builder.vertex(matrixStack.last().pose(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0)
+				.endVertex();
+		builder.vertex(matrixStack.last().pose(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0)
+				.endVertex();
 		matrixStack.popPose();
 	}
 
-	public static void drawRectangleUnlit(PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Color color) {
+	public static void drawRectangleUnlit(PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, SDColor color) {
 		drawRectangleLit(matrixStack, buffer, offset, scale, color, 15728880);
 	}
 
-	public static int getForwardFacingLightLevel(TileEntityBase tileEntity) {
+	public static int getForwardFacingLightLevel(BlockEntityBase tileEntity) {
 		return LevelRenderer.getLightColor(tileEntity.getLevel(), tileEntity.getBlockPos().relative(tileEntity.getFacingDirection()));
 	}
 
 	public static void drawFluidQuadLit(FluidStack fluid, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, int lightlevel) {
-		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+		SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 		TextureAtlasSprite icon = GuiDrawUtilities.getStillFluidSprite(fluid);
 		drawTexturedQuadLit(icon.getName(), matrixStack, buffer, offset, scale, uv, fluidColor, lightlevel);
 	}
@@ -206,12 +212,13 @@ public class WorldRenderingUtilities {
 		drawFluidQuadLit(fluid, matrixStack, buffer, offset, scale, uv, 15728880);
 	}
 
-	public static void drawLine(PoseStack matrixStack, MultiBufferSource buffer, Vector3D start, Vector3D end, float thickness, Color color) {
+	public static void drawLine(PoseStack matrixStack, MultiBufferSource buffer, Vector3D start, Vector3D end, float thickness, SDColor color) {
 		// TODO: Find a workaround for this! GlStateManager._lineWidth(thickness);
 		VertexConsumer builder = buffer.getBuffer(RenderType.lines());
-		builder.vertex(matrixStack.last().pose(), start.getX(), start.getY(), start.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(1.0f, 0.0f, 0.0f)
-				.endVertex();
-		builder.vertex(matrixStack.last().pose(), end.getX(), end.getY(), end.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(1.0f, 0.0f, 0.0f).endVertex();
+		builder.vertex(matrixStack.last().pose(), start.getX(), start.getY(), start.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+				.normal(1.0f, 0.0f, 0.0f).endVertex();
+		builder.vertex(matrixStack.last().pose(), end.getX(), end.getY(), end.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+				.normal(1.0f, 0.0f, 0.0f).endVertex();
 	}
 
 	/**

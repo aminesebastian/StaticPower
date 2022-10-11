@@ -6,6 +6,7 @@ import java.util.Collections;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -37,7 +38,6 @@ public class RaytracingUtilities {
 		float f6 = f3 * f4;
 		float f7 = f2 * f4;
 		double d0 = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue();
-		;
 		Vec3 vector3d1 = vector3d.add((double) f6 * d0, (double) f5 * d0, (double) f7 * d0);
 		return worldIn.clip(new ClipContext(vector3d, vector3d1, ClipContext.Block.OUTLINE, fluidMode, player));
 	}
@@ -69,7 +69,7 @@ public class RaytracingUtilities {
 
 	public static AdvancedRayTraceResult<BlockHitResult> collisionRayTrace(BlockPos pos, Vec3 start, Vec3 end, Collection<AABB> boxes) {
 		double minDistance = Double.POSITIVE_INFINITY;
-		AdvancedRayTraceResult<BlockHitResult> hit = null;
+		AdvancedRayTraceResult<BlockHitResult> hit = AdvancedRayTraceResult.MISS;
 		int i = -1;
 
 		for (AABB aabb : boxes) {
@@ -96,9 +96,10 @@ public class RaytracingUtilities {
 		return new AdvancedRayTraceResult<>(result, bounds);
 	}
 
-	public static class AdvancedRayTraceResult<T extends HitResult> {
+	public static class AdvancedRayTraceResult<T extends BlockHitResult> {
+		public static final AdvancedRayTraceResult<BlockHitResult> MISS = new AdvancedRayTraceResult<BlockHitResult>(null, null);
 		public final AABB bounds;
-		public final T hit;
+		private final T hit;
 
 		public AdvancedRayTraceResult(T mop, AABB aabb) {
 			hit = mop;
@@ -107,6 +108,20 @@ public class RaytracingUtilities {
 
 		public boolean valid() {
 			return hit != null && bounds != null;
+		}
+
+		public Direction getDirection() {
+			if (hit != null) {
+				return hit.getDirection();
+			}
+			return null;
+		}
+
+		public HitResult.Type getType() {
+			if (hit != null) {
+				return hit.getType();
+			}
+			return HitResult.Type.MISS;
 		}
 
 		public double squareDistanceTo(Vec3 vec) {

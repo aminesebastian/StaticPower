@@ -3,6 +3,5 @@
 	"fluids": [
 		"minecraft:flowing_lava"
 	],
-	"conductivity": "0.0",
-	"heating_amount": 5
+	"temperature": 1000000
 }

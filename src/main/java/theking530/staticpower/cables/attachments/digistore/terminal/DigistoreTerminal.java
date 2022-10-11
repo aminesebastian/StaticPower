@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -17,8 +16,8 @@ import theking530.staticpower.cables.attachments.digistore.terminalbase.Abstract
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class DigistoreTerminal extends AbstractDigistoreTerminalAttachment {
-	public DigistoreTerminal(String name) {
-		super(name, StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON, StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT);
+	public DigistoreTerminal() {
+		super( StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON, StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT);
 	}
 
 	@Override
@@ -38,12 +37,12 @@ public class DigistoreTerminal extends AbstractDigistoreTerminalAttachment {
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment) {
-		return 2000;
+	public double getPowerUsage(ItemStack attachment) {
+		return 2;
 	}
 	
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.digistore_terminal_tooltip"));
+		tooltip.add(Component.translatable("gui.staticpower.digistore_terminal_tooltip"));
 	}
 }

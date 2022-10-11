@@ -6,8 +6,6 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -53,7 +51,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 
 		// Update the info tab label.
 		getTabManager().registerTab(infoTab = new GuiInfoTab(110));
-		infoTab.addLine("desc", new TextComponent("Filter items going into an inventory."));
+		infoTab.addLine("desc", Component.literal("Filter items going into an inventory."));
 
 		registerWidget(whitelistButton = new SpriteButton(45, 40, 20, 20, StaticPowerSprites.FILTER_WHITELIST, null, this::buttonPressed));
 		registerWidget(nbtButton = new SpriteButton(67, 40, 20, 20, StaticPowerSprites.FILTER_NBT, null, this::buttonPressed));
@@ -61,11 +59,11 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		registerWidget(modButton = new SpriteButton(111, 40, 20, 20, StaticPowerSprites.FILTER_MOD, null, this::buttonPressed));
 
 		whitelistButton.setRegularTexture(getItemFilter().isWhiteListMode(getItemStack()) ? StaticPowerSprites.FILTER_WHITELIST : StaticPowerSprites.FILTER_BLACKLIST);
-		whitelistButton.setTooltip(new TranslatableComponent(getItemFilter().isWhiteListMode(getItemStack()) ? "Whitelist" : "Blacklist"));
+		whitelistButton.setTooltip(Component.translatable(getItemFilter().isWhiteListMode(getItemStack()) ? "Whitelist" : "Blacklist"));
 
-		nbtButton.setToggleable(true).setToggled(getItemFilter().filterForNBT(getItemStack())).setTooltip(new TranslatableComponent("Enable NBT Match"));
-		tagButton.setToggleable(true).setToggled(getItemFilter().filterForTag(getItemStack())).setTooltip(new TranslatableComponent("Enable Ore Dictionary Match"));
-		modButton.setToggleable(true).setToggled(getItemFilter().filterForMod(getItemStack())).setTooltip(new TranslatableComponent("Enable Mod Match"));
+		nbtButton.setToggleable(true).setToggled(getItemFilter().filterForNBT(getItemStack())).setTooltip(Component.translatable("Enable NBT Match"));
+		tagButton.setToggleable(true).setToggled(getItemFilter().filterForTag(getItemStack())).setTooltip(Component.translatable("Enable Ore Dictionary Match"));
+		modButton.setToggleable(true).setToggled(getItemFilter().filterForMod(getItemStack())).setTooltip(Component.translatable("Enable Mod Match"));
 
 		if (this.getMenu().filterInventory.getSlots() > 9) {
 			int additionalHeight = 16;
@@ -81,7 +79,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		if (button == whitelistButton) {
 			getItemFilter().setWhitelistMode(getItemStack(), !getItemFilter().isWhiteListMode(getItemStack()));
 			whitelistButton.setRegularTexture(getItemFilter().isWhiteListMode(getItemStack()) ? StaticPowerSprites.FILTER_WHITELIST : StaticPowerSprites.FILTER_BLACKLIST);
-			whitelistButton.setTooltip(new TranslatableComponent(getItemFilter().isWhiteListMode(getItemStack()) ? "Whitelist" : "Blacklist"));
+			whitelistButton.setTooltip(Component.translatable(getItemFilter().isWhiteListMode(getItemStack()) ? "Whitelist" : "Blacklist"));
 		}
 		if (button == nbtButton) {
 			getItemFilter().setFilterForNBT(getItemStack(), !getItemFilter().filterForNBT(getItemStack()));

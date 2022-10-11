@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion",
+	"input": {
+		"tag": "forge:silicon"
+	},
+	"fluid": {
+		"fluid": "staticpower:fluid_energized",
+		"volume": 100
+	},
+	"result": {
+		"item": "staticpower:silicon_doped_energized"
+	}
+}

@@ -4,7 +4,7 @@
   "model": "staticpower:models/block/conveyors/conveyor_ramp_down.obj",
   "materialLibraryOverride": true,
   "materialLibraryOverride": "staticpower:models/block/conveyors/conveyor_ramp_down_basic.mtl",
-  "flip-v": true,
+  "flip_v": true,
   "textures": {
 	"particle": "staticpower:blocks/conveyors/conveyor_top"
   },

@@ -1,0 +1,7 @@
+{
+	"parent": "staticpower:block/power/wire_terminals/wire_terminal_lv",
+	"textures": {
+		"particle": "staticpower:blocks/cables/terminals/ev_terminal",
+		"texture": "staticpower:blocks/cables/terminals/ev_terminal"
+	}
+}

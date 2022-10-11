@@ -9,15 +9,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.items.InventoryComponent;
 
 public class StaticPowerContainerSlot extends SlotItemHandler {
 	private @Nullable InventoryComponent inventoryComponent;
@@ -27,7 +27,8 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	private boolean drawFluidContainerAsFluid;
 	private boolean isEnabled;
 
-	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition, @Nonnull MachineSideMode mode) {
+	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition,
+			@Nonnull MachineSideMode mode) {
 		super(itemHandler, index, xPosition, yPosition);
 		this.previewItem = previewItem;
 		this.previewAlpha = previewAlpha;
@@ -102,7 +103,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 			GuiDrawUtilities.drawItem(matrixStack, getPreviewItem(), x, y, 0.0f, getPreviewAlpha());
 		}
 		if (drawFluidContainerAsFluid) {
-			IFluidHandlerItem fluidItem = getItem().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);
+			IFluidHandlerItem fluidItem = getItem().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);
 			if (fluidItem != null) {
 				if (fluidItem.getTanks() > 0) {
 					RenderSystem.enableDepthTest();

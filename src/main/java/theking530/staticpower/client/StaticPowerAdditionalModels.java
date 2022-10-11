@@ -8,7 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ForgeModelBakery;
+import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerAdditionalModels {
@@ -255,23 +255,22 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation TURBINE_BLADES_ENERGIZED = registerModel("block/machines/turbine_blades/turbine_blades_energized");
 	public static final ResourceLocation TURBINE_BLADES_LUMUM = registerModel("block/machines/turbine_blades/turbine_blades_lumum");
 	public static final ResourceLocation TURBINE_BLADES_CREATIVE = registerModel("block/machines/turbine_blades/turbine_blades_creative");
-	
 
 	static {
 		CABLE_REDSTONE_BASIC = new HashMap<>();
 		for (int i = 0; i < 16; i++) {
 			ChatFormatting formatting = ChatFormatting.values()[i];
 			String name = formatting.name().toLowerCase();
-			CABLE_REDSTONE_BASIC.put(name,
-					new ResourceLocation[] { registerModel("block/cables/redstone/basic/" + name + "/straight"), registerModel("block/cables/redstone/basic/" + name + "/extension") });
+			CABLE_REDSTONE_BASIC.put(name, new ResourceLocation[] { registerModel("block/cables/redstone/basic/" + name + "/straight"),
+					registerModel("block/cables/redstone/basic/" + name + "/extension") });
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void registerModels() {
+	public static void registerModels(ModelEvent.RegisterAdditional event) {
 		for (ResourceLocation model : MODELS) {
-			ForgeModelBakery.addSpecialModel(model);
-			StaticPower.LOGGER.info(String.format("Loading additional model: %1$s.", model.toString()));
+			event.register(model);
+			StaticPower.LOGGER.trace(String.format("Loading additional model: %1$s.", model.toString()));
 		}
 	}
 

@@ -2,8 +2,8 @@ package theking530.api.attributes.defenitions;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.FloatAttributeModifier;
@@ -114,6 +114,6 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 
 		String sign = difference > 0 ? "+" : difference < 0 ? "-" : "";
 		String color = difference > 0 ? ChatFormatting.GREEN.toString() : ChatFormatting.RED.toString();
-		return super.getAttributeTitle(false).append(" ").append(new TextComponent(color + sign + difference));
+		return super.getAttributeTitle(false).append(" ").append(Component.literal(color + sign + difference));
 	}
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.api.attributes.capability.CapabilityAttributable;
@@ -30,7 +29,7 @@ public class AttributeUtilities {
 
 			// Add the header and footer.
 			if (attributeTooltips.size() > 0) {
-				tooltip.add(new TextComponent(""));
+				tooltip.add(Component.literal(""));
 				tooltip.addAll(attributeTooltips);
 			}
 		});

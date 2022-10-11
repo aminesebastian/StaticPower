@@ -12,18 +12,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.PacketDistributor;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
-import theking530.staticcore.network.NetworkMessage;
-import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.network.TileEntityBasicSyncPacket;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.items.InventoryComponent;
+import theking530.staticpower.network.BlockEntityBasicSyncPacket;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> extends StaticPowerContainer {
+public abstract class StaticPowerTileEntityContainer<T extends BlockEntityBase> extends StaticPowerContainer {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerTileEntityContainer.class);
-	public static final int DEFAULT_SYNC_TIME = 2;
+	public static final int DEFAULT_SYNC_TIME = 1;
 
 	private final T owningTileEntity;
 	private int syncTime;
@@ -48,7 +45,7 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	}
 
 	/**
-	 * Override of the parent method to send a {@link TileEntityBasicSyncPacket} on
+	 * Override of the parent method to send a {@link BlockEntityBasicSyncPacket} on
 	 * a set interval as defined by {@link #syncTime}.
 	 */
 	@Override
@@ -57,10 +54,9 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 		syncTimer++;
 
 		// If the sync timer has passed a sync time interval, perform a sync.
-		if (syncTimer % syncTime == 0 && containerListeners.size() > 0) {
-			if (this.getPlayerInventory().player instanceof ServerPlayer) {
-				NetworkMessage msg = new TileEntityBasicSyncPacket(getTileEntity(), false);
-				StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.getPlayerInventory().player), msg);
+		if (syncTimer % DEFAULT_SYNC_TIME == 0 && containerListeners.size() > 0) {
+			if (getPlayerInventory().player instanceof ServerPlayer) {
+				getTileEntity().synchronizeDataToContainerListener((ServerPlayer) getPlayerInventory().player);
 			}
 		}
 	}
@@ -88,13 +84,13 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	 * @param playerInventory The player's inventory (used to get the world
 	 *                        instance).
 	 * @param data            The data packet.
-	 * @return The {@link TileEntityBase} for this container or null if none was
+	 * @return The {@link BlockEntityBase} for this container or null if none was
 	 *         encountered.
 	 */
-	protected static TileEntityBase resolveTileEntityFromDataPacket(final Inventory playerInventory, final FriendlyByteBuf data) {
+	protected static BlockEntityBase resolveTileEntityFromDataPacket(final Inventory playerInventory, final FriendlyByteBuf data) {
 		final BlockEntity tileAtPos = playerInventory.player.level.getBlockEntity(data.readBlockPos());
-		if (tileAtPos instanceof TileEntityBase) {
-			return (TileEntityBase) tileAtPos;
+		if (tileAtPos instanceof BlockEntityBase) {
+			return (BlockEntityBase) tileAtPos;
 		} else {
 			LOGGER.error(String.format("Encountered invalid tile entity: %1$s at position: %2$s.", tileAtPos, data.readBlockPos()));
 			return null;

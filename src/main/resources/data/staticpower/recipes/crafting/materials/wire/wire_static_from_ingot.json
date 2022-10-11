@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+		"item": "staticpower:ingot_static"
+		},
+		{
+			"tag": "staticpower:wire_cutters"
+		}
+	],
+	"result": {
+		"item": "staticpower:wire_static",
+		"count": 3
+	}
+}

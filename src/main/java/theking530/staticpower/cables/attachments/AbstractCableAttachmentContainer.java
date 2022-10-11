@@ -9,9 +9,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.container.StaticPowerContainer;
 
 public class AbstractCableAttachmentContainer<T extends Item> extends StaticPowerContainer {

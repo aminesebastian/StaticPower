@@ -1,0 +1,6 @@
+{
+	"type": "staticpower:hydroponic_farming",
+	"input": {
+		"item": "minecraft:potato"
+	}
+}

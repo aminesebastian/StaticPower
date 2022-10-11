@@ -3,7 +3,7 @@ package theking530.staticpower.items.tools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -24,8 +24,8 @@ import theking530.staticpower.items.StaticPowerItem;
 
 public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 
-	public StaticWrench(String name) {
-		super(name, new Item.Properties().stacksTo(1).setNoRepair());
+	public StaticWrench() {
+		super(new Item.Properties().stacksTo(1).setNoRepair());
 	}
 
 	@Override
@@ -35,10 +35,10 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 			if (playerIn.isShiftKeyDown()) {
 				if (getWrenchMode(itemStack).ordinal() + 1 <= RegularWrenchMode.values().length - 1) {
 					setWrenchMode(itemStack, RegularWrenchMode.values()[getWrenchMode(itemStack).ordinal() + 1]);
-					playerIn.sendMessage(new TextComponent("Wrench Mode: " + getWrenchMode(itemStack).toString()), playerIn.getUUID());
+					playerIn.sendSystemMessage(Component.literal("Wrench Mode: " + getWrenchMode(itemStack).toString()));
 				} else {
 					setWrenchMode(itemStack, RegularWrenchMode.values()[0]);
-					playerIn.sendMessage(new TextComponent("Wrench Mode: " + getWrenchMode(itemStack).toString()), playerIn.getUUID());
+					playerIn.sendSystemMessage(Component.literal("Wrench Mode: " + getWrenchMode(itemStack).toString()));
 				}
 			}
 		}
@@ -69,15 +69,17 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 					InteractionResult result = wrenchable.wrenchBlock(player, getWrenchMode(item), item, world, wrenchablePos, wrenchableFace, true);
 					if (result == InteractionResult.SUCCESS) {
 						playWrenchSound(world, wrenchablePos);
-						return result;
 					}
+					return result;
 				} else {
+					// Make sure its only the block we're actually hitting that is wrenchable. Up
+					// top we also check for the relative face.
 					if (world.getBlockState(pos).getBlock() instanceof IWrenchable) {
 						InteractionResult result = wrenchable.sneakWrenchBlock(player, getSneakWrenchMode(item), item, world, wrenchablePos, wrenchableFace, true);
 						if (result == InteractionResult.SUCCESS) {
 							playWrenchSound(world, wrenchablePos);
-							return result;
 						}
+						return result;
 					}
 				}
 			} else if (world.getBlockState(pos).getProperties().contains(BlockStateProperties.AXIS) && getWrenchMode(item) == RegularWrenchMode.ROTATE) {
@@ -101,7 +103,8 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 	}
 
 	public void playWrenchSound(Level world, BlockPos pos) {
-		world.playSound(null, pos, SoundEvents.LANTERN_HIT, SoundSource.BLOCKS, 0.5F, (float) (0.7F + Math.random() * 0.5));
+		world.playSound(null, pos, SoundEvents.LANTERN_HIT, SoundSource.BLOCKS, 0.35F, (float) (0.5F + Math.random() * 0.5));
+		world.playSound(null, pos, SoundEvents.SPYGLASS_USE, SoundSource.BLOCKS, 1.5f, 1f);
 	}
 
 	@Override

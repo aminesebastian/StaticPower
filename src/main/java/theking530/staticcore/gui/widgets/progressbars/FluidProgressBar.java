@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 
 @OnlyIn(Dist.CLIENT)
 public class FluidProgressBar extends AbstractProgressBar<FluidProgressBar> {
@@ -39,7 +39,7 @@ public class FluidProgressBar extends AbstractProgressBar<FluidProgressBar> {
 			// If the icon is valid, draw the progress.
 			if (icon != null) {
 				// Get the fluid color.
-				Color fluidColor = GuiDrawUtilities.getFluidColor(displayFluidStack);
+				SDColor fluidColor = GuiDrawUtilities.getFluidColor(displayFluidStack);
 				fluidColor.setAlpha(1.0f);
 
 				// Calculate the UV difference.
@@ -51,7 +51,7 @@ public class FluidProgressBar extends AbstractProgressBar<FluidProgressBar> {
 			}
 
 			// Draw the leading white line.
-			GuiDrawUtilities.drawRectangle(pose, (visualCurrentProgresPercentage * getSize().getX()), 0, 0.75f, getSize().getY(), 1.0f, Color.WHITE);
+			GuiDrawUtilities.drawRectangle(pose, (visualCurrentProgresPercentage * getSize().getX()), 0, 0.75f, getSize().getY(), 1.0f, SDColor.WHITE);
 		}
 
 		// Draw the error indicator if needed.

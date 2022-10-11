@@ -7,20 +7,20 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
 public class SolidColorButton extends StandardButton {
 	private int padding;
-	private Color color;
+	private SDColor color;
 
-	public SolidColorButton(int xPos, int yPos, int width, int height, Color color, BiConsumer<StandardButton, MouseButton> onClicked) {
+	public SolidColorButton(int xPos, int yPos, int width, int height, SDColor color, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, width, height, onClicked);
 		this.color = color;
 	}
 
-	public SolidColorButton setColor(Color color) {
+	public SolidColorButton setColor(SDColor color) {
 		this.color = color;
 		return this;
 	}
@@ -30,7 +30,7 @@ public class SolidColorButton extends StandardButton {
 		return this;
 	}
 
-	public Color getColor() {
+	public SDColor getColor() {
 		return color;
 	}
 

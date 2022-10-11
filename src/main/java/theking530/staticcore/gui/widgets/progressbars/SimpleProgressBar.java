@@ -3,18 +3,18 @@ package theking530.staticcore.gui.widgets.progressbars;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class SimpleProgressBar extends AbstractProgressBar<SimpleProgressBar> {
 	private boolean flipped;
-	private Color barColor;
-	private Color emptyBarColor;
+	private SDColor barColor;
+	private SDColor emptyBarColor;
 
 	public SimpleProgressBar(int xPosition, int yPosition, int width, int height) {
 		super(xPosition, yPosition, width, height);
-		barColor = new Color(3.5f, 0.5f, 0.5f, 1.0f);
-		emptyBarColor = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+		barColor = new SDColor(3.5f, 0.5f, 0.5f, 1.0f);
+		emptyBarColor = new SDColor(0.4f, 0.4f, 0.4f, 1.0f);
 	}
 
 	public SimpleProgressBar setFlipped(boolean flipped) {
@@ -40,7 +40,7 @@ public class SimpleProgressBar extends AbstractProgressBar<SimpleProgressBar> {
 		}
 
 		// Handle the glow effect for when progress is completed.
-		Color actualBarColor = barColor.copy();
+		SDColor actualBarColor = barColor.copy();
 		if (visualCurrentProgresPercentage >= 1.0f) {
 			float glowFactor = GuiDrawUtilities.getSinFunction(5.0f, 3.0f);
 			actualBarColor.setAlpha(glowFactor);
@@ -63,10 +63,10 @@ public class SimpleProgressBar extends AbstractProgressBar<SimpleProgressBar> {
 		}
 
 		if (visualCurrentProgresPercentage >= 1.0f) {
-			GuiDrawUtilities.drawStringCentered(pose, "Completed!", (getSize().getXi() / 2), (getSize().getYi() / 2) + 2f, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose, "Completed!", (getSize().getXi() / 2), (getSize().getYi() / 2) + 2f, 0.0f, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
 		} else {
 			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsStringNoDecimal(percent).getString() + "%",
-					Math.min(Math.max(width, 12 + (visualCurrentProgresPercentage * getSize().getX() - 5)), getSize().getXi() - 10), (getSize().getYi() / 2) + 2f, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE,
+					Math.min(Math.max(width, 12 + (visualCurrentProgresPercentage * getSize().getX() - 5)), getSize().getXi() - 10), (getSize().getYi() / 2) + 2f, 0.0f, 0.5f, SDColor.EIGHT_BIT_WHITE,
 					true);
 		}
 	}

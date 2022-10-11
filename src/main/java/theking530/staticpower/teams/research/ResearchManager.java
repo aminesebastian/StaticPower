@@ -3,7 +3,6 @@ package theking530.staticpower.teams.research;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +11,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -76,7 +76,7 @@ public class ResearchManager {
 	public void addProgressToSelectedResearch(int requirementIndex, int amount) {
 		if (hasSelectedResearch() && !getSelectedResearch().isCompleted()) {
 			team.markDirty(true);
-			selectedResearch.requirementFullfillment.set(requirementIndex, selectedResearch.requirementFullfillment.get(requirementIndex) + amount);
+			selectedResearch.requirementFullfillment[requirementIndex] = selectedResearch.requirementFullfillment[requirementIndex] + amount;
 			if (selectedResearch.isCompleted()) {
 				markResearchAsCompleted(selectedResearch.getTrackedResearch().getId());
 			}
@@ -119,9 +119,9 @@ public class ResearchManager {
 		return true;
 	}
 
-	public void unlockAllResearch() {
+	public void unlockAllResearch(Level level) {
 		completedResearch.clear();
-		for (Research research : ResearchLevels.getAllResearch().values()) {
+		for (Research research : ResearchLevels.getAllResearch(level).values()) {
 			completedResearch.add(research.getId());
 		}
 		selectedResearch = null;
@@ -183,13 +183,13 @@ public class ResearchManager {
 		ListTag completedResearchList = tag.getList("completedResearch", Tag.TAG_COMPOUND);
 		completedResearch.clear();
 		completedResearch.addAll(NBTUtilities.deserialize(completedResearchList, (research) -> {
-			return new ResourceLocation(research.getString("name"));
+			return new ResourceLocation(((CompoundTag) research).getString("name"));
 		}));
 
 		activeResearch.clear();
 		ListTag activeResearchList = tag.getList("activeResearch", Tag.TAG_COMPOUND);
 		NBTUtilities.deserialize(activeResearchList, (research) -> {
-			return ResearchInstance.deserialize(research, this);
+			return ResearchInstance.deserialize(((CompoundTag) research), this);
 		}).forEach((active) -> {
 			activeResearch.put(active.getId(), active);
 		});
@@ -208,21 +208,22 @@ public class ResearchManager {
 			LOCKED, UNLOCKED, IN_PROGRESS_INACTIVE, IN_PROGRESS_ACTIVE, COMPLETED
 		}
 
-		private final List<Integer> requirementFullfillment;
+		private final int[] requirementFullfillment;
 		private final Research research;
 		private final ResearchManager manager;
 
 		public ResearchInstance(ResourceLocation researchName, ResearchManager manager) {
 			this.manager = manager;
-			this.requirementFullfillment = new LinkedList<Integer>();
 			research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, researchName).orElse(null);
 
 			// Throw a fatal error if somehow we ended up with an invalid research name.
 			if (research == null) {
+				requirementFullfillment = new int[0];
 				StaticPower.LOGGER.fatal(String.format("Invalid research with name: %1$s provided.", researchName.toString()));
 			} else {
+				requirementFullfillment = new int[research.getRequirements().size()];
 				for (int i = 0; i < research.getRequirements().size(); i++) {
-					requirementFullfillment.add(0);
+					requirementFullfillment[i] = 0;
 				}
 			}
 		}
@@ -236,7 +237,7 @@ public class ResearchManager {
 		}
 
 		public int getRequirementFullfillment(int index) {
-			return requirementFullfillment.get(index);
+			return requirementFullfillment[index];
 		}
 
 		public ResearchManager getResearchManager() {
@@ -287,9 +288,10 @@ public class ResearchManager {
 			ResearchInstance instance = new ResearchInstance(new ResourceLocation(researchId), manager);
 
 			int[] fullfillment = tag.getIntArray("requirementFullfillment");
-			instance.requirementFullfillment.clear();
-			for (int i = 0; i < fullfillment.length; i++) {
-				instance.requirementFullfillment.add(fullfillment[i]);
+			for (int i = 0; i < instance.getTrackedResearch().getRequirements().size(); i++) {
+				if (i < fullfillment.length) {
+					instance.requirementFullfillment[i] = fullfillment[i];
+				}
 			}
 			return instance;
 		}

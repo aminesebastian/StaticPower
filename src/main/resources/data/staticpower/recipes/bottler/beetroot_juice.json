@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:bottler_recipe",
+	"type": "staticpower:bottler",
 	"empty_bottle": {
 		"item": "minecraft:glass_bottle"
 	},

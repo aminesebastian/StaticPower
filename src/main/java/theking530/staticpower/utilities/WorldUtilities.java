@@ -29,8 +29,10 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import theking530.staticcore.utilities.Vector3D;
 
 public class WorldUtilities {
 
@@ -70,6 +72,14 @@ public class WorldUtilities {
 		}
 	}
 
+	/**
+	 * Checks where one block pos is relative to another. This ONLY works for block
+	 * positions exactly one block apart.
+	 * 
+	 * @param source
+	 * @param query
+	 * @return
+	 */
 	public static Direction getFacingFromPos(BlockPos source, BlockPos query) {
 		if (source != null && query != null) {
 			if (source.getY() > query.getY()) {
@@ -92,6 +102,15 @@ public class WorldUtilities {
 			}
 		}
 		return Direction.UP;
+	}
+
+	public static Direction getDirectionBetweenBlocks(BlockPos source, BlockPos query) {
+		Vector3D thisPos = new Vector3D(source);
+		Vector3D linkPos = new Vector3D(query);
+		Vector3D pointingVector = linkPos.subtract(thisPos);
+		pointingVector.normalize();
+
+		return Direction.getNearest(pointingVector.getX(), pointingVector.getY(), pointingVector.getZ());
 	}
 
 	public static void writeBlockPosToNBT(CompoundTag nbt, BlockPos pos, String name) {
@@ -169,12 +188,21 @@ public class WorldUtilities {
 	 * @return
 	 */
 	public static List<ItemStack> getBlockDrops(Level world, BlockPos pos) {
-		if (world.isClientSide) {
+		if (world.isClientSide()) {
 			throw new RuntimeException("The #getBlockDrops method was excuted on the client. This should only be excuted on the server.");
 		}
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			NonNullList<ItemStack> output = NonNullList.create();
 			output.addAll(Block.getDrops(world.getBlockState(pos), (ServerLevel) world, pos, null));
+			return output;
+		}
+		return Collections.emptyList();
+	}
+
+	public static List<ItemStack> getBlockDrops(Level world, BlockPos pos, BlockState state) {
+		if (!world.isClientSide()) {
+			NonNullList<ItemStack> output = NonNullList.create();
+			output.addAll(Block.getDrops(state, (ServerLevel) world, pos, null));
 			return output;
 		}
 		return Collections.emptyList();
@@ -188,7 +216,7 @@ public class WorldUtilities {
 		Fluid content = fluid.getFluid();
 		BlockState blockstate = world.getBlockState(pos);
 		Block block = blockstate.getBlock();
-		Material material = blockstate.getMaterial ();
+		Material material = blockstate.getMaterial();
 		boolean flag = blockstate.canBeReplaced(content);
 		boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(world, pos, blockstate, content);
 		if (!flag1) {
@@ -214,7 +242,7 @@ public class WorldUtilities {
 
 			if (!world.setBlock(pos, content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
 				return false;
-			} else if(blockstate.isAir()){
+			} else if (blockstate.isAir()) {
 				playBucketEmptySound(fluid, player, world, pos);
 				return true;
 			}
@@ -224,7 +252,7 @@ public class WorldUtilities {
 
 	public static void playBucketFillSound(FluidStack incomingFluid, @Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos) {
 		Fluid content = incomingFluid.getFluid();
-		SoundEvent soundevent = content.getAttributes().getFillSound();
+		SoundEvent soundevent = content.getFluidType().getSound(SoundActions.BUCKET_FILL);
 		if (soundevent == null)
 			soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA;
 		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -233,7 +261,7 @@ public class WorldUtilities {
 
 	public static void playBucketEmptySound(FluidStack outgoingFluid, @Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos) {
 		Fluid content = outgoingFluid.getFluid();
-		SoundEvent soundevent = content.getAttributes().getEmptySound();
+		SoundEvent soundevent = content.getFluidType().getSound(SoundActions.BUCKET_EMPTY);
 		if (soundevent == null)
 			soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
 		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);

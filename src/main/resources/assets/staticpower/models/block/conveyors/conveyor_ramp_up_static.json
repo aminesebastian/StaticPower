@@ -5,7 +5,7 @@
   "diffuseLighting": false,
   "materialLibraryOverride": true,
   "materialLibraryOverride": "staticpower:models/block/conveyors/conveyor_ramp_up_static.mtl",
-  "flip-v": true,
+  "flip_v": true,
   "textures": {
 	"particle": "staticpower:blocks/conveyors/conveyor_top"
   },

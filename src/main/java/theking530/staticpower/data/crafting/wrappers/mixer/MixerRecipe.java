@@ -8,9 +8,11 @@ import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class MixerRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<MixerRecipe> RECIPE_TYPE = RecipeType.register("mixer");
+	public static final String ID = "mixer";
+	public static final RecipeType<MixerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<MixerRecipe>();
 
 	private final StaticPowerIngredient input1;
 	private final StaticPowerIngredient input2;

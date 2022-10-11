@@ -12,28 +12,26 @@ import net.minecraft.nbt.Tag;
 public class NBTUtilities {
 	public static <T> ListTag serialize(Iterable<T> iterable, BiConsumer<T, CompoundTag> callback) {
 		ListTag output = new ListTag();
-		iterable.forEach(player -> {
+		iterable.forEach(thing -> {
 			CompoundTag newTag = new CompoundTag();
-			callback.accept(player, newTag);
+			callback.accept(thing, newTag);
 			output.add(newTag);
 		});
 		return output;
 	}
 
-	public static <T> ListTag serialize(Iterable<T> iterable, Function<T, CompoundTag> callback) {
+	public static <T> ListTag serialize(Iterable<T> iterable, Function<T, Tag> callback) {
 		ListTag output = new ListTag();
-		iterable.forEach(player -> {
-			CompoundTag newTag = callback.apply(player);
-			output.add(newTag);
+		iterable.forEach(thing -> {
+			output.add(callback.apply(thing));
 		});
 		return output;
 	}
 
-	public static <T> List<T> deserialize(ListTag tagList, Function<CompoundTag, T> callback) {
+	public static <T> List<T> deserialize(ListTag tagList, Function<Tag, T> callback) {
 		List<T> output = new ArrayList<T>();
 		for (Tag tag : tagList) {
-			CompoundTag tagCompound = (CompoundTag) tag;
-			output.add(callback.apply(tagCompound));
+			output.add(callback.apply(tag));
 		}
 
 		return output;

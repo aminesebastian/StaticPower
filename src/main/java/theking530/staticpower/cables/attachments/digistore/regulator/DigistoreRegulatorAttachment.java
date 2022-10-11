@@ -5,15 +5,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -26,9 +27,9 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.init.ModUpgrades;
+import theking530.staticpower.init.ModItems;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -36,8 +37,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class DigistoreRegulatorAttachment extends AbstractDigistoreCableAttachment {
 	public static final String REGULATOR_TIMER_TAG = "regulator_timer";
 
-	public DigistoreRegulatorAttachment(String name) {
-		super(name);
+	public DigistoreRegulatorAttachment() {
+		super();
 	}
 
 	/**
@@ -46,25 +47,25 @@ public class DigistoreRegulatorAttachment extends AbstractDigistoreCableAttachme
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.SERVER.digistoreRegulatorSlots.get()), (Direction) null)
+		int slots = !StaticPowerConfig.SERVER_SPEC.isLoaded() ? 0 : StaticPowerConfig.SERVER.digistoreRegulatorSlots.get();
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots), (Direction) null)
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 3));
 	}
 
 	@Override
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cableComponent) {
 		super.onAddedToCable(attachment, side, cableComponent);
-		attachment.getTag().putInt(REGULATOR_TIMER_TAG, 0);
+		getAttachmentTag(attachment).putInt(REGULATOR_TIMER_TAG, 0);
 	}
 
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (cable.getWorld().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+		if (cable.getLevel().isClientSide() || !cable.doesAttachmentPassRedstoneTest(attachment)) {
 			return;
 		}
 
 		// Get the tile entity on the pulling side, return if it is null.
-		BlockEntity te = cable.getWorld().getBlockEntity(cable.getPos().relative(side));
+		BlockEntity te = cable.getLevel().getBlockEntity(cable.getPos().relative(side));
 		if (te == null || te.isRemoved()) {
 			return;
 		}
@@ -80,20 +81,20 @@ public class DigistoreRegulatorAttachment extends AbstractDigistoreCableAttachme
 		if (!attachment.hasTag()) {
 			attachment.setTag(new CompoundTag());
 		}
-		if (!attachment.getTag().contains(REGULATOR_TIMER_TAG)) {
-			attachment.getTag().putInt(REGULATOR_TIMER_TAG, 0);
+		if (!getAttachmentTag(attachment).contains(REGULATOR_TIMER_TAG)) {
+			getAttachmentTag(attachment).putInt(REGULATOR_TIMER_TAG, 0);
 		}
 
 		// Get the current timer and the extraction rate.
-		int currentTimer = attachment.getTag().getInt(REGULATOR_TIMER_TAG);
+		int currentTimer = getAttachmentTag(attachment).getInt(REGULATOR_TIMER_TAG);
 
 		// Increment the current timer.
 		currentTimer += 1;
 		if (currentTimer >= getRegulationRate(attachment)) {
-			attachment.getTag().putInt(REGULATOR_TIMER_TAG, 0);
+			getAttachmentTag(attachment).putInt(REGULATOR_TIMER_TAG, 0);
 			return true;
 		} else {
-			attachment.getTag().putInt(REGULATOR_TIMER_TAG, currentTimer);
+			getAttachmentTag(attachment).putInt(REGULATOR_TIMER_TAG, currentTimer);
 
 			return false;
 		}
@@ -111,19 +112,19 @@ public class DigistoreRegulatorAttachment extends AbstractDigistoreCableAttachme
 	}
 
 	@Override
-	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+	public ResourceLocation getModel(ItemStack attachment, BlockAndTintGetter level, BlockPos pos) {
 		return StaticPowerAdditionalModels.CABLE_DIGISTORE_REGULATOR_ATTACHMENT;
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment) {
-		return 1000;
+	public double getPowerUsage(ItemStack attachment) {
+		return 1;
 	}
 
 	protected boolean regulate(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
 		AtomicBoolean output = new AtomicBoolean(false);
 		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
-			cable.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
+			cable.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(module -> {
 				// Return early if there is no manager.
 				if (!module.isManagerPresent()) {
 					return;
@@ -185,7 +186,7 @@ public class DigistoreRegulatorAttachment extends AbstractDigistoreCableAttachme
 	protected int getRegulationRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModItems.AcceleratorUpgrade.get().getMaxStackSize());
 			return (int) (StaticPowerConfig.SERVER.digistoreRegulatorRate.get() / accelerationAmount);
 		} else {
 			return StaticPowerConfig.SERVER.digistoreRegulatorRate.get();
@@ -194,7 +195,7 @@ public class DigistoreRegulatorAttachment extends AbstractDigistoreCableAttachme
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.regulator_tooltip"));
+		tooltip.add(Component.translatable("gui.staticpower.regulator_tooltip"));
 		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.SERVER.digistoreRegulatorSlots.get(), tooltip);
 	}
 

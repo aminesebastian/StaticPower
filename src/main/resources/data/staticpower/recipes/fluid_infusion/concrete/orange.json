@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:fluid_infusion_recipe",
+	"type": "staticpower:fluid_infusion",
 	"input": {
 		"item": "minecraft:orange_concrete_powder"
 	},

@@ -6,20 +6,16 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CentrifugeRecipe> {
+public class CentrifugeRecipeSerializer extends StaticPowerRecipeSerializer<CentrifugeRecipe> {
 	public static final CentrifugeRecipeSerializer INSTANCE = new CentrifugeRecipeSerializer();
-
-	private CentrifugeRecipeSerializer() {
-		setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "centrifuge_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "centrifuge_recipe");
 
 	@Override
 	public CentrifugeRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -31,8 +27,8 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 		int minimumSpeed = json.get("minimum_speed").getAsInt();
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.centrifugeProcessingTime.get(),
-				StaticPowerConfig.SERVER.centrifugePowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.centrifugeProcessingTime,
+				StaticPowerConfig.SERVER.centrifugePowerUsage, json);
 
 		// Get the outputs.
 		JsonArray outputs = json.getAsJsonArray("outputs");

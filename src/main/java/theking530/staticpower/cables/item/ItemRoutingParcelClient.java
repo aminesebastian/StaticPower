@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemRoutingParcelClient {
-	public static final int ROTATION_PER_BLOCK = 90;
+	public static final int ROTATION_PER_BLOCK = 45;
 	private long id;
 	protected ItemStack containedItem;
 	protected int moveTimer;

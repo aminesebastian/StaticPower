@@ -35,8 +35,10 @@ public class StaticPowerGameDataLoadPacket extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
-		StaticPowerGameDataManager.deleteData(id);
-		StaticPowerGameData gameData = StaticPowerGameDataManager.getOrCreateaGameData(id);
-		gameData.loadFromDisk(serializedData);
+		ctx.get().enqueueWork(() -> {
+			StaticPowerGameDataManager.deleteData(id);
+			StaticPowerGameData gameData = StaticPowerGameDataManager.getOrCreateaGameData(id);
+			gameData.loadFromDisk(serializedData);
+		});
 	}
 }

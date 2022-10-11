@@ -8,7 +8,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
@@ -23,30 +22,30 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.network.NetworkHooks;
+import theking530.staticcore.cablenetwork.CableBoundsHoverResult;
+import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHoverType;
+import theking530.staticcore.cablenetwork.CableUtilities;
+import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableBoundsHoverResult;
-import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
-import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.cables.redstone.basic.gui.ContainerBasicRedstoneIO;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.tileentities.TileEntityBase;
 
 public class BlockRedstoneCable extends AbstractCableBlock {
 	private static boolean canProvidePower;
 	private final String color;
 
-	public BlockRedstoneCable(String name) {
-		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)), name.contains("naked") ? 1.0f : 1.5f);
+	public BlockRedstoneCable(String color) {
+		super(new BasicRedstoneCableBoundsCache(color.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)),color.contains("naked") ? 1.0f : 1.5f);
 
 		// String the color from the last section of the registry name.
-		this.color = name.substring(name.indexOf("_", name.indexOf("_", name.indexOf("_") + 1) + 1) + 1);
+		this.color = color;
 		canProvidePower = true;
 	}
 
@@ -57,16 +56,16 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		if (color.equals("naked")) {
-			BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT);
-			BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION);
-			BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT);
+			BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION);
+			BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		} else {
-			BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0]);
-			BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1]);
-			BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0]);
+			BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1]);
+			BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		}
 	}
@@ -87,7 +86,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 			if (hoverResult.type == CableBoundsHoverType.DEFAULT_ATTACHMENT) {
 				Direction cableSide = hoverResult.direction;
-				return component.getConnectionState(cableSide) == CableConnectionState.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
+				return component.getConnectionTypeOnSide(cableSide) == CableConnectionType.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
 			}
 		} else {
 			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));
@@ -110,11 +109,11 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	 * @return
 	 */
 	@Override
-	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public void enterGuiScreen(BlockEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (!world.isClientSide) {
 			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
-			RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getDirection());
-			NetworkGUI.openGui((ServerPlayer) player, provider, buf -> {
+			RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (BlockEntityRedstoneCable) tileEntity, hit.getDirection());
+			NetworkGUI.openScreen((ServerPlayer) player, provider, buf -> {
 				buf.writeBlockPos(pos);
 				buf.writeInt(hoverResult.direction.ordinal());
 			});
@@ -125,48 +124,48 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		switch (color) {
 		case "black":
-			return TileEntityRedstoneCable.TYPE_BASIC_BLACK.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_BLACK.create(pos, state);
 		case "dark_blue":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_BLUE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_BLUE.create(pos, state);
 		case "dark_green":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_GREEN.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_GREEN.create(pos, state);
 		case "dark_aqua":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_AQUA.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_AQUA.create(pos, state);
 		case "dark_red":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_RED.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_RED.create(pos, state);
 		case "dark_purple":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_PURPLE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_PURPLE.create(pos, state);
 		case "gold":
-			return TileEntityRedstoneCable.TYPE_BASIC_GOLD.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_GOLD.create(pos, state);
 		case "gray":
-			return TileEntityRedstoneCable.TYPE_BASIC_GRAY.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_GRAY.create(pos, state);
 		case "dark_gray":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_GRAY.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_GRAY.create(pos, state);
 		case "blue":
-			return TileEntityRedstoneCable.TYPE_BASIC_BLUE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_BLUE.create(pos, state);
 		case "green":
-			return TileEntityRedstoneCable.TYPE_BASIC_GREEN.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_GREEN.create(pos, state);
 		case "aqua":
-			return TileEntityRedstoneCable.TYPE_BASIC_AQUA.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_AQUA.create(pos, state);
 		case "red":
-			return TileEntityRedstoneCable.TYPE_BASIC_RED.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_RED.create(pos, state);
 		case "light_purple":
-			return TileEntityRedstoneCable.TYPE_BASIC_LIGHT_PURPLE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_LIGHT_PURPLE.create(pos, state);
 		case "yellow":
-			return TileEntityRedstoneCable.TYPE_BASIC_YELLOW.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_YELLOW.create(pos, state);
 		case "white":
-			return TileEntityRedstoneCable.TYPE_BASIC_WHITE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_WHITE.create(pos, state);
 		default:
-			return TileEntityRedstoneCable.TYPE_BASIC_NAKED.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_NAKED.create(pos, state);
 		}
 	}
 
 	public class RedstoneCableContainerProvider implements MenuProvider {
 		public final Direction side;
 		public final Block owningBlock;
-		public final TileEntityRedstoneCable cable;
+		public final BlockEntityRedstoneCable cable;
 
-		public RedstoneCableContainerProvider(Block owningBlock, TileEntityRedstoneCable cable, Direction side) {
+		public RedstoneCableContainerProvider(Block owningBlock, BlockEntityRedstoneCable cable, Direction side) {
 			this.owningBlock = owningBlock;
 			this.side = side;
 			this.cable = cable;
@@ -179,7 +178,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 		@Override
 		public Component getDisplayName() {
-			return new TranslatableComponent(owningBlock.getDescriptionId());
+			return Component.translatable(owningBlock.getDescriptionId());
 		}
 
 	}

@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -31,8 +30,8 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 	public static final int RECIPE_OUTPUT_SLOT = 9;
 	public static final int RECIPE_SINGLE_SLOT = 9;
 
-	public DigistorePatternEncoder(String name) {
-		super(name, StaticPowerAdditionalModels.CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON, StaticPowerAdditionalModels.CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT);
+	public DigistorePatternEncoder() {
+		super(StaticPowerAdditionalModels.CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON, StaticPowerAdditionalModels.CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT);
 	}
 
 	@Override
@@ -61,12 +60,12 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment) {
-		return 1000;
+	public double getPowerUsage(ItemStack attachment) {
+		return 1;
 	}
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.digistore_pattern_encoder"));
+		tooltip.add(Component.translatable("gui.staticpower.digistore_pattern_encoder"));
 	}
 }

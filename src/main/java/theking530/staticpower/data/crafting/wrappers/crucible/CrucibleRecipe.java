@@ -9,9 +9,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class CrucibleRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<CrucibleRecipe> RECIPE_TYPE = RecipeType.register("crucible");
+	public static final String ID = "crucible";
+	public static final RecipeType<CrucibleRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CrucibleRecipe>();
 
 	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput output;

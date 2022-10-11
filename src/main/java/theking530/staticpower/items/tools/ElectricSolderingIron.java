@@ -5,45 +5,71 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.ISolderingIron;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.api.energy.StaticPowerVoltage;
+import theking530.api.energy.StaticVoltageRange;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implements ISolderingIron {
 
-	public ElectricSolderingIron(String name, long capacity) {
-		super(name, capacity);
+	public ElectricSolderingIron() {
 	}
 
 	@Override
-	public boolean useSolderingItem(ItemStack itemstack) {
+	public boolean useSolderingItem(Level level, ItemStack itemstack) {
 		// Should move to config, but 10SV per soldering operation.
-		if (EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >=  10 * CapabilityStaticVolt.mSV_TO_SV) {
-			EnergyHandlerItemStackUtilities.drainPower(itemstack,  10 * CapabilityStaticVolt.mSV_TO_SV, false);
+		if (EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >= 10) {
+			EnergyHandlerItemStackUtilities.drainPower(itemstack, 10, false);
 		}
 		return false;
 	}
 
 	@Override
 	public boolean canSolder(ItemStack itemstack) {
-		return EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >=  10 * CapabilityStaticVolt.mSV_TO_SV;
+		return EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >= 10;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TextComponent("Power per Operation: 10SV"));
+		tooltip.add(Component.literal("Power per Operation: 10SV"));
 		if (showAdvanced) {
-			long energyStored = EnergyHandlerItemStackUtilities.getStoredPower(stack);
-			long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
-			tooltip.add(new TextComponent("Power Stored: ").append(GuiTextUtilities.formatEnergyToString(energyStored, capacity)));
+			double energyStored = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+			double capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
+			tooltip.add(Component.literal("Power Stored: ").append(PowerTextFormatting.formatPowerToString(energyStored, capacity)));
 		}
+	}
+
+	@Override
+	public double getCapacity() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryCapacity.get();
+	}
+
+	@Override
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.getPortableBatteryChargingVoltage();
+	}
+
+	@Override
+	public double getMaximumInputPower() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryMaximumPowerInput.get();
+	}
+
+	@Override
+	public StaticPowerVoltage getOutputVoltage() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryOutputVoltage.get();
+	}
+
+	@Override
+	public double getMaximumOutputPower() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
 }

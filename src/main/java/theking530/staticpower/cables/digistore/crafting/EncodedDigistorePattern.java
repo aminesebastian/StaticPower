@@ -3,6 +3,7 @@ package theking530.staticpower.cables.digistore.crafting;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -191,8 +192,9 @@ public class EncodedDigistorePattern {
 
 		// Create the recipe.
 		if (recipeType == RecipeEncodingType.CRAFTING_TABLE) {
-			if (craftingRecipeId != null && StaticPowerRecipeRegistry.CRAFTING_RECIPES.containsKey(craftingRecipeId)) {
-				return new EncodedDigistorePattern(id, inputStacks, StaticPowerRecipeRegistry.CRAFTING_RECIPES.get(craftingRecipeId));
+			Optional<CraftingRecipe> craftingRecipe = StaticPowerRecipeRegistry.getCraftingRecipe(craftingRecipeId);
+			if (craftingRecipeId != null && craftingRecipe.isPresent()) {
+				return new EncodedDigistorePattern(id, inputStacks, craftingRecipe.get());
 			} else {
 				return new EncodedDigistorePattern(id, inputStacks, null);
 			}
@@ -203,8 +205,8 @@ public class EncodedDigistorePattern {
 
 	@Override
 	public String toString() {
-		return "EncodedDigistorePattern [inputs=" + Arrays.toString(inputs) + ", output=" + output + ", recipeType=" + recipeType + ", requiredItems=" + requiredItems + ", craftingRecipeId="
-				+ craftingRecipeId + ", isValid=" + isValid + "]";
+		return "EncodedDigistorePattern [inputs=" + Arrays.toString(inputs) + ", output=" + output + ", recipeType=" + recipeType + ", requiredItems=" + requiredItems
+				+ ", craftingRecipeId=" + craftingRecipeId + ", isValid=" + isValid + "]";
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package theking530.staticcore.gui.widgets.tabs;
 import java.util.Collections;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
@@ -11,65 +10,55 @@ import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.network.NetworkMessage;
-import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.RectangleBounds;
-import theking530.staticcore.utilities.RenderingUtilities;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent.SideIncrementDirection;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent.SideIncrementDirection;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiSideConfigTab extends BaseGuiTab {
-	private static final BlockModel HIGHLIGHT_RENDERER = new BlockModel();
 	private static final AABB BOUNDS = new AABB(new Vec3(-0.05, -0.05, -0.05), new Vec3(1.05, 1.05, 1.05));
+	private static final float MOUSE_SENSETIVITY = 2.5f;
 
-	public TileEntityBase tileEntity;
+	public BlockEntityBase tileEntity;
 	private Vector2D rotation;
 	private Vector2D rotationVelocity;
 	private Vector2D mouseDownLocation;
 	private boolean mouseDownInside;
 	private Direction highlightedSide;
 
-	public GuiSideConfigTab(TileEntityBase te) {
-		super("Side Config", Color.EIGHT_BIT_WHITE, 110, 105, new Color(0.1f, 0.4f, 0.95f, 1.0f), te.getBlockState().getBlock());
+	public GuiSideConfigTab(BlockEntityBase te) {
+		super("Side Config", SDColor.EIGHT_BIT_WHITE, 110, 105, new SDColor(0.1f, 0.4f, 0.95f, 1.0f), te.getBlockState().getBlock());
 		tileEntity = te;
-
-		rotation = new Vector2D(55, -25);
 		rotationVelocity = new Vector2D(0, 0);
 		mouseDownLocation = new Vector2D(0, 0);
 
 		// Rotate initially to reflect the angle the player is looking from.
-		@SuppressWarnings("resource")
-		Player player = Minecraft.getInstance().player;
-		Vec3 eyeLocation = player.getPosition(0.5f);
-		Vec3 blockPosition = new Vec3(tileEntity.getBlockPos().getX(), tileEntity.getBlockPos().getY(), tileEntity.getBlockPos().getZ());
-		Vec3 direction = eyeLocation.subtract(blockPosition).normalize();
+		Vec3 direction = getLocalPlayer().getLookAngle();
 		double xAngle = Math.toDegrees(Math.atan2(direction.x(), direction.z()));
-		rotation = new Vector2D(xAngle, -25);
+		double yAngle = Math.toDegrees(Math.asin(direction.y()));
+		rotation = new Vector2D(xAngle + 180, yAngle);
 	}
 
 	@Override
@@ -89,7 +78,6 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		}
 	}
 
-	@SuppressWarnings("resource")
 	@Override
 	public void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
@@ -101,26 +89,21 @@ public class GuiSideConfigTab extends BaseGuiTab {
 
 		drawDarkBackground(matrix, 12, 25, (int) getWidth() - 26, (int) getHeight() - 35);
 
-		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
-		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-		BakedModel model = renderer.getBlockModel(tileEntity.getBlockState());
-		IModelData data = model.getModelData(Minecraft.getInstance().level, tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity.getModelData());
-		matrix.pushPose();
-		matrix.translate(73f, 41.2f, 50);
-		matrix.scale(-38, 38, 38);
-		matrix.translate(0.5f, 0.5f, 0.5f);
-		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
-		matrix.translate(-0.5f, -0.5f, -0.5f);
 		Lighting.setupForEntityInInventory();
-		renderer.renderSingleBlock(tileEntity.getBlockState(), matrix, buffer, 15728880, OverlayTexture.NO_OVERLAY, data);
-		buffer.endBatch();
+		Vector3D translation = new Vector3D(75f, 40.75f, 50);
+		Vector3D renderRotation = new Vector3D(rotation.getY(), rotation.getX(), 180);
+		Vector3D scale = new Vector3D(-39, 39, 39);
+		Matrix4f inverse = GuiDrawUtilities.drawBlockState(matrix, tileEntity.getBlockState(), tileEntity.getBlockPos(), tileEntity.getModelData(), translation, renderRotation,
+				scale);
+		Lighting.setupFor3DItems();
 
-		Matrix4f inverse = matrix.last().pose().copy();
 		inverse.invert();
 		Vector4f mouseMin = createMouseVector(inverse, mouseX, mouseY, 1000);
 		Vector4f mouseMax = createMouseVector(inverse, mouseX, mouseY, -1000);
 
-		BlockHitResult result = AABB.clip(Collections.singleton(BOUNDS), new Vec3(mouseMin.x(), mouseMin.y(), mouseMin.z()), new Vec3(mouseMax.x(), mouseMax.y(), mouseMax.z()), new BlockPos(0, 0, 0));
+		BlockHitResult result = AABB.clip(Collections.singleton(BOUNDS), new Vec3(mouseMin.x(), mouseMin.y(), mouseMin.z()), new Vec3(mouseMax.x(), mouseMax.y(), mouseMax.z()),
+				new BlockPos(0, 0, 0));
+
 		if (result != null) {
 			highlightedSide = result.getDirection();
 			SideConfigurationComponent sideConfig = tileEntity.getComponent(SideConfigurationComponent.class);
@@ -128,14 +111,17 @@ public class GuiSideConfigTab extends BaseGuiTab {
 				boolean enabled = sideConfig.getWorldSpaceEnabledState(highlightedSide);
 				if (enabled) {
 					MachineSideMode mode = sideConfig.getWorldSpaceDirectionConfiguration(highlightedSide);
-					Color color = mode.getColor().copy();
+					SDColor color = mode.getColor().copy();
 					color.setAlpha(0.75f);
 
 					matrix.pushPose();
+					matrix.translate(translation.getX(), translation.getY(), translation.getZ());
+					matrix.scale(scale.getX(), scale.getY(), scale.getZ());
 					matrix.translate(0.5f, 0.5f, 0.5f);
+					matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
 					matrix.mulPose(result.getDirection().getRotation());
 					matrix.translate(-0.5f, -0.5f, -0.5f);
-					HIGHLIGHT_RENDERER.drawPreviewCube(new Vector3f(0.25f, 1.025f, 0.25f), new Vector3f(0.5f, 0.2f, 0.5f), color, matrix);
+					BlockModel.drawCubeInGui(new Vector3f(0.3f, 1.01f, 0.3f), new Vector3f(0.4f, 0.05f, 0.4f), color, matrix);
 					matrix.popPose();
 				} else {
 					highlightedSide = null; // Clear out the highlighted side if its a disabled side.
@@ -144,7 +130,6 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		} else {
 			highlightedSide = null;
 		}
-		matrix.popPose();
 	}
 
 	private Vector4f createMouseVector(Matrix4f inverse, int mouseX, int mouseY, int distance) {
@@ -171,8 +156,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	@Override
 	public EInputResult mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		if (mouseDownInside) {
-			rotationVelocity.setX((float) deltaX * -1.5f);
-			rotationVelocity.setY((float) deltaY * -1.5f);
+			rotationVelocity.setX((float) deltaX * -MOUSE_SENSETIVITY);
+			rotationVelocity.setY((float) deltaY * -MOUSE_SENSETIVITY);
 			return EInputResult.HANDLED;
 		}
 		return EInputResult.UNHANDLED;
@@ -205,11 +190,11 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		return EInputResult.UNHANDLED;
 	}
 
-	public TranslatableComponent conditionallyGetCardinal(BlockSide side) {
-		if (tileEntity instanceof TileEntityBase) {
-			TileEntityBase te = (TileEntityBase) tileEntity;
-			return new TranslatableComponent("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
+	public MutableComponent conditionallyGetCardinal(BlockSide side) {
+		if (tileEntity instanceof BlockEntityBase) {
+			BlockEntityBase te = (BlockEntityBase) tileEntity;
+			return Component.translatable("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
 		}
-		return new TranslatableComponent("ERROR");
+		return Component.translatable("ERROR");
 	}
 }

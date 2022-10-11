@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 
 public class StaticPowerFood extends StaticPowerItem {
 
-	public StaticPowerFood(String name, FoodProperties food) {
-		super(name, new Item.Properties().food(food));
+	public StaticPowerFood(FoodProperties food) {
+		super(new Item.Properties().food(food));
 	}
 }

@@ -13,9 +13,9 @@ import java.util.Queue;
 import java.util.Set;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
 public class ResearchLevels {
 	public final static float UNIT_SCALE = 100;
@@ -34,9 +34,9 @@ public class ResearchLevels {
 		return "ResearchLevels [" + levels + "]";
 	}
 
-	public static ResearchLevels getAllResearchLevels() {
+	public static ResearchLevels getAllResearchLevels(Level level) {
 		ResearchLevels output = new ResearchLevels();
-		Map<ResourceLocation, Research> allResearch = getAllResearch();
+		Map<ResourceLocation, Research> allResearch = getAllResearch(level);
 		Set<ResourceLocation> handled = new HashSet<ResourceLocation>();
 		List<ResearchNode> allNodes = new ArrayList<ResearchNode>();
 
@@ -133,7 +133,8 @@ public class ResearchLevels {
 				}
 
 				// The following is a useful debug line.
-				//System.out.println("Parent: " + research.getResearch().getId() + "  Child: " + child.getResearch().getId() + "  " + currentOffset);
+				// System.out.println("Parent: " + research.getResearch().getId() + " Child: " +
+				// child.getResearch().getId() + " " + currentOffset);
 
 				float targetX = (minParentX + maxParentX) / 2;
 
@@ -189,9 +190,9 @@ public class ResearchLevels {
 		return researchList;
 	}
 
-	public static Map<ResourceLocation, Research> getAllResearch() {
+	public static Map<ResourceLocation, Research> getAllResearch(Level level) {
 		Map<ResourceLocation, Research> output = new HashMap<ResourceLocation, Research>();
-		StaticPowerRecipeRegistry.getRecipesOfType(Research.RECIPE_TYPE).forEach((re) -> {
+		level.getRecipeManager().getAllRecipesFor(Research.RECIPE_TYPE).forEach((re) -> {
 			output.put(re.getId(), re);
 		});
 		return output;

@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ili",
+		"gpg",
+		"idi"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:glass"
+		},
+		"i": {
+			"item": "staticpower:ingot_static"
+		},
+		"p": {
+			"item": "staticpower:io_port"
+		},
+		"d": {
+			"tag": "minecraft:dirt"
+		},
+		"l": {
+			"tag": "staticpower:lightbulbs"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_hydroponic_pod"
+	}
+}

@@ -2,13 +2,16 @@ package theking530.staticpower.utilities;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
+import theking530.staticpower.init.ModTags;
 
 public class ItemUtilities {
 	public static boolean filterItems(IItemHandler inventoryOfFilterItems, ItemStack itemToCheck, boolean whitelist, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
@@ -35,7 +38,7 @@ public class ItemUtilities {
 		if (!match && matchMod) {
 			for (int i = 0; i < filterItems.size(); i++) {
 				if (!filterItems.get(i).isEmpty()) {
-					if (filterItems.get(i).getItem().getRegistryName().getNamespace() == itemToCheck.getItem().getRegistryName().getNamespace()) {
+					if (ForgeRegistries.ITEMS.getKey(filterItems.get(i).getItem()).getNamespace() == ForgeRegistries.ITEMS.getKey(itemToCheck.getItem()).getNamespace()) {
 						match = true;
 						break;
 					}
@@ -46,8 +49,8 @@ public class ItemUtilities {
 		// Check for ore dictionary (tags).
 		if (!match && matchOreDict) {
 			for (ItemStack filterItem : filterItems) {
-				for (ResourceLocation filterItemTags : filterItem.getItem().getTags()) {
-					if (itemToCheck.getItem().getTags().contains(filterItemTags)) {
+				for (TagKey<Item> filterItemTags : ModTags.getTags(filterItem)) {
+					if (ModTags.tagContainsItem(filterItemTags, itemToCheck.getItem())) {
 						match = true;
 						break;
 					}
@@ -82,8 +85,8 @@ public class ItemUtilities {
 	 * @return True if stack2 is usable to replace stack1.
 	 */
 	public static boolean doStacksOverlapTags(ItemStack stack1, ItemStack stack2) {
-		for (ResourceLocation filterItemTags : stack1.getItem().getTags()) {
-			if (stack2.getItem().getTags().contains(filterItemTags)) {
+		for (TagKey<Item> filterItemTags : ModTags.getTags(stack1)) {
+			if (ModTags.tagContainsItem(filterItemTags, stack2.getItem())) {
 				return true;
 			}
 		}
@@ -163,5 +166,12 @@ public class ItemUtilities {
 			itemstack.readShareTag(buffer.readNbt());
 			return itemstack;
 		}
+	}
+
+	public static int getItemStackHash(ItemStack stack) {
+		// TODO: Profile the performance here.
+		CompoundTag tag = stack.serializeNBT();
+		tag.remove("Count");
+		return Objects.hash(tag);
 	}
 }

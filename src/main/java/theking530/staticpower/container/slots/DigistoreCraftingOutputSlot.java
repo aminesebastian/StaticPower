@@ -30,14 +30,14 @@ public class DigistoreCraftingOutputSlot extends ResultSlot {
 		super.onTake(thePlayer, stack);
 
 		// On the client, set the items back to the original for a moment.
-		if (container.getCableComponent().getWorld().isClientSide()) {
+		if (container.getCableComponent().getLevel().isClientSide()) {
 			for (int i = 0; i < originalrecipe.length; i++) {
 				ItemStack originalStack = originalrecipe[i];
 
 				// Get the stack to put back into the slot.
 				ItemStack putBackStack = originalStack.copy();
-				if (putBackStack.hasContainerItem()) {
-					putBackStack = putBackStack.getContainerItem();
+				if (putBackStack.hasCraftingRemainingItem()) {
+					putBackStack = putBackStack.getCraftingRemainingItem();
 				}
 
 				// Put it back.
@@ -54,8 +54,8 @@ public class DigistoreCraftingOutputSlot extends ResultSlot {
 				} else {
 					// Get the stack to put back into the slot.
 					ItemStack putBackStack = originalStack.copy();
-					if (putBackStack.hasContainerItem()) {
-						putBackStack = putBackStack.getContainerItem();
+					if (putBackStack.hasCraftingRemainingItem()) {
+						putBackStack = putBackStack.getCraftingRemainingItem();
 					} else {
 						putBackStack.shrink(1);
 					}
@@ -68,7 +68,7 @@ public class DigistoreCraftingOutputSlot extends ResultSlot {
 
 		// If on the server, attempt to set the crafting inventory to the same items
 		// again.
-		if (!container.getCableComponent().getWorld().isClientSide) {
+		if (!container.getCableComponent().getLevel().isClientSide()) {
 			container.getDigistoreNetwork().ifPresent(digistoreModule -> {
 				for (int i = 0; i < craftMatrix.getContainerSize(); i++) {
 					// Get the original item

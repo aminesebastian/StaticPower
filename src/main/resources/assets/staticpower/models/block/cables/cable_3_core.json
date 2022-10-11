@@ -14,6 +14,19 @@
 				"up": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
 				"down": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"}
 			}
+		},
+		{
+			"name": "Core inverted",
+			"from": [9.5, 9.5, 9.5],
+			"to": [6.5, 6.5, 6.5],
+			"faces": {
+				"north": {"uv": [7, 9, 9, 7], "texture": "#cable_texture"},
+				"east": {"uv": [7, 9, 9, 7], "texture": "#cable_texture"},
+				"south": {"uv": [7, 9, 9, 7], "texture": "#cable_texture"},
+				"west": {"uv": [7, 9, 9, 7], "texture": "#cable_texture"},
+				"up": {"uv": [9, 7, 7, 9], "texture": "#cable_texture"},
+				"down": {"uv": [9, 7, 7, 9], "texture": "#cable_texture"}
+			}
 		}
 	]
 }

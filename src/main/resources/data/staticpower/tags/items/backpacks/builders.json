@@ -1,0 +1,10 @@
+{
+	"replace": false,
+	"values": [
+		"#forge:stone",
+		"#forge:glass",
+		"#forge:glass_panes",
+		"#forge:fences",
+		"#forge:fence_gates"
+	]
+}

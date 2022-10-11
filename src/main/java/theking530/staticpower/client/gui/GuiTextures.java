@@ -21,6 +21,7 @@ public class GuiTextures {
 
 	public static final ResourceLocation HEAT_BAR_FG = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/heat_bar_fg.png");
 	public static final ResourceLocation HEAT_BAR_BG = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/heat_bar_bg.png");
+	public static final ResourceLocation HEAT_BAR_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/heat_bar_indicator.png");
 
 	public static final ResourceLocation BUTTON_BG = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/button_bg.png");
 	public static final ResourceLocation ARROW_TEXTURES = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/arrow_buttons.png");
@@ -28,6 +29,13 @@ public class GuiTextures {
 	public static final ResourceLocation BUTTON_HOVER = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/button_hover.png");
 
 	public static final ResourceLocation POWER_TAB_ICON = new ResourceLocation(StaticPower.MOD_ID, "textures/items/upgrades/upgrade_power.png");
+
+	public static final ResourceLocation UP_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/up_indicator.png");
+	public static final ResourceLocation DOWN_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/down_indicator.png");
+	
+	public static final ResourceLocation AC_POWER_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/power_ac_signal.png");
+	public static final ResourceLocation DC_POWER_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/power_dc_symbol.png");
+	public static final ResourceLocation POWER_VOLTAGE_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/power_voltage_indicator.png");
 
 	public static final ResourceLocation GUI_ICONS = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/gui_icons.png");
 	public static final ResourceLocation FIRE_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/flames.png");
@@ -47,9 +55,9 @@ public class GuiTextures {
 	public static final ResourceLocation SUNSET_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/sunset_indicator.png");
 	public static final ResourceLocation SUNRISE_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/sunrise_indicator.png");
 	public static final ResourceLocation SNOW_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/snow_indicator.png");
-	
+
 	public static final ResourceLocation SCROLL_HANDLE = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/scroll_handle.png");
 	public static final ResourceLocation SCROLL_HANDLE_DISABLED = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/scroll_handle_disabled.png");
-	
+
 	public static final ResourceLocation BLANK = new ResourceLocation(StaticPower.MOD_ID, "textures/blank_texture.png");
 }

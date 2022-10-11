@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:cauldron_recipe",
+	"type": "staticpower:cauldron",
 	"input": {
 		"item": "staticpower:crop_static"
 	},

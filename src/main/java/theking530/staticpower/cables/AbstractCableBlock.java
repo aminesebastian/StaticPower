@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -28,19 +30,25 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
+import theking530.staticcore.cablenetwork.CableBoundsCache;
+import theking530.staticcore.cablenetwork.CableBoundsHoverResult;
+import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHoverType;
+import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.network.NetworkGUI;
-import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
-import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
+import theking530.staticpower.blockentities.components.ComponentUtilities;
+import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
-import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
+public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractCableBlock.class);
 	public final CableBoundsCache cableBoundsCache;
 	public final float coverHoleSize;
+
+	public AbstractCableBlock(CableBoundsCache cableBoundsCache, float coverHoleSize) {
+		this(null, cableBoundsCache, coverHoleSize);
+	}
 
 	/**
 	 * 
@@ -49,9 +57,9 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	 * @param coverHoleSize        The size of the hole to render in a cover when
 	 *                             this cable passes through a cover.
 	 */
-	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator, float coverHoleSize) {
-		super(name, Block.Properties.of(Material.METAL).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
-		cableBoundsCache = cableBoundsGenerator;
+	public AbstractCableBlock(ResourceLocation tier, CableBoundsCache cableBoundsCache, float coverHoleSize) {
+		super(tier, Block.Properties.of(Material.METAL).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
+		this.cableBoundsCache = cableBoundsCache;
 		this.coverHoleSize = coverHoleSize;
 	}
 
@@ -78,8 +86,8 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	}
 
 	@Override
-	public boolean shouldHaveFacingProperty() {
-		return false;
+	public DirectionProperty getFacingType() {
+		return null;
 	}
 
 	@Override
@@ -105,8 +113,8 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 
 				// If the item requests a GUI, open it.
 				if (attachmentItem.hasGui(attachment)) {
-					if (!world.isClientSide) {
-						NetworkGUI.openGui((ServerPlayer) player, attachmentItem.getUIContainerProvider(attachment, component, hoveredDirection), buff -> {
+					if (!world.isClientSide()) {
+						NetworkGUI.openScreen((ServerPlayer) player, attachmentItem.getUIContainerProvider(attachment, component, hoveredDirection), buff -> {
 							buff.writeInt(hoveredDirection.ordinal());
 							buff.writeBlockPos(pos);
 						});
@@ -117,37 +125,43 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 		}
 
 		// IF we didn't return earlier, go to the super call.
-		//hit.hitInfo = hoverResult;
 		return super.onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
 	}
 
 	@Override
 	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
+		if (world.isClientSide()) {
+			return super.sneakWrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
+		}
+
 		// Drop the block.
-		if (returnDrops && !world.isClientSide) {
+		if (returnDrops) {
 			BlockState state = world.getBlockState(pos);
 			List<ItemStack> stacks = Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos));
 			for (ItemStack stack : stacks) {
 				WorldUtilities.dropItem(world, pos, stack);
 			}
-			this.spawnAfterBreak(state, (ServerLevel) world, pos, wrench);
-		}
+			this.spawnAfterBreak(state, (ServerLevel) world, pos, wrench, true);
 
-		// Perform this on both the client and the server so the client updates any
-		// render changes (any conected cables).
-		world.setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
-		world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2, 512);
+			// Perform this on both the client and the server so the client updates any
+			// render changes (any conected cables).
+			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
+			world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2, 512);
+		}
 
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
-		super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
+		if (world.isClientSide()) {
+			return super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
+		}
+
 		// Get the cable component and make sure its valid.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {
-			return InteractionResult.FAIL;
+			return super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 		}
 
 		// Check for the hover result.
@@ -184,11 +198,6 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 		AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.relative(hitSide));
 		if (oppositeComponent != null) {
 			oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
-		}
-
-		// Refresh the cable on the server.
-		if (!world.isClientSide) {
-			CableNetworkManager.get(world).refreshCable(CableNetworkManager.get(world).getCable(pos));
 		}
 
 		return InteractionResult.SUCCESS;
@@ -229,9 +238,9 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 
 	@Deprecated
 	@Override
-	public void spawnAfterBreak(BlockState state, ServerLevel worldIn, BlockPos pos, ItemStack stack) {
+	public void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack, boolean brokenByPlayer) {
 		// Get the cable provider if present.
-		ComponentUtilities.getComponent(AbstractCableProviderComponent.class, worldIn.getBlockEntity(pos)).ifPresent(component -> {
+		ComponentUtilities.getComponent(AbstractCableProviderComponent.class, level.getBlockEntity(pos)).ifPresent(component -> {
 			// Allocate a container for the additional drops.
 			List<ItemStack> additionalDrops = new ArrayList<ItemStack>();
 
@@ -247,7 +256,7 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 
 			// Drop the additional drops.
 			for (ItemStack drop : additionalDrops) {
-				WorldUtilities.dropItem(worldIn, pos, drop);
+				WorldUtilities.dropItem(level, pos, drop);
 			}
 		});
 	}

@@ -8,13 +8,14 @@ import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.IUpgradeItem;
+import theking530.api.upgrades.UpgradeType;
+import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.items.StaticPowerItem;
@@ -24,23 +25,23 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	private final ResourceLocation tier;
 	private final Set<UpgradeType> upgradeTypes;
 
-	public BaseUpgrade(String name, Properties properties, UpgradeType... upgradeTypes) {
-		this(name, null, properties, upgradeTypes);
+	public BaseUpgrade(Properties properties, UpgradeType... upgradeTypes) {
+		this(null, properties, upgradeTypes);
 	}
 
-	public BaseUpgrade(String name, ResourceLocation tier, UpgradeType... upgradeTypes) {
-		this(name, tier, new Properties().stacksTo(16), upgradeTypes);
+	public BaseUpgrade(ResourceLocation tier, UpgradeType... upgradeTypes) {
+		this(tier, new Properties().stacksTo(16), upgradeTypes);
 	}
 
-	public BaseUpgrade(String name, ResourceLocation tier, Properties properties, UpgradeType... upgradeTypes) {
-		super(name, properties);
+	public BaseUpgrade(ResourceLocation tier, Properties properties, UpgradeType... upgradeTypes) {
+		super(properties);
 		this.tier = tier;
 		this.upgradeTypes = new HashSet<UpgradeType>();
 
 		// If no upgrade type was supplied, then mark this as a special singular
 		// upgrade.
 		if (upgradeTypes.length == 0) {
-			this.upgradeTypes.add(UpgradeType.SPECIAL);
+			this.upgradeTypes.add(UpgradeTypes.SPECIAL);
 		} else {
 			for (UpgradeType type : upgradeTypes) {
 				this.upgradeTypes.add(type);
@@ -48,10 +49,14 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 		}
 	}
 
+	public StaticPowerTier getTierObject() {
+		return StaticPowerConfig.getTier(tier);
+	}
+
 	@Override
-	public StaticPowerTier getTier() {
+	public ResourceLocation getTier() {
 		if (isTiered()) {
-			return StaticPowerConfig.getTier(tier);
+			return tier;
 		} else {
 			throw new RuntimeException("Attempted to get the tier of a non-tiered ugprade!");
 		}
@@ -65,7 +70,7 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.WHITE + "Stacks Up To " + stack.getMaxStackSize()));
+		tooltip.add(Component.literal(ChatFormatting.WHITE + "Stacks Up To " + stack.getMaxStackSize()));
 	}
 
 	@Override

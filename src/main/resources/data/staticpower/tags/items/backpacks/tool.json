@@ -1,0 +1,9 @@
+{
+	"replace": false,
+	"values": [
+		"#staticpower:soldering_iron",
+		"#staticpower:wire_cutters",
+		"#staticpower:hammer",
+		"#staticpower:saw"
+	]
+}

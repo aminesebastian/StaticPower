@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 
 @OnlyIn(Dist.CLIENT)
 public class TextButton extends StandardButton {
@@ -28,10 +28,10 @@ public class TextButton extends StandardButton {
 		int width = getFontRenderer().width(text);
 
 		GuiDrawUtilities.drawString(pose, text, getSize().getX() / 2 + width / 2, -1 + getFontRenderer().lineHeight / 2 + getSize().getY() / 2, 0.0f, 1.0f,
-				isEnabled() ? Color.EIGHT_BIT_WHITE : Color.EIGHT_BIT_WHITE, true);
+				isEnabled() ? SDColor.EIGHT_BIT_WHITE : SDColor.EIGHT_BIT_WHITE, true);
 
 		if (!isEnabled()) {
-			GuiDrawUtilities.drawRectangle(pose, getSize().getX(), getSize().getY(), new Color(0.5f, 0.5f, 0.5f, 0.75f));
+			GuiDrawUtilities.drawRectangle(pose, getSize().getX(), getSize().getY(), new SDColor(0.5f, 0.5f, 0.5f, 0.75f));
 		}
 	}
 

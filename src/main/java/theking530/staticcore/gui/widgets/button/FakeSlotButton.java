@@ -13,7 +13,7 @@ import net.minecraft.world.item.TooltipFlag.Default;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
@@ -30,6 +30,7 @@ public class FakeSlotButton extends StandardButton {
 	public FakeSlotButton(ItemStack icon, int xPos, int yPos, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, 18, 18, onClicked);
 		itemIcon = icon;
+		this.setClickSoundEnabled(false);
 	}
 
 	/**
@@ -54,7 +55,10 @@ public class FakeSlotButton extends StandardButton {
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (!itemIcon.isEmpty()) {
-			tooltips.addAll(itemIcon.getTooltipLines(Minecraft.getInstance().player, showAdvanced ? Default.ADVANCED : Default.NORMAL));
+			// Do not ever show advanced tooltips here as those contain the registry name
+			// and NBT tag count.
+			// Not the same as StaticPower Advanced tooltips.
+			tooltips.addAll(itemIcon.getTooltipLines(Minecraft.getInstance().player, Default.NORMAL));
 		}
 	}
 
@@ -78,7 +82,7 @@ public class FakeSlotButton extends StandardButton {
 
 		// Render the hover effect.
 		if (isHovered()) {
-			GuiDrawUtilities.drawRectangle(pose, 16, 16, 0, 0, 250, new Color(1.0f, 1.0f, 1.0f, 0.5f));
+			GuiDrawUtilities.drawRectangle(pose, 16, 16, 0, 0, 250, new SDColor(1.0f, 1.0f, 1.0f, 0.5f));
 		}
 	}
 }

@@ -8,9 +8,12 @@ import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.init.ModFluids;
 
 public class RefineryRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<RefineryRecipe> RECIPE_TYPE = RecipeType.register("refinery");
+	public static final String ID = "refinery";
+	public static final RecipeType<RefineryRecipe> RECIPE_TYPE = new StaticPowerRecipeType<RefineryRecipe>();
 
 	private final StaticPowerIngredient catalyst;
 	private final FluidStack inputFluid1;
@@ -19,8 +22,8 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 	private final FluidStack output2;
 	private final FluidStack output3;
 
-	public RefineryRecipe(ResourceLocation name, StaticPowerIngredient catalyst, FluidStack inputFluid1, FluidStack inputFluid2, FluidStack output1, FluidStack output2, FluidStack output3,
-			MachineRecipeProcessingSection processing) {
+	public RefineryRecipe(ResourceLocation name, StaticPowerIngredient catalyst, FluidStack inputFluid1, FluidStack inputFluid2, FluidStack output1, FluidStack output2,
+			FluidStack output3, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.catalyst = catalyst;
 		this.inputFluid1 = inputFluid1;
@@ -83,30 +86,23 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 			}
 
 			// Check fluids either way.
-			boolean straightMatch = true;
-			straightMatch &= matchParams.getFluids()[0].equals(inputFluid1);
-			straightMatch &= matchParams.getFluids()[1].equals(inputFluid2);
-			if (!straightMatch) {
-				matched &= matchParams.getFluids()[1].equals(inputFluid1);
-				matched &= matchParams.getFluids()[0].equals(inputFluid2);
+			matched &= matchParams.getFluids()[0].equals(inputFluid1) || matchParams.getFluids()[0] == ModFluids.WILDCARD;
+			matched &= matchParams.getFluids()[1].equals(inputFluid2) || matchParams.getFluids()[1] == ModFluids.WILDCARD;
+			if (!matched) {
+				return false;
 			}
 
 			// Verify the amounts.
 			if (matched && matchParams.shouldVerifyFluidAmounts()) {
-				if (straightMatch) {
-					matched &= matchParams.getFluids()[0].getAmount() >= inputFluid1.getAmount();
-					matched &= matchParams.getFluids()[1].getAmount() >= inputFluid2.getAmount();
-				} else {
-					matched &= matchParams.getFluids()[1].getAmount() >= inputFluid1.getAmount();
-					matched &= matchParams.getFluids()[0].getAmount() >= inputFluid2.getAmount();
-				}
+				matched &= matchParams.getFluids()[0].getAmount() >= inputFluid1.getAmount() || matchParams.getFluids()[0] == ModFluids.WILDCARD;
+				matched &= matchParams.getFluids()[1].getAmount() >= inputFluid2.getAmount() || matchParams.getFluids()[1] == ModFluids.WILDCARD;
 			}
 		}
 
 		// Check items.
 		if (matchParams.shouldVerifyItems() && !catalyst.isEmpty()) {
 			// Check items either way.
-			if (!matchParams.hasItems() && catalyst.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
+			if (!matchParams.hasItems() || !catalyst.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
 				return false;
 			}
 		}

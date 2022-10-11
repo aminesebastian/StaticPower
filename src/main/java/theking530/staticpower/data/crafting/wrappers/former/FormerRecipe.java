@@ -10,9 +10,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class FormerRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<FormerRecipe> RECIPE_TYPE = RecipeType.register("former");
+	public static final String ID = "former";
+	public static final RecipeType<FormerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FormerRecipe>();
 
 	private StaticPowerIngredient inputIngredient;
 	private Ingredient requiredMold;

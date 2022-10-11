@@ -10,20 +10,16 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraftforge.registries.ForgeRegistryEntry;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<Research> {
+public class ResearchSerializer extends StaticPowerRecipeSerializer<Research> {
 	public static final ResearchSerializer INSTANCE = new ResearchSerializer();
-
-	private ResearchSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "research"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "research");
 
 	@Override
 	public Research fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -115,9 +111,9 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 
 		// Capture the hidden driver and color.
 		boolean hidden = json.has("hiddenUntilAvailable") ? json.get("hiddenUntilAvailable").getAsBoolean() : false;
-		Color color = null;
+		SDColor color = null;
 		if (json.has("color")) {
-			color = Color.fromJson(json.get("color").getAsJsonObject());
+			color = SDColor.fromJson(json.get("color").getAsJsonObject());
 		}
 
 		// Capture visual offset.
@@ -179,7 +175,7 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		}
 
 		boolean hidden = buffer.readBoolean();
-		Color color = Color.fromBuffer(buffer);
+		SDColor color = SDColor.fromBuffer(buffer);
 
 		// Create the recipe.
 		return new Research(recipeId, title, description, visualOffset, sortOrder, prerequisites, requirements, rewards, unlocks, advacements, icon, hidden, color);

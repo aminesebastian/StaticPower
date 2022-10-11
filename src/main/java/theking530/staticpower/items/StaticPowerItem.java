@@ -33,10 +33,6 @@ import theking530.staticpower.StaticPower;
  *
  */
 public class StaticPowerItem extends Item implements ITooltipProvider {
-	/**
-	 * The name of this item.
-	 */
-	public String NAME = "";
 	protected static final Random RANDOM = new Random();
 
 	/**
@@ -45,8 +41,8 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * 
 	 * @param name The registry name for this item sans namespace.
 	 */
-	public StaticPowerItem(String name) {
-		this(name, new Item.Properties().tab(StaticPower.CREATIVE_TAB));
+	public StaticPowerItem() {
+		this(new Item.Properties().tab(StaticPower.CREATIVE_TAB));
 	}
 
 	/**
@@ -56,10 +52,8 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param properties The properties for this item (the item group is set within
 	 *                   this method, no need to set it externally).
 	 */
-	public StaticPowerItem(String name, Item.Properties properties) {
+	public StaticPowerItem(Item.Properties properties) {
 		super(properties.tab(StaticPower.CREATIVE_TAB));
-		NAME = name;
-		setRegistryName(name);
 	}
 
 	@Override
@@ -144,7 +138,7 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
 		if (this.isEdible()) {
 			ItemStack itemstack = player.getItemInHand(hand);
-			if (player.canEat(this.getFoodProperties().canAlwaysEat())) {
+			if (player.canEat(this.getFoodProperties(item, player).canAlwaysEat())) {
 				player.startUsingItem(hand);
 				return InteractionResultHolder.consume(itemstack);
 			} else {
@@ -202,6 +196,7 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	public int getBarWidth(ItemStack stack) {
 		return Math.round(13.0F - (float) stack.getDamageValue() * 13.0F / (float) stack.getMaxDamage());
 	}
+
 	@Override
 	public int getBarColor(ItemStack stack) {
 		float f = Math.max(0.0F, ((float) stack.getMaxDamage() - (float) stack.getDamageValue()) / (float) stack.getMaxDamage());

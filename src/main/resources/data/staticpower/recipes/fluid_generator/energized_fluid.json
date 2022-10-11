@@ -1,8 +1,8 @@
 {
-	"type": "staticpower:fluid_generator_recipe",
+	"type": "staticpower:fluid_generator",
 	"fluid": {
 		"fluid": "staticpower:fluid_energized",
 		"volume": 1
 	},
-	"power": 16000
+	"power": 16
 }

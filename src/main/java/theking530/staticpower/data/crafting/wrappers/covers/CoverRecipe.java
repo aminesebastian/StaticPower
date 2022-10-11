@@ -10,23 +10,25 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.Level;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.cover.CableCover;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.tools.CoverSaw;
 
 public class CoverRecipe extends CustomRecipe {
 	public static final SimpleRecipeSerializer<CoverRecipe> SERIALIZER_INSTANCE;
+	public static final String ID = "cover";
+	public static final RecipeType<CoverRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CoverRecipe>();
 
 	static {
-		SERIALIZER_INSTANCE = new SimpleRecipeSerializer<>(id -> new CoverRecipe(id));
-		SERIALIZER_INSTANCE.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "cover_recipe"));
+		SERIALIZER_INSTANCE = new SimpleRecipeSerializer<>(name -> new CoverRecipe(name));
 	}
 
-	public CoverRecipe(ResourceLocation id) {
-		super(id);
+	public CoverRecipe(ResourceLocation name) {
+		super(name);
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public class CoverRecipe extends CustomRecipe {
 		// If we can make a cover for this block, return that cover. Otherwise, return
 		// an empty itemstack.
 		if (CableCover.isValidForCover(((BlockItem) target).getBlock())) {
-			ItemStack output = ModItems.CableCover.makeCoverForBlock(((BlockItem) target).getBlock().defaultBlockState());
+			ItemStack output = ModItems.CableCover.get().makeCoverForBlock(((BlockItem) target).getBlock().defaultBlockState());
 			output.setCount(8);
 			return output;
 		} else {

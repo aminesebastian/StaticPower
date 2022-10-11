@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" g ",
+		" g ",
+		" r "
+	],
+	"key": {
+		"r": {
+			"tag": "forge:dusts/redstone"
+		},
+		"g": {
+			"tag": "forge:glass"
+		}
+	},
+	"result": {
+		"item": "staticpower:thermometer"
+	}
+}

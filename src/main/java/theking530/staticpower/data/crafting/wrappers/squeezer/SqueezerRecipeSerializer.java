@@ -8,23 +8,19 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class SqueezerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SqueezerRecipe> {
+public class SqueezerRecipeSerializer extends StaticPowerRecipeSerializer<SqueezerRecipe> {
 	public static final SqueezerRecipeSerializer INSTANCE = new SqueezerRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "squeezer_recipe");
 	private static final Logger LOGGER = LogManager.getLogger(SqueezerRecipeSerializer.class);
-
-	private SqueezerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "squeezer_recipe"));
-	}
 
 	@Override
 	public SqueezerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -39,8 +35,8 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.squeezerProcessingTime.get(), StaticPowerConfig.SERVER.squeezerPowerUsage.get(),
-				json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.squeezerProcessingTime,
+				StaticPowerConfig.SERVER.squeezerPowerUsage, json);
 
 		// Get the outputs object.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");

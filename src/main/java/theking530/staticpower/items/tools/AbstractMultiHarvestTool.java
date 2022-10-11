@@ -13,7 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,10 +40,10 @@ import theking530.staticpower.StaticPower;
 public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	protected float attackDamage;
 	protected Multimap<Attribute, AttributeModifier> toolAttributes;
-	protected List<Tag<Block>> mineableTags;
+	protected List<TagKey<Block>> mineableTags;
 
-	public AbstractMultiHarvestTool(Item.Properties properties, String name, float attackDamageIn, float attackSpeedIn, List<Tag<Block>> tags) {
-		super(name, properties.stacksTo(1));
+	public AbstractMultiHarvestTool(Item.Properties properties, float attackDamageIn, float attackSpeedIn, List<TagKey<Block>> tags) {
+		super(properties.stacksTo(1));
 		this.attackDamage = attackDamageIn + 2.0f;
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", (double) this.attackDamage, AttributeModifier.Operation.ADDITION));
@@ -274,7 +274,8 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 		return removed && canHarvestWithDrops;
 	}
 
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience,
+			boolean isCreative) {
 		block.playerDestroy(player.getCommandSenderWorld(), player, pos, state, tileEntity, heldItem);
 		if (experience > 0) {
 			state.getBlock().popExperience((ServerLevel) player.getCommandSenderWorld(), pos, experience);
@@ -317,7 +318,7 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
 		// Check to make sure one of the tags contains this.
 		boolean mineable = false;
-		for (Tag<Block> tag : mineableTags) {
+		for (TagKey<Block> tag : mineableTags) {
 			if (state.is(tag)) {
 				mineable = true;
 				break;

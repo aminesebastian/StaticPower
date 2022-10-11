@@ -11,17 +11,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class SolderingRecipeSerializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>>
-		implements RecipeSerializer<SolderingRecipe> {
+public class SolderingRecipeSerializer extends StaticPowerRecipeSerializer<SolderingRecipe> {
 	public static final SolderingRecipeSerializer INSTANCE = new SolderingRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "soldering_recipe");
 	private final JsonElement solderingIronTag;
 
 	public SolderingRecipeSerializer() {
-		setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "soldering_recipe"));
 		solderingIronTag = GsonHelper.parse("{ \"tag\":\"staticpower:soldering_iron\" }");
 	}
 

@@ -1,0 +1,6 @@
+{
+    "parent": "staticpower:block/machines/base_blocks/machine_block_static",
+	"textures": {
+		"front_overlay": "staticpower:blocks/machines/hydroponic_farmer_face_off"
+	}
+}

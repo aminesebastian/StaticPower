@@ -16,8 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,7 +32,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
@@ -43,7 +40,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -54,9 +51,13 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
+import theking530.api.energy.StaticPowerVoltage;
+import theking530.api.energy.StaticVoltageRange;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
+import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.api.multipartitem.AbstractMultiPartSlot;
 import theking530.api.multipartitem.MultiPartSlots;
-import theking530.api.power.ItemStackStaticVoltCapability;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -68,23 +69,45 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSupplier {
 	private static final List<AbstractMultiPartSlot> PARTS = new ArrayList<AbstractMultiPartSlot>();
 	private static final int MAX_RECURSION = 100;
-	private Ingredient woodIngredient;
 	public final ResourceLocation tier;
 
-	public Chainsaw(String name, float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
-		super(new Item.Properties().setNoRepair(), name, attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_AXE));
+	public Chainsaw(float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
+		super(new Item.Properties().setNoRepair(), attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_AXE));
 		this.tier = tier;
 		PARTS.add(MultiPartSlots.CHAINSAW_BLADE);
 	}
 
-	public long getCapacity() {
-		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 2;
+	public double getCapacity() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get() * 2;
+	}
+
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
+	}
+
+	public double getMaximumInputPower() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
+	}
+
+	public StaticPowerVoltage getOutputVoltage() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
+	}
+
+	public double getMaximumOutputPower() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
+	}
+
+	@Override
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+		// Only show the animation if the stored power is the same (didn't change).
+		// This is so we don't SPAM the animation on charge or discharge.
+		return super.shouldCauseBlockBreakReset(oldStack, newStack)
+				&& EnergyHandlerItemStackUtilities.getStoredPower(newStack) == EnergyHandlerItemStackUtilities.getStoredPower(oldStack);
 	}
 
 	@Override
@@ -99,7 +122,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 	public ItemStack getFilledVariant() {
 		ItemStack output = new ItemStack(this, 1);
-		EnergyHandlerItemStackUtilities.setEnergy(output, Integer.MAX_VALUE);
+		EnergyHandlerItemStackUtilities.getEnergyContainer(output).ifPresent((cap) -> {
+			cap.setStoredPower(Double.MAX_VALUE);
+		});
 		return output;
 	}
 
@@ -139,7 +164,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 				}
 			});
 		}
-		return efficiency.get() * StaticPowerConfig.getTier(tier).chainsawSpeedMultiplier.get();
+		return efficiency.get() * StaticPowerConfig.getTier(tier).toolConfiguration.chainsawSpeedMultiplier.get();
 	}
 
 	/**
@@ -148,7 +173,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
 		if (!world.isClientSide && player.isShiftKeyDown()) {
-			NetworkGUI.openGui((ServerPlayer) player, new ChainsawContainerProvider(item), buff -> {
+			NetworkGUI.openScreen((ServerPlayer) player, new ChainsawContainerProvider(item), buff -> {
 				buff.writeInt(player.getInventory().selected);
 			});
 			return InteractionResultHolder.success(item);
@@ -156,7 +181,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		return InteractionResultHolder.pass(item);
 	}
 
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience,
+			boolean isCreative) {
 		// If the player is in creative, do nothing.
 		if (isCreative) {
 			return;
@@ -189,11 +215,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		}
 
 		// Spawn any additional drops.
-		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem);
+		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem, true);
 	}
 
-	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
-			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
+			ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was smelted.
 		boolean wasAnythingSmelted = false;
@@ -205,7 +231,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 				// Get the droppable stack and get the furnace recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
 				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
-				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), player.getLevel());
+				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]),
+						player.getLevel());
 
 				// Replace the spot the droppable list with the smelting output if it exists.
 				if (recipe.isPresent()) {
@@ -233,27 +260,27 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 		// Update the energy usage on client and server. 1SV per block.
 		if (!player.isCreative()) {
-			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size() * 1000, false);
+			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size() * StaticPowerConfig.SERVER.chainsawPowerUsePerBlock.get(), false);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(" ").append(GuiTextUtilities.formatNumberAsString(StaticPowerConfig.getTier(tier).chainsawSpeedMultiplier.get())).append("x ")
-				.append(new TranslatableComponent("gui.staticpower.tool_speed_multiplier")).withStyle(ChatFormatting.DARK_GREEN));
+		tooltip.add(Component.literal(" ").append(GuiTextUtilities.formatNumberAsString(StaticPowerConfig.getTier(tier).toolConfiguration.chainsawSpeedMultiplier.get()))
+				.append("x ").append(Component.translatable("gui.staticpower.tool_speed_multiplier")).withStyle(ChatFormatting.DARK_GREEN));
 
-		tooltip.add(new TextComponent(" "));
+		tooltip.add(Component.literal(" "));
 
-		long remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
-		long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
-		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
+		double remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+		double capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
+		tooltip.add(PowerTextFormatting.formatPowerToString(remainingCharge, capacity));
 
 		if (isSlotPopulated(stack, MultiPartSlots.CHAINSAW_BLADE)) {
 			ItemStack blade = getPartInSlot(stack, MultiPartSlots.CHAINSAW_BLADE);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
 			bladeItem.getTooltip(blade, worldIn, tooltip, isShowingAdvanced);
-			tooltip.add(new TranslatableComponent("gui.staticpower.mining_speed").append(" ").append(String.valueOf(getEfficiency(stack))));
+			tooltip.add(Component.translatable("gui.staticpower.mining_speed").append(" ").append(String.valueOf(getEfficiency(stack))));
 			AttributeUtilities.addTooltipsForAttribute(blade, tooltip, isShowingAdvanced);
 		}
 	}
@@ -274,8 +301,12 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
-				.addCapability(new ItemStackStaticVoltCapability("default", stack, getCapacity(), getCapacity(), getCapacity()));
+		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
+			return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
+					.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getCapacity(), getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(),
+							getMaximumOutputPower()));
+		}
+		return null;
 	}
 
 	@Override
@@ -328,14 +359,10 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 		// Get the state and block here, and check if they are air.
 		BlockState state = player.getCommandSenderWorld().getBlockState(pos);
-		Block block = state.getBlock();
 		if (!state.isAir()) {
-			// Make an itemstack for the block.
-			ItemStack blockStack = new ItemStack(Item.byBlock(block));
-
 			// If not air, check to see if it is wood. If it is, and its harvestable,
 			// harvest it.
-			if (getLogTag().test(blockStack)) {
+			if (state.is(ModTags.LOG)) {
 				if (isCorrectToolForDrops(itemstack, state)) {
 					positions.add(pos);
 
@@ -353,16 +380,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		return ToolActions.DEFAULT_AXE_ACTIONS.contains(toolAction);
 	}
 
-	private Ingredient getLogTag() {
-		if (woodIngredient == null) {
-			woodIngredient = Ingredient.of(ModTags.LOG);
-		}
-		return woodIngredient;
-	}
-
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new ChainsawItemModel(existingModel);
 	}
 

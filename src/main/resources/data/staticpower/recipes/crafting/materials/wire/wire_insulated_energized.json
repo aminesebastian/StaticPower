@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"rwr",
+		"rwr",
+		"rwr"
+	],
+	"key": {
+		"r": {
+			"tag": "forge:rubber"
+		},
+		"w": {
+			"item": "staticpower:wire_energized"
+		}
+	},
+	"result": {
+		"item": "staticpower:wire_insulated_energized",
+		"count": 3
+	}
+}

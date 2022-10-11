@@ -10,22 +10,18 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.EnchantmentRecipeWrapper;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class EnchanterRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EnchanterRecipe> {
+public class EnchanterRecipeSerializer extends StaticPowerRecipeSerializer<EnchanterRecipe> {
 	public static final EnchanterRecipeSerializer INSTANCE = new EnchanterRecipeSerializer();
-
-	private EnchanterRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "enchanter_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "enchanter_recipe");
 
 	@Override
 	public EnchanterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -53,8 +49,8 @@ public class EnchanterRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.enchanterProcessingTime.get(), StaticPowerConfig.SERVER.enchanterPowerUsage.get(),
-				json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.enchanterProcessingTime,
+				StaticPowerConfig.SERVER.enchanterPowerUsage, json);
 
 		// Create the recipe.
 		return new EnchanterRecipe(recipeId, inputs, fluidInput, enchantments, processing);

@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<CompoundTag> {
+	public static final StaticPowerFluidTank EMPTY = new StaticPowerFluidTank(0);
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
 	protected Queue<Float> ioCaptureFrames;
 	protected Queue<Float> filledCaptureFrames;
@@ -39,6 +40,7 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 		if (resource.isEmpty() || !isFluidValid(resource)) {
 			return 0;
 		}
+
 		if (action.simulate()) {
 			if (voidExcess) {
 				return resource.getAmount();
@@ -49,6 +51,7 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 			}
 			return Math.min(capacity - fluid.getAmount(), resource.getAmount());
 		}
+
 		if (fluid.isEmpty()) {
 			fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
 			onContentsChanged();
@@ -93,10 +96,15 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 	@Nonnull
 	@Override
 	public FluidStack drain(int maxDrain, FluidAction action) {
+		if (maxDrain <= 0) {
+			return FluidStack.EMPTY;
+		}
+
 		int drained = maxDrain;
-		if (fluid.getAmount() < drained) {
+		if (drained > fluid.getAmount()) {
 			drained = fluid.getAmount();
 		}
+		
 		FluidStack stack = new FluidStack(fluid, drained);
 		if (action.execute() && drained > 0) {
 			fluid.shrink(drained);
@@ -202,5 +210,10 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 		averageDrained = nbt.getFloat("extracted");
 		capacity = nbt.getInt("capacity");
 		readFromNBT(nbt.getCompound("tank"));
+	}
+
+	@Override
+	public String toString() {
+		return "StaticPowerFluidTank [fluid=" + fluid + ", capacity=" + capacity + ", averageFilled=" + averageFilled + ", averageDrained=" + averageDrained + "]";
 	}
 }

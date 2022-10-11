@@ -8,6 +8,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -18,9 +19,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
+import theking530.staticpower.blockentities.nonpowered.conveyors.IConveyorBlock;
 import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntity;
 import theking530.staticpower.init.ModEntities;
-import theking530.staticpower.tileentities.nonpowered.conveyors.IConveyorBlock;
 
 public class ConveyorBeltEntity extends ItemEntity {
 	public static final int CHANGE_BACK_TTL = 20;
@@ -94,6 +95,11 @@ public class ConveyorBeltEntity extends ItemEntity {
 				remove(RemovalReason.DISCARDED);
 			}
 		}
+	}
+
+	@Override
+	public boolean hurt(DamageSource p_32013_, float p_32014_) {
+		return false;
 	}
 
 	@Override

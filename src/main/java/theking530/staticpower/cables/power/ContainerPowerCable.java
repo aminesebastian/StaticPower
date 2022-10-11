@@ -5,17 +5,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.network.PacketDistributor;
+import theking530.api.energy.metrics.IPowerMetricsSyncConsumer;
+import theking530.api.energy.metrics.PowerTransferMetrics;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
-import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.power.ContainerPowerMetricsSyncPacket;
-import theking530.staticpower.tileentities.components.power.IPowerMetricsSyncConsumer;
-import theking530.staticpower.tileentities.components.power.PowerTransferMetrics;
 
-public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEntityPowerCable> implements IPowerMetricsSyncConsumer {
+public class ContainerPowerCable extends StaticPowerTileEntityContainer<BlockEntityPowerCable> implements IPowerMetricsSyncConsumer {
 	@ContainerTypePopulator
 	public static final ContainerTypeAllocator<ContainerPowerCable, GuiPowerCable> TYPE = new ContainerTypeAllocator<>("power_cable", ContainerPowerCable::new);
 	static {
@@ -34,10 +30,10 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 	private long nextUpdateTime;
 
 	public ContainerPowerCable(int windowId, Inventory inv, FriendlyByteBuf data) {
-		this(windowId, inv, (TileEntityPowerCable) resolveTileEntityFromDataPacket(inv, data));
+		this(windowId, inv, (BlockEntityPowerCable) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerPowerCable(int windowId, Inventory playerInventory, TileEntityPowerCable owner) {
+	public ContainerPowerCable(int windowId, Inventory playerInventory, BlockEntityPowerCable owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -74,8 +70,8 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 		// Send a packet to all listening players.
 		getTileEntity().powerCableComponent.getPowerNetworkModule().ifPresent(module -> {
 			if (this.containerListeners.size() > 0 && getPlayerInventory().player instanceof ServerPlayer) {
-				NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.containerId, module.getMetrics());
-				StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) getPlayerInventory().player), msg);
+			//	NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.containerId, module.getMetrics());
+				//StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) getPlayerInventory().player), msg);
 			}
 		});
 	}

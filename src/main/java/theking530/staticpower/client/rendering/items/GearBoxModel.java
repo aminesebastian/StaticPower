@@ -3,30 +3,28 @@ package theking530.staticpower.client.rendering.items;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 
 @OnlyIn(Dist.CLIENT)
@@ -39,6 +37,7 @@ public class GearBoxModel implements BakedModel {
 		this.baseGearItem = new ItemStack(baseGearItem);
 	}
 
+	@SuppressWarnings("resource")
 	private BakedModel getBaseModel() {
 		return Minecraft.getInstance().getItemRenderer().getModel(baseGearItem, Minecraft.getInstance().level, null, 0);
 	}
@@ -57,7 +56,7 @@ public class GearBoxModel implements BakedModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
+	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
 		return getBaseModel().getQuads(state, side, rand);
 	}
 
@@ -93,12 +92,7 @@ public class GearBoxModel implements BakedModel {
 		}
 
 		@Override
-		public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
-			return getQuads(state, side, rand, EmptyModelData.INSTANCE);
-		}
-
-		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand, IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromModelData(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderLayer) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
@@ -106,18 +100,12 @@ public class GearBoxModel implements BakedModel {
 			List<BakedQuad> output = new ArrayList<BakedQuad>();
 
 			BakedModel itemModel = getBaseModel();
-			List<BakedQuad> chainsawBladeQuads = itemModel.getQuads(state, side, rand, data);
+			List<BakedQuad> chainsawBladeQuads = itemModel.getQuads(state, side, rand, data, renderLayer);
 			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(-0.21f, -0.22f, 0f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
 			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(0.21f, -0.02f, 0f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
 			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(-0.13f, 0.22f, 0.001f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
 
 			return output;
-		}
-
-		@Override
-		public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
-			BaseModel.handlePerspective(cameraTransformType, mat);
-			return this;
 		}
 
 		@Override

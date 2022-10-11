@@ -8,9 +8,11 @@ import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class CauldronRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<CauldronRecipe> RECIPE_TYPE = RecipeType.register("cauldron");
+	public static final String ID = "cauldron";
+	public static final RecipeType<CauldronRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CauldronRecipe>();
 
 	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput output;

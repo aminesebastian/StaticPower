@@ -2,7 +2,7 @@ package theking530.staticcore.gui.widgets.tabs.redstonecontrol;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -10,8 +10,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.button.ItemButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
-import theking530.staticcore.utilities.Color;
-import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticcore.utilities.SDColor;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
@@ -21,7 +21,7 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	public ItemButton highRedstoneButton;
 
 	public AbstractGuiRedstoneTab(RedstoneMode currentMode) {
-		super("Redstone Control", Color.EIGHT_BIT_YELLOW, 120, 100, new Color(1, 0.1f, 0.1f, 1), Items.REDSTONE);
+		super("Redstone Control", SDColor.EIGHT_BIT_YELLOW, 120, 100, new SDColor(1, 0.1f, 0.1f, 1), Items.REDSTONE);
 
 		registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 18, 26, 20, 20, (button, mouseButton) -> {
 			synchronizeRedstoneMode(RedstoneMode.Ignore);
@@ -36,9 +36,9 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 			updateToggledButton(highRedstoneButton);
 		}));
 
-		highRedstoneButton.setTooltip(new TranslatableComponent("gui.staticpower.redstone_mode.high"));
-		ignoreRedstoneButton.setClickSoundPitch(0.7f).setTooltip(new TranslatableComponent("gui.staticpower.redstone_mode.ignore"));
-		lowRedstoneButton.setClickSoundPitch(0.85f).setTooltip(new TranslatableComponent("gui.staticpower.redstone_mode.low"));
+		highRedstoneButton.setTooltip(Component.translatable("gui.staticpower.redstone_mode.high"));
+		ignoreRedstoneButton.setClickSoundPitch(0.7f).setTooltip(Component.translatable("gui.staticpower.redstone_mode.ignore"));
+		lowRedstoneButton.setClickSoundPitch(0.85f).setTooltip(Component.translatable("gui.staticpower.redstone_mode.low"));
 
 		// Initialize the correct button.
 		if (currentMode == RedstoneMode.Ignore) {

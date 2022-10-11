@@ -12,6 +12,7 @@
 		"staticpower:ore_tungsten",
 		"staticpower:ore_zinc",
 		"staticpower:ore_rusty_iron",
+		"staticpower:ore_uranium",
 		"staticpower:ore_deepslate_aluminum",
 		"staticpower:ore_deepslate_lead",
 		"staticpower:ore_deepslate_magnesium",
@@ -22,6 +23,7 @@
 		"staticpower:ore_deepslate_tin",
 		"staticpower:ore_deepslate_tungsten",
 		"staticpower:ore_deepslate_zinc",
+		"staticpower:ore_deepslate_tungsten",
 		"staticpower:ore_nether_silver",
 		"staticpower:ore_nether_tungsten",
 		"staticpower:ore_nether_platinum"

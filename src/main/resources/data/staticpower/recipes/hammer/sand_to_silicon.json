@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:hammer_recipe",
+	"type": "staticpower:hammer",
 	"input_block": "minecraft:sand",
 	"output": {
 		"item": "staticpower:raw_silicon",

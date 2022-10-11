@@ -10,8 +10,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
 public class StaticPowerRotatePillarBlock extends StaticPowerBlock {
-	public StaticPowerRotatePillarBlock(String name, Properties properties) {
-		super(name, properties);
+	public StaticPowerRotatePillarBlock(Properties properties) {
+		super(properties);
 		this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.Y));
 	}
 

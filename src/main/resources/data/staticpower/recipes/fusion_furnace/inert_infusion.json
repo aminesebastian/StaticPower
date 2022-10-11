@@ -1,8 +1,8 @@
 {
-	"type": "staticpower:fusion_furnace_recipe",
+	"type": "staticpower:fusion_furnace",
 	"inputs": [
 		{
-			"tag": "forge:ingots/iron"
+			"tag": "forge:ingots/copper"
 		},
 		{
 			"tag": "forge:ingots/gold"

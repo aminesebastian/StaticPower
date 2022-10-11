@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:centrifuge_recipe",
+	"type": "staticpower:centrifuge",
 	"input": {
 		"item": "staticpower:upgrade_range_static"
 	},

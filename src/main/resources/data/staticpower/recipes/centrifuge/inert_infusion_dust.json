@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:centrifuge_recipe",
+	"type": "staticpower:centrifuge",
 	"input": {
 		"item": "staticpower:dust_inert_infusion",
 		"count": 3

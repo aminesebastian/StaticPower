@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "staticpower:fluid_energized"
+    "staticpower:fluid_energized",
+    "staticpower:fluid_energized_flowing"
   ]
 }

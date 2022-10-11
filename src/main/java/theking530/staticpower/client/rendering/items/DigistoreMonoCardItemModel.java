@@ -4,34 +4,33 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ForgeModelBakery;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
@@ -62,7 +61,7 @@ public class DigistoreMonoCardItemModel implements BakedModel {
 				float ratio = (float) inv.getTotalContainedCount() / inv.getItemCapacity();
 				int intRatio = (int) (ratio * 20);
 
-				int hash = Objects.hash(stack.getItem().getRegistryName(), intRatio);
+				int hash = Objects.hash(ForgeRegistries.ITEMS.getKey(stack.getItem()), intRatio);
 				DigistoreMonoCardModel model = DigistoreMonoCardItemModel.this.cache.get(hash);
 				if (model == null) {
 					model = new DigistoreMonoCardModel(baseModel, ratio);
@@ -75,7 +74,7 @@ public class DigistoreMonoCardItemModel implements BakedModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
+	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
 		return baseModel.getQuads(state, side, rand);
 	}
 
@@ -114,43 +113,30 @@ public class DigistoreMonoCardItemModel implements BakedModel {
 		}
 
 		@Override
-		public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
-			return getQuads(state, side, rand, EmptyModelData.INSTANCE);
-		}
-
-		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand, IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromModelData(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderLayer) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
 
 			if (quads == null) {
 				quads = new ArrayList<BakedQuad>();
-				quads.addAll(BaseModel.getQuads(state, side, rand, data));
+				quads.addAll(BaseModel.getQuads(state, side, rand, data, renderLayer));
 
-				TextureAtlas blocksTexture = ForgeModelBakery.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
 				TextureAtlasSprite sideSprite;
-
 				if (filledRatio < 1.0f) {
-					sideSprite = blocksTexture.getSprite(StaticPowerSprites.DIGISTORE_FILL_BAR);
+					sideSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.DIGISTORE_FILL_BAR);
 				} else {
-					sideSprite = blocksTexture.getSprite(StaticPowerSprites.DIGISTORE_FILL_BAR_FULL);
+					sideSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.DIGISTORE_FILL_BAR_FULL);
 				}
 
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 				BlockElementFace blockPartFace = new BlockElementFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
 
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(3.5f, 4.0f, 0.0f), new Vector3f(3.5f + (filledRatio * 9.0f), 5.4f, 16.0f), blockPartFace, sideSprite, Direction.SOUTH, ModelUtilities.IDENTITY,
-						null, false, new ResourceLocation("dummy_name"));
+				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(3.5f, 4.0f, 0.0f), new Vector3f(3.5f + (filledRatio * 9.0f), 5.4f, 16.0f), blockPartFace, sideSprite,
+						Direction.SOUTH, ModelUtilities.IDENTITY, null, false, new ResourceLocation("dummy_name"));
 				quads.add(newQuad);
 			}
 			return quads;
-		}
-
-		@Override
-		public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
-			BaseModel.handlePerspective(cameraTransformType, mat);
-			return this;
 		}
 
 		@Override

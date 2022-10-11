@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:farming_fertalizer_recipe",
+	"type": "staticpower:farming_fertalizer",
 	"fertilizer": {
 		"fluid": "staticpower:fluid_static",
 		"volume": 1

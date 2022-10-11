@@ -15,9 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.RegistryManager;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class StaticPowerJsonParsingUtilities {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerJsonParsingUtilities.class);
@@ -25,13 +24,13 @@ public class StaticPowerJsonParsingUtilities {
 	public static FluidStack parseFluidStack(JsonObject object) {
 		try {
 			// Get the fluid. If there is no defined fluid by that name, return null.
-			Fluid fluid = RegistryManager.ACTIVE.getRegistry(Fluid.class).getValue(new ResourceLocation(object.get("fluid").getAsString()));
+			Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(object.get("fluid").getAsString()));
 			if (fluid == null) {
 				throw new RuntimeException("An invalid fluid name was supplied.");
 			}
 
 			// Get the amount (if provided).
-			int amount = FluidAttributes.BUCKET_VOLUME;
+			int amount = 1000;
 			if (object.has("volume")) {
 				amount = object.get("volume").getAsInt();
 			}

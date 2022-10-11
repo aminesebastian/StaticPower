@@ -10,7 +10,7 @@
 			"item": "staticpower:plate_energized"
 		},
 		"w": {
-			"tag": "forge:wires/gold"
+			"tag": "forge:nuggets/gold"
 		},
 		"r": {
 			"item": "staticpower:crystal_energized"

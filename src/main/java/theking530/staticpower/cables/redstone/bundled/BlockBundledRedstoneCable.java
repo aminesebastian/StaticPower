@@ -16,16 +16,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
-import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 
 public class BlockBundledRedstoneCable extends AbstractCableBlock {
-	public BlockBundledRedstoneCable(String name) {
-		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
+	public BlockBundledRedstoneCable() {
+		super(new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -35,10 +35,10 @@ public class BlockBundledRedstoneCable extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
-		BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_STRAIGHT);
-		BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_EXTENSION);
-		BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_ATTACHMENT);
+	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
+		BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_STRAIGHT);
+		BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_EXTENSION);
+		BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_ATTACHMENT);
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}
 
@@ -54,6 +54,6 @@ public class BlockBundledRedstoneCable extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return TileEntityBundledRedstoneCable.TYPE.create(pos, state);
+		return BlockEntityBundledRedstoneCable.TYPE.create(pos, state);
 	}
 }

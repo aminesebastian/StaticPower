@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:former_recipe",
+	"type": "staticpower:former",
 	"input": {
 		"tag": "forge:ingots/aluminum"
 	},
@@ -8,6 +8,6 @@
 	},
 	"output": {
 		"item": "staticpower:wire_aluminum",
-		"count": 8
+		"count": 9
 	}
 }

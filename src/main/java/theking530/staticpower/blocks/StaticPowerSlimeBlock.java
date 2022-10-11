@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StaticPowerSlimeBlock extends StaticPowerBlock {
 
-	public StaticPowerSlimeBlock(String name, Block.Properties properties) {
-		super(name, properties);
+	public StaticPowerSlimeBlock(Block.Properties properties) {
+		super(properties);
 	}
 
 	/**

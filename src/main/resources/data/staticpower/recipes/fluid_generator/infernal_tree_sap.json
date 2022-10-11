@@ -1,8 +1,8 @@
 {
-	"type": "staticpower:fluid_generator_recipe",
+	"type": "staticpower:fluid_generator",
 	"fluid": {
 		"fluid": "staticpower:infernal_tree_sap",
 		"volume": 1
 	},
-	"power": 18000
+	"power": 18
 }

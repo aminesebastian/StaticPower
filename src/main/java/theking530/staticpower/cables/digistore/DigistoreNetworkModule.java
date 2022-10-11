@@ -2,33 +2,34 @@ package theking530.staticpower.cables.digistore;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticcore.cablenetwork.CableNetwork;
+import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
+import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
+import theking530.staticpower.blockentities.components.ComponentUtilities;
+import theking530.staticpower.blockentities.digistorenetwork.manager.TileEntityDigistoreManager;
+import theking530.staticpower.blockentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
-import theking530.staticpower.cables.network.CableNetwork;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.NetworkMapper;
-import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.digistorenetwork.manager.TileEntityDigistoreManager;
-import theking530.staticpower.tileentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
+import theking530.staticpower.init.cables.ModCableModules;
+import theking530.staticpower.teams.Team;
 import theking530.staticpower.utilities.MetricConverter;
 
-public class DigistoreNetworkModule extends AbstractCableNetworkModule {
+public class DigistoreNetworkModule extends CableNetworkModule {
 	public static final int CRAFTING_TIME = 10;
 
 	private final List<IDigistoreInventory> digistores;
@@ -42,7 +43,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	private int craftingTimer;
 
 	public DigistoreNetworkModule() {
-		super(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+		super(ModCableModules.Digistore.get());
 		digistores = new LinkedList<IDigistoreInventory>();
 		transactionManager = new DigistoreNetworkTransactionManager(this);
 		powerUsingDigistores = new LinkedList<ServerCable>();
@@ -54,7 +55,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void tick(Level world) {
 		if (isManagerPresent()) {
-			manager.energyStorage.useBulkPower(getPowerUsage());
+			manager.energyStorage.drainPower(getPowerUsage(), false);
 
 			craftingTimer++;
 			if (craftingTimer >= CRAFTING_TIME) {
@@ -92,7 +93,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 				}
 
 				// If this cable has a power usage tag, capture it as a power user.
-				if (cable.containsProperty(DigistoreCableProviderComponent.POWER_USAGE_TAG)) {
+				if (cable.getDataTag().contains(DigistoreCableProviderComponent.POWER_USAGE_TAG)) {
 					powerUsingDigistores.add(cable);
 				}
 
@@ -107,8 +108,12 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 				});
 
 				// If this is also a manager, set the manager present to true.
+				// If we already had a manager set, ignore this.
+				// TODO: Error message to show that there are multiple managers attached.
 				if (te instanceof TileEntityDigistoreManager) {
-					manager = (TileEntityDigistoreManager) te;
+					if (manager == null) {
+						manager = (TileEntityDigistoreManager) te;
+					}
 				}
 			}
 		}
@@ -118,10 +123,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	public boolean isManagerPresent() {
-		if (manager == null) {
-			Network.updateGraph(Network.getWorld(), Network.getOrigin());
-		}
-		return manager != null && manager.energyStorage.getStorage().getStoredPower() >= getPowerUsage();
+		return manager != null && manager.energyStorage.getStoredPower() >= getPowerUsage();
 	}
 
 	public DigistoreInventorySnapshot getNetworkInventorySnapshotForDisplay(String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
@@ -160,7 +162,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	public int getPowerUsage() {
 		int usage = 0;
 		for (ServerCable cable : powerUsingDigistores) {
-			usage += cable.getIntProperty(DigistoreCableProviderComponent.POWER_USAGE_TAG);
+			usage += cable.getDataTag().getInt(DigistoreCableProviderComponent.POWER_USAGE_TAG);
 		}
 		return usage;
 	}
@@ -198,14 +200,14 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void onAddedToNetwork(CableNetwork other) {
 		super.onAddedToNetwork(other);
-		if (other.hasModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
-			DigistoreNetworkModule module = (DigistoreNetworkModule) other.getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+		if (other.hasModule(ModCableModules.Digistore.get())) {
+			DigistoreNetworkModule module = (DigistoreNetworkModule) other.getModule(ModCableModules.Digistore.get());
 			module.craftingManager.mergeWithOtherManager(craftingManager);
 		}
 	}
 
 	@Override
-	public void getReaderOutput(List<Component> output) {
+	public void getReaderOutput(List<Component> output, BlockPos pos) {
 		// Get the total amount of items.
 		int items = 0;
 		for (IDigistoreInventory inv : digistores) {
@@ -214,17 +216,26 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 
 		// Inventories.
 		String digistoreInventories = new MetricConverter(digistores.size()).getValueAsString(true);
-		output.add(new TextComponent(String.format("Contains: %1$s digistore inventories.", digistoreInventories)));
+		output.add(Component.literal(String.format("Contains: %1$s digistore inventories.", digistoreInventories)));
 
 		// ItemCount
 		String itemCount = new MetricConverter(items).getValueAsString(true);
-		output.add(new TextComponent(String.format("Contains: %1$s items.", itemCount)));
+		output.add(Component.literal(String.format("Contains: %1$s items.", itemCount)));
 	}
 
 	@Override
 	public void readFromNbt(CompoundTag tag) {
 		craftingManager.readFromNbt(tag);
 		craftingTimer = tag.getInt("crafting_timer");
+	}
+
+	protected Optional<Team> getOwningTeam() {
+		if (!isManagerPresent()) {
+			return Optional.empty();
+		}
+
+		Team team = manager.getTeamComponent().getOwningTeam();
+		return Optional.ofNullable(team);
 	}
 
 	@Override

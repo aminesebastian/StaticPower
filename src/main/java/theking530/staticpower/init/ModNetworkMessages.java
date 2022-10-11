@@ -1,11 +1,29 @@
 package theking530.staticpower.init;
 
+import theking530.staticcore.cablenetwork.CableStateSyncPacket;
+import theking530.staticcore.cablenetwork.CableStateSyncRequestPacket;
 import theking530.staticcore.data.StaticPowerGameDataLoadPacket;
 import theking530.staticcore.data.StaticPowerGameDataSyncPacket;
 import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
 import theking530.staticcore.gui.widgets.tabs.slottabs.PacketGuiTabAddSlots;
+import theking530.staticcore.productivity.metrics.PacketRecieveProductionMetrics;
+import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics;
+import theking530.staticpower.blockentities.components.control.ProcesingComponentSyncPacket;
+import theking530.staticpower.blockentities.components.energy.PowerStorageComponentSyncPacket;
+import theking530.staticpower.blockentities.components.fluids.PacketFluidContainerComponent;
+import theking530.staticpower.blockentities.components.fluids.PacketFluidTankComponent;
+import theking530.staticpower.blockentities.components.heat.PacketHeatStorageComponent;
+import theking530.staticpower.blockentities.components.items.PacketLockInventorySlot;
+import theking530.staticpower.blockentities.components.loopingsound.LoopingSoundPacketStart;
+import theking530.staticpower.blockentities.components.loopingsound.LoopingSoundPacketStop;
+import theking530.staticpower.blockentities.components.team.PacketSetTeamComponentTeam;
+import theking530.staticpower.blockentities.digistorenetwork.digistore.PacketLockDigistore;
+import theking530.staticpower.blockentities.machines.packager.PacketPackagerSizeChange;
+import theking530.staticpower.blockentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
+import theking530.staticpower.blockentities.power.powermonitor.PacketPowerMonitorSync;
+import theking530.staticpower.blockentities.power.transformer.TransformerControlSyncPacket;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketClearDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketRestorePreviousCraftingRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderClearRecipe;
@@ -30,24 +48,9 @@ import theking530.staticpower.container.PacketRevertToParentContainer;
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
+import theking530.staticpower.network.BlockEntityBasicSyncPacket;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.teams.research.network.PacketSetSelectedResearch;
-import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
-import theking530.staticpower.tileentities.components.fluids.PacketFluidTankComponent;
-import theking530.staticpower.tileentities.components.heat.PacketHeatStorageComponent;
-import theking530.staticpower.tileentities.components.items.PacketLockInventorySlot;
-import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStart;
-import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStop;
-import theking530.staticpower.tileentities.components.power.ContainerPowerMetricsSyncPacket;
-import theking530.staticpower.tileentities.components.power.PacketEnergyStorageComponent;
-import theking530.staticpower.tileentities.components.power.TileEntityPowerMetricsSyncPacket;
-import theking530.staticpower.tileentities.components.team.PacketSetTeamComponentTeam;
-import theking530.staticpower.tileentities.digistorenetwork.digistore.PacketLockDigistore;
-import theking530.staticpower.tileentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
-import theking530.staticpower.tileentities.powered.battery.BatteryControlSyncPacket;
-import theking530.staticpower.tileentities.powered.packager.PacketPackagerSizeChange;
-import theking530.staticpower.tileentities.powered.powermonitor.PacketPowerMonitorSync;
 
 public class ModNetworkMessages {
 	public static void init() {
@@ -56,15 +59,14 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketSideConfigTab.class);
 		StaticPowerMessageHandler.registerMessage(PacketItemFilter.class);
 		StaticPowerMessageHandler.registerMessage(PacketLockDigistore.class);
-		StaticPowerMessageHandler.registerMessage(TileEntityBasicSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(BlockEntityBasicSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(ItemCableAddedPacket.class);
 		StaticPowerMessageHandler.registerMessage(ItemCableRemovedPacket.class);
 		StaticPowerMessageHandler.registerMessage(FluidCableUpdatePacket.class);
 		StaticPowerMessageHandler.registerMessage(HeatCableUpdatePacket.class);
-		StaticPowerMessageHandler.registerMessage(BatteryControlSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(TransformerControlSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreTerminalFilters.class);
 		StaticPowerMessageHandler.registerMessage(JEIRecipeTransferPacket.class);
-		StaticPowerMessageHandler.registerMessage(PacketEnergyStorageComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketHeatStorageComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketFluidTankComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketLockInventorySlot.class);
@@ -80,26 +82,34 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketMakeDigistoreCraftingRequest.class);
 		StaticPowerMessageHandler.registerMessage(PacketCloseCurrentContainer.class);
 		StaticPowerMessageHandler.registerMessage(PacketRevertToParentContainer.class);
+
 		StaticPowerMessageHandler.registerMessage(PacketGetCurrentCraftingQueue.class);
 		StaticPowerMessageHandler.registerMessage(PacketReturnCurrentCraftingQueue.class);
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
+
 		StaticPowerMessageHandler.registerMessage(PacketRestorePreviousCraftingRecipe.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
-		StaticPowerMessageHandler.registerMessage(ContainerPowerMetricsSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncStaticPowerPlayerDataCapability.class);
 		StaticPowerMessageHandler.registerMessage(PacketClearDigistoreCraftingTerminal.class);
 		StaticPowerMessageHandler.registerMessage(PacketUpdateRedstoneCableConfiguration.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncSolderingFakeSlotRecipe.class);
+		StaticPowerMessageHandler.registerMessage(ProcesingComponentSyncPacket.class);
 
 		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreInventory.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreFakeSlotClicked.class);
-		
+
 		StaticPowerMessageHandler.registerMessage(PacketPowerMonitorSync.class);
-		StaticPowerMessageHandler.registerMessage(TileEntityPowerMetricsSyncPacket.class);
-		
+		StaticPowerMessageHandler.registerMessage(PowerStorageComponentSyncPacket.class);
+
 		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataLoadPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetTeamComponentTeam.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetSelectedResearch.class);
+
+		StaticPowerMessageHandler.registerMessage(CableStateSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(CableStateSyncRequestPacket.class);
+
+		StaticPowerMessageHandler.registerMessage(PacketRequestProductionMetrics.class);
+		StaticPowerMessageHandler.registerMessage(PacketRecieveProductionMetrics.class);
 	}
 }

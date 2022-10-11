@@ -4,21 +4,17 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class RefineryRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<RefineryRecipe> {
+public class RefineryRecipeSerializer extends StaticPowerRecipeSerializer<RefineryRecipe> {
 	public static final RefineryRecipeSerializer INSTANCE = new RefineryRecipeSerializer();
-
-	private RefineryRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "refinery_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "refinery_recipe");
 
 	@Override
 	public RefineryRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -40,8 +36,8 @@ public class RefineryRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.refineryProcessingTime.get(), StaticPowerConfig.SERVER.refineryPowerUsage.get(),
-				json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.refineryProcessingTime,
+				StaticPowerConfig.SERVER.refineryPowerUsage, StaticPowerConfig.SERVER.refineryMinimumHeat, StaticPowerConfig.SERVER.refineryHeatUse, json);
 
 		// Get the fluid result.
 		FluidStack output1 = FluidStack.EMPTY;

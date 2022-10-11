@@ -107,7 +107,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		if (getCableComponent().isManagerPresent()) {
 			progressBar.setErrorState(false);
 		} else {
-			progressBar.setErrorState(true).setErrorMessage("Digistore Manager not present or out of power!");
+			progressBar.setErrorState(true).setErrorMessage(Component.translatable("gui.staticpower.alert.digistore_manager_missing"));
 		}
 
 		// Keep the last crafting recipes updated.

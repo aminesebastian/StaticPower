@@ -1,5 +1,5 @@
 {
-	"type": "staticpower:mixer_recipe",
+	"type": "staticpower:mixer",
 	"fluid_input_1": {
 		"fluid": "staticpower:concrete_gray",
 		"volume": 100

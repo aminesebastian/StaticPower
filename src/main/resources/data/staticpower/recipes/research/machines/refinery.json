@@ -3,7 +3,7 @@
 	"title": "research.staticpower.refinery.title",
 	"description": "research.staticpower.refinery.description",
 	"icon": {
-		"item": "staticpower:machine_refinery"
+		"item": "staticpower:machine_refinery_controller"
 	},
 	"visualOffset": [
 		0,
@@ -29,7 +29,7 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/refinery"
+			"target": "staticpower:crafting/machines/refinery_controller"
 		}
 	]
 }

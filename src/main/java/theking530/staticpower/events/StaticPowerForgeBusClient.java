@@ -1,13 +1,13 @@
 package theking530.staticpower.events;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -25,41 +25,30 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.DrawSelectionEvent;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
-import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
-import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
-import net.minecraftforge.client.event.ScreenEvent.DrawScreenEvent;
-import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderHighlightEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.client.gui.StaticPowerExtensionGui;
 import theking530.staticpower.client.gui.StaticPowerHUDElement;
-import theking530.staticpower.client.rendering.CustomRenderer;
-import theking530.staticpower.fluid.AbstractStaticPowerFluid;
+import theking530.staticpower.client.rendering.renderers.ICustomRenderer;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
-import theking530.staticpower.utilities.PlayerUtilities;
 import theking530.staticpower.utilities.RaytracingUtilities;
 
 /**
  * Any client only event handling is performed here.
  * 
- * @author 
+ * @author
  *
  */
 @SuppressWarnings("resource")
@@ -67,91 +56,43 @@ import theking530.staticpower.utilities.RaytracingUtilities;
 public class StaticPowerForgeBusClient {
 	protected static Field currentBlockDamageMP;
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerForgeBusClient.class);
-	private static final CustomRenderer CUSTOM_RENDERER = new CustomRenderer();
-	private static final List<StaticPowerExtensionGui> UI_EXTENSIONS = new ArrayList<>();
-	private static final List<StaticPowerExtensionGui> BOUND_UI_EXTENSIONS = new ArrayList<>();
-	private static final List<StaticPowerHUDElement> HUD_ELEMENTS = new ArrayList<>();
+	private static final Set<StaticPowerHUDElement> HUD_ELEMENTS = new HashSet<>();
+	private static final Set<ICustomRenderer> CUSTOM_RENDERERS = new HashSet<>();
 
 	public static void addHUDElement(StaticPowerHUDElement element) {
 		HUD_ELEMENTS.add(element);
 	}
 
+	public static void addCustomRenderer(ICustomRenderer renderer) {
+		CUSTOM_RENDERERS.add(renderer);
+	}
+
 	@SubscribeEvent
-	public static void render(RenderLevelLastEvent event) {
-		CUSTOM_RENDERER.render(event);
+	public static void render(RenderLevelStageEvent event) {
+		// Start our own stack entry and project us into world space.
+		event.getPoseStack().pushPose();
+		Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+		event.getPoseStack().translate(-projectedView.x, -projectedView.y, -projectedView.z);
+
+		// Renderer all the renderers.
+		for (ICustomRenderer renderer : CUSTOM_RENDERERS) {
+			renderer.render(Minecraft.getInstance().level, event);
+		}
+
+		// Pop our stack entry.
+		event.getPoseStack().popPose();
 		renderMultiHarvesteBlockBreakEffect(event);
 	}
 
 	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public static void onInitScreenEvent(InitScreenEvent event) {
-		BOUND_UI_EXTENSIONS.clear();
-		for (StaticPowerExtensionGui gui : UI_EXTENSIONS) {
-			boolean shouldAttach = gui.shouldAttach(event);
-			if (shouldAttach) {
-				event.addListener(gui);
-				BOUND_UI_EXTENSIONS.add(gui);
-			}
-		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public static void onDrawScreen(DrawScreenEvent.Post event) {
-		for (StaticPowerExtensionGui gui : UI_EXTENSIONS) {
-			gui.tick();
-			gui.render(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
-		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public static void onDrawBehindScreen(BackgroundDrawnEvent event) {
-		for (StaticPowerExtensionGui gui : UI_EXTENSIONS) {
-			gui.renderBackground(event.getPoseStack());
-		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public static void onDrawHUD(RenderGameOverlayEvent.Post event) {
-		if (event.getType() == ElementType.ALL) {
+	public static void onDrawHUD(RenderGuiOverlayEvent.Post event) {
+		if (event.getOverlay() == VanillaGuiOverlay.HOTBAR.type()) {
 			for (StaticPowerHUDElement gui : HUD_ELEMENTS) {
 				gui.setCurrentWindow(event.getWindow());
 				gui.tick();
-				gui.renderBackground(event.getMatrixStack());
-				gui.render(event.getMatrixStack(), 0, 0, event.getPartialTicks());
+				gui.renderBackground(event.getPoseStack());
+				gui.render(event.getPoseStack(), 0, 0, event.getPartialTick());
 			}
-
-			// Draw the fluid overlay.
-			Fluid fluid = PlayerUtilities.getFluidAtEyeLevel();
-			if (fluid instanceof AbstractStaticPowerFluid) {
-				AbstractStaticPowerFluid abstractFluid = (AbstractStaticPowerFluid) fluid;
-				GuiDrawUtilities.drawScreenOverlay(fluid.getAttributes().getOverlayTexture(), abstractFluid.getOverlayColor(), 0.3f, 512, 512);
-			}
-		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
-	public static void onEvent(FogDensity event) {
-
-	}
-
-	@SubscribeEvent
-	public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
-		Fluid fluid = PlayerUtilities.getFluidAtEyeLevel();
-		if (fluid instanceof AbstractStaticPowerFluid) {
-			RenderSystem.setShaderFogStart(-8.0f);
-			RenderSystem.setShaderFogEnd(event.getFarPlaneDistance() * 0.05f);
-		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
-	public static void onEvent(FogColors event) {
-		Fluid fluid = PlayerUtilities.getFluidAtEyeLevel();
-
-		if (fluid instanceof AbstractStaticPowerFluid) {
-			AbstractStaticPowerFluid abstractFluid = (AbstractStaticPowerFluid) fluid;	
-			Color color = abstractFluid.getFogColor();	
-			event.setRed(color.getRed());
-			event.setGreen(color.getGreen());
-			event.setBlue(color.getBlue());
 		}
 	}
 
@@ -161,7 +102,7 @@ public class StaticPowerForgeBusClient {
 	 * @param event the highlight event
 	 */
 	@SubscribeEvent
-	public static void renderBlockHighlights(DrawSelectionEvent.HighlightBlock event) {
+	public static void renderBlockHighlights(RenderHighlightEvent event) {
 		// If the player is null, do nothing.
 		if (Minecraft.getInstance().player == null) {
 			return;
@@ -179,7 +120,7 @@ public class StaticPowerForgeBusClient {
 			// Get the tool's item and get the blocks that are currently being targeted for
 			// harvesting.
 			AbstractMultiHarvestTool toolItem = (AbstractMultiHarvestTool) tool.getItem();
-			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getBlockPos(), Minecraft.getInstance().player);
+			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, new BlockPos(event.getTarget().getLocation()), Minecraft.getInstance().player);
 
 			// Get the world renderer state.
 			LevelRenderer worldRender = event.getLevelRenderer();
@@ -206,37 +147,40 @@ public class StaticPowerForgeBusClient {
 		}
 	}
 
-	private static void renderMultiHarvesteBlockBreakEffect(RenderLevelLastEvent event) {
-		// Get the controller. If it is null, return early.
-		MultiPlayerGameMode controller = Minecraft.getInstance().gameMode;
-		if (controller == null) {
-			return;
-		}
-
-		// Get the local player. If null, return early.
-		Player player = Minecraft.getInstance().player;
-		if (player == null) {
-			return;
-		}
-
-		// Get the player's held item.
-		ItemStack heldItem = player.getMainHandItem();
-
-		// If we're holding a multi harvest tool, render the extra block damage.
-		if (!heldItem.isEmpty() && heldItem.getItem() instanceof AbstractMultiHarvestTool) {
-			// Raytrace from the player's perspective to see which block they are looking
-			// at.
-			BlockHitResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getCommandSenderWorld(), player, ClipContext.Fluid.ANY);
-			if (raytraceResult.getType() != HitResult.Type.BLOCK) {
+	private static void renderMultiHarvesteBlockBreakEffect(RenderLevelStageEvent event) {
+		if (event.getStage() == Stage.AFTER_PARTICLES) {
+			// Get the controller. If it is null, return early.
+			MultiPlayerGameMode controller = Minecraft.getInstance().gameMode;
+			if (controller == null) {
 				return;
 			}
 
-			// Get all the extra blocks that we can mine based on where we are looking.
-			List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem()).getMineableExtraBlocks(heldItem, raytraceResult.getBlockPos(), player);
+			// Get the local player. If null, return early.
+			Player player = Minecraft.getInstance().player;
+			if (player == null) {
+				return;
+			}
 
-			// If we're currently mining, draw the block damage texture.
-			if (controller.isDestroying()) {
-				drawBlockDamageTexture(event.getLevelRenderer(), event.getPoseStack(), Minecraft.getInstance().gameRenderer.getMainCamera(), player.getCommandSenderWorld(), extraBlocks);
+			// Get the player's held item.
+			ItemStack heldItem = player.getMainHandItem();
+
+			// If we're holding a multi harvest tool, render the extra block damage.
+			if (!heldItem.isEmpty() && heldItem.getItem() instanceof AbstractMultiHarvestTool) {
+				// Raytrace from the player's perspective to see which block they are looking
+				// at.
+				BlockHitResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getCommandSenderWorld(), player, ClipContext.Fluid.ANY);
+				if (raytraceResult.getType() != HitResult.Type.BLOCK) {
+					return;
+				}
+
+				// Get all the extra blocks that we can mine based on where we are looking.
+				List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem()).getMineableExtraBlocks(heldItem, raytraceResult.getBlockPos(), player);
+
+				// If we're currently mining, draw the block damage texture.
+				if (controller.isDestroying()) {
+					drawBlockDamageTexture(event.getLevelRenderer(), event.getPoseStack(), Minecraft.getInstance().gameRenderer.getMainCamera(), player.getCommandSenderWorld(),
+							extraBlocks);
+				}
 			}
 		}
 	}
@@ -271,7 +215,8 @@ public class StaticPowerForgeBusClient {
 		for (BlockPos pos : extraBlocks) {
 			matrixStackIn.pushPose();
 			// Make sure we transform into projection space.
-			matrixStackIn.translate((double) pos.getX() - renderInfo.getPosition().x, (double) pos.getY() - renderInfo.getPosition().y, (double) pos.getZ() - renderInfo.getPosition().z);
+			matrixStackIn.translate((double) pos.getX() - renderInfo.getPosition().x, (double) pos.getY() - renderInfo.getPosition().y,
+					(double) pos.getZ() - renderInfo.getPosition().z);
 			VertexConsumer matrixBuilder = new SheetedDecalTextureGenerator(vertexBuilder, matrixStackIn.last().pose(), matrixStackIn.last().normal());
 
 			// Render the damage.

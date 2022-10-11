@@ -5,14 +5,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import theking530.api.attributes.capability.IAttributable;
 
 public class AttributableItemRenderLayers {
@@ -42,7 +42,7 @@ public class AttributableItemRenderLayers {
 	 * @param attributable
 	 * @return
 	 */
-	public List<BakedQuad> getOrderedRenderQuads(ItemStack stack, IAttributable attributable, BlockState state, Direction side, Random rand, IModelData data) {
+	public List<BakedQuad> getOrderedRenderQuads(ItemStack stack, IAttributable attributable, BlockState state, Direction side, RandomSource rand, ModelData data) {
 		// Allocate a list for the appropriate layers.
 		ArrayList<AbstractAttributeRenderLayer> applicableLayers = new ArrayList<>();
 

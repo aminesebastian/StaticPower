@@ -4,8 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import theking530.staticpower.cables.network.pathfinding.Path;
-import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
+import theking530.staticcore.cablenetwork.pathfinding.Path;
+import theking530.staticcore.cablenetwork.pathfinding.Path.PathEntry;
 
 public class ItemRoutingParcel extends ItemRoutingParcelClient {
 	private Path path;
@@ -40,7 +40,7 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 
 
 	public void incrementCurrentPathIndex(boolean startHalfWay) {
-		if (currentPathIndex < path.getLength() - 1) {
+		if (currentPathIndex < path.getPathEntryCount() - 1) {
 			// The direction of entry will be null for the first cable in. We use the one
 			// provided in the constructor instead.
 			if (getCurrentEntry().getDirectionOfEntry() != null) {
@@ -61,7 +61,7 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 	 * @return
 	 */
 	public BlockPos getFinalCablePosition() {
-		return getPath().getEntries()[getPath().getLength() - 2].getPosition();
+		return getPath().getEntries()[getPath().getPathEntryCount() - 2].getPosition();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 	 * @return
 	 */
 	public Direction getFinalInsertSide() {
-		return getPath().getEntries()[getPath().getLength() - 1].getDirectionOfEntry();
+		return getPath().getEntries()[getPath().getPathEntryCount() - 1].getDirectionOfEntry();
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 	 * @return
 	 */
 	public boolean isAtFinalCable() {
-		return currentPathIndex == getPath().getLength() - 2;
+		return currentPathIndex == getPath().getPathEntryCount() - 2;
 	}
 
 	/**

@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
@@ -109,7 +109,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget<AutoCraftingSteps
 		// Render the vertical dividers.
 		int divisionDistance = this.getSize().getXi() / columns;
 		for (int i = 1; i < columns; i++) {
-			GuiDrawUtilities.drawRectangle(matrix, 1.0f, (rows * 24) - 1, divisionDistance, 0, 0, Color.GREY);
+			GuiDrawUtilities.drawRectangle(matrix, 1.0f, (rows * 24) - 1, divisionDistance, 0, 0, SDColor.GREY);
 		}
 	}
 

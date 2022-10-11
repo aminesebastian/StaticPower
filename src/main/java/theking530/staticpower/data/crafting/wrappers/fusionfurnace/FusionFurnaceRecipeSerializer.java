@@ -9,20 +9,16 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FusionFurnaceRecipe> {
+public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<FusionFurnaceRecipe> {
 	public static final FusionFurnaceRecipeSerializer INSTANCE = new FusionFurnaceRecipeSerializer();
-
-	private FusionFurnaceRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "fusion_furnace_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "fusion_furnace_recipe");
 
 	@Override
 	public FusionFurnaceRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -37,8 +33,8 @@ public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<RecipeSeri
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get(),
-				StaticPowerConfig.SERVER.fusionFurnacePowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fusionFurnaceProcessingTime,
+				StaticPowerConfig.SERVER.fusionFurnacePowerUsage, json);
 
 		// Get the output.
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(json.getAsJsonObject("output"));

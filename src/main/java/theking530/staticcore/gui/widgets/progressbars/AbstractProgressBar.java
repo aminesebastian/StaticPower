@@ -1,6 +1,5 @@
 package theking530.staticcore.gui.widgets.progressbars;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,8 +8,7 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.IDrawable;
@@ -18,8 +16,9 @@ import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.blockentities.components.control.processing.AbstractProcesingComponent;
 import theking530.staticpower.client.StaticPowerSprites;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 /**
  * Abstract progress bar that can be used to render the current progress of a
@@ -35,7 +34,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * exists).
 	 */
 	@Nullable
-	protected MachineProcessingComponent machineProcessingComponent;
+	protected AbstractProcesingComponent machineProcessingComponent;
 
 	/**
 	 * The visual current progress. This is interpolated to match the current
@@ -73,7 +72,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * If the processing is stopped due to an error, this message will indicate what
 	 * that error is to the user.
 	 */
-	protected String processingErrorMessage;
+	protected MutableComponent processingErrorMessage;
 	/**
 	 * Instance of the error drawable.
 	 */
@@ -157,20 +156,18 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		DecimalFormat decimalFormat = new DecimalFormat("#.#");
-
 		if (isProcessingErrored) {
-			String[] splitTooltips = processingErrorMessage.split("\\$");
+			String[] splitTooltips = processingErrorMessage.getString().split("\\$");
 			for (String tip : splitTooltips) {
-				tooltips.add(new TextComponent(tip));
+				tooltips.add(Component.literal(tip));
 			}
 		} else if (enableProgressTooltip) {
 			if (currentProgress > 0) {
-				String remainingTime = decimalFormat.format((maxProgress - currentProgress) / (tickDownRate * 20.0f));
-				tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
+				MutableComponent remainingTime = GuiTextUtilities.formatTicksToTimeUnit((int) ((maxProgress - currentProgress) / (tickDownRate)));
+				tooltips.add(Component.translatable("gui.staticpower.remaining").append(": ").append(remainingTime));
 			} else {
-				String maxTime = decimalFormat.format(maxProgress / (tickDownRate * 20.0f));
-				tooltips.add(new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
+				MutableComponent maxTime = GuiTextUtilities.formatTicksToTimeUnit((int) (maxProgress / (tickDownRate)));
+				tooltips.add(Component.translatable("gui.staticpower.max").append(": ").append(maxTime));
 			}
 		}
 	}
@@ -194,7 +191,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	}
 
 	@SuppressWarnings("unchecked")
-	public T setErrorMessage(String message) {
+	public T setErrorMessage(MutableComponent message) {
 		processingErrorMessage = message;
 		return (T) this;
 	}
@@ -226,7 +223,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * @param component The component to bind to.
 	 * @return This progress bar for chaining of commands.
 	 */
-	public T bindToMachineProcessingComponent(MachineProcessingComponent component) {
+	public T bindToMachineProcessingComponent(AbstractProcesingComponent component) {
 		machineProcessingComponent = component;
 
 		// Set the initial values.

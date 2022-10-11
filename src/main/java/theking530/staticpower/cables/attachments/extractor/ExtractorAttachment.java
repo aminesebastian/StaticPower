@@ -7,17 +7,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -31,6 +31,7 @@ import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blockentities.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
@@ -38,10 +39,8 @@ import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.cables.item.ItemNetworkModule;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.ServerAttachmentDataContainer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.digistorenetwork.ioport.TileEntityDigistoreIOPort;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ExtractorAttachment extends AbstractCableAttachment {
@@ -54,8 +53,8 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	private final ResourceLocation tierType;
 	private final ResourceLocation model;
 
-	public ExtractorAttachment(String name, ResourceLocation tierType, ResourceLocation model) {
-		super(name);
+	public ExtractorAttachment(ResourceLocation tierType, ResourceLocation model) {
+		super();
 		this.tierType = tierType;
 		this.model = model;
 	}
@@ -66,24 +65,25 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableExtractionFilterSlots.get()));
+		int slots = !StaticPowerConfig.isConfigLoaded(tierType) ? 0 : StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionFilterSlots.get();
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots));
 	}
 
 	@Override
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cableComponent) {
 		super.onAddedToCable(attachment, side, cableComponent);
-		attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
+		getAttachmentTag(attachment).putInt(EXTRACTION_TIMER_TAG, 0);
+		getAttachmentTag(attachment).putBoolean(INPUT_BLOCKED, true);
 	}
 
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (cable.getWorld().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+		if (cable.getLevel().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
 			return;
 		}
 
 		// Get the tile entity on the pulling side, return if it is null.
-		BlockEntity te = cable.getWorld().getBlockEntity(cable.getPos().relative(side));
+		BlockEntity te = cable.getLevel().getBlockEntity(cable.getPos().relative(side));
 		if (te == null || te.isRemoved()) {
 			return;
 		}
@@ -126,33 +126,24 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	public boolean incrementExtractionTimer(ItemStack attachment) {
-
-		if (!attachment.hasTag()) {
-			attachment.setTag(new CompoundTag());
-		}
-		if (!attachment.getTag().contains(EXTRACTION_TIMER_TAG)) {
-			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
+		if (!getAttachmentTag(attachment).contains(EXTRACTION_TIMER_TAG)) {
+			getAttachmentTag(attachment).putInt(EXTRACTION_TIMER_TAG, 0);
 		}
 
 		// Get the current timer and the extraction rate.
-		int currentTimer = attachment.getTag().getInt(EXTRACTION_TIMER_TAG);
+		int currentTimer = getAttachmentTag(attachment).getInt(EXTRACTION_TIMER_TAG);
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableExtractorRate.get()) {
-			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
+		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractorRate.get()) {
+			getAttachmentTag(attachment).putInt(EXTRACTION_TIMER_TAG, 0);
 			return true;
 		} else {
-			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, currentTimer);
+			getAttachmentTag(attachment).putInt(EXTRACTION_TIMER_TAG, currentTimer);
 
 			return false;
 		}
 
-	}
-
-	@Override
-	public void initializeServerDataContainer(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, ServerAttachmentDataContainer dataContainer) {
-		dataContainer.addProperty(INPUT_BLOCKED, true);
 	}
 
 	@Override
@@ -166,7 +157,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+	public ResourceLocation getModel(ItemStack attachment, BlockAndTintGetter level, BlockPos pos) {
 		return model;
 	}
 
@@ -178,8 +169,8 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	protected boolean performDigistoreExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
 		if (targetTe instanceof TileEntityDigistoreIOPort) {
 			AtomicBoolean output = new AtomicBoolean(false);
-			((TileEntityDigistoreIOPort) targetTe).digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
-				cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
+			((TileEntityDigistoreIOPort) targetTe).digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(module -> {
+				cable.<ItemNetworkModule>getNetworkModule(ModCableModules.Item.get()).ifPresent(network -> {
 					// Return early if there is no manager.
 					if (!module.isManagerPresent()) {
 						return;
@@ -198,7 +189,8 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 					for (int i = 0; i < filterItems.getSlots(); i++) {
 						if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
 							// Simulate an extract.
-							ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot), StaticPowerConfig.getTier(tierType).cableExtractionStackSize.get(), true);
+							ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot),
+									StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionStackSize.get(), true);
 
 							// Increment the current slot and make sure we wrap around.
 							currentSlot++;
@@ -213,7 +205,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 
 							// Attempt to transfer the itemstack through the cable network.
 							ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side.getOpposite(), false,
-									StaticPowerConfig.getTier(tierType).cableExtractedItemInitialSpeed.get());
+									StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
 							if (remainingAmount.getCount() < extractedItem.getCount()) {
 								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
 								cable.getTileEntity().setChanged();
@@ -230,12 +222,12 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	protected void performItemHandlerExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
-		cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
+		cable.<ItemNetworkModule>getNetworkModule(ModCableModules.Item.get()).ifPresent(network -> {
 			// Attempt to extract an item.
 			targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
 				for (int i = 0; i < inv.getSlots(); i++) {
 					// Simulate an extract.
-					ItemStack extractedItem = inv.extractItem(i, StaticPowerConfig.getTier(tierType).cableExtractionStackSize.get(), true);
+					ItemStack extractedItem = inv.extractItem(i, StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionStackSize.get(), true);
 
 					// If the extracted item is empty, continue.
 					if (extractedItem.isEmpty()) {
@@ -249,7 +241,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 
 					// Attempt to transfer the itemstack through the cable network.
 					ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side.getOpposite(), false,
-							StaticPowerConfig.getTier(tierType).cableExtractedItemInitialSpeed.get());
+							StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
 					if (remainingAmount.getCount() < extractedItem.getCount()) {
 						inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
 						cable.getTileEntity().setChanged();
@@ -261,7 +253,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	protected void performFluidExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
-		cable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
+		cable.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).ifPresent(network -> {
 			FluidCableComponent fluidCable = (FluidCableComponent) cable;
 			// Attempt to extract an item.
 			targetTe.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(tank -> {
@@ -269,7 +261,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 					return;
 				}
 				if (fluidCable.isFluidValid(0, tank.getFluidInTank(0))) {
-					FluidStack drained = tank.drain(StaticPowerConfig.getTier(tierType).cableExtractionFluidRate.get(), FluidAction.SIMULATE);
+					FluidStack drained = tank.drain(StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionFluidRate.get(), FluidAction.SIMULATE);
 					int filled = fluidCable.fill(drained, FluidAction.EXECUTE);
 					tank.drain(filled, FluidAction.EXECUTE);
 				}
@@ -279,22 +271,24 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.extractor_tooltip"));
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableExtractionFilterSlots.get(), tooltip);
+		tooltip.add(Component.translatable("gui.staticpower.extractor_tooltip"));
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionFilterSlots.get(),
+				tooltip);
 	}
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent(""));
-		tooltip.add(new TranslatableComponent("gui.staticpower.extractor_rate_format", ChatFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableExtractorRate.get()));
-		tooltip.add(new TextComponent("• ").append(
-				new TranslatableComponent("gui.staticpower.extractor_stack_size", ChatFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableExtractionStackSize.get())));
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.extractor_fluid_rate",
-				ChatFormatting.BLUE + GuiTextUtilities.formatFluidToString(StaticPowerConfig.getTier(tierType).cableExtractionFluidRate.get()).getString())));
+		tooltip.add(Component.literal(""));
+		tooltip.add(Component.translatable("gui.staticpower.extractor_rate_format",
+				ChatFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractorRate.get()));
+		tooltip.add(Component.literal("ï¿½ ").append(Component.translatable("gui.staticpower.extractor_stack_size",
+				ChatFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionStackSize.get())));
+		tooltip.add(Component.literal("ï¿½ ").append(Component.translatable("gui.staticpower.extractor_fluid_rate", ChatFormatting.BLUE
+				+ GuiTextUtilities.formatFluidToString(StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionFluidRate.get()).getString())));
 
-		double blocksPerTick = StaticPowerConfig.getTier(tierType).cableExtractedItemInitialSpeed.get();
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.cable_transfer_rate",
-				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslatableComponent("gui.staticpower.blocks").getString())));
+		double blocksPerTick = StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get();
+		tooltip.add(Component.literal("ï¿½ ").append(Component.translatable("gui.staticpower.cable_transfer_rate",
+				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), Component.translatable("gui.staticpower.blocks").getString())));
 	}
 
 	protected class ExtractorContainerProvider extends AbstractCableAttachmentContainerProvider {
