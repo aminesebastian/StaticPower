@@ -85,12 +85,12 @@ public class CauldronRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<CauldronRecipe> getSerializer() {
 		return CauldronRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<CauldronRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

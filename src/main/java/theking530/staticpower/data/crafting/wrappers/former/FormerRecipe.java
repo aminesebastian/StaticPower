@@ -62,12 +62,12 @@ public class FormerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<FormerRecipe> getSerializer() {
 		return FormerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<FormerRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

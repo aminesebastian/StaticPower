@@ -82,12 +82,12 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<FusionFurnaceRecipe> getSerializer() {
 		return FusionFurnaceRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<FusionFurnaceRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

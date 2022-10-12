@@ -131,11 +131,11 @@ public class StaticPowerForgeEventsCommon {
 		// When called on the client, clear the local data registry.
 		if (!load.getEntity().getLevel().isClientSide()) {
 			// TODO: Change this back later, for now there will only be one team.
-			if (TeamManager.get().getTeamForPlayer(load.getEntity()) == null) {
-				if (TeamManager.get().getTeams().size() == 0) {
-					TeamManager.get().createTeam(load.getEntity());
+			if (TeamManager.get(load.getEntity().getLevel()).getTeamForPlayer(load.getEntity()) == null) {
+				if (TeamManager.get(load.getEntity().getLevel()).getTeams().size() == 0) {
+					TeamManager.get(load.getEntity().getLevel()).createTeam(load.getEntity());
 				} else {
-					TeamManager.get().getTeams().get(0).addPlayer(load.getEntity());
+					TeamManager.get(load.getEntity().getLevel()).getTeams().get(0).addPlayer(load.getEntity());
 				}
 			}
 		}
@@ -145,7 +145,7 @@ public class StaticPowerForgeEventsCommon {
 	public static void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent loggedIn) {
 		// If on the server, send a sync packet for the static power player data
 		// capability.
-		if (!loggedIn.getEntity().getCommandSenderWorld().isClientSide()) {
+		if (!loggedIn.getEntity().level.isClientSide()) {
 			loggedIn.getEntity().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
 				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) loggedIn.getEntity(),
 						new PacketSyncStaticPowerPlayerDataCapability(((StaticPowerPlayerData) data).serializeNBT()));

@@ -38,7 +38,7 @@ public class PacketSetSelectedResearch extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			Team team = TeamManager.get().getTeamById(teamId);
+			Team team = TeamManager.get(ctx.get().getSender().level).getTeamById(teamId);
 			if (team != null) {
 				team.getResearchManager().setSelectedResearch(researchId);
 			}

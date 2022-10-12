@@ -27,7 +27,7 @@ public class BlockDigistore extends BaseDigistoreBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityDigistore.TYPE.create(pos, state);
+		return BlockEntityDigistore.TYPE.create(pos, state);
 	}
 	@Override
 	public boolean hasModelOverride(BlockState state) {

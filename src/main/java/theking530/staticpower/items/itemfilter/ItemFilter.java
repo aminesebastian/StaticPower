@@ -19,8 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -127,7 +127,7 @@ public class ItemFilter extends StaticPowerItem {
 	 * @return True if the itemstack passs the filter.
 	 */
 	public boolean evaluateItemStackAgainstFilter(ItemStack filter, ItemStack itemstack) {
-		IItemHandler inv = filter.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		IItemHandler inv = filter.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 		if (inv != null) {
 			boolean whitelist = true;
 			boolean matchNBT = false;
@@ -155,7 +155,7 @@ public class ItemFilter extends StaticPowerItem {
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		if (showAdvanced) {
-			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+			IItemHandler inv = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 			if (inv != null) {
 				boolean empty = true;
 				for (int i = 0; i < inv.getSlots(); i++) {

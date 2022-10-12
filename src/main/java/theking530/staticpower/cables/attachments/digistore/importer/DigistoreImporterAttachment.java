@@ -18,8 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -126,7 +126,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 	public boolean doesItemPassImportFilter(ItemStack attachment, ItemStack itemToTest) {
 		// Get the filter inventory (if there is a null value, do not handle it, throw
 		// an exception).
-		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		IItemHandler filterItems = attachment.getCapability(ForgeCapabilities.ITEM_HANDLER)
 				.orElseThrow(() -> new RuntimeException("Encounetered an importer attachment without a valid filter inventory."));
 
 		// Get the list of filter items.
@@ -149,7 +149,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 
 	protected boolean importFromAttached(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
 		AtomicBoolean output = new AtomicBoolean(false);
-		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
+		targetTe.getCapability(ForgeCapabilities.ITEM_HANDLER, side.getOpposite()).ifPresent(target -> {
 			cable.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(module -> {
 				// Return early if there is no manager.
 				if (!module.isManagerPresent()) {

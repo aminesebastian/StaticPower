@@ -6,16 +6,16 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 
-public abstract class BaseDigistoreTileEntity extends BlockEntityBase {
+public abstract class BlockEntityDigistoreBase extends BlockEntityBase {
 	public final DigistoreCableProviderComponent digistoreCableProvider;
 
-	public BaseDigistoreTileEntity(BlockEntityTypeAllocator<? extends BaseDigistoreTileEntity> allocator, BlockPos pos,
+	public BlockEntityDigistoreBase(BlockEntityTypeAllocator<? extends BlockEntityDigistoreBase> allocator, BlockPos pos,
 			BlockState state) {
 		this(allocator, pos, state, 0);
 
 	}
 
-	public BaseDigistoreTileEntity(BlockEntityTypeAllocator<? extends BaseDigistoreTileEntity> allocator, BlockPos pos,
+	public BlockEntityDigistoreBase(BlockEntityTypeAllocator<? extends BlockEntityDigistoreBase> allocator, BlockPos pos,
 			BlockState state, int powerUsage) {
 		super(allocator, pos, state);
 		registerComponent(

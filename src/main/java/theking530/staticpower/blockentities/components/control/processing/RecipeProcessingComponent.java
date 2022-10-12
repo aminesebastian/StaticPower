@@ -7,6 +7,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingFluidWrapper;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
@@ -108,6 +109,19 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 					getItemProductionToken().setConsumptionPerSection(teamComp.getOwningTeam(), input.item(), input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
 				}
 			}
+
+			for (ProcessingFluidWrapper output : outputContainer.getOutputFluids()) {
+				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
+					getFluidProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.fluid(),
+							output.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)));
+				}
+			}
+			for (ProcessingFluidWrapper input : outputContainer.getInputFluids()) {
+				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
+					getFluidProductionToken().setConsumptionPerSection(teamComp.getOwningTeam(), input.fluid(),
+							input.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)));
+				}
+			}
 		}
 	}
 
@@ -174,8 +188,13 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 
 	@Override
 	protected void onProcessingCompleted() {
-		// If we can immediately start processing again, do so without a move delay.
-		processor.processingCompleted(this, getCurrentRecipe().get(), outputContainer);
+		if(getCurrentRecipe().isPresent()) {
+			// If we can immediately start processing again, do so without a move delay.
+			processor.processingCompleted(this, getCurrentRecipe().get(), outputContainer);
+			
+		}else {
+			System.out.println("wtf");
+		}
 
 		TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
 		if (teamComp != null) {

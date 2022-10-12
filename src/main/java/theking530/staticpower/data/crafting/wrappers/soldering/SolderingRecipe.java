@@ -51,7 +51,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 		this.recipeOutput = recipeOutputIn;
 	}
 
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<SolderingRecipe> getSerializer() {
 		return SolderingRecipeSerializer.INSTANCE;
 	}
 
@@ -73,7 +73,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<SolderingRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 

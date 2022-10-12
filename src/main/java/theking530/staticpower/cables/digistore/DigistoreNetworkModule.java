@@ -19,8 +19,8 @@ import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
-import theking530.staticpower.blockentities.digistorenetwork.manager.TileEntityDigistoreManager;
-import theking530.staticpower.blockentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
+import theking530.staticpower.blockentities.digistorenetwork.manager.BlockEntityDigistoreManager;
+import theking530.staticpower.blockentities.digistorenetwork.patternstorage.BlockEntityPatternStorage;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
@@ -34,12 +34,12 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 
 	private final List<IDigistoreInventory> digistores;
 	private final List<ServerCable> powerUsingDigistores;
-	private final List<TileEntityPatternStorage> patternStorages;
+	private final List<BlockEntityPatternStorage> patternStorages;
 	private final List<CraftingInterfaceWrapper> craftingInterfaces;
 
 	private final DigistoreNetworkTransactionManager transactionManager;
 	private final DigistoreNetworkCraftingManager craftingManager;
-	private TileEntityDigistoreManager manager;
+	private BlockEntityDigistoreManager manager;
 	private int craftingTimer;
 
 	public DigistoreNetworkModule() {
@@ -48,7 +48,7 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 		transactionManager = new DigistoreNetworkTransactionManager(this);
 		powerUsingDigistores = new LinkedList<ServerCable>();
 		craftingInterfaces = new LinkedList<CraftingInterfaceWrapper>();
-		patternStorages = new LinkedList<TileEntityPatternStorage>();
+		patternStorages = new LinkedList<BlockEntityPatternStorage>();
 		craftingManager = new DigistoreNetworkCraftingManager(this);
 	}
 
@@ -88,8 +88,8 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 				});
 
 				// Capture the constructors.
-				if (te instanceof TileEntityPatternStorage) {
-					patternStorages.add((TileEntityPatternStorage) te);
+				if (te instanceof BlockEntityPatternStorage) {
+					patternStorages.add((BlockEntityPatternStorage) te);
 				}
 
 				// If this cable has a power usage tag, capture it as a power user.
@@ -110,9 +110,9 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 				// If this is also a manager, set the manager present to true.
 				// If we already had a manager set, ignore this.
 				// TODO: Error message to show that there are multiple managers attached.
-				if (te instanceof TileEntityDigistoreManager) {
+				if (te instanceof BlockEntityDigistoreManager) {
 					if (manager == null) {
-						manager = (TileEntityDigistoreManager) te;
+						manager = (BlockEntityDigistoreManager) te;
 					}
 				}
 			}
@@ -167,7 +167,7 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 		return usage;
 	}
 
-	public List<TileEntityPatternStorage> getPatternStorageTileEntities() {
+	public List<BlockEntityPatternStorage> getPatternStorageTileEntities() {
 		return patternStorages;
 	}
 

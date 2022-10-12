@@ -1,6 +1,5 @@
 package theking530.api.attributes.defenitions;
 
-import java.awt.TextComponent;
 import java.util.List;
 
 import net.minecraft.ChatFormatting;

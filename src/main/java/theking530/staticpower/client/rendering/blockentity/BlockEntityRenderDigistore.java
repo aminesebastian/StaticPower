@@ -13,12 +13,12 @@ import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.blockentities.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockEntityDigistore;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.utilities.MetricConverter;
 
 @OnlyIn(Dist.CLIENT)
-public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRenderer<TileEntityDigistore> {
+public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRenderer<BlockEntityDigistore> {
 	private static final float ICON_SIZE = 0.09f;
 
 	public BlockEntityRenderDigistore(BlockEntityRendererProvider.Context context) {
@@ -26,7 +26,7 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 	}
 
 	@Override
-	public void renderTileEntityBase(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+	public void renderTileEntityBase(BlockEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Digistore");
 		if (tileEntity.inventory.getUniqueItemCapacity() > 0) {
@@ -41,7 +41,7 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 		Minecraft.getInstance().getProfiler().pop();
 	}
 
-	public void drawIndicators(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+	public void drawIndicators(BlockEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		// Calculate the number of icons that need to be drawn.
 		int icons = 0;
@@ -68,7 +68,7 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 		}
 	}
 
-	public void drawFillBar(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+	public void drawFillBar(BlockEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		float filledRatio = tileEntity.inventory.getFilledRatio();
 		if (filledRatio < 1.0f) {

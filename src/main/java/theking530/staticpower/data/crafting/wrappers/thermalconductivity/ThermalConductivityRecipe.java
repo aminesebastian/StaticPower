@@ -173,12 +173,12 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<ThermalConductivityRecipe> getSerializer() {
 		return ThermalConductivityRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<ThermalConductivityRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

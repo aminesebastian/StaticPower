@@ -29,7 +29,7 @@ import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.blockentities.BlockEntityBase;
-import theking530.staticpower.blockentities.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockEntityDigistore;
 
 public class WorldRenderingUtilities {
 	public static void drawItemInWorld(BlockEntityBase tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks,
@@ -61,7 +61,7 @@ public class WorldRenderingUtilities {
 		matrixStack.popPose();
 	}
 
-	public static void drawFlatItemInWorld(TileEntityDigistore tile, @Nonnull ItemStack itemStack, Vector3D offset, Vector2D scale, float partialTickTime, PoseStack matrixStack,
+	public static void drawFlatItemInWorld(BlockEntityDigistore tile, @Nonnull ItemStack itemStack, Vector3D offset, Vector2D scale, float partialTickTime, PoseStack matrixStack,
 			MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		// Skip empty items.
 		if (itemStack.isEmpty()) {

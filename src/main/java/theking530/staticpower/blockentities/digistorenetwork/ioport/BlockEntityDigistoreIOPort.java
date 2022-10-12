@@ -11,17 +11,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.blockentities.digistorenetwork.BaseDigistoreTileEntity;
+import theking530.staticpower.blockentities.digistorenetwork.BlockEntityDigistoreBase;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.cables.ModCableModules;
 
-public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
+public class BlockEntityDigistoreIOPort extends BlockEntityDigistoreBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>("digistore_io_port",
-			(type, pos, state) -> new TileEntityDigistoreIOPort(pos, state), ModBlocks.DigistoreIOPort);
+	public static final BlockEntityTypeAllocator<BlockEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>("digistore_io_port",
+			(type, pos, state) -> new BlockEntityDigistoreIOPort(pos, state), ModBlocks.DigistoreIOPort);
 
-	public TileEntityDigistoreIOPort(BlockPos pos, BlockState state) {
+	public BlockEntityDigistoreIOPort(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 5);
 		registerComponent(new DigitstoreIOPortInventoryComponent("IONetwork"));
 	}

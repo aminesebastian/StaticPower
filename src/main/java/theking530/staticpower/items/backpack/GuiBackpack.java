@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.StaticPowerItemStackGui;
@@ -24,7 +24,7 @@ public class GuiBackpack extends StaticPowerItemStackGui<ContainerBackpack, Back
 	@Override
 	public void initializeGui() {
 		// Attempt to get the item filter inventory.
-		getItemStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
+		getItemStack().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent((handler) -> {
 			inventory = (ItemStackHandler) handler;
 		});
 

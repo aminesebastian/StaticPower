@@ -1,16 +1,17 @@
-package theking530.staticcore.productivity.product;
+package theking530.staticcore.productivity.product.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
-import theking530.staticcore.productivity.entry.FluidProductionEntry;
+import theking530.staticcore.productivity.cacheentry.FluidProductionEntry;
+import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.utilities.FluidUtilities;
 
 public class FluidStackProductType extends ProductType<FluidStack> {
 
 	public FluidStackProductType() {
-		super(FluidStack.class, () -> new ProductionCache<FluidStack>(ModProducts.Fluid.get()));
+		super(FluidStack.class, (isClientSide) -> new ProductionCache<FluidStack>(ModProducts.Fluid.get(), isClientSide));
 	}
 
 	@Override

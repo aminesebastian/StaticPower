@@ -113,7 +113,7 @@ public class BlockEntityCaster extends BlockEntityMachine implements IRecipeProc
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<CastingRecipe> component, CastingRecipe recipe, ProcessingOutputContainer outputContainer) {
 		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
-		fluidTankComponent.drain(outputContainer.getOutputFluid(0).fluid(), FluidAction.EXECUTE);
+		fluidTankComponent.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
 	}
 
 	@Override

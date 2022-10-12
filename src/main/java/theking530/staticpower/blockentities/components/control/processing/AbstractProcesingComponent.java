@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.FluidStack;
 import theking530.api.energy.PowerStack;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticcore.gui.text.PowerTextFormatting;
@@ -26,7 +27,8 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
 	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
 
-	private final ProductionTrackingToken<ItemStack> productionToken;
+	private final ProductionTrackingToken<ItemStack> itemProductionToken;
+	private final ProductionTrackingToken<FluidStack> fluidProductionToken;
 
 	private boolean shouldControlOnBlockState;
 	protected UpgradeInventoryComponent upgradeInventory;
@@ -98,8 +100,9 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		this.processingErrorMessage = Component.literal("");
 		this.processingStoppedDueToError = false;
 		this.powerMultiplier = 1.0f;
-		
-		productionToken = ModProducts.Item.get().getProductivityToken();
+
+		itemProductionToken = ModProducts.Item.get().getProductivityToken();
+		fluidProductionToken = ModProducts.Fluid.get().getProductivityToken();
 	}
 
 	@SuppressWarnings("resource")
@@ -110,7 +113,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		}
 
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getLevel().isClientSide) {
+		if (serverOnly && getLevel().isClientSide()) {
 			return;
 		}
 
@@ -588,7 +591,11 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	}
 
 	public ProductionTrackingToken<ItemStack> getItemProductionToken() {
-		return this.productionToken;
+		return this.itemProductionToken;
+	}
+
+	public ProductionTrackingToken<FluidStack> getFluidProductionToken() {
+		return this.fluidProductionToken;
 	}
 
 	protected void sendSynchronizationPacket() {

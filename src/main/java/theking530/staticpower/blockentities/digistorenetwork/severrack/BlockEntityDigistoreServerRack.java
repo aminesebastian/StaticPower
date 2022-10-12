@@ -14,20 +14,20 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.items.InventoryComponent.InventoryChangeType;
-import theking530.staticpower.blockentities.digistorenetwork.BaseDigistoreTileEntity;
+import theking530.staticpower.blockentities.digistorenetwork.BlockEntityDigistoreBase;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.DigistoreInventoryComponent;
 import theking530.staticpower.init.ModBlocks;
 
-public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
+public class BlockEntityDigistoreServerRack extends BlockEntityDigistoreBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new BlockEntityTypeAllocator<TileEntityDigistoreServerRack>("digistore_server_rack",
-			(type, pos, state) -> new TileEntityDigistoreServerRack(pos, state), ModBlocks.DigistoreServerRack);
+	public static final BlockEntityTypeAllocator<BlockEntityDigistoreServerRack> TYPE = new BlockEntityTypeAllocator<BlockEntityDigistoreServerRack>("digistore_server_rack",
+			(type, pos, state) -> new BlockEntityDigistoreServerRack(pos, state), ModBlocks.DigistoreServerRack);
 
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<ServerRackRenderingState> CARD_RENDERING_STATE = new ModelProperty<ServerRackRenderingState>();
 	public final DigistoreInventoryComponent inventory;
 
-	public TileEntityDigistoreServerRack(BlockPos pos, BlockState state) {
+	public BlockEntityDigistoreServerRack(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 5);
 		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 8).setShiftClickEnabled(true));
 		inventory.setModifiedCallback((type, stack, comp) -> {

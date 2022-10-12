@@ -18,8 +18,8 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -78,10 +78,10 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 		}
 
 		// Get the filter inventory.
-		IItemHandler filterInventory = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		IItemHandler filterInventory = attachment.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 
 		// Get the filter inventory.
-		IItemHandler targetInventory = adjacentEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).orElse(null);
+		IItemHandler targetInventory = adjacentEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side.getOpposite()).orElse(null);
 
 		// Attempt to retrieve the item.
 		cable.<ItemNetworkModule>getNetworkModule(ModCableModules.Item.get()).ifPresent(network -> {

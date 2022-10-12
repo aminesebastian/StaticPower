@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.IUpgradeItem;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult;
@@ -133,7 +133,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	}
 
 	protected IItemHandler getUpgradeInventory(ItemStack attachment) {
-		return attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
+		return attachment.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN).orElse(null);
 	}
 
 	/**

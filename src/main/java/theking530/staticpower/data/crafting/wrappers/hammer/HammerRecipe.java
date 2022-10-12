@@ -88,12 +88,12 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<HammerRecipe> getSerializer() {
 		return HammerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<HammerRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

@@ -18,7 +18,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.api.digistore.IDigistoreInventory;
-import theking530.staticpower.blockentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
+import theking530.staticpower.blockentities.digistorenetwork.patternstorage.BlockEntityPatternStorage;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
@@ -184,7 +184,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		}
 
 		// Add the craftable items.
-		for (TileEntityPatternStorage constructor : module.getPatternStorageTileEntities()) {
+		for (BlockEntityPatternStorage constructor : module.getPatternStorageTileEntities()) {
 			// Iterate through all the patterns.
 			for (ItemStack pattern : constructor.patternInventory) {
 				// If we're able to get the encoded pattern and it is for a crafting table.

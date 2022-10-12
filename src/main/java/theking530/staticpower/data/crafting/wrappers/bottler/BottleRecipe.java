@@ -38,12 +38,12 @@ public class BottleRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<BottleRecipe> getSerializer() {
 		return BottlerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<BottleRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 

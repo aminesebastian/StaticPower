@@ -111,12 +111,12 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<RefineryRecipe> getSerializer() {
 		return RefineryRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<RefineryRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

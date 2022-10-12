@@ -17,8 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
@@ -62,13 +62,13 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	@Override
 	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		super.onRemovedFromCable(attachment, side, cable);
-		IItemHandler patternInv = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		IItemHandler patternInv = attachment.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 		InventoryUtilities.clearInventory(patternInv);
 	}
 
 	@Override
 	public void getAdditionalDrops(ItemStack attachment, AbstractCableProviderComponent cable, List<ItemStack> drops) {
-		IItemHandler patternInv = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		IItemHandler patternInv = attachment.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 		if (patternInv != null) {
 			for (int i = 0; i < patternInv.getSlots(); i++) {
 				ItemStack upgrade = patternInv.getStackInSlot(i);
@@ -136,7 +136,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	}
 
 	protected void supplyCraftingSupplies(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
-		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
+		targetTe.getCapability(ForgeCapabilities.ITEM_HANDLER, side.getOpposite()).ifPresent(target -> {
 			cable.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(module -> {
 				// Return early if there is no manager.
 				if (!module.isManagerPresent()) {
@@ -145,7 +145,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 
 				// Get the crafting item inventory (if there is a null value, do not handle it,
 				// throw an exception).
-				IItemHandlerModifiable processingItemInventory = (IItemHandlerModifiable) attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN)
+				IItemHandlerModifiable processingItemInventory = (IItemHandlerModifiable) attachment.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN)
 						.orElseThrow(() -> new RuntimeException("Encounetered a supplier attachment without a valid filter inventory."));
 
 				// If the processing inventory is empty, do nothing.
@@ -186,7 +186,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 		List<EncodedDigistorePattern> patterns = new LinkedList<EncodedDigistorePattern>();
 
 		// Attempt to get the item filter inventory.
-		IItemHandler patternInventory = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		IItemHandler patternInventory = attachment.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 		for (int i = 0; i < patternInventory.getSlots(); i++) {
 			EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(patternInventory.getStackInSlot(i));
 			if (pattern != null) {
@@ -205,7 +205,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	public static boolean isCraftingInterfaceBusy(ItemStack attachment) {
 		// If the recipe inventory is empty, we are good to process. Otherwise, we are
 		// busy.
-		IItemHandler processingItemInventory = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
+		IItemHandler processingItemInventory = attachment.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN).orElse(null);
 		return !InventoryUtilities.isInventoryEmpty(processingItemInventory);
 	}
 
@@ -224,7 +224,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 		}
 
 		// Get the inventory. If it is null, return false.
-		IItemHandler processingItemInventory = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
+		IItemHandler processingItemInventory = attachment.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN).orElse(null);
 		if (processingItemInventory == null) {
 			return false;
 		}

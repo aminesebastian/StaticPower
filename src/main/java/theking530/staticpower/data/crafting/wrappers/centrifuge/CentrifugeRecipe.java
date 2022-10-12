@@ -69,12 +69,12 @@ public class CentrifugeRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<CentrifugeRecipe> getSerializer() {
 		return CentrifugeRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<CentrifugeRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 

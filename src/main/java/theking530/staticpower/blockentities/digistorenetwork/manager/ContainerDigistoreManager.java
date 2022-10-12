@@ -9,7 +9,7 @@ import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 
-public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<TileEntityDigistoreManager> {
+public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<BlockEntityDigistoreManager> {
 	@ContainerTypePopulator
 	public static final ContainerTypeAllocator<ContainerDigistoreManager, GuiDigistoreManager> TYPE = new ContainerTypeAllocator<>("digistore_manager", ContainerDigistoreManager::new);
 	static {
@@ -19,10 +19,10 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 	}
 
 	public ContainerDigistoreManager(int windowId, Inventory inv, FriendlyByteBuf data) {
-		this(windowId, inv, (TileEntityDigistoreManager) resolveTileEntityFromDataPacket(inv, data));
+		this(windowId, inv, (BlockEntityDigistoreManager) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerDigistoreManager(int windowId, Inventory playerInventory, TileEntityDigistoreManager owner) {
+	public ContainerDigistoreManager(int windowId, Inventory playerInventory, BlockEntityDigistoreManager owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

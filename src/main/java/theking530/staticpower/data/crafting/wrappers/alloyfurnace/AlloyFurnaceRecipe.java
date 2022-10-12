@@ -71,12 +71,12 @@ public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<AlloyFurnaceRecipe> getSerializer() {
 		return AlloyFurnaceRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<AlloyFurnaceRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

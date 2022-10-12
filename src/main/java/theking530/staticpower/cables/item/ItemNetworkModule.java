@@ -22,7 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.cablenetwork.CableNetwork;
@@ -239,7 +239,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 			// The method #getSourcesForItemRetrieval should only return sources that have
 			// tile entities, so no need to check that here.
 			IItemHandler sourceInv = targetSource.getDestinationWrapper().getTileEntity()
-					.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getFirstConnectedDestinationSide()).orElse(null);
+					.getCapability(ForgeCapabilities.ITEM_HANDLER, targetSource.getDestinationWrapper().getFirstConnectedDestinationSide()).orElse(null);
 
 			// If the source inventory is valid.
 			if (sourceInv != null) {
@@ -285,7 +285,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 			double blocksPerSecond) {
 		// Get the destination inventory.
 		BlockEntity destinationTe = Network.getWorld().getBlockEntity(path.getDestinationLocation());
-		IItemHandler destInventory = destinationTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).orElse(null);
+		IItemHandler destInventory = destinationTe.getCapability(ForgeCapabilities.ITEM_HANDLER, path.getDestinationDirection().getOpposite()).orElse(null);
 
 		// Ensure the destination inventory is valid.
 		if (destInventory != null) {
@@ -368,7 +368,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 				// Get the inventory, if it is not valid, re-route the parcel. Otherwise, insert
 				// as much as we can, and if there are any left overs, reroute them. Tell the
 				// item cable at the current location that it should stop rendering the parcel.
-				IItemHandler outputInventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, packet.getNextEntry().getDirectionOfEntry().getOpposite())
+				IItemHandler outputInventory = te.getCapability(ForgeCapabilities.ITEM_HANDLER, packet.getNextEntry().getDirectionOfEntry().getOpposite())
 						.orElse(null);
 				if (outputInventory != null) {
 					ItemStack output = InventoryUtilities.insertItemIntoInventory(outputInventory, packet.getContainedItem(), false);
@@ -749,7 +749,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 			}
 
 			// If we're able to insert into that inventory, set the atomic boolean.
-			Network.getWorld().getBlockEntity(destination).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite())
+			Network.getWorld().getBlockEntity(destination).getCapability(ForgeCapabilities.ITEM_HANDLER, path.getDestinationDirection().getOpposite())
 					.ifPresent(inv -> {
 						isValid.set(InventoryUtilities.canPartiallyInsertItemIntoInventory(inv, stack));
 					});
@@ -797,7 +797,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 
 			// If we're able to insert into that inventory, set the atomic boolean.
 			if (canExtractFromCable(item, dest.getFirstConnectedCable(), dest.getFirstConnectedDestinationSide().getOpposite())) {
-				IItemHandler inv = dest.getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dest.getFirstConnectedDestinationSide()).orElse(null);
+				IItemHandler inv = dest.getTileEntity().getCapability(ForgeCapabilities.ITEM_HANDLER, dest.getFirstConnectedDestinationSide()).orElse(null);
 				// If this inventory contains the provided item, add the destination to the
 				// list.
 				int slot = InventoryUtilities.getFirstSlotContainingItem(item, inv);

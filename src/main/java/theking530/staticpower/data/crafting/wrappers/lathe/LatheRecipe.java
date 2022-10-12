@@ -108,12 +108,12 @@ public class LatheRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<LatheRecipe> getSerializer() {
 		return LatheRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<LatheRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 

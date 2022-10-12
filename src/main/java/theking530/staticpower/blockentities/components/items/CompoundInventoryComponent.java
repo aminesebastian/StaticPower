@@ -8,8 +8,8 @@ import java.util.Optional;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
@@ -67,7 +67,7 @@ public class CompoundInventoryComponent extends AbstractBlockEntityComponent imp
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		if (isEnabled()) {
-			if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventoryMode != MachineSideMode.Never) {
+			if (cap == ForgeCapabilities.ITEM_HANDLER && inventoryMode != MachineSideMode.Never) {
 				// Check if the owner is side configurable. If it is, check to make sure it's
 				// not disabled, if not, return the inventory.
 				Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());

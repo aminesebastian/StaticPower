@@ -2,7 +2,7 @@ package theking530.staticcore.item;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ItemStackCapabilityInventory extends ItemStackHandler implements IItemMultiCapability {
@@ -28,7 +28,7 @@ public class ItemStackCapabilityInventory extends ItemStackHandler implements II
 
 	@Override
 	public Capability<?>[] getCapabilityTypes() {
-		return new Capability<?>[] { CapabilityItemHandler.ITEM_HANDLER_CAPABILITY };
+		return new Capability<?>[] { ForgeCapabilities.ITEM_HANDLER };
 	}
 
 	@Override

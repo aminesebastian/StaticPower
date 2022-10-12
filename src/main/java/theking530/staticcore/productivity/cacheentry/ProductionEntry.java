@@ -1,4 +1,4 @@
-package theking530.staticcore.productivity.entry;
+package theking530.staticcore.productivity.cacheentry;
 
 import java.util.HashMap;
 import java.util.Map;

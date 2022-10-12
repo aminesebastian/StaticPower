@@ -9,8 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import theking530.staticcore.productivity.entry.ProductionEntry;
-import theking530.staticcore.productivity.entry.ProductionEntry.ProductionEntryState;
+import theking530.staticcore.productivity.cacheentry.ProductionEntry;
+import theking530.staticcore.productivity.cacheentry.ProductionEntry.ProductionEntryState;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
@@ -24,11 +24,14 @@ public class ProductionCache<T> {
 	private final Map<Integer, Integer> productivityBucketMap;
 	private final ProductType<T> productType;
 	private final String productTablePrefix;
+	private SertializedBiDirectionalMetrics clientMetrics;
 
 	private Connection database;
 	private int bucketRoundRobinIndex;
+	private boolean isClientSide;
 
-	public ProductionCache(ProductType<T> productType) {
+	public ProductionCache(ProductType<T> productType, boolean isClientSide) {
+		this.isClientSide = isClientSide;
 		this.productType = productType;
 		this.productTablePrefix = StaticPowerRegistries.ProductRegistry().getKey(productType).toString().replace(":", "_");
 		bucketRoundRobinIndex = 0;
@@ -37,6 +40,7 @@ public class ProductionCache<T> {
 		for (int i = 0; i < 20; i++) {
 			productivityBuckets.add(new HashMap<Integer, ProductionEntry<T>>());
 		}
+		clientMetrics = SertializedBiDirectionalMetrics.EMPTY;
 	}
 
 	public void tick(long gameTime) {
@@ -45,6 +49,14 @@ public class ProductionCache<T> {
 				entry.tick(gameTime);
 			}
 		}
+	}
+
+	public SertializedBiDirectionalMetrics getClientSyncedMetrics() {
+		return clientMetrics;
+	}
+
+	public void setClientSyncedMetrics(SertializedBiDirectionalMetrics metrics) {
+		clientMetrics = metrics;
 	}
 
 	public ProductionEntry<T> addOrUpdateProductionRate(ProductionTrackingToken<T> token, T product, int productHash, double rate) {
@@ -244,7 +256,7 @@ public class ProductionCache<T> {
 		try {
 			Statement stmt = getDatabase().createStatement();
 			stmt.execute(tableQuery);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			StaticPower.LOGGER.error(String.format("An error occured when creating the lookup table for product type: $1$s!", productTablePrefix), e);
 		}
 	}
@@ -258,7 +270,7 @@ public class ProductionCache<T> {
 		try {
 			Statement stmt = getDatabase().createStatement();
 			stmt.execute(insert);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			StaticPower.LOGGER.error(String.format("An error occured when inserting a new product entry for product: $1$s!", entry.getSerializedProduct()), e);
 		}
 	}

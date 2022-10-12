@@ -67,12 +67,12 @@ public class FluidInfusionRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<FluidInfusionRecipe> getSerializer() {
 		return FluidInfusionRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<FluidInfusionRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

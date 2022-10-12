@@ -20,18 +20,18 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blockentities.digistorenetwork.ioport.TileEntityDigistoreIOPort;
+import theking530.staticpower.blockentities.digistorenetwork.ioport.BlockEntityDigistoreIOPort;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
@@ -104,7 +104,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	public boolean doesItemPassExtractionFilter(ItemStack attachment, ItemStack itemToTest) {
 		// Get the filter inventory (if there is a null value, do not handle it, throw
 		// an exception).
-		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		IItemHandler filterItems = attachment.getCapability(ForgeCapabilities.ITEM_HANDLER)
 				.orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
 
 		// Get the list of filter items.
@@ -167,9 +167,9 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	protected boolean performDigistoreExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
-		if (targetTe instanceof TileEntityDigistoreIOPort) {
+		if (targetTe instanceof BlockEntityDigistoreIOPort) {
 			AtomicBoolean output = new AtomicBoolean(false);
-			((TileEntityDigistoreIOPort) targetTe).digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(module -> {
+			((BlockEntityDigistoreIOPort) targetTe).digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(module -> {
 				cable.<ItemNetworkModule>getNetworkModule(ModCableModules.Item.get()).ifPresent(network -> {
 					// Return early if there is no manager.
 					if (!module.isManagerPresent()) {
@@ -178,7 +178,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 
 					// Get the filter inventory (if there is a null value, do not handle it, throw
 					// an exception).
-					IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+					IItemHandler filterItems = attachment.getCapability(ForgeCapabilities.ITEM_HANDLER)
 							.orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
 
 					// We do this to ensure we randomly extract.
@@ -224,7 +224,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	protected void performItemHandlerExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
 		cable.<ItemNetworkModule>getNetworkModule(ModCableModules.Item.get()).ifPresent(network -> {
 			// Attempt to extract an item.
-			targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
+			targetTe.getCapability(ForgeCapabilities.ITEM_HANDLER, side.getOpposite()).ifPresent(inv -> {
 				for (int i = 0; i < inv.getSlots(); i++) {
 					// Simulate an extract.
 					ItemStack extractedItem = inv.extractItem(i, StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionStackSize.get(), true);

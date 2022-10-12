@@ -8,7 +8,6 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
-import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipeSerializer;
 
 public class HydroponicFarmingRecipe extends AbstractMachineRecipe {
 	public static final String ID = "hydroponic_farming";
@@ -42,12 +41,12 @@ public class HydroponicFarmingRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
-		return SqueezerRecipeSerializer.INSTANCE;
+	public RecipeSerializer<HydroponicFarmingRecipe> getSerializer() {
+		return HydroponicFarmingRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<HydroponicFarmingRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

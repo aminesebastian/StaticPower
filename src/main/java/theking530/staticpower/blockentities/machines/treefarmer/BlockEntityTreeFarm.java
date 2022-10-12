@@ -337,8 +337,6 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		// Add the drops for the current block and break it.
 		items.addAll(WorldUtilities.getBlockDrops(getLevel(), pos));
 		hitPositions.add(pos);
-		System.out.println(hitPositions.size() + "   " + getLevel().getBlockState(pos));
-		System.out.println(items.size());
 		getLevel().destroyBlock(pos, false);
 		powerStorage.drainPower(StaticPowerConfig.SERVER.treeFarmerHarvestPowerUsage.get(), false);
 		useAxe();

@@ -53,12 +53,12 @@ public class FermenterRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<FermenterRecipe> getSerializer() {
 		return FermenterRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<FermenterRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

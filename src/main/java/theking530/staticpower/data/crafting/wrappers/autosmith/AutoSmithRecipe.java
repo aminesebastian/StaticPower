@@ -160,12 +160,12 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<AutoSmithRecipe> getSerializer() {
 		return AutoSmithRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<AutoSmithRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 

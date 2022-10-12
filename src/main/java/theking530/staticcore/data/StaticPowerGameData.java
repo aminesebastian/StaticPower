@@ -13,8 +13,6 @@ public abstract class StaticPowerGameData {
 		this.id = id;
 	}
 
-	public abstract void loadFromDisk(CompoundTag tag);
-
 	public abstract void deserialize(CompoundTag tag);
 
 	public abstract CompoundTag serialize(CompoundTag tag);

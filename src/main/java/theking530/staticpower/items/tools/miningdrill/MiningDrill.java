@@ -41,8 +41,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.attributes.capability.CapabilityAttributable;
@@ -121,7 +121,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	public ItemStack getPartInSlot(ItemStack stack, AbstractMultiPartSlot slot) {
 		if (slot == MultiPartSlots.DRILL_BIT) {
-			IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+			IItemHandler inventory = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 			if (inventory != null) {
 				return inventory.getStackInSlot(0);
 			}
@@ -325,7 +325,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	protected void onAllBlocksMined(ItemStack stack, List<BlockPos> blocksMined, Player player) {
 		// Apply damage to the drill bit.
-		stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+		stack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
 			handler.getStackInSlot(0).hurtAndBreak(blocksMined.size(), player, (entity) -> {
 				entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
 			});

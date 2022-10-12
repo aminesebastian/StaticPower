@@ -31,17 +31,17 @@ import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
-import theking530.staticpower.blockentities.digistorenetwork.BaseDigistoreTileEntity;
+import theking530.staticpower.blockentities.digistorenetwork.BlockEntityDigistoreBase;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderDigistore;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class TileEntityDigistore extends BaseDigistoreTileEntity implements IItemHandler {
+public class BlockEntityDigistore extends BlockEntityDigistoreBase implements IItemHandler {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistore> TYPE = new BlockEntityTypeAllocator<TileEntityDigistore>("digistore",
-			(type, pos, state) -> new TileEntityDigistore(pos, state), ModBlocks.Digistore);
+	public static final BlockEntityTypeAllocator<BlockEntityDigistore> TYPE = new BlockEntityTypeAllocator<BlockEntityDigistore>("digistore",
+			(type, pos, state) -> new BlockEntityDigistore(pos, state), ModBlocks.Digistore);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -59,7 +59,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 	@UpdateSerialize
 	private boolean locked;
 
-	public TileEntityDigistore(BlockPos pos, BlockState state) {
+	public BlockEntityDigistore(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 1);
 		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 1).setShiftClickEnabled(true));
 		inventory.setFilter(new ItemStackHandlerFilter() {

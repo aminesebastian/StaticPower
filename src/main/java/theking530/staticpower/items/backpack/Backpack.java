@@ -32,7 +32,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
@@ -91,7 +90,7 @@ public class Backpack extends StaticPowerItem implements ICustomModelSupplier {
 			return;
 		}
 
-		IItemHandler backpackInventory = backpack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		IItemHandler backpackInventory = backpack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 		for (int backpackSlot = 0; backpackSlot < backpackInventory.getSlots(); backpackSlot++) {
 			// Only extract one at a time. Skip empty slots.
 			ItemStack backpackItem = backpackInventory.extractItem(backpackSlot, 1, true);

@@ -129,7 +129,6 @@ public abstract class StaticPowerBlockEntityBlock extends StaticPowerBlock imple
 		BlockEntityBase te = (BlockEntityBase) world.getBlockEntity(pos);
 
 		if (te != null) {
-			// System.out.println(side);
 			HasGuiType guiType = hasGuiScreen(te, state, world, pos, player, hand, hit);
 			// Ensure we meet the criteria for entering the GUI.
 			if (guiType == HasGuiType.ALWAYS || (guiType == HasGuiType.SNEAKING_ONLY && player.isShiftKeyDown())) {

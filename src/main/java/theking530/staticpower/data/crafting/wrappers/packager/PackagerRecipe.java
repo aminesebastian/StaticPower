@@ -60,12 +60,12 @@ public class PackagerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<PackagerRecipe> getSerializer() {
 		return PackagerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<PackagerRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

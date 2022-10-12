@@ -79,9 +79,6 @@ public class FluidNetworkModule extends CableNetworkModule {
 		visited.add(cable.getPos());
 
 		Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
-		if (adjacents.isEmpty()) {
-			return;
-		}
 
 		// If the cable is empty, just recurse and leave.
 		if (cable.getFluidStorage().isEmpty()) {

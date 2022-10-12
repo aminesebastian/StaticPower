@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
@@ -47,7 +47,7 @@ public class PacketItemFilter extends NetworkMessage {
 		context.get().enqueueWork(() -> {
 			ItemStack heldItem = context.get().getSender().getItemInHand(InteractionHand.MAIN_HAND);
 			if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemFilter) {
-				heldItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((IItemHandler handler) -> {
+				heldItem.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent((IItemHandler handler) -> {
 					ItemFilter filter = (ItemFilter) heldItem.getItem();
 					filter.setWhitelistMode(heldItem, whitelist);
 					filter.setFilterForNBT(heldItem, matchNbt);

@@ -7,8 +7,8 @@ import javax.annotation.Nonnull;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
@@ -84,7 +84,7 @@ public class DigitstoreIOPortInventoryComponent extends AbstractBlockEntityCompo
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+		if (cap == ForgeCapabilities.ITEM_HANDLER) {
 			return LazyOptional.of(() -> {
 				return this;
 			}).cast();

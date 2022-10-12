@@ -22,6 +22,6 @@ public class BlockDigistoreManager extends BaseDigistoreBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityDigistoreManager.TYPE.create(pos, state);
+		return BlockEntityDigistoreManager.TYPE.create(pos, state);
 	}
 }

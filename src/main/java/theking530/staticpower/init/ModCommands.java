@@ -29,10 +29,11 @@ public class ModCommands {
 		public static int unlockAllResearch(CommandContext<CommandSourceStack> commandContext) throws CommandSyntaxException {
 			try {
 				Player player = commandContext.getSource().getPlayerOrException();
-				Team team = TeamManager.get().getTeamForPlayer(player);
+				Team team = TeamManager.get(player.level).getTeamForPlayer(player);
 				if (team != null) {
 					team.getResearchManager().unlockAllResearch(player.level);
 				}
+				TeamManager.get(player.level).syncToClients();
 			} catch (Exception e) {
 				StaticPower.LOGGER.error("An error occured when executing the unlock all research command.", e);
 			}
@@ -42,7 +43,7 @@ public class ModCommands {
 		public static int lockAllResearch(CommandContext<CommandSourceStack> commandContext) throws CommandSyntaxException {
 			try {
 				Player player = commandContext.getSource().getPlayerOrException();
-				Team team = TeamManager.get().getTeamForPlayer(player);
+				Team team = TeamManager.get(player.level).getTeamForPlayer(player);
 				if (team != null) {
 					team.getResearchManager().lockAllResearch();
 				}

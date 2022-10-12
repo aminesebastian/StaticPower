@@ -13,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -61,7 +61,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		inputSlots = new ArrayList<PhantomSlot>();
 
 		// Attempt to get the item filter inventory.
-		getAttachment().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
+		getAttachment().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent((handler) -> {
 			encoderInventory = (ItemStackHandler) handler;
 		});
 

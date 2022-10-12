@@ -55,6 +55,6 @@ public class BlockDigistoreServerRack extends StaticPowerBlockEntityBlock implem
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return TileEntityDigistoreServerRack.TYPE.create(pos, state);
+		return BlockEntityDigistoreServerRack.TYPE.create(pos, state);
 	}
 }

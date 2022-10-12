@@ -30,12 +30,12 @@ public class FluidGeneratorRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<FluidGeneratorRecipe> getSerializer() {
 		return FluidGeneratorRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<FluidGeneratorRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 

@@ -13,7 +13,7 @@ import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModItems;
 
-public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntityDigistore> {
+public class ContainerDigistore extends StaticPowerTileEntityContainer<BlockEntityDigistore> {
 	@ContainerTypePopulator
 	public static final ContainerTypeAllocator<ContainerDigistore, GuiDigistore> TYPE = new ContainerTypeAllocator<>("digistore", ContainerDigistore::new);
 	static {
@@ -23,10 +23,10 @@ public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntit
 	}
 
 	public ContainerDigistore(int windowId, Inventory inv, FriendlyByteBuf data) {
-		this(windowId, inv, (TileEntityDigistore) resolveTileEntityFromDataPacket(inv, data));
+		this(windowId, inv, (BlockEntityDigistore) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerDigistore(int windowId, Inventory playerInventory, TileEntityDigistore owner) {
+	public ContainerDigistore(int windowId, Inventory playerInventory, BlockEntityDigistore owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

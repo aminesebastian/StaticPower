@@ -82,12 +82,12 @@ public class LumberMillRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<LumberMillRecipe> getSerializer() {
 		return LumberMillRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<LumberMillRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

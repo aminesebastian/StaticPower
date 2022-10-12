@@ -25,10 +25,12 @@ public class ResearchManager {
 	private final Team team;
 	private final List<ResourceLocation> completedResearch;
 	private final HashMap<ResourceLocation, ResearchInstance> activeResearch;
+	private final boolean isClientSide;
 	private ResearchInstance selectedResearch;
 
-	public ResearchManager(Team team) {
+	public ResearchManager(Team team, boolean isClientSide) {
 		this.team = team;
+		this.isClientSide = isClientSide;
 		completedResearch = new ArrayList<>();
 		activeResearch = new LinkedHashMap<>();
 	}
@@ -43,6 +45,10 @@ public class ResearchManager {
 		}
 		selectedResearch = activeResearch.get(name);
 		team.markDirty(true);
+	}
+
+	public boolean isClientSide() {
+		return isClientSide;
 	}
 
 	public void clearSelectedResearch() {

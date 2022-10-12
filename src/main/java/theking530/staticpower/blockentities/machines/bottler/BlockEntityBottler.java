@@ -74,7 +74,7 @@ public class BlockEntityBottler extends BlockEntityMachine {
 		// Use the old processing system because we need to support NON recipe based
 		// processing as well as recipe based.
 		registerComponent(moveComponent = MachineProcessingComponent
-				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
+				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted)
 				.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.bottlerProcessingTime.get(), this::canProcess,
 				this::canProcess, this::processingCompleted, true));

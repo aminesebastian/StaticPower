@@ -102,7 +102,7 @@ public class ChainsawItemModel implements BakedModel {
 			AtomicBoolean bladeEquipped = new AtomicBoolean(false);
 
 			// Attempt to get the chainsaw inventory.
-			stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
+			stack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent((handler) -> {
 				if (!handler.getStackInSlot(0).isEmpty()) {
 					bladeEquipped.set(true);
 					BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(handler.getStackInSlot(0), Minecraft.getInstance().level, null, 0);

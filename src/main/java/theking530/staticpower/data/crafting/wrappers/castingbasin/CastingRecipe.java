@@ -65,12 +65,12 @@ public class CastingRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<CastingRecipe> getSerializer() {
 		return CastingRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<CastingRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

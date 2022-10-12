@@ -22,7 +22,7 @@ import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.utilities.MetricConverter;
 
-public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, TileEntityDigistore> {
+public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, BlockEntityDigistore> {
 
 	private GuiInfoTab infoTab;
 	private TextButton lockedButton;

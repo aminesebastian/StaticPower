@@ -27,19 +27,26 @@ import theking530.staticpower.utilities.NBTUtilities;
 
 public class Team {
 	private final Connection db;
-	private String id;
-	private String name;
 	private final HashSet<String> players;
 	private final ResearchManager researchManager;
 	private final ProductionManager productionManager;
+	private final boolean isClientSide;
+	private String id;
+	private String name;
 	private boolean dirty;
 
-	public Team(String name, String id) {
+	public Team(String name, String id, boolean isClientSide) {
 		this.id = id.replace("-", "");
-		this.db = StaticPowerGameDataManager.getDatabaseConnection(new ResourceLocation(StaticPower.MOD_ID, id));
+		if(!isClientSide) {
+			this.db = StaticPowerGameDataManager.getDatabaseConnection(new ResourceLocation(StaticPower.MOD_ID, id));
+		}else {
+			this.db = null;
+		}
+
+		this.isClientSide = isClientSide;
 		players = new LinkedHashSet<String>();
-		researchManager = new ResearchManager(this);
-		productionManager = new ProductionManager(this);
+		researchManager = new ResearchManager(this, isClientSide);
+		productionManager = new ProductionManager(this, isClientSide);
 		this.name = name;
 	}
 
@@ -51,6 +58,10 @@ public class Team {
 
 	public String getName() {
 		return name;
+	}
+
+	public boolean isClientSide() {
+		return isClientSide;
 	}
 
 	public void setName(String name) {
@@ -153,8 +164,8 @@ public class Team {
 		return id;
 	}
 
-	public static Team fromTag(CompoundTag tag) {
-		Team output = new Team(tag.getString("name"), tag.getString("id"));
+	public static Team fromTag(CompoundTag tag, boolean isClientSide) {
+		Team output = new Team(tag.getString("name"), tag.getString("id"), isClientSide);
 		output.deserialize(tag);
 		return output;
 	}

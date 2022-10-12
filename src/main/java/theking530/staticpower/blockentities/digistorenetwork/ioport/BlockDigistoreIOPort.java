@@ -13,6 +13,6 @@ public class BlockDigistoreIOPort extends BaseDigistoreBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityDigistoreIOPort.TYPE.create(pos, state);
+		return BlockEntityDigistoreIOPort.TYPE.create(pos, state);
 	}
 }

@@ -49,7 +49,7 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		// If there is a striped variant defined.
 		if (handIn == InteractionHand.MAIN_HAND && strippedVariant != null) {
-			Team team = TeamManager.get().getTeamForPlayer(player);
+			Team team = TeamManager.get(worldIn).getTeamForPlayer(player);
 			if (team != null) {
 				if (team.getResearchManager().hasCompletedResearch(ModResearch.RUBBER_WOOD_STRIPPING)) {
 					// If the player is holding an axe.

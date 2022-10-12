@@ -2,7 +2,6 @@ package theking530.staticpower.init;
 
 import theking530.staticcore.cablenetwork.CableStateSyncPacket;
 import theking530.staticcore.cablenetwork.CableStateSyncRequestPacket;
-import theking530.staticcore.data.StaticPowerGameDataLoadPacket;
 import theking530.staticcore.data.StaticPowerGameDataSyncPacket;
 import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
@@ -102,7 +101,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PowerStorageComponentSyncPacket.class);
 
 		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataSyncPacket.class);
-		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataLoadPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetTeamComponentTeam.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetSelectedResearch.class);
 

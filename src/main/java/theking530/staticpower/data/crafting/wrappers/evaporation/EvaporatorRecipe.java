@@ -37,12 +37,12 @@ public class EvaporatorRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<EvaporatorRecipe> getSerializer() {
 		return EvaporatorRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<EvaporatorRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 

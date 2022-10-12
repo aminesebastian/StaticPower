@@ -18,7 +18,6 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
-import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipeSerializer;
 
 public class EnchanterRecipe extends AbstractMachineRecipe {
 	public static final String ID = "esoteric_enchanter";
@@ -140,12 +139,12 @@ public class EnchanterRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
-		return FermenterRecipeSerializer.INSTANCE;
+	public RecipeSerializer<EnchanterRecipe> getSerializer() {
+		return EnchanterRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<EnchanterRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

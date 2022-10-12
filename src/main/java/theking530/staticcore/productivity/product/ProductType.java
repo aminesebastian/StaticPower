@@ -1,16 +1,16 @@
 package theking530.staticcore.productivity.product;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
-import theking530.staticcore.productivity.entry.ProductionEntry;
+import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 
 public abstract class ProductType<T> {
 	private final Class<T> productClass;
-	private Supplier<ProductionCache<T>> cacheType;
+	private Function<Boolean, ProductionCache<T>> cacheType;
 
-	public ProductType(Class<T> productClass, Supplier<ProductionCache<T>> cacheType) {
+	public ProductType(Class<T> productClass, Function<Boolean, ProductionCache<T>> cacheType) {
 		this.productClass = productClass;
 		this.cacheType = cacheType;
 	}
@@ -22,8 +22,8 @@ public abstract class ProductType<T> {
 		return token;
 	}
 
-	public ProductionCache<T> createNewCacheInstance() {
-		return cacheType.get();
+	public ProductionCache<T> createNewCacheInstance(boolean isClientSide) {
+		return cacheType.apply(isClientSide);
 	}
 
 	protected abstract ProductionTrackingToken<T> createProductivityToken();

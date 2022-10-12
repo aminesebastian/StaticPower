@@ -130,12 +130,12 @@ public class MixerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<MixerRecipe> getSerializer() {
 		return MixerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<MixerRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

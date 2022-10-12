@@ -1,8 +1,8 @@
 package theking530.staticpower.init.cables;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.api.energy.CapabilityStaticPower;
@@ -20,7 +20,7 @@ public class ModCableDestinations {
 	public static final RegistryObject<CableDestinationCapability> Power = DESTINATIONS.register("power",
 			() -> new CableDestinationCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY));
 	public static final RegistryObject<CableDestinationCapability> Item = DESTINATIONS.register("item",
-			() -> new CableDestinationCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY));
+			() -> new CableDestinationCapability(ForgeCapabilities.ITEM_HANDLER));
 	public static final RegistryObject<CableDestinationCapability> Fluid = DESTINATIONS.register("fluid",
 			() -> new CableDestinationCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	public static final RegistryObject<CableDestinationCapability> Heat = DESTINATIONS.register("heat",

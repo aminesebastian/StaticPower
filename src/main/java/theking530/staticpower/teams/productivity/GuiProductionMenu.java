@@ -14,6 +14,7 @@ import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics;
 import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
 import theking530.staticcore.productivity.metrics.SertializedBiDirectionalMetrics;
+import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
@@ -27,6 +28,8 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	private static final int POST_TOP_PANEL_MARGIN = 20;
 	private static final float GRAPH_PANEL_PADDING = 30;
 	private static final float GRAPH_PANEL_OFFSET = 2;
+
+	private ProductType<?> displayedProductType;
 
 	private ScrollBox inputScrollBox;
 	private List<MetricEntryWidget> inputMetricWidgets;
@@ -52,12 +55,11 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 
 	@Override
 	public void initializeGui() {
+		displayedProductType = ModProducts.Item.get();
 		inputMetricWidgets = new LinkedList<>();
 		outputMetricWidgets = new LinkedList<>();
 		inputHorizontalBoxes = new LinkedList<>();
 		outputHorizontalBoxes = new LinkedList<>();
-
-		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(ModProducts.Item.get()));
 
 		this.registerWidget(inputScrollBox = new ScrollBox(10, 10, 200, 200));
 		inputScrollBox.setDrawScrollBar(true);
@@ -67,10 +69,10 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		outputScrollBox.setDrawScrollBarBackground(true);
 
 		for (int i = 0; i < 20; i++) {
-			MetricEntryWidget inputWidget = new MetricEntryWidget(null, MetricType.CONSUMPTION, 0, 0, 0, 20);
+			MetricEntryWidget inputWidget = new MetricEntryWidget(MetricType.CONSUMPTION, 0, 0, 0, 20);
 			inputMetricWidgets.add(inputWidget);
 
-			MetricEntryWidget outputWidget = new MetricEntryWidget(null, MetricType.PRODUCTION, 0, 0, 0, 20);
+			MetricEntryWidget outputWidget = new MetricEntryWidget(MetricType.PRODUCTION, 0, 0, 0, 20);
 			outputMetricWidgets.add(outputWidget);
 		}
 
@@ -96,6 +98,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 			box.setVisible(false);
 		}
 
+		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
 		recalculateSizes();
 	}
 
@@ -104,7 +107,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	public void tick() {
 		super.tick();
 		if (Minecraft.getInstance().level.getGameTime() % 20 == 0) {
-			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(ModProducts.Item.get()));
+			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
 		}
 
 		// Updated the metric widgets.
@@ -117,7 +120,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 
 		if (getProductionManager() != null) {
 			ProductionManager manager = getProductionManager();
-			SertializedBiDirectionalMetrics metrics = manager.getClientSyncedMetrics(ModProducts.Item.get());
+			SertializedBiDirectionalMetrics metrics = manager.getCache(this.displayedProductType).getClientSyncedMetrics();
 
 			int maxInputs = Math.min(inputMetricWidgets.size(), metrics.getInputs().size());
 			int widgetIndex = 0;
@@ -125,7 +128,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 				SerializedMetricPeriod periodMetrics = metrics.getInputs().get(i);
 				if (periodMetrics.getConsumption() > 0) {
 					inputHorizontalBoxes.get(i / 2).setVisible(true);
-					inputMetricWidgets.get(widgetIndex).setMetric(periodMetrics);
+					inputMetricWidgets.get(widgetIndex).setMetric(displayedProductType, periodMetrics);
 					widgetIndex++;
 				}
 
@@ -140,7 +143,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 				SerializedMetricPeriod periodMetrics = metrics.getOutputs().get(i);
 				if (periodMetrics.getProduction() > 0) {
 					outputHorizontalBoxes.get(i / 2).setVisible(true);
-					outputMetricWidgets.get(widgetIndex).setMetric(periodMetrics);
+					outputMetricWidgets.get(widgetIndex).setMetric(displayedProductType, periodMetrics);
 					widgetIndex++;
 				}
 

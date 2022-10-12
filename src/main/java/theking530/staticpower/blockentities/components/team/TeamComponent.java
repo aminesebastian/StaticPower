@@ -25,7 +25,7 @@ public class TeamComponent extends AbstractBlockEntityComponent {
 	@Override
 	public void onOwningBlockEntityFirstPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (placer instanceof Player) {
-			Team placerTeam = TeamManager.get().getTeamForPlayer((Player) placer);
+			Team placerTeam = TeamManager.get(context.getLevel()).getTeamForPlayer((Player) placer);
 			if (placerTeam != null) {
 				teamId = placerTeam.getId().toString();
 			}
@@ -44,6 +44,6 @@ public class TeamComponent extends AbstractBlockEntityComponent {
 		if (teamId == "missing") {
 			return null;
 		}
-		return TeamManager.get().getTeamById(teamId);
+		return TeamManager.get(getLevel()).getTeamById(teamId);
 	}
 }

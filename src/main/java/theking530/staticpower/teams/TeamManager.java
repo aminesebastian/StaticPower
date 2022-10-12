@@ -23,10 +23,12 @@ import theking530.staticpower.init.ModResearch;
 
 public class TeamManager extends StaticPowerGameData {
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "teams");
-	private Map<String, Team> teams;
+	private final boolean isClientSide;
+	private final Map<String, Team> teams;
 
-	public TeamManager() {
+	public TeamManager(boolean isClientSide) {
 		super(ID);
+		this.isClientSide = isClientSide;
 		teams = new HashMap<String, Team>();
 	}
 
@@ -86,7 +88,7 @@ public class TeamManager extends StaticPowerGameData {
 
 		// Name the team after the first player in the list and create it.
 		String name = String.format("%1$s's Team", players[0].getDisplayName().getString());
-		Team newTeam = new Team(name, UUID.randomUUID().toString().replace("-", ""));
+		Team newTeam = new Team(name, UUID.randomUUID().toString().replace("-", ""), isClientSide);
 
 		// For all the players, if they're also on another team, remove them from that
 		// team.
@@ -115,15 +117,8 @@ public class TeamManager extends StaticPowerGameData {
 		return List.copyOf(teams.values());
 	}
 
-	@Overwrite
-	public void loadFromDisk(CompoundTag tag) {
-		teams.clear();
-		ListTag teamsTag = tag.getList("teams", Tag.TAG_COMPOUND);
-		for (Tag teamTag : teamsTag) {
-			CompoundTag teamTagCompound = (CompoundTag) teamTag;
-			Team team = Team.fromTag(teamTagCompound);
-			teams.put(team.getId(), team);
-		}
+	public boolean isClientSide() {
+		return isClientSide;
 	}
 
 	@Override
@@ -135,7 +130,7 @@ public class TeamManager extends StaticPowerGameData {
 			if (teams.containsKey(teamId)) {
 				teams.get(teamId).deserialize(teamTagCompound);
 			} else {
-				teams.put(teamId, Team.fromTag(teamTagCompound));
+				teams.put(teamId, Team.fromTag(teamTagCompound, isClientSide));
 			}
 		}
 	}
@@ -150,14 +145,14 @@ public class TeamManager extends StaticPowerGameData {
 		return tag;
 	}
 
-	public static TeamManager get() {
-		return StaticPowerGameDataManager.getOrCreateaGameData(ID);
+	public static TeamManager get(Level level) {
+		return StaticPowerGameDataManager.getOrCreateaGameData(ID, level.isClientSide());
 	}
 
 	@SuppressWarnings("resource")
 	@OnlyIn(Dist.CLIENT)
 	public static Team getLocalTeam() {
-		return TeamManager.get().getTeamForPlayer(Minecraft.getInstance().player);
+		return TeamManager.get(Minecraft.getInstance().level).getTeamForPlayer(Minecraft.getInstance().player);
 	}
 
 	@Override

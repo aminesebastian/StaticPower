@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -28,9 +28,9 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public class StaticPowerGameDataManager {
 	private static final HashMap<ResourceLocation, Connection> DATABASE_CONNECTIONS = new LinkedHashMap<>();
 	private static final HashMap<ResourceLocation, StaticPowerGameData> DATA = new LinkedHashMap<>();
-	private static final HashMap<ResourceLocation, Supplier<StaticPowerGameData>> DATA_FACTORIES = new LinkedHashMap<>();
+	private static final HashMap<ResourceLocation, Function<Boolean, StaticPowerGameData>> DATA_FACTORIES = new LinkedHashMap<>();
 
-	public static void registerDataFactory(ResourceLocation id, Supplier<StaticPowerGameData> factory) {
+	public static void registerDataFactory(ResourceLocation id, Function<Boolean, StaticPowerGameData> factory) {
 		DATA_FACTORIES.put(id, factory);
 	}
 
@@ -55,12 +55,12 @@ public class StaticPowerGameDataManager {
 						// If we already have a loaded data object with this name, load on top of it,
 						// otherwise create a new one.
 						if (!DATA.containsKey(entry.getKey())) {
-							DATA.put(entry.getKey(), entry.getValue().get());
+							DATA.put(entry.getKey(), entry.getValue().apply(false));
 						}
-						DATA.get(entry.getKey()).loadFromDisk(tag);
+						DATA.get(entry.getKey()).deserialize(tag);
 					} else {
 						// If the file was not found, create the data for the first time.
-						createAndCacheDataFirstTime(entry.getKey());
+						createAndCacheDataFirstTime(entry.getKey(), false);
 					}
 				} catch (Exception e) {
 					StaticPower.LOGGER.error(String.format("An error occured when attempting to load data: %1$s from the disk.", entry.getKey()), e);
@@ -130,9 +130,9 @@ public class StaticPowerGameDataManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends StaticPowerGameData> T getOrCreateaGameData(ResourceLocation id) {
+	public static <T extends StaticPowerGameData> T getOrCreateaGameData(ResourceLocation id, boolean isClientSide) {
 		if (!DATA.containsKey(id)) {
-			createAndCacheDataFirstTime(id);
+			createAndCacheDataFirstTime(id, isClientSide);
 		}
 		return (T) DATA.get(id);
 	}
@@ -157,22 +157,13 @@ public class StaticPowerGameDataManager {
 	}
 
 	/**
-	 * Synchronizes the data to all clients and they perform a create OR update.
-	 */
-	public static void syncAllGameDataToClients() {
-		for (StaticPowerGameData data : DATA.values()) {
-			data.syncToClients();
-		}
-	}
-
-	/**
 	 * Synchronizes the data to all clients and forces them to completely clear
 	 * their local data. This is good for sending when players first join in case
 	 * they were already in another server that also has your mod.
 	 */
 	public static void loadDataForClients() {
 		for (StaticPowerGameData data : DATA.values()) {
-			StaticPowerMessageHandler.sendToAllPlayers(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new StaticPowerGameDataLoadPacket(data));
+			data.syncToClients();
 		}
 	}
 
@@ -184,8 +175,8 @@ public class StaticPowerGameDataManager {
 		}
 	}
 
-	private static StaticPowerGameData createAndCacheDataFirstTime(ResourceLocation id) {
-		StaticPowerGameData newInstance = DATA_FACTORIES.get(id).get();
+	private static StaticPowerGameData createAndCacheDataFirstTime(ResourceLocation id, boolean isClientSide) {
+		StaticPowerGameData newInstance = DATA_FACTORIES.get(id).apply(isClientSide);
 		newInstance.onFirstTimeCreated();
 		DATA.put(newInstance.getId(), newInstance);
 		return newInstance;

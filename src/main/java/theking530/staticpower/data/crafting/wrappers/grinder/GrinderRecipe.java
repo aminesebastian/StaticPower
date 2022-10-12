@@ -63,12 +63,12 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<GrinderRecipe> getSerializer() {
 		return GrinderRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<GrinderRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

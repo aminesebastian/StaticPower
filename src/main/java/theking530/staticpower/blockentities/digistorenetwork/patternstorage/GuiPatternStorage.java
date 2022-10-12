@@ -7,7 +7,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.utilities.MetricConverter;
 
-public class GuiPatternStorage extends StaticPowerTileEntityGui<ContainerPatternStorage, TileEntityPatternStorage> {
+public class GuiPatternStorage extends StaticPowerTileEntityGui<ContainerPatternStorage, BlockEntityPatternStorage> {
 
 	private GuiInfoTab infoTab;
 

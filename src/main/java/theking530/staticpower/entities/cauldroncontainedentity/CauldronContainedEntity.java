@@ -93,7 +93,6 @@ public class CauldronContainedEntity extends ItemEntity {
 				// Get the tile entity for the cauldron.
 				BlockEntityCauldron cauldron = (BlockEntityCauldron) te;
 				if (cauldron.getRecipe(getItem()).isPresent()) {
-					System.out.println(getEntityData().get(CURRENT_COOKING_TIME));
 					// See if we aged enough.
 					if (getEntityData().get(CURRENT_COOKING_TIME) >= getEntityData().get(TOTAL_COOKING_TIME)) {
 						// Reset the time spent cooking.

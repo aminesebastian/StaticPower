@@ -37,12 +37,12 @@ public class CondensationRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<CondensationRecipe> getSerializer() {
 		return CondensationRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<CondensationRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 

@@ -27,11 +27,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -86,10 +86,10 @@ public class BlockTank extends StaticPowerBlockEntityBlock implements ICustomMod
 			// otherwise, fill the cauldron.
 			if (cauldron.fluidTankComponent.getFluidAmount() > 0) {
 				actionResult = FluidUtil.tryFillContainerAndStow(heldItem, cauldron.fluidTankComponent,
-						player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null), 1000, player, true);
+						player.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null), 1000, player, true);
 			} else {
 				actionResult = FluidUtil.tryEmptyContainerAndStow(heldItem, cauldron.fluidTankComponent,
-						player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null), 1000, player, true);
+						player.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null), 1000, player, true);
 			}
 
 			// Check what happened.

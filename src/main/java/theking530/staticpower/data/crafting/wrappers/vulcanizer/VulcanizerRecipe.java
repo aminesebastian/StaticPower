@@ -53,12 +53,12 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<VulcanizerRecipe> getSerializer() {
 		return VulcanizerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<VulcanizerRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

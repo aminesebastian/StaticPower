@@ -14,35 +14,39 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
+import theking530.staticcore.productivity.ProductMetricTileRendererRegistry;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
+import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.init.ModProducts;
 
 public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 	@Nullable
 	private SerializedMetricPeriod metric;
 	private MetricType metricType;
+	private ProductType<?> currentProductType;
 
-	public MetricEntryWidget(@Nullable SerializedMetricPeriod metric, MetricType metricType, float xPosition, float yPosition, float width, float height) {
+	public MetricEntryWidget(MetricType metricType, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
-		this.metric = metric;
 		this.metricType = metricType;
 	}
 
-	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
-
-	}
-
-	public void setMetric(@Nullable SerializedMetricPeriod metric) {
+	public void setMetric(ProductType<?> productType, @Nullable SerializedMetricPeriod metric) {
 		this.metric = metric;
+		this.currentProductType = productType;
 	}
 
 	public SerializedMetricPeriod getMetric() {
 		return metric;
+	}
+
+	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+
 	}
 
 	@Override
@@ -55,6 +59,10 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		GuiDrawUtilities.drawRectangle(pose, getWidth(), getHeight() - 2, 0, 1, 1, bgColor);
 		GuiDrawUtilities.drawRectangle(pose, getWidth(), 1, 0, getHeight() - 1, 1, new SDColor(0.0f, 0.0f, 0.0f, 0.5f));
 
+		if (metric != null && currentProductType != null) {
+			ProductMetricTileRendererRegistry.getRenderer(currentProductType).setRenderContext(metric, metricType);
+			ProductMetricTileRendererRegistry.getRenderer(currentProductType).drawBackground(pose, new Vector2D(mouseX, mouseY), partialTicks, getSize(), isHovered());
+		}
 	}
 
 	@Override
@@ -63,38 +71,10 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 
 	@Override
 	public void renderWidgetForeground(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
-		if (metric == null) {
-			return;
+		if (metric != null && currentProductType != null) {
+			ProductMetricTileRendererRegistry.getRenderer(currentProductType).setRenderContext(metric, metricType);
+			ProductMetricTileRendererRegistry.getRenderer(currentProductType).drawForeground(pose, new Vector2D(mouseX, mouseY), partialTicks, getSize(), isHovered());
 		}
-		try {
-			CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
-			tag.putByte("Count", (byte) 1);
-			ItemStack product = ItemStack.of(tag);
-
-			GuiDrawUtilities.drawItem(pose, product, 2, 2, 10, 16, 16);
-			GuiDrawUtilities.drawStringLeftAligned(pose, GuiTextUtilities.formatNumberAsStringOneDecimal(metric.getMetric(metricType)).getString() + "/m", 21, 12f, 1, 0.75f,
-					SDColor.EIGHT_BIT_WHITE, true);
-		} catch (CommandSyntaxException e) {
-			e.printStackTrace();
-		}
-
-		SDColor testColor = new SDColor(1, 1, 1, 1);
-		int serializedHash = metric.getSerializedProduct().hashCode();
-		testColor.setRed(Math.abs(serializedHash) % 100 / 100.0f);
-		testColor.setGreen(Math.abs(serializedHash) % 200 / 200.0f);
-		testColor.setBlue(Math.abs(serializedHash) % 300 / 300.0f);
-		testColor.desaturate(-1);
-		testColor.lighten(0.5f, 0.5f, 0.5f, 0.0f);
-
-		float growthPercentage = 0.5f;
-		pose.pushPose();
-		pose.scale(1, 0.85f, 1);
-		float barXPos = 50;
-		float barYPos = (getHeight() - 12);
-		float width = (getWidth() - barXPos - 5);
-		GuiDrawUtilities.drawGenericBackground(pose, width, 7, barXPos, barYPos, 1, new SDColor(0.4f, 0.4f, 0.4f, 1.0f));
-		GuiDrawUtilities.drawGenericBackground(pose, Math.max(7, width * growthPercentage), 7, barXPos, barYPos, 1, testColor);
-		pose.popPose();
 	}
 
 	@SuppressWarnings("resource")
@@ -102,10 +82,17 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
 		try {
 			if (metric != null) {
-				CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
-				tag.putByte("Count", (byte) 1);
-				ItemStack product = ItemStack.of(tag);
-				tooltips.addAll(product.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.Default.NORMAL));
+				if (currentProductType == ModProducts.Item.get()) {
+					CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
+					tag.putByte("Count", (byte) 1);
+					ItemStack product = ItemStack.of(tag);
+					tooltips.addAll(product.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.Default.NORMAL));
+				} else if (currentProductType == ModProducts.Fluid.get()) {
+					CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
+					tag.putInt("Amount", (byte) 1);
+					FluidStack product = FluidStack.loadFluidStackFromNBT(tag);
+					tooltips.add(product.getDisplayName());
+				}
 			}
 		} catch (CommandSyntaxException e) {
 			e.printStackTrace();

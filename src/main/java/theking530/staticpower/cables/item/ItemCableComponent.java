@@ -16,8 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.PacketDistributor;
 import theking530.staticcore.cablenetwork.CableNetwork;
@@ -175,7 +175,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		// Only provide the item capability if we are not disabled on the provided side.
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != null) {
+		if (cap == ForgeCapabilities.ITEM_HANDLER && side != null) {
 			boolean disabled = false;
 			if (side != null) {
 				if (isClientSide()) {

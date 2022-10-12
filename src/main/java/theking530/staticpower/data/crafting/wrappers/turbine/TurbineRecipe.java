@@ -54,12 +54,12 @@ public class TurbineRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<TurbineRecipe> getSerializer() {
 		return TurbineRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<TurbineRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

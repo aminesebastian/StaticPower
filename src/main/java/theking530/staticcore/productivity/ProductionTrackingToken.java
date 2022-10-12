@@ -3,7 +3,7 @@ package theking530.staticcore.productivity;
 import java.util.HashSet;
 import java.util.Set;
 
-import theking530.staticcore.productivity.entry.ProductionEntry;
+import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticpower.teams.Team;
 

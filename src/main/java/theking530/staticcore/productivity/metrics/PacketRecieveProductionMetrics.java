@@ -38,7 +38,7 @@ public class PacketRecieveProductionMetrics extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			TeamManager.getLocalTeam().getProductionManager().setClientSyncedMetrics(productType, metrics);
+			TeamManager.getLocalTeam().getProductionManager().getCache(productType).setClientSyncedMetrics(metrics);
 		});
 	}
 }

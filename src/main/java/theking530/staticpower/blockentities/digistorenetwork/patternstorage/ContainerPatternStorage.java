@@ -9,7 +9,7 @@ import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 
-public class ContainerPatternStorage extends StaticPowerTileEntityContainer<TileEntityPatternStorage> {
+public class ContainerPatternStorage extends StaticPowerTileEntityContainer<BlockEntityPatternStorage> {
 	@ContainerTypePopulator
 	public static final ContainerTypeAllocator<ContainerPatternStorage, GuiPatternStorage> TYPE = new ContainerTypeAllocator<>("digistore_atomic_constructor", ContainerPatternStorage::new);
 	static {
@@ -19,10 +19,10 @@ public class ContainerPatternStorage extends StaticPowerTileEntityContainer<Tile
 	}
 
 	public ContainerPatternStorage(int windowId, Inventory inv, FriendlyByteBuf data) {
-		this(windowId, inv, (TileEntityPatternStorage) resolveTileEntityFromDataPacket(inv, data));
+		this(windowId, inv, (BlockEntityPatternStorage) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerPatternStorage(int windowId, Inventory playerInventory, TileEntityPatternStorage owner) {
+	public ContainerPatternStorage(int windowId, Inventory playerInventory, BlockEntityPatternStorage owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

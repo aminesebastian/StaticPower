@@ -63,12 +63,12 @@ public class SqueezerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<SqueezerRecipe> getSerializer() {
 		return SqueezerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<SqueezerRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

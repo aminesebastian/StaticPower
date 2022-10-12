@@ -35,7 +35,8 @@ public class CraftingResearchLockingUtilities {
 				}
 			} else if (container instanceof CraftingContainer) {
 				CraftingContainer craftCont = (CraftingContainer) container;
-				AbstractContainerMenu menu = (AbstractContainerMenu) ObfuscationReflectionHelper.getPrivateValue(CraftingContainer.class, craftCont, "f_39323_"); // Get the "menu" field.
+				AbstractContainerMenu menu = (AbstractContainerMenu) ObfuscationReflectionHelper.getPrivateValue(CraftingContainer.class, craftCont, "f_39323_"); // Get the "menu"
+																																									// field.
 
 				for (Slot slot : menu.slots) {
 					if (slot instanceof ResultSlot) {
@@ -60,7 +61,7 @@ public class CraftingResearchLockingUtilities {
 			return false;
 		}
 
-		Team team = TeamManager.get().getTeamForPlayer(player);
+		Team team = TeamManager.get(player.level).getTeamForPlayer(player);
 		return canTeamCraftRecipe(team, recipe);
 	}
 

@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -141,7 +141,7 @@ public class InputServoComponent extends AbstractBlockEntityComponent {
 					// If the tile entity exists.
 					if (te != null) {
 						// Get the item handler on that side.
-						IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite()).orElse(null);
+						IItemHandler handler = te.getCapability(ForgeCapabilities.ITEM_HANDLER, direction.getOpposite()).orElse(null);
 
 						// If that exists and is not empty, add is as a candidate.
 						if (handler != null && !InventoryUtilities.isInventoryEmpty(handler)) {

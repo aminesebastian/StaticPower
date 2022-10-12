@@ -33,7 +33,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.blockentities.digistorenetwork.severrack.TileEntityDigistoreServerRack;
+import theking530.staticpower.blockentities.digistorenetwork.severrack.BlockEntityDigistoreServerRack;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.items.DigistoreCard;
@@ -64,13 +64,13 @@ public class ServerRackModel extends AbstractBakedModel {
 	@Override
 	protected List<BakedQuad> getBakedQuadsFromModelData(@Nullable BlockState state, Direction side, @Nonnull RandomSource rand, @Nonnull ModelData data, RenderType renderLayer) {
 		// If the property is not there, return early.
-		if (!data.has(TileEntityDigistoreServerRack.CARD_RENDERING_STATE)) {
+		if (!data.has(BlockEntityDigistoreServerRack.CARD_RENDERING_STATE)) {
 			return Collections.emptyList();
 		}
 
 		// Get the data used in rendering.
 		Direction facing = state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
-		ItemStack[] cards = data.get(TileEntityDigistoreServerRack.CARD_RENDERING_STATE).cards;
+		ItemStack[] cards = data.get(BlockEntityDigistoreServerRack.CARD_RENDERING_STATE).cards;
 
 		// Create the output array.
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();

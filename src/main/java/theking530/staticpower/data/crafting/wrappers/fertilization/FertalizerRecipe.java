@@ -35,12 +35,12 @@ public class FertalizerRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<FertalizerRecipe> getSerializer() {
 		return FertalizerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<FertalizerRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

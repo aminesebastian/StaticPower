@@ -53,12 +53,12 @@ public class TumblerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<TumblerRecipe> getSerializer() {
 		return TumblerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<TumblerRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

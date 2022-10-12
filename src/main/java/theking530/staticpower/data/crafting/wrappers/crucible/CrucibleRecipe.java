@@ -62,12 +62,12 @@ public class CrucibleRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<CrucibleRecipe> getSerializer() {
 		return CrucibleRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<CrucibleRecipe> getType() {
 		return RECIPE_TYPE;
 	}
 }

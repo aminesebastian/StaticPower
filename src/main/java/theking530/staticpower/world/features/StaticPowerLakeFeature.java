@@ -15,7 +15,6 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 
 public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfiguration> {
-	private static final BlockState AIR = Blocks.CAVE_AIR.defaultBlockState();
 
 	public StaticPowerLakeFeature(Codec<StaticPowerLakeFeatureConfiguration> codec) {
 		super(codec);
@@ -76,7 +75,6 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 			float normalizedDistanceFromCenter = (float) distanceFromCenter / bulbRadius;
 			normalizedDistanceFromCenter = 1.0f - normalizedDistanceFromCenter;
 			int sliceRadius = Math.max(1, (int) (normalizedDistanceFromCenter * radius));
-			System.out.println(sliceRadius);
 			for (int x = -sliceRadius - 1; x < sliceRadius + 1; x++) {
 				for (int z = -sliceRadius + 1; z < sliceRadius - 1; z++) {
 					float currentRadius = new Vector2D(x, z).getLength();
@@ -121,7 +119,7 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 		}
 
 		for (Direction dir : Direction.values()) {
-			if (dir == Direction.UP) {
+			if (dir == Direction.UP || dir == Direction.DOWN) {
 				continue;
 			}
 
@@ -131,10 +129,5 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 			}
 		}
 		return true;
-	}
-
-	private boolean canReplaceBlock(BlockState state) {
-		return !state.is(BlockTags.FEATURES_CANNOT_REPLACE);
-
 	}
 }

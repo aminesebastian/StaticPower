@@ -22,6 +22,6 @@ public class BlockPatternStorage extends BaseDigistoreBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityPatternStorage.TYPE.create(pos, state);
+		return BlockEntityPatternStorage.TYPE.create(pos, state);
 	}
 }
