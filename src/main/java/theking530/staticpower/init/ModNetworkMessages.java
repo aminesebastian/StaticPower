@@ -8,7 +8,9 @@ import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachm
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
 import theking530.staticcore.gui.widgets.tabs.slottabs.PacketGuiTabAddSlots;
 import theking530.staticcore.productivity.metrics.PacketRecieveProductionMetrics;
+import theking530.staticcore.productivity.metrics.PacketRecieveProductionTimeline;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics;
+import theking530.staticcore.productivity.metrics.PacketRequestProductionTimeline;
 import theking530.staticpower.blockentities.components.control.ProcesingComponentSyncPacket;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponentSyncPacket;
 import theking530.staticpower.blockentities.components.fluids.PacketFluidContainerComponent;
@@ -109,5 +111,8 @@ public class ModNetworkMessages {
 
 		StaticPowerMessageHandler.registerMessage(PacketRequestProductionMetrics.class);
 		StaticPowerMessageHandler.registerMessage(PacketRecieveProductionMetrics.class);
+
+		StaticPowerMessageHandler.registerMessage(PacketRequestProductionTimeline.class);
+		StaticPowerMessageHandler.registerMessage(PacketRecieveProductionTimeline.class);
 	}
 }

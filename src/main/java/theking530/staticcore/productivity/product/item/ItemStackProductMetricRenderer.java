@@ -15,7 +15,7 @@ public class ItemStackProductMetricRenderer extends ProductMetricTileRenderer<It
 
 	@Override
 	protected void drawIcon(ItemStack product, PoseStack pose, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
-		GuiDrawUtilities.drawItem(pose, product, 2, 2, 10, 16, 16);
+		GuiDrawUtilities.drawItem(pose, product, 3, 2, 10, 16, 16);
 	}
 
 	@Override

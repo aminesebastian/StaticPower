@@ -1,6 +1,7 @@
 package theking530.staticcore.productivity;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
@@ -9,12 +10,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
+
 import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 import theking530.staticcore.productivity.cacheentry.ProductionEntry.ProductionEntryState;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
-import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
-import theking530.staticcore.productivity.metrics.SertializedBiDirectionalMetrics;
+import theking530.staticcore.productivity.metrics.ProductionMetric;
+import theking530.staticcore.productivity.metrics.ProductionMetrics;
+import theking530.staticcore.productivity.metrics.ProductivityTimeline;
+import theking530.staticcore.productivity.metrics.ProductivityTimeline.ProductivityTimelineEntry;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistries;
@@ -24,7 +29,8 @@ public class ProductionCache<T> {
 	private final Map<Integer, Integer> productivityBucketMap;
 	private final ProductType<T> productType;
 	private final String productTablePrefix;
-	private SertializedBiDirectionalMetrics clientMetrics;
+	private ProductionMetrics clientMetrics;
+	private long lastClientSyncTime;
 
 	private Connection database;
 	private int bucketRoundRobinIndex;
@@ -40,7 +46,7 @@ public class ProductionCache<T> {
 		for (int i = 0; i < 20; i++) {
 			productivityBuckets.add(new HashMap<Integer, ProductionEntry<T>>());
 		}
-		clientMetrics = SertializedBiDirectionalMetrics.EMPTY;
+		clientMetrics = ProductionMetrics.EMPTY;
 	}
 
 	public void tick(long gameTime) {
@@ -49,14 +55,6 @@ public class ProductionCache<T> {
 				entry.tick(gameTime);
 			}
 		}
-	}
-
-	public SertializedBiDirectionalMetrics getClientSyncedMetrics() {
-		return clientMetrics;
-	}
-
-	public void setClientSyncedMetrics(SertializedBiDirectionalMetrics metrics) {
-		clientMetrics = metrics;
 	}
 
 	public ProductionEntry<T> addOrUpdateProductionRate(ProductionTrackingToken<T> token, T product, int productHash, double rate) {
@@ -83,7 +81,81 @@ public class ProductionCache<T> {
 		return entry;
 	}
 
+	public ProductType<T> getProductType() {
+		return productType;
+	}
+
+	public ProductivityTimeline getProductivityTimeline(MetricPeriod period, int productHash, long currentGameTick) {
+		String serializedProduct = getSerializedProductFromHash(productHash);
+		try {
+			Statement stmt = database.createStatement();
+			long threshold = currentGameTick - period.getMaxRecordsAgeTicks();
+			//@formatter:off
+			String query = String.format("SELECT consumed, produced, game_tick \n"
+					+ "FROM %1$s_productivity_%2$s \n"
+					+ "WHERE game_tick > %3$d AND product_hash = %4$d\n"
+					+ "ORDER BY game_tick DESC",
+					productTablePrefix, 
+					period.getTableKey(),
+					threshold,
+					productHash);		
+			//@formatter:on		
+
+			List<ProductivityTimelineEntry> entries = new LinkedList<>();
+			ResultSet sqlData = stmt.executeQuery(query);
+			while (sqlData.next()) {
+				ProductivityTimelineEntry entry = new ProductivityTimelineEntry(sqlData.getFloat(1), sqlData.getFloat(2), sqlData.getLong(3));
+				entries.add(entry);
+			}
+			return new ProductivityTimeline(productType, serializedProduct, period, ImmutableList.copyOf(entries));
+		} catch (Exception e) {
+			StaticPower.LOGGER
+					.error(String.format("An error occured when getting the production timeline for product hash: %1$d on table: %2$s.", productHash, productTablePrefix), e);
+		}
+		return new ProductivityTimeline(productType, serializedProduct, period, ImmutableList.of());
+	}
+
+	public String getSerializedProductFromHash(int productHash) {
+		try {
+			Statement stmt = database.createStatement();
+		//@formatter:off
+		String query = String.format("SELECT serialized_product "
+				+ "FROM %1$s_product "
+				+ "WHERE product_hash = %2$d ", productTablePrefix, productHash);	
+		//@formatter:on		
+			ResultSet sqlData = stmt.executeQuery(query);
+			return sqlData.getString(1);
+		} catch (Exception e) {
+			StaticPower.LOGGER.error(
+					String.format("An error occured when attempting to get the serialized product for product hash: %1$d on table: %2$s.", productHash, productTablePrefix), e);
+		}
+		return "";
+	}
+
+	public ProductionMetrics getProductionMetrics(MetricPeriod period) {
+		if (this.isClientSide) {
+			return clientMetrics;
+		} else {
+			List<ProductionMetric> inputs = getAverageProductionRate(period, MetricType.CONSUMPTION);
+			List<ProductionMetric> outputs = getAverageProductionRate(period, MetricType.PRODUCTION);
+			return new ProductionMetrics(inputs, outputs);
+		}
+	}
+
+	public void setClientSyncedMetrics(ProductionMetrics metrics, long syncTime) {
+		clientMetrics = metrics;
+		lastClientSyncTime = syncTime;
+	}
+
+	public boolean haveClientValuesUpdatedSince(long lastCheckTime) {
+		return lastClientSyncTime > lastCheckTime;
+	}
+
 	public void initializeDatabase(Connection database) {
+		if (isClientSide) {
+			throw new RuntimeException("The database can only be initialized on the server!");
+		}
+
 		this.database = database;
 		try {
 			Statement stmt = database.createStatement();
@@ -98,11 +170,11 @@ public class ProductionCache<T> {
 		createProductLookupTable();
 	}
 
-	public ProductType<T> getProductType() {
-		return productType;
-	}
-
 	public void insertProductivityPerSecond(Connection database, int bucketIndex, long gameTime) {
+		if (isClientSide) {
+			throw new RuntimeException("Productivity data can only be inserted on the server!");
+		}
+
 		List<ProductionEntry<T>> toBeInserted = new LinkedList<>();
 
 		try {
@@ -139,12 +211,16 @@ public class ProductionCache<T> {
 				}
 			}
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			StaticPower.LOGGER.error(String.format("An error occured when inserting the per second productivity for product: %1$s.", productTablePrefix), e);
 		}
 	}
 
 	public void updateAggregateData(Connection database, MetricPeriod fromPeriod, MetricPeriod toPeriod, long gameTime) {
+		if (isClientSide) {
+			throw new RuntimeException("Aggregate data can only be updated on the server!");
+		}
+
 		StaticPower.LOGGER.trace(String.format("Updating aggregate data for product type: %1$s from period: %2$s to period: %3$s.", productTablePrefix, fromPeriod.getTableKey(),
 				toPeriod.getTableKey()));
 		try {
@@ -162,38 +238,10 @@ public class ProductionCache<T> {
 
 			Statement stmt = database.createStatement();
 			stmt.execute(upsert);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			StaticPower.LOGGER.error(String.format("An error occured when aggregating the productivity for product: %1$s from period: %2$s to period: %3$s.", productTablePrefix,
 					fromPeriod.getTableKey(), toPeriod.getTableKey()), e);
 		}
-	}
-
-	public SertializedBiDirectionalMetrics getSerializedProductionMetrics(long gameTime, int limit, MetricPeriod period) {
-		List<SerializedMetricPeriod> inputs = getAverageProductionRate(gameTime, limit, period, MetricType.CONSUMPTION);
-		List<SerializedMetricPeriod> outputs = getAverageProductionRate(gameTime, limit, period, MetricType.PRODUCTION);
-		return new SertializedBiDirectionalMetrics(inputs, outputs);
-	}
-
-	private List<SerializedMetricPeriod> getAverageProductionRate(long gameTime, int limit, MetricPeriod period, MetricType direction) {
-		List<SerializedMetricPeriod> metrics = new LinkedList<SerializedMetricPeriod>();
-
-		// Pull the production rates from memory into the metrics result.
-		for (Map<Integer, ProductionEntry<T>> bucket : productivityBuckets) {
-			for (ProductionEntry<T> entry : bucket.values()) {
-				double consumption = entry.getConsumptionRate() * period.getPeriodLengthInSeconds();
-				double production = entry.getProductionRate() * period.getPeriodLengthInSeconds();
-				metrics.add(new SerializedMetricPeriod(entry.getSerializedProduct(), consumption, production, period));
-			}
-		}
-
-		// Sort such that the highest rates go to the top.
-		if (direction == MetricType.PRODUCTION) {
-			metrics.sort((m1, m2) -> Double.compare(m2.getProduction(), m1.getProduction()));
-		} else {
-			metrics.sort((m1, m2) -> Double.compare(m2.getConsumption(), m1.getConsumption()));
-		}
-
-		return metrics;
 	}
 
 	public void clearOldEntries(Connection database, MetricPeriod period, long gameTime) {
@@ -211,10 +259,32 @@ public class ProductionCache<T> {
 
 			Statement stmt = database.createStatement();
 			stmt.execute(upsert);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			StaticPower.LOGGER
 					.error(String.format("An error occured when clearing old data for product: %1$s over period: %2$s.", productTablePrefix, period.getMaxRecordsAgeTicks()), e);
 		}
+	}
+
+	private List<ProductionMetric> getAverageProductionRate(MetricPeriod period, MetricType direction) {
+		List<ProductionMetric> metrics = new LinkedList<ProductionMetric>();
+
+		// Pull the production rates from memory into the metrics result.
+		for (Map<Integer, ProductionEntry<T>> bucket : productivityBuckets) {
+			for (ProductionEntry<T> entry : bucket.values()) {
+				double consumption = entry.getConsumptionRate() * period.getPeriodLengthInSeconds();
+				double production = entry.getProductionRate() * period.getPeriodLengthInSeconds();
+				metrics.add(new ProductionMetric(entry.getProductHashCode(), entry.getSerializedProduct(), consumption, production));
+			}
+		}
+
+		// Sort such that the highest rates go to the top.
+		if (direction == MetricType.PRODUCTION) {
+			metrics.sort((m1, m2) -> Double.compare(m2.getProduced(), m1.getProduced()));
+		} else {
+			metrics.sort((m1, m2) -> Double.compare(m2.getConsumed(), m1.getConsumed()));
+		}
+
+		return metrics;
 	}
 
 	protected boolean containsProduct(int productHash) {

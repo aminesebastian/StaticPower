@@ -4,18 +4,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.productivity.metrics.MetricType;
-import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
+import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public abstract class ProductMetricTileRenderer<T, K extends ProductType<T>> {
-	private SerializedMetricPeriod metric;
+	private ProductionMetric metric;
 	private MetricType metricType;
 	private T deserializedProduct;
 
-	public SerializedMetricPeriod getMetric() {
+	public ProductionMetric getMetric() {
 		return metric;
 	}
 
@@ -27,7 +27,7 @@ public abstract class ProductMetricTileRenderer<T, K extends ProductType<T>> {
 		return deserializedProduct;
 	}
 
-	public void setRenderContext(SerializedMetricPeriod metric, MetricType metricType) {
+	public void setRenderContext(ProductionMetric metric, MetricType metricType) {
 		this.metric = metric;
 		this.metricType = metricType;
 		this.deserializedProduct = this.deserializeProduct(metric.getSerializedProduct());
@@ -46,7 +46,7 @@ public abstract class ProductMetricTileRenderer<T, K extends ProductType<T>> {
 	protected abstract void drawIcon(T product, PoseStack pose, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered);
 
 	protected void drawValue(T product, PoseStack pose, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
-		GuiDrawUtilities.drawStringLeftAligned(pose, GuiTextUtilities.formatNumberAsStringOneDecimal(metric.getMetric(metricType)).getString() + "/m", 21, 12f, 1, 0.75f,
+		GuiDrawUtilities.drawStringLeftAligned(pose, GuiTextUtilities.formatNumberAsStringOneDecimal(metric.getMetric(metricType)).getString() + "/m", 22, 12f, 1, 0.75f,
 				SDColor.EIGHT_BIT_WHITE, true);
 	}
 

@@ -35,6 +35,7 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<BlockEnt
 
 	public ContainerPowerCable(int windowId, Inventory playerInventory, BlockEntityPowerCable owner) {
 		super(TYPE, windowId, playerInventory, owner);
+		metrics = new PowerTransferMetrics();
 	}
 
 	@Override
@@ -70,8 +71,8 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<BlockEnt
 		// Send a packet to all listening players.
 		getTileEntity().powerCableComponent.getPowerNetworkModule().ifPresent(module -> {
 			if (this.containerListeners.size() > 0 && getPlayerInventory().player instanceof ServerPlayer) {
-			//	NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.containerId, module.getMetrics());
-				//StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) getPlayerInventory().player), msg);
+//				NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.containerId, module.getMetrics());
+//				StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) getPlayerInventory().player), msg);
 			}
 		});
 	}

@@ -39,7 +39,6 @@ public class BlockEntityRenderHydroponicPod extends StaticPowerBlockEntitySpecia
 		Optional<Block> block = tileEntity.getPlantBlockForDisplay();
 
 		if (!block.isEmpty()) {
-
 			Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.HydroponicPod.Crop");
 			float growthPercentage = tileEntity.getGrowthPercentage();
 			if (block.get() instanceof CropBlock) {

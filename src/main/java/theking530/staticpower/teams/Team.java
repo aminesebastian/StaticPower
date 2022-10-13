@@ -37,9 +37,9 @@ public class Team {
 
 	public Team(String name, String id, boolean isClientSide) {
 		this.id = id.replace("-", "");
-		if(!isClientSide) {
+		if (!isClientSide) {
 			this.db = StaticPowerGameDataManager.getDatabaseConnection(new ResourceLocation(StaticPower.MOD_ID, id));
-		}else {
+		} else {
 			this.db = null;
 		}
 

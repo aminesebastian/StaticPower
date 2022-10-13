@@ -19,7 +19,7 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.productivity.ProductMetricTileRendererRegistry;
 import theking530.staticcore.productivity.metrics.MetricType;
-import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
+import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
@@ -27,7 +27,7 @@ import theking530.staticpower.init.ModProducts;
 
 public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 	@Nullable
-	private SerializedMetricPeriod metric;
+	private ProductionMetric metric;
 	private MetricType metricType;
 	private ProductType<?> currentProductType;
 
@@ -36,12 +36,12 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		this.metricType = metricType;
 	}
 
-	public void setMetric(ProductType<?> productType, @Nullable SerializedMetricPeriod metric) {
+	public void setMetric(ProductType<?> productType, @Nullable ProductionMetric metric) {
 		this.metric = metric;
 		this.currentProductType = productType;
 	}
 
-	public SerializedMetricPeriod getMetric() {
+	public ProductionMetric getMetric() {
 		return metric;
 	}
 
@@ -51,13 +51,22 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 
 	@Override
 	public void renderWidgetBackground(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
-		GuiDrawUtilities.drawRectangle(pose, getWidth(), 1, 0, 0, 1, new SDColor(1.0f, 1.0f, 1.0f, 0.5f));
+		SDColor lightColor = new SDColor(0.75f, 0.75f, 0.75f, 1.0f);
+
 		SDColor bgColor = new SDColor(0.6f, 0.6f, 0.6f, 1.0f);
 		if (this.isHovered()) {
 			bgColor.add(0, 0, 0.1f);
 		}
-		GuiDrawUtilities.drawRectangle(pose, getWidth(), getHeight() - 2, 0, 1, 1, bgColor);
-		GuiDrawUtilities.drawRectangle(pose, getWidth(), 1, 0, getHeight() - 1, 1, new SDColor(0.0f, 0.0f, 0.0f, 0.5f));
+		GuiDrawUtilities.drawRectangle(pose, getWidth(), getHeight(), 0, 0, 0, bgColor);
+
+		GuiDrawUtilities.drawRectangle(pose, getWidth(), 1, 0, 0, 1, lightColor);
+		GuiDrawUtilities.drawRectangle(pose, getWidth(), 1, 0, getHeight() - 1, 1, SDColor.DARK_GREY);
+
+		GuiDrawUtilities.drawRectangle(pose, 1f, getHeight(), 0, 0, 10, SDColor.DARK_GREY);
+		GuiDrawUtilities.drawRectangle(pose, 1f, getHeight() - 2, 1, 1, 10, SDColor.GREY);
+
+		GuiDrawUtilities.drawRectangle(pose, 1f, getHeight() - 1, getWidth() - 2, 0, 10, lightColor);
+		GuiDrawUtilities.drawRectangle(pose, 1f, getHeight(), getWidth() - 1, 0, 10, SDColor.DARK_GREY);
 
 		if (metric != null && currentProductType != null) {
 			ProductMetricTileRendererRegistry.getRenderer(currentProductType).setRenderContext(metric, metricType);

@@ -30,7 +30,7 @@ public class PacketFluidTankComponent extends NetworkMessage {
 	public void decode(FriendlyByteBuf buf) {
 		fluidComponentNBT = buf.readNbt();
 		position = buf.readBlockPos();
-		componentName =buf.readUtf();
+		componentName = buf.readUtf();
 	}
 
 	@Override
@@ -40,6 +40,7 @@ public class PacketFluidTankComponent extends NetworkMessage {
 		buf.writeUtf(componentName);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
@@ -48,7 +49,6 @@ public class PacketFluidTankComponent extends NetworkMessage {
 					BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(position);
 
 					ComponentUtilities.getComponent(FluidTankComponent.class, componentName, rawTileEntity).ifPresent(comp -> {
-						// Set the mode.
 						comp.deserializeUpdateNbt(fluidComponentNBT, true);
 					});
 				}

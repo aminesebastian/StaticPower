@@ -10,7 +10,6 @@ import theking530.staticpower.blockentities.components.control.processing.Proces
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingFluidWrapper;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
-import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blockentities.components.team.TeamComponent;
 import theking530.staticpower.container.FakeCraftingInventory;
@@ -26,7 +25,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 	private final RecipeType<T> recipeType;
 	private final IRecipeProcessor<T> processor;
 
-	@SaveSerialize
+	@UpdateSerialize
 	private final ProcessingOutputContainer outputContainer;
 	@UpdateSerialize
 	private int moveTimer;

@@ -1,22 +1,30 @@
 package theking530.staticpower.teams.productivity;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.AbstractGuiWidget;
+import theking530.staticcore.gui.widgets.DataGraphWidget;
+import theking530.staticcore.gui.widgets.DataGraphWidget.DynamicGraphDataSet;
+import theking530.staticcore.gui.widgets.button.StandardButton;
+import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.containers.HorizontalBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
 import theking530.staticcore.productivity.ProductionManager;
+import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics;
-import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
-import theking530.staticcore.productivity.metrics.SertializedBiDirectionalMetrics;
+import theking530.staticcore.productivity.metrics.PacketRequestProductionTimeline;
+import theking530.staticcore.productivity.metrics.ProductionMetric;
+import theking530.staticcore.productivity.metrics.ProductionMetrics;
+import theking530.staticcore.productivity.metrics.ProductivityTimeline;
+import theking530.staticcore.productivity.metrics.ProductivityTimeline.ProductivityTimelineEntry;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.StaticPowerRegistries;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
 import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -29,15 +37,18 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	private static final float GRAPH_PANEL_PADDING = 30;
 	private static final float GRAPH_PANEL_OFFSET = 2;
 
+	private long lastClientFetchTime;
 	private ProductType<?> displayedProductType;
 
-	private ScrollBox inputScrollBox;
-	private List<MetricEntryWidget> inputMetricWidgets;
-	private List<HorizontalBox> inputHorizontalBoxes;
+	private HorizontalBox productButtonContainer;
 
-	private ScrollBox outputScrollBox;
-	private List<MetricEntryWidget> outputMetricWidgets;
-	private List<HorizontalBox> outputHorizontalBoxes;
+	private ScrollBox consumptionScrollBox;
+	private MetricEntryContainer consumptionMetrics;
+	private DataGraphWidget consumptionGraph;
+
+	private ScrollBox productionScrollBox;
+	private MetricEntryContainer productionMetrics;
+	private DataGraphWidget productionGraph;
 
 	private Vector2D overallPadding;
 	private Vector2D overallTopLeft;
@@ -56,47 +67,43 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	@Override
 	public void initializeGui() {
 		displayedProductType = ModProducts.Item.get();
-		inputMetricWidgets = new LinkedList<>();
-		outputMetricWidgets = new LinkedList<>();
-		inputHorizontalBoxes = new LinkedList<>();
-		outputHorizontalBoxes = new LinkedList<>();
+		productButtonContainer = new HorizontalBox(0, 0, 0, 20).setEvenlyDivideSpace(true);
+		lastClientFetchTime = 0;
+		registerWidget(consumptionGraph = new DataGraphWidget(0, 0, 0, 0));
+		registerWidget(productionGraph = new DataGraphWidget(0, 0, 0, 0));
 
-		this.registerWidget(inputScrollBox = new ScrollBox(10, 10, 200, 200));
-		inputScrollBox.setDrawScrollBar(true);
-		inputScrollBox.setDrawScrollBarBackground(true);
-		this.registerWidget(outputScrollBox = new ScrollBox(10, 10, 200, 200));
-		outputScrollBox.setDrawScrollBar(true);
-		outputScrollBox.setDrawScrollBarBackground(true);
-
-		for (int i = 0; i < 20; i++) {
-			MetricEntryWidget inputWidget = new MetricEntryWidget(MetricType.CONSUMPTION, 0, 0, 0, 20);
-			inputMetricWidgets.add(inputWidget);
-
-			MetricEntryWidget outputWidget = new MetricEntryWidget(MetricType.PRODUCTION, 0, 0, 0, 20);
-			outputMetricWidgets.add(outputWidget);
+		for (ProductType<?> prodType : StaticPowerRegistries.ProductRegistry().getValues()) {
+			StandardButton button = new TextButton(0, 0, 14, Component.translatable(prodType.getUnlocalizedName()).getString(), (self, mouseButton) -> {
+				this.displayedProductType = prodType;
+				for (AbstractGuiWidget<?> otherButton : productButtonContainer.getChildren()) {
+					TextButton castOtherButton = (TextButton) otherButton;
+					if (castOtherButton != null) {
+						castOtherButton.setToggled(false);
+					}
+				}
+				self.setToggled(true);
+				StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
+			});
+			button.setTooltip(Component.translatable(prodType.getUnlocalizedName()));
+			if (displayedProductType == prodType) {
+				button.setToggled(true);
+			}
+			productButtonContainer.registerWidget(button);
 		}
+		this.registerWidget(productButtonContainer);
 
-		for (int i = 0; i < 20; i += 2) {
-			HorizontalBox inputBox = new HorizontalBox(0, 0, 20, 20);
-			inputHorizontalBoxes.add(inputBox);
-			inputBox.registerWidget(inputMetricWidgets.get(i));
-			inputBox.registerWidget(inputMetricWidgets.get(i + 1));
-			inputScrollBox.registerWidget(inputBox);
+		this.registerWidget(consumptionScrollBox = new ScrollBox(10, 10, 200, 200));
+		consumptionScrollBox.setDrawScrollBar(true);
+		consumptionScrollBox.setDrawScrollBarBackground(true);
+		this.registerWidget(productionScrollBox = new ScrollBox(10, 10, 200, 200));
+		productionScrollBox.setDrawScrollBar(true);
+		productionScrollBox.setDrawScrollBarBackground(true);
 
-			HorizontalBox outputBox = new HorizontalBox(0, 0, 20, 20);
-			outputHorizontalBoxes.add(outputBox);
-			outputBox.registerWidget(outputMetricWidgets.get(i));
-			outputBox.registerWidget(outputMetricWidgets.get(i + 1));
-			outputScrollBox.registerWidget(outputBox);
-		}
+		consumptionMetrics = new MetricEntryContainer(MetricType.CONSUMPTION, 0, 0, 0, 0);
+		consumptionScrollBox.registerWidget(consumptionMetrics);
 
-		// Updated the metric widgets.
-		for (HorizontalBox box : inputHorizontalBoxes) {
-			box.setVisible(false);
-		}
-		for (HorizontalBox box : outputHorizontalBoxes) {
-			box.setVisible(false);
-		}
+		productionMetrics = new MetricEntryContainer(MetricType.PRODUCTION, 0, 0, 0, 0);
+		productionScrollBox.registerWidget(productionMetrics);
 
 		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
 		recalculateSizes();
@@ -110,53 +117,60 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
 		}
 
-		// Updated the metric widgets.
-		for (HorizontalBox box : inputHorizontalBoxes) {
-			box.setVisible(false);
-		}
-		for (HorizontalBox box : outputHorizontalBoxes) {
-			box.setVisible(false);
-		}
-
-		if (getProductionManager() != null) {
-			ProductionManager manager = getProductionManager();
-			SertializedBiDirectionalMetrics metrics = manager.getCache(this.displayedProductType).getClientSyncedMetrics();
-
-			int maxInputs = Math.min(inputMetricWidgets.size(), metrics.getInputs().size());
-			int widgetIndex = 0;
-			for (int i = 0; i < metrics.getInputs().size(); i++) {
-				SerializedMetricPeriod periodMetrics = metrics.getInputs().get(i);
-				if (periodMetrics.getConsumption() > 0) {
-					inputHorizontalBoxes.get(i / 2).setVisible(true);
-					inputMetricWidgets.get(widgetIndex).setMetric(displayedProductType, periodMetrics);
-					widgetIndex++;
-				}
-
-				if (widgetIndex > maxInputs) {
-					break;
-				}
-			}
-
-			int maxOutputs = Math.min(outputMetricWidgets.size(), metrics.getOutputs().size());
-			widgetIndex = 0;
-			for (int i = 0; i < metrics.getOutputs().size(); i++) {
-				SerializedMetricPeriod periodMetrics = metrics.getOutputs().get(i);
-				if (periodMetrics.getProduction() > 0) {
-					outputHorizontalBoxes.get(i / 2).setVisible(true);
-					outputMetricWidgets.get(widgetIndex).setMetric(displayedProductType, periodMetrics);
-					widgetIndex++;
-				}
-
-				if (widgetIndex > maxOutputs) {
-					break;
-				}
-			}
+		// If the data has changed since we last fetched, update the display values.
+		if (getProductionManager() != null && getProductionManager().getCache(displayedProductType).haveClientValuesUpdatedSince(lastClientFetchTime)) {
+			updateDisplayValues();
 		}
 	}
 
 	@Override
 	public void updateBeforeRender() {
 
+	}
+
+	@SuppressWarnings("resource")
+	private void updateDisplayValues() {
+		ProductionManager manager = getProductionManager();
+		ProductionMetrics metrics = manager.getCache(displayedProductType).getProductionMetrics(MetricPeriod.MINUTE);
+
+		consumptionMetrics.updateMetrics(displayedProductType, metrics.getConsumption());
+		productionMetrics.updateMetrics(displayedProductType, metrics.getProduction());
+
+		if (!metrics.isEmpty()) {
+			ProductionMetric metric;
+			if (!metrics.getProduction().isEmpty()) {
+				metric = metrics.getProduction().get(0);
+			} else {
+				metric = metrics.getConsumption().get(0);
+			}
+
+			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL,
+					new PacketRequestProductionTimeline(displayedProductType, metric.getProductHash(), MetricPeriod.SECOND));
+		}
+		lastClientFetchTime = Minecraft.getInstance().level.getGameTime();
+	}
+
+	public void recieveTimelineData(ProductType<?> productType, int productHashCode, MetricPeriod period, ProductivityTimeline timeline) {
+		DynamicGraphDataSet production = new DynamicGraphDataSet(SDColor.GREEN);
+		DynamicGraphDataSet consumption = new DynamicGraphDataSet(SDColor.RED);
+
+		long startingTick = timeline.entries().get(0).tick();
+		int index = 0;
+
+		for (int i = 0; i < 60; i++) {
+			ProductivityTimelineEntry entry = timeline.entries().get(index);
+			if (entry.tick() == startingTick - (i * 20)) {
+				index++;
+				production.addNewDataPoint(entry.produced());
+				consumption.addNewDataPoint(entry.consumed());
+			} else {
+				production.addNewDataPoint(0);
+				consumption.addNewDataPoint(0);
+			}
+		}
+
+		productionGraph.setDataSet("Production", production);
+		consumptionGraph.setDataSet("Consumption", consumption);
 	}
 
 	@Override
@@ -180,14 +194,8 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		{
 			GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), TOP_PANEL_HEIGHT, overallHalfPadding.getX(), overallHalfPadding.getY() + TOP_PANEL_HEIGHT - 4, 1,
 					new SDColor(0.35f, 0.35f, 0.35f));
-
-			float factor = overallSize.getX() / 4;
-			for (int i = 0; i < 4; i++) {
-				GuiDrawUtilities.drawRectangle(pose, 1, 13, overallHalfPadding.getX() + 3 + (i * factor), overallHalfPadding.getY() + TOP_PANEL_HEIGHT, 1, SDColor.DARK_GREY);
-				GuiDrawUtilities.drawStringLeftAligned(pose, "Items", overallHalfPadding.getX() + 50 + (i * factor), overallHalfPadding.getY() + TOP_PANEL_HEIGHT + 9, 1, 0.75f,
-						SDColor.EIGHT_BIT_WHITE, true);
-				GuiDrawUtilities.drawRectangle(pose, 1, 13, overallHalfPadding.getX() - 3 + ((i + 1) * factor), overallHalfPadding.getY() + TOP_PANEL_HEIGHT, 1, SDColor.DARK_GREY);
-			}
+			productButtonContainer.setWidth(overallSize.getX() - 6);
+			productButtonContainer.setPosition(overallHalfPadding.getX() + 3, overallHalfPadding.getY() + TOP_PANEL_HEIGHT - 1);
 		}
 
 		{
@@ -200,11 +208,15 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 			GuiDrawUtilities.drawStringLeftAligned(pose, "Production", overallTopLeft.getX() + 14, graphPanelPos.getY() - 5, 1, 1, SDColor.EIGHT_BIT_WHITE, true);
 			GuiDrawUtilities.drawSlotWithBorder(pose, graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4, graphPanelSize.getY(), graphPanelPos.getX(), graphPanelPos.getY(), 1,
 					new SDColor(0.1f, 0.1f, 0.1f));
+			productionGraph.setSize(graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4, graphPanelSize.getY());
+			productionGraph.setPosition(graphPanelPos.getX(), graphPanelPos.getY());
 
 			GuiDrawUtilities.drawStringLeftAligned(pose, "Consumption", graphPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, graphPanelPos.getY() - 5, 1, 1,
 					SDColor.EIGHT_BIT_WHITE, true);
 			GuiDrawUtilities.drawSlotWithBorder(pose, graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4, graphPanelSize.getY(),
 					graphPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, graphPanelPos.getY(), 1, new SDColor(0.1f, 0.1f, 0.1f));
+			consumptionGraph.setSize(graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4, graphPanelSize.getY());
+			consumptionGraph.setPosition(graphPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, graphPanelPos.getY());
 		}
 
 		{
@@ -217,15 +229,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 
 	@Override
 	protected void drawForegroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
-		GuiDrawUtilities.drawRectangle(pose, 1f, outputScrollBox.getSize().getY(), outputScrollBox.getPosition().getX() + (outputScrollBox.getSize().getX() / 2) - 5.25f,
-				outputScrollBox.getPosition().getY(), 10, SDColor.DARK_GREY);
-		GuiDrawUtilities.drawRectangle(pose, 1f, outputScrollBox.getSize().getY(), outputScrollBox.getPosition().getX() + 1 + (outputScrollBox.getSize().getX() / 2) - 5.25f,
-				outputScrollBox.getPosition().getY(), 10, SDColor.GREY);
 
-		GuiDrawUtilities.drawRectangle(pose, 1f, inputScrollBox.getSize().getY(), inputScrollBox.getPosition().getX() + (inputScrollBox.getSize().getX() / 2) - 5.25f,
-				inputScrollBox.getPosition().getY(), 10, SDColor.DARK_GREY);
-		GuiDrawUtilities.drawRectangle(pose, 1f, inputScrollBox.getSize().getY(), inputScrollBox.getPosition().getX() + 1 + (inputScrollBox.getSize().getX() / 2) - 5.25f,
-				inputScrollBox.getPosition().getY(), 10, SDColor.GREY);
 	}
 
 	protected void recalculateSizes() {
@@ -243,16 +247,14 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		bottomPanelSize = new Vector2D(graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4,
 				overallSize.getY() - graphPanelSize.getY() - TOP_PANEL_HEIGHT - POST_TOP_PANEL_MARGIN - GRAPH_PANEL_PADDING - GRAPH_PANEL_OFFSET - 2);
 
-		outputScrollBox.setPosition(bottomPanelPos.getX(), bottomPanelPos.getY());
-		outputScrollBox.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
+		productionScrollBox.setPosition(bottomPanelPos.getX(), bottomPanelPos.getY());
+		productionScrollBox.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
+		productionMetrics.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
 
-		inputScrollBox.setPosition(bottomPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, bottomPanelPos.getY());
-		inputScrollBox.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
+		consumptionScrollBox.setPosition(bottomPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, bottomPanelPos.getY());
+		consumptionScrollBox.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
+		consumptionMetrics.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
 
-		for (int i = 0; i < 20; i++) {
-			outputMetricWidgets.get(i).setWidth((outputScrollBox.getSize().getX() - 10) / 2);
-			inputMetricWidgets.get(i).setWidth((inputScrollBox.getSize().getX() - 10) / 2);
-		}
 	}
 
 	protected ProductionManager getProductionManager() {

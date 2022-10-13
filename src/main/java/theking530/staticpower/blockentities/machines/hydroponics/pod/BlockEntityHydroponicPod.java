@@ -55,7 +55,6 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 			(type, pos, state) -> new BlockEntityHydroponicPod(pos, state), ModBlocks.HydroponicPod);
 
 	public final InventoryComponent inputInventory;
-	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
 	public final RecipeProcessingComponent<HydroponicFarmingRecipe> processingComponent;
 
@@ -76,7 +75,6 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 				return StaticPowerRecipeRegistry.getRecipe(HydroponicFarmingRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack)).isPresent();
 			}
 		}).setSlotLimit(2));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 10, MachineSideMode.Output));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 
@@ -149,8 +147,8 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 		return simulated.getAmount() == 2 && simulated.getFluid() == Fluids.WATER;
 	}
 
-	protected HarvestResult getDrops() {
-		Optional<BlockState> blockState = getPlantBlockStateForHarvest();
+	protected HarvestResult getDrops(ProcessingOutputContainer outputContainer) {
+		Optional<BlockState> blockState = getPlantBlockStateForHarvest(outputContainer);
 		if (blockState.isEmpty()) {
 			return HarvestResult.empty();
 		}
@@ -159,8 +157,8 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 		return HarvestResult.noTool(outputItems);
 	}
 
-	public Optional<BlockState> getPlantBlockStateForHarvest() {
-		Optional<Block> block = getPlantBlockFromSeed(internalInventory.getStackInSlot(0));
+	public Optional<BlockState> getPlantBlockStateForHarvest(ProcessingOutputContainer outputContainer) {
+		Optional<Block> block = getPlantBlockFromSeed(processingComponent.getCurrentProcessingContainer().getInputItem(0).item());
 		if (block.isEmpty()) {
 			return Optional.empty();
 		}
@@ -179,8 +177,29 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 		return Optional.of(result);
 	}
 
+	public Optional<BlockState> getPlantBlockStateForDisplay() {
+		Optional<Block> block = getPlantBlockForDisplay();
+		if (block.isEmpty()) {
+			return Optional.empty();
+		}
+
+		BlockState result = block.get().defaultBlockState();
+		if (block.get() instanceof CropBlock) {
+			CropBlock crop = (CropBlock) block.get();
+			int age = ((int) (getGrowthPercentage() * crop.getMaxAge())) % crop.getMaxAge();
+			result = crop.getStateForAge(age);
+
+		} else if (block.get() instanceof StemBlock) {
+			StemBlock stem = (StemBlock) block.get();
+			StemGrownBlock fruit = stem.getFruit();
+			result = fruit.defaultBlockState();
+		}
+
+		return Optional.of(result);
+	}
+
 	public Optional<Block> getPlantBlockForDisplay() {
-		Optional<Block> block = getPlantBlockFromSeed(internalInventory.getStackInSlot(0));
+		Optional<Block> block = getPlantBlockFromSeed(processingComponent.getCurrentProcessingContainer().getInputItem(0).item());
 		if (block.isEmpty()) {
 			block = getPlantBlockFromSeed(inputInventory.getStackInSlot(0));
 		}
@@ -230,7 +249,7 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 	public void captureInputsAndProducts(RecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe, ProcessingOutputContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 
-		HarvestResult results = getDrops();
+		HarvestResult results = getDrops(outputContainer);
 		for (ItemStack stack : results.getResults()) {
 			outputContainer.addOutputItem(stack, CaptureType.BOTH);
 		}

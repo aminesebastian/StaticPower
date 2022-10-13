@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -57,7 +58,7 @@ public class HydroponicPodProgressWidget extends AbstractGuiWidget<GuiPowerBarFr
 			return;
 		}
 
-		Optional<BlockState> state = currentPod.getPlantBlockStateForHarvest();
+		Optional<BlockState> state = currentPod.getPlantBlockStateForDisplay();
 		if (state.isEmpty()) {
 			GuiDrawUtilities.drawStringCentered(matrix, "Empty", getWidth() / 2.0f, 10, 1, 0.5f, SDColor.EIGHT_BIT_DARK_GREY, false);
 			return;
@@ -76,14 +77,14 @@ public class HydroponicPodProgressWidget extends AbstractGuiWidget<GuiPowerBarFr
 			return;
 		}
 
-		Optional<BlockState> state = currentPod.getPlantBlockStateForHarvest();
+		Optional<Block> state = currentPod.getPlantBlockForDisplay();
 		if (state.isEmpty()) {
 			tooltips.add(Component.literal("Pod not currently active!"));
 			return;
 		}
 
 		tooltips.add(Component.literal("Currently growing:").withStyle(ChatFormatting.AQUA));
-		tooltips.add(Component.literal("• ").append(state.get().getBlock().getName()));
+		tooltips.add(Component.literal("• ").append(state.get().getName()));
 		tooltips.add(Component.literal("Growth Progress: ").withStyle(ChatFormatting.GREEN));
 		tooltips.add(Component.literal("• ").append(GuiTextUtilities.formatNumberAsPercentStringNoDecimal(currentPod.getGrowthPercentage())));
 	}

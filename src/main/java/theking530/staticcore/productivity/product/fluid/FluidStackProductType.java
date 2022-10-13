@@ -16,7 +16,7 @@ public class FluidStackProductType extends ProductType<FluidStack> {
 
 	@Override
 	public String getUnlocalizedName() {
-		return "gui.staticpower.item";
+		return "gui.staticpower.fluid";
 	}
 
 	@Override

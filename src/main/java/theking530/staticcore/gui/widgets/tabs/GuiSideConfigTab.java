@@ -93,9 +93,9 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		Vector3D translation = new Vector3D(75f, 40.75f, 50);
 		Vector3D renderRotation = new Vector3D(rotation.getY(), rotation.getX(), 180);
 		Vector3D scale = new Vector3D(-39, 39, 39);
+
 		Matrix4f inverse = GuiDrawUtilities.drawBlockState(matrix, tileEntity.getBlockState(), tileEntity.getBlockPos(), tileEntity.getModelData(), translation, renderRotation,
 				scale);
-		Lighting.setupFor3DItems();
 
 		inverse.invert();
 		Vector4f mouseMin = createMouseVector(inverse, mouseX, mouseY, 1000);

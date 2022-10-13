@@ -9,38 +9,49 @@ import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticpower.StaticPowerRegistries;
-import theking530.staticpower.teams.TeamManager;
+import theking530.staticpower.teams.productivity.GuiProductionMenu;
 
-public class PacketRecieveProductionMetrics extends NetworkMessage {
-	private ProductionMetrics metrics;
+public class PacketRecieveProductionTimeline extends NetworkMessage {
 	private ProductType<?> productType;
+	private int productHashCode;
+	private MetricPeriod period;
+	private ProductivityTimeline timeline;
 
-	public PacketRecieveProductionMetrics() {
+	public PacketRecieveProductionTimeline() {
 
 	}
 
-	public PacketRecieveProductionMetrics(ProductType<?> productType, ProductionMetrics metrics) {
-		this.metrics = metrics;
+	public PacketRecieveProductionTimeline(ProductType<?> productType, int productHashCode, MetricPeriod period, ProductivityTimeline timeline) {
 		this.productType = productType;
+		this.productHashCode = productHashCode;
+		this.period = period;
+		this.timeline = timeline;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
+		timeline.encode(buffer);
 		buffer.writeUtf(StaticPowerRegistries.ProductRegistry().getKey(productType).toString());
-		metrics.encode(buffer);
+		buffer.writeInt(productHashCode);
+		buffer.writeByte(period.ordinal());
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
+		timeline = ProductivityTimeline.decode(buffer);
 		productType = StaticPowerRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
-		metrics = ProductionMetrics.decode(buffer);
+		productHashCode = buffer.readInt();
+		period = MetricPeriod.values()[buffer.readByte()];
 	}
 
 	@SuppressWarnings("resource")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			TeamManager.getLocalTeam().getProductionManager().getCache(productType).setClientSyncedMetrics(metrics, Minecraft.getInstance().level.getGameTime());
+			GuiProductionMenu productionMenu = (GuiProductionMenu) Minecraft.getInstance().screen;
+			if (productionMenu != null) {
+				productionMenu.recieveTimelineData(productType, productHashCode, period, timeline);
+			}
 		});
 	}
 }

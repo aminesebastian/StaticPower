@@ -129,7 +129,7 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 	public void updateBeforeRendering(float partialTicks) {
 		if (visualFillLevel != fluidStorage.getFluidAmount() && lastUpdatePartialTick != partialTicks) {
 			float difference = visualFillLevel - fluidStorage.getFluidAmount();
-			visualFillLevel -= difference * (partialTicks / 100.0f);
+			visualFillLevel -= difference * (partialTicks / 5.0f);
 			lastUpdatePartialTick = partialTicks;
 		}
 	}

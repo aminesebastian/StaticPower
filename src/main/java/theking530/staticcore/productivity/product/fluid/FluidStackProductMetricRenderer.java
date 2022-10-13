@@ -15,7 +15,7 @@ public class FluidStackProductMetricRenderer extends ProductMetricTileRenderer<F
 
 	@Override
 	protected void drawIcon(FluidStack product, PoseStack pose, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
-		GuiFluidBarUtilities.drawFluidBar(pose, product, 1, 1, 2, 17, 10, 15, 15, false);
+		GuiFluidBarUtilities.drawFluidBar(pose, product, 2, 1, 3, 17, 10, 15, 15, false);
 	}
 
 	@Override

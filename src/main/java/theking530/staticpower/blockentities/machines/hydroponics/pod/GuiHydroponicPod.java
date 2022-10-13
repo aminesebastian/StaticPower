@@ -7,10 +7,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
-import net.minecraft.world.level.block.StemGrownBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -46,24 +44,17 @@ public class GuiHydroponicPod extends StaticPowerTileEntityGui<ContainierHydropo
 	@Override
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		long gameTime = getTileEntity().getLevel().getGameTime();
-		Optional<Block> block = getTileEntity().getPlantBlockForDisplay();
-		if (block.isEmpty()) {
+		Optional<BlockState> state = getTileEntity().getPlantBlockStateForDisplay();
+		if (state.isEmpty()) {
 			return;
 		}
 
-		if (block.get() instanceof CropBlock) {
-			CropBlock crop = (CropBlock) block.get();
-			int age = ((int) (getTileEntity().getGrowthPercentage() * crop.getMaxAge())) % crop.getMaxAge();
-			BlockState state = crop.getStateForAge(age);
-			GuiDrawUtilities.drawBlockState(stack, state, BlockPos.ZERO, ModelData.EMPTY, new Vector3D(72, 40, 1), new Vector3D(15, gameTime + partialTicks, 180),
+		if (state.get().getBlock() instanceof CropBlock) {
+			GuiDrawUtilities.drawBlockState(stack, state.get(), BlockPos.ZERO, ModelData.EMPTY, new Vector3D(72, 40, 1), new Vector3D(15, gameTime + partialTicks, 180),
 					new Vector3D(32, 32, -1));
-		} else if (block.get() instanceof StemBlock) {
+		} else if (state.get().getBlock() instanceof StemBlock) {
 			float scale = getTileEntity().getGrowthPercentage() * 13.0f + 13.0f;
-
-			StemBlock stem = (StemBlock) block.get();
-			StemGrownBlock fruit = stem.getFruit();
-			BlockState state = fruit.defaultBlockState();
-			GuiDrawUtilities.drawBlockState(stack, state, BlockPos.ZERO, ModelData.EMPTY, new Vector3D(88 - (scale / 2), 61 - (scale / 2), 1),
+			GuiDrawUtilities.drawBlockState(stack, state.get(), BlockPos.ZERO, ModelData.EMPTY, new Vector3D(88 - (scale / 2), 61 - (scale / 2), 1),
 					new Vector3D(15, gameTime + partialTicks, 180), new Vector3D(scale, scale, -1));
 		}
 	}

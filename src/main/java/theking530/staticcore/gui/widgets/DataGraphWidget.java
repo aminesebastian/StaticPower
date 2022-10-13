@@ -7,21 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
-public class DataGraphWidget extends AbstractGuiWidget {
+public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 	private Map<String, IGraphDataSet> dataSets;
-	private List<String> xAxisLabels;
 
 	public DataGraphWidget(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
@@ -30,79 +26,45 @@ public class DataGraphWidget extends AbstractGuiWidget {
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		// Return early if there is no data.
-		if (dataSets.size() == 0) {
-			return;
+		int maxDataPoints = 60;
+		float scale = (float) getWidth() / maxDataPoints;
+		int yLines = (int) (Math.ceil(getHeight() / scale));
+		SDColor backgroundColor = new SDColor(0.2f, 0.2f, 0.2f);
+		SDColor lineColor = backgroundColor.copy().lighten(-0.05f, -0.05f, -0.05f, 0.0f);
+
+		// Draw the background and lines.
+		GuiDrawUtilities.drawSlot(matrix, getSize().getX(), getSize().getY(), 0, 0, 0);
+		GuiDrawUtilities.drawRectangle(matrix, getWidth(), getHeight(), backgroundColor);
+		for (int i = 0; i < maxDataPoints; i++) {
+			GuiDrawUtilities.drawRectangle(matrix, 0.5f, getHeight(), i * scale, 0, 1, lineColor);
+		}
+		for (int i = 1; i < yLines; i++) {
+			GuiDrawUtilities.drawRectangle(matrix, getWidth(), 0.5f, 0, i * scale, 1, lineColor);
 		}
 
-		// Calculate the max data height and segment length (THIS SHOULD BE CACHED).
-		int maxSegmentCount = getMaxDataSetLength();
-		float maxDataHeight = getSize().getY() - 0.5f;
-		float segmentLength = getSize().getX() / maxSegmentCount;
+		// If we have no data, stop here.
+		Vector2D minMax = new Vector2D(0, 0);
+		if (!dataSets.isEmpty()) {
+			minMax = getTotalYValueRange();
 
-		// Get the min and max values.
-		Vector2D minMax = getTotalYValueRange();
-		Vector2D xAxisRange = getXAxisRange(minMax);
-		float xAxisDifference = xAxisRange.getY() - xAxisRange.getX();
-		xAxisDifference = xAxisDifference == 0.0f ? 1.0f : xAxisDifference;
-		float valueScale = maxDataHeight / xAxisDifference;
-
-		// Draw the background.
-		GuiDrawUtilities.drawSlot(matrix, getSize().getX(), getSize().getY(), getPosition().getX(), this.getPosition().getY(), 0);
-
-		// Move us down and a little to the left so the origin of the graph is the
-		// bottom right corner.
-		matrix.pushPose();
-		matrix.translate(0.1f + getPosition().getX(), getSize().getY() - 0.5f - ((xAxisDifference * valueScale) / 2) + getPosition().getY(), 0);
-
-		// Draw the 0 line.
-		GuiDrawUtilities.drawRectangle(matrix, getSize().getX(), 0.5f, 0, 0, 1, SDColor.GREY);
-
-		// Draw the grids.
-		for (int i = 0; i < maxSegmentCount; i++) {
-			GuiDrawUtilities.drawRectangle(matrix, 0.5f, getSize().getY() - 0.5f, i * segmentLength, 0.25f - getSize().getY() / 2, 1, SDColor.GREY);
-
-			if (xAxisLabels != null && (i == 0 || i == maxSegmentCount - 1) && i < xAxisLabels.size()) {
-				if (i == 0) {
-					GuiDrawUtilities.drawStringCentered(matrix, xAxisLabels.get(i), 8, 5 + getSize().getY() / 2, 0.0f, 0.45f, SDColor.EIGHT_BIT_DARK_GREY, false);
-				} else if (i == maxSegmentCount - 1) {
-					GuiDrawUtilities.drawStringCentered(matrix, xAxisLabels.get(i), getSize().getX() - 8, 5 + getSize().getY() / 2, 0.0f, 0.45f, SDColor.EIGHT_BIT_DARK_GREY, false);
+			// Move us down so the origin of the graph is the bottom right corner and then
+			// draw the data.
+			matrix.pushPose();
+			matrix.translate(getWidth(), getSize().getY(), 0);
+			for (String dataLabel : dataSets.keySet()) {
+				if (dataSets.get(dataLabel).getData().length > 0) {
+					drawDataSet(matrix, maxDataPoints, dataSets.get(dataLabel), minMax.getY(), scale);
 				}
 			}
+			matrix.popPose();
 		}
-
-		// Set appropriate GL attributes.
-//		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-//		GL11.glDisable(GL11.GL_CULL_FACE);
-//		GL11.glDisable(GL11.GL_LIGHTING);
-//		GL11.glDisable(GL11.GL_TEXTURE_2D);
-//		GL11.glDepthMask(false);
-//		GL11.glEnable(GL11.GL_BLEND);
-//		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-		// Draw all the data sets.
-		for (String dataLabel : dataSets.keySet()) {
-			if (dataSets.get(dataLabel).getData().length > 0) {
-				drawDataSet(matrix, dataSets.get(dataLabel), valueScale, segmentLength, maxDataHeight / 2);
-			}
-		}
-
-		// Clear the gl attributes and pop the transform matrix.
-//		GL11.glDepthMask(true);
-//		GL11.glPopAttrib();
 
 		// Draw y axis values.
-		GuiDrawUtilities.drawStringLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 1.5f, getSize().getY() / 2 - 2, 0.0f, 0.55f,
-				SDColor.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 1.5f, -getSize().getY() / 2 + 5, 0.0f, 0.55f,
-				SDColor.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringLeftAligned(matrix, "0", 1.5f, -2f, 0.0f, 0.55f, SDColor.EIGHT_BIT_DARK_GREY, false);
-
-		matrix.popPose();
-	}
-
-	public void setXAxisLabels(List<String> labels) {
-		xAxisLabels = labels;
+		GuiDrawUtilities.drawStringLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 4, getSize().getY() - 4, 10, 0.75f,
+				SDColor.EIGHT_BIT_WHITE, true);
+		if (minMax.getY() > minMax.getX()) {
+			GuiDrawUtilities.drawStringLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 4, 8, 10, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
+		}
 	}
 
 	public void setDataSet(String label, IGraphDataSet dataSet) {
@@ -134,78 +96,24 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		return new Vector2D((float) min, (float) max);
 	}
 
-	protected int getMaxDataSetLength() {
-		// Calculate the longest data set length.
-		int length = 0;
-
-		// Check each data set.
-		for (String dataLabel : dataSets.keySet()) {
-			int dataSetLength = dataSets.get(dataLabel).getData().length;
-			if (dataSetLength > length) {
-				length = dataSetLength;
-			}
-		}
-
-		// Return the max length.
-		return length;
-	}
-
-	protected Vector2D getXAxisRange(Vector2D minMaxValues) {
-		// Get the raw values.
-		float minAxis = minMaxValues.getX();
-		float maxAxis = minMaxValues.getY();
-
-		// Shift so it always ends with a 0.
-		minAxis = ((minAxis / 10) * 10) + 10;
-		maxAxis = ((maxAxis / 10) * 10) + 10;
-
-		// Return those values.
-		return new Vector2D(minAxis, maxAxis);
-	}
-
-	protected void drawDataSet(PoseStack matrix, IGraphDataSet data, float valueScale, float segmentLength, float maxDataHeight) {
+	protected void drawDataSet(PoseStack matrix, int maxPointsToDisplay, IGraphDataSet data, float maxDataValue, float valueScale) {
 		SDColor lineColor = data.getLineColor();
-		// GL11.glColor4d(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue(),
-		// lineColor.getAlpha());
-		// GL11.glLineWidth(data.getLineThickness());
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.getBuilder();
-		bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-
-		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(matrix, 0, 0);
 		double[] yAxis = data.getData();
-		double x;
-		double y;
-		double nextY;
+		int maxPoints = (int) Math.min(yAxis.length, maxPointsToDisplay + 1);
 
 		// Render all the data points.
-		if (yAxis.length >= 2) {
-			for (int i = 0; i < yAxis.length; i++) {
-				x = i * segmentLength;
-				y = -SDMath.clamp(yAxis[i] * valueScale, -maxDataHeight, maxDataHeight);
-				nextY = i < yAxis.length - 1 ? -SDMath.clamp(yAxis[i + 1] * valueScale, -maxDataHeight, maxDataHeight) : y;
+		if (maxPoints >= 2) {
+			for (int i = 0; i < maxPoints - 1; i++) {
+				float x = -(i * valueScale) + 1f;
+				float y = (float) (yAxis[i] / maxDataValue) * getHeight();
+				float nextY = (float) (yAxis[i + 1] / maxDataValue) * getHeight();
 
-				bufferBuilder.vertex(origin.getX() + x, origin.getY() + y, 1).endVertex();
-				bufferBuilder.vertex(origin.getX() + x + segmentLength, origin.getY() + nextY, 1).endVertex();
+				GuiDrawUtilities.drawLine(matrix, new Vector3D(x, -y, 1), new Vector3D(x - valueScale, -nextY, 1), lineColor, 4);
 			}
 		} else if (yAxis.length == 1) {
-			y = -SDMath.clamp(yAxis[0] * valueScale, -maxDataHeight, maxDataHeight);
-			bufferBuilder.vertex(origin.getX(), origin.getY() + y, 1).endVertex();
-			bufferBuilder.vertex(origin.getX() + getSize().getX(), origin.getY() + y, 1).endVertex();
-		}
-
-		// Draw all the points.
-		tessellator.end();
-
-		// Draw the value label.
-		if (yAxis.length > 0) {
-			double lastValue = yAxis[yAxis.length - 1];
-			float textYPos = (float) (-lastValue * valueScale) + 6;
-			textYPos = SDMath.clamp(textYPos, -maxDataHeight, maxDataHeight - 2);
-			// GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GuiDrawUtilities.drawString(matrix, GuiTextUtilities.formatNumberAsString(lastValue).getString(), yAxis.length * segmentLength, textYPos, 0.0f, 0.55f,
-					lineColor.fromFloatToEightBit(), false);
-			// GL11.glDisable(GL11.GL_TEXTURE_2D);
+			float x = getWidth();
+			float y = (float) -SDMath.clamp(yAxis[0] * valueScale, -maxDataValue, maxDataValue);
+			GuiDrawUtilities.drawLine(matrix, new Vector3D(x, y, 10), new Vector3D(x, y, 10), lineColor, 5);
 		}
 	}
 
