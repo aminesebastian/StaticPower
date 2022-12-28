@@ -16,6 +16,7 @@ import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.machines.fluidinfuser.BlockEntityFluidInfuser;
 
 @OnlyIn(Dist.CLIENT)
@@ -53,8 +54,9 @@ public class BlockEntityRenderFluidInfuser extends StaticPowerBlockEntitySpecial
 					WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
 			// Render the item inside the infuser.
-			if (!tileEntity.processingComponent.getCurrentProcessingContainer().getInputItem(0).item().isEmpty()) {
-				ItemStack inputItem = tileEntity.processingComponent.getCurrentProcessingContainer().getInputItem(0).item();
+			ProcessingOutputContainer processingContainer = tileEntity.processingComponent.getCurrentProcessingContainer();
+			if (processingContainer.hasInputItems()) {
+				ItemStack inputItem = processingContainer.getInputItem(0).item();
 				// Get the baked model and check if it wants to render the item in 3d or 2d.
 				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inputItem, null, null, combinedOverlay);
 				boolean render3D = itemModel.isGui3d();

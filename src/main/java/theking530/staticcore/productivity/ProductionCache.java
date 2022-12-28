@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 import theking530.staticcore.productivity.cacheentry.ProductionEntry.ProductionEntryState;
+import theking530.staticcore.productivity.cacheentry.ProductivityRate;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.ProductionMetric;
@@ -58,14 +59,22 @@ public class ProductionCache<T> {
 	}
 
 	public ProductionEntry<T> addOrUpdateProductionRate(ProductionTrackingToken<T> token, T product, int productHash, double rate) {
+		return addOrUpdateProductionRate(token, product, productHash, rate, rate);
+	}
+
+	public ProductionEntry<T> addOrUpdateProductionRate(ProductionTrackingToken<T> token, T product, int productHash, double currentRate, double idealRate) {
 		ProductionEntry<T> entry = getOrCreateProductionEntry(product, productHash);
-		entry.updateProductionRate(token, rate);
+		entry.updateProductionRate(token, currentRate, idealRate);
 		return entry;
 	}
 
 	public ProductionEntry<T> addOrUpdateConsumptionRate(ProductionTrackingToken<T> token, T product, int productHash, double rate) {
+		return addOrUpdateConsumptionRate(token, product, productHash, rate, rate);
+	}
+
+	public ProductionEntry<T> addOrUpdateConsumptionRate(ProductionTrackingToken<T> token, T product, int productHash, double currentRate, double idealRate) {
 		ProductionEntry<T> entry = getOrCreateProductionEntry(product, productHash);
-		entry.updateConsumptionRate(token, rate);
+		entry.updateConsumptionRate(token, currentRate, idealRate);
 		return entry;
 	}
 
@@ -109,8 +118,8 @@ public class ProductionCache<T> {
 			}
 			return new ProductivityTimeline(productType, serializedProduct, period, ImmutableList.copyOf(entries));
 		} catch (Exception e) {
-			StaticPower.LOGGER
-					.error(String.format("An error occured when getting the production timeline for product hash: %1$d on table: %2$s.", productHash, productTablePrefix), e);
+			StaticPower.LOGGER.error(String.format("An error occured when getting the production timeline for product hash: %1$d on table: %2$s.", productHash, productTablePrefix),
+					e);
 		}
 		return new ProductivityTimeline(productType, serializedProduct, period, ImmutableList.of());
 	}
@@ -192,7 +201,7 @@ public class ProductionCache<T> {
 						+ "  VALUES('%3$d', '%4$f', '%5$f',  '%6$d');",
 						productTablePrefix, 
 						MetricPeriod.SECOND.getTableKey(), 
-						entry.getProductHashCode(), 
+						 productType.getProductHashCode(entry.getProduct()), 
 						metric.consumed(),
 						metric.produced(),
 						gameTime);
@@ -271,17 +280,20 @@ public class ProductionCache<T> {
 		// Pull the production rates from memory into the metrics result.
 		for (Map<Integer, ProductionEntry<T>> bucket : productivityBuckets) {
 			for (ProductionEntry<T> entry : bucket.values()) {
-				double consumption = entry.getConsumptionRate() * period.getPeriodLengthInSeconds();
-				double production = entry.getProductionRate() * period.getPeriodLengthInSeconds();
-				metrics.add(new ProductionMetric(entry.getProductHashCode(), entry.getSerializedProduct(), consumption, production));
+				ProductivityRate consumption = new ProductivityRate(entry.getConsumptionRate().getCurrentValue() * period.getPeriodLengthInSeconds(),
+						entry.getConsumptionRate().getIdealValue() * period.getPeriodLengthInSeconds());
+				ProductivityRate production = new ProductivityRate(entry.getProductionRate().getCurrentValue() * period.getPeriodLengthInSeconds(),
+						entry.getProductionRate().getIdealValue() * period.getPeriodLengthInSeconds());
+				metrics.add(
+						new ProductionMetric(productType.getProductHashCode(entry.getProduct()), productType.getSerializedProduct(entry.getProduct()), consumption, production));
 			}
 		}
 
 		// Sort such that the highest rates go to the top.
 		if (direction == MetricType.PRODUCTION) {
-			metrics.sort((m1, m2) -> Double.compare(m2.getProduced(), m1.getProduced()));
+			metrics.sort((m1, m2) -> Double.compare(m2.getProduced().getCurrentValue(), m1.getProduced().getCurrentValue()));
 		} else {
-			metrics.sort((m1, m2) -> Double.compare(m2.getConsumed(), m1.getConsumed()));
+			metrics.sort((m1, m2) -> Double.compare(m2.getConsumed().getCurrentValue(), m1.getConsumed().getCurrentValue()));
 		}
 
 		return metrics;
@@ -304,12 +316,14 @@ public class ProductionCache<T> {
 	}
 
 	protected void insertNew(ProductionEntry<T> entry) {
-		if (containsProduct(entry.getProductHashCode())) {
+		int productHashCode = productType.getProductHashCode(entry.getProduct());
+
+		if (containsProduct(productHashCode)) {
 			throw new RuntimeException("Attempted to insert a product entry for a product we're already tracking!");
 		}
-		productivityBucketMap.put(entry.getProductHashCode(), bucketRoundRobinIndex);
+		productivityBucketMap.put(productHashCode, bucketRoundRobinIndex);
 		Map<Integer, ProductionEntry<T>> bucket = productivityBuckets.get(bucketRoundRobinIndex);
-		bucket.put(entry.getProductHashCode(), entry);
+		bucket.put(productHashCode, entry);
 		bucketRoundRobinIndex = (bucketRoundRobinIndex + 1) % productivityBuckets.size();
 		insertNewProduct(entry);
 	}
@@ -335,13 +349,14 @@ public class ProductionCache<T> {
 		//@formatter:off
 			String insert = String.format("REPLACE INTO %1$s_product(product_hash, serialized_product) \n"
 					+ "  VALUES('%2$d', '%3$s');",
-					productTablePrefix, entry.getProductHashCode(), entry.getSerializedProduct());
+					productTablePrefix,productType.getProductHashCode(entry.getProduct()), productType.getSerializedProduct(entry.getProduct()));
 			//@formatter:on
 		try {
 			Statement stmt = getDatabase().createStatement();
 			stmt.execute(insert);
 		} catch (Exception e) {
-			StaticPower.LOGGER.error(String.format("An error occured when inserting a new product entry for product: $1$s!", entry.getSerializedProduct()), e);
+			StaticPower.LOGGER.error(String.format("An error occured when inserting a new product entry for product: $1$s!", productType.getSerializedProduct(entry.getProduct())),
+					e);
 		}
 	}
 

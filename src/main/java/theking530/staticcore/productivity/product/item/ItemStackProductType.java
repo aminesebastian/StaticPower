@@ -1,5 +1,7 @@
 package theking530.staticcore.productivity.product.item;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
@@ -15,8 +17,11 @@ public class ItemStackProductType extends ProductType<ItemStack> {
 	}
 
 	@Override
-	public String getUnlocalizedName() {
-		return "gui.staticpower.item";
+	public String getUnlocalizedName(int amount) {
+		if (amount > 1) {
+			return "gui.staticpower.product.items";
+		}
+		return "gui.staticpower.product.item";
 	}
 
 	@Override
@@ -32,5 +37,28 @@ public class ItemStackProductType extends ProductType<ItemStack> {
 	@Override
 	public ItemProductionEntry createProductionEntry(ItemStack product) {
 		return new ItemProductionEntry(product);
+	}
+
+	@Override
+	public boolean isValidProduct(ItemStack product) {
+		return !product.isEmpty();
+	}
+
+	@Override
+	public String getSerializedProduct(ItemStack product) {
+		CompoundTag serialized = product.serializeNBT();
+		serialized.remove("Count");
+		return serialized.getAsString();
+	}
+
+	@Override
+	public ItemStack deserializeProduct(String serializedProduct) {
+		try {
+			CompoundTag tag = TagParser.parseTag(serializedProduct);
+			tag.putByte("Count", (byte) 1);
+			return ItemStack.of(tag);
+		} catch (Exception e) {
+			throw new RuntimeException(String.format("An error occured when attempting to deserialize the serialized string: %1$s to an ItemStack.", serializedProduct));
+		}
 	}
 }

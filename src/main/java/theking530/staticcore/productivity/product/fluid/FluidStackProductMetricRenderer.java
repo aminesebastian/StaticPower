@@ -1,17 +1,20 @@
 package theking530.staticcore.productivity.product.fluid;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagParser;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.productivity.ProductMetricTileRenderer;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.init.ModProducts;
 
 public class FluidStackProductMetricRenderer extends ProductMetricTileRenderer<FluidStack, ProductType<FluidStack>> {
+
+	public FluidStackProductMetricRenderer() {
+		super(ModProducts.Fluid.get());
+	}
 
 	@Override
 	protected void drawIcon(FluidStack product, PoseStack pose, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
@@ -19,13 +22,7 @@ public class FluidStackProductMetricRenderer extends ProductMetricTileRenderer<F
 	}
 
 	@Override
-	protected FluidStack deserializeProduct(String serializedProduct) {
-		try {
-			CompoundTag tag = TagParser.parseTag(serializedProduct);
-			tag.putInt("Amount", (byte) 1);
-			return FluidStack.loadFluidStackFromNBT(tag);
-		} catch (CommandSyntaxException e) {
-			return FluidStack.EMPTY;
-		}
+	protected String getValueText(FluidStack product, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
+		return GuiTextUtilities.formatFluidToString(getMetric().getMetricValue(getMetricType()).getCurrentValue()).getString();
 	}
 }

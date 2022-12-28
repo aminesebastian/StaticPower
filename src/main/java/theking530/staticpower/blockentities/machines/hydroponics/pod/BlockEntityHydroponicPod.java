@@ -98,11 +98,10 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 
 		if (!getLevel().isClientSide()) {
 			// Only do the following if we have a farmer.
-			if (hasFarmer()) {
+			if (hasFarmer() && hasWater() && isGrowing()) {
 				// Use fluid if we're growing.
-				if (isGrowing()) {
-					owningFarmer.fluidTankComponent.drain(2, FluidAction.EXECUTE);
-				}
+				processingComponent.getFluidProductionToken().setConsumptionPerSecond(getTeamComponent().getOwningTeam(), owningFarmer.fluidTankComponent.getFluid(), (2) * 20);
+				owningFarmer.fluidTankComponent.drain(2, FluidAction.EXECUTE);
 			}
 		}
 	}
@@ -199,7 +198,10 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 	}
 
 	public Optional<Block> getPlantBlockForDisplay() {
-		Optional<Block> block = getPlantBlockFromSeed(processingComponent.getCurrentProcessingContainer().getInputItem(0).item());
+		Optional<Block> block = Optional.empty();
+		if (processingComponent.getCurrentProcessingContainer().hasInputItems()) {
+			block = getPlantBlockFromSeed(processingComponent.getCurrentProcessingContainer().getInputItem(0).item());
+		}
 		if (block.isEmpty()) {
 			block = getPlantBlockFromSeed(inputInventory.getStackInSlot(0));
 		}
@@ -253,7 +255,6 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 		for (ItemStack stack : results.getResults()) {
 			outputContainer.addOutputItem(stack, CaptureType.BOTH);
 		}
-
 		component.setMaxProcessingTime(recipe.getProcessingTime());
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 	}

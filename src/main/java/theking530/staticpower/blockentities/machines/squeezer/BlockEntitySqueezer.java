@@ -113,7 +113,7 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 	public void captureInputsAndProducts(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
-		outputContainer.addOutputFluid(fluidTankComponent.getFluid(), recipe.getOutputFluid().getAmount(), CaptureType.BOTH);
+		outputContainer.addOutputFluid(recipe.getOutputFluid(), recipe.getOutputFluid().getAmount(), CaptureType.BOTH);
 
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
@@ -124,13 +124,13 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// If this recipe has an item output that we cannot put into the output slot,
 		// continue waiting.
-		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
+		if (outputContainer.hasOutputItems() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
-		if (recipe.hasOutputFluid() && fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
+		if (outputContainer.hasOutputFluids() && fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
 

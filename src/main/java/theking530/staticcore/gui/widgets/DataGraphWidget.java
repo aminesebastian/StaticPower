@@ -46,21 +46,27 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 		Vector2D minMax = new Vector2D(0, 0);
 		if (!dataSets.isEmpty()) {
 			minMax = getTotalYValueRange();
+			minMax.multiply(1.25f);
+			float offset = 0; // ((Minecraft.getInstance().level.getGameTime() % 20) + partialTicks) / 20.0f;
 
 			// Move us down so the origin of the graph is the bottom right corner and then
 			// draw the data.
 			matrix.pushPose();
-			matrix.translate(getWidth(), getSize().getY(), 0);
+			matrix.translate(getWidth() - (offset * scale), getSize().getY(), 0);
 			for (String dataLabel : dataSets.keySet()) {
 				if (dataSets.get(dataLabel).getData().length > 0) {
 					drawDataSet(matrix, maxDataPoints, dataSets.get(dataLabel), minMax.getY(), scale);
 				}
+				double currentValue = dataSets.get(dataLabel).getData()[0];
+				float currentValueY = (float) (currentValue / minMax.getY()) * getHeight();
+				GuiDrawUtilities.drawString(matrix, GuiTextUtilities.formatNumberAsString(currentValue).getString(),-4, -currentValueY - 6, 10, 0.75f, dataSets.get(dataLabel).getLineColor().fromFloatToEightBit().encodeInInteger(), true);
+				GuiDrawUtilities.drawRectangle(matrix, 4, 4, -5, -currentValueY - 2.5f, 5, dataSets.get(dataLabel).getLineColor());
 			}
 			matrix.popPose();
 		}
 
 		// Draw y axis values.
-		GuiDrawUtilities.drawStringLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 4, getSize().getY() - 4, 10, 0.75f,
+		GuiDrawUtilities.drawStringLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX() < 0 ? minMax.getX() : 0).getString(), 4, getSize().getY() - 4, 10, 0.75f,
 				SDColor.EIGHT_BIT_WHITE, true);
 		if (minMax.getY() > minMax.getX()) {
 			GuiDrawUtilities.drawStringLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 4, 8, 10, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
@@ -73,6 +79,10 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 
 	public IGraphDataSet getDataSet(String label) {
 		return dataSets.get(label);
+	}
+
+	public void clearAllData() {
+		dataSets.clear();
 	}
 
 	protected Vector2D getTotalYValueRange() {
@@ -98,6 +108,7 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 
 	protected void drawDataSet(PoseStack matrix, int maxPointsToDisplay, IGraphDataSet data, float maxDataValue, float valueScale) {
 		SDColor lineColor = data.getLineColor();
+		
 		double[] yAxis = data.getData();
 		int maxPoints = (int) Math.min(yAxis.length, maxPointsToDisplay + 1);
 
@@ -108,7 +119,7 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 				float y = (float) (yAxis[i] / maxDataValue) * getHeight();
 				float nextY = (float) (yAxis[i + 1] / maxDataValue) * getHeight();
 
-				GuiDrawUtilities.drawLine(matrix, new Vector3D(x, -y, 1), new Vector3D(x - valueScale, -nextY, 1), lineColor, 4);
+				GuiDrawUtilities.drawLine(matrix, new Vector3D(x, -y, 1), new Vector3D(x - valueScale, -nextY, 1), lineColor, 3);
 			}
 		} else if (yAxis.length == 1) {
 			float x = getWidth();

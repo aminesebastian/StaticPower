@@ -183,6 +183,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.initializeCableProperties(cable, context, state, placer, stack);
 		// Update the power usage.
 		updatePowerUsage(cable);
 	}

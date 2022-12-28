@@ -3,6 +3,6 @@
 	"fluids": [
 		"staticpower:coolant"
 	],
-	"temperature": -50000,
-	"conductivity": 50
+	"temperature": 5000,
+	"conductivity": 10
 }

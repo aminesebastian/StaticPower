@@ -1,20 +1,15 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-		"lll",
-		"lcl",
-		"lll"
-	],
-	"key": {
-		"l": {
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
 			"item": "staticpower:latex_chunk"
 		},
-		"c": {
-			"tag": "minecraft:coals"
+		{
+			"item": "staticpower:latex_chunk"
 		}
-	},
+	],
 	"result": {
 		"item": "staticpower:rubber_bar",
-		"count": 4
+		"count": 1
 	}
 }

@@ -21,9 +21,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.CableRenderingState;
@@ -507,11 +510,19 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	}
 
 	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
-
+		for (Direction dir : Direction.values()) {
+			BlockPos side = cable.getPos().relative(dir);
+			if(CableNetworkManager.get(getLevel()).isTrackingCable(side)) {
+				ServerCable adjacentCable = CableNetworkManager.get(getLevel()).getCable(side);
+				if(adjacentCable.isDisabledOnSide(dir.getOpposite())) {
+					cable.setDisabledStateOnSide(dir, true);
+				}
+			}
+		}
 	}
 
 	protected void onCableFirstAddedToNetwork(ServerCable cable, BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-
+		
 	}
 
 	public boolean areCableCompatible(AbstractCableProviderComponent otherProvider, Direction side) {

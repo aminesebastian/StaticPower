@@ -1,5 +1,7 @@
 package theking530.staticpower.teams.productivity;
 
+import java.util.function.BiConsumer;
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -10,6 +12,7 @@ import theking530.staticcore.productivity.product.ProductType;
 
 public class MetricEntryContainer extends AbstractGuiWidget<MetricEntryContainer> {
 	private final MetricType metricType;
+	private BiConsumer<MetricEntryWidget, Integer> selectedMetricChanged;
 
 	public MetricEntryContainer(MetricType metricType, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
@@ -19,13 +22,22 @@ public class MetricEntryContainer extends AbstractGuiWidget<MetricEntryContainer
 	public void updateMetrics(ProductType<?> productType, ImmutableList<ProductionMetric> metrics) {
 		this.clearChildren();
 		for (ProductionMetric metric : metrics) {
-			if (metric.getMetric(metricType) > 0) {
+			if (!metric.getMetricValue(metricType).isZero()) {
 				MetricEntryWidget metricWidget = new MetricEntryWidget(metricType, 0, 0, 0, 20);
 				metricWidget.setMetric(productType, metric);
 				registerWidget(metricWidget);
+				metricWidget.setClickedCallback((widget) -> {
+					if (selectedMetricChanged != null) {
+						selectedMetricChanged.accept(widget, metric.getProductHash());
+					}
+				});
 			}
 		}
 		repositionWidgets();
+	}
+
+	public void setSelectedMetricChanged(BiConsumer<MetricEntryWidget, Integer> selectedMetricChanged) {
+		this.selectedMetricChanged = selectedMetricChanged;
 	}
 
 	@Override

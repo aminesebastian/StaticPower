@@ -35,11 +35,15 @@ public class ProductionTrackingToken<T> {
 	 * @param consumptionPerSection
 	 */
 	public void setProductionPerSecond(Team team, T product, double productionPerSecond) {
-		if (team == null) {
+		setProductionPerSecond(team, product, productionPerSecond, productionPerSecond);
+	}
+
+	public void setProductionPerSecond(Team team, T product, double productionPerSecond, double idealProductionPerSecond) {
+		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
 		ProductionCache<T> cache = getProductionCache(team);
-		ProductionEntry<T> entry = cache.addOrUpdateProductionRate(this, product, getType().getProductHashCode(product), productionPerSecond);
+		ProductionEntry<T> entry = cache.addOrUpdateProductionRate(this, product, getType().getProductHashCode(product), productionPerSecond, idealProductionPerSecond);
 		trackedProductionEntries.add(entry);
 	}
 
@@ -50,14 +54,18 @@ public class ProductionTrackingToken<T> {
 	 * 
 	 * @param team
 	 * @param product
-	 * @param consumptionPerSection
+	 * @param consumptionPerSecond
 	 */
-	public void setConsumptionPerSection(Team team, T product, double consumptionPerSection) {
-		if (team == null) {
+	public void setConsumptionPerSecond(Team team, T product, double consumptionPerSecond) {
+		setConsumptionPerSecond(team, product, consumptionPerSecond, consumptionPerSecond);
+	}
+
+	public void setConsumptionPerSecond(Team team, T product, double consumptionPerSecond, double idealConsumptionPerSecond) {
+		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
 		ProductionCache<T> cache = getProductionCache(team);
-		ProductionEntry<T> entry = cache.addOrUpdateConsumptionRate(this, product, getType().getProductHashCode(product), consumptionPerSection);
+		ProductionEntry<T> entry = cache.addOrUpdateConsumptionRate(this, product, getType().getProductHashCode(product), consumptionPerSecond, idealConsumptionPerSecond);
 		trackedProductionEntries.add(entry);
 	}
 
@@ -70,7 +78,7 @@ public class ProductionTrackingToken<T> {
 	 * @param amount
 	 */
 	public void produced(Team team, T product, double amount) {
-		if (team == null) {
+		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
 		ProductionCache<T> cache = getProductionCache(team);
@@ -87,7 +95,7 @@ public class ProductionTrackingToken<T> {
 	 * @param amount
 	 */
 	public void consumed(Team team, T product, double amount) {
-		if (team == null) {
+		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
 		ProductionCache<T> cache = getProductionCache(team);

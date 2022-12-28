@@ -113,7 +113,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 				}
 			}
 
-			if (processingComponent.isCurrentlyProcessing()) {
+			if (processingComponent.performedWorkLastTick()) {
 				heatStorage.setCanHeat(true);
 				heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
 				heatStorage.setCanHeat(false);
@@ -127,7 +127,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 				miningSoundComponent.stopPlayingSound();
 			}
 		} else {
-			if (processingComponent.isCurrentlyProcessing()) {
+			if (processingComponent.performedWorkLastTick()) {
 				if (SDMath.diceRoll(0.5)) {
 					BlockPos minedPos = getCurrentlyTargetedBlockPos();
 					getLevel().addParticle(ParticleTypes.POOF, minedPos.getX() + 0.5f, minedPos.getY() + 0.5f, minedPos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);

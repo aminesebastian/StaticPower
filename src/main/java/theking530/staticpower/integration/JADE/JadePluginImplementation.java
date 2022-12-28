@@ -219,13 +219,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static class FluidPipeDecorator implements IBlockComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-			if (accessor.getServerData().contains("pressure")) {
-				int pressure = (int) Math.floor(accessor.getServerData().getFloat("pressure"));
 
-				JadePluginImplementation.drawBar(tooltip, pressure, 32.0f, MAIN_FLUID_COLOR, ALT_FLUID_COLOR,
-						Component.translatable("gui.staticpower.pressure").append(" ").append(GuiTextUtilities.formatNumberAsString(pressure)).withStyle(ChatFormatting.WHITE),
-						FLUID_BAR_RENDERER);
-			}
 		}
 
 		@Override

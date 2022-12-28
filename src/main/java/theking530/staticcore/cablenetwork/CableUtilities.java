@@ -52,13 +52,13 @@ public class CableUtilities {
 		// Get the number of sides that are connected to a cable. If a side is connected
 		// to a tile entity, instantly return false;.
 		for (Direction dir : Direction.values()) {
-			if (renderingState.getConnectionType(dir) == CableConnectionType.CABLE) {
+			if (!renderingState.isDisabledOnSide(dir) && renderingState.getConnectionType(dir) == CableConnectionType.CABLE) {
 				cableConnections++;
 			} else if (renderingState.getConnectionType(dir) == CableConnectionType.TILE_ENTITY) {
 				return false;
 			}
 		}
-
+		
 		// If only two sides are connected, check to see which sides. If they are
 		// opposites, we can use a straight cable model.
 		if (cableConnections == 2) {
@@ -77,7 +77,7 @@ public class CableUtilities {
 		if (isCableStraightConnection(renderingState)) {
 			for (int i = 0; i < 6; i += 2) {
 				Direction dir = Direction.values()[i];
-				if (renderingState.getConnectionType(dir) == CableConnectionType.CABLE) {
+				if (!renderingState.isDisabledOnSide(dir) && renderingState.getConnectionType(dir) == CableConnectionType.CABLE) {
 					return dir;
 				}
 			}

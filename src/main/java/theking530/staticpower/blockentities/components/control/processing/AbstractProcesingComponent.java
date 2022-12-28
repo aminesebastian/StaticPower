@@ -6,12 +6,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.api.energy.PowerStack;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.productivity.ProductionTrackingToken;
+import theking530.staticcore.productivity.product.power.PowerProductionStack;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
+import theking530.staticpower.blockentities.components.ProductionTrackingComponent;
 import theking530.staticpower.blockentities.components.control.ProcesingComponentSyncPacket;
 import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
@@ -19,6 +21,7 @@ import theking530.staticpower.blockentities.components.items.UpgradeInventoryCom
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
+import theking530.staticpower.blockentities.components.team.TeamComponent;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -26,9 +29,10 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public abstract class AbstractProcesingComponent<T extends AbstractProcesingComponent<?>> extends AbstractBlockEntityComponent {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
 	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
+	private static final double POWER_SATISFACTION_SMOOTHING = 1;
 
-	private final ProductionTrackingToken<ItemStack> itemProductionToken;
-	private final ProductionTrackingToken<FluidStack> fluidProductionToken;
+	private ProductionTrackingComponent productionTrackingComponent;
+	private PowerProductionStack powerProductionStack;
 
 	private boolean shouldControlOnBlockState;
 	protected UpgradeInventoryComponent upgradeInventory;
@@ -41,16 +45,16 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	protected boolean processingStoppedDueToError;
 
 	@UpdateSerialize
-	private int processingTime;
+	private int fullSatisfactionProcessingTime;
 	@UpdateSerialize
-	private int currentProcessingTime;
+	private int currentProcessingTimer;
 	@SaveSerialize
 	private int defaultProcessingTime;
 	@SaveSerialize
 	private int tickDownRate;
 
 	@UpdateSerialize
-	private boolean processing;
+	private boolean shouldProcessThisTick;
 	@UpdateSerialize
 	private boolean hasStarted;
 	@UpdateSerialize
@@ -60,21 +64,18 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	private float processingSpeedUpgradeMultiplier;
 
 	@UpdateSerialize
-	protected double powerUsage;
+	protected double fullSatisfactionPowerUsage;
 	@SaveSerialize
 	protected double defaultPowerUsage;
+
+	private boolean modulateProcessingTimeByPowerSatisfaction;
+	private double smoothedPowerSatisfaction;
 
 	/**
 	 * The power multiplier as calculated from the speed upgrade.
 	 */
 	@UpdateSerialize
 	private float powerUsageIncreaseMultiplier;
-	/**
-	 * External power usage multiplier that can be used by implementers to set a
-	 * power multiple. Defaults to 1.0f;
-	 */
-	@UpdateSerialize
-	private float powerMultiplier;
 
 	@SaveSerialize
 	private final boolean serverOnly;
@@ -87,9 +88,9 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 
 	public AbstractProcesingComponent(String name, int processingTime, boolean serverOnly) {
 		super(name);
-		this.processingTime = processingTime;
+		this.fullSatisfactionProcessingTime = processingTime;
 		this.defaultProcessingTime = processingTime;
-		this.processing = false;
+		this.shouldProcessThisTick = false;
 		this.hasStarted = false;
 		this.serverOnly = serverOnly;
 		this.shouldControlOnBlockState = false;
@@ -99,17 +100,38 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		this.powerUsageIncreaseMultiplier = 1.0f;
 		this.processingErrorMessage = Component.literal("");
 		this.processingStoppedDueToError = false;
-		this.powerMultiplier = 1.0f;
+		this.modulateProcessingTimeByPowerSatisfaction = true;
+		this.smoothedPowerSatisfaction = 0;
+	}
 
-		itemProductionToken = ModProducts.Item.get().getProductivityToken();
-		fluidProductionToken = ModProducts.Fluid.get().getProductivityToken();
+	@Override
+	public void onRegistered(BlockEntityBase owner) {
+		super.onRegistered(owner);
+		powerProductionStack = new PowerProductionStack(owner.getBlockState().getBlock());
+		if (getTileEntity().hasComponentOfType(ProductionTrackingComponent.class)) {
+			productionTrackingComponent = getTileEntity().getComponent(ProductionTrackingComponent.class);
+		} else {
+			productionTrackingComponent = new ProductionTrackingComponent(getComponentName() + "_productionTracker");
+			getTileEntity().registerComponent(productionTrackingComponent);
+		}
+	}
+
+	public ProductionTrackingComponent getProductionTrackingComponent() {
+		return productionTrackingComponent;
 	}
 
 	@SuppressWarnings("resource")
 	public void preProcessUpdate() {
 		// Check for upgrades on the server.
 		if (!getLevel().isClientSide) {
-			checkUpgrades();
+			handleUpgrades();
+			if (modulateProcessingTimeByPowerSatisfaction) {
+				// Slow down processing proportionally to the power satisfaction.
+				// The lower the satisfaction, the slower the processing.
+				if (smoothedPowerSatisfaction > 0) {
+					fullSatisfactionProcessingTime /= smoothedPowerSatisfaction;
+				}
+			}
 		}
 
 		// If we should only run on the server, do nothing.
@@ -148,6 +170,14 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 			sendSynchronizationPacket();
 		}
 
+		// Smooth the power satisfaction upwards. Instantly move it downwards though.
+		double currentPowerSatisfaction = getPowerSatisfaction();
+		if (currentPowerSatisfaction > smoothedPowerSatisfaction) {
+			smoothedPowerSatisfaction = (currentPowerSatisfaction + (smoothedPowerSatisfaction * POWER_SATISFACTION_SMOOTHING)) / (POWER_SATISFACTION_SMOOTHING + 1);
+		} else {
+			smoothedPowerSatisfaction = currentPowerSatisfaction;
+		}
+
 		// Check if we have not started.
 		if (!hasStarted) {
 			// If we have not, check the starting state.
@@ -158,6 +188,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 				processingStoppedDueToError = true;
 				processingErrorMessage = startProcessingState.getErrorMessage();
 				onProcessingPausedDueToError();
+				invalidatedAllProductionTokens();
 				return false;
 			} else {
 				// Set the error state to false.
@@ -173,7 +204,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		// allow for responsive stopping of processing if needed.
 		if (hasStarted) {
 			// Always set processing to false first.
-			processing = false;
+			shouldProcessThisTick = false;
 
 			// Check to see if we can continue processing.
 			ProcessingCheckState canContinueProcessing = internalCanContinueProcessing();
@@ -181,6 +212,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 				processingStoppedDueToError = true;
 				processingErrorMessage = canContinueProcessing.getErrorMessage();
 				onProcessingPausedDueToError();
+				invalidatedAllProductionTokens();
 				return false;
 			} else {
 				// Get out of the error state.
@@ -188,7 +220,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 
 				// Determine if we should pause or continue.
 				if (canContinueProcessing.isOk()) {
-					processing = true;
+					shouldProcessThisTick = true;
 				} else if (canContinueProcessing.isCancel()) {
 					cancelProcessing();
 					return false;
@@ -197,21 +229,30 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		}
 
 		// If we're currently processing.
-		if (processing) {
+		if (shouldProcessThisTick) {
 			// If the processing is paused, do nothing.
 			if (processingPaused) {
 				return false;
 			}
 
+			// Update all the production statistics.
+			TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
+			if (teamComp != null && teamComp.getOwningTeam() != null) {
+				updateProductionStatistics(teamComp);
+			}
+
 			// Use power if requested to.
-			if (powerUsage > 0 && powerComponent != null && currentProcessingTime < processingTime) {
+			if (getPowerUsage() > 0 && powerComponent != null && currentProcessingTimer < fullSatisfactionProcessingTime) {
 				powerComponent.drainPower(getPowerUsage(), false);
+				if (teamComp != null) {
+					getPowerProductionToken().consumed(teamComp.getOwningTeam(), powerProductionStack, getPowerUsage());
+				}
 			}
 
 			// If we can can continue processing, do so, otherwise, stop. If we have
 			// completed the processing, try to complete it using the callback.
 			// If the callback is true, we reset the state of the component back to initial
-			if (currentProcessingTime >= processingTime) {
+			if (currentProcessingTimer >= fullSatisfactionProcessingTime) {
 				ProcessingCheckState completedState = canCompleteProcessing();
 
 				// If there is an error, freeze processing and just set the error message.
@@ -219,21 +260,23 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 					processingStoppedDueToError = true;
 					processingErrorMessage = completedState.getErrorMessage();
 					onProcessingPausedDueToError();
+					invalidatedAllProductionTokens();
 					return false;
 				} else {
 					// If it is cancel or an ok, finish processing. If it is skip, do nothing.
 					if (completedState.isOk() || completedState.isCancel()) {
 						// Stop processing since we completed.
-						currentProcessingTime = 0;
+						currentProcessingTimer = 0;
 						blockStateOffTimer = 0;
-						processing = false;
+						shouldProcessThisTick = false;
 						hasStarted = false;
 						processingStoppedDueToError = false;
 						onProcessingCompleted();
+						invalidatedAllProductionTokens();
 					}
 				}
 			} else {
-				currentProcessingTime += tickDownRate;
+				currentProcessingTimer += tickDownRate;
 			}
 			return true;
 		}
@@ -251,8 +294,8 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		}
 
 		// DO NOT CHANGE THIS LOGIC, VERY IMPORTANT IT REMAINS THE SAME.
-		if (!processing) {
-			processing = true;
+		if (!shouldProcessThisTick) {
+			shouldProcessThisTick = true;
 			processingPaused = false;
 
 			setIsOnBlockState(true);
@@ -287,11 +330,25 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		if (serverOnly && getLevel().isClientSide) {
 			return;
 		}
-		currentProcessingTime = 0;
-		processing = false;
+		currentProcessingTimer = 0;
+		shouldProcessThisTick = false;
 		hasStarted = false;
 		processingStoppedDueToError = false;
 		onProcessingCanceled();
+		invalidatedAllProductionTokens();
+	}
+
+	public double getPowerSatisfaction() {
+		if (fullSatisfactionPowerUsage == 0) {
+			return 1;
+		}
+		return powerComponent == null ? 1.0 : Math.min(1.0, powerComponent.getStoredPower() / fullSatisfactionPowerUsage);
+	}
+
+	protected void updateProductionStatistics(TeamComponent teamComp) {
+		if (powerComponent != null && getPowerUsage() > 0) {
+			getPowerProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), powerProductionStack, getPowerUsage() * 20, fullSatisfactionPowerUsage * 20);
+		}
 	}
 
 	private ProcessingCheckState internalCanStartProcessing() {
@@ -321,7 +378,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		// Check the power state.
 		// Only do this if there is still processing to be done.
 		ProcessingCheckState powerState;
-		if (currentProcessingTime < processingTime && !(powerState = checkPowerRequirements()).isOk()) {
+		if (currentProcessingTimer < fullSatisfactionProcessingTime && !(powerState = checkPowerRequirements()).isOk()) {
 			return powerState;
 		}
 
@@ -353,6 +410,10 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 
 	}
 
+	protected void invalidatedAllProductionTokens() {
+		productionTrackingComponent.invalidateAll();
+	}
+
 	/**
 	 * Returns true if the current processing time is equal to the maximum
 	 * processing time for this component. This is useful to check in combination
@@ -367,7 +428,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	 * @return
 	 */
 	public boolean isDone() {
-		return currentProcessingTime > processingTime;
+		return currentProcessingTimer > fullSatisfactionProcessingTime;
 	}
 
 	/**
@@ -377,7 +438,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	 * 
 	 * @return
 	 */
-	public boolean isCurrentlyProcessing() {
+	public boolean performedWorkLastTick() {
 		return performedWorkLastTick;
 	}
 
@@ -390,18 +451,18 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	}
 
 	public int getCurrentProcessingTime() {
-		return currentProcessingTime;
+		return currentProcessingTimer;
 	}
 
 	public int getMaxProcessingTime() {
-		return processingTime;
+		return fullSatisfactionProcessingTime;
 	}
 
 	public void setMaxProcessingTime(int newTime) {
 		defaultProcessingTime = newTime;
-		processingTime = (int) (defaultProcessingTime * processingSpeedUpgradeMultiplier);
-		if (processingTime == 0) {
-			processingTime = 1;
+		fullSatisfactionProcessingTime = (int) (defaultProcessingTime * processingSpeedUpgradeMultiplier);
+		if (fullSatisfactionProcessingTime == 0) {
+			fullSatisfactionProcessingTime = 1;
 		}
 	}
 
@@ -432,7 +493,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		}
 
 		defaultPowerUsage = power;
-		powerUsage = defaultPowerUsage * powerUsageIncreaseMultiplier;
+		fullSatisfactionPowerUsage = defaultPowerUsage * powerUsageIncreaseMultiplier;
 		return (T) this;
 	}
 
@@ -455,21 +516,15 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		return (T) this;
 	}
 
-	@SuppressWarnings("unchecked")
-	public T setPowerUsageMuiltiplier(float multiplier) {
-		powerMultiplier = multiplier;
-		return (T) this;
-	}
-
-	public float getPowerUsageMultiplier() {
-		return powerMultiplier;
+	public double getPowerUsageAtFullSatisfaction() {
+		return fullSatisfactionPowerUsage;
 	}
 
 	public double getPowerUsage() {
-		return powerUsage * powerMultiplier;
+		return fullSatisfactionPowerUsage * smoothedPowerSatisfaction;
 	}
 
-	protected void checkUpgrades() {
+	protected void handleUpgrades() {
 		// Do nothing if there is no upgrade inventory.
 		if (upgradeInventory == null) {
 			return;
@@ -488,13 +543,13 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		}
 
 		// Set the processing time.
-		processingTime = (int) (defaultProcessingTime / processingSpeedUpgradeMultiplier);
-		if (processingTime == 0) {
-			processingTime = 1;
+		fullSatisfactionProcessingTime = (int) (defaultProcessingTime / processingSpeedUpgradeMultiplier);
+		if (fullSatisfactionProcessingTime == 0) {
+			fullSatisfactionProcessingTime = 1;
 		}
 
 		// Set the power usages.
-		powerUsage = (int) (defaultPowerUsage * powerUsageIncreaseMultiplier);
+		fullSatisfactionPowerUsage = defaultPowerUsage * powerUsageIncreaseMultiplier;
 	}
 
 	/**
@@ -517,7 +572,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	}
 
 	public int getProgressScaled(int scaleValue) {
-		return (int) (((float) (currentProcessingTime) / processingTime) * scaleValue);
+		return (int) (((float) (currentProcessingTimer) / fullSatisfactionProcessingTime) * scaleValue);
 	}
 
 	public MutableComponent getProcessingErrorMessage() {
@@ -539,15 +594,19 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		}
 
 		// Check the processing power cost.
-		if (powerUsage > 0) {
+		if (fullSatisfactionPowerUsage > 0) {
 			if (powerComponent != null) {
-				if (powerComponent.getStoredPower() < getPowerUsage()) {
-					return ProcessingCheckState.error(Component.literal("Not Enough Power!").getString());
+				if (modulateProcessingTimeByPowerSatisfaction) {
+					if (smoothedPowerSatisfaction <= 0) {
+						return ProcessingCheckState.error(Component.literal("Not Enough Power!").getString());
+					}
+				} else {
+					if (powerComponent.getStoredPower() < getPowerUsage()) {
+						return ProcessingCheckState.error(Component.literal("Not Enough Power!").getString());
+					}
 				}
 
-				// Check the processing power rate.
-				PowerStack drainedPower = powerComponent.drainPower(getPowerUsage(), true);
-				if (drainedPower.getPower() < getPowerUsage()) {
+				if (getPowerUsage() > powerComponent.getMaximumPowerOutput()) {
 					return ProcessingCheckState.error(Component.literal("Recipe's power per tick requirement (")
 							.append(PowerTextFormatting.formatPowerRateToString(getPowerUsage())).append(") is larger than the amount this machine can handle!").getString());
 				}
@@ -591,11 +650,19 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	}
 
 	public ProductionTrackingToken<ItemStack> getItemProductionToken() {
-		return this.itemProductionToken;
+		return getProductionTrackingComponent().getToken(ModProducts.Item.get());
 	}
 
 	public ProductionTrackingToken<FluidStack> getFluidProductionToken() {
-		return this.fluidProductionToken;
+		return getProductionTrackingComponent().getToken(ModProducts.Fluid.get());
+	}
+
+	public ProductionTrackingToken<PowerProductionStack> getPowerProductionToken() {
+		return getProductionTrackingComponent().getToken(ModProducts.Power.get());
+	}
+
+	public PowerProductionStack getPowerProductionStack() {
+		return powerProductionStack;
 	}
 
 	protected void sendSynchronizationPacket() {
@@ -604,12 +671,12 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 			return;
 		}
 
-		boolean shouldSync = Math.abs(lastSyncProcessingTime - this.currentProcessingTime) >= SYNC_UPDATE_DELTA_THRESHOLD;
-		shouldSync |= lastSyncProcessingTime == 0 && currentProcessingTime != 0;
-		shouldSync |= currentProcessingTime == 0 && lastSyncProcessingTime != 0;
+		boolean shouldSync = Math.abs(lastSyncProcessingTime - this.currentProcessingTimer) >= SYNC_UPDATE_DELTA_THRESHOLD;
+		shouldSync |= lastSyncProcessingTime == 0 && currentProcessingTimer != 0;
+		shouldSync |= currentProcessingTimer == 0 && lastSyncProcessingTime != 0;
 
 		if (shouldSync) {
-			lastSyncProcessingTime = currentProcessingTime;
+			lastSyncProcessingTime = currentProcessingTimer;
 			// Send the packet to all clients within the requested radius.
 			ProcesingComponentSyncPacket msg = new ProcesingComponentSyncPacket(getPos(), this);
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);

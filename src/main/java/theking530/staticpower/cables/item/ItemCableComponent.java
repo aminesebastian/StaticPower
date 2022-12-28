@@ -162,6 +162,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putDouble(ITEM_CABLE_MAX_TRANSFER_SPEED, maxTransferSpeed);
 		cable.getDataTag().putDouble(ITEM_CABLE_FRICTION_FACTOR_TAG, frictionFactor);
 		cable.getDataTag().putDouble(ITEM_CABLE_ACCELERATION_FACTOR_TAG, accelerationFactor);

@@ -91,6 +91,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());
 	}
 

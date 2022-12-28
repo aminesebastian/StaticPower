@@ -1,14 +1,15 @@
 package theking530.staticcore.productivity.metrics;
 
 import net.minecraft.nbt.CompoundTag;
+import theking530.staticcore.productivity.cacheentry.ProductivityRate;
 
 public class ProductionMetric {
 	private final int productHash;
 	private final String serializedProduct;
-	private final double consumed;
-	private final double produced;
+	private final ProductivityRate consumed;
+	private final ProductivityRate produced;
 
-	public ProductionMetric(int productHash, String serializedProduct, double consumed, double produced) {
+	public ProductionMetric(int productHash, String serializedProduct, ProductivityRate consumed, ProductivityRate produced) {
 		this.productHash = productHash;
 		this.consumed = consumed;
 		this.produced = produced;
@@ -19,11 +20,11 @@ public class ProductionMetric {
 		return serializedProduct;
 	}
 
-	public double getConsumed() {
+	public ProductivityRate getConsumed() {
 		return consumed;
 	}
 
-	public double getProduced() {
+	public ProductivityRate getProduced() {
 		return produced;
 	}
 
@@ -31,7 +32,7 @@ public class ProductionMetric {
 		return productHash;
 	}
 
-	public double getMetric(MetricType type) {
+	public ProductivityRate getMetricValue(MetricType type) {
 		if (type == MetricType.PRODUCTION) {
 			return produced;
 		}
@@ -39,14 +40,14 @@ public class ProductionMetric {
 	}
 
 	public static ProductionMetric deserialize(CompoundTag tag) {
-		return new ProductionMetric(tag.getInt("h"), tag.getString("s"), tag.getDouble("c"), tag.getDouble("p"));
+		return new ProductionMetric(tag.getInt("h"), tag.getString("s"), ProductivityRate.deserialize(tag.getCompound("c")), ProductivityRate.deserialize(tag.getCompound("p")));
 	}
 
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("i", productHash);
-		tag.putDouble("c", consumed);
-		tag.putDouble("p", produced);
+		tag.put("c", consumed.serialize());
+		tag.put("p", produced.serialize());
 		tag.putString("s", serializedProduct);
 		return tag;
 	}

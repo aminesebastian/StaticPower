@@ -33,6 +33,7 @@ import theking530.staticcore.productivity.ProductMetricTileRendererRegistry;
 import theking530.staticcore.productivity.ProductMetricTileRendererRegistry.RegisterEvent;
 import theking530.staticcore.productivity.product.fluid.FluidStackProductMetricRenderer;
 import theking530.staticcore.productivity.product.item.ItemStackProductMetricRenderer;
+import theking530.staticcore.productivity.product.power.PowerProductMetricRenderer;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
@@ -130,6 +131,7 @@ public class StaticPowerModEventsClient {
 	public static void registerProductMetricRenderers(ProductMetricTileRendererRegistry.RegisterEvent event) {
 		event.registerProductMetricRenderer(ModProducts.Item, () -> new ItemStackProductMetricRenderer());
 		event.registerProductMetricRenderer(ModProducts.Fluid, () -> new FluidStackProductMetricRenderer());
+		event.registerProductMetricRenderer(ModProducts.Power, () -> new PowerProductMetricRenderer());
 	}
 
 	@SubscribeEvent

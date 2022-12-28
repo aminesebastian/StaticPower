@@ -29,6 +29,12 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.network.NetworkHooks;
 import theking530.api.IBreakSerializeable;
 import theking530.api.wrench.RegularWrenchMode;
@@ -129,6 +135,14 @@ public abstract class StaticPowerBlockEntityBlock extends StaticPowerBlock imple
 		BlockEntityBase te = (BlockEntityBase) world.getBlockEntity(pos);
 
 		if (te != null) {
+			// If we are able to fill this block entity from a held fluid container, or fill
+			// a fluid container from the fluids in this container, leave early.
+			if (fillFromHeldFluidContainer(te, world, pos, player, hand, hit)) {
+				return InteractionResult.CONSUME;
+			} else if (drainToHeldFluidContainer(te, world, pos, player, hand, hit)) {
+				return InteractionResult.CONSUME;
+			}
+
 			HasGuiType guiType = hasGuiScreen(te, state, world, pos, player, hand, hit);
 			// Ensure we meet the criteria for entering the GUI.
 			if (guiType == HasGuiType.ALWAYS || (guiType == HasGuiType.SNEAKING_ONLY && player.isShiftKeyDown())) {
@@ -248,5 +262,51 @@ public abstract class StaticPowerBlockEntityBlock extends StaticPowerBlock imple
 			return ((BlockEntityBase) tileEntity).getStrongPower(blockState, blockAccess, pos, side);
 		}
 		return 0;
+	}
+
+	protected boolean fillFromHeldFluidContainer(BlockEntityBase blockEntity, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (world.isClientSide()) {
+			return false;
+		}
+		// See if we're holding and item, and if so, see if it has a fluid that we can
+		// put into the block entity.
+		ItemStack heldItem = player.getItemInHand(hand);
+		IFluidHandlerItem itemFluidContainer = FluidUtil.getFluidHandler(heldItem).orElse(null);
+		IFluidHandler tank = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, hit.getDirection()).orElse(null);
+		if (itemFluidContainer != null && tank != null) {
+			FluidStack simulatedDrain = itemFluidContainer.drain(1000, FluidAction.SIMULATE);
+			int filledAmount = tank.fill(simulatedDrain, FluidAction.EXECUTE);
+			if (filledAmount > 0) {
+				itemFluidContainer.drain(filledAmount, FluidAction.EXECUTE);
+				WorldUtilities.playBucketEmptySound(simulatedDrain, player, world, pos);
+				player.setItemInHand(hand, itemFluidContainer.getContainer());
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected boolean drainToHeldFluidContainer(BlockEntityBase blockEntity, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (world.isClientSide()) {
+			return false;
+		}
+
+		// See if we're holding and item, and if so, see if it can be filled with fluid
+		// from this machine.
+		ItemStack heldItem = player.getItemInHand(hand);
+		IFluidHandlerItem itemFluidContainer = FluidUtil.getFluidHandler(heldItem).orElse(null);
+		IFluidHandler tank = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, hit.getDirection()).orElse(null);
+		if (itemFluidContainer != null && tank != null) {
+			FluidStack simulatedDrain = tank.drain(1000, FluidAction.SIMULATE);
+			int simulatedFill = itemFluidContainer.fill(simulatedDrain, FluidAction.SIMULATE);
+			if (simulatedFill > 0) {
+				FluidStack actualDrain = tank.drain(simulatedFill, FluidAction.EXECUTE);
+				itemFluidContainer.fill(actualDrain, FluidAction.EXECUTE);
+				WorldUtilities.playBucketFillSound(simulatedDrain, player, world, pos);
+				player.setItemInHand(hand, itemFluidContainer.getContainer());
+				return true;
+			}
+		}
+		return false;
 	}
 }

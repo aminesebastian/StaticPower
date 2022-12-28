@@ -10,7 +10,10 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
+import theking530.staticcore.productivity.ProductionTrackingToken;
+import theking530.staticcore.productivity.product.power.PowerProductionStack;
 import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.ProductionTrackingComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -18,6 +21,7 @@ import theking530.staticpower.blockentities.components.energy.PowerDistributionC
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModProducts;
 
 public class BlockEntitySolarPanel extends BlockEntityBase {
 	@BlockEntityTypePopulator()
@@ -44,6 +48,9 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntitySolarPanel>("solar_panel_creative",
 			(allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state), ModBlocks.SolarPanelCreative);
 
+	private final ProductionTrackingComponent trackingComponent;
+	private final PowerProductionStack powerProductionStack;
+
 	public PowerStorageComponent powerStorage;
 	public SideConfigurationComponent sideConfiguration;
 	private final boolean isCreative;
@@ -69,6 +76,9 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 
 		// Set the distribution component.
 		registerComponent(new PowerDistributionComponent("PowerDistribution", powerStorage).setProvideAlternatingCurrent(true));
+		registerComponent(trackingComponent = new ProductionTrackingComponent("ProductionTracker"));
+
+		powerProductionStack = new PowerProductionStack(getBlockState().getBlock());
 	}
 
 	@Override
@@ -80,15 +90,21 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 
 	// Functionality
 	public void generateRF() {
+		ProductionTrackingToken<PowerProductionStack> powerToken = trackingComponent.getToken(ModProducts.Power.get());
 		if (isGenerating()) {
-			double generateAmount = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
+			double maxGeneration = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
+			double actualGeneration = maxGeneration;
 			if (getLevel().isRaining()) {
-				generateAmount /= 2;
+				actualGeneration /= 2;
 			}
 
 			// No need to check if we the power storage can take this power. If it can't
 			// this will just be a no-op.
-			powerStorage.addPower(new PowerStack(generateAmount, powerStorage.getOutputVoltage()), false);
+			double added = powerStorage.addPower(new PowerStack(actualGeneration, powerStorage.getOutputVoltage()), false);
+			powerToken.setProductionPerSecond(getTeamComponent().getOwningTeam(), powerProductionStack, added * 20, actualGeneration * 20);
+			powerToken.produced(getTeamComponent().getOwningTeam(), powerProductionStack, added);
+		} else {
+			powerToken.invalidate();
 		}
 	}
 

@@ -119,26 +119,20 @@ minecraft.runs.all {
 }
 
 dependencies {
-    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-	// compile against the JEI API but do not include it at runtime
 	compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
 	compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-	// at runtime, use the full JEI jar for Forge
 	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 	
 	compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
 	
-	// Visit https://www.curseforge.com/minecraft/mc-mods/jade/files/all
-    // to get the latest version
     implementation fg.deobf("curse.maven:jade-324717:${jade_version}")
-	
 	implementation fg.deobf("codechicken:CodeChickenLib:${mc_version}-${ccl_version}:universal")
 	
+	compileOnly fg.deobf("curse.maven:the-one-probe-245211:3965693")
+
 	// SQL driver
 	library ('org.xerial:sqlite-jdbc:3.39.3.0') {
         transitive = false
@@ -167,6 +161,9 @@ repositories {
 	maven {
 		url 'https://maven.covers1624.net'
 	}
+    maven {
+        url "https://maven.k-4u.nl"
+    }
 }
 
 jar {

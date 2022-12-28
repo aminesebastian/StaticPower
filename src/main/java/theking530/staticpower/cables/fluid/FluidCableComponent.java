@@ -172,6 +172,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.initializeCableProperties(cable, context, state, placer, stack);
 		FluidCableCapability fluidCapability = ModCableCapabilities.Fluid.get().create(cable);
 		fluidCapability.initialize(capacity, transferRate, isIndustrial);
 		cable.registerCapability(fluidCapability);

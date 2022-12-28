@@ -44,6 +44,11 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	@Override
 	public void preWorldTick(Level world) {
+
+	}
+
+	@Override
+	public void tick(Level world) {
 		world.getProfiler().push("FluidNetworkModule.Balancing");
 		{
 			world.getProfiler().push("FluidNetworkModule.Balancing.Fluid");
@@ -52,10 +57,6 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 		world.getProfiler().pop();
 
-	}
-
-	@Override
-	public void tick(Level world) {
 	}
 
 	protected void simulateFlow() {

@@ -48,19 +48,12 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 	@Override
 	public boolean process() {
 		if (!hasProcessingStarted()) {
-			getItemProductionToken().invalidate();
 			if (!attemptMove()) {
 				return false;
 			}
 		}
 
-		boolean result = super.process();
-		if (isCurrentlyProcessing()) {
-			updateProductionStatistics();
-		} else {
-			getItemProductionToken().invalidate();
-		}
-		return result;
+		return super.process();
 	}
 
 	protected boolean attemptMove() {
@@ -73,7 +66,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 				setProcessingPowerUsage(machineRecipe.getPowerCost());
 			}
 
-			if (this.isCurrentlyProcessing()) {
+			if (this.performedWorkLastTick()) {
 				moveTimer = moveTime;
 			}
 
@@ -95,31 +88,28 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		}
 	}
 
-	private void updateProductionStatistics() {
-		TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
-		if (teamComp != null && teamComp.getOwningTeam() != null) {
-			for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
-				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
-					getItemProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.item(), output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
-				}
+	@Override
+	protected void updateProductionStatistics(TeamComponent teamComp) {
+		super.updateProductionStatistics(teamComp);
+		for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
+			if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
+				getItemProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.item(), output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
 			}
-			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
-				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
-					getItemProductionToken().setConsumptionPerSection(teamComp.getOwningTeam(), input.item(), input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
-				}
+		}
+		for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
+			if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
+				getItemProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.item(), input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
 			}
+		}
 
-			for (ProcessingFluidWrapper output : outputContainer.getOutputFluids()) {
-				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
-					getFluidProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.fluid(),
-							output.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)));
-				}
+		for (ProcessingFluidWrapper output : outputContainer.getOutputFluids()) {
+			if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
+				getFluidProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.fluid(), output.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)));
 			}
-			for (ProcessingFluidWrapper input : outputContainer.getInputFluids()) {
-				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
-					getFluidProductionToken().setConsumptionPerSection(teamComp.getOwningTeam(), input.fluid(),
-							input.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)));
-				}
+		}
+		for (ProcessingFluidWrapper input : outputContainer.getInputFluids()) {
+			if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
+				getFluidProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.fluid(), input.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)));
 			}
 		}
 	}
@@ -187,11 +177,11 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 
 	@Override
 	protected void onProcessingCompleted() {
-		if(getCurrentRecipe().isPresent()) {
+		if (getCurrentRecipe().isPresent()) {
 			// If we can immediately start processing again, do so without a move delay.
 			processor.processingCompleted(this, getCurrentRecipe().get(), outputContainer);
-			
-		}else {
+
+		} else {
 			System.out.println("wtf");
 		}
 
@@ -205,6 +195,17 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
 				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.COUNT_ONLY) {
 					getItemProductionToken().consumed(teamComp.getOwningTeam(), input.item(), input.item().getCount());
+				}
+			}
+
+			for (ProcessingFluidWrapper output : outputContainer.getOutputFluids()) {
+				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.COUNT_ONLY) {
+					getFluidProductionToken().produced(teamComp.getOwningTeam(), output.fluid(), output.fluid().getAmount());
+				}
+			}
+			for (ProcessingFluidWrapper input : outputContainer.getInputFluids()) {
+				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.COUNT_ONLY) {
+					getFluidProductionToken().consumed(teamComp.getOwningTeam(), input.fluid(), input.fluid().getAmount());
 				}
 			}
 		}
@@ -268,18 +269,6 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		processor.processingStarted(this, getCurrentRecipe().get(), outputContainer);
 	}
 
-	@Override
-	protected void onProcessingCanceled() {
-		outputContainer.clear();
-		getItemProductionToken().invalidate();
-	}
-
-	@Override
-	protected void onProcessingPausedDueToError() {
-		getItemProductionToken().invalidate();
-
-	}
-
 	public int getMoveTime() {
 		return moveTime;
 	}
@@ -288,8 +277,4 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		this.moveTime = moveTime;
 	}
 
-	public void onOwningBlockEntityUnloaded() {
-		super.onOwningBlockEntityUnloaded();
-		getItemProductionToken().invalidate();
-	}
 }

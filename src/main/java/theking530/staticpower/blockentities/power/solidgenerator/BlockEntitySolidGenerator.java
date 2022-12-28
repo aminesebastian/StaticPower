@@ -107,7 +107,7 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 		}
 
 		// If we're processing, generate power. Otherwise, pause.
-		if (!getLevel().isClientSide() && processingComponent.isCurrentlyProcessing()) {
+		if (!getLevel().isClientSide() && processingComponent.performedWorkLastTick()) {
 			powerStorage.addPower(new PowerStack(powerGenerationPerTick, powerStorage.getOutputVoltage()), false);
 		}
 	}

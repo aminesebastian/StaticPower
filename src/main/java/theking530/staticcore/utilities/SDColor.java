@@ -82,6 +82,13 @@ public class SDColor extends AbstractVector<SDColor> {
 		add(new SDColor(r, g, b, a));
 		return this;
 	}
+	public SDColor clampToSDRRange() {
+		values[0] = SDMath.clamp(values[0], 0, 1);
+		values[1] = SDMath.clamp(values[1], 0, 1);
+		values[2] = SDMath.clamp(values[2], 0, 1);
+		values[3] = SDMath.clamp(values[3], 0, 1);
+		return this;
+	}
 
 	public SDColor darken(float r, float g, float b, float a) {
 		subtract(new SDColor(r, g, b, a));

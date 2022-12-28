@@ -1289,6 +1289,12 @@
 	"gui.staticpower.backpack_mode.locked": "Locked",
 	"gui.staticpower.backpack_mode.reload": "Reload",
 	
+	"gui.staticpower.product.fluid": "Fluid",
+	"gui.staticpower.product.fluids": "Fluids",
+	"gui.staticpower.product.item": "Item",
+	"gui.staticpower.product.items": "Items",
+	"gui.staticpower.product.power": "Power",
+	
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox",
 	"key.categories.staticpower": "Static Power",

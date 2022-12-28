@@ -5,7 +5,6 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
@@ -93,7 +92,8 @@ public class WorldRenderingUtilities {
 		}
 
 		// Invert the normals of the model on the Y-Axis.
-		matrixStack.last().normal().load(Matrix3f.createScaleMatrix(1, -1, 1));
+		matrixStack.scale(1, -1, 1);
+//		matrixStack.last().normal().load(Matrix3f.createScaleMatrix(1, -1, 1));
 
 		// Render the item.
 		Minecraft.getInstance().getItemRenderer().render(itemStack, ItemTransforms.TransformType.GUI, false, matrixStack, buffer, combinedLight, combinedOverlay, itemModel);

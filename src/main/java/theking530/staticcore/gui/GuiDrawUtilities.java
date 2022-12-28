@@ -574,9 +574,7 @@ public class GuiDrawUtilities {
 		pose.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getX(), rotation.getY(), rotation.getZ())));
 		pose.translate(-0.5f, -0.5f, -0.5f);
 
-		for (RenderType type : renderTypes) {
-			renderer.renderSingleBlock(state, pose, buffer, 15728880, OverlayTexture.NO_OVERLAY, data, type);
-		}
+		renderer.renderSingleBlock(state, pose, buffer, 15728880, OverlayTexture.NO_OVERLAY, data, null);
 
 		buffer.endBatch();
 

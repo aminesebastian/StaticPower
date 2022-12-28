@@ -94,7 +94,8 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-
+		processingComponent.setPowerComponent(powerStorage);
+		
 		// Setup the input fluid tanks.
 		fluidTanks = new FluidTankComponent[5];
 
@@ -150,7 +151,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		if (!getLevel().isClientSide()) {
 			if (redstoneControlComponent.passesRedstoneCheck() && getProductivity() > 0 && processingComponent.getCurrentOrPendingRecipe().isPresent()) {
 				double powerCost = StaticPowerConfig.SERVER.refineryPowerUsage.get();
-				boolean shouldHeat = processingComponent.isCurrentlyProcessing() || !heatStorage.isRecoveringFromMeltdown();
+				boolean shouldHeat = processingComponent.performedWorkLastTick() || !heatStorage.isRecoveringFromMeltdown();
 				if (powerStorage.canSupplyPower(powerCost) && shouldHeat) {
 					powerStorage.drainPower(powerCost, false);
 					heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
@@ -380,7 +381,24 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		if (recipe.hasCatalyst()) {
 			outputContainer.addInputItem(catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), true), CaptureType.BOTH);
 		}
-
+		
+		if(recipe.hasPrimaryFluidInput()) {
+			outputContainer.addInputFluid(recipe.getPrimaryFluidInput(), recipe.getPrimaryFluidInput().getAmount(), CaptureType.BOTH);
+		}
+		if(recipe.hasSecondaryFluidInput()) {
+			outputContainer.addInputFluid(recipe.getSecondaryFluidInput(), recipe.getSecondaryFluidInput().getAmount(), CaptureType.BOTH);
+		}
+		
+		if(!recipe.getFluidOutput1().isEmpty()) {
+			outputContainer.addOutputFluid(recipe.getFluidOutput1(), recipe.getFluidOutput1().getAmount(), CaptureType.BOTH);
+		}
+		if(!recipe.getFluidOutput2().isEmpty()) {
+			outputContainer.addOutputFluid(recipe.getFluidOutput2(), recipe.getFluidOutput2().getAmount(), CaptureType.BOTH);
+		}
+		if(!recipe.getFluidOutput3().isEmpty()) {
+			outputContainer.addOutputFluid(recipe.getFluidOutput3(), recipe.getFluidOutput3().getAmount(), CaptureType.BOTH);
+		}
+		
 		component.setMaxProcessingTime(recipe.getProcessingTime());
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		heatStorage.setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());

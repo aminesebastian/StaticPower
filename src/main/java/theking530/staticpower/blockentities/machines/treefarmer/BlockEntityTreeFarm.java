@@ -183,7 +183,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 
 	@Override
 	public void process() {
-		if (processingComponent.isCurrentlyProcessing()) {
+		if (processingComponent.performedWorkLastTick()) {
 			if (!getLevel().isClientSide()) {
 				fluidTankComponent.drain(StaticPowerConfig.SERVER.treeFarmerFluidUsage.get(), FluidAction.EXECUTE);
 			}

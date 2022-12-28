@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticcore.fluid.ISidedFluidHandler;
 import theking530.staticcore.fluid.SidedFluidHandlerCapabilityWrapper;
@@ -281,7 +281,7 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 	}
 
 	public <T> LazyOptional<T> manuallyGetCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if (cap == ForgeCapabilities.FLUID_HANDLER) {
 			return LazyOptional.of(() -> capabilityWrapper.get(side)).cast();
 		}
 		return LazyOptional.empty();

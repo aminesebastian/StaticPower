@@ -1,6 +1,7 @@
 package theking530.staticpower.teams.productivity;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -30,6 +31,7 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 	private ProductionMetric metric;
 	private MetricType metricType;
 	private ProductType<?> currentProductType;
+	private Consumer<MetricEntryWidget> clicked;
 
 	public MetricEntryWidget(MetricType metricType, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
@@ -45,8 +47,20 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		return metric;
 	}
 
+	public MetricType getMetricType() {
+		return metricType;
+	}
+
+	public ProductType<?> getCurrentProductType() {
+		return currentProductType;
+	}
+
 	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
 
+	}
+
+	public void setClickedCallback(Consumer<MetricEntryWidget> clicked) {
+		this.clicked = clicked;
 	}
 
 	@Override
@@ -121,6 +135,9 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
 		if (isHovered()) {
 			playSoundLocally(SoundEvents.STONE_BUTTON_CLICK_OFF, 1.0f, 2.0f);
+			if (clicked != null) {
+				clicked.accept(this);
+			}
 			return EInputResult.HANDLED;
 		}
 

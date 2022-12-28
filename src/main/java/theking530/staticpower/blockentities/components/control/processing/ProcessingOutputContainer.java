@@ -80,13 +80,7 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingOutputContainer addInputItem(ItemStack item, CaptureType captureType, boolean isTemplateItem) {
-		if (isClosed()) {
-			throw new RuntimeException(String.format("Attempted to add an input item to a clowed process output container."));
-		}
-		// Don't check for empty items here because some recipes depend on empty items
-		// to match shapes (eg: crafting).
-		inputItems.add(new ProcessingItemWrapper(item.copy(), captureType, isTemplateItem));
-		return this;
+		return addInputItem(item, item.getCount(), captureType, isTemplateItem);
 	}
 
 	public ProcessingOutputContainer addInputItem(ItemStack item, int amount, CaptureType captureType) {
@@ -94,8 +88,18 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingOutputContainer addInputItem(ItemStack item, int amount, CaptureType captureType, boolean isTemplateItem) {
-		item.setCount(amount);
-		return addInputItem(item, captureType, isTemplateItem);
+		if (isClosed()) {
+			throw new RuntimeException(String.format("Attempted to add an input item to a clowed process output container."));
+		}
+		if (amount == 0) {
+			return this;
+		}
+		// Don't check for empty items here because some recipes depend on empty items
+		// to match shapes (eg: crafting).
+		ItemStack itemCopy = item.copy();
+		itemCopy.setCount(amount);
+		inputItems.add(new ProcessingItemWrapper(itemCopy, captureType, isTemplateItem));
+		return this;
 	}
 
 	public List<ProcessingItemWrapper> getInputItems() {
@@ -103,9 +107,6 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingItemWrapper getInputItem(int index) {
-		if (index >= inputItems.size()) {
-			return ProcessingItemWrapper.EMPTY;
-		}
 		return inputItems.get(index);
 	}
 
@@ -118,13 +119,7 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingOutputContainer addOutputItem(ItemStack item, CaptureType captureType, boolean isTemplateItem) {
-		if (isClosed()) {
-			throw new RuntimeException(String.format("Attempted to add an output item to a clowed process output container."));
-		}
-		if (!item.isEmpty()) {
-			outputItems.add(new ProcessingItemWrapper(item.copy(), captureType, isTemplateItem));
-		}
-		return this;
+		return addOutputItem(item, item.getCount(), captureType, isTemplateItem);
 	}
 
 	public ProcessingOutputContainer addOutputItem(ItemStack item, int amount, CaptureType captureType) {
@@ -132,8 +127,16 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingOutputContainer addOutputItem(ItemStack item, int amount, CaptureType captureType, boolean isTemplateItem) {
-		item.setCount(amount);
-		return addOutputItem(item, captureType, isTemplateItem);
+		if (isClosed()) {
+			throw new RuntimeException(String.format("Attempted to add an output item to a clowed process output container."));
+		}
+		
+		// Don't check for empty items here because some recipes depend on empty items
+		// to match shapes (eg: crafting).
+		ItemStack itemCopy = item.copy();
+		itemCopy.setCount(amount);
+		outputItems.add(new ProcessingItemWrapper(itemCopy, captureType, isTemplateItem));
+		return this;
 	}
 
 	public List<ProcessingItemWrapper> getOutputItems() {
@@ -141,9 +144,6 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingItemWrapper getOutputItem(int index) {
-		if (index >= inputItems.size()) {
-			return ProcessingItemWrapper.EMPTY;
-		}
 		return outputItems.get(index);
 	}
 
@@ -156,13 +156,7 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingOutputContainer addInputFluid(FluidStack fluid, CaptureType captureType, boolean isTemplateItem) {
-		if (isClosed()) {
-			throw new RuntimeException(String.format("Attempted to add an input fluid to a clowed process output container."));
-		}
-		if (!fluid.isEmpty()) {
-			inputFluids.add(new ProcessingFluidWrapper(fluid.copy(), captureType, isTemplateItem));
-		}
-		return this;
+		return addInputFluid(fluid, fluid.getAmount(), captureType, isTemplateItem);
 	}
 
 	public ProcessingOutputContainer addInputFluid(FluidStack fluid, int amount, CaptureType captureType) {
@@ -170,8 +164,17 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingOutputContainer addInputFluid(FluidStack fluid, int amount, CaptureType captureType, boolean isTemplateItem) {
-		fluid.setAmount(amount);
-		return addInputFluid(fluid, captureType, isTemplateItem);
+		if (isClosed()) {
+			throw new RuntimeException(String.format("Attempted to add an input fluid to a closed process output container."));
+		}
+		// Don't check for empty fluids here because some recipes depend on empty fluids
+		// to match shapes (eg: refinery).
+		if (!fluid.isEmpty()) {
+			FluidStack fluidCopy = fluid.copy();
+			fluidCopy.setAmount(amount);
+			inputFluids.add(new ProcessingFluidWrapper(fluidCopy, captureType, isTemplateItem));
+		}
+		return this;
 	}
 
 	public List<ProcessingFluidWrapper> getInputFluids() {
@@ -179,9 +182,6 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingFluidWrapper getInputFluid(int index) {
-		if (index >= inputItems.size()) {
-			return ProcessingFluidWrapper.EMPTY;
-		}
 		return inputFluids.get(index);
 	}
 
@@ -194,13 +194,7 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingOutputContainer addOutputFluid(FluidStack fluid, CaptureType captureType, boolean isTemplateItem) {
-		if (isClosed()) {
-			throw new RuntimeException(String.format("Attempted to add an output fluid to a clowed process output container."));
-		}
-		if (!fluid.isEmpty()) {
-			outputFluids.add(new ProcessingFluidWrapper(fluid.copy(), captureType, isTemplateItem));
-		}
-		return this;
+		return addOutputFluid(fluid, fluid.getAmount(), captureType, isTemplateItem);
 	}
 
 	public ProcessingOutputContainer addOutputFluid(FluidStack fluid, int amount, CaptureType captureType) {
@@ -208,8 +202,18 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingOutputContainer addOutputFluid(FluidStack fluid, int amount, CaptureType captureType, boolean isTemplateItem) {
-		fluid.setAmount(amount);
-		return addOutputFluid(fluid, captureType, isTemplateItem);
+		if (isClosed()) {
+			throw new RuntimeException(String.format("Attempted to add an output fluid to a closed process output container."));
+		}
+		if (amount == 0) {
+			return this;
+		}
+		if (!fluid.isEmpty()) {
+			FluidStack fluidCopy = fluid.copy();
+			fluidCopy.setAmount(amount);
+			outputFluids.add(new ProcessingFluidWrapper(fluidCopy, captureType, isTemplateItem));
+		}
+		return this;
 	}
 
 	public List<ProcessingFluidWrapper> getOutputFluids() {
@@ -217,9 +221,6 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 	}
 
 	public ProcessingFluidWrapper getOutputFluid(int index) {
-		if (index >= inputItems.size()) {
-			return ProcessingFluidWrapper.EMPTY;
-		}
 		return outputFluids.get(index);
 	}
 

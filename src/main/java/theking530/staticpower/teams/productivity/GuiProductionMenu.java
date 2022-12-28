@@ -1,5 +1,10 @@
 package theking530.staticpower.teams.productivity;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -17,7 +22,6 @@ import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionTimeline;
-import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.metrics.ProductionMetrics;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline.ProductivityTimelineEntry;
@@ -45,10 +49,14 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	private ScrollBox consumptionScrollBox;
 	private MetricEntryContainer consumptionMetrics;
 	private DataGraphWidget consumptionGraph;
+	private Set<Integer> selectedConsumptionProduct;
 
 	private ScrollBox productionScrollBox;
 	private MetricEntryContainer productionMetrics;
 	private DataGraphWidget productionGraph;
+	private Set<Integer> selectedProductionProduct;
+
+	private MetricPeriod selectedMetricPeriod;
 
 	private Vector2D overallPadding;
 	private Vector2D overallTopLeft;
@@ -66,15 +74,18 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 
 	@Override
 	public void initializeGui() {
+		selectedMetricPeriod = MetricPeriod.MINUTE;
+		selectedConsumptionProduct = new HashSet<>();
+		selectedProductionProduct = new HashSet<>();
 		displayedProductType = ModProducts.Item.get();
 		productButtonContainer = new HorizontalBox(0, 0, 0, 20).setEvenlyDivideSpace(true);
 		lastClientFetchTime = 0;
 		registerWidget(consumptionGraph = new DataGraphWidget(0, 0, 0, 0));
 		registerWidget(productionGraph = new DataGraphWidget(0, 0, 0, 0));
 
+		// Create the product type buttons.
 		for (ProductType<?> prodType : StaticPowerRegistries.ProductRegistry().getValues()) {
-			StandardButton button = new TextButton(0, 0, 14, Component.translatable(prodType.getUnlocalizedName()).getString(), (self, mouseButton) -> {
-				this.displayedProductType = prodType;
+			StandardButton button = new TextButton(0, 0, 14, Component.translatable(prodType.getUnlocalizedName(2)).getString(), (self, mouseButton) -> {
 				for (AbstractGuiWidget<?> otherButton : productButtonContainer.getChildren()) {
 					TextButton castOtherButton = (TextButton) otherButton;
 					if (castOtherButton != null) {
@@ -82,30 +93,32 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 					}
 				}
 				self.setToggled(true);
-				StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
+				changeDisplayedProductType(prodType);
 			});
-			button.setTooltip(Component.translatable(prodType.getUnlocalizedName()));
+			button.setTooltip(Component.translatable(prodType.getUnlocalizedName(2)));
 			if (displayedProductType == prodType) {
 				button.setToggled(true);
 			}
 			productButtonContainer.registerWidget(button);
 		}
-		this.registerWidget(productButtonContainer);
+		registerWidget(productButtonContainer);
 
-		this.registerWidget(consumptionScrollBox = new ScrollBox(10, 10, 200, 200));
+		registerWidget(consumptionScrollBox = new ScrollBox(10, 10, 200, 200));
 		consumptionScrollBox.setDrawScrollBar(true);
 		consumptionScrollBox.setDrawScrollBarBackground(true);
-		this.registerWidget(productionScrollBox = new ScrollBox(10, 10, 200, 200));
+		registerWidget(productionScrollBox = new ScrollBox(10, 10, 200, 200));
 		productionScrollBox.setDrawScrollBar(true);
 		productionScrollBox.setDrawScrollBarBackground(true);
 
 		consumptionMetrics = new MetricEntryContainer(MetricType.CONSUMPTION, 0, 0, 0, 0);
+		consumptionMetrics.setSelectedMetricChanged(this::metricEntryClicked);
 		consumptionScrollBox.registerWidget(consumptionMetrics);
 
 		productionMetrics = new MetricEntryContainer(MetricType.PRODUCTION, 0, 0, 0, 0);
+		productionMetrics.setSelectedMetricChanged(this::metricEntryClicked);
 		productionScrollBox.registerWidget(productionMetrics);
 
-		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
+		requestMetricUpdateFromServer();
 		recalculateSizes();
 	}
 
@@ -114,63 +127,19 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	public void tick() {
 		super.tick();
 		if (Minecraft.getInstance().level.getGameTime() % 20 == 0) {
-			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
+			requestMetricUpdateFromServer();
+			if (!selectedConsumptionProduct.isEmpty()) {
+				updateTimelineValues(selectedConsumptionProduct, MetricType.CONSUMPTION, selectedMetricPeriod);
+			}
+			if (!selectedProductionProduct.isEmpty()) {
+				updateTimelineValues(selectedProductionProduct, MetricType.PRODUCTION, selectedMetricPeriod);
+			}
 		}
 
 		// If the data has changed since we last fetched, update the display values.
 		if (getProductionManager() != null && getProductionManager().getCache(displayedProductType).haveClientValuesUpdatedSince(lastClientFetchTime)) {
 			updateDisplayValues();
 		}
-	}
-
-	@Override
-	public void updateBeforeRender() {
-
-	}
-
-	@SuppressWarnings("resource")
-	private void updateDisplayValues() {
-		ProductionManager manager = getProductionManager();
-		ProductionMetrics metrics = manager.getCache(displayedProductType).getProductionMetrics(MetricPeriod.MINUTE);
-
-		consumptionMetrics.updateMetrics(displayedProductType, metrics.getConsumption());
-		productionMetrics.updateMetrics(displayedProductType, metrics.getProduction());
-
-		if (!metrics.isEmpty()) {
-			ProductionMetric metric;
-			if (!metrics.getProduction().isEmpty()) {
-				metric = metrics.getProduction().get(0);
-			} else {
-				metric = metrics.getConsumption().get(0);
-			}
-
-			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL,
-					new PacketRequestProductionTimeline(displayedProductType, metric.getProductHash(), MetricPeriod.SECOND));
-		}
-		lastClientFetchTime = Minecraft.getInstance().level.getGameTime();
-	}
-
-	public void recieveTimelineData(ProductType<?> productType, int productHashCode, MetricPeriod period, ProductivityTimeline timeline) {
-		DynamicGraphDataSet production = new DynamicGraphDataSet(SDColor.GREEN);
-		DynamicGraphDataSet consumption = new DynamicGraphDataSet(SDColor.RED);
-
-		long startingTick = timeline.entries().get(0).tick();
-		int index = 0;
-
-		for (int i = 0; i < 60; i++) {
-			ProductivityTimelineEntry entry = timeline.entries().get(index);
-			if (entry.tick() == startingTick - (i * 20)) {
-				index++;
-				production.addNewDataPoint(entry.produced());
-				consumption.addNewDataPoint(entry.consumed());
-			} else {
-				production.addNewDataPoint(0);
-				consumption.addNewDataPoint(0);
-			}
-		}
-
-		productionGraph.setDataSet("Production", production);
-		consumptionGraph.setDataSet("Consumption", consumption);
 	}
 
 	@Override
@@ -183,6 +152,93 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	public void resize(Minecraft minecraft, int width, int height) {
 		super.resize(minecraft, width, height);
 		recalculateSizes();
+	}
+
+	private void changeDisplayedProductType(ProductType<?> product) {
+		displayedProductType = product;
+		selectedConsumptionProduct.clear();
+		selectedProductionProduct.clear();
+		requestMetricUpdateFromServer();
+	}
+
+	private void changeDisplayedTimePeriod(MetricPeriod period) {
+		this.selectedMetricPeriod = period;
+		updateDisplayValues();
+	}
+
+	private void metricEntryClicked(MetricEntryWidget widget, Integer productHash) {
+		if (widget.getMetricType() == MetricType.PRODUCTION) {
+			selectedProductionProduct.clear();
+			selectedProductionProduct.add(productHash);
+		} else {
+			selectedConsumptionProduct.clear();
+			selectedConsumptionProduct.add(productHash);
+		}
+		updateDisplayValues();
+	}
+
+	private void requestMetricUpdateFromServer() {
+		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
+	}
+
+	public void recieveTimelineData(ProductType<?> productType, MetricPeriod period, MetricType type, List<ProductivityTimeline> timelines) {
+		// First ensure we clear all the data from the graphs before we do anything
+		// else.
+		if (type == MetricType.PRODUCTION) {
+			productionGraph.clearAllData();
+		} else {
+			consumptionGraph.clearAllData();
+		}
+
+		// If there is no data returned, get out.
+		if (timelines.isEmpty()) {
+			return;
+		}
+
+		for (ProductivityTimeline timeline : timelines) {
+			DynamicGraphDataSet data = new DynamicGraphDataSet(productType.getProductColor(timeline.serializedProduct()));
+
+			for (int i = 0; i < 60; i++) {
+				ProductivityTimelineEntry entry = timeline.entries().get(i);
+				data.addNewDataPoint(type == MetricType.PRODUCTION ? entry.produced() : entry.consumed());
+			}
+
+			if (type == MetricType.PRODUCTION) {
+				productionGraph.setDataSet(timeline.serializedProduct() + "_production", data);
+			} else {
+				consumptionGraph.setDataSet(timeline.serializedProduct() + "_consumption", data);
+			}
+		}
+	}
+
+	@SuppressWarnings("resource")
+	private void updateDisplayValues() {
+		ProductionManager manager = getProductionManager();
+		ProductionMetrics metrics = manager.getCache(displayedProductType).getProductionMetrics(selectedMetricPeriod);
+
+		consumptionMetrics.updateMetrics(displayedProductType, metrics.getConsumption());
+		productionMetrics.updateMetrics(displayedProductType, metrics.getProduction());
+
+		if (!metrics.isEmpty()) {
+			if (selectedConsumptionProduct.isEmpty() && !metrics.getConsumption().isEmpty()) {
+				selectedConsumptionProduct.add(metrics.getConsumption().get(0).getProductHash());
+			}
+			if (selectedProductionProduct.isEmpty() && !metrics.getProduction().isEmpty()) {
+				selectedProductionProduct.add(metrics.getProduction().get(0).getProductHash());
+			}
+		}
+
+		updateTimelineValues(selectedConsumptionProduct, MetricType.CONSUMPTION, selectedMetricPeriod);
+		updateTimelineValues(selectedProductionProduct, MetricType.PRODUCTION, selectedMetricPeriod);
+		lastClientFetchTime = Minecraft.getInstance().level.getGameTime();
+	}
+
+	private void updateTimelineValues(Collection<Integer> products, MetricType type, MetricPeriod period) {
+		if (period == MetricPeriod.SECOND) {
+			throw new RuntimeException("We can't get a timeline for a single second!");
+		}
+		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL,
+				new PacketRequestProductionTimeline(displayedProductType, products, MetricPeriod.values()[period.ordinal() - 1], type));
 	}
 
 	@Override

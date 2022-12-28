@@ -151,6 +151,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putDouble(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.getDataTag().putDouble(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
 	}

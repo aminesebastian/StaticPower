@@ -73,7 +73,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 	@Override
 	public void process() {
 		if (!getLevel().isClientSide()) {
-			if (processingComponent.isCurrentlyProcessing()) {
+			if (processingComponent.performedWorkLastTick()) {
 				generatingSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING, SoundSource.BLOCKS, 0.1f, 0.75f, getBlockPos(), 64);
 			} else {
 				generatingSoundComponent.stopPlayingSound();

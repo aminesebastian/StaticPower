@@ -77,6 +77,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putByte(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
 		cable.getDataTag().putDouble(POWER_LOSS, powerLoss);
 		cable.getDataTag().putDouble(POWER_MAX, maxPower);

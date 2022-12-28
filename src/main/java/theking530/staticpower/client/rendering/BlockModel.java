@@ -58,17 +58,17 @@ public class BlockModel {
 		buffer.endBatch(RenderType.translucentMovingBlock());
 	}
 
-	public static void drawCubeInGui(Vector3f position, Vector3f scale, SDColor tint, PoseStack matrixStack) {
+	public static void drawCubeInGui(PoseStack matrixStack, Vector3f position, Vector3f scale, SDColor tint) {
 		// Bind a blank texture.
 		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.BLANK_TEXTURE);
-		drawCubeInGui(position, scale, tint, matrixStack, sprite, ONE_VECTOR);
+		drawCubeInGui(matrixStack, position, scale, tint, sprite, ONE_VECTOR);
 	}
 
-	public static void drawCubeInGui(Vector3f position, Vector3f scale, SDColor tint, PoseStack matrixStack, TextureAtlasSprite sprite, Vector3D uv) {
-		BlockModel.drawCubeInGui(position, scale, tint, matrixStack, sprite, uv, null);
+	public static void drawCubeInGui(PoseStack matrixStack, Vector3f position, Vector3f scale, SDColor tint, TextureAtlasSprite sprite, Vector3D uv) {
+		BlockModel.drawCubeInGui(matrixStack, position, scale, tint, sprite, uv, null);
 	}
 
-	public static void drawCubeInGui(Vector3f position, Vector3f scale, SDColor tint, PoseStack matrixStack, TextureAtlasSprite sprite, Vector3D uv, BlockPos lightingPos) {
+	public static void drawCubeInGui(PoseStack matrixStack, Vector3f position, Vector3f scale, SDColor tint, TextureAtlasSprite sprite, Vector3D uv, BlockPos lightingPos) {
 		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.enableBlend();
 		Tesselator tesselator = Tesselator.getInstance();

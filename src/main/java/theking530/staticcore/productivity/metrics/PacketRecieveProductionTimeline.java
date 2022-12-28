@@ -1,5 +1,7 @@
 package theking530.staticcore.productivity.metrics;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
@@ -13,35 +15,44 @@ import theking530.staticpower.teams.productivity.GuiProductionMenu;
 
 public class PacketRecieveProductionTimeline extends NetworkMessage {
 	private ProductType<?> productType;
-	private int productHashCode;
 	private MetricPeriod period;
-	private ProductivityTimeline timeline;
+	private MetricType type;
+	private List<ProductivityTimeline> timelines;
 
 	public PacketRecieveProductionTimeline() {
 
 	}
 
-	public PacketRecieveProductionTimeline(ProductType<?> productType, int productHashCode, MetricPeriod period, ProductivityTimeline timeline) {
+	public PacketRecieveProductionTimeline(ProductType<?> productType,  MetricPeriod period, MetricType type, List<ProductivityTimeline> timelines) {
 		this.productType = productType;
-		this.productHashCode = productHashCode;
 		this.period = period;
-		this.timeline = timeline;
+		this.type = type;
+		this.timelines = timelines;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		timeline.encode(buffer);
+		buffer.writeByte(timelines.size());
+		for (ProductivityTimeline timeline : timelines) {
+			timeline.encode(buffer);
+		}
+
 		buffer.writeUtf(StaticPowerRegistries.ProductRegistry().getKey(productType).toString());
-		buffer.writeInt(productHashCode);
 		buffer.writeByte(period.ordinal());
+		buffer.writeByte(type.ordinal());
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
-		timeline = ProductivityTimeline.decode(buffer);
+		timelines = new LinkedList<ProductivityTimeline>();
+		int count = buffer.readByte();
+		for (int i = 0; i < count; i++) {
+			timelines.add(ProductivityTimeline.decode(buffer));
+		}
+
 		productType = StaticPowerRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
-		productHashCode = buffer.readInt();
 		period = MetricPeriod.values()[buffer.readByte()];
+		type = MetricType.values()[buffer.readByte()];
 	}
 
 	@SuppressWarnings("resource")
@@ -50,7 +61,7 @@ public class PacketRecieveProductionTimeline extends NetworkMessage {
 		ctx.get().enqueueWork(() -> {
 			GuiProductionMenu productionMenu = (GuiProductionMenu) Minecraft.getInstance().screen;
 			if (productionMenu != null) {
-				productionMenu.recieveTimelineData(productType, productHashCode, period, timeline);
+				productionMenu.recieveTimelineData(productType,  period, type, timelines);
 			}
 		});
 	}
