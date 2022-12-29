@@ -82,6 +82,8 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
 		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
 		powerStorage.setInputCurrentTypes(CurrentType.DIRECT, CurrentType.ALTERNATING);
+		powerStorage.setCanAcceptExternalPower(true);
+		powerStorage.setCanOutputExternalPower(true);
 
 		if (this.getTier() == StaticPowerTiers.CREATIVE) {
 			powerStorage.setMaximumInputPower(Double.MAX_VALUE);

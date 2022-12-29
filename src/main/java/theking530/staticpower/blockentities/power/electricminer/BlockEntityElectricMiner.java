@@ -32,7 +32,7 @@ public class BlockEntityElectricMiner extends AbstractTileEntityMiner {
 	public BlockEntityElectricMiner(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
-		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier()));
+		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, false));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 
 		// Set the processing parameters.

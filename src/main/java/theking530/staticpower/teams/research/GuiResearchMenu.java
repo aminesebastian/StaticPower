@@ -34,6 +34,7 @@ import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchLevels;
 import theking530.staticpower.data.research.ResearchLevels.ResearchLevel;
 import theking530.staticpower.data.research.ResearchLevels.ResearchNode;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
@@ -93,7 +94,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
-		nodePanBox.setMaxZoom(4.0f);
+		nodePanBox.setMaxZoom(2.0f);
 
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 
@@ -251,7 +252,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 			// We need to iterate backwards here.
 			List<ResourceLocation> completed = new ArrayList<>(getResearchManager().getCompletedResearch());
 			for (int i = completed.size() - 1; i >= 0; i--) {
-				Research research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completed.get(i)).orElse(null);
+				Research research = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.RESEARCH_RECIPE_TYPE.get(), completed.get(i)).orElse(null);
 				if (research != null) {
 					float tint = index % 2 == 0 ? 0.5f : 0.0f;
 					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, 0, 105, HISTORY_HEIGHT).setBackgroundColor(new SDColor(tint, tint, tint, 0.35f))
@@ -273,7 +274,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		nodePanBox.setSize(screenWidth - 105, screenHeight - 25);
 
 		// Size up the sidebar.
-		sideBarScrollBox.setSize(102, screenHeight - selectedResearchWidget.getSize().getY());
+		sideBarScrollBox.setSize(102, screenHeight - selectedResearchWidget.getSize().getY() + 15);
 		for (ResearchHistoryWidget widgets : historyWidgets) {
 			widgets.setSize(102, HISTORY_HEIGHT);
 		}
@@ -339,10 +340,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				index++;
 
 				Vector3D expandedPosition = outerNode.getPosition().promote();
-				expandedPosition.add(12.5f, 2, 100);
+				expandedPosition.add(12.5f, 2, -100);
 
 				Vector3D preReqPosition = node.getPosition().promote();
-				preReqPosition.add(12.5f, 20f, 100);
+				preReqPosition.add(12.5f, 20f, -100);
 
 				SDColor startLineColor = new SDColor(1.0f, 1.0f, 1.0f, 0.5f);
 				SDColor endLineColor = startLineColor;
@@ -355,7 +356,6 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				// If a node is expanded, only draw lines for that node and push them over
 				// everything.
 				if (hoveredNode != null && outerNode == hoveredNode) {
-					preReqPosition.add(0, 0, 500);
 					float timeHovered = SDMath.clamp((this.hoveredNode.getTicksHovered() - (index * 2)) / 1f, 0, 1);
 
 					if (!getResearchManager().hasCompletedResearch(node.getResearch().getId())) {

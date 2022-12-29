@@ -46,7 +46,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 
 		// Add the power distributor.
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));
-		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier()) {
+		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(Direction side, PowerStack stack, boolean simulate) {
 				return transformAndSupplyPower(side, stack, simulate);

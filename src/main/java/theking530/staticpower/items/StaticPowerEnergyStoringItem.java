@@ -50,7 +50,7 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
 			double capacity = getCapacity();
 			return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, capacity, getInputVoltageRange(),
-					getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower()));
+					getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower(), canAcceptExternalPower(), canOutputExternalPower()));
 		}
 		return null;
 	}
@@ -78,6 +78,14 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public abstract StaticPowerVoltage getOutputVoltage();
 
 	public abstract double getMaximumOutputPower();
+
+	public boolean canAcceptExternalPower() {
+		return true;
+	}
+
+	public boolean canOutputExternalPower() {
+		return false;
+	}
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {

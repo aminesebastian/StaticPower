@@ -381,7 +381,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
 			return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
 					.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getCapacity(), getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(),
-							getMaximumOutputPower()));
+							getMaximumOutputPower(), true, false));
 		}
 		return null;
 	}

@@ -20,10 +20,13 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	protected double maxOutputPower;
 	protected CurrentType outputCurrentType;
 
+	protected boolean canAcceptExternalPower;
+	protected boolean canOutputExternalPower;
+
 	protected StaticPowerEnergyTracker ticker;
 
 	public StaticPowerStorage(double capacity, StaticVoltageRange inputVoltageRange, double maxInputPower, CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage,
-			double maxOutputPower, CurrentType outputCurrentType) {
+			double maxOutputPower, CurrentType outputCurrentType, boolean canAcceptExternalPower, boolean canOutputExternalPower) {
 		this();
 		this.capacity = capacity;
 		this.inputVoltageRange = inputVoltageRange;
@@ -32,6 +35,8 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		this.maxOutputPower = maxOutputPower;
 		this.outputCurrentType = outputCurrentType;
 		this.acceptableCurrentTypes.addAll(Arrays.asList(acceptableCurrentTypes));
+		this.canAcceptExternalPower = canAcceptExternalPower;
+		this.canOutputExternalPower = canOutputExternalPower;
 	}
 
 	protected StaticPowerStorage() {
@@ -82,6 +87,16 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 
 	public StaticPowerStorage setOutputCurrentType(CurrentType type) {
 		this.outputCurrentType = type;
+		return this;
+	}
+
+	public StaticPowerStorage setCanAcceptExternalPower(boolean canAcceptExternalPower) {
+		this.canAcceptExternalPower = canAcceptExternalPower;
+		return this;
+	}
+
+	public StaticPowerStorage setCanOutputExternalPower(boolean canOutputExternalPower) {
+		this.canOutputExternalPower = canOutputExternalPower;
 		return this;
 	}
 
@@ -148,6 +163,16 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	@Override
 	public double getMaximumPowerOutput() {
 		return maxOutputPower;
+	}
+
+	@Override
+	public boolean canAcceptExternalPower() {
+		return canAcceptExternalPower;
+	}
+
+	@Override
+	public boolean canOutputExternalPower() {
+		return canOutputExternalPower;
 	}
 
 	@Override
@@ -232,6 +257,10 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 			index++;
 		}
 		output.put("ticker", ticker.serializeNBT());
+
+		output.putBoolean("canAcceptExternalPower", canAcceptExternalPower);
+		output.putBoolean("canOutputExternalPower", canOutputExternalPower);
+
 		return output;
 	}
 
@@ -255,6 +284,9 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		}
 
 		ticker.deserializeNBT(nbt.getCompound("ticker"));
+
+		canAcceptExternalPower = nbt.getBoolean("canAcceptExternalPower");
+		canOutputExternalPower = nbt.getBoolean("canOutputExternalPower");
 	}
 
 	public static StaticPowerStorage fromTag(CompoundTag nbt) {

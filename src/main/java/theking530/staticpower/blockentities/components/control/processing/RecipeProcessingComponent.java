@@ -93,23 +93,27 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		super.updateProductionStatistics(teamComp);
 		for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
 			if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
-				getItemProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.item(), output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
+				getItemProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.item(), output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)),
+						output.item().getCount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
 		for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
 			if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
-				getItemProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.item(), input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
+				getItemProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.item(), input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)),
+						input.item().getCount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
 
 		for (ProcessingFluidWrapper output : outputContainer.getOutputFluids()) {
 			if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
-				getFluidProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.fluid(), output.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)));
+				getFluidProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.fluid(), output.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)),
+						output.fluid().getAmount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
 		for (ProcessingFluidWrapper input : outputContainer.getInputFluids()) {
 			if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
-				getFluidProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.fluid(), input.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)));
+				getFluidProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.fluid(), input.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)),
+						input.fluid().getAmount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
 	}

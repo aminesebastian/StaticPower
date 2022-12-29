@@ -44,6 +44,7 @@ import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.cables.ModCableCapabilities;
 import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
+import theking530.staticpower.integration.ModIntegrations;
 
 @Mod(StaticPower.MOD_ID)
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
@@ -84,6 +85,8 @@ public class StaticPower {
 		StaticPowerConfig.registerTier(StaticPowerTiers.EMERALD, StaticPowerTierEmerald::new);
 
 		StaticCoreRegistry.preInitialize();
+		ModIntegrations.preInit(eventBus);
+
 		ModRecipeTypes.init(eventBus);
 		ModRecipeSerializers.init(eventBus);
 		ModBlocks.init(eventBus);
@@ -97,11 +100,13 @@ public class StaticPower {
 		ModCableCapabilities.init(eventBus);
 		ModLootSerializers.init(eventBus);
 		ModFeatures.init(eventBus);
+		ModIntegrations.init(eventBus);
 
 		StaticCoreRegistry.postInitialize();
 		StaticCoreRegistry.registerBlockEntityTypes(eventBus);
 		StaticCoreRegistry.registerContainerTypes(eventBus);
 
 		ModProducts.init(eventBus);
+		ModIntegrations.postInit(eventBus);
 	}
 }

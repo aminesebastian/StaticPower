@@ -32,7 +32,7 @@ public class BlockEntityRectifier extends BlockEntityConfigurable {
 
 		// Add the power distributor.
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));
-		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier()) {
+		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(PowerStack stack, boolean simulate) {
 				return transferPower(stack, simulate);

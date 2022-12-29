@@ -18,9 +18,6 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class ResearchSerializer extends StaticPowerRecipeSerializer<Research> {
-	public static final ResearchSerializer INSTANCE = new ResearchSerializer();
-	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "research");
-
 	@Override
 	public Research fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Get the title and description.

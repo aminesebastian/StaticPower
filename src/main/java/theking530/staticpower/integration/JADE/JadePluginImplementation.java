@@ -47,9 +47,6 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static final SDColor MAIN_PROCESSING_COLOR = new SDColor(0.67f, 0.67f, 0.67f).fromFloatToEightBit();
 	public static final SDColor ALT_PROCESSING_COLOR = new SDColor(0.67f, 0.67f, 0.67f).fromFloatToEightBit();
 
-	public static final SDColor MAIN_FLUID_COLOR = new SDColor(0, 0.18f, 0.88f).fromFloatToEightBit();
-	public static final SDColor ALT_FLUID_COLOR = new SDColor(0, 0.164f, 0.831f).fromFloatToEightBit();
-
 	@Override
 	public void register(IWailaCommonRegistration registrar) {
 		registrar.registerBlockDataProvider(new JadeDataProviders(), BlockEntity.class);
@@ -74,15 +71,16 @@ public class JadePluginImplementation implements IWailaPlugin {
 				if (storage != null || (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.POWER_TAG))) {
 					double stored = 0, capacity = 0, outputVoltage = 0;
 					StaticPowerVoltage minVoltage = StaticPowerVoltage.ZERO, maxVoltage = StaticPowerVoltage.ZERO;
-					boolean displayOutputVoltage = false;
-					boolean displayInputParameters = false;
+					boolean canAcceptExternalPower = false;
+					boolean canOutputExternalPower = false;
 					boolean isAlternating = false;
 
 					if (accessor.isServerConnected()) {
 						CompoundTag svData = accessor.getServerData().getCompound(JadeDataProviders.POWER_TAG);
+						canAcceptExternalPower = svData.getBoolean("canAcceptExternalPower");
+						canOutputExternalPower = svData.getBoolean("canOutputExternalPower");
 
 						if (svData.contains("output_voltage")) {
-							displayOutputVoltage = true;
 							outputVoltage = svData.getDouble("output_voltage");
 						}
 
@@ -96,20 +94,18 @@ public class JadePluginImplementation implements IWailaPlugin {
 
 							minVoltage = range.minimumVoltage();
 							maxVoltage = range.maximumVoltage();
-							if (minVoltage != StaticPowerVoltage.ZERO && maxVoltage != StaticPowerVoltage.ZERO) {
-								displayInputParameters = true;
-							}
 						}
 
 					} else {
+						canAcceptExternalPower = storage.canAcceptExternalPower();
+						canOutputExternalPower = storage.canOutputExternalPower();
+
 						if (!storage.drainPower(1, true).isEmpty()) {
-							displayOutputVoltage = true;
 							outputVoltage = storage.getOutputVoltage();
 						}
 
 						if (storage.getInputVoltageRange().minimumVoltage() != StaticPowerVoltage.ZERO
 								&& storage.getInputVoltageRange().maximumVoltage() != StaticPowerVoltage.ZERO) {
-							displayInputParameters = true;
 							stored = storage.getStoredPower();
 							capacity = storage.getCapacity();
 							minVoltage = storage.getInputVoltageRange().minimumVoltage();
@@ -118,7 +114,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 					}
 
 					// Draw the output voltage.
-					if (displayOutputVoltage) {
+					if (canOutputExternalPower) {
 						JadePluginImplementation.drawValue(tooltip,
 								Component.translatable("gui.staticpower.output_voltage").append(": ").append(PowerTextFormatting.formatVoltageToString(outputVoltage)),
 								OUTPUT_VOLTAGE_RENDERER);
@@ -128,26 +124,9 @@ public class JadePluginImplementation implements IWailaPlugin {
 						JadePluginImplementation.drawValue(tooltip, Component.translatable("~"), new ResourceLocation(StaticPower.MOD_ID, "TEMP_AC"));
 					}
 
-					// Draw stored power bar.
-					if (displayInputParameters) {
-						if (minVoltage != StaticPowerVoltage.LOW && maxVoltage != StaticPowerVoltage.BONKERS) {
-							if (minVoltage == maxVoltage) {
-								JadePluginImplementation.drawValue(tooltip,
-										Component.translatable("gui.staticpower.input_voltage").append(": ").append(Component.translatable(minVoltage.getShortName())),
-										INPUT_VOLTAGE_RENDERER);
-							} else if (minVoltage == StaticPowerVoltage.ZERO) {
-								JadePluginImplementation.drawValue(tooltip,
-										Component.translatable("gui.staticpower.input_voltage").append(": <").append(Component.translatable(maxVoltage.getShortName())),
-										INPUT_VOLTAGE_RENDERER);
-							} else if (maxVoltage == StaticPowerVoltage.BONKERS) {
-								JadePluginImplementation.drawValue(tooltip,
-										Component.translatable("gui.staticpower.input_voltage").append(": >").append(Component.translatable(minVoltage.getShortName())),
-										INPUT_VOLTAGE_RENDERER);
-							} else {
-								JadePluginImplementation.drawValue(tooltip, Component.translatable("gui.staticpower.input_voltage").append(": ")
-										.append(PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minVoltage, maxVoltage))), INPUT_VOLTAGE_RENDERER);
-							}
-						}
+					if (canAcceptExternalPower) {
+						JadePluginImplementation.drawValue(tooltip, Component.translatable("gui.staticpower.input_voltage").append(": ")
+								.append(PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minVoltage, maxVoltage))), INPUT_VOLTAGE_RENDERER);
 					}
 
 					if (capacity > 0) {

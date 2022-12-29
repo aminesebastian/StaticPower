@@ -1,6 +1,7 @@
 package theking530.staticpower.init;
 
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -70,6 +71,7 @@ import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchSerializer;
 
 public class ModRecipeSerializers {
+	public static final DeferredRegister<RecipeType<?>> TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StaticPower.MOD_ID);
 	public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StaticPower.MOD_ID);
 
 	public static final RegistryObject<AutoSmithRecipeSerializer> AUTO_SMITH_SERIALIZER = SERIALIZERS.register(AutoSmithRecipe.ID, () -> AutoSmithRecipeSerializer.INSTANCE);
@@ -98,7 +100,7 @@ public class ModRecipeSerializers {
 	public static final RegistryObject<LumberMillRecipeSerializer> LUMBER_MILL_SERIALIZER = SERIALIZERS.register(LumberMillRecipe.ID, () -> LumberMillRecipeSerializer.INSTANCE);
 	public static final RegistryObject<MixerRecipeSerializer> MIXER_SERIALIZER = SERIALIZERS.register(MixerRecipe.ID, () -> MixerRecipeSerializer.INSTANCE);
 	public static final RegistryObject<RefineryRecipeSerializer> REFINERY_SERIALIZER = SERIALIZERS.register(RefineryRecipe.ID, () -> RefineryRecipeSerializer.INSTANCE);
-	public static final RegistryObject<ResearchSerializer> RESEARCH_SERIALIZER = SERIALIZERS.register(Research.ID, () -> ResearchSerializer.INSTANCE);
+	public static final RegistryObject<ResearchSerializer> RESEARCH_SERIALIZER = SERIALIZERS.register(Research.ID, () -> new ResearchSerializer());
 	public static final RegistryObject<SolderingRecipeSerializer> SOLDERING_SERIALIZER = SERIALIZERS.register(SolderingRecipe.ID, () -> SolderingRecipeSerializer.INSTANCE);
 	public static final RegistryObject<SqueezerRecipeSerializer> SQUEEZER_SERIALIZER = SERIALIZERS.register(SqueezerRecipe.ID, () -> SqueezerRecipeSerializer.INSTANCE);
 	public static final RegistryObject<ThermalConductivityRecipeSerializer> THERMAL_CONDUCTIVITY_SERIALIZER = SERIALIZERS.register(ThermalConductivityRecipe.ID,
@@ -107,7 +109,7 @@ public class ModRecipeSerializers {
 	public static final RegistryObject<TurbineRecipeSerializer> TURBINE_SERIALIZER = SERIALIZERS.register(TurbineRecipe.ID, () -> TurbineRecipeSerializer.INSTANCE);
 	public static final RegistryObject<VulcanizerRecipeSerializer> VULCANIZER_SERIALIZER = SERIALIZERS.register(VulcanizerRecipe.ID, () -> VulcanizerRecipeSerializer.INSTANCE);
 	public static final RegistryObject<AlloyFurnaceRecipeSerializer> ALLOY_FURNACE_SERIALIZER = SERIALIZERS.register(AlloyFurnaceRecipe.ID,
-			() -> AlloyFurnaceRecipeSerializer.INSTANCE);
+			() -> new AlloyFurnaceRecipeSerializer());
 	public static final RegistryObject<HydroponicFarmingRecipeSerializer> HYDROPONIC_FARMER_SERIALIZER = SERIALIZERS.register(HydroponicFarmingRecipe.ID,
 			() -> HydroponicFarmingRecipeSerializer.INSTANCE);
 

@@ -12,6 +12,9 @@ public class StaticPowerEnergyStorageBuilder {
 	protected StaticPowerVoltage outputVoltage;
 	protected double maxOutputCurrent;
 
+	protected boolean canAcceptExternalPower;
+	protected boolean canOutputExternalPower;
+
 	protected CurrentType outputCurrentType;
 	protected Set<CurrentType> acceptableCurrentTypes;
 
@@ -24,16 +27,18 @@ public class StaticPowerEnergyStorageBuilder {
 		this.acceptableCurrentTypes = new HashSet<>();
 	}
 
-	public StaticPowerEnergyStorageBuilder withInputParameters(StaticVoltageRange inputVoltageRange, double maxInputCurrent) {
+	public StaticPowerEnergyStorageBuilder withInputParameters(StaticVoltageRange inputVoltageRange, double maxInputCurrent, boolean canAcceptExternalPower) {
 		this.inputVoltageRange = inputVoltageRange;
 		this.maxInputCurrent = maxInputCurrent;
+		this.canAcceptExternalPower = canAcceptExternalPower;
 		return this;
 	}
 
-	public StaticPowerEnergyStorageBuilder withOutputParameters(CurrentType currentType, StaticPowerVoltage outputVoltage, double maxOutputCurrent) {
+	public StaticPowerEnergyStorageBuilder withOutputParameters(CurrentType currentType, StaticPowerVoltage outputVoltage, double maxOutputCurrent, boolean canOutputExternalPower) {
 		this.outputCurrentType = currentType;
 		this.outputVoltage = outputVoltage;
 		this.maxOutputCurrent = maxOutputCurrent;
+		this.canOutputExternalPower = canOutputExternalPower;
 		return this;
 	}
 
@@ -46,6 +51,6 @@ public class StaticPowerEnergyStorageBuilder {
 
 	public StaticPowerStorage build() {
 		return new StaticPowerStorage(capacity, inputVoltageRange, maxInputCurrent, acceptableCurrentTypes.toArray(new CurrentType[acceptableCurrentTypes.size()]), outputVoltage,
-				maxOutputCurrent, outputCurrentType);
+				maxOutputCurrent, outputCurrentType, canAcceptExternalPower, canOutputExternalPower);
 	}
 }

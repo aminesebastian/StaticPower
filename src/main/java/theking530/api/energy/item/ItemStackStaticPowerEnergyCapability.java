@@ -17,13 +17,16 @@ public class ItemStackStaticPowerEnergyCapability extends StaticPowerStorage imp
 	protected ItemStackMultiCapabilityProvider owningProvider;
 
 	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputRange, double maximumInputPower,
-			StaticPowerVoltage voltageOutput, double maximumOutputPower) {
-		this(name, container, capacity, inputRange, maximumInputPower, new CurrentType[] { CurrentType.DIRECT }, voltageOutput, maximumOutputPower, CurrentType.DIRECT);
+			StaticPowerVoltage voltageOutput, double maximumOutputPower, boolean canAcceptExternalPower, boolean canOutputExternalPower) {
+		this(name, container, capacity, inputRange, maximumInputPower, new CurrentType[] { CurrentType.DIRECT }, voltageOutput, maximumOutputPower, CurrentType.DIRECT,
+				canAcceptExternalPower, canOutputExternalPower);
 	}
 
 	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputVoltageRange, double maximumInputPower,
-			CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage, double maximumOutputPower, CurrentType outputCurrentType) {
-		super(capacity, inputVoltageRange, maximumInputPower, acceptableCurrentTypes, outputVoltage, maximumOutputPower, outputCurrentType);
+			CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage, double maximumOutputPower, CurrentType outputCurrentType, boolean canAcceptExternalPower,
+			boolean canOutputExternalPower) {
+		super(capacity, inputVoltageRange, maximumInputPower, acceptableCurrentTypes, outputVoltage, maximumOutputPower, outputCurrentType, canAcceptExternalPower,
+				canOutputExternalPower);
 		this.name = name;
 		this.container = container;
 

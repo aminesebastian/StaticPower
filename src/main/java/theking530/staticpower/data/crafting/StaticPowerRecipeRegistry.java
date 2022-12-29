@@ -41,6 +41,7 @@ import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchUnlock;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.teams.Team;
 
 public class StaticPowerRecipeRegistry {
@@ -205,8 +206,8 @@ public class StaticPowerRecipeRegistry {
 		handleCraftingResearchRecipeReplacement(manager, newRecipes.getOrDefault(RecipeType.CRAFTING, new HashMap<ResourceLocation, Recipe<?>>()));
 
 		// Cache additional recipes.
-		cacheDynamicBottlerRecipes(manager, getOrPutDefault(newRecipes, BottleRecipe.RECIPE_TYPE));
-		cacheDynamicSolidGeneratorRecipes(manager, getOrPutDefault(newRecipes, SolidFuelRecipe.RECIPE_TYPE));
+		//cacheDynamicBottlerRecipes(manager, getOrPutDefault(newRecipes, BottleRecipe.RECIPE_TYPE));
+		//cacheDynamicSolidGeneratorRecipes(manager, getOrPutDefault(newRecipes, SolidFuelRecipe.RECIPE_TYPE));
 
 		// Replace the recipes.
 		// TODO: This feels so dirty, wish I could just add recipes.
@@ -367,7 +368,7 @@ public class StaticPowerRecipeRegistry {
 
 		// Capture all the lockable recipes mapped to the set of required research for
 		// them.
-		for (Research research : manager.getAllRecipesFor(Research.RECIPE_TYPE)) {
+		for (Research research : manager.getAllRecipesFor(ModRecipeTypes.RESEARCH_RECIPE_TYPE.get())) {
 			for (ResearchUnlock unlock : research.getUnlocks()) {
 				if (unlock.getType() == ResearchUnlockType.CRAFTING || unlock.getType() == ResearchUnlockType.MACHINE_RECIPE) {
 					if (!LOCKED_RECIPES.containsKey(unlock.getTarget())) {

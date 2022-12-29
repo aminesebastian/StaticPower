@@ -8,11 +8,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 	public static final String ID = "alloy_furnace";
-	public static final RecipeType<AlloyFurnaceRecipe> RECIPE_TYPE = new StaticPowerRecipeType<AlloyFurnaceRecipe>();
 
 	private final StaticPowerIngredient input1;
 	private final StaticPowerIngredient input2;
@@ -72,11 +72,11 @@ public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public RecipeSerializer<AlloyFurnaceRecipe> getSerializer() {
-		return AlloyFurnaceRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.ALLOY_FURNACE_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<AlloyFurnaceRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get();
 	}
 }

@@ -285,7 +285,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 			comp.onOwningBlockEntityBroken(state, newState, isMoving);
 		}
 		isValid = false;
-
+		
 		// Drop all the items currently in an inventory.
 		for (InventoryComponent comp : getComponents(InventoryComponent.class)) {
 			// Skip components that should not drop their contents.

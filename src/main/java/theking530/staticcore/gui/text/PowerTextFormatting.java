@@ -99,27 +99,6 @@ public class PowerTextFormatting {
 
 	public static MutableComponent formatVoltageToString(double voltage, boolean includeUnits, boolean includeMetricUnit) {
 		return Component.translatable(StaticPowerVoltage.getVoltageClass(voltage).getShortName());
-//		// Allocate the text component.
-//		MutableComponent output;
-//
-//		// If the value is equal to the integer max, make it infinite.
-//		if (Double.isInfinite(voltage) || voltage == Double.MAX_VALUE || voltage == Double.MIN_VALUE) {
-//			output = Component.literal("∞");
-//		} else {
-//			// Perform the metric conversion.
-//			MetricConverter metricEnergy = new MetricConverter(voltage);
-//			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
-//
-//			// Include the metric unit if requested.
-//			if (includeMetricUnit) {
-//				output.append(metricEnergy.getSuffix());
-//			}
-//		}
-//
-//		if (includeUnits) {
-//			output.append(VOLTAGE_UNIT);
-//		}
-//		return output;
 	}
 
 	public static MutableComponent formatVoltageToString(double voltage, boolean includeUnits) {
@@ -136,7 +115,7 @@ public class PowerTextFormatting {
 		} else if (range.minimumVoltage() == StaticPowerVoltage.LOW) {
 			return Component.literal("<").append(Component.translatable(range.maximumVoltage().getShortName()));
 		} else if (range.maximumVoltage() == StaticPowerVoltage.EXTREME) {
-			return Component.literal("<").append(Component.translatable(range.maximumVoltage().getShortName()));
+			return Component.literal(">").append(Component.translatable(range.minimumVoltage().getShortName()));
 		} else {
 			return Component.translatable(range.minimumVoltage().getShortName()).append("⇔").append(Component.translatable(range.maximumVoltage().getShortName()));
 		}

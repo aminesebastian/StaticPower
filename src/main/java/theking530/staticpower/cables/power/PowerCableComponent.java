@@ -165,6 +165,28 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
+	public boolean canAcceptExternalPower() {
+		if (!isClientSide()) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.canAcceptExternalPower();
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean canOutputExternalPower() {
+		if (!isClientSide()) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.canOutputExternalPower();
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public double addPower(PowerStack power, boolean simulate) {
 		return 0;
 	}

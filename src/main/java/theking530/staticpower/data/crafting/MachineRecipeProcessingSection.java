@@ -92,7 +92,11 @@ public class MachineRecipeProcessingSection {
 	}
 
 	public static MachineRecipeProcessingSection fromBuffer(FriendlyByteBuf buf) {
-		return new MachineRecipeProcessingSection(() -> buf.readInt(), () -> buf.readDouble(), () -> buf.readInt(), () -> buf.readInt());
+		int processingTime = buf.readInt();
+		double powerCost = buf.readDouble();
+		int minHeat = buf.readInt();
+		int heatUse = buf.readInt();
+		return new MachineRecipeProcessingSection(() -> processingTime, () -> powerCost, () -> minHeat, () -> heatUse);
 	}
 
 	public void writeToBuffer(FriendlyByteBuf buf) {

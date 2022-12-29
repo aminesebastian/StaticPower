@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
@@ -12,9 +11,6 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class AlloyFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<AlloyFurnaceRecipe> {
-	public static final AlloyFurnaceRecipeSerializer INSTANCE = new AlloyFurnaceRecipeSerializer();
-	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "alloy_furnace_recipe");
-
 	@Override
 	public AlloyFurnaceRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		StaticPowerIngredient input1 = StaticPowerIngredient.deserialize(json.get("input1"));

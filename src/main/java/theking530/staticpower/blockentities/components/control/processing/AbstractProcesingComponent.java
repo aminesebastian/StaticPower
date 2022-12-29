@@ -458,6 +458,10 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		return fullSatisfactionProcessingTime;
 	}
 
+	public int getFullPowerSatisfactionMaxProcessingTime() {
+		return (int) (defaultProcessingTime * processingSpeedUpgradeMultiplier);
+	}
+
 	public void setMaxProcessingTime(int newTime) {
 		defaultProcessingTime = newTime;
 		fullSatisfactionProcessingTime = (int) (defaultProcessingTime * processingSpeedUpgradeMultiplier);

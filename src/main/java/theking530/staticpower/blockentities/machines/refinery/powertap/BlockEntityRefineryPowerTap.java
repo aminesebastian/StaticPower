@@ -136,6 +136,22 @@ public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
+	public boolean canAcceptExternalPower() {
+		if (hasController()) {
+			return getController().powerStorage.canAcceptExternalPower();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean canOutputExternalPower() {
+		if (hasController()) {
+			return getController().powerStorage.canOutputExternalPower();
+		}
+		return false;
+	}
+
+	@Override
 	public double addPower(PowerStack power, boolean simulate) {
 		if (hasController()) {
 			return getController().powerStorage.addPower(power, simulate);
@@ -150,4 +166,5 @@ public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity impleme
 		}
 		return PowerStack.EMPTY;
 	}
+
 }

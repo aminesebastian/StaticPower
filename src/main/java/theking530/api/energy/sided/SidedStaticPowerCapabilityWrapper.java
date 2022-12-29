@@ -90,6 +90,16 @@ public class SidedStaticPowerCapabilityWrapper {
 		}
 
 		@Override
+		public boolean canAcceptExternalPower() {
+			return proxy.canAcceptExternalPower(representedSide);
+		}
+
+		@Override
+		public boolean canOutputExternalPower() {
+			return proxy.canOutputExternalPower(representedSide);
+		}
+
+		@Override
 		public final double addPower(PowerStack power, boolean simulate) {
 			return proxy.addPower(representedSide, power, simulate);
 		}

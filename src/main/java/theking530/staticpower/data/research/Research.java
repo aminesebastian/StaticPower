@@ -14,14 +14,14 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
 import theking530.staticpower.init.ModItems;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.items.ResearchItem;
 
 public class Research extends AbstractStaticPowerRecipe {
 	public static final String ID = "research";
-	public static final RecipeType<Research> RECIPE_TYPE = new StaticPowerRecipeType<Research>();
 
 	private final String title;
 	private final String description;
@@ -108,12 +108,12 @@ public class Research extends AbstractStaticPowerRecipe {
 
 	@Override
 	public RecipeType<?> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.RESEARCH_RECIPE_TYPE.get();
 	}
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return ResearchSerializer.INSTANCE;
+		return ModRecipeSerializers.RESEARCH_SERIALIZER.get();
 	}
 
 	@Override

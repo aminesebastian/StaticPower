@@ -6,7 +6,10 @@
 		}
 	],
 	"type": "staticpower:static_power_loot_modifier",
-	"item": "staticpower:seed_static",
+	"output": {
+		"id": "staticpower:seed_static",
+		"Count": 1
+	},
 	"minCount": 1,
 	"maxCount": 3,
 	"chance": 0.05

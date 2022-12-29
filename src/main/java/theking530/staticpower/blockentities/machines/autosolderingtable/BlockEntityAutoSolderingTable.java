@@ -52,7 +52,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 		super(TYPE, pos, state);
 
 		disableFaceInteraction();
-		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier()));
+		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, false));
 
 		// Set the inventory component to the input mode.
 		inventory.setMode(MachineSideMode.Input).setSlotsLockable(true);

@@ -40,6 +40,14 @@ public interface ISidedStaticPowerStorage extends IStaticPowerStorage {
 		return getCapacity();
 	}
 
+	public default boolean canAcceptExternalPower(Direction side) {
+		return canAcceptExternalPower();
+	}
+
+	public default boolean canOutputExternalPower(Direction side) {
+		return canOutputExternalPower();
+	}
+
 	public default double addPower(Direction side, PowerStack power, boolean simulate) {
 		return addPower(power, simulate);
 	}

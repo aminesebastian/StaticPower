@@ -15,6 +15,6 @@ public abstract class BlockEntityMachine extends BlockEntityConfigurable {
 	public BlockEntityMachine(BlockEntityTypeAllocator<? extends BlockEntityMachine> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		disableFaceInteraction();
-		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier()));
+		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, false));
 	}
 }

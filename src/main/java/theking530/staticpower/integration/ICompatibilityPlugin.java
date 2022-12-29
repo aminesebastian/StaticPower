@@ -1,15 +1,20 @@
 package theking530.staticpower.integration;
 
+import net.minecraft.resources.ResourceLocation;
+
 public interface ICompatibilityPlugin {
 
-	public void register();
-	
-	public void preInit();
-	public void init();
-	public void postInit();
-	
-	public boolean shouldRegister();
-	public boolean isRegistered();
+	public ResourceLocation getPluginName();
 
-	public String getPluginName();
+	public void register();
+
+	default public void preInit() {
+	}
+
+	default public void postInit() {
+	}
+
+	default public boolean shouldRegister() {
+		return true;
+	}
 }

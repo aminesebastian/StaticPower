@@ -32,6 +32,7 @@ import theking530.staticpower.blockentities.components.serialization.UpdateSeria
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements IRecipeProcessor<AlloyFurnaceRecipe> {
@@ -74,7 +75,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements 
 		}));
 
 		registerComponent(processingComponent = new RecipeProcessingComponent<AlloyFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
-				AlloyFurnaceRecipe.RECIPE_TYPE, this));
+				ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 	}
 

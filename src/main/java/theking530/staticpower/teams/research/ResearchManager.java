@@ -17,6 +17,7 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchLevels;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.ModResearch;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.utilities.NBTUtilities;
@@ -103,7 +104,7 @@ public class ResearchManager {
 
 	public Research getLastCompletedResearch() {
 		if (completedResearch.size() > 0) {
-			return StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completedResearch.get(completedResearch.size() - 1)).orElse(null);
+			return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.RESEARCH_RECIPE_TYPE.get(), completedResearch.get(completedResearch.size() - 1)).orElse(null);
 		}
 		return null;
 	}
@@ -113,7 +114,7 @@ public class ResearchManager {
 			return false;
 		}
 
-		Research research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, id).orElse(null);
+		Research research = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.RESEARCH_RECIPE_TYPE.get(), id).orElse(null);
 		if (research != null) {
 			for (ResourceLocation pre : research.getPrerequisites()) {
 				if (!completedResearch.contains(pre)) {
@@ -220,7 +221,7 @@ public class ResearchManager {
 
 		public ResearchInstance(ResourceLocation researchName, ResearchManager manager) {
 			this.manager = manager;
-			research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, researchName).orElse(null);
+			research = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.RESEARCH_RECIPE_TYPE.get(), researchName).orElse(null);
 
 			// Throw a fatal error if somehow we ended up with an invalid research name.
 			if (research == null) {

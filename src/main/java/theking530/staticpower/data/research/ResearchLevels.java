@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class ResearchLevels {
 	public final static float UNIT_SCALE = 100;
@@ -192,7 +193,7 @@ public class ResearchLevels {
 
 	public static Map<ResourceLocation, Research> getAllResearch(Level level) {
 		Map<ResourceLocation, Research> output = new HashMap<ResourceLocation, Research>();
-		level.getRecipeManager().getAllRecipesFor(Research.RECIPE_TYPE).forEach((re) -> {
+		level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.RESEARCH_RECIPE_TYPE.get()).forEach((re) -> {
 			output.put(re.getId(), re);
 		});
 		return output;

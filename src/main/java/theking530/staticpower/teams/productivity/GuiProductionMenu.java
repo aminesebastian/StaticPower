@@ -244,11 +244,11 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	@Override
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		Vector2D overallHalfPadding = overallPadding.copy().divide(2);
-		GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), overallSize.getY(), overallHalfPadding.getX(), overallHalfPadding.getY(), 1,
+		GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), overallSize.getY(), overallHalfPadding.getX(), overallHalfPadding.getY(), 0,
 				new SDColor(0.1f, 0.1f, 0.1f, 0.75f));
 
 		{
-			GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), TOP_PANEL_HEIGHT, overallHalfPadding.getX(), overallHalfPadding.getY() + TOP_PANEL_HEIGHT - 4, 1,
+			GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), TOP_PANEL_HEIGHT, overallHalfPadding.getX(), overallHalfPadding.getY() + TOP_PANEL_HEIGHT - 4, 0,
 					new SDColor(0.35f, 0.35f, 0.35f));
 			productButtonContainer.setWidth(overallSize.getX() - 6);
 			productButtonContainer.setPosition(overallHalfPadding.getX() + 3, overallHalfPadding.getY() + TOP_PANEL_HEIGHT - 1);

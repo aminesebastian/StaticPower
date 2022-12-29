@@ -240,6 +240,16 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	}
 
 	@Override
+	public boolean canAcceptExternalPower() {
+		return true;
+	}
+
+	@Override
+	public boolean canOutputExternalPower() {
+		return true;
+	}
+
+	@Override
 	public double addPower(PowerStack power, boolean simulate) {
 		return 0;
 	}

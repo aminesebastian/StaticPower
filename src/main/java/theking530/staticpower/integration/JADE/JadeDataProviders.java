@@ -67,6 +67,9 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 			powerData.putDouble("stored_power", powerStorage.getStoredPower());
 			powerData.putDouble("capacity", powerStorage.getCapacity());
 
+			powerData.putBoolean("canAcceptExternalPower", powerStorage.canAcceptExternalPower());
+			powerData.putBoolean("canOutputExternalPower", powerStorage.canOutputExternalPower());
+
 			data.put(POWER_TAG, powerData);
 		});
 

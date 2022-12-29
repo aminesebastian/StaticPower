@@ -35,7 +35,6 @@ import theking530.staticpower.cables.attachments.digistore.craftingterminal.Cont
 import theking530.staticpower.cables.attachments.digistore.patternencoder.ContainerDigistorePatternEncoder;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
-import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
@@ -62,6 +61,7 @@ import theking530.staticpower.data.crafting.wrappers.tumbler.TumblerRecipe;
 import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.integration.JEI.categories.AlloyFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.BottleRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.CasterRecipeCategory;
@@ -225,7 +225,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(HammerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(HammerRecipe.RECIPE_TYPE));
 		registration.addRecipes(CauldronRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CauldronRecipe.RECIPE_TYPE));
 		registration.addRecipes(FertilizerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FertalizerRecipe.RECIPE_TYPE));
-		registration.addRecipes(AlloyFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(AlloyFurnaceRecipe.RECIPE_TYPE));
+		registration.addRecipes(AlloyFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get()));
 		registration.addRecipes(PoweredGrinderRecipeCategory.TYPE, recipeManager.getAllRecipesFor(GrinderRecipe.RECIPE_TYPE));
 		registration.addRecipes(CentrifugeRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CentrifugeRecipe.RECIPE_TYPE));
 		registration.addRecipes(SolidGeneratorRecipeCategory.TYPE, recipeManager.getAllRecipesFor(SolidFuelRecipe.RECIPE_TYPE));

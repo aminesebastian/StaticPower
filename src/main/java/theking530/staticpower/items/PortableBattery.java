@@ -54,4 +54,9 @@ public class PortableBattery extends StaticPowerEnergyStoringItem implements ICu
 	public double getMaximumOutputPower() {
 		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
+
+	@Override
+	public boolean canOutputExternalPower() {
+		return true;
+	}
 }

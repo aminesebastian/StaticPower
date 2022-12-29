@@ -6,6 +6,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
@@ -63,7 +64,7 @@ public class ModRecipeTypes {
 	public static final RegistryObject<RecipeType<LumberMillRecipe>> LUMBER_MILL_RECIPE_TYPE = TYPES.register(LumberMillRecipe.ID, () -> LumberMillRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<MixerRecipe>> MIXER_RECIPE_TYPE = TYPES.register(MixerRecipe.ID, () -> MixerRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<RefineryRecipe>> REFINERY_RECIPE_TYPE = TYPES.register(RefineryRecipe.ID, () -> RefineryRecipe.RECIPE_TYPE);
-	public static final RegistryObject<RecipeType<Research>> RESEARCH_RECIPE_TYPE = TYPES.register(Research.ID, () -> Research.RECIPE_TYPE);
+	public static final RegistryObject<RecipeType<Research>> RESEARCH_RECIPE_TYPE = TYPES.register(Research.ID, () -> new StaticPowerRecipeType<Research>());
 	public static final RegistryObject<RecipeType<SolderingRecipe>> SOLDERING_RECIPE_TYPE = TYPES.register(SolderingRecipe.ID, () -> SolderingRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<SqueezerRecipe>> SQUEEZER_RECIPE_TYPE = TYPES.register(SqueezerRecipe.ID, () -> SqueezerRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<ThermalConductivityRecipe>> THERMAL_CONDUCTIVITY_RECIPE_TYPE = TYPES.register(ThermalConductivityRecipe.ID,
@@ -71,7 +72,8 @@ public class ModRecipeTypes {
 	public static final RegistryObject<RecipeType<TumblerRecipe>> TUMBLER_RECIPE_TYPE = TYPES.register(TumblerRecipe.ID, () -> TumblerRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<TurbineRecipe>> TURBINE_RECIPE_TYPE = TYPES.register(TurbineRecipe.ID, () -> TurbineRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<VulcanizerRecipe>> VULCANIZER_RECIPE_TYPE = TYPES.register(VulcanizerRecipe.ID, () -> VulcanizerRecipe.RECIPE_TYPE);
-	public static final RegistryObject<RecipeType<AlloyFurnaceRecipe>> ALLOY_FURNACE_RECIPE_TYPE = TYPES.register(AlloyFurnaceRecipe.ID, () -> AlloyFurnaceRecipe.RECIPE_TYPE);
+	public static final RegistryObject<RecipeType<AlloyFurnaceRecipe>> ALLOY_FURNACE_RECIPE_TYPE = TYPES.register(AlloyFurnaceRecipe.ID,
+			() -> new StaticPowerRecipeType<AlloyFurnaceRecipe>());
 	public static final RegistryObject<RecipeType<HydroponicFarmingRecipe>> HYDROPONIC_FARMING_RECIPE_TYPE = TYPES.register(HydroponicFarmingRecipe.ID,
 			() -> HydroponicFarmingRecipe.RECIPE_TYPE);
 

@@ -260,6 +260,10 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 			return LazyOptional.empty();
 		}
 
+		if (cap != ForgeCapabilities.FLUID_HANDLER) {
+			return LazyOptional.empty();
+		}
+
 		// Still expose even if exposeAsCapability is false if the side is null. This is
 		// used for JADE and other overlays.
 		if (side == null) {
@@ -271,7 +275,11 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 		}
 
 		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
-		if (!sideConfig.isPresent() || !sideConfig.get().getWorldSpaceDirectionConfiguration(side).isDisabledMode()) {
+		if (!sideConfig.isPresent()) {
+			return manuallyGetCapability(cap, side);
+		}
+
+		if (!sideConfig.get().getWorldSpaceDirectionConfiguration(side).isDisabledMode()) {
 			if (capabilityExposedModes.contains(sideConfig.get().getWorldSpaceDirectionConfiguration(side))) {
 				return manuallyGetCapability(cap, side);
 			}

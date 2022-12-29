@@ -63,7 +63,7 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 		generationPerTick = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
 
 		// Set the energy storage.
-		registerComponent(powerStorage = new PowerStorageComponent("Powerbuffer", getTier()));
+		registerComponent(powerStorage = new PowerStorageComponent("Powerbuffer", getTier(), false, true));
 		powerStorage.setCapacity(getTierObject().powerConfiguration.solarPanelPowerStorage.get());
 		powerStorage.setOutputVoltage(StaticPowerVoltage.LOW);
 		powerStorage.setMaximumOutputPower(generationPerTick);

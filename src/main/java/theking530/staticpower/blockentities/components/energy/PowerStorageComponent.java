@@ -63,11 +63,9 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	private boolean shouldExplodeWhenOverVolted;
 	private int electricalExplosionTimeRemaining;
 
-	private boolean canAcceptExternalPower;
-	private boolean canBeDrainedByExternalPower;
-
-	public PowerStorageComponent(String name, ResourceLocation staticPowerTier) {
-		this(name, 0, StaticPowerVoltage.ZERO, StaticPowerVoltage.ZERO, 0, new CurrentType[] { CurrentType.DIRECT }, StaticPowerVoltage.ZERO, 0, CurrentType.DIRECT);
+	public PowerStorageComponent(String name, ResourceLocation staticPowerTier, boolean canAcceptExternalPower, boolean canOutputExternalPower) {
+		this(name, 0, StaticPowerVoltage.ZERO, StaticPowerVoltage.ZERO, 0, new CurrentType[] { CurrentType.DIRECT }, StaticPowerVoltage.ZERO, 0, CurrentType.DIRECT,
+				canAcceptExternalPower, canOutputExternalPower);
 		issueSyncPackets = true;
 
 		// Get the tier.
@@ -80,10 +78,9 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	public PowerStorageComponent(String name, double capacity, StaticPowerVoltage minInputVoltage, StaticPowerVoltage maxInputVoltage, double maxInputcurrent,
-			CurrentType[] acceptableInputCurrents, StaticPowerVoltage voltageOutput, double maxCurrentOutput, CurrentType outputCurrentType) {
+			CurrentType[] acceptableInputCurrents, StaticPowerVoltage voltageOutput, double maxCurrentOutput, CurrentType outputCurrentType, boolean canAcceptExternalPower,
+			boolean canOutputExternalPower) {
 		super(name);
-		canAcceptExternalPower = true;
-		canBeDrainedByExternalPower = false;
 
 		exposeAsCapability = true;
 		shouldExplodeWhenOverVolted = true;
@@ -96,7 +93,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		baseMaximumOutputPower = maxCurrentOutput;
 
 		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputcurrent, acceptableInputCurrents, voltageOutput,
-				maxCurrentOutput, outputCurrentType);
+				maxCurrentOutput, outputCurrentType, canAcceptExternalPower, canOutputExternalPower);
 
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 	}
@@ -259,16 +256,6 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		return this;
 	}
 
-	public PowerStorageComponent setCanAcceptExternalPower(boolean canAcceptExternalPower) {
-		this.canAcceptExternalPower = canAcceptExternalPower;
-		return this;
-	}
-
-	public PowerStorageComponent setCanBeDrainedByExternalPower(boolean canBeDrainedByExternalPower) {
-		this.canBeDrainedByExternalPower = canBeDrainedByExternalPower;
-		return this;
-	}
-
 	public PowerStorageComponent setCapacity(double capacity) {
 		storage.setCapacity(capacity);
 		baseCapacity = capacity;
@@ -317,6 +304,16 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 
 	public PowerStorageComponent setOutputCurrentType(CurrentType type) {
 		storage.setOutputCurrentType(type);
+		return this;
+	}
+
+	public PowerStorageComponent setCanAcceptExternalPower(boolean canAcceptExternalPower) {
+		storage.setCanAcceptExternalPower(canAcceptExternalPower);
+		return this;
+	}
+
+	public PowerStorageComponent setCanOutputExternalPower(boolean canOutputExternalPower) {
+		storage.setCanOutputExternalPower(canOutputExternalPower);
 		return this;
 	}
 
@@ -380,6 +377,16 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	@Override
+	public boolean canAcceptExternalPower() {
+		return storage.canAcceptExternalPower();
+	}
+
+	@Override
+	public boolean canOutputExternalPower() {
+		return storage.canOutputExternalPower();
+	}
+
+	@Override
 	public double addPower(PowerStack stack, boolean simulate) {
 		return storage.addPower(stack, simulate);
 	}
@@ -391,7 +398,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 
 	@Override
 	public double addPower(Direction side, PowerStack stack, boolean simulate) {
-		if (!canAcceptExternalPower) {
+		if (!storage.canAcceptExternalPower()) {
 			return 0;
 		}
 
@@ -414,7 +421,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 
 	@Override
 	public PowerStack drainPower(Direction side, double power, boolean simulate) {
-		if (!canBeDrainedByExternalPower) {
+		if (!storage.canOutputExternalPower()) {
 			return PowerStack.EMPTY;
 		}
 		if (sideConfig == null || sideConfig.getWorldSpaceDirectionConfiguration(side).isOutputMode()) {

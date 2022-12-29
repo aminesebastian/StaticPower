@@ -26,7 +26,7 @@ public class BlockEntityDigistoreManager extends BlockEntityDigistoreBase {
 	public BlockEntityDigistoreManager(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 10);
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(energyStorage = new PowerStorageComponent("MainEnergyStorage", StaticPowerTiers.ENERGIZED).setUpgradeInventory(upgradesInventory));
+		registerComponent(energyStorage = new PowerStorageComponent("MainEnergyStorage", StaticPowerTiers.ENERGIZED, true, false).setUpgradeInventory(upgradesInventory));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 	}
 

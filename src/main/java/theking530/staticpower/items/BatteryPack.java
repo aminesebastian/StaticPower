@@ -90,7 +90,7 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 			if (powerStorage == null) {
 				return;
 			}
-			
+
 			// If power is stored, attempt to charge items.
 			if (powerStorage.getStoredPower() > 0) {
 				// Get the player.
@@ -173,5 +173,10 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 	@Override
 	public double getMaximumOutputPower() {
 		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
+	}
+
+	@Override
+	public boolean canOutputExternalPower() {
+		return true;
 	}
 }
