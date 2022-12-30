@@ -66,11 +66,11 @@ public enum StaticPowerVoltage {
 
 	public static double adjustPowerLossByVoltage(StaticPowerVoltage voltage, double powerLoss) {
 		// We do voltage.ordinal() - 1 to adjust for the "ZERO" option.
-		if (voltage == StaticPowerVoltage.ZERO) {
+		if (voltage == StaticPowerVoltage.ZERO || voltage == StaticPowerVoltage.LOW) {
 			return powerLoss;
 		}
 
-		double adjustment = POWER_LOSS_ADJUSTMENT_PER_VOLTAGE * (StaticPowerVoltage.values().length - voltage.ordinal() - 1);
+		double adjustment = POWER_LOSS_ADJUSTMENT_PER_VOLTAGE * Math.max(0, (StaticPowerVoltage.values().length - voltage.ordinal() - 1));
 		return powerLoss * adjustment;
 	}
 

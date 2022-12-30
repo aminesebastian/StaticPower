@@ -29,6 +29,9 @@ public class WireRenderCache {
 	public record WirePoint(Vec3 start, Vec3 end, Vec3 tangent, Vec3 normal, Vec3 biTangent) {
 	}
 
+	private final long linkId;
+	private final BlockPos blockStart;
+	private final BlockPos blockEnd;
 	private final Vec3 start;
 	private final Vec3 end;
 	private final List<WirePoint> pointCache;
@@ -49,7 +52,10 @@ public class WireRenderCache {
 	private float wireThickness;
 	private float wireSagCoefficient;
 
-	public WireRenderCache(Vec3 start, Vec3 end, SDColor color, float wireThickness, float wireSagCoefficient) {
+	public WireRenderCache(long linkId, BlockPos blockStart, BlockPos blockEnd, Vec3 start, Vec3 end, SDColor color, float wireThickness, float wireSagCoefficient) {
+		this.linkId = linkId;
+		this.blockStart = blockStart;
+		this.blockEnd = blockEnd;
 		this.start = start;
 		this.end = end;
 		this.cableBounds = new AABB(start.x(), start.y(), start.z(), end.x(), end.y(), end.z());
@@ -111,7 +117,18 @@ public class WireRenderCache {
 				}
 			}
 		}
+	}
 
+	public long getLinkId() {
+		return linkId;
+	}
+
+	public BlockPos getBlockStart() {
+		return blockStart;
+	}
+
+	public BlockPos getBlockEnd() {
+		return blockEnd;
 	}
 
 	public boolean isVisible(Camera camera, Frustum frustum) {

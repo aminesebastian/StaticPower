@@ -157,7 +157,7 @@ public class NetworkPathFinder {
 		for (PathEntry entry : pathEntries) {
 			length += entry.getDistance();
 		}
-
+		
 		// Convert the list to an array and create the final path.
 		PathEntry[] entries = new PathEntry[pathEntries.size()];
 		pathEntries.toArray(entries);

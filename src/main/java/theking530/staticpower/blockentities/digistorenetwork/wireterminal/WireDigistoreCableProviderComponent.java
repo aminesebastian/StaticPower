@@ -52,13 +52,14 @@ public class WireDigistoreCableProviderComponent extends DigistoreCableProviderC
 
 	@Override
 	public void onOwningBlockEntityBroken(BlockState state, BlockState newState, boolean isMoving) {
-		WireRenderer.removeWireRenderCache(getPos());
 		if (!isClientSide()) {
 			ServerCable cable = CableNetworkManager.get(getLevel()).getCable(getPos());
 			for (SparseCableLink link : cable.getSparseLinks()) {
 				ItemStack wireStack = ItemStack.of(link.data().getCompound("wire"));
 				WorldUtilities.dropItem(getLevel(), getPos(), wireStack);
 			}
+		} else {
+			WireRenderer.removeWireRenderCache(getPos());
 		}
 
 		super.onOwningBlockEntityBroken(state, newState, isMoving);
@@ -87,7 +88,7 @@ public class WireDigistoreCableProviderComponent extends DigistoreCableProviderC
 					ItemStack wireStack = ItemStack.of(link.data().getCompound("wire"));
 					SDColor color = ((WireCoil) wireStack.getItem()).getColor();
 					float thickness = ((WireCoil) wireStack.getItem()).getWireThickness();
-					WireRenderer.addWireRenderCache(getPos(), link.linkId(), new WireRenderCache(start, end, color, thickness, 5));
+					WireRenderer.addWireRenderCache(new WireRenderCache(link.linkId(), startBe.getBlockPos(), getPos(), start, end, color, thickness, 5));
 				}
 			}
 		}

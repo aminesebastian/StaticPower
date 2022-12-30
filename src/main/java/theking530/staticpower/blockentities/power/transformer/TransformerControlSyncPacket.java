@@ -12,29 +12,25 @@ import theking530.staticcore.network.NetworkMessage;
 public class TransformerControlSyncPacket extends NetworkMessage {
 	private BlockPos position;
 	private StaticPowerVoltage voltage;
-	private double powerDelta;
 
 	public TransformerControlSyncPacket() {
 	}
 
-	public TransformerControlSyncPacket(BlockPos pos, StaticPowerVoltage voltage, double powerDelta) {
+	public TransformerControlSyncPacket(BlockPos pos, StaticPowerVoltage voltage) {
 		this.position = pos;
 		this.voltage = voltage;
-		this.powerDelta = powerDelta;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(position);
 		buffer.writeByte(voltage.ordinal());
-		buffer.writeDouble(powerDelta);
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
 		position = buffer.readBlockPos();
 		voltage = StaticPowerVoltage.values()[buffer.readByte()];
-		powerDelta = buffer.readDouble();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -46,7 +42,6 @@ public class TransformerControlSyncPacket extends NetworkMessage {
 				if (rawTileEntity != null && rawTileEntity instanceof BlockEntityTransformer) {
 					BlockEntityTransformer battery = (BlockEntityTransformer) rawTileEntity;
 					battery.setOutputVoltage(voltage);
-					battery.addMaximumOutputPowerDelta(powerDelta);
 				}
 			}
 		});

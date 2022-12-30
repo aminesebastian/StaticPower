@@ -41,7 +41,8 @@ public class BlockEntityWireConnector extends BlockEntityBase {
 		StaticPowerVoltage voltage = tier.cablePowerConfiguration.wireTerminalMaxVoltage.get();
 		double maxPower = tier.cablePowerConfiguration.wireTerminalMaxPower.get();
 
-		registerComponent(wireComponent = new WirePowerCableComponent("WireComponent", voltage, maxPower, 0) {
+		// TODO: Power loss here has to be updated per wire type, not per terminal.
+		registerComponent(wireComponent = new WirePowerCableComponent("WireComponent", voltage, maxPower, 1) {
 			@Override
 			public double addPower(Direction side, PowerStack power, boolean simulate) {
 				// We only accept power from null sides or the opposite side that we're facing.

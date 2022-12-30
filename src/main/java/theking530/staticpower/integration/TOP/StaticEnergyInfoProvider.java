@@ -41,17 +41,15 @@ public class StaticEnergyInfoProvider implements IProbeInfoProvider, IProbeConfi
 
 		be.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, data.getSideHit()).ifPresent(powerStorage -> {
 			if (powerStorage.canOutputExternalPower()) {
-				probeInfo.text(Component.literal(ChatFormatting.GRAY.toString()).append(
-						Component.translatable("gui.staticpower.output_voltage").append(": ").append(PowerTextFormatting.formatVoltageToString(powerStorage.getOutputVoltage()))));
+				probeInfo.text(Component.literal(ChatFormatting.GRAY.toString())
+						.append(Component.translatable("gui.staticpower.output_voltage").append(": ")
+								.append(PowerTextFormatting.formatVoltageToString(powerStorage.getOutputVoltage())))
+						.append(powerStorage.getOutputCurrentType() == CurrentType.ALTERNATING ? Component.literal("∿") : Component.literal("⎓")));
 			}
 
 			if (powerStorage.canAcceptExternalPower()) {
 				probeInfo.text(Component.literal(ChatFormatting.GRAY.toString()).append(Component.translatable("gui.staticpower.input_voltage").append(": ")
 						.append(PowerTextFormatting.formatVoltageRangeToString(powerStorage.getInputVoltageRange()))));
-			}
-
-			if (powerStorage.getOutputCurrentType() == CurrentType.ALTERNATING) {
-				probeInfo.text(Component.literal(ChatFormatting.GRAY.toString()).append(Component.translatable("~")));
 			}
 
 			double current = powerStorage.getStoredPower();

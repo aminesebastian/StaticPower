@@ -23,6 +23,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.energy.transformation.PowerTransformDirection;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
@@ -47,8 +48,11 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 		X_AXIS_SHAPE = xAxis;
 	}
 
-	public BlockTransformer(ResourceLocation tier) {
+	public final PowerTransformDirection transformerDirection;
+
+	public BlockTransformer(ResourceLocation tier, PowerTransformDirection transformerDirection) {
 		super(tier);
+		this.transformerDirection = transformerDirection;
 	}
 
 	@Override
@@ -80,6 +84,10 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return BlockEntityTransformer.TYPE_BASIC.create(pos, state);
+		if (transformerDirection == PowerTransformDirection.STEP_UP) {
+			return BlockEntityTransformer.BASIC_STEP_UP_TRANSFORMER.create(pos, state);
+		} else {
+			return BlockEntityTransformer.BASIC_STEP_DOWN_TRANSFORMER.create(pos, state);
+		}
 	}
 }

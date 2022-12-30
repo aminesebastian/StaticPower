@@ -45,8 +45,8 @@ public class BlockEntityRectifier extends BlockEntityConfigurable {
 	@Override
 	public void process() {
 		if (!getLevel().isClientSide()) {
-
 		}
+		powerStorage.setMaximumOutputPower(10000);
 	}
 
 	public double transferPower(PowerStack stack, boolean simulate) {

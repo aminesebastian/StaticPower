@@ -9,6 +9,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import theking530.api.energy.transformation.PowerTransformDirection;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockDigistore;
@@ -526,7 +527,8 @@ public class ModBlocks {
 	public static final RegistryObject<BlockBattery> BatteryCreative = registerBlock("battery_block_creative", () -> new BlockBattery(StaticPowerTiers.CREATIVE));
 
 	// Transformers
-	public static final RegistryObject<BlockTransformer> TransformerBasic = registerBlock("transformer_basic", () -> new BlockTransformer(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockTransformer> TransformerStepUpBasic = registerBlock("transformer_step_up_basic", () -> new BlockTransformer(StaticPowerTiers.BASIC, PowerTransformDirection.STEP_UP));
+	public static final RegistryObject<BlockTransformer> TransformerStepDownBasic = registerBlock("transformer_step_down_basic", () -> new BlockTransformer(StaticPowerTiers.BASIC, PowerTransformDirection.STEP_DOWN));
 
 	// Inverters
 	public static final RegistryObject<BlockInverter> InverterBasic = registerBlock("inverter_basic", () -> new BlockInverter(StaticPowerTiers.BASIC));

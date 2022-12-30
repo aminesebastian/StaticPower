@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import snownee.jade.api.IServerDataProvider;
 import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.CurrentType;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
@@ -69,6 +70,8 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 
 			powerData.putBoolean("canAcceptExternalPower", powerStorage.canAcceptExternalPower());
 			powerData.putBoolean("canOutputExternalPower", powerStorage.canOutputExternalPower());
+
+			powerData.putBoolean("is_alternating", powerStorage.getOutputCurrentType() == CurrentType.ALTERNATING);
 
 			data.put(POWER_TAG, powerData);
 		});

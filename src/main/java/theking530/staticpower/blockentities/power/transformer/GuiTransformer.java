@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.api.energy.StaticPowerVoltage;
@@ -21,8 +20,6 @@ import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransformer, BlockEntityTransformer> {
-	private TextButton powerLimitUp;
-	private TextButton powerLimitDown;
 	private TextButton voltageUp;
 	private TextButton voltageDown;
 
@@ -41,8 +38,6 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
-		registerWidget(powerLimitUp = new TextButton(52, 23, 20, 20, "+", this::buttonPressed));
-		registerWidget(powerLimitDown = new TextButton(52, 48, 20, 20, "-", this::buttonPressed));
 		registerWidget(voltageUp = new TextButton(104, 23, 20, 20, "+", this::buttonPressed));
 		registerWidget(voltageDown = new TextButton(104, 48, 20, 20, "-", this::buttonPressed));
 	}
@@ -85,30 +80,17 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
-		double deltaPower = 0;
 		StaticPowerVoltage voltage = StaticPowerVoltage.getVoltageClass(getTileEntity().powerStorage.getOutputVoltage());
 
-		if (button == powerLimitUp) {
-			deltaPower = 1;
-		} else if (button == powerLimitDown) {
-			deltaPower = -1;
-		} else if (button == voltageUp) {
+		if (button == voltageUp) {
 			voltage = voltage.upgrade();
 		} else if (button == voltageDown) {
 			voltage = voltage.downgrade();
 		}
 
-		deltaPower *= mouseButton == MouseButton.LEFT ? 1 : 10;
-		if (Screen.hasShiftDown()) {
-			deltaPower = (deltaPower * 10);
-		} else if (Screen.hasAltDown()) {
-			deltaPower = (deltaPower / 2);
-		}
-
 		// Create the packet and send a packet to the server with the updated values.
-		NetworkMessage msg = new TransformerControlSyncPacket(getTileEntity().getBlockPos(), voltage, deltaPower);
+		NetworkMessage msg = new TransformerControlSyncPacket(getTileEntity().getBlockPos(), voltage);
 		getTileEntity().setOutputVoltage(voltage);
-		getTileEntity().addMaximumOutputPowerDelta(deltaPower);
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}
 }

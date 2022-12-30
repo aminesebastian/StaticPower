@@ -18,6 +18,7 @@ import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.IElementHelper;
 import snownee.jade.api.ui.IProgressStyle;
 import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
@@ -111,17 +112,19 @@ public class JadePluginImplementation implements IWailaPlugin {
 							minVoltage = storage.getInputVoltageRange().minimumVoltage();
 							maxVoltage = storage.getInputVoltageRange().maximumVoltage();
 						}
+
+						isAlternating = storage.getOutputCurrentType() == CurrentType.ALTERNATING;
+					}
+
+					Component voltageTypeComponent = Component.literal("⎓");
+					if (isAlternating) {
+						voltageTypeComponent = Component.literal("∿");
 					}
 
 					// Draw the output voltage.
 					if (canOutputExternalPower) {
-						JadePluginImplementation.drawValue(tooltip,
-								Component.translatable("gui.staticpower.output_voltage").append(": ").append(PowerTextFormatting.formatVoltageToString(outputVoltage)),
-								OUTPUT_VOLTAGE_RENDERER);
-					}
-
-					if (isAlternating) {
-						JadePluginImplementation.drawValue(tooltip, Component.translatable("~"), new ResourceLocation(StaticPower.MOD_ID, "TEMP_AC"));
+						JadePluginImplementation.drawValue(tooltip, Component.translatable("gui.staticpower.output_voltage").append(": ")
+								.append(PowerTextFormatting.formatVoltageToString(outputVoltage).append(voltageTypeComponent)), OUTPUT_VOLTAGE_RENDERER);
 					}
 
 					if (canAcceptExternalPower) {

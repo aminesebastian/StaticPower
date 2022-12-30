@@ -733,7 +733,9 @@
 	"block.staticpower.battery_block_lumum": "Lumum Battery",
 	"block.staticpower.battery_block_creative": "Creative Battery",
 	
-	"block.staticpower.transformer_basic": "Basic Transformer",
+	"block.staticpower.transformer_step_up_basic": "Basic Step-Up Transformer",
+	
+	"block.staticpower.transformer_step_down_basic": "Basic Step-Down Transformer",
 	
 	"block.staticpower.inverter_basic": "Basic Inverter",
 	

@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -226,13 +227,26 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 		super.playerDestroy(world, player, pos, state, te, stack);
 	}
 
+	public static void updateOrDestroy(BlockState p_49909_, BlockState p_49910_, LevelAccessor p_49911_, BlockPos p_49912_, int p_49913_, int p_49914_) {
+		if (p_49910_ != p_49909_) {
+			if (p_49910_.isAir()) {
+				if (!p_49911_.isClientSide()) {
+					p_49911_.destroyBlock(p_49912_, (p_49913_ & 32) == 0, (Entity) null, p_49914_);
+				}
+			} else {
+				p_49911_.setBlock(p_49912_, p_49910_, p_49913_ & -33, p_49914_);
+			}
+		}
+
+	}
+
 	@Deprecated
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		// Raise the inheritor's method.
 		onStaticPowerBlockReplaced(state, world, pos, newState, isMoving, state.getBlock() != newState.getBlock());
 
-		if (state.getBlock() != newState.getBlock()) {
+	      if (!isMoving && !state.is(newState.getBlock())) {
 			// Raise the tile entity's broken method.
 			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
 				((BlockEntityBase) world.getBlockEntity(pos)).onBlockBroken(state, newState, isMoving);
