@@ -253,7 +253,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		output.putByte("acceptedInputCount", (byte) acceptableCurrentTypes.size());
 		byte index = 0;
 		for (CurrentType type : acceptableCurrentTypes) {
-			output.putByte("input" + index, (byte) type.ordinal());
+			output.putByte("acceptedInputCount" + index, (byte) type.ordinal());
 			index++;
 		}
 		output.put("ticker", ticker.serializeNBT());

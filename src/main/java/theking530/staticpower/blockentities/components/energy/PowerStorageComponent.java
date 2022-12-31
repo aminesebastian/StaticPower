@@ -77,8 +77,8 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		setOutputVoltage(tierObject.powerConfiguration.defaultOutputVoltage.get());
 	}
 
-	public PowerStorageComponent(String name, double capacity, StaticPowerVoltage minInputVoltage, StaticPowerVoltage maxInputVoltage, double maxInputcurrent,
-			CurrentType[] acceptableInputCurrents, StaticPowerVoltage voltageOutput, double maxCurrentOutput, CurrentType outputCurrentType, boolean canAcceptExternalPower,
+	public PowerStorageComponent(String name, double capacity, StaticPowerVoltage minInputVoltage, StaticPowerVoltage maxInputVoltage, double maxInputPower,
+			CurrentType[] acceptableInputCurrents, StaticPowerVoltage voltageOutput, double maxPowerOutput, CurrentType outputCurrentType, boolean canAcceptExternalPower,
 			boolean canOutputExternalPower) {
 		super(name);
 
@@ -90,10 +90,10 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		baseCapacity = capacity;
 		baseInputVoltageRange = new StaticVoltageRange(minInputVoltage, maxInputVoltage);
 		baseVoltageOutput = voltageOutput;
-		baseMaximumOutputPower = maxCurrentOutput;
+		baseMaximumOutputPower = maxPowerOutput;
 
-		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputcurrent, acceptableInputCurrents, voltageOutput,
-				maxCurrentOutput, outputCurrentType, canAcceptExternalPower, canOutputExternalPower);
+		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputPower, acceptableInputCurrents, voltageOutput,
+				maxPowerOutput, outputCurrentType, canAcceptExternalPower, canOutputExternalPower);
 
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 	}

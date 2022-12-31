@@ -74,7 +74,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
 		// Check to see if the manager is present. If not, update the tile entity.
-		if (!getLevel().isClientSide) {
+		if (!getLevel().isClientSide()) {
 			this.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
@@ -111,7 +111,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		boolean superResult = super.attachAttachment(attachment, side);
 
 		// Update the power usage on the server.
-		if (!getLevel().isClientSide) {
+		if (!getLevel().isClientSide()) {
 			updatePowerUsage();
 		}
 
@@ -121,7 +121,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	@Override
 	public ItemStack removeAttachment(Direction side) {
 		ItemStack superResult = super.removeAttachment(side);
-		if (!getLevel().isClientSide) {
+		if (!getLevel().isClientSide()) {
 			updatePowerUsage();
 		}
 		return superResult;
@@ -194,7 +194,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	}
 
 	protected void setIsOnBlockState(boolean on) {
-		if (!getLevel().isClientSide && shouldControlOnBlockState) {
+		if (!getLevel().isClientSide() && shouldControlOnBlockState) {
 			BlockState currentState = getLevel().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != on) {

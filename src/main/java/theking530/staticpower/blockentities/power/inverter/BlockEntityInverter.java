@@ -40,14 +40,14 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 			}
 		}.setOutputCurrentType(CurrentType.ALTERNATING).setSideConfiguration(ioSideConfiguration));
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getDefaultInputVoltageRange());
+		powerStorage.setMaximumInputPower(getTierObject().powerConfiguration.batteryMaximumPowerInput.get());
+		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
+		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
 		powerStorage.setCapacity(0);
 	}
 
 	@Override
 	public void process() {
-		if (!getLevel().isClientSide()) {
-		}
-		powerStorage.setMaximumOutputPower(10000);
 	}
 
 	public double transferPower(PowerStack stack, boolean simulate) {

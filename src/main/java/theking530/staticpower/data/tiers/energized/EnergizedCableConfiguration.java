@@ -62,7 +62,7 @@ public class EnergizedCableConfiguration {
 
 		@Override
 		protected double getCablePowerLossPerBlock() {
-			return 0.05;
+			return 0.1;
 		}
 
 		@Override
@@ -73,6 +73,11 @@ public class EnergizedCableConfiguration {
 		@Override
 		protected double getWireTerminalMaxPower() {
 			return 500;
+		}
+
+		@Override
+		protected double getWireCoilPowerLossPerBlock() {
+			return 0.1;
 		}
 	}
 

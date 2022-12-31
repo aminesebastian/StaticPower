@@ -232,12 +232,12 @@ public class WireRenderCache {
 				int endLightLevel = getLightLevelAtPosition(level, endPos);
 
 				float startDarkenAmount = 1 - (startLightLevel / 16.0f);
-				startDarkenAmount *= 0.75f;
+				startDarkenAmount *= 0.6f;
 				startColor.darken(startDarkenAmount, startDarkenAmount, startDarkenAmount, 0);
 				startColor.desaturate(startDarkenAmount * 1.25f);
 
 				float endDarkenAmount = 1 - (endLightLevel / 16.0f);
-				endDarkenAmount *= 0.75f;
+				endDarkenAmount *= 0.6f;
 				endColor.darken(endDarkenAmount, endDarkenAmount, endDarkenAmount, 0);
 				endColor.desaturate(endDarkenAmount * 1.25f);
 			}

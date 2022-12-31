@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.utilities.SDColor;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 
@@ -25,11 +27,13 @@ public class WireCoil extends StaticPowerItem {
 	private final SDColor wireColor;
 	private final float wireThickness;
 	private final Supplier<CableNetworkModuleType> cableModuleType;
+	public final ResourceLocation tier;
 
-	public WireCoil(SDColor wireColor, float wireThickness, Supplier<CableNetworkModuleType> cableModuleType) {
+	public WireCoil(SDColor wireColor, float wireThickness, ResourceLocation tier, Supplier<CableNetworkModuleType> cableModuleType) {
 		this.wireColor = wireColor;
 		this.wireThickness = wireThickness;
 		this.cableModuleType = cableModuleType;
+		this.tier = tier;
 	}
 
 	public SDColor getColor() {
@@ -38,6 +42,10 @@ public class WireCoil extends StaticPowerItem {
 
 	public float getWireThickness() {
 		return wireThickness;
+	}
+
+	public double getPowerLoss(ItemStack wireStack) {
+		return StaticPowerConfig.getTier(tier).cablePowerConfiguration.wireCoilPowerLossPerBlock.get();
 	}
 
 	public boolean canApplyToTerminal(ItemStack coil, AbstractCableProviderComponent component) {
@@ -130,8 +138,8 @@ public class WireCoil extends StaticPowerItem {
 				item.shrink(1);
 			}
 
-			MutableComponent message = Component.literal(
-					String.format("Linked wire connector at location %1$s to position %2$s.", pos.toShortString(), initialLocation.toShortString()));
+			MutableComponent message = Component
+					.literal(String.format("Linked wire connector at location %1$s to position %2$s.", pos.toShortString(), initialLocation.toShortString()));
 			player.sendSystemMessage(message);
 			clearPendingLocation(item);
 			world.playSound(null, pos, SoundEvents.LEASH_KNOT_BREAK, SoundSource.PLAYERS, 0.75f, 1.0f);

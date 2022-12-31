@@ -74,6 +74,11 @@ public class BasicCableConfiguration {
 		protected double getWireTerminalMaxPower() {
 			return 60;
 		}
+
+		@Override
+		protected double getWireCoilPowerLossPerBlock() {
+			return 1;
+		}
 	}
 
 	public static class CableAttachmentConfiguration extends TierCableAttachmentConfiguration {

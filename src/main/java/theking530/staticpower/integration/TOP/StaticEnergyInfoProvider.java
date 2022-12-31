@@ -55,14 +55,16 @@ public class StaticEnergyInfoProvider implements IProbeInfoProvider, IProbeConfi
 			double current = powerStorage.getStoredPower();
 			double max = powerStorage.getCapacity();
 
-			MutableComponent suffix = PowerTextFormatting.formatPowerToString(current, true, true);
-			suffix.append("/");
-			suffix.append(PowerTextFormatting.formatPowerToString(max, true, true));
+			if(max > 0) {
+				MutableComponent suffix = PowerTextFormatting.formatPowerToString(current, true, true);
+				suffix.append("/");
+				suffix.append(PowerTextFormatting.formatPowerToString(max, true, true));
 
-			probeInfo.progress((int) current, (int) max,
-					probeInfo.defaultProgressStyle().filledColor(JadePluginImplementation.MAIN_SV_COLOR.encodeInInteger())
-							.alternateFilledColor(JadePluginImplementation.ALT_SV_COLOR.encodeInInteger()).numberFormat(NumberFormat.NONE)
-							.borderColor(SDColor.EIGHT_BIT_GREY.encodeInInteger()).suffix(suffix));
+				probeInfo.progress((int) current, (int) max,
+						probeInfo.defaultProgressStyle().filledColor(JadePluginImplementation.MAIN_SV_COLOR.encodeInInteger())
+								.alternateFilledColor(JadePluginImplementation.ALT_SV_COLOR.encodeInInteger()).numberFormat(NumberFormat.NONE)
+								.borderColor(SDColor.EIGHT_BIT_GREY.encodeInInteger()).suffix(suffix));
+			}
 		});
 	}
 

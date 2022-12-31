@@ -13,7 +13,7 @@
 			"tag": "forge:ingots/iron"
 		},
 		"w": {
-			"tag": "forge:wire/brass"
+			"tag": "forge:wires/brass"
 		}
 	},
 	"result": {

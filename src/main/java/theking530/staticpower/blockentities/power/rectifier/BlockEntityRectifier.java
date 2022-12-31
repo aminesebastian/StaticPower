@@ -35,18 +35,21 @@ public class BlockEntityRectifier extends BlockEntityConfigurable {
 		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(PowerStack stack, boolean simulate) {
+				if(!powerStorage.getInputVoltageRange().isVoltageInRange(stack.getVoltage())) {
+					return super.addPower(stack, simulate);
+				}
 				return transferPower(stack, simulate);
 			}
 		}.setInputCurrentTypes(CurrentType.ALTERNATING).setOutputCurrentType(CurrentType.DIRECT).setSideConfiguration(ioSideConfiguration));
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getDefaultInputVoltageRange());
+		powerStorage.setMaximumInputPower(getTierObject().powerConfiguration.batteryMaximumPowerInput.get());
+		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
+		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
 		powerStorage.setCapacity(0);
 	}
 
 	@Override
 	public void process() {
-		if (!getLevel().isClientSide()) {
-		}
-		powerStorage.setMaximumOutputPower(10000);
 	}
 
 	public double transferPower(PowerStack stack, boolean simulate) {

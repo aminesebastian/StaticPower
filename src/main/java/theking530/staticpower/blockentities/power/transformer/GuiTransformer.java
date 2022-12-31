@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.api.energy.StaticPowerVoltage;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
@@ -16,6 +17,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
@@ -24,7 +26,7 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 	private TextButton voltageDown;
 
 	public GuiTransformer(ContainerTransformer container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 178);
+		super(container, invPlayer, name, 176, 145);
 	}
 
 	@Override
@@ -38,23 +40,17 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
-		registerWidget(voltageUp = new TextButton(104, 23, 20, 20, "+", this::buttonPressed));
-		registerWidget(voltageDown = new TextButton(104, 48, 20, 20, "-", this::buttonPressed));
+		registerWidget(voltageDown = new TextButton(66, 37, 16, 16, "-", this::buttonPressed));
+		registerWidget(voltageUp = new TextButton(96, 37, 16, 16, "+", this::buttonPressed));
+		updateButtons();
 	}
 
 	@Override
 	protected void drawForegroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 
-		// Render the output current.
-		font.draw(stack, "Current", 8, 36, 4210752);
-		String inputRateString = PowerTextFormatting.formatPowerRateToString(getTileEntity().powerStorage.getMaximumPowerOutput()).getString();
-		font.draw(stack, inputRateString, 28 - (font.width(inputRateString) / 2), 46, 4210752);
-
-		// Render the output voltage.
-		font.draw(stack, "Voltage", 131, 36, 4210752);
 		String outputRateString = PowerTextFormatting.formatVoltageToString(getTileEntity().powerStorage.getOutputVoltage()).getString();
-		font.draw(stack, outputRateString, 149 - (font.width(outputRateString) / 2), 46, 4210752);
+		GuiDrawUtilities.drawStringCentered(stack, outputRateString, 91, 30, 1, 1.25f, SDColor.EIGHT_BIT_WHITE, true);
 
 		// Add tooltip for the actual value of the input.
 		List<Component> tooltips = new ArrayList<Component>();
@@ -65,14 +61,8 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 
 	@Override
 	protected void getExtraTooltips(List<Component> tooltips, PoseStack stack, int mouseX, int mouseY) {
-		String maxPower = PowerTextFormatting.formatPowerRateToString(getTileEntity().powerStorage.getMaximumPowerOutput()).getString();
 		String maxVoltage = PowerTextFormatting.formatVoltageToString(getTileEntity().powerStorage.getOutputVoltage()).getString();
 
-		if (mouseX > leftPos + 28 - (font.width(maxPower) / 2) && mouseX < leftPos + 28 + (font.width(maxPower) / 2) && mouseY > this.topPos + 41 && mouseY < this.topPos + 50) {
-			tooltips.add(Component.literal(maxPower));
-		}
-
-		// Add tooltip for the actual value of the output.
 		if (mouseX > leftPos + 149 - (font.width(maxVoltage) / 2) && mouseX < leftPos + 149 + (font.width(maxVoltage) / 2) && mouseY > this.topPos + 41
 				&& mouseY < this.topPos + 50) {
 			tooltips.add(Component.literal(maxVoltage));
@@ -92,5 +82,27 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 		NetworkMessage msg = new TransformerControlSyncPacket(getTileEntity().getBlockPos(), voltage);
 		getTileEntity().setOutputVoltage(voltage);
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
+
+		updateButtons();
+	}
+
+	private void updateButtons() {
+		if (!getTileEntity().possibleOutputVoltageRange.isVoltageInRange(getCurrentVoltage().upgrade().getVoltage())) {
+			voltageUp.setEnabled(false);
+		} else {
+			voltageUp.setEnabled(true);
+			voltageUp.setTooltip(PowerTextFormatting.formatVoltageToString(getCurrentVoltage().upgrade().getVoltage()));
+		}
+
+		if (!getTileEntity().possibleOutputVoltageRange.isVoltageInRange(getCurrentVoltage().downgrade().getVoltage())) {
+			voltageDown.setEnabled(false);
+		} else {
+			voltageDown.setEnabled(true);
+			voltageDown.setTooltip(PowerTextFormatting.formatVoltageToString(getCurrentVoltage().downgrade().getVoltage()));
+		}
+	}
+
+	private StaticPowerVoltage getCurrentVoltage() {
+		return StaticPowerVoltage.getVoltageClass(getTileEntity().powerStorage.getOutputVoltage());
 	}
 }

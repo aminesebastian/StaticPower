@@ -19,7 +19,6 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityTransformer extends BlockEntityConfigurable {
@@ -36,7 +35,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 	protected final PowerDistributionComponent powerDistributor;
 
 	public final PowerTransformDirection direction;
-	private final StaticVoltageRange possibleOutputVoltageRange;
+	public final StaticVoltageRange possibleOutputVoltageRange;
 
 	public BlockEntityTransformer(PowerTransformDirection direction, BlockEntityTypeAllocator<BlockEntityTransformer> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
@@ -59,21 +58,15 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		}.setSideConfiguration(ioSideConfiguration));
 		powerStorage.setCapacity(0);
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getTransformerVoltageRange());
+		powerStorage.setOutputVoltage(possibleOutputVoltageRange.minimumVoltage());
 		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
-		if (getTier() == StaticPowerTiers.CREATIVE) {
-			powerStorage.setOutputVoltage(StaticPowerVoltage.LOW);
-		} else {
-			powerStorage.setOutputVoltage(possibleOutputVoltageRange.minimumVoltage());
-		}
+		powerStorage.setMaximumInputPower(getTierObject().powerConfiguration.batteryMaximumPowerInput.get());
+		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
 	}
 
 	@Override
 	public void process() {
-		if (!getLevel().isClientSide()) {
-
-		}
-		powerStorage.setMaximumOutputPower(10000);
 	}
 
 	public double transformAndSupplyPower(Direction side, PowerStack stack, boolean simulate) {
@@ -91,6 +84,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		if (direction == PowerTransformDirection.STEP_UP && inputVoltageClass.isGreaterThan(outputVoltageClass)) {
 			return 0.0;
 		}
+		
 		// Do nothing if we want to step down and the input voltage is lower than the
 		// output voltage.
 		if (direction == PowerTransformDirection.STEP_DOWN && inputVoltageClass.isLessThan(outputVoltageClass)) {

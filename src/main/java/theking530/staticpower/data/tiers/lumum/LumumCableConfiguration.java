@@ -62,7 +62,7 @@ public class LumumCableConfiguration {
 
 		@Override
 		protected double getCablePowerLossPerBlock() {
-			return 0.01;
+			return 0.05;
 		}
 
 		@Override
@@ -73,6 +73,11 @@ public class LumumCableConfiguration {
 		@Override
 		protected double getWireTerminalMaxPower() {
 			return 1000;
+		}
+
+		@Override
+		protected double getWireCoilPowerLossPerBlock() {
+			return 0.05;
 		}
 	}
 

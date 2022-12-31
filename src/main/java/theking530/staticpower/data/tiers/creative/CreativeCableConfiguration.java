@@ -74,5 +74,10 @@ public class CreativeCableConfiguration {
 		protected double getWireTerminalMaxPower() {
 			return Double.MAX_VALUE;
 		}
+
+		@Override
+		protected double getWireCoilPowerLossPerBlock() {
+			return 0;
+		}
 	}
 }

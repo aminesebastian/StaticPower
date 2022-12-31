@@ -78,7 +78,9 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 			CompoundTag nbt = IBreakSerializeable.getSerializeDataFromItemStack(stack);
 			if (nbt.contains("MainEnergyStorage") && nbt.getCompound("MainEnergyStorage").contains("storage")) {
 				StaticPowerStorage storage = StaticPowerStorage.fromTag(nbt.getCompound("MainEnergyStorage").getCompound("storage"));
-				PowerTooltips.addStoredPowerTooltip(tooltip, storage.getStoredPower());
+				if(storage.getStoredPower() > 0) {
+					PowerTooltips.addStoredPowerTooltip(tooltip, storage.getStoredPower());	
+				}
 			}
 		}
 	}

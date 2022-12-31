@@ -62,7 +62,7 @@ public class StaticCableConfiguration {
 
 		@Override
 		protected double getCablePowerLossPerBlock() {
-			return 0.1;
+			return 0.25;
 		}
 
 		@Override
@@ -73,6 +73,11 @@ public class StaticCableConfiguration {
 		@Override
 		protected double getWireTerminalMaxPower() {
 			return 250;
+		}
+
+		@Override
+		protected double getWireCoilPowerLossPerBlock() {
+			return 0.25;
 		}
 	}
 

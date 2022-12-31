@@ -16,6 +16,8 @@ public abstract class TierPowerCableConfiguration {
 
 	public final ConfigValue<StaticPowerVoltage> wireTerminalMaxVoltage;
 	public final ConfigValue<Double> wireTerminalMaxPower;
+	
+	public final ConfigValue<Double> wireCoilPowerLossPerBlock;
 
 	public TierPowerCableConfiguration(ForgeConfigSpec.Builder builder) {
 		builder.push("Power");
@@ -42,6 +44,9 @@ public abstract class TierPowerCableConfiguration {
 				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalMaxVoltage").define("WireTerminalMaxVoltage", getWireTerminalMaxVoltage());
 		wireTerminalMaxPower = builder.comment("The amount of power a wire terminal of this tier can transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalMaxPower").define("WireTerminalMaxPower", getWireTerminalMaxPower());
+		wireCoilPowerLossPerBlock = builder.comment(
+				"The resistance of this cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
+				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalPowerLossPerBlock").define("WireTerminalPowerLossPerBlock", getWireCoilPowerLossPerBlock());
 		builder.pop();
 	}
 
@@ -54,6 +59,8 @@ public abstract class TierPowerCableConfiguration {
 	protected abstract StaticPowerVoltage getWireTerminalMaxVoltage();
 
 	protected abstract double getWireTerminalMaxPower();
+
+	protected abstract double getWireCoilPowerLossPerBlock();
 
 	protected StaticPowerVoltage getCableIndustrialMaxVoltage() {
 		return getCableMaxVoltage();

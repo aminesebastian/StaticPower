@@ -131,5 +131,10 @@ public class AdvancedCableConfiguration {
 		protected double getWireTerminalMaxPower() {
 			return 125;
 		}
+
+		@Override
+		protected double getWireCoilPowerLossPerBlock() {
+			return 0.5;
+		}
 	}
 }

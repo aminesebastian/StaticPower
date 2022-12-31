@@ -26,8 +26,9 @@ public class WireRenderer implements ICustomRenderer {
 
 	public static void addWireRenderCache(WireRenderCache cache) {
 		if (WIRE_RENDER_CACHE.containsKey(cache.getLinkId())) {
-			StaticPower.LOGGER
-					.error(String.format("Attempted to add a wire render request at position: %1$s with duplicate id: %2$d.", cache.getBlockStart().toString(), cache.getLinkId()));
+			StaticPower.LOGGER.warn(String.format(
+					"Attempted to add a wire render request at position: %1$s with duplicate id: %2$d. This can safely be ignored -- just a heads up in case you don't want this.",
+					cache.getBlockStart().toString(), cache.getLinkId()));
 			return;
 		}
 
