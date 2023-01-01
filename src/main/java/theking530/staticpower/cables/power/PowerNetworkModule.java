@@ -135,10 +135,9 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		output.add(Component.literal(""));
 		getReaderOutput(output, null);
 		ElectricalPathProperties properties = getPropertiesBetweenPoints(startingLocation, endingLocation);
-
 		if (lastProvidedVoltage != 0) {
 			output.add(Component.translatable("gui.staticpower.power_loss").append(": ").append(ChatFormatting.GOLD.toString() + PowerTextFormatting
-					.formatPowerToString(StaticPowerVoltage.adjustPowerLossByVoltage(StaticPowerVoltage.getVoltageClass(lastProvidedVoltage),  properties.powerLoss)).getString()));
+					.formatPowerToString(StaticPowerVoltage.adjustPowerLossByVoltage(StaticPowerVoltage.getVoltageClass(lastProvidedVoltage), properties.powerLoss)).getString()));
 		} else {
 			output.add(Component.translatable("gui.staticpower.power_loss").append(": ")
 					.append(ChatFormatting.GOLD.toString() + PowerTextFormatting.formatPowerToString(properties.powerLoss).getString()).append(" @ ")
@@ -181,7 +180,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(entry.getPosition());
 			if (cable != null) {
 				cablePowerLoss += (cable.getDataTag().getDouble(PowerCableComponent.POWER_LOSS));
-				
+
 				if (!cables.contains(cable)) {
 					cables.add(cable);
 				}
@@ -192,7 +191,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 				}
 			}
 		}
-		
+		cablePowerLoss /= path.getPathEntryCount();
 		cablePowerLoss *= path.getLength();
 		return new ElectricalPathProperties(cablePowerLoss, maxPowerPerTick, cables);
 	}

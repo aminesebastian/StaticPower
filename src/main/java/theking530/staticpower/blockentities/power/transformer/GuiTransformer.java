@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.button.StandardButton;
@@ -18,7 +17,9 @@ import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.SDColor;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransformer, BlockEntityTransformer> {
@@ -70,39 +71,38 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
-		StaticPowerVoltage voltage = StaticPowerVoltage.getVoltageClass(getTileEntity().powerStorage.getOutputVoltage());
+		int currentRatio = getTileEntity().getTransformerRatio();
 
 		if (button == voltageUp) {
-			voltage = voltage.upgrade();
+			currentRatio = SDMath.clamp(currentRatio + 1, 1, 4);
 		} else if (button == voltageDown) {
-			voltage = voltage.downgrade();
+			currentRatio = SDMath.clamp(currentRatio - 1, 1, 4);
 		}
 
 		// Create the packet and send a packet to the server with the updated values.
-		NetworkMessage msg = new TransformerControlSyncPacket(getTileEntity().getBlockPos(), voltage);
-		getTileEntity().setOutputVoltage(voltage);
+		NetworkMessage msg = new TransformerRatioPacket(getTileEntity().getBlockPos(), (byte) currentRatio);
+		getTileEntity().setTransformerRatio(currentRatio);
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
-
 		updateButtons();
 	}
 
 	private void updateButtons() {
-		if (!getTileEntity().possibleOutputVoltageRange.isVoltageInRange(getCurrentVoltage().upgrade().getVoltage())) {
+		if (getTileEntity().getTier() != StaticPowerTiers.LUMUM) {
+			voltageUp.setVisible(false);
+			voltageDown.setVisible(false);
+			return;
+		}
+
+		if (getTileEntity().getTransformerRatio() >= 4) {
 			voltageUp.setEnabled(false);
 		} else {
 			voltageUp.setEnabled(true);
-			voltageUp.setTooltip(PowerTextFormatting.formatVoltageToString(getCurrentVoltage().upgrade().getVoltage()));
 		}
 
-		if (!getTileEntity().possibleOutputVoltageRange.isVoltageInRange(getCurrentVoltage().downgrade().getVoltage())) {
+		if (getTileEntity().getTransformerRatio() <= 1) {
 			voltageDown.setEnabled(false);
 		} else {
 			voltageDown.setEnabled(true);
-			voltageDown.setTooltip(PowerTextFormatting.formatVoltageToString(getCurrentVoltage().downgrade().getVoltage()));
 		}
-	}
-
-	private StaticPowerVoltage getCurrentVoltage() {
-		return StaticPowerVoltage.getVoltageClass(getTileEntity().powerStorage.getOutputVoltage());
 	}
 }

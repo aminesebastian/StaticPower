@@ -39,4 +39,9 @@ public class AdvancedPowerConfiguration extends TierPowerConfiguration {
 	protected double getSolarPanelPowerGeneration() {
 		return 2;
 	}
+
+	@Override
+	protected int getTransfomerRatio() {
+		return 2;
+	}
 }

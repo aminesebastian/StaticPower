@@ -62,4 +62,9 @@ public class CreativePowerConfiguration extends TierPowerConfiguration {
 	protected double getSolarPanelPowerStorage() {
 		return Double.MAX_VALUE;
 	}
+
+	@Override
+	protected int getTransfomerRatio() {
+		return 4;
+	}
 }

@@ -1,11 +1,12 @@
 package theking530.staticpower.blockentities.power.transformer;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -23,50 +24,66 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.transformation.PowerTransformDirection;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockTransformer extends StaticPowerMachineBlock {
-	public static final VoxelShape X_AXIS_SHAPE;
-	public static final VoxelShape Z_AXIS_SHAPE;
+	private static final HashMap<Direction, VoxelShape> SHAPES = new HashMap<>();
 
 	static {
 		VoxelShape base = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
 		base = Shapes.join(base, Block.box(1.0D, 2.0D, 1.0D, 15.0D, 4.0D, 15.0D), BooleanOp.OR);
-		base = Shapes.join(base, Block.box(2.0D, 4.0D, 2.0D, 7.5D, 16.0D, 7.5D), BooleanOp.OR);
-		base = Shapes.join(base, Block.box(8.5D, 4.0D, 2.0D, 14.0D, 16.0D, 7.5D), BooleanOp.OR);
-		base = Shapes.join(base, Block.box(8.5D, 4.0D, 8.5D, 14.0D, 16.0D, 14.0D), BooleanOp.OR);
-		base = Shapes.join(base, Block.box(2.0D, 4.0D, 8.5D, 7.5D, 16.0D, 14.0D), BooleanOp.OR);
 
-		VoxelShape zAxis = Shapes.join(base, Block.box(5.0D, 5.0D, 0.0D, 11.0D, 11.0D, 2.0D), BooleanOp.OR);
-		zAxis = Shapes.join(zAxis, Block.box(5.0D, 5.0D, 14.0D, 11.0D, 11.0D, 16.0D), BooleanOp.OR);
-		Z_AXIS_SHAPE = zAxis;
+		VoxelShape north = Shapes.join(base, Block.box(5.0D, 5.0D, 0.0D, 11.0D, 11.0D, 2.0D), BooleanOp.OR);
+		north = Shapes.join(north, Block.box(5.0D, 5.0D, 14.0D, 11.0D, 11.0D, 16.0D), BooleanOp.OR);
+		north = Shapes.join(north, Block.box(2.0D, 4.0D, 2.0D, 7.5D, 14.0D, 7.5D), BooleanOp.OR);
+		north = Shapes.join(north, Block.box(2.0D, 4.0D, 8.5D, 7.5D, 16.0D, 14.0D), BooleanOp.OR);
+		north = Shapes.join(north, Block.box(8.5D, 4.0D, 2.0D, 14.0D, 14.0D, 7.5D), BooleanOp.OR);
+		north = Shapes.join(north, Block.box(8.5D, 4.0D, 8.5D, 14.0D, 16.0D, 14.0D), BooleanOp.OR);
+		SHAPES.put(Direction.NORTH, north);
 
-		VoxelShape xAxis = Shapes.join(base, Block.box(0.0D, 5.0D, 5.0D, 2.0D, 11.0D, 11.0D), BooleanOp.OR);
-		xAxis = Shapes.join(xAxis, Block.box(14.0D, 5.0D, 5.0D, 16.0D, 11.0D, 11.0D), BooleanOp.OR);
-		X_AXIS_SHAPE = xAxis;
+		VoxelShape south = Shapes.join(base, Block.box(5.0D, 5.0D, 0.0D, 11.0D, 11.0D, 2.0D), BooleanOp.OR);
+		south = Shapes.join(south, Block.box(5.0D, 5.0D, 14.0D, 11.0D, 11.0D, 16.0D), BooleanOp.OR);
+		south = Shapes.join(south, Block.box(2.0D, 4.0D, 2.0D, 7.5D, 16.0D, 7.5D), BooleanOp.OR);
+		south = Shapes.join(south, Block.box(2.0D, 4.0D, 8.5D, 7.5D, 14.0D, 14.0D), BooleanOp.OR);
+		south = Shapes.join(south, Block.box(8.5D, 4.0D, 2.0D, 14.0D, 16.0D, 7.5D), BooleanOp.OR);
+		south = Shapes.join(south, Block.box(8.5D, 4.0D, 8.5D, 14.0D, 14.0D, 14.0D), BooleanOp.OR);
+		SHAPES.put(Direction.SOUTH, south);
+
+		VoxelShape east = Shapes.join(base, Block.box(0.0D, 5.0D, 5.0D, 2.0D, 11.0D, 11.0D), BooleanOp.OR);
+		east = Shapes.join(east, Block.box(14.0D, 5.0D, 5.0D, 16.0D, 11.0D, 11.0D), BooleanOp.OR);
+		east = Shapes.join(east, Block.box(2.0D, 4.0D, 2.0D, 7.5D, 16.0D, 7.5D), BooleanOp.OR);
+		east = Shapes.join(east, Block.box(2.0D, 4.0D, 8.5D, 7.5D, 16.0D, 14.0D), BooleanOp.OR);
+		east = Shapes.join(east, Block.box(8.5D, 4.0D, 2.0D, 14.0D, 14.0D, 7.5D), BooleanOp.OR);
+		east = Shapes.join(east, Block.box(8.5D, 4.0D, 8.5D, 14.0D, 14.0D, 14.0D), BooleanOp.OR);
+		SHAPES.put(Direction.EAST, east);
+
+		VoxelShape west = Shapes.join(base, Block.box(0.0D, 5.0D, 5.0D, 2.0D, 11.0D, 11.0D), BooleanOp.OR);
+		west = Shapes.join(west, Block.box(14.0D, 5.0D, 5.0D, 16.0D, 11.0D, 11.0D), BooleanOp.OR);
+		west = Shapes.join(west, Block.box(2.0D, 4.0D, 2.0D, 7.5D, 14.0D, 7.5D), BooleanOp.OR);
+		west = Shapes.join(west, Block.box(2.0D, 4.0D, 8.5D, 7.5D, 14.0D, 14.0D), BooleanOp.OR);
+		west = Shapes.join(west, Block.box(8.5D, 4.0D, 2.0D, 14.0D, 16.0D, 7.5D), BooleanOp.OR);
+		west = Shapes.join(west, Block.box(8.5D, 4.0D, 8.5D, 14.0D, 16.0D, 14.0D), BooleanOp.OR);
+		SHAPES.put(Direction.WEST, west);
 	}
 
-	public final PowerTransformDirection transformerDirection;
-
-	public BlockTransformer(ResourceLocation tier, PowerTransformDirection transformerDirection) {
+	public BlockTransformer(ResourceLocation tier) {
 		super(tier);
-		this.transformerDirection = transformerDirection;
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING).getAxis() == Axis.Z) {
-			return Z_AXIS_SHAPE;
-		} else {
-			return X_AXIS_SHAPE;
-		}
+		Direction facing = state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
+		return SHAPES.get(facing);
 	}
 
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		return HasGuiType.ALWAYS;
+		if (this.tier == StaticPowerTiers.LUMUM || this.tier == StaticPowerTiers.CREATIVE) {
+			return HasGuiType.ALWAYS;
+		}
+		return HasGuiType.NEVER;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -84,10 +101,6 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (transformerDirection == PowerTransformDirection.STEP_UP) {
-			return BlockEntityTransformer.BASIC_STEP_UP_TRANSFORMER.create(pos, state);
-		} else {
-			return BlockEntityTransformer.BASIC_STEP_DOWN_TRANSFORMER.create(pos, state);
-		}
+		return BlockEntityTransformer.BASIC_TRANSFORMER.create(pos, state);
 	}
 }

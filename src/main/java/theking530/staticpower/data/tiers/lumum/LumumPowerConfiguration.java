@@ -39,4 +39,9 @@ public class LumumPowerConfiguration extends TierPowerConfiguration {
 	protected double getSolarPanelPowerGeneration() {
 		return 16;
 	}
+
+	@Override
+	protected int getTransfomerRatio() {
+		return 4;
+	}
 }

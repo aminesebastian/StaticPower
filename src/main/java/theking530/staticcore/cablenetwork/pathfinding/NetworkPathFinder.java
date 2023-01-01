@@ -51,6 +51,9 @@ public class NetworkPathFinder {
 				destinationAdjacentCables.add(targetPosition.relative(dir));
 			}
 		}
+		// TODO: THIS WAS NOT TESTED. I added this to support paths between cables
+		// inside a network, not just from a cable to a destination.
+		destinationAdjacentCables.add(targetPosition);
 
 		// Capture the start position.
 		this.startingCablePosition = startingCablePosition;
@@ -157,7 +160,7 @@ public class NetworkPathFinder {
 		for (PathEntry entry : pathEntries) {
 			length += entry.getDistance();
 		}
-		
+
 		// Convert the list to an array and create the final path.
 		PathEntry[] entries = new PathEntry[pathEntries.size()];
 		pathEntries.toArray(entries);

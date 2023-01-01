@@ -136,7 +136,7 @@ public class ServerCable {
 			}
 			output.add(new CableScanLocation(getPos().relative(dir), dir, false));
 		}
-
+		
 		for (SparseCableLink link : getSparseLinks()) {
 			Direction side = WorldUtilities.getDirectionBetweenBlocks(getPos(), link.linkToPosition());
 			output.add(new CableScanLocation(link.linkToPosition(), side, true));

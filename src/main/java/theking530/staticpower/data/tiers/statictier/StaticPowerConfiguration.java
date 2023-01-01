@@ -39,4 +39,9 @@ public class StaticPowerConfiguration extends TierPowerConfiguration {
 	protected double getSolarPanelPowerGeneration() {
 		return 4;
 	}
+
+	@Override
+	protected int getTransfomerRatio() {
+		return 3;
+	}
 }

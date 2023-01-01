@@ -2,12 +2,13 @@ package theking530.api.energy;
 
 import java.util.function.Supplier;
 
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 
 public enum StaticPowerVoltage {
 	ZERO("no_voltage", () -> 0.0), LOW("low_voltage", StaticPowerConfig.SERVER.lowVoltage), MEDIUM("medium_voltage", StaticPowerConfig.SERVER.mediumVoltage),
-	HIGH("high_voltage", StaticPowerConfig.SERVER.highVoltage),
-	EXTREME("extreme_voltage", StaticPowerConfig.SERVER.extremeVoltage), BONKERS("bonkers_voltage", StaticPowerConfig.SERVER.bonkersVoltage);
+	HIGH("high_voltage", StaticPowerConfig.SERVER.highVoltage), EXTREME("extreme_voltage", StaticPowerConfig.SERVER.extremeVoltage),
+	BONKERS("bonkers_voltage", StaticPowerConfig.SERVER.bonkersVoltage);
 
 	private static final double POWER_LOSS_ADJUSTMENT_PER_VOLTAGE = 1.0 / (StaticPowerVoltage.values().length - 1);
 	private String unlocalizedName;
@@ -49,19 +50,21 @@ public enum StaticPowerVoltage {
 	}
 
 	public StaticPowerVoltage upgrade() {
-		if (ordinal() == StaticPowerVoltage.values().length - 1) {
-			return this;
-		} else {
-			return StaticPowerVoltage.values()[ordinal() + 1];
-		}
+		return upgrade(1);
+	}
+
+	public StaticPowerVoltage upgrade(int ratio) {
+		int newOrdinal = SDMath.clamp(ordinal() + ratio, 0, StaticPowerVoltage.values().length - 1);
+		return StaticPowerVoltage.values()[newOrdinal];
 	}
 
 	public StaticPowerVoltage downgrade() {
-		if (this.ordinal() == 0) {
-			return this;
-		} else {
-			return StaticPowerVoltage.values()[ordinal() - 1];
-		}
+		return downgrade(1);
+	}
+
+	public StaticPowerVoltage downgrade(int ratio) {
+		int newOrdinal = SDMath.clamp(ordinal() - ratio, 0, StaticPowerVoltage.values().length - 1);
+		return StaticPowerVoltage.values()[newOrdinal];
 	}
 
 	public static double adjustPowerLossByVoltage(StaticPowerVoltage voltage, double powerLoss) {

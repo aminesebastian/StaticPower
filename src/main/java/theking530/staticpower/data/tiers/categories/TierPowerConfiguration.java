@@ -41,6 +41,7 @@ public abstract class TierPowerConfiguration {
 	 * Transformer Configuration
 	 *********************/
 	public final ConfigValue<List<StaticPowerVoltage>> transformerVoltageRange;
+	public final ConfigValue<Integer> transfomerRatio;
 
 	/*************
 	 * Solar Panel
@@ -66,6 +67,8 @@ public abstract class TierPowerConfiguration {
 
 		transformerVoltageRange = builder.comment("The voltage range that can be handled by a transformer of this tier.")
 				.translation(StaticPower.MOD_ID + ".config." + "transformerVoltageRange").define("TransformerVoltageRange", internalGetTransformerVoltageRange());
+		transfomerRatio = builder.comment("The number of tiers of voltage a transformer of this tier will upgrade. For example, a ratio of 2 will raise LV to HV or MV to BV.")
+				.translation(StaticPower.MOD_ID + ".config." + "transfomerRatio").define("TransfomerRatio", getTransfomerRatio());
 
 		builder.pop();
 
@@ -138,6 +141,8 @@ public abstract class TierPowerConfiguration {
 	protected List<StaticPowerVoltage> internalGetTransformerVoltageRange() {
 		return Arrays.asList(StaticPowerVoltage.LOW, getDefaultOutputVoltage().upgrade());
 	}
+
+	protected abstract int getTransfomerRatio();
 
 	public final StaticVoltageRange getTransformerVoltageRange() {
 		return new StaticVoltageRange(transformerVoltageRange.get().get(0), transformerVoltageRange.get().get(1));

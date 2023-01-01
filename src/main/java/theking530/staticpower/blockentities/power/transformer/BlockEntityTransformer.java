@@ -9,13 +9,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
-import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.transformation.PowerTransformDirection;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
@@ -23,30 +23,19 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityTransformer extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTransformer> BASIC_STEP_UP_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>(
-			"transformer_step_up_basic", (allocator, pos, state) -> new BlockEntityTransformer(PowerTransformDirection.STEP_UP, allocator, pos, state),
-			ModBlocks.TransformerStepUpBasic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTransformer> BASIC_STEP_DOWN_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>(
-			"transformer_step_down_basic", (allocator, pos, state) -> new BlockEntityTransformer(PowerTransformDirection.STEP_DOWN, allocator, pos, state),
-			ModBlocks.TransformerStepDownBasic);
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> BASIC_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_basic",
+			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerBasic);
 
 	public final PowerStorageComponent powerStorage;
 	protected final PowerDistributionComponent powerDistributor;
+	protected int transformerRatio;
 
-	public final PowerTransformDirection direction;
-	public final StaticVoltageRange possibleOutputVoltageRange;
-
-	public BlockEntityTransformer(PowerTransformDirection direction, BlockEntityTypeAllocator<BlockEntityTransformer> allocator, BlockPos pos, BlockState state) {
+	public BlockEntityTransformer(BlockEntityTypeAllocator<BlockEntityTransformer> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
-		this.direction = direction;
 
 		// Enable face interaction.
 		enableFaceInteraction();
 		ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.FRONT_BACK_INPUT_OUTPUT, true);
-
-		// Capture the current and voltage ranges.
-		possibleOutputVoltageRange = getTierObject().powerConfiguration.getTransformerVoltageRange();
 
 		// Add the power distributor.
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));
@@ -58,11 +47,13 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		}.setSideConfiguration(ioSideConfiguration));
 		powerStorage.setCapacity(0);
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getTransformerVoltageRange());
-		powerStorage.setOutputVoltage(possibleOutputVoltageRange.minimumVoltage());
+		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.getTransformerVoltageRange().maximumVoltage());
 		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
 		powerStorage.setMaximumInputPower(getTierObject().powerConfiguration.batteryMaximumPowerInput.get());
 		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
+
+		transformerRatio = getTierObject().powerConfiguration.transfomerRatio.get();
 	}
 
 	@Override
@@ -77,30 +68,35 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		}
 
 		StaticPowerVoltage inputVoltageClass = StaticPowerVoltage.getVoltageClass(stack.getVoltage());
-		StaticPowerVoltage outputVoltageClass = StaticPowerVoltage.getVoltageClass(powerStorage.getOutputVoltage());
 
-		// Do nothing if we want to step up and the input voltage is higher than the
-		// output voltage.
-		if (direction == PowerTransformDirection.STEP_UP && inputVoltageClass.isGreaterThan(outputVoltageClass)) {
-			return 0.0;
-		}
-		
-		// Do nothing if we want to step down and the input voltage is lower than the
-		// output voltage.
-		if (direction == PowerTransformDirection.STEP_DOWN && inputVoltageClass.isLessThan(outputVoltageClass)) {
-			return 0.0;
+		BlockSide inputSide = SideConfigurationUtilities.getBlockSide(side, getFacingDirection());
+		boolean isInputOnShortSide = inputSide == BlockSide.FRONT;
+		PowerTransformDirection direction = isInputOnShortSide ? PowerTransformDirection.STEP_UP : PowerTransformDirection.STEP_DOWN;
+
+		StaticPowerVoltage outputVoltageClass;
+		if (direction == PowerTransformDirection.STEP_UP) {
+			outputVoltageClass = inputVoltageClass.upgrade(transformerRatio);
+
+			// Do nothing if we want to step up and the input voltage is higher than the
+			// output voltage.
+			if (inputVoltageClass.isGreaterThan(outputVoltageClass)) {
+				return 0.0;
+			}
+		} else {
+			outputVoltageClass = inputVoltageClass.downgrade(transformerRatio);
+
+			// Do nothing if we want to step down and the input voltage is lower than the
+			// output voltage.
+			if (inputVoltageClass.isLessThan(outputVoltageClass)) {
+				return 0.0;
+			}
 		}
 
+		powerStorage.setOutputVoltage(outputVoltageClass);
 		double voltageSign = stack.getVoltage() < 0 ? -1 : 1;
 		double power = Math.min(stack.getPower(), powerStorage.getMaximumPowerOutput());
 		PowerStack transformedStack = new PowerStack(power, powerStorage.getOutputVoltage() * voltageSign, CurrentType.ALTERNATING);
 		return powerDistributor.manuallyDistributePower(powerStorage, transformedStack, simulate);
-	}
-
-	public void setOutputVoltage(StaticPowerVoltage voltage) {
-		if (possibleOutputVoltageRange.isVoltageInRange(voltage)) {
-			powerStorage.setOutputVoltage(voltage);
-		}
 	}
 
 	@Override
@@ -114,5 +110,38 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 			return mode == MachineSideMode.Never;
 		}
 		return mode == MachineSideMode.Output || mode == MachineSideMode.Input;
+	}
+
+	public int getTransformerRatio() {
+		return transformerRatio;
+	}
+
+	public void setTransformerRatio(int transformerRatio) {
+		this.transformerRatio = transformerRatio;
+	}
+
+	@Override
+	protected void onSidesConfigUpdate(BlockSide side, MachineSideMode newMode) {
+		super.onSidesConfigUpdate(side, newMode);
+		MachineSideMode frontMode = ioSideConfiguration.getBlockSideConfiguration(BlockSide.FRONT);
+		MachineSideMode backMode = ioSideConfiguration.getBlockSideConfiguration(BlockSide.BACK);
+
+		if (frontMode != backMode) {
+			return;
+		}
+
+		if (side == BlockSide.FRONT) {
+			if (frontMode.isInputMode()) {
+				ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.BACK, MachineSideMode.Output);
+			} else if (frontMode.isOutputMode()) {
+				ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.BACK, MachineSideMode.Input);
+			}
+		} else if (side == BlockSide.BACK) {
+			if (backMode.isInputMode()) {
+				ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.FRONT, MachineSideMode.Output);
+			} else if (backMode.isOutputMode()) {
+				ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.FRONT, MachineSideMode.Input);
+			}
+		}
 	}
 }

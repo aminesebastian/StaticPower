@@ -39,4 +39,9 @@ public class EnergizedPowerConfiguration extends TierPowerConfiguration {
 	protected double getSolarPanelPowerGeneration() {
 		return 8;
 	}
+
+	@Override
+	protected int getTransfomerRatio() {
+		return 4;
+	}
 }

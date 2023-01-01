@@ -6,31 +6,30 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
-import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticcore.network.NetworkMessage;
 
-public class TransformerControlSyncPacket extends NetworkMessage {
+public class TransformerRatioPacket extends NetworkMessage {
 	private BlockPos position;
-	private StaticPowerVoltage voltage;
+	private byte ratio;
 
-	public TransformerControlSyncPacket() {
+	public TransformerRatioPacket() {
 	}
 
-	public TransformerControlSyncPacket(BlockPos pos, StaticPowerVoltage voltage) {
+	public TransformerRatioPacket(BlockPos pos, byte ratio) {
 		this.position = pos;
-		this.voltage = voltage;
+		this.ratio = ratio;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(position);
-		buffer.writeByte(voltage.ordinal());
+		buffer.writeByte(ratio);
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
 		position = buffer.readBlockPos();
-		voltage = StaticPowerVoltage.values()[buffer.readByte()];
+		ratio = buffer.readByte();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -41,7 +40,7 @@ public class TransformerControlSyncPacket extends NetworkMessage {
 				BlockEntity rawTileEntity = ctx.get().getSender().getLevel().getBlockEntity(position);
 				if (rawTileEntity != null && rawTileEntity instanceof BlockEntityTransformer) {
 					BlockEntityTransformer battery = (BlockEntityTransformer) rawTileEntity;
-					battery.setOutputVoltage(voltage);
+					battery.setTransformerRatio(ratio);
 				}
 			}
 		});

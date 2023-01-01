@@ -24,7 +24,7 @@ import theking530.staticpower.blockentities.digistorenetwork.digistore.PacketLoc
 import theking530.staticpower.blockentities.machines.packager.PacketPackagerSizeChange;
 import theking530.staticpower.blockentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
 import theking530.staticpower.blockentities.power.powermonitor.PacketPowerMonitorSync;
-import theking530.staticpower.blockentities.power.transformer.TransformerControlSyncPacket;
+import theking530.staticpower.blockentities.power.transformer.TransformerRatioPacket;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketClearDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketRestorePreviousCraftingRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderClearRecipe;
@@ -65,7 +65,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(ItemCableRemovedPacket.class);
 		StaticPowerMessageHandler.registerMessage(FluidCableUpdatePacket.class);
 		StaticPowerMessageHandler.registerMessage(HeatCableUpdatePacket.class);
-		StaticPowerMessageHandler.registerMessage(TransformerControlSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(TransformerRatioPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreTerminalFilters.class);
 		StaticPowerMessageHandler.registerMessage(JEIRecipeTransferPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketHeatStorageComponent.class);
