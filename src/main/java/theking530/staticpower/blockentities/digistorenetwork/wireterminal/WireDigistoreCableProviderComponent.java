@@ -26,7 +26,7 @@ import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.client.rendering.WireRenderCache;
 import theking530.staticpower.client.rendering.renderers.WireRenderer;
-import theking530.staticpower.items.WireCoil;
+import theking530.staticpower.items.wirecoils.PowerWireCoil;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class WireDigistoreCableProviderComponent extends DigistoreCableProviderComponent {
@@ -127,8 +127,8 @@ public class WireDigistoreCableProviderComponent extends DigistoreCableProviderC
 				Vec3 start = startBe.getComponent(WirePowerCableComponent.class).getWireAttachLocation();
 				Vec3 end = getWireAttachLocation().add(0.001f, 0.001f, 0.001f);
 				ItemStack wireStack = ItemStack.of(link.data().getCompound("wire"));
-				SDColor color = ((WireCoil) wireStack.getItem()).getColor();
-				float thickness = ((WireCoil) wireStack.getItem()).getWireThickness();
+				SDColor color = ((PowerWireCoil) wireStack.getItem()).getColor();
+				float thickness = ((PowerWireCoil) wireStack.getItem()).getWireThickness();
 
 				WireRenderer.addWireRenderCache(new WireRenderCache(link.linkId(), startBe.getBlockPos(), getPos(), start, end, color, thickness, 5));
 			}

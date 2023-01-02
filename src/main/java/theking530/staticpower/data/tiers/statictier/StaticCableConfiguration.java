@@ -52,7 +52,7 @@ public class StaticCableConfiguration {
 
 		@Override
 		protected StaticPowerVoltage getCableMaxVoltage() {
-			return StaticPowerVoltage.MEDIUM;
+			return StaticPowerVoltage.HIGH;
 		}
 
 		@Override
@@ -73,6 +73,21 @@ public class StaticCableConfiguration {
 		@Override
 		protected double getWireTerminalMaxPower() {
 			return 250;
+		}
+
+		@Override
+		protected int getWireCoilMaxDistance() {
+			return 32;
+		}
+
+		@Override
+		protected StaticPowerVoltage getWireCoilMaxVoltage() {
+			return StaticPowerVoltage.HIGH;
+		}
+
+		@Override
+		protected double getWireCoilMaxPower() {
+			return 320;
 		}
 
 		@Override

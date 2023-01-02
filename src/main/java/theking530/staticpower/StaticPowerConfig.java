@@ -124,6 +124,8 @@ public class StaticPowerConfig {
 		public final ConfigValue<Integer> digistoreWirelessTerminalPowerCapacity;
 		public final ConfigValue<Double> digistoreWirelessTerminalPowerUsage;
 
+		public final ConfigValue<Integer> overvoltageExplodeTime;
+
 		public final ConfigValue<Integer> minerHeatGeneration;
 		public final ConfigValue<Integer> minerFuelUsage;
 		public final ConfigValue<Integer> minerRadius;
@@ -435,6 +437,13 @@ public class StaticPowerConfig {
 			builder.push("Upgrades");
 			acceleratorCardImprovment = builder.comment("Defines the effect a max sized stack of accelerator upgrades will have.")
 					.translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment").define("AcceleratorCardImprovment", 4.0);
+			builder.pop();
+
+			builder.push("Power");
+			{
+				overvoltageExplodeTime = builder.comment("Defines how many ticks it takes before a machine explodes from recieveing too high a voltage.")
+						.translation(StaticPower.MOD_ID + ".config." + "overvoltageExplodeTime").define("OvervoltageExplodeTime", 40);
+			}
 			builder.pop();
 
 			builder.push("Machines");

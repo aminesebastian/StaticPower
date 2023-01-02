@@ -39,6 +39,11 @@ public class CreativePowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected StaticPowerVoltage internalGetMaximumBatteryInputVoltage() {
+		return StaticPowerVoltage.BONKERS;
+	}
+
+	@Override
 	protected double getDefaultMaximumPowerOutput() {
 		return Double.MAX_VALUE;
 	}

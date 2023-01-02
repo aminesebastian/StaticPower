@@ -71,7 +71,22 @@ public class CreativeCableConfiguration {
 		}
 
 		@Override
+		protected int getWireCoilMaxDistance() {
+			return 64;
+		}
+
+		@Override
 		protected double getWireTerminalMaxPower() {
+			return Double.MAX_VALUE;
+		}
+
+		@Override
+		protected StaticPowerVoltage getWireCoilMaxVoltage() {
+			return StaticPowerVoltage.EXTREME;
+		}
+
+		@Override
+		protected double getWireCoilMaxPower() {
 			return Double.MAX_VALUE;
 		}
 

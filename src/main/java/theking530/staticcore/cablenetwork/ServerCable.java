@@ -44,15 +44,16 @@ public class ServerCable {
 	private final CompoundTag dataTag;
 	private final CableSideConnectionState[] sidedData;
 
-	private final boolean isSparse;
+	private final boolean canAcceptSparseLink;
 	private final Map<BlockPos, SparseCableLink> sparseLinks;
 	private final Set<CableDestination> supportedDestinationTypes;
 	private final Map<ServerCableCapabilityType, ServerCableCapability> capabilities;
 
-	public ServerCable(Level level, BlockPos position, boolean sparse, Set<CableNetworkModuleType> supportedNetworkModules, Set<CableDestination> supportedDestinationTypes) {
+	public ServerCable(Level level, BlockPos position, boolean canAcceptSparseLink, Set<CableNetworkModuleType> supportedNetworkModules,
+			Set<CableDestination> supportedDestinationTypes) {
 		this.position = position;
 		this.level = level;
-		this.isSparse = sparse;
+		this.canAcceptSparseLink = canAcceptSparseLink;
 		this.supportedNetworkModules = supportedNetworkModules;
 		this.supportedDestinationTypes = supportedDestinationTypes;
 		dataTag = new CompoundTag();
@@ -66,7 +67,7 @@ public class ServerCable {
 	}
 
 	public SparseCableLink addSparseLink(BlockPos linkToPosition, CompoundTag data) {
-		if (!linkToPosition.equals(getPos()) && !isLinkedTo(linkToPosition) && isSparse()) {
+		if (!linkToPosition.equals(getPos()) && !isLinkedTo(linkToPosition)) {
 			long linkId = CableNetworkManager.get(getWorld()).getAndIncrementCurentSparseLinkId();
 			ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(linkToPosition);
 			otherCable.sparseLinks.put(getPos(), new SparseCableLink(linkId, getPos(), data, SparseCableConnectionType.STARTING));
@@ -114,8 +115,8 @@ public class ServerCable {
 		return sparseLinks.containsKey(position);
 	}
 
-	public boolean isSparse() {
-		return this.isSparse;
+	public boolean canAcceptSparseLink() {
+		return canAcceptSparseLink;
 	}
 
 	public Collection<SparseCableLink> getSparseLinks() {
@@ -136,7 +137,7 @@ public class ServerCable {
 			}
 			output.add(new CableScanLocation(getPos().relative(dir), dir, false));
 		}
-		
+
 		for (SparseCableLink link : getSparseLinks()) {
 			Direction side = WorldUtilities.getDirectionBetweenBlocks(getPos(), link.linkToPosition());
 			output.add(new CableScanLocation(link.linkToPosition(), side, true));
@@ -389,7 +390,7 @@ public class ServerCable {
 		level = world;
 
 		position = BlockPos.of(tag.getLong("position"));
-		isSparse = tag.getBoolean("sparse");
+		canAcceptSparseLink = tag.getBoolean("sparse");
 
 		// Get the supported network types.
 		supportedNetworkModules = new HashSet<CableNetworkModuleType>();
@@ -439,7 +440,7 @@ public class ServerCable {
 
 	public CompoundTag writeToNbt(CompoundTag tag) {
 		tag.putLong("position", position.asLong());
-		tag.putBoolean("sparse", isSparse);
+		tag.putBoolean("sparse", canAcceptSparseLink);
 
 		// Serialize the supported module types.
 		ListTag supportedModules = new ListTag();

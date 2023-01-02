@@ -21,6 +21,11 @@ public class BasicPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected StaticPowerVoltage internalGetMaximumBatteryInputVoltage() {
+		return StaticPowerVoltage.LOW;
+	}
+
+	@Override
 	protected double getDefaultMaximumPowerInput() {
 		return 10;
 	}
@@ -44,4 +49,5 @@ public class BasicPowerConfiguration extends TierPowerConfiguration {
 	protected int getTransfomerRatio() {
 		return 1;
 	}
+
 }

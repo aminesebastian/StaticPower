@@ -15,10 +15,9 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
+import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderBatteryBlock;
@@ -63,27 +62,42 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		}
 	}
 
+	public final PowerStorageComponent powerStorage;
 	public final BatteryInventoryComponent batteryInventory;
 	public final InventoryComponent chargingInventory;
 	protected final PowerDistributionComponent powerDistributor;
 
 	public BlockEntityBattery(BlockEntityTypeAllocator<BlockEntityBattery> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
-
-		// Enable face interaction.
 		enableFaceInteraction();
-		this.ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION, true);
+		ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION, true);
+
+		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
+			@Override
+			public double addPower(PowerStack stack, boolean simulate) {
+				// Creative batteries will always accept the full incoming stack.
+				// Useful for debugging purposes and not having batteries fill up on you while
+				// testing.
+				if (getTier() == StaticPowerTiers.CREATIVE) {
+					super.addPower(stack, simulate);
+					return stack.getPower();
+				}
+				return super.addPower(stack, simulate);
+			}
+		});
 
 		// Add the power distributor.
-		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", powerStorage));
 		powerStorage.setSideConfiguration(ioSideConfiguration);
 		powerStorage.setCapacity(getTierObject().powerConfiguration.batteryCapacity.get());
+		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getMaximumBatteryInputVoltage());
 		powerStorage.setMaximumInputPower(getTierObject().powerConfiguration.batteryMaximumPowerInput.get());
 		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
 		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
 		powerStorage.setInputCurrentTypes(CurrentType.DIRECT, CurrentType.ALTERNATING);
 		powerStorage.setCanAcceptExternalPower(true);
 		powerStorage.setCanOutputExternalPower(true);
+
+		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", powerStorage));
 
 		if (this.getTier() == StaticPowerTiers.CREATIVE) {
 			powerStorage.setMaximumInputPower(Double.MAX_VALUE);
@@ -124,10 +138,5 @@ public class BlockEntityBattery extends BlockEntityMachine {
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerBattery(windowId, inventory, this);
-	}
-
-	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input;
 	}
 }

@@ -101,6 +101,17 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return BlockEntityTransformer.BASIC_TRANSFORMER.create(pos, state);
+		if (tier == StaticPowerTiers.BASIC) {
+			return BlockEntityTransformer.BASIC_TRANSFORMER.create(pos, state);
+		} else if (tier == StaticPowerTiers.ADVANCED) {
+			return BlockEntityTransformer.ADVANCED_TRANSFORMER.create(pos, state);
+		} else if (tier == StaticPowerTiers.STATIC) {
+			return BlockEntityTransformer.STATIC_TRANSFORMER.create(pos, state);
+		} else if (tier == StaticPowerTiers.ENERGIZED) {
+			return BlockEntityTransformer.ENERGIZED_TRANSFORMER.create(pos, state);
+		} else if (tier == StaticPowerTiers.LUMUM) {
+			return BlockEntityTransformer.LUMUM_TRANSFORMER.create(pos, state);
+		}
+		return null;
 	}
 }

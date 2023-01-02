@@ -76,6 +76,21 @@ public class BasicCableConfiguration {
 		}
 
 		@Override
+		protected int getWireCoilMaxDistance() {
+			return 12;
+		}
+
+		@Override
+		protected StaticPowerVoltage getWireCoilMaxVoltage() {
+			return StaticPowerVoltage.LOW;
+		}
+
+		@Override
+		protected double getWireCoilMaxPower() {
+			return 80;
+		}
+
+		@Override
 		protected double getWireCoilPowerLossPerBlock() {
 			return 1;
 		}

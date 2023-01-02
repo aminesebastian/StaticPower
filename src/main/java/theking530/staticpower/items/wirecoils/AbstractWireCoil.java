@@ -1,7 +1,11 @@
-package theking530.staticpower.items;
+package theking530.staticpower.items.wirecoils;
 
+import java.util.List;
 import java.util.function.Supplier;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -15,22 +19,28 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
+import theking530.staticcore.gui.text.TooltipUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.items.StaticPowerItem;
 
-public class WireCoil extends StaticPowerItem {
-	private static final String INITIAL_LOCATOIN_TAG_NAME = "initial_connecting_point";
-	private final SDColor wireColor;
-	private final float wireThickness;
-	private final Supplier<CableNetworkModuleType> cableModuleType;
-	public final ResourceLocation tier;
+public class AbstractWireCoil extends StaticPowerItem {
+	protected static final String INITIAL_LOCATOIN_TAG_NAME = "initial_connecting_point";
+	protected final SDColor wireColor;
+	protected final boolean isInsulated;
+	protected final float wireThickness;
+	protected final Supplier<CableNetworkModuleType> cableModuleType;
+	protected final ResourceLocation tier;
 
-	public WireCoil(SDColor wireColor, float wireThickness, ResourceLocation tier, Supplier<CableNetworkModuleType> cableModuleType) {
+	public AbstractWireCoil(SDColor wireColor, float wireThickness, boolean isInsulated, ResourceLocation tier, Supplier<CableNetworkModuleType> cableModuleType) {
 		this.wireColor = wireColor;
+		this.isInsulated = isInsulated;
 		this.wireThickness = wireThickness;
 		this.cableModuleType = cableModuleType;
 		this.tier = tier;
@@ -44,8 +54,12 @@ public class WireCoil extends StaticPowerItem {
 		return wireThickness;
 	}
 
-	public double getPowerLoss(ItemStack wireStack) {
-		return StaticPowerConfig.getTier(tier).cablePowerConfiguration.wireCoilPowerLossPerBlock.get();
+	public int getMaximumDistance(ItemStack wireStack) {
+		if (isInsulated) {
+			return StaticPowerConfig.getTier(tier).cablePowerConfiguration.insulatedWireCoilMaxDistance.get();
+		} else {
+			return StaticPowerConfig.getTier(tier).cablePowerConfiguration.wireCoilMaxDistance.get();
+		}
 	}
 
 	public boolean canApplyToTerminal(ItemStack coil, AbstractCableProviderComponent component) {
@@ -101,7 +115,7 @@ public class WireCoil extends StaticPowerItem {
 
 	public boolean trySetFirstSampleLocation(Level world, Player player, ItemStack stack, BlockPos pos) {
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
-		if (component == null || !component.isSpraseCable()) {
+		if (component == null) {
 			return false;
 		}
 
@@ -114,7 +128,7 @@ public class WireCoil extends StaticPowerItem {
 
 	public boolean tryCompleteConnection(Level world, Player player, ItemStack item, BlockPos pos) {
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
-		if (component == null || !component.isSpraseCable()) {
+		if (component == null) {
 			return false;
 		}
 
@@ -126,9 +140,17 @@ public class WireCoil extends StaticPowerItem {
 			return false;
 		}
 
+		// Make sure the connection is not too far.
+		double distance = Math.sqrt(initialLocation.distSqr(pos));
+		if (distance > getMaximumDistance(item)) {
+			MutableComponent message = Component.literal(String.format("This wire cannot complete a connection to a terminal %1$d blocks away!", distance));
+			player.sendSystemMessage(message);
+			return false;
+		}
+
 		// Check to make sure this wire coil will work on this component type.
 		if (!canApplyToTerminal(item, component)) {
-			MutableComponent message = Component.literal(String.format("This wire is not useable on a terminal of this type!", initialLocation.toShortString()));
+			MutableComponent message = Component.literal(String.format("This wire is not useable on a terminal of this type!"));
 			player.sendSystemMessage(message);
 			return false;
 		}
@@ -159,5 +181,11 @@ public class WireCoil extends StaticPowerItem {
 
 	public void clearPendingLocation(ItemStack stack) {
 		stack.removeTagKey(INITIAL_LOCATOIN_TAG_NAME);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.power_wire_max_distance", ChatFormatting.LIGHT_PURPLE, String.valueOf(getMaximumDistance(stack)));
 	}
 }

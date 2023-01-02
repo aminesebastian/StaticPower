@@ -21,6 +21,11 @@ public class EnergizedPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected StaticPowerVoltage internalGetMaximumBatteryInputVoltage() {
+		return StaticPowerVoltage.EXTREME;
+	}
+
+	@Override
 	protected double getDefaultMaximumPowerInput() {
 		return 75;
 	}

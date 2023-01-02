@@ -1,0 +1,7 @@
+{
+	"parent": "staticpower:block/power/transformers/transformer_basic",
+	"textures": {
+		"particle": "staticpower:blocks/power/transformers/transformer_advanced",
+		"texture": "staticpower:blocks/power/transformers/transformer_advanced"
+	}
+}

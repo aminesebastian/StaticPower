@@ -12,12 +12,17 @@ public class PowerTooltips {
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.output_voltage", ChatFormatting.BLUE, PowerTextFormatting.formatVoltageToString(outputVoltage));
 	}
 
+	public static void addMaxVoltageTooltip(List<Component> tooltip, double maxVoltage) {
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_voltage", ChatFormatting.DARK_PURPLE, PowerTextFormatting.formatVoltageToString(maxVoltage));
+	}
+
 	public static void addMaximumOutputPowerTooltip(List<Component> tooltip, double maximumPower) {
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_output_power", ChatFormatting.RED, PowerTextFormatting.formatPowerRateToString(maximumPower));
 	}
 
 	public static void addMaximumPowerTransferTooltip(List<Component> tooltip, double maximumPowerTransfer) {
-		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_power_transfer", ChatFormatting.GREEN, PowerTextFormatting.formatPowerRateToString(maximumPowerTransfer));
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_power_transfer", ChatFormatting.GREEN,
+				PowerTextFormatting.formatPowerRateToString(maximumPowerTransfer));
 	}
 
 	public static void addPowerLossPerBlockTooltip(List<Component> tooltip, double powerLoss) {

@@ -52,7 +52,7 @@ public class EnergizedCableConfiguration {
 
 		@Override
 		protected StaticPowerVoltage getCableMaxVoltage() {
-			return StaticPowerVoltage.MEDIUM;
+			return StaticPowerVoltage.EXTREME;
 		}
 
 		@Override
@@ -73,6 +73,21 @@ public class EnergizedCableConfiguration {
 		@Override
 		protected double getWireTerminalMaxPower() {
 			return 500;
+		}
+
+		@Override
+		protected int getWireCoilMaxDistance() {
+			return 48;
+		}
+
+		@Override
+		protected StaticPowerVoltage getWireCoilMaxVoltage() {
+			return StaticPowerVoltage.EXTREME;
+		}
+
+		@Override
+		protected double getWireCoilMaxPower() {
+			return 640;
 		}
 
 		@Override

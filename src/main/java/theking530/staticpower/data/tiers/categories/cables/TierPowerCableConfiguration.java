@@ -16,7 +16,12 @@ public abstract class TierPowerCableConfiguration {
 
 	public final ConfigValue<StaticPowerVoltage> wireTerminalMaxVoltage;
 	public final ConfigValue<Double> wireTerminalMaxPower;
-	
+
+	public final ConfigValue<Integer> wireCoilMaxDistance;
+	public final ConfigValue<Integer> insulatedWireCoilMaxDistance;
+
+	public final ConfigValue<StaticPowerVoltage> wireCoilMaxVoltage;
+	public final ConfigValue<Double> wireCoilMaxPower;
 	public final ConfigValue<Double> wireCoilPowerLossPerBlock;
 
 	public TierPowerCableConfiguration(ForgeConfigSpec.Builder builder) {
@@ -44,6 +49,17 @@ public abstract class TierPowerCableConfiguration {
 				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalMaxVoltage").define("WireTerminalMaxVoltage", getWireTerminalMaxVoltage());
 		wireTerminalMaxPower = builder.comment("The amount of power a wire terminal of this tier can transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalMaxPower").define("WireTerminalMaxPower", getWireTerminalMaxPower());
+		builder.pop();
+
+		builder.push("Wire Coil");
+		wireCoilMaxDistance = builder.comment("The maximum distance a wire of this tier can extend.").translation(StaticPower.MOD_ID + ".config." + "wireCoilMaxDistance")
+				.define("WireCoilMaxDistance", getWireCoilMaxDistance());
+		insulatedWireCoilMaxDistance = builder.comment("The maximum distance an insulated wire of this tier can extend.")
+				.translation(StaticPower.MOD_ID + ".config." + "insulatedWireCoilMaxDistance").define("InsulatedWireCoilMaxDistance", getInsulatedWireCoilMaxDistance());
+		wireCoilMaxVoltage = builder.comment("The highest voltage a cable of this tier can transfer before burning.")
+				.translation(StaticPower.MOD_ID + ".config." + "wireCoilMaxVoltage").define("WireCoilMaxVoltage", getWireCoilMaxVoltage());
+		wireCoilMaxPower = builder.comment("The amount of power a wire of this tier can transfer.").translation(StaticPower.MOD_ID + ".config." + "wireCoilMaxPower")
+				.define("WireCoilMaxPower", getWireCoilMaxPower());
 		wireCoilPowerLossPerBlock = builder.comment(
 				"The resistance of this cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalPowerLossPerBlock").define("WireTerminalPowerLossPerBlock", getWireCoilPowerLossPerBlock());
@@ -59,6 +75,16 @@ public abstract class TierPowerCableConfiguration {
 	protected abstract StaticPowerVoltage getWireTerminalMaxVoltage();
 
 	protected abstract double getWireTerminalMaxPower();
+
+	protected abstract int getWireCoilMaxDistance();
+
+	protected int getInsulatedWireCoilMaxDistance() {
+		return getWireCoilMaxDistance() * 2;
+	}
+
+	protected abstract StaticPowerVoltage getWireCoilMaxVoltage();
+
+	protected abstract double getWireCoilMaxPower();
 
 	protected abstract double getWireCoilPowerLossPerBlock();
 

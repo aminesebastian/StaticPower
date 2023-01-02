@@ -10,7 +10,6 @@ public enum StaticPowerVoltage {
 	HIGH("high_voltage", StaticPowerConfig.SERVER.highVoltage), EXTREME("extreme_voltage", StaticPowerConfig.SERVER.extremeVoltage),
 	BONKERS("bonkers_voltage", StaticPowerConfig.SERVER.bonkersVoltage);
 
-	private static final double POWER_LOSS_ADJUSTMENT_PER_VOLTAGE = 1.0 / (StaticPowerVoltage.values().length - 1);
 	private String unlocalizedName;
 	private String shortName;
 	private Supplier<Double> voltageSupplier;
@@ -68,13 +67,10 @@ public enum StaticPowerVoltage {
 	}
 
 	public static double adjustPowerLossByVoltage(StaticPowerVoltage voltage, double powerLoss) {
-		// We do voltage.ordinal() - 1 to adjust for the "ZERO" option.
-		if (voltage == StaticPowerVoltage.ZERO || voltage == StaticPowerVoltage.LOW) {
-			return powerLoss;
-		}
-
-		double adjustment = POWER_LOSS_ADJUSTMENT_PER_VOLTAGE * Math.max(0, (StaticPowerVoltage.values().length - voltage.ordinal() - 1));
-		return powerLoss * adjustment;
+		// Offset by 1 because ordinal 0 is the zero voltage.
+		int adjustedOrdinal = Math.max(0, voltage.ordinal() - 1);
+		double powerLossFactor = Math.pow(2, adjustedOrdinal);
+		return powerLoss / powerLossFactor;
 	}
 
 	public static StaticPowerVoltage getVoltageClass(double voltage) {

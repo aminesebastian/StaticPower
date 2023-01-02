@@ -26,6 +26,7 @@ public abstract class TierPowerConfiguration {
 	public final ConfigValue<Double> batteryCapacity;
 	public final ConfigValue<Double> batteryMaximumPowerInput;
 	public final ConfigValue<Double> batteryMaximumPowerOutput;
+	public final ConfigValue<StaticPowerVoltage> maximumBatteryInputVoltage;
 	public final ConfigValue<StaticPowerVoltage> batteryOutputVoltage;
 
 	/*********************************
@@ -79,6 +80,8 @@ public abstract class TierPowerConfiguration {
 				.translation(StaticPower.MOD_ID + ".config." + "batteryMaximumPowerInput").define("BatteryMaximumPowerInput", getBatteryMaximumPowerInput());
 		batteryMaximumPowerOutput = builder.comment("The maximum power that a battery of this tier can output (in SW/t).")
 				.translation(StaticPower.MOD_ID + ".config." + "batteryMaximumPowerOutput").define("BatteryMaximumPowerOutput", getBatteryMaximumPowerOutput());
+		maximumBatteryInputVoltage = builder.comment("The maximum input voltage of a batter of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "maximumBatteryInputVoltage").define("MaximumBatteryInputVoltage", internalGetMaximumBatteryInputVoltage());
 		batteryOutputVoltage = builder.comment("The output voltage of a batter of this tier.").translation(StaticPower.MOD_ID + ".config." + "batteryOutputVoltage")
 				.define("BatteryOutputVoltage", getBatteryOutputVoltage());
 		builder.pop();
@@ -133,6 +136,12 @@ public abstract class TierPowerConfiguration {
 	}
 
 	protected abstract double getBatteryMaximumPowerOutput();
+
+	protected abstract StaticPowerVoltage internalGetMaximumBatteryInputVoltage();
+
+	public final StaticVoltageRange getMaximumBatteryInputVoltage() {
+		return new StaticVoltageRange(StaticPowerVoltage.LOW, maximumBatteryInputVoltage.get());
+	}
 
 	protected StaticPowerVoltage getBatteryOutputVoltage() {
 		return getDefaultOutputVoltage();

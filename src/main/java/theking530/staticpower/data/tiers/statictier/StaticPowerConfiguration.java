@@ -21,6 +21,11 @@ public class StaticPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected StaticPowerVoltage internalGetMaximumBatteryInputVoltage() {
+		return StaticPowerVoltage.HIGH;
+	}
+
+	@Override
 	protected double getDefaultMaximumPowerInput() {
 		return 40;
 	}

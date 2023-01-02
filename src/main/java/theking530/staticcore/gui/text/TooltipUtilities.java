@@ -26,4 +26,8 @@ public class TooltipUtilities {
 	public static void addSingleLineBullet(List<Component> tooltip, String key, ChatFormatting color, Component value) {
 		tooltip.add(new ComponentBuilder().append("• ").append(key, color).append(": ").append(value).build());
 	}
+
+	public static void addSingleLineBullet(List<Component> tooltip, String key, ChatFormatting color, String value) {
+		addSingleLineBullet(tooltip, key, color, Component.literal(value));
+	}
 }

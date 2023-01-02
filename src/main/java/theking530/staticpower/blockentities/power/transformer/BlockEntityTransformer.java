@@ -25,6 +25,18 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityTransformer> BASIC_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_basic",
 			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerBasic);
+	@BlockEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> ADVANCED_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_advanced",
+			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerStatic);
+	@BlockEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> STATIC_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_static",
+			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerStatic);
+	@BlockEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> ENERGIZED_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_energized",
+			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerEnergized);
+	@BlockEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> LUMUM_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_lumum",
+			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerLumum);
 
 	public final PowerStorageComponent powerStorage;
 	protected final PowerDistributionComponent powerDistributor;
@@ -45,13 +57,14 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 				return transformAndSupplyPower(side, stack, simulate);
 			}
 		}.setSideConfiguration(ioSideConfiguration));
-		powerStorage.setCapacity(0);
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getTransformerVoltageRange());
 		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.getTransformerVoltageRange().maximumVoltage());
 		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
-		powerStorage.setMaximumInputPower(getTierObject().powerConfiguration.batteryMaximumPowerInput.get());
-		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
+		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+
+		powerStorage.setCapacity(0);
 
 		transformerRatio = getTierObject().powerConfiguration.transfomerRatio.get();
 	}

@@ -527,6 +527,10 @@ public class ModBlocks {
 
 	// Transformers
 	public static final RegistryObject<BlockTransformer> TransformerBasic = registerBlock("transformer_basic", () -> new BlockTransformer(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockTransformer> TransformerAdvanced = registerBlock("transformer_advanced", () -> new BlockTransformer(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockTransformer> TransformerStatic = registerBlock("transformer_static", () -> new BlockTransformer(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockTransformer> TransformerEnergized = registerBlock("transformer_energized", () -> new BlockTransformer(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockTransformer> TransformerLumum = registerBlock("transformer_lumum", () -> new BlockTransformer(StaticPowerTiers.LUMUM));
 
 	// Inverters
 	public static final RegistryObject<BlockInverter> InverterBasic = registerBlock("inverter_basic", () -> new BlockInverter(StaticPowerTiers.BASIC));

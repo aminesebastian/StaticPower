@@ -43,7 +43,6 @@ import theking530.staticpower.items.PortableBattery;
 import theking530.staticpower.items.ResearchItem;
 import theking530.staticpower.items.StaticPowerFood;
 import theking530.staticpower.items.StaticPowerItem;
-import theking530.staticpower.items.WireCoil;
 import theking530.staticpower.items.backpack.Backpack;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
@@ -82,6 +81,8 @@ import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.items.upgrades.VoidUpgrade;
+import theking530.staticpower.items.wirecoils.DigistoreWireCoil;
+import theking530.staticpower.items.wirecoils.PowerWireCoil;
 
 public class ModItems {
 
@@ -411,29 +412,29 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> WireInsulatedLumum = ITEMS.register("wire_insulated_lumum", () -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> WireCoilCopper = ITEMS.register("wire_coil_copper",
-			() -> new WireCoil(new SDColor(1, 0.55f, 0.1f), 0.015f, StaticPowerTiers.BASIC, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(1, 0.55f, 0.1f), 0.015f, false, StaticPowerTiers.BASIC, ModCableModules.Power));
 	public static final RegistryObject<StaticPowerItem> WireCoilBrass = ITEMS.register("wire_coil_brass",
-			() -> new WireCoil(new SDColor(1, 0.8f, 0.2f), 0.015f, StaticPowerTiers.ADVANCED, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(1, 0.8f, 0.2f), 0.015f, false, StaticPowerTiers.ADVANCED, ModCableModules.Power));
 	public static final RegistryObject<StaticPowerItem> WireCoilStatic = ITEMS.register("wire_coil_static",
-			() -> new WireCoil(new SDColor(0, 1.0f, 0.4f), 0.01f, StaticPowerTiers.STATIC, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(0, 1.0f, 0.4f), 0.01f, false, StaticPowerTiers.STATIC, ModCableModules.Power));
 	public static final RegistryObject<StaticPowerItem> WireCoilEnergized = ITEMS.register("wire_coil_energized",
-			() -> new WireCoil(new SDColor(0, 0.8f, 1.0f), 0.01f, StaticPowerTiers.ENERGIZED, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(0, 0.8f, 1.0f), 0.01f, false, StaticPowerTiers.ENERGIZED, ModCableModules.Power));
 	public static final RegistryObject<StaticPowerItem> WireCoilLumum = ITEMS.register("wire_coil_lumum",
-			() -> new WireCoil(new SDColor(0.6f, 0.2f, 1.0f), 0.01f, StaticPowerTiers.LUMUM, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(0.6f, 0.2f, 1.0f), 0.01f, false, StaticPowerTiers.LUMUM, ModCableModules.Power));
 
 	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedCopper = ITEMS.register("wire_coil_insulated_copper",
-			() -> new WireCoil(new SDColor(1, 0.55f, 0.1f), 0.03f, StaticPowerTiers.BASIC, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(1, 0.55f, 0.1f), 0.03f, true, StaticPowerTiers.BASIC, ModCableModules.Power));
 	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedBrass = ITEMS.register("wire_coil_insulated_brass",
-			() -> new WireCoil(new SDColor(1, 0.8f, 0.2f), 0.03f, StaticPowerTiers.ADVANCED, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(1, 0.8f, 0.2f), 0.03f, true, StaticPowerTiers.ADVANCED, ModCableModules.Power));
 	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedStatic = ITEMS.register("wire_coil_insulated_static",
-			() -> new WireCoil(new SDColor(0, 1.0f, 0.4f), 0.02f, StaticPowerTiers.STATIC, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(0, 1.0f, 0.4f), 0.02f, true, StaticPowerTiers.STATIC, ModCableModules.Power));
 	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedEnergized = ITEMS.register("wire_coil_insulated_energized",
-			() -> new WireCoil(new SDColor(0, 0.8f, 1.0f), 0.02f, StaticPowerTiers.ENERGIZED, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(0, 0.8f, 1.0f), 0.02f, true, StaticPowerTiers.ENERGIZED, ModCableModules.Power));
 	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedLumum = ITEMS.register("wire_coil_insulated_lumum",
-			() -> new WireCoil(new SDColor(0.6f, 0.2f, 1.0f), 0.02f, StaticPowerTiers.LUMUM, ModCableModules.Power));
+			() -> new PowerWireCoil(new SDColor(0.6f, 0.2f, 1.0f), 0.02f, true, StaticPowerTiers.LUMUM, ModCableModules.Power));
 
 	public static final RegistryObject<StaticPowerItem> WireCoilDigistore = ITEMS.register("wire_coil_digistore",
-			() -> new WireCoil(new SDColor(0.205f, 0.347f, 0.617f), 0.02f, StaticPowerTiers.BASIC, ModCableModules.Digistore));
+			() -> new DigistoreWireCoil(new SDColor(0.205f, 0.347f, 0.617f), 0.02f, false, StaticPowerTiers.ADVANCED, ModCableModules.Digistore));
 
 	public static final RegistryObject<DrillBit> IronDrillBit = ITEMS.register("drill_bit_iron", () -> new DrillBit(Tiers.IRON, StaticPowerTiers.IRON));
 	public static final RegistryObject<DrillBit> BronzeDrillBit = ITEMS.register("drill_bit_bronze", () -> new DrillBit(Tiers.IRON, StaticPowerTiers.BRONZE));

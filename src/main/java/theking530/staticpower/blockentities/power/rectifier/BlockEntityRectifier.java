@@ -42,9 +42,11 @@ public class BlockEntityRectifier extends BlockEntityConfigurable {
 			}
 		}.setInputCurrentTypes(CurrentType.ALTERNATING).setOutputCurrentType(CurrentType.DIRECT).setSideConfiguration(ioSideConfiguration));
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getDefaultInputVoltageRange());
-		powerStorage.setMaximumInputPower(getTierObject().powerConfiguration.batteryMaximumPowerInput.get());
 		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
-		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
+		
+		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		
 		powerStorage.setCapacity(0);
 	}
 

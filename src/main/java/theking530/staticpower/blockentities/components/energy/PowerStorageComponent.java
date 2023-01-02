@@ -1,6 +1,7 @@
 package theking530.staticpower.blockentities.components.energy;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -19,6 +20,7 @@ import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities.ElectricalExplosionTrigger;
 import theking530.api.upgrades.UpgradeTypes;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
@@ -31,7 +33,6 @@ import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class PowerStorageComponent extends AbstractBlockEntityComponent implements ISidedStaticPowerStorage {
-	public static final int ELECTRICAL_EXPLOSION_TICKS = 40;
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 64;
 	private static final double ENERGY_SYNC_MAX_DELTA = 10;
 
@@ -58,6 +59,8 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	private double lastSyncEnergy;
 	private boolean pendingManualSync;
 
+	@UpdateSerialize
+	private boolean isPendingOverVoltageExplostion;
 	private boolean receivedExplosivePowerCurrentTick;
 	private boolean receivedExplosivePowerLastTick;
 	private boolean shouldExplodeWhenOverVolted;
@@ -92,8 +95,8 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		baseVoltageOutput = voltageOutput;
 		baseMaximumOutputPower = maxPowerOutput;
 
-		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputPower, acceptableInputCurrents, voltageOutput,
-				maxPowerOutput, outputCurrentType, canAcceptExternalPower, canOutputExternalPower);
+		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputPower, acceptableInputCurrents, voltageOutput, maxPowerOutput,
+				outputCurrentType, canAcceptExternalPower, canOutputExternalPower);
 
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 	}
@@ -123,6 +126,18 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 			storage.tick(getLevel());
 			receivedExplosivePowerLastTick = receivedExplosivePowerCurrentTick;
 			receivedExplosivePowerCurrentTick = false;
+		}
+
+		if (isPendingOverVoltageExplostion) {
+			float randomX = ((2 * getLevel().getRandom().nextFloat()) - 1.0f) * 0.75f;
+			float randomY = ((2 * getLevel().getRandom().nextFloat()) - 1.0f) * 0.5f;
+			float randomZ = ((2 * getLevel().getRandom().nextFloat()) - 1.0f) * 0.75f;
+
+			if (SDMath.diceRoll(0.5)) {
+				getLevel().addParticle(ParticleTypes.LARGE_SMOKE, getPos().getX() + randomX + 0.5, getPos().getY() + randomY + 0.5, getPos().getZ() + randomZ + 0.5, 0.0f, 0.0f,
+						0.0f);
+			}
+			getLevel().addParticle(ParticleTypes.ELECTRIC_SPARK, getPos().getX() + randomX + 0.5, getPos().getY() + 1.0, getPos().getZ() + randomZ + 0.5, 0.0f, 0.0f, 0.0f);
 		}
 	}
 
@@ -239,16 +254,20 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 
 	protected void initiateExplosionTimer() {
 		// TODO: Add particle effects here.
-		electricalExplosionTimeRemaining = ELECTRICAL_EXPLOSION_TICKS;
+		electricalExplosionTimeRemaining = StaticPowerConfig.SERVER.overvoltageExplodeTime.get();
 		getLevel().playSound(null, getPos(), SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0f, 1.5f);
+		isPendingOverVoltageExplostion = true;
+		sendSynchronizationPacket();
 	}
 
 	protected void resetExplosionTimer() {
 		electricalExplosionTimeRemaining = -1;
+		isPendingOverVoltageExplostion = false;
+		sendSynchronizationPacket();
 	}
 
 	protected boolean isPendingElectricalExplosion() {
-		return electricalExplosionTimeRemaining >= 0;
+		return isPendingOverVoltageExplostion;
 	}
 
 	public PowerStorageComponent setSideConfiguration(SideConfigurationComponent sideConfig) {

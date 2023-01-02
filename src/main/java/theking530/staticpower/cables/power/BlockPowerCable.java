@@ -43,10 +43,10 @@ public class BlockPowerCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-		
-		PowerTooltips.addOutputVoltageTooltip(tooltip, tierObject.cablePowerConfiguration.cableMaxVoltage.get().getVoltage());
+
 		PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.cablePowerMaxPower.get());
 		PowerTooltips.addPowerLossPerBlockTooltip(tooltip, tierObject.cablePowerConfiguration.cablePowerLossPerBlock.get());
+		PowerTooltips.addMaxVoltageTooltip(tooltip, tierObject.cablePowerConfiguration.cableMaxVoltage.get().getVoltage());
 	}
 
 	@Override

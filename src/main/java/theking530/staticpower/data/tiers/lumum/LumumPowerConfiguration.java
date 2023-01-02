@@ -21,6 +21,11 @@ public class LumumPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected StaticPowerVoltage internalGetMaximumBatteryInputVoltage() {
+		return StaticPowerVoltage.BONKERS;
+	}
+
+	@Override
 	protected double getDefaultMaximumPowerInput() {
 		return 100;
 	}

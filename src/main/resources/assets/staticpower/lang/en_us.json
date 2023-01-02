@@ -734,6 +734,10 @@
 	"block.staticpower.battery_block_creative": "Creative Battery",
 	
 	"block.staticpower.transformer_basic": "Basic Transformer",
+	"block.staticpower.transformer_advanced": "Advanced Transformer",
+	"block.staticpower.transformer_static": "Static Transformer",
+	"block.staticpower.transformer_energized": "Energized Transformer",
+	"block.staticpower.transformer_lumum": "Lumum Transformer",
 	
 	"block.staticpower.inverter_basic": "Basic Inverter",
 	
@@ -1077,6 +1081,8 @@
 	"gui.staticpower.max_output_power": "Max. Output Power",
 	"gui.staticpower.power_loss": "Power Loss",
 	"gui.staticpower.power_loss_per_block": "Loss Per Block",
+	
+	"gui.staticpower.power_wire_max_distance": "Max. Distance",
 	
 	"gui.staticpower.millbuckets": "mB",
 	"gui.staticpower.fluid_unit": "B",

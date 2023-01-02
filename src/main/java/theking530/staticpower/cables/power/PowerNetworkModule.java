@@ -2,8 +2,9 @@ package theking530.staticpower.cables.power;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -37,8 +38,8 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	protected record CachedPowerDestination(IStaticPowerStorage power, BlockPos cable, BlockPos desintationPos) {
 	}
 
-	private record ElectricalPathProperties(double powerLoss, double maxPower, List<ServerCable> cables) {
-		public static final ElectricalPathProperties EMPTY = new ElectricalPathProperties(0, 0, Collections.emptyList());
+	private record ElectricalPathProperties(double powerLoss, double maxPower, double length, List<ServerCable> cables) {
+		public static final ElectricalPathProperties EMPTY = new ElectricalPathProperties(0, 0, 0, Collections.emptyList());
 	}
 
 	private final List<CachedPowerDestination> destinations;
@@ -146,7 +147,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 		output.add(Component.translatable("gui.staticpower.max_power").append(": ")
 				.append(ChatFormatting.GREEN.toString() + PowerTextFormatting.formatPowerRateToString(properties.maxPower).getString()));
-		output.add(Component.translatable("gui.staticpower.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.cables().size()));
+		output.add(Component.translatable("gui.staticpower.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.length()));
 	}
 
 	public ElectricalPathProperties getPropertiesBetweenPoints(BlockPos start, BlockPos end) {
@@ -159,7 +160,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			// no need to be too mean).
 			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(end);
 			double maxPower = cable.getDataTag().getDouble(PowerCableComponent.POWER_MAX);
-			return new ElectricalPathProperties(0, maxPower, List.of(cable));
+			return new ElectricalPathProperties(0, maxPower, 1, List.of(cable));
 		}
 
 		List<Path> paths = Network.getPathCache().getPaths(start, end, getType());
@@ -168,7 +169,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		}
 
 		Path path = paths.get(0);
-		List<ServerCable> cables = new LinkedList<ServerCable>();
+		Set<ServerCable> cables = new HashSet<ServerCable>();
 		double cablePowerLoss = 0;
 		double maxPowerPerTick = Double.MAX_VALUE;
 		for (PathEntry entry : path.getEntries()) {
@@ -179,6 +180,9 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			// destination.
 			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(entry.getPosition());
 			if (cable != null) {
+				if (cables.contains(cable)) {
+					continue;
+				}
 				cablePowerLoss += (cable.getDataTag().getDouble(PowerCableComponent.POWER_LOSS));
 
 				if (!cables.contains(cable)) {
@@ -191,9 +195,9 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 				}
 			}
 		}
-		cablePowerLoss /= path.getPathEntryCount();
+		cablePowerLoss /= cables.size();
 		cablePowerLoss *= path.getLength();
-		return new ElectricalPathProperties(cablePowerLoss, maxPowerPerTick, cables);
+		return new ElectricalPathProperties(cablePowerLoss, maxPowerPerTick, path.getLength(), cables.stream().toList());
 	}
 
 	@Override
@@ -264,14 +268,15 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 		// Get the resistance between the points. If it is -1, there was no path, return
 		// 0.
-		ElectricalPathProperties properties = getPropertiesBetweenPoints(fromCablePos, destination.desintationPos);
+		ElectricalPathProperties properties = getPropertiesBetweenPoints(fromCablePos, destination.cable());
 		if (properties == ElectricalPathProperties.EMPTY) {
 			return 0;
 		}
 
 		// If the input voltage is higher than the voltage of a cable, break it. Use ALL
 		// the power.
-		for (ServerCable cable : properties.cables) {
+		for (int i = 0; i < properties.cables.size(); i++) {
+			ServerCable cable = properties.cables.get(i);
 			StaticPowerVoltage voltage = StaticPowerVoltage.values()[cable.getDataTag().getByte(PowerCableComponent.VOLTAGE_ORDINAL)];
 			if (stack.getVoltage() > voltage.getVoltage()) {
 				if (!simulate) {
