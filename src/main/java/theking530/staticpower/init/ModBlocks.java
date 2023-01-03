@@ -533,10 +533,10 @@ public class ModBlocks {
 	public static final RegistryObject<BlockTransformer> TransformerLumum = registerBlock("transformer_lumum", () -> new BlockTransformer(StaticPowerTiers.LUMUM));
 
 	// Inverters
-	public static final RegistryObject<BlockInverter> InverterBasic = registerBlock("inverter_basic", () -> new BlockInverter(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockInverter> Inverter = registerBlock("inverter", () -> new BlockInverter(StaticPowerTiers.BASIC));
 
 	// Rectifiers
-	public static final RegistryObject<BlockRectifier> RectifierBasic = registerBlock("rectifier_basic", () -> new BlockRectifier(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockRectifier> Rectifier = registerBlock("rectifier", () -> new BlockRectifier(StaticPowerTiers.BASIC));
 
 	// Wire Terminals
 	public static final RegistryObject<BlockWireConnector> WireConnectorLV = registerBlock("wire_terminal_lv", () -> new BlockWireConnector(StaticPowerTiers.BASIC));

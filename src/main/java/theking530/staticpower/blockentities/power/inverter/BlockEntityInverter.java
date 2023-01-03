@@ -7,6 +7,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -18,8 +20,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityInverter extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityInverter> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityInverter>("inverted_basic",
-			(allocator, pos, state) -> new BlockEntityInverter(allocator, pos, state), ModBlocks.InverterBasic);
+	public static final BlockEntityTypeAllocator<BlockEntityInverter> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityInverter>("inverted",
+			(allocator, pos, state) -> new BlockEntityInverter(allocator, pos, state), ModBlocks.Inverter);
 
 	public final PowerStorageComponent powerStorage;
 	protected final PowerDistributionComponent powerDistributor;
@@ -39,12 +41,12 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 				return transferPower(stack, simulate);
 			}
 		}.setOutputCurrentType(CurrentType.ALTERNATING).setSideConfiguration(ioSideConfiguration));
-		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getDefaultInputVoltageRange());
-		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
-		
+		powerStorage.setInputVoltageRange(StaticVoltageRange.ANY_VOLTAGE);
+		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
+
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
-		
+
 		powerStorage.setCapacity(0);
 	}
 

@@ -109,6 +109,10 @@ public class PowerTextFormatting {
 		return formatVoltageToString(voltage, true, true);
 	}
 
+	public static MutableComponent formatTransformerRatioToString(int ratio) {
+		return Component.literal(String.valueOf(ratio+1)).append(":1");
+	}
+
 	public static MutableComponent formatVoltageRangeToString(StaticVoltageRange range) {
 		if (range.minimumVoltage() == range.maximumVoltage()) {
 			return Component.translatable(range.maximumVoltage().getShortName());

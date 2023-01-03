@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -24,6 +25,9 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.gui.text.PowerTooltips;
+import theking530.staticcore.gui.text.TooltipUtilities;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -90,6 +94,13 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
+
+		if (tier == StaticPowerTiers.LUMUM) {
+			TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.transfomer_ratio", ChatFormatting.GREEN, Component.translatable("gui.staticpower.variable"));
+		} else {
+			int transformerRatio = StaticPowerConfig.getTier(tier).powerConfiguration.transfomerRatio.get();
+			PowerTooltips.addTransformerRatioTooltip(tooltip, transformerRatio);
+		}
 
 	}
 

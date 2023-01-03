@@ -7,6 +7,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
@@ -17,8 +19,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRectifier extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRectifier> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityRectifier>("rectifier_basic",
-			(allocator, pos, state) -> new BlockEntityRectifier(allocator, pos, state), ModBlocks.RectifierBasic);
+	public static final BlockEntityTypeAllocator<BlockEntityRectifier> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityRectifier>("rectifier",
+			(allocator, pos, state) -> new BlockEntityRectifier(allocator, pos, state), ModBlocks.Rectifier);
 
 	public final PowerStorageComponent powerStorage;
 	protected final PowerDistributionComponent powerDistributor;
@@ -35,18 +37,18 @@ public class BlockEntityRectifier extends BlockEntityConfigurable {
 		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(PowerStack stack, boolean simulate) {
-				if(!powerStorage.getInputVoltageRange().isVoltageInRange(stack.getVoltage())) {
+				if (!powerStorage.getInputVoltageRange().isVoltageInRange(stack.getVoltage())) {
 					return super.addPower(stack, simulate);
 				}
 				return transferPower(stack, simulate);
 			}
 		}.setInputCurrentTypes(CurrentType.ALTERNATING).setOutputCurrentType(CurrentType.DIRECT).setSideConfiguration(ioSideConfiguration));
-		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getDefaultInputVoltageRange());
-		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
-		
+		powerStorage.setInputVoltageRange(StaticVoltageRange.ANY_VOLTAGE);
+		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
+
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
-		
+
 		powerStorage.setCapacity(0);
 	}
 

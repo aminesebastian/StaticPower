@@ -739,9 +739,9 @@
 	"block.staticpower.transformer_energized": "Energized Transformer",
 	"block.staticpower.transformer_lumum": "Lumum Transformer",
 	
-	"block.staticpower.inverter_basic": "Basic Inverter",
+	"block.staticpower.inverter": "Inverter",
 	
-	"block.staticpower.rectifier_basic": "Basic Rectifier",
+	"block.staticpower.rectifier": "Rectifier",
 	
 	"block.staticpower.wire_terminal_lv": "LV Wire Terminal",
 	"block.staticpower.wire_terminal_mv": "MV Wire Terminal",
@@ -1084,6 +1084,8 @@
 	
 	"gui.staticpower.power_wire_max_distance": "Max. Distance",
 	
+	"gui.staticpower.transfomer_ratio": "Transformer Ratio",
+	
 	"gui.staticpower.millbuckets": "mB",
 	"gui.staticpower.fluid_unit": "B",
 	"gui.staticpower.fluid_unit_per_tick": "B/t",
@@ -1108,6 +1110,8 @@
 	"gui.staticpower.voltage.short_name.bonkers_voltage": "BV",
 	
 	"gui.staticpower.pressure": "Pressure",
+	
+	"gui.staticpower.variable": "Variable",
 	
 	"gui.staticpower.length": "Length",
 	"gui.staticpower.heat_transfer": "Heat Transfer",

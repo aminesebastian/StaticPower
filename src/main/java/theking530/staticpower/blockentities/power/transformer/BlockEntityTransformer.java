@@ -58,7 +58,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 			}
 		}.setSideConfiguration(ioSideConfiguration));
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getTransformerVoltageRange());
-		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.getTransformerVoltageRange().maximumVoltage());
+		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
 		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);

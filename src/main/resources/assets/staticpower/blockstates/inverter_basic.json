@@ -1,8 +1,0 @@
-{
-    "variants": {
-		"facing=north,is_on=false": { "model": "staticpower:block/power/inverters/inverter_basic" },
-        "facing=south,is_on=false": { "model": "staticpower:block/power/inverters/inverter_basic", "y": 180 },
-        "facing=west,is_on=false":  { "model": "staticpower:block/power/inverters/inverter_basic", "y": 270 },
-        "facing=east,is_on=false":  { "model": "staticpower:block/power/inverters/inverter_basic", "y": 90 }
-    }
-}

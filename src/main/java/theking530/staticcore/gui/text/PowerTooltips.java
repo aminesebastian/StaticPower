@@ -8,6 +8,10 @@ import theking530.api.energy.StaticVoltageRange;
 
 public class PowerTooltips {
 
+	public static void addTransformerRatioTooltip(List<Component> tooltip, int ratio) {
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.transfomer_ratio", ChatFormatting.GREEN, PowerTextFormatting.formatTransformerRatioToString(ratio));
+	}
+
 	public static void addOutputVoltageTooltip(List<Component> tooltip, double outputVoltage) {
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.output_voltage", ChatFormatting.BLUE, PowerTextFormatting.formatVoltageToString(outputVoltage));
 	}

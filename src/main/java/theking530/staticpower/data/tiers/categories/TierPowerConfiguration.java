@@ -131,8 +131,7 @@ public abstract class TierPowerConfiguration {
 	}
 
 	protected double getBatteryMaximumPowerInput() {
-		return getDefaultMaximumPowerInput();
-
+		return getDefaultMaximumPowerInput() * 2;
 	}
 
 	protected abstract double getBatteryMaximumPowerOutput();
