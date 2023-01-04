@@ -1,6 +1,7 @@
 package theking530.staticcore.cablenetwork.pathfinding;
 
 import java.util.Arrays;
+import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,12 +19,13 @@ public class Path {
 	private final float length;
 	private final CableNetworkModuleType supportedNetworkType;
 
-	public Path(BlockPos source, BlockPos destination, CableNetworkModuleType supportedNetworkType, float length, PathEntry... path) {
+	public Path(BlockPos source, BlockPos destination, CableNetworkModuleType supportedNetworkType, float length, List<PathEntry> path) {
 		sourceLocation = source;
 		destinationLocation = destination;
-		this.path = path;
 		this.length = length;
 		this.supportedNetworkType = supportedNetworkType;
+		this.path = new PathEntry[path.size()];
+		path.toArray(this.path);
 	}
 
 	public Path(CompoundTag nbt) {
@@ -119,12 +121,11 @@ public class Path {
 	public static class PathEntry {
 		private final BlockPos position;
 		private final Direction entryDirection;
-		private final float distance;
+		private float distance;
 
-		public PathEntry(BlockPos position, Direction directionOfApproach, float distance) {
+		public PathEntry(BlockPos position, Direction directionOfApproach) {
 			this.position = position;
 			entryDirection = directionOfApproach;
-			this.distance = distance;
 		}
 
 		/**
@@ -158,12 +159,8 @@ public class Path {
 			return nbt;
 		}
 
-		public float getDistance() {
-			return distance;
-		}
-
 		public static PathEntry createFromNbt(CompoundTag nbt) {
-			return new PathEntry(BlockPos.of(nbt.getLong("position")), nbt.contains("direction") ? Direction.values()[nbt.getInt("direction")] : null, nbt.getFloat("dist"));
+			return new PathEntry(BlockPos.of(nbt.getLong("position")), nbt.contains("direction") ? Direction.values()[nbt.getInt("direction")] : null);
 		}
 
 		@Override

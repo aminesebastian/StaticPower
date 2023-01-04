@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import java.util.function.BiFunction;
 
 import net.minecraft.core.BlockPos;
@@ -30,10 +31,11 @@ public class NetworkPathFinder {
 	private final CableNetworkModuleType supportedNetworkType;
 	private final Queue<BlockPos> bfsQueue;
 	private final Level world;
-	private final BiFunction<ServerCable, Double, Float> lengthProvider;
+	private final boolean destinationIsCable;
+	private final BiFunction<ServerCable, Float, Float> lengthProvider;
 
-	public NetworkPathFinder(CableNetworkGraph graph, Level world, BlockPos startingCablePosition, BlockPos targetPosition, CableNetworkModuleType supportedNetworkType,
-			BiFunction<ServerCable, Double, Float> lengthProvider) {
+	public NetworkPathFinder(CableNetworkGraph graph, Level world, BlockPos startingCablePosition, BlockPos endingPosition, CableNetworkModuleType supportedNetworkType,
+			BiFunction<ServerCable, Float, Float> lengthProvider) {
 		// Capture all the positions in the network graph.
 		existingCables = new HashSet<BlockPos>();
 		graph.getCables().values().forEach(cable -> {
@@ -45,19 +47,19 @@ public class NetworkPathFinder {
 		// Capture all the terminus nodes in the network graph (the final cables before
 		// the target), if they support the network type.
 		destinationAdjacentCables = new HashSet<BlockPos>();
-		for (Direction dir : Direction.values()) {
-			ServerCable cable = CableNetworkManager.get(world).getCable(targetPosition.relative(dir));
-			if (cable != null && cable.supportsNetworkModule(supportedNetworkType) && !cable.isDisabledOnSide(dir.getOpposite())) {
-				destinationAdjacentCables.add(targetPosition.relative(dir));
+		destinationIsCable = CableNetworkManager.get(world).isTrackingCable(endingPosition);
+		if (!destinationIsCable) {
+			for (Direction dir : Direction.values()) {
+				ServerCable cable = CableNetworkManager.get(world).getCable(endingPosition.relative(dir));
+				if (cable != null && cable.supportsNetworkModule(supportedNetworkType) && !cable.isDisabledOnSide(dir.getOpposite())) {
+					destinationAdjacentCables.add(endingPosition.relative(dir));
+				}
 			}
 		}
-		// TODO: THIS WAS NOT TESTED. I added this to support paths between cables
-		// inside a network, not just from a cable to a destination.
-		destinationAdjacentCables.add(targetPosition);
 
 		// Capture the start position.
 		this.startingCablePosition = startingCablePosition;
-		this.endingPosition = targetPosition;
+		this.endingPosition = endingPosition;
 		this.supportedNetworkType = supportedNetworkType;
 		this.lengthProvider = lengthProvider;
 		this.world = world;
@@ -67,9 +69,100 @@ public class NetworkPathFinder {
 		bfsQueue = new LinkedList<BlockPos>();
 	}
 
+	public List<Path> executeDFSVersion() {
+		List<Path> output = new LinkedList<Path>();
+
+		// If we're already at the target location, create a 2 entry path (from the
+		// starting outwards, and then from the starting to the end).
+		if (isAtTargetLocation(startingCablePosition)) {
+			List<PathEntry> rawPath = new ArrayList<>();
+			rawPath.add(new PathEntry(startingCablePosition, null));
+			rawPath.add(new PathEntry(endingPosition, WorldUtilities.getFacingFromPos(startingCablePosition, endingPosition)));
+			output.add(new Path(startingCablePosition, endingPosition, supportedNetworkType, 1, rawPath));
+		} else {
+			List<PathEntry> initialPath = new ArrayList<>();
+			Set<BlockPos> initialVisited = new HashSet<>();
+			List<List<PathEntry>> rawPaths = new ArrayList<>();
+
+			recurseDFS(rawPaths, new CableScanLocation(startingCablePosition, null, false), initialPath, initialVisited);
+
+			System.out.println("Path count: " + rawPaths.size());
+
+			for (List<PathEntry> entries : rawPaths) {
+				float length = 0;
+				for (PathEntry entry : entries) {
+					length += entry.getDistance();
+				}
+
+				if (!destinationIsCable) {
+					entries.add(new PathEntry(endingPosition, WorldUtilities.getFacingFromPos(entries.get(entries.size() - 1).getPosition(), endingPosition)));
+				}
+
+				output.add(new Path(startingCablePosition, endingPosition, supportedNetworkType, length, entries));
+			}
+
+			// Sort shortest to longest.
+			output.sort((Path lhs, Path rhs) -> lhs.getLength() < rhs.getLength() ? -1 : lhs.getLength() == rhs.getLength() ? 0 : 1);
+
+		}
+
+		return output;
+	}
+
+	private void recurseDFS(List<List<PathEntry>> paths, CableScanLocation curr, List<PathEntry> currentPath, Set<BlockPos> visited) {
+		visited.add(curr.getLocation());
+
+		if (!CableNetworkManager.get(world).isTrackingCable(curr.getLocation())) {
+			return;
+		}
+
+		currentPath.add(new PathEntry(curr.getLocation(), curr.getSide()));
+
+		if (isAtTargetLocation(curr.getLocation())) {
+			paths.add(currentPath);
+			return;
+		}
+
+		ServerCable cable = CableNetworkManager.get(world).getCable(curr.getLocation());
+		List<CableScanLocation> toScan = new LinkedList<>();
+
+		for (CableScanLocation scanLoc : cable.getScanLocations()) {
+			if (visited.contains(scanLoc.getLocation())) {
+				continue;
+			}
+			toScan.add(scanLoc);
+		}
+
+		if (toScan.isEmpty()) {
+			return;
+		}
+
+		if (toScan.size() == 1) {
+			recurseDFS(paths, toScan.get(0), currentPath, visited);
+		} else {
+			List<List<PathEntry>> pathCopies = new LinkedList<>();
+			List<Set<BlockPos>> visitedCopies = new LinkedList<>();
+			for (int i = 0; i < toScan.size(); i++) {
+				pathCopies.add(new LinkedList<>(currentPath));
+				visitedCopies.add(new HashSet<>(visited));
+			}
+
+			for (int i = 0; i < toScan.size(); i++) {
+				recurseDFS(paths, toScan.get(i), pathCopies.get(i), visitedCopies.get(i));
+			}
+		}
+	}
+
+	private boolean isAtTargetLocation(BlockPos pos) {
+		if (destinationIsCable) {
+			return pos.equals(endingPosition);
+		}
+		return destinationAdjacentCables.contains(pos);
+	}
+
 	public List<Path> executeAlgorithm() {
 		// If we have no terminus nodes, return an empty list.
-		if (destinationAdjacentCables.size() == 0) {
+		if (!destinationIsCable && destinationAdjacentCables.size() == 0) {
 			return Collections.emptyList();
 		}
 
@@ -103,8 +196,7 @@ public class NetworkPathFinder {
 				visitedPositions.add(scanLoc.getLocation());
 
 				// Cache the predecessor to this location.
-				float distance = curr.distManhattan(scanLoc.getLocation());
-				predecessors.put(scanLoc.getLocation(), new PathEntry(curr, scanLoc.getSide(), distance));
+				predecessors.put(scanLoc.getLocation(), new PathEntry(curr, scanLoc.getSide()));
 
 				// Now we add the position to the BFS queue and continue.
 				bfsQueue.add(scanLoc.getLocation());
@@ -116,27 +208,36 @@ public class NetworkPathFinder {
 
 	protected List<Path> generateOutputPaths() {
 		List<Path> output = new LinkedList<Path>();
-		// Go through all predecessors.
-		for (BlockPos terminus : destinationAdjacentCables) {
-			// This will generate the shortest path to the terminus.
-			Path path = generatePathToOutput(terminus);
+		if (destinationIsCable) {
+			Path path = generatePathToOutput(endingPosition);
 			if (path != null) {
 				output.add(path);
 			}
+		} else {
+			// Go through all predecessors.
+			for (BlockPos terminus : destinationAdjacentCables) {
+				// This will generate the shortest path to the terminus.
+				Path path = generatePathToOutput(terminus);
+				if (path != null) {
+					output.add(path);
+				}
+			}
 		}
+
+		System.out.println("Path count: " + output.size());
 		return output;
 	}
 
-	protected Path generatePathToOutput(BlockPos lastCable) {
+	protected Path generatePathToOutput(BlockPos penultimatePosition) {
 		// If this potential last cable does not exist in the predecessors list, odds
 		// are its just air.
-		if (!predecessors.containsKey(lastCable)) {
+		if (!predecessors.containsKey(penultimatePosition)) {
 			return null;
 		}
 
 		// Get the predecessor to the last cable (if there is one, this path could just
 		// be the single cable).
-		PathEntry curr = predecessors.get(lastCable);
+		PathEntry curr = predecessors.get(penultimatePosition);
 
 		// Build the path entries.
 		List<PathEntry> pathEntries = new ArrayList<PathEntry>();
@@ -147,23 +248,39 @@ public class NetworkPathFinder {
 			curr = predecessors.get(curr.getPosition());
 		}
 		// Add the starting cable - direction doesn't matter here.
-		pathEntries.add(new PathEntry(startingCablePosition, null, 0));
+		pathEntries.add(new PathEntry(startingCablePosition, null));
 
 		// The whole path is currently reversed, so unreverse it.
 		Collections.reverse(pathEntries);
 
 		// Add the last cable and the end position.
-		pathEntries.add(new PathEntry(lastCable, WorldUtilities.getFacingFromPos(lastCable, endingPosition), 0));
-		pathEntries.add(new PathEntry(endingPosition, WorldUtilities.getFacingFromPos(lastCable, endingPosition), 0));
+		// Take the distance, then multiply by 10, clamp to int, and then divide.
+		// This should give us a distance with a single decimal.
+		double distance = Math.sqrt(penultimatePosition.distSqr(endingPosition));
+		distance *= 10;
+		int roundedDistance = (int) distance;
+
+		pathEntries.add(new PathEntry(penultimatePosition, WorldUtilities.getFacingFromPos(penultimatePosition, endingPosition)));
+		pathEntries.add(new PathEntry(endingPosition, WorldUtilities.getFacingFromPos(penultimatePosition, endingPosition)));
 
 		float length = 1;
+		Set<BlockPos> deduplicationList = new HashSet<>();
 		for (PathEntry entry : pathEntries) {
+			if (deduplicationList.contains(entry.getPosition())) {
+				continue;
+			}
+
+			deduplicationList.add(entry.getPosition());
 			length += entry.getDistance();
 		}
 
-		// Convert the list to an array and create the final path.
-		PathEntry[] entries = new PathEntry[pathEntries.size()];
-		pathEntries.toArray(entries);
-		return new Path(startingCablePosition, endingPosition, supportedNetworkType, length, entries);
+		return new Path(startingCablePosition, endingPosition, supportedNetworkType, length, pathEntries);
+	}
+
+	protected double calculateDistance(BlockPos starting, BlockPos ending) {
+		double distance = Math.sqrt(starting.distSqr(ending));
+		distance *= 10;
+		return ((int) distance) / 10;
+
 	}
 }
