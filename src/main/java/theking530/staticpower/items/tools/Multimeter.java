@@ -34,6 +34,13 @@ public class Multimeter extends StaticPowerItem {
 	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		// If on the server.
 		if (!world.isClientSide()) {
+			// If we shift right clicked, clear the pending location.
+			if (player.isCrouching() && isPendingSecondLocation(item)) {
+				clearPendingLocation(item);
+				player.sendSystemMessage(Component.translatable("gui.staticpower.multimeter_cleared"));
+				return InteractionResult.PASS;
+			}
+
 			// If we right clicked on a cable.
 			if (CableNetworkManager.get(world).isTrackingCable(pos)) {
 				// Get the cable.

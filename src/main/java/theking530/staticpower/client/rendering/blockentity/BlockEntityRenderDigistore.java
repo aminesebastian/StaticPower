@@ -34,8 +34,8 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 					new Vector2D(0.4f, 0.4f), partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
 			drawFillBar(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 			MetricConverter metric = new MetricConverter(tileEntity.inventory.getTotalContainedCount());
-			WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, metric.getValueAsString(true), tileEntity, SDColor.EIGHT_BIT_WHITE, new Vector3D(0.5f, 0.323f, 1.0001f), 0.007f,
-					partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+			WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, metric.getValueAsString(true), SDColor.EIGHT_BIT_WHITE, new Vector3D(0.5f, 0.323f, 1.0001f), 0.007f, matrixStack,
+					buffer, combinedLight, combinedOverlay);
 		}
 		drawIndicators(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		Minecraft.getInstance().getProfiler().pop();

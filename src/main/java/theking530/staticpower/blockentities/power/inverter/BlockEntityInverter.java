@@ -44,7 +44,7 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 		powerStorage.setInputVoltageRange(StaticVoltageRange.ANY_VOLTAGE);
 		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
 
-		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		powerStorage.setMaximumInputPower(Double.MAX_VALUE);
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
 
 		powerStorage.setCapacity(0);

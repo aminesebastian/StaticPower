@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -15,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.core.BlockPos;
 import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
+import theking530.staticpower.StaticPower;
 
 public class PathCache {
 	public static final Logger LOGGER = LogManager.getLogger(PathCache.class);
@@ -57,11 +57,13 @@ public class PathCache {
 			return Collections.emptyList();
 		}
 
-		if (hasPath(cablePosition, destination, moduleType)) {
-			return Cache.get(destination).get(cablePosition).stream().filter(path -> path.getSupportedNetworkType().equals(moduleType)).collect(Collectors.toList());
-		} else {
-			return cacheNewPath(cablePosition, destination, moduleType);
-		}
+		return cacheNewPath(cablePosition, destination, moduleType);
+		// TEMPORARY
+//		if (hasPath(cablePosition, destination, moduleType)) {
+//			return Cache.get(destination).get(cablePosition).stream().filter(path -> path.getSupportedNetworkType().equals(moduleType)).collect(Collectors.toList());
+//		} else {
+//			return cacheNewPath(cablePosition, destination, moduleType);
+//		}
 	}
 
 	/**
@@ -105,5 +107,6 @@ public class PathCache {
 	 */
 	public void invalidateCache() {
 		Cache.clear();
+		StaticPower.LOGGER.debug(String.format("Path cache invalidated for network with origin cable position: %1$s!", OwningNetwork.getOrigin().toString()));
 	}
 }

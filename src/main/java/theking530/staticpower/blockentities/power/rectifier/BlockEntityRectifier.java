@@ -40,13 +40,19 @@ public class BlockEntityRectifier extends BlockEntityConfigurable {
 				if (!powerStorage.getInputVoltageRange().isVoltageInRange(stack.getVoltage())) {
 					return super.addPower(stack, simulate);
 				}
-				return transferPower(stack, simulate);
+				double rectified =  transferPower(stack, simulate);		
+				
+				powerStorage.setCapacity(rectified);
+				super.addPower(new PowerStack(rectified, stack.getVoltage()), simulate);
+				super.drainPower(rectified, simulate);
+				powerStorage.setCapacity(0);
+				return rectified;
 			}
 		}.setInputCurrentTypes(CurrentType.ALTERNATING).setOutputCurrentType(CurrentType.DIRECT).setSideConfiguration(ioSideConfiguration));
 		powerStorage.setInputVoltageRange(StaticVoltageRange.ANY_VOLTAGE);
 		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
 
-		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		powerStorage.setMaximumInputPower(Double.MAX_VALUE);
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
 
 		powerStorage.setCapacity(0);

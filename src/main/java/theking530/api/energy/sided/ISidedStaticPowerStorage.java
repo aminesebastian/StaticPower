@@ -4,6 +4,7 @@ import net.minecraft.core.Direction;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerEnergyTracker;
 import theking530.api.energy.StaticVoltageRange;
 
 public interface ISidedStaticPowerStorage extends IStaticPowerStorage {
@@ -54,5 +55,9 @@ public interface ISidedStaticPowerStorage extends IStaticPowerStorage {
 
 	public default PowerStack drainPower(Direction side, double power, boolean simulate) {
 		return drainPower(power, simulate);
+	}
+
+	public default StaticPowerEnergyTracker getEnergyTracker(Direction side) {
+		return getEnergyTracker();
 	}
 }

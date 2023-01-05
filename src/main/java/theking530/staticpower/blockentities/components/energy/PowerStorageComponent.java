@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerEnergyTracker;
 import theking530.api.energy.StaticPowerStorage;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
@@ -447,6 +448,11 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 			return drainPower(power, simulate);
 		}
 		return PowerStack.EMPTY;
+	}
+
+	@Override
+	public StaticPowerEnergyTracker getEnergyTracker() {
+		return storage.getEnergyTracker();
 	}
 
 	public double getAveragePowerUsedPerTick() {

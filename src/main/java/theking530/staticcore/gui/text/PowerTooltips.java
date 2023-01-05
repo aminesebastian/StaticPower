@@ -30,7 +30,7 @@ public class PowerTooltips {
 	}
 
 	public static void addPowerLossPerBlockTooltip(List<Component> tooltip, double powerLoss) {
-		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.power_loss_per_block", ChatFormatting.GOLD, PowerTextFormatting.formatPowerToString(powerLoss));
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.power_loss_per_block", ChatFormatting.YELLOW, PowerTextFormatting.formatPowerToString(powerLoss));
 	}
 
 	public static void addPowerCapacityTooltip(List<Component> tooltip, double capacity) {
@@ -42,10 +42,14 @@ public class PowerTooltips {
 	}
 
 	public static void addVoltageInputTooltip(List<Component> tooltip, StaticVoltageRange range) {
-		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.input_voltage", ChatFormatting.GREEN, PowerTextFormatting.formatVoltageRangeToString(range));
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.input_voltage", ChatFormatting.AQUA, PowerTextFormatting.formatVoltageRangeToString(range));
 	}
 
 	public static void addMaximumInputPowerTooltip(List<Component> tooltip, double maximumPower) {
-		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_input_power", ChatFormatting.AQUA, PowerTextFormatting.formatPowerRateToString(maximumPower));
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_input", ChatFormatting.YELLOW, PowerTextFormatting.formatPowerRateToString(maximumPower));
+	}
+
+	public static void addMaximumCurrentTooltip(List<Component> tooltip, double current) {
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_current", ChatFormatting.GOLD, PowerTextFormatting.formatCurrentToString(current));
 	}
 }

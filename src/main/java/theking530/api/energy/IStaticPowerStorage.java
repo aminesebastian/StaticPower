@@ -1,5 +1,7 @@
 package theking530.api.energy;
 
+import javax.annotation.Nullable;
+
 public interface IStaticPowerStorage {
 
 	public StaticVoltageRange getInputVoltageRange();
@@ -65,4 +67,15 @@ public interface IStaticPowerStorage {
 	 * @return
 	 */
 	public PowerStack drainPower(double power, boolean simulate);
+
+	/**
+	 * Return an option energy tracker that will be used when rendering the
+	 * electrical overlay into the world.
+	 * 
+	 * @return
+	 */
+	@Nullable
+	public default StaticPowerEnergyTracker getEnergyTracker() {
+		return null;
+	}
 }

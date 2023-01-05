@@ -43,10 +43,11 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	}
 
 	private final List<CachedPowerDestination> destinations;
-	private double lastProvidedVoltage;
-	private CurrentType lastProvidedCurrentType;
 	private double maximumCurrentOutput;
 	private int lastSuppliedDestinationIndex;
+
+	private PowerStack lastProvidedStack;
+	private PowerStack lastReceivedStack;
 
 	public PowerNetworkModule() {
 		this(ModCableModules.Power.get());
@@ -60,8 +61,8 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 	@Override
 	public void preWorldTick(Level world) {
-		lastProvidedVoltage = 0;
-		lastProvidedCurrentType = CurrentType.DIRECT;
+		lastProvidedStack = PowerStack.EMPTY;
+		lastReceivedStack = PowerStack.EMPTY;
 	}
 
 	@Override
@@ -128,17 +129,24 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	@Override
 	public void getReaderOutput(List<Component> output, BlockPos pos) {
 		output.add(Component.literal(String.format("Supplying: %1$d destinations.", destinations.size())));
-		output.add(Component.translatable("gui.staticpower.voltage").append(": ")
-				.append(ChatFormatting.BLUE.toString() + PowerTextFormatting.formatVoltageToString(lastProvidedVoltage).getString()));
+		getMultimeterOutput(output, pos, pos);
 	}
 
 	public void getMultimeterOutput(List<Component> output, BlockPos startingLocation, BlockPos endingLocation) {
 		output.add(Component.literal(""));
-		getReaderOutput(output, null);
 		ElectricalPathProperties properties = getPropertiesBetweenPoints(startingLocation, endingLocation);
-		if (lastProvidedVoltage != 0) {
-			output.add(Component.translatable("gui.staticpower.power_loss").append(": ").append(ChatFormatting.GOLD.toString() + PowerTextFormatting
-					.formatPowerToString(StaticPowerVoltage.adjustPowerLossByVoltage(StaticPowerVoltage.getVoltageClass(lastProvidedVoltage), properties.powerLoss)).getString()));
+
+		if (!lastProvidedStack.isEmpty()) {
+			output.add(Component.translatable("gui.staticpower.power_loss").append(": ")
+					.append(ChatFormatting.GOLD.toString() + PowerTextFormatting
+							.formatPowerToString(
+									StaticPowerVoltage.adjustPowerLossByVoltage(StaticPowerVoltage.getVoltageClass(lastProvidedStack.getVoltage()), properties.powerLoss))
+							.getString()));
+		}
+
+		if (!lastReceivedStack.isEmpty()) {
+			output.add(Component.translatable("gui.staticpower.output_current").append(": ")
+					.append(ChatFormatting.RED.toString() + PowerTextFormatting.formatCurrentToString(lastProvidedStack.getCurrent()).getString()));
 		} else {
 			output.add(Component.translatable("gui.staticpower.power_loss").append(": ")
 					.append(ChatFormatting.GOLD.toString() + PowerTextFormatting.formatPowerToString(properties.powerLoss).getString()).append(" @ ")
@@ -227,7 +235,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 	@Override
 	public double getOutputVoltage() {
-		return lastProvidedVoltage;
+		return lastReceivedStack.getVoltage();
 	}
 
 	@Override
@@ -237,7 +245,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 	@Override
 	public CurrentType getOutputCurrentType() {
-		return lastProvidedCurrentType;
+		return lastReceivedStack.getCurrentType();
 	}
 
 	@Override
@@ -258,6 +266,14 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	@Override
 	public double addPower(PowerStack power, boolean simulate) {
 		return 0;
+	}
+
+	public PowerStack getLastReceivedStack() {
+		return lastReceivedStack;
+	}
+
+	public PowerStack getLastProvidedStack() {
+		return lastProvidedStack;
 	}
 
 	protected double supplyPower(BlockPos powerSourcePos, BlockPos fromCablePos, PowerStack stack, CachedPowerDestination destination, boolean simulate) {
@@ -304,13 +320,12 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		if (machineUsedPower == 0) {
 			return 0;
 		}
-
+		
 		return machineUsedPower + cablePowerLoss;
 	}
 
 	public double addPower(BlockPos powerSourcePos, BlockPos fromCablePos, PowerStack power, boolean simulate) {
-		lastProvidedVoltage = power.getVoltage();
-		lastProvidedCurrentType = power.getCurrentType();
+		lastReceivedStack = power;
 
 		if (destinations.isEmpty()) {
 			return 0;
@@ -326,6 +341,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 				break;
 			}
 		}
+		lastProvidedStack = new PowerStack(suppliedPower, power.getVoltage());
 		return suppliedPower;
 	}
 }

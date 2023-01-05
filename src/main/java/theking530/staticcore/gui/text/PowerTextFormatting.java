@@ -19,7 +19,7 @@ public class PowerTextFormatting {
 	/** Translation text component for Static Volts (V). */
 	public static final MutableComponent VOLTAGE_UNIT = Component.translatable("gui.staticpower.volt_unit");
 
-	/** Translation text component for Static Current (C). */
+	/** Translation text component for Static Current (A). */
 	public static final MutableComponent CURRENT_UNIT = Component.translatable("gui.staticpower.current_unit");
 
 	/** Translation text component for Static Power (P). */
@@ -110,15 +110,17 @@ public class PowerTextFormatting {
 	}
 
 	public static MutableComponent formatTransformerRatioToString(int ratio) {
-		return Component.literal(String.valueOf(ratio+1)).append(":1");
+		return Component.literal(String.valueOf(ratio + 1)).append(":1");
 	}
 
 	public static MutableComponent formatVoltageRangeToString(StaticVoltageRange range) {
 		if (range.minimumVoltage() == range.maximumVoltage()) {
 			return Component.translatable(range.maximumVoltage().getShortName());
+		} else if (range.minimumVoltage() == StaticPowerVoltage.LOW && range.maximumVoltage() == StaticPowerVoltage.BONKERS) {
+			return Component.translatable("gui.staticpower.any_voltage");
 		} else if (range.minimumVoltage() == StaticPowerVoltage.LOW) {
 			return Component.literal("<").append(Component.translatable(range.maximumVoltage().getShortName()));
-		} else if (range.maximumVoltage() == StaticPowerVoltage.EXTREME) {
+		} else if (range.maximumVoltage() == StaticPowerVoltage.BONKERS) {
 			return Component.literal(">").append(Component.translatable(range.minimumVoltage().getShortName()));
 		} else {
 			return Component.translatable(range.minimumVoltage().getShortName()).append("⇔").append(Component.translatable(range.maximumVoltage().getShortName()));
@@ -144,7 +146,7 @@ public class PowerTextFormatting {
 		}
 
 		if (includeUnits) {
-			output.append(RESISTANCE_UNIT);
+			output.append(CURRENT_UNIT);
 		}
 		return output;
 	}
@@ -156,4 +158,37 @@ public class PowerTextFormatting {
 	public static MutableComponent formatResistanceToString(double resistance) {
 		return formatResistanceToString(resistance, true, true);
 	}
+
+	public static MutableComponent formatCurrentToString(double current, boolean includeUnits, boolean includeMetricUnit) {
+		// Allocate the text component.
+		MutableComponent output;
+
+		// If the value is equal to the integer max, make it infinite.
+		if (Double.isInfinite(current) || current == Double.MAX_VALUE) {
+			output = Component.literal("∞");
+		} else {
+			// Perform the metric conversion.
+			MetricConverter metricEnergy = new MetricConverter(current, 0);
+			output = Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(metricEnergy.getValue()));
+
+			// Include the metric unit if requested.
+			if (includeMetricUnit) {
+				output.append(metricEnergy.getSuffix());
+			}
+		}
+
+		if (includeUnits) {
+			output.append(CURRENT_UNIT);
+		}
+		return output;
+	}
+
+	public static MutableComponent formatCurrentToString(double current, boolean includeUnits) {
+		return formatCurrentToString(current, includeUnits, true);
+	}
+
+	public static MutableComponent formatCurrentToString(double current) {
+		return formatCurrentToString(current, true, true);
+	}
+
 }

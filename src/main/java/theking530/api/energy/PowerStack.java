@@ -74,7 +74,7 @@ public class PowerStack {
 
 	protected void updateCurrent() {
 		if (voltage != 0) {
-			current = power / voltage;
+			current = power / Math.abs(voltage);
 		} else {
 			current = 0;
 		}

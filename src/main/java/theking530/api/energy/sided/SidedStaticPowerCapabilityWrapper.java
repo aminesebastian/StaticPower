@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerEnergyTracker;
 import theking530.api.energy.StaticVoltageRange;
 
 /**
@@ -107,6 +108,11 @@ public class SidedStaticPowerCapabilityWrapper {
 		@Override
 		public final PowerStack drainPower(double power, boolean simulate) {
 			return proxy.drainPower(representedSide, power, simulate);
+		}
+
+		@Override
+		public final StaticPowerEnergyTracker getEnergyTracker() {
+			return proxy.getEnergyTracker(representedSide);
 		}
 	}
 }

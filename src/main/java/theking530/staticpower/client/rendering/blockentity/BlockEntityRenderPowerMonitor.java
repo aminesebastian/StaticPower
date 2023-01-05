@@ -50,17 +50,17 @@ public class BlockEntityRenderPowerMonitor extends StaticPowerBlockEntitySpecial
 		double minValue = tileEntity.getProvidedData().getMinMaxValues().getX();
 
 		// Draw the max value.
-		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, PowerTextFormatting.formatPowerRateToString(maxValue).getString(), tileEntity,
-				new SDColor(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.07f, 0.43f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, PowerTextFormatting.formatPowerRateToString(maxValue).getString(), new SDColor(255.0f, 255.0f, 255.0f, 255.0f),
+				new Vector3D(0.07f, 0.43f, 0.025f), 0.0035f, matrixStack, buffer, combinedLight, combinedOverlay);
 
 		// Draw the min value.
-		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, PowerTextFormatting.formatPowerRateToString(minValue).getString(), tileEntity,
-				new SDColor(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.07f, 0.04f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, PowerTextFormatting.formatPowerRateToString(minValue).getString(), new SDColor(255.0f, 255.0f, 255.0f, 255.0f),
+				new Vector3D(0.07f, 0.04f, 0.025f), 0.0035f, matrixStack, buffer, combinedLight, combinedOverlay);
 
 		// Draw the current value.
 		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer,
-				PowerTextFormatting.formatPowerRateToString(tileEntity.getMetrics().getData(MetricsTimeUnit.TICKS).getInputValues().peekLast()).getString(), tileEntity,
-				new SDColor(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.74f, 0.2145f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+				PowerTextFormatting.formatPowerRateToString(tileEntity.getMetrics().getData(MetricsTimeUnit.TICKS).getInputValues().peekLast()).getString(), new SDColor(255.0f, 255.0f, 255.0f, 255.0f),
+				new Vector3D(0.74f, 0.2145f, 0.025f), 0.0035f, matrixStack, buffer, combinedLight, combinedOverlay);
 
 		matrixStack.popPose();
 		Minecraft.getInstance().getProfiler().pop();

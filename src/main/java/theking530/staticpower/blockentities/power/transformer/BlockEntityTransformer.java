@@ -54,14 +54,21 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(Direction side, PowerStack stack, boolean simulate) {
-				return transformAndSupplyPower(side, stack, simulate);
+				double transformed = transformAndSupplyPower(side, stack, simulate);
+				
+				powerStorage.setCapacity(transformed);
+				super.addPower(new PowerStack(transformed, stack.getVoltage()), simulate);
+				super.drainPower(transformed, simulate);
+				powerStorage.setCapacity(0);
+				
+				return transformed;
 			}
 		}.setSideConfiguration(ioSideConfiguration));
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getTransformerVoltageRange());
 		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
 		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
-		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		powerStorage.setMaximumInputPower(Double.MAX_VALUE);
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
 
 		powerStorage.setCapacity(0);
@@ -109,6 +116,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		double voltageSign = stack.getVoltage() < 0 ? -1 : 1;
 		double power = Math.min(stack.getPower(), powerStorage.getMaximumPowerOutput());
 		PowerStack transformedStack = new PowerStack(power, powerStorage.getOutputVoltage() * voltageSign, CurrentType.ALTERNATING);
+
 		return powerDistributor.manuallyDistributePower(powerStorage, transformedStack, simulate);
 	}
 

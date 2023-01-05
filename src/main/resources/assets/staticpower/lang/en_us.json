@@ -1059,14 +1059,19 @@
 	"gui.staticpower.stored_power": "Stored Power",
 	"gui.staticpower.usage": "Usage",
 	
+	"gui.staticpower.invalid_multimeter_second_location": "Invalid second location for multimeter!",
+	"gui.staticpower.multimeter_cleared": "Multimeter cleared!",
+	
 	"gui.staticpower.voltage": "Voltage",
 	"gui.staticpower.max_voltage": "Max. Voltage",
 	"gui.staticpower.min_voltage": "Min. Voltage",
 	"gui.staticpower.input_voltage": "Input Voltage",
 	"gui.staticpower.output_voltage": "Output Voltage",
 	"gui.staticpower.volt_unit": "V",
+	"gui.staticpower.any_voltage": "Any",
 	
 	"gui.staticpower.current": "Current",
+	"gui.staticpower.output_current": "Output Current",
 	"gui.staticpower.max_current": "Max. Current",
 	"gui.staticpower.max_input_current": "Max. Input Current",
 	"gui.staticpower.max_output_current": "Max. Output Current",

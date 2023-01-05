@@ -109,20 +109,17 @@ public class WorldRenderingUtilities {
 
 	/**
 	 * Renders a string in the world.
-	 * 
 	 * @param text            The text to render.
-	 * @param tileEntity
 	 * @param color
 	 * @param offset
 	 * @param scale
-	 * @param partialTicks
 	 * @param matrixStack
 	 * @param buffer
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	public static void drawTextInWorld(BlockEntityRenderDispatcher renderDispatcher, String text, BlockEntityBase tileEntity, SDColor color, Vector3D offset, float scale,
-			float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public static void drawTextInWorld(BlockEntityRenderDispatcher renderDispatcher, String text, SDColor color, Vector3D offset, float scale, PoseStack matrixStack,
+			MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (text == null || text.isEmpty())
 			return;
 

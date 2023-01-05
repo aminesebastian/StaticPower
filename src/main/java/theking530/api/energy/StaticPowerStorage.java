@@ -178,7 +178,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	@Override
 	public double addPower(PowerStack stack, boolean simulate) {
 		// If we can't accept the input type, do nothing,
-		if (!canAcceptCurrentType(stack.getCurrentType()) || stack.getVoltage() < 0 || stack.getPower() < 0) {
+		if (!canAcceptCurrentType(stack.getCurrentType()) || stack.getPower() < 0) {
 			if (!simulate) {
 				ticker.powerAdded(new PowerStack(0, stack.getVoltage(), stack.getCurrentType()));
 			}
@@ -262,6 +262,11 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		output.putBoolean("canOutputExternalPower", canOutputExternalPower);
 
 		return output;
+	}
+
+	@Override
+	public StaticPowerEnergyTracker getEnergyTracker() {
+		return ticker;
 	}
 
 	@Override

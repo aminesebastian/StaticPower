@@ -39,6 +39,7 @@ import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
+import theking530.staticpower.client.rendering.renderers.ElectricalOverlayRenderer;
 import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
 import theking530.staticpower.client.rendering.renderers.WireRenderer;
 import theking530.staticpower.init.ModEntities;
@@ -117,6 +118,7 @@ public class StaticPowerModEventsClient {
 			// Register the custom renderers.
 			StaticPowerForgeBusClient.addCustomRenderer(new WireRenderer());
 			StaticPowerForgeBusClient.addCustomRenderer(new RadiusPreviewRenderer());
+			StaticPowerForgeBusClient.addCustomRenderer(new ElectricalOverlayRenderer());
 
 			// Fire event to register metric renderers.
 			ModLoader.get().postEvent(new ProductMetricTileRendererRegistry.RegisterEvent());

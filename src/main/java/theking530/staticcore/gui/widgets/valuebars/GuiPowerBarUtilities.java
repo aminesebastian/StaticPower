@@ -5,13 +5,12 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.text.PowerTextFormatting;
+import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.gui.GuiTextures;
 
@@ -20,16 +19,10 @@ public class GuiPowerBarUtilities {
 			StaticPowerVoltage maximumInputVoltage) {
 		List<Component> tooltip = new ArrayList<Component>();
 
-		// Show the total amount of energy remaining / total energy capacity.
-		tooltip.add(Component.translatable("gui.staticpower.stored_power").withStyle(ChatFormatting.GREEN).append(": ")
-				.append(ChatFormatting.WHITE + PowerTextFormatting.formatPowerToString(storedPower, capacity).getString()));
+		PowerTooltips.addStoredPowerTooltip(tooltip, storedPower);
+		PowerTooltips.addMaximumInputPowerTooltip(tooltip, maximumInptuPower);
+		PowerTooltips.addVoltageInputTooltip(tooltip, new StaticVoltageRange(minimumInputVoltage, maximumInputVoltage));
 
-		// Add the input voltage to the tooltip.
-		tooltip.add(Component.translatable("gui.staticpower.input_voltage").withStyle(ChatFormatting.AQUA).append(": ")
-				.append(ChatFormatting.WHITE + PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minimumInputVoltage, maximumInputVoltage)).getString()));
-
-		tooltip.add(Component.translatable("gui.staticpower.max_input").withStyle(ChatFormatting.YELLOW).append(": ")
-				.append(ChatFormatting.WHITE + PowerTextFormatting.formatPowerRateToString(maximumInptuPower).getString()));
 		return tooltip;
 	}
 
