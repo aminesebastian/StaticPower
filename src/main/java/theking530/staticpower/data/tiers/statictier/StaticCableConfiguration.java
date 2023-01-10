@@ -56,8 +56,8 @@ public class StaticCableConfiguration {
 		}
 
 		@Override
-		protected double getCableMaxPower() {
-			return 80;
+		protected double getCableMaxCurrent() {
+			return 10;
 		}
 
 		@Override
@@ -71,8 +71,8 @@ public class StaticCableConfiguration {
 		}
 
 		@Override
-		protected double getWireTerminalMaxPower() {
-			return 250;
+		protected double getWireTerminalMaxCurrent() {
+			return 25;
 		}
 
 		@Override
@@ -86,8 +86,8 @@ public class StaticCableConfiguration {
 		}
 
 		@Override
-		protected double getWireCoilMaxPower() {
-			return 320;
+		protected double getWireCoilMaxCurrent() {
+			return 10;
 		}
 
 		@Override

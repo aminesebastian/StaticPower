@@ -54,13 +54,11 @@ public class BlockEntityPowerCable extends BlockEntityBase {
 
 	public BlockEntityPowerCable(BlockEntityTypeAllocator<BlockEntityPowerCable> allocator, BlockPos pos, BlockState state, boolean isIndustrial) {
 		super(allocator, pos, state);
-		StaticPowerVoltage voltage = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialMaxVoltage.get()
-				: getTierObject().cablePowerConfiguration.cableMaxVoltage.get();
 		double maxPower = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerMaxPower.get()
-				: getTierObject().cablePowerConfiguration.cablePowerMaxPower.get();
+				: getTierObject().cablePowerConfiguration.cablerMaxCurrent.get();
 		double resistance = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerLossPerBlock.get()
 				: getTierObject().cablePowerConfiguration.cablePowerLossPerBlock.get();
-		registerComponent(powerCableComponent = new PowerCableComponent("PowerCableComponent", isIndustrial, voltage, maxPower, resistance));
+		registerComponent(powerCableComponent = new PowerCableComponent("PowerCableComponent", isIndustrial, StaticPowerVoltage.BONKERS, maxPower, resistance));
 	}
 
 	@Override

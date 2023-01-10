@@ -40,17 +40,20 @@ public class BlockEntityRectifier extends BlockEntityConfigurable {
 				if (!powerStorage.getInputVoltageRange().isVoltageInRange(stack.getVoltage())) {
 					return super.addPower(stack, simulate);
 				}
-				double rectified =  transferPower(stack, simulate);		
-				
+				double rectified = transferPower(stack, simulate);
 				powerStorage.setCapacity(rectified);
-				super.addPower(new PowerStack(rectified, stack.getVoltage()), simulate);
+				super.addPower(new PowerStack(rectified, stack.getVoltage(), stack.getCurrentType()), simulate);
 				super.drainPower(rectified, simulate);
 				powerStorage.setCapacity(0);
 				return rectified;
 			}
-		}.setInputCurrentTypes(CurrentType.ALTERNATING).setOutputCurrentType(CurrentType.DIRECT).setSideConfiguration(ioSideConfiguration));
+		}.setSideConfiguration(ioSideConfiguration));
+
 		powerStorage.setInputVoltageRange(StaticVoltageRange.ANY_VOLTAGE);
 		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
+
+		powerStorage.setInputCurrentTypes(CurrentType.ALTERNATING);
+		powerStorage.setOutputCurrentType(CurrentType.DIRECT);
 
 		powerStorage.setMaximumInputPower(Double.MAX_VALUE);
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
@@ -64,6 +67,7 @@ public class BlockEntityRectifier extends BlockEntityConfigurable {
 
 	public double transferPower(PowerStack stack, boolean simulate) {
 		if (stack.getCurrentType() == CurrentType.ALTERNATING) {
+			powerStorage.setOutputVoltage(StaticPowerVoltage.getVoltageClass(stack.getVoltage()));
 			PowerStack directVersion = new PowerStack(Math.abs(stack.getPower()), Math.abs(stack.getVoltage()), CurrentType.DIRECT);
 			return powerDistributor.manuallyDistributePower(powerStorage, directVersion, simulate);
 		}

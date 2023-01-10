@@ -39,7 +39,7 @@ public class BlockEntityWireConnector extends BlockEntityBase {
 
 		StaticPowerTier tier = getTierObject();
 		StaticPowerVoltage voltage = tier.cablePowerConfiguration.wireTerminalMaxVoltage.get();
-		double maxPower = tier.cablePowerConfiguration.wireTerminalMaxPower.get();
+		double maxPower = tier.cablePowerConfiguration.wireTerminalMaxCurrent.get();
 		double powerLoss = tier.cablePowerConfiguration.wireCoilPowerLossPerBlock.get();
 
 		// TODO: Power loss here has to be updated per wire type, not per terminal.

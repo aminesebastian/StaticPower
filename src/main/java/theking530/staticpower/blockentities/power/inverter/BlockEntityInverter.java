@@ -38,11 +38,22 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(PowerStack stack, boolean simulate) {
-				return transferPower(stack, simulate);
+				double transfered = transferPower(stack, simulate);
+
+				powerStorage.setCapacity(transfered);
+				super.addPower(new PowerStack(transfered, stack.getVoltage(), stack.getCurrentType()), simulate);
+				super.drainPower(transfered, simulate);
+				powerStorage.setCapacity(0);
+
+				return transfered;
 			}
-		}.setOutputCurrentType(CurrentType.ALTERNATING).setSideConfiguration(ioSideConfiguration));
+		}.setSideConfiguration(ioSideConfiguration));
+
 		powerStorage.setInputVoltageRange(StaticVoltageRange.ANY_VOLTAGE);
 		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
+
+		powerStorage.setInputCurrentTypes(CurrentType.DIRECT);
+		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
 		powerStorage.setMaximumInputPower(Double.MAX_VALUE);
 		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
@@ -57,6 +68,7 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 	public double transferPower(PowerStack stack, boolean simulate) {
 		if (stack.getCurrentType() == CurrentType.DIRECT) {
 			double multiplier = StaticPowerEnergyUtilities.getAlternatingCurrentMultiplier(getLevel());
+			powerStorage.setOutputVoltage(StaticPowerVoltage.getVoltageClass(stack.getVoltage()));
 			PowerStack alternatingVersion = new PowerStack(stack.getPower(), stack.getVoltage() * multiplier, CurrentType.ALTERNATING);
 			return powerDistributor.manuallyDistributePower(powerStorage, alternatingVersion, simulate);
 		}

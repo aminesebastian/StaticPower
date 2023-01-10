@@ -169,7 +169,7 @@ public class PowerTextFormatting {
 		} else {
 			// Perform the metric conversion.
 			MetricConverter metricEnergy = new MetricConverter(current, 0);
-			output = Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(metricEnergy.getValue()));
+			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
 
 			// Include the metric unit if requested.
 			if (includeMetricUnit) {

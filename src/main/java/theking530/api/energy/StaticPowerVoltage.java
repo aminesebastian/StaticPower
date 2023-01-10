@@ -80,6 +80,6 @@ public enum StaticPowerVoltage {
 				return tier;
 			}
 		}
-		return StaticPowerVoltage.EXTREME;
+		return StaticPowerVoltage.BONKERS;
 	}
 }

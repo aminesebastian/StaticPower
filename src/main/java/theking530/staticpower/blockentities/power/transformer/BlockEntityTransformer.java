@@ -57,7 +57,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 				double transformed = transformAndSupplyPower(side, stack, simulate);
 				
 				powerStorage.setCapacity(transformed);
-				super.addPower(new PowerStack(transformed, stack.getVoltage()), simulate);
+				super.addPower(new PowerStack(transformed, stack.getVoltage(), stack.getCurrentType()), simulate);
 				super.drainPower(transformed, simulate);
 				powerStorage.setCapacity(0);
 				
@@ -66,6 +66,8 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		}.setSideConfiguration(ioSideConfiguration));
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getTransformerVoltageRange());
 		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
+		
+		powerStorage.setInputCurrentTypes(CurrentType.ALTERNATING);
 		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
 		powerStorage.setMaximumInputPower(Double.MAX_VALUE);

@@ -22,6 +22,8 @@ import theking530.api.energy.CurrentType;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.components.ComponentUtilities;
+import theking530.staticpower.cables.power.PowerCableComponent;
 import theking530.staticpower.integration.JADE.JadePluginImplementation;
 
 public class StaticEnergyInfoProvider implements IProbeInfoProvider, IProbeConfigProvider {
@@ -40,14 +42,16 @@ public class StaticEnergyInfoProvider implements IProbeInfoProvider, IProbeConfi
 		}
 
 		be.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, data.getSideHit()).ifPresent(powerStorage -> {
+			boolean isPowerCable = ComponentUtilities.getComponent(PowerCableComponent.class, be).isPresent();
+
 			if (powerStorage.canOutputExternalPower()) {
+				String key = isPowerCable ? "gui.staticpower.current_voltage" : "gui.staticpower.output_voltage";
 				probeInfo.text(Component.literal(ChatFormatting.GRAY.toString())
-						.append(Component.translatable("gui.staticpower.output_voltage").append(": ")
-								.append(PowerTextFormatting.formatVoltageToString(powerStorage.getOutputVoltage())))
+						.append(Component.translatable(key).append(": ").append(PowerTextFormatting.formatVoltageToString(powerStorage.getOutputVoltage())))
 						.append(powerStorage.getOutputCurrentType() == CurrentType.ALTERNATING ? Component.literal("∿") : Component.literal("⎓")));
 			}
 
-			if (powerStorage.canAcceptExternalPower()) {
+			if (powerStorage.canAcceptExternalPower() && !isPowerCable) {
 				probeInfo.text(Component.literal(ChatFormatting.GRAY.toString()).append(Component.translatable("gui.staticpower.input_voltage").append(": ")
 						.append(PowerTextFormatting.formatVoltageRangeToString(powerStorage.getInputVoltageRange()))));
 			}
@@ -55,7 +59,7 @@ public class StaticEnergyInfoProvider implements IProbeInfoProvider, IProbeConfi
 			double current = powerStorage.getStoredPower();
 			double max = powerStorage.getCapacity();
 
-			if(max > 0) {
+			if (max > 0) {
 				MutableComponent suffix = PowerTextFormatting.formatPowerToString(current, true, true);
 				suffix.append("/");
 				suffix.append(PowerTextFormatting.formatPowerToString(max, true, true));

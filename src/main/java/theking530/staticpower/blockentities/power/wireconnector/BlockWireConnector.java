@@ -78,7 +78,7 @@ public class BlockWireConnector extends StaticPowerBlockEntityBlock {
 		if (tier != null) {
 			StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 			PowerTooltips.addVoltageInputTooltip(tooltip, new StaticVoltageRange(StaticPowerVoltage.LOW, tierObject.cablePowerConfiguration.wireTerminalMaxVoltage.get()));
-			PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.wireTerminalMaxPower.get());
+			PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.wireTerminalMaxCurrent.get());
 		}
 	}
 

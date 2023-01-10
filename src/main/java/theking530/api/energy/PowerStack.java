@@ -5,7 +5,7 @@ import java.util.Objects;
 import net.minecraft.nbt.CompoundTag;
 
 public class PowerStack {
-	public static final PowerStack EMPTY = new PowerStack(0, 0, CurrentType.DIRECT);
+	public static final PowerStack EMPTY = new EmptyPowerStack(0, 0);
 	private double power;
 	private double voltage;
 	private double current;
@@ -101,5 +101,28 @@ public class PowerStack {
 	@Override
 	public String toString() {
 		return "PowerStack [power=" + power + ", voltage=" + voltage + ", type=" + type + "]";
+	}
+
+	/**
+	 * This is purely so that we make sure no one tries to modify the empty power
+	 * stack.
+	 * 
+	 * @author amine
+	 *
+	 */
+	private static class EmptyPowerStack extends PowerStack {
+		public EmptyPowerStack(double power, double voltage) {
+			super(power, voltage);
+		}
+
+		@Override
+		public void setPower(double power) {
+			throw new RuntimeException("Someone tried to modify the empty power stack! Make a copy if you need to do so!");
+		}
+
+		@Override
+		public void setVoltage(double voltage) {
+			throw new RuntimeException("Someone tried to modify the empty power stack! Make a copy if you need to do so!");
+		}
 	}
 }

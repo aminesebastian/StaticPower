@@ -56,8 +56,8 @@ public class BasicCableConfiguration {
 		}
 
 		@Override
-		protected double getCableMaxPower() {
-			return 20;
+		protected double getCableMaxCurrent() {
+			return 2;
 		}
 
 		@Override
@@ -71,8 +71,8 @@ public class BasicCableConfiguration {
 		}
 
 		@Override
-		protected double getWireTerminalMaxPower() {
-			return 60;
+		protected double getWireTerminalMaxCurrent() {
+			return 5;
 		}
 
 		@Override
@@ -86,8 +86,8 @@ public class BasicCableConfiguration {
 		}
 
 		@Override
-		protected double getWireCoilMaxPower() {
-			return 80;
+		protected double getWireCoilMaxCurrent() {
+			return 2;
 		}
 
 		@Override

@@ -56,7 +56,7 @@ public class CreativeCableConfiguration {
 		}
 
 		@Override
-		protected double getCableMaxPower() {
+		protected double getCableMaxCurrent() {
 			return Double.MAX_VALUE;
 		}
 
@@ -76,7 +76,7 @@ public class CreativeCableConfiguration {
 		}
 
 		@Override
-		protected double getWireTerminalMaxPower() {
+		protected double getWireTerminalMaxCurrent() {
 			return Double.MAX_VALUE;
 		}
 
@@ -86,7 +86,7 @@ public class CreativeCableConfiguration {
 		}
 
 		@Override
-		protected double getWireCoilMaxPower() {
+		protected double getWireCoilMaxCurrent() {
 			return Double.MAX_VALUE;
 		}
 

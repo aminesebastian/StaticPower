@@ -97,19 +97,6 @@ public class StaticPowerEnergyUtilities {
 		return storage.getStoredPower() + power <= storage.getCapacity();
 	}
 
-	public static double transferPower(double power, IStaticPowerStorage source, IStaticPowerStorage destination) {
-		PowerStack maxDrain = source.drainPower(power, true);
-		double provided = destination.addPower(maxDrain, false);
-		source.drainPower(provided, false);
-		return provided;
-	}
-
-	public static double transferPower(PowerStack power, IStaticPowerStorage source, IStaticPowerStorage destination) {
-		double provided = destination.addPower(power, false);
-		source.drainPower(provided, false);
-		return provided;
-	}
-
 	public static ElectricalExplosionTrigger shouldPowerStackTriggerExplosion(PowerStack stack, IStaticPowerStorage storage) {
 		// If there is no power, no need to explode.
 		if (stack.getPower() == 0) {

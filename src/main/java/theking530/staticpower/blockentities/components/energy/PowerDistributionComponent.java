@@ -44,7 +44,7 @@ public class PowerDistributionComponent extends AbstractBlockEntityComponent {
 			for (Direction facing : Direction.values()) {
 				if (canOutputFromSide(facing)) {
 					PowerStack maxDrain = autoDistributionSource.drainPower(Double.MAX_VALUE, true);
-					distributeOnSide(autoDistributionSource, facing, maxDrain);
+					distributeOnSide(autoDistributionSource, facing, maxDrain, false);
 				}
 			}
 		}
@@ -54,21 +54,23 @@ public class PowerDistributionComponent extends AbstractBlockEntityComponent {
 		double providedTotal = 0;
 		for (Direction facing : Direction.values()) {
 			if (canOutputFromSide(facing)) {
-				double provided = distributeOnSide(source, facing, stack);
+				double provided = distributeOnSide(source, facing, stack, simulate);
 				providedTotal += provided;
 				if (!simulate) {
-					source.drainPower(provided, false);
+					source.drainPower(provided, simulate);
 				}
 			}
 		}
 		return providedTotal;
 	}
 
-	protected double distributeOnSide(IStaticPowerStorage source, Direction facing, PowerStack stack) {
+	protected double distributeOnSide(IStaticPowerStorage source, Direction facing, PowerStack stack, boolean simulate) {
 		IStaticPowerStorage targetStorage = getPowerStorageOnSide(facing.getOpposite());
 
 		if (source != null && targetStorage != null) {
-			return StaticPowerEnergyUtilities.transferPower(stack, source, targetStorage);
+			double provided = targetStorage.addPower(stack, simulate);
+			source.drainPower(provided, simulate);
+			return provided;
 		}
 		return 0;
 	}

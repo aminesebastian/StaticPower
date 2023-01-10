@@ -56,8 +56,8 @@ public class EnergizedCableConfiguration {
 		}
 
 		@Override
-		protected double getCableMaxPower() {
-			return 160;
+		protected double getCableMaxCurrent() {
+			return 25;
 		}
 
 		@Override
@@ -71,8 +71,8 @@ public class EnergizedCableConfiguration {
 		}
 
 		@Override
-		protected double getWireTerminalMaxPower() {
-			return 500;
+		protected double getWireTerminalMaxCurrent() {
+			return 50;
 		}
 
 		@Override
@@ -86,8 +86,8 @@ public class EnergizedCableConfiguration {
 		}
 
 		@Override
-		protected double getWireCoilMaxPower() {
-			return 640;
+		protected double getWireCoilMaxCurrent() {
+			return 25;
 		}
 
 		@Override

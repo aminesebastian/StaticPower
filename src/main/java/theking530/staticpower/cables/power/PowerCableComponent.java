@@ -27,14 +27,14 @@ import theking530.staticpower.init.cables.ModCableModules;
 
 public class PowerCableComponent extends AbstractCableProviderComponent implements ISidedStaticPowerStorage {
 	public static final String VOLTAGE_ORDINAL = "power_voltage_ordinal";
-	public static final String POWER_MAX = "power_max_power";
+	public static final String CURRENT_MAX = "power_max_current";
 	public static final String POWER_LOSS = "power_resistance";
 	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
 
 	private final CableNetworkModuleType moduleType;
 	private final SidedStaticPowerCapabilityWrapper capabilityWrapper;
 	private final double powerLoss;
-	private final double maxPower;
+	private final double maxCurrent;
 	private final StaticPowerVoltage voltage;
 	private final boolean isIndustrial;
 
@@ -42,13 +42,13 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		this(name, ModCableModules.Power.get(), isIndustrial, voltage, maxPower, powerLoss);
 	}
 
-	public PowerCableComponent(String name, CableNetworkModuleType powerModuleType, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
+	public PowerCableComponent(String name, CableNetworkModuleType powerModuleType, boolean isIndustrial, StaticPowerVoltage voltage, double maxCurrent, double powerLoss) {
 		super(name, powerModuleType);
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 
 		this.voltage = voltage;
 		this.powerLoss = powerLoss;
-		this.maxPower = maxPower;
+		this.maxCurrent = maxCurrent;
 		this.isIndustrial = isIndustrial;
 		this.moduleType = powerModuleType;
 	}
@@ -80,7 +80,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putByte(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
 		cable.getDataTag().putDouble(POWER_LOSS, powerLoss);
-		cable.getDataTag().putDouble(POWER_MAX, maxPower);
+		cable.getDataTag().putDouble(CURRENT_MAX, maxCurrent);
 		cable.getDataTag().putBoolean(POWER_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 	}
 

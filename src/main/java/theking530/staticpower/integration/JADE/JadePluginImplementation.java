@@ -27,7 +27,9 @@ import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockDigistore;
+import theking530.staticpower.cables.power.PowerCableComponent;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 @WailaPlugin(StaticPower.MOD_ID)
@@ -66,15 +68,16 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static class StaticVoltDecorator implements IBlockComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-			BlockEntity tile = accessor.getBlockEntity();
-			if (tile != null) {
-				IStaticPowerStorage storage = tile.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).orElse(null);
+			BlockEntity be = accessor.getBlockEntity();
+			if (be != null) {
+				IStaticPowerStorage storage = be.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).orElse(null);
 				if (storage != null || (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.POWER_TAG))) {
 					double stored = 0, capacity = 0, outputVoltage = 0;
 					StaticPowerVoltage minVoltage = StaticPowerVoltage.ZERO, maxVoltage = StaticPowerVoltage.ZERO;
 					boolean canAcceptExternalPower = false;
 					boolean canOutputExternalPower = false;
 					boolean isAlternating = false;
+					boolean isPowerCable = ComponentUtilities.getComponent(PowerCableComponent.class, be).isPresent();
 
 					if (accessor.isServerConnected()) {
 						CompoundTag svData = accessor.getServerData().getCompound(JadeDataProviders.POWER_TAG);
@@ -123,11 +126,13 @@ public class JadePluginImplementation implements IWailaPlugin {
 
 					// Draw the output voltage.
 					if (canOutputExternalPower) {
-						JadePluginImplementation.drawValue(tooltip, Component.translatable("gui.staticpower.output_voltage").append(": ")
-								.append(PowerTextFormatting.formatVoltageToString(outputVoltage).append(voltageTypeComponent)), OUTPUT_VOLTAGE_RENDERER);
+						String key = isPowerCable ? "gui.staticpower.current_voltage" : "gui.staticpower.output_voltage";
+						JadePluginImplementation.drawValue(tooltip,
+								Component.translatable(key).append(": ").append(PowerTextFormatting.formatVoltageToString(outputVoltage).append(voltageTypeComponent)),
+								OUTPUT_VOLTAGE_RENDERER);
 					}
 
-					if (canAcceptExternalPower) {
+					if (canAcceptExternalPower && !isPowerCable) {
 						JadePluginImplementation.drawValue(tooltip, Component.translatable("gui.staticpower.input_voltage").append(": ")
 								.append(PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minVoltage, maxVoltage))), INPUT_VOLTAGE_RENDERER);
 					}

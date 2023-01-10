@@ -6,38 +6,32 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticpower.StaticPower;
 
 public abstract class TierPowerCableConfiguration {
-	public final ConfigValue<StaticPowerVoltage> cableMaxVoltage;
-	public final ConfigValue<Double> cablePowerMaxPower;
+	public final ConfigValue<Double> cablerMaxCurrent;
 	public final ConfigValue<Double> cablePowerLossPerBlock;
 
-	public final ConfigValue<StaticPowerVoltage> cableIndustrialMaxVoltage;
 	public final ConfigValue<Double> cableIndustrialPowerMaxPower;
 	public final ConfigValue<Double> cableIndustrialPowerLossPerBlock;
 
 	public final ConfigValue<StaticPowerVoltage> wireTerminalMaxVoltage;
-	public final ConfigValue<Double> wireTerminalMaxPower;
+	public final ConfigValue<Double> wireTerminalMaxCurrent;
 
 	public final ConfigValue<Integer> wireCoilMaxDistance;
 	public final ConfigValue<Integer> insulatedWireCoilMaxDistance;
 
-	public final ConfigValue<StaticPowerVoltage> wireCoilMaxVoltage;
-	public final ConfigValue<Double> wireCoilMaxPower;
+	public final ConfigValue<Double> wireCoilMaxCurrent;
 	public final ConfigValue<Double> wireCoilPowerLossPerBlock;
 
 	public TierPowerCableConfiguration(ForgeConfigSpec.Builder builder) {
 		builder.push("Power");
-		cableMaxVoltage = builder.comment("The highest voltage a cable of this tier can transfer before burning.").translation(StaticPower.MOD_ID + ".config." + "cableMaxVoltage")
-				.define("CableMaxVoltage", getCableMaxVoltage());
-		cablePowerMaxPower = builder.comment("The amount of power a cable of this tier can transfer.").translation(StaticPower.MOD_ID + ".config." + "cablePowerMaxPower")
-				.define("CablePowerMaxPower", getCableMaxPower());
+		cablerMaxCurrent = builder.comment("The amount of current a cable of this tier can transfer.").translation(StaticPower.MOD_ID + ".config." + "cablerMaxCurrent")
+				.define("CablerMaxCurrent", getCableMaxCurrent());
 		cablePowerLossPerBlock = builder.comment(
 				"The resistance of this cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "cablePowerLossPerBlock").define("CablePowerLossPerBlock", this.getCablePowerLossPerBlock());
 
-		cableIndustrialMaxVoltage = builder.comment("The highest voltage an industrial cable of this tier can transfer before burning.")
-				.translation(StaticPower.MOD_ID + ".config." + "CableIndustrialMaxVoltage").define("cableIndustrialMaxVoltage", this.getCableIndustrialMaxVoltage());
+
 		cableIndustrialPowerMaxPower = builder.comment("The amount of power an industrial cable of this tier can transfer.")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerMaxPower").define("CableIndustrialPowerMaxPower", getCableIndustrialPowerMaxPower());
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerMaxPower").define("CableIndustrialPowerMaxPower", getCableIndustrialPowerMaxCurrent());
 		cableIndustrialPowerLossPerBlock = builder.comment(
 				"The resistance of this industrial cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerLossPerBlock")
@@ -47,8 +41,8 @@ public abstract class TierPowerCableConfiguration {
 		builder.push("Wire Terminal");
 		wireTerminalMaxVoltage = builder.comment("The highest voltage a wire terminal of this tier can transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalMaxVoltage").define("WireTerminalMaxVoltage", getWireTerminalMaxVoltage());
-		wireTerminalMaxPower = builder.comment("The amount of power a wire terminal of this tier can transfer.")
-				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalMaxPower").define("WireTerminalMaxPower", getWireTerminalMaxPower());
+		wireTerminalMaxCurrent = builder.comment("The amount of current a wire terminal of this tier can transfer.")
+				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalMaxCurrent").define("WireTerminalMaxCurrent", getWireTerminalMaxCurrent());
 		builder.pop();
 
 		builder.push("Wire Coil");
@@ -56,10 +50,9 @@ public abstract class TierPowerCableConfiguration {
 				.define("WireCoilMaxDistance", getWireCoilMaxDistance());
 		insulatedWireCoilMaxDistance = builder.comment("The maximum distance an insulated wire of this tier can extend.")
 				.translation(StaticPower.MOD_ID + ".config." + "insulatedWireCoilMaxDistance").define("InsulatedWireCoilMaxDistance", getInsulatedWireCoilMaxDistance());
-		wireCoilMaxVoltage = builder.comment("The highest voltage a cable of this tier can transfer before burning.")
-				.translation(StaticPower.MOD_ID + ".config." + "wireCoilMaxVoltage").define("WireCoilMaxVoltage", getWireCoilMaxVoltage());
-		wireCoilMaxPower = builder.comment("The amount of power a wire of this tier can transfer.").translation(StaticPower.MOD_ID + ".config." + "wireCoilMaxPower")
-				.define("WireCoilMaxPower", getWireCoilMaxPower());
+		
+		wireCoilMaxCurrent = builder.comment("The amount of current a wire of this tier can transfer.").translation(StaticPower.MOD_ID + ".config." + "wireCoilMaxCurrent")
+				.define("WireCoilMaxCurrent", getWireCoilMaxCurrent());
 		wireCoilPowerLossPerBlock = builder.comment(
 				"The resistance of this cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "wireTerminalPowerLossPerBlock").define("WireTerminalPowerLossPerBlock", getWireCoilPowerLossPerBlock());
@@ -68,13 +61,13 @@ public abstract class TierPowerCableConfiguration {
 
 	protected abstract StaticPowerVoltage getCableMaxVoltage();
 
-	protected abstract double getCableMaxPower();
+	protected abstract double getCableMaxCurrent();
 
 	protected abstract double getCablePowerLossPerBlock();
 
 	protected abstract StaticPowerVoltage getWireTerminalMaxVoltage();
 
-	protected abstract double getWireTerminalMaxPower();
+	protected abstract double getWireTerminalMaxCurrent();
 
 	protected abstract int getWireCoilMaxDistance();
 
@@ -84,7 +77,7 @@ public abstract class TierPowerCableConfiguration {
 
 	protected abstract StaticPowerVoltage getWireCoilMaxVoltage();
 
-	protected abstract double getWireCoilMaxPower();
+	protected abstract double getWireCoilMaxCurrent();
 
 	protected abstract double getWireCoilPowerLossPerBlock();
 
@@ -92,8 +85,8 @@ public abstract class TierPowerCableConfiguration {
 		return getCableMaxVoltage();
 	}
 
-	protected double getCableIndustrialPowerMaxPower() {
-		return getCableMaxPower() * 10;
+	protected double getCableIndustrialPowerMaxCurrent() {
+		return getCableMaxCurrent() * 10;
 	}
 
 	protected double cableIndustrialPowerLossPerBlock() {

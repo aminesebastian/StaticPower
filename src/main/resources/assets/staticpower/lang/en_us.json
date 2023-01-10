@@ -1063,6 +1063,7 @@
 	"gui.staticpower.multimeter_cleared": "Multimeter cleared!",
 	
 	"gui.staticpower.voltage": "Voltage",
+	"gui.staticpower.current_voltage": "Current Voltage",
 	"gui.staticpower.max_voltage": "Max. Voltage",
 	"gui.staticpower.min_voltage": "Min. Voltage",
 	"gui.staticpower.input_voltage": "Input Voltage",
@@ -1080,6 +1081,7 @@
 	"gui.staticpower.stored_power": "Stored Power",
 	"gui.staticpower.power_unit": "W",
 	"gui.staticpower.power_unit_per_tick": "W/t",
+	"gui.staticpower.power": "Power",
 	"gui.staticpower.max_power": "Max. Power",
 	"gui.staticpower.max_power_transfer": "Transfer Rate",
 	"gui.staticpower.max_input_power": "Max. Input Power",
