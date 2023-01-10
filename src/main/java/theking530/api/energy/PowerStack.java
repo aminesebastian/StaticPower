@@ -5,17 +5,17 @@ import java.util.Objects;
 import net.minecraft.nbt.CompoundTag;
 
 public class PowerStack {
-	public static final PowerStack EMPTY = new EmptyPowerStack(0, 0);
+	public static final PowerStack EMPTY = new EmptyPowerStack(0, StaticPowerVoltage.ZERO);
 	private double power;
-	private double voltage;
+	private StaticPowerVoltage voltage;
 	private double current;
 	private CurrentType type;
 
-	public PowerStack(double power, double voltage) {
+	public PowerStack(double power, StaticPowerVoltage voltage) {
 		this(power, voltage, CurrentType.DIRECT);
 	}
 
-	public PowerStack(double power, double voltage, CurrentType type) {
+	public PowerStack(double power, StaticPowerVoltage voltage, CurrentType type) {
 		this.power = power;
 		this.voltage = voltage;
 		this.type = type;
@@ -31,11 +31,11 @@ public class PowerStack {
 		updateCurrent();
 	}
 
-	public double getVoltage() {
+	public StaticPowerVoltage getVoltage() {
 		return voltage;
 	}
 
-	public void setVoltage(double voltage) {
+	public void setVoltage(StaticPowerVoltage voltage) {
 		this.voltage = voltage;
 		updateCurrent();
 	}
@@ -63,18 +63,18 @@ public class PowerStack {
 	public CompoundTag serialize() {
 		CompoundTag output = new CompoundTag();
 		output.putDouble("p", power);
-		output.putDouble("v", voltage);
+		output.putDouble("v", voltage.ordinal());
 		output.putByte("t", (byte) type.ordinal());
 		return output;
 	}
 
 	public static PowerStack deserialize(CompoundTag tag) {
-		return new PowerStack(tag.getDouble("p"), tag.getDouble("v"), CurrentType.values()[tag.getByte("t")]);
+		return new PowerStack(tag.getDouble("p"), StaticPowerVoltage.values()[tag.getByte("v")], CurrentType.values()[tag.getByte("t")]);
 	}
 
 	protected void updateCurrent() {
-		if (voltage != 0) {
-			current = power / Math.abs(voltage);
+		if (voltage.getValue() > 0) {
+			current = power / voltage.getValue();
 		} else {
 			current = 0;
 		}
@@ -94,8 +94,7 @@ public class PowerStack {
 		if (getClass() != obj.getClass())
 			return false;
 		PowerStack other = (PowerStack) obj;
-		return Double.doubleToLongBits(power) == Double.doubleToLongBits(other.power) && type == other.type
-				&& Double.doubleToLongBits(voltage) == Double.doubleToLongBits(other.voltage);
+		return Double.doubleToLongBits(power) == Double.doubleToLongBits(other.power) && type == other.type && voltage == other.voltage;
 	}
 
 	@Override
@@ -111,7 +110,7 @@ public class PowerStack {
 	 *
 	 */
 	private static class EmptyPowerStack extends PowerStack {
-		public EmptyPowerStack(double power, double voltage) {
+		public EmptyPowerStack(double power, StaticPowerVoltage voltage) {
 			super(power, voltage);
 		}
 
@@ -121,7 +120,7 @@ public class PowerStack {
 		}
 
 		@Override
-		public void setVoltage(double voltage) {
+		public void setVoltage(StaticPowerVoltage voltage) {
 			throw new RuntimeException("Someone tried to modify the empty power stack! Make a copy if you need to do so!");
 		}
 	}

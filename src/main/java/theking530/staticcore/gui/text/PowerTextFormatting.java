@@ -97,16 +97,8 @@ public class PowerTextFormatting {
 		return formatPowerToString(power, false, true).append("/").append(formatPowerToString(capacity));
 	}
 
-	public static MutableComponent formatVoltageToString(double voltage, boolean includeUnits, boolean includeMetricUnit) {
-		return Component.translatable(StaticPowerVoltage.getVoltageClass(voltage).getShortName());
-	}
-
-	public static MutableComponent formatVoltageToString(double voltage, boolean includeUnits) {
-		return formatVoltageToString(voltage, includeUnits, true);
-	}
-
-	public static MutableComponent formatVoltageToString(double voltage) {
-		return formatVoltageToString(voltage, true, true);
+	public static MutableComponent formatVoltageToString(StaticPowerVoltage voltage) {
+		return Component.translatable(voltage.getShortName());
 	}
 
 	public static MutableComponent formatTransformerRatioToString(int ratio) {

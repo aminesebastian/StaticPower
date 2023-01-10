@@ -14,11 +14,11 @@ public record StaticVoltageRange(StaticPowerVoltage minimumVoltage, StaticPowerV
 
 	public boolean isVoltageInRange(double voltage) {
 		voltage = Math.abs(voltage);
-		return voltage >= minimumVoltage.getVoltage() && voltage <= maximumVoltage.getVoltage();
+		return voltage >= minimumVoltage.getValue() && voltage <= maximumVoltage.getValue();
 	}
 
 	public double clampVoltageToRange(double voltage) {
-		return SDMath.clamp(voltage, minimumVoltage.getVoltage(), maximumVoltage.getVoltage());
+		return SDMath.clamp(voltage, minimumVoltage.getValue(), maximumVoltage.getValue());
 	}
 
 	public StaticVoltageRange copy() {

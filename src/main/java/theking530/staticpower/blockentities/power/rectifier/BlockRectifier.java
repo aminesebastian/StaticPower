@@ -72,7 +72,7 @@ public class BlockRectifier extends StaticPowerMachineBlock {
 
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		return HasGuiType.ALWAYS;
+		return HasGuiType.NEVER;
 	}
 
 	@OnlyIn(Dist.CLIENT)

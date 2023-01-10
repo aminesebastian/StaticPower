@@ -1,19 +1,17 @@
 package theking530.staticpower.blockentities.power.inverter;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
-import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.init.ModBlocks;
@@ -24,7 +22,7 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 			(allocator, pos, state) -> new BlockEntityInverter(allocator, pos, state), ModBlocks.Inverter);
 
 	public final PowerStorageComponent powerStorage;
-	protected final PowerDistributionComponent powerDistributor;
+	private final PowerDistributionComponent powerDistributor;
 
 	public BlockEntityInverter(BlockEntityTypeAllocator<BlockEntityInverter> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
@@ -67,16 +65,43 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 
 	public double transferPower(PowerStack stack, boolean simulate) {
 		if (stack.getCurrentType() == CurrentType.DIRECT) {
-			double multiplier = StaticPowerEnergyUtilities.getAlternatingCurrentMultiplier(getLevel());
-			powerStorage.setOutputVoltage(StaticPowerVoltage.getVoltageClass(stack.getVoltage()));
-			PowerStack alternatingVersion = new PowerStack(stack.getPower(), stack.getVoltage() * multiplier, CurrentType.ALTERNATING);
+			powerStorage.setOutputVoltage(stack.getVoltage());
+			PowerStack alternatingVersion = new PowerStack(stack.getPower(), stack.getVoltage(), CurrentType.ALTERNATING);
 			return powerDistributor.manuallyDistributePower(powerStorage, alternatingVersion, simulate);
 		}
 		return 0;
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		return new ContainerInverter(windowId, inventory, this);
+	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
+		if (side != BlockSide.BACK && side != BlockSide.FRONT) {
+			return mode == MachineSideMode.Never;
+		}
+		return mode == MachineSideMode.Output || mode == MachineSideMode.Input;
+	}
+
+	@Override
+	protected void onSidesConfigUpdate(BlockSide side, MachineSideMode newMode) {
+		super.onSidesConfigUpdate(side, newMode);
+		MachineSideMode frontMode = ioSideConfiguration.getBlockSideConfiguration(BlockSide.FRONT);
+		MachineSideMode backMode = ioSideConfiguration.getBlockSideConfiguration(BlockSide.BACK);
+
+		if (frontMode != backMode) {
+			return;
+		}
+
+		if (side == BlockSide.FRONT) {
+			if (frontMode.isInputMode()) {
+				ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.BACK, MachineSideMode.Output);
+			} else if (frontMode.isOutputMode()) {
+				ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.BACK, MachineSideMode.Input);
+			}
+		} else if (side == BlockSide.BACK) {
+			if (backMode.isInputMode()) {
+				ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.FRONT, MachineSideMode.Output);
+			} else if (backMode.isOutputMode()) {
+				ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.FRONT, MachineSideMode.Input);
+			}
+		}
 	}
 }

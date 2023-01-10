@@ -10,6 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -116,7 +117,7 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		if (!getLevel().isClientSide()) {
 			// If this is a creative battery, always keep the power at max.
 			if (getTier() == StaticPowerTiers.CREATIVE) {
-				powerStorage.addPower(new PowerStack(Double.MAX_VALUE, Double.MAX_VALUE), false);
+				powerStorage.addPower(new PowerStack(Double.MAX_VALUE, StaticPowerVoltage.LOW), false);
 			}
 
 			// Charge up the item in the input slot.

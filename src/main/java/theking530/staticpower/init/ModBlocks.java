@@ -75,6 +75,7 @@ import theking530.staticpower.blockentities.nonpowered.solderingtable.BlockSolde
 import theking530.staticpower.blockentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.blockentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.blockentities.power.battery.BlockBattery;
+import theking530.staticpower.blockentities.power.circuit_breaker.BlockCircuitBreaker;
 import theking530.staticpower.blockentities.power.electricminer.BlockElectricMiner;
 import theking530.staticpower.blockentities.power.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.blockentities.power.heatsink.BlockHeatSink;
@@ -537,6 +538,14 @@ public class ModBlocks {
 
 	// Rectifiers
 	public static final RegistryObject<BlockRectifier> Rectifier = registerBlock("rectifier", () -> new BlockRectifier(StaticPowerTiers.BASIC));
+
+	// Circuit Breakers
+	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker2A = registerBlock("circuit_breaker_2", () -> new BlockCircuitBreaker(2));
+	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker5A = registerBlock("circuit_breaker_5", () -> new BlockCircuitBreaker(5));
+	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker10A = registerBlock("circuit_breaker_10", () -> new BlockCircuitBreaker(10));
+	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker20A = registerBlock("circuit_breaker_20", () -> new BlockCircuitBreaker(20));
+	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker50A = registerBlock("circuit_breaker_50", () -> new BlockCircuitBreaker(50));
+	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker100A = registerBlock("circuit_breaker_100", () -> new BlockCircuitBreaker(100));
 
 	// Wire Terminals
 	public static final RegistryObject<BlockWireConnector> WireConnectorLV = registerBlock("wire_terminal_lv", () -> new BlockWireConnector(StaticPowerTiers.BASIC));

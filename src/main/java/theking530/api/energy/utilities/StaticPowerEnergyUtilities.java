@@ -4,6 +4,7 @@ import net.minecraft.world.level.Level;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
 
 public class StaticPowerEnergyUtilities {
 	public enum ElectricalExplosionTrigger {
@@ -24,16 +25,16 @@ public class StaticPowerEnergyUtilities {
 		return (storage.getStoredPower() / storage.getCapacity()) * scale;
 	}
 
-	public static double getCurrentFromPower(double power, double voltage) {
-		return power / voltage;
+	public static double getCurrentFromPower(double power, StaticPowerVoltage voltage) {
+		return power / voltage.getValue();
 	}
 
 	public static double getVoltageFromPower(double power, double current) {
 		return power / current;
 	}
 
-	public static double getPowerFromVoltageAndCurrent(double voltage, double current) {
-		return voltage * current;
+	public static double getPowerFromVoltageAndCurrent(StaticPowerVoltage voltage, double current) {
+		return voltage.getValue() * current;
 	}
 
 	public static double getMaxOutputPower(IStaticPowerStorage storage) {
@@ -110,7 +111,7 @@ public class StaticPowerEnergyUtilities {
 		}
 
 		// If the input voltage is over our supported range, that's an overvoltage!
-		if (Math.abs(stack.getVoltage()) > storage.getInputVoltageRange().maximumVoltage().getVoltage()) {
+		if (Math.abs(stack.getVoltage().getValue()) > storage.getInputVoltageRange().maximumVoltage().getValue()) {
 			return ElectricalExplosionTrigger.OVER_VOLTAGE;
 		}
 

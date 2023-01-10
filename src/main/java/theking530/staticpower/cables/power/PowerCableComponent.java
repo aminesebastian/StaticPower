@@ -132,14 +132,14 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public double getOutputVoltage() {
+	public StaticPowerVoltage getOutputVoltage() {
 		if (!isClientSide()) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				return module.getOutputVoltage();
 			}
 		}
-		return 0;
+		return StaticPowerVoltage.ZERO;
 	}
 
 	@Override

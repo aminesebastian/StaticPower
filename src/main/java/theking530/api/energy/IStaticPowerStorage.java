@@ -10,7 +10,7 @@ public interface IStaticPowerStorage {
 
 	public boolean canAcceptCurrentType(CurrentType type);
 
-	public double getOutputVoltage();
+	public StaticPowerVoltage getOutputVoltage();
 
 	public double getMaximumPowerOutput();
 

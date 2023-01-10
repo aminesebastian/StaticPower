@@ -5,6 +5,7 @@ import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerEnergyTracker;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 
 public interface ISidedStaticPowerStorage extends IStaticPowerStorage {
@@ -21,7 +22,7 @@ public interface ISidedStaticPowerStorage extends IStaticPowerStorage {
 		return canAcceptCurrentType(type);
 	}
 
-	public default double getOutputVoltage(Direction side) {
+	public default StaticPowerVoltage getOutputVoltage(Direction side) {
 		return getOutputVoltage();
 	}
 

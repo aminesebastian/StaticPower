@@ -31,6 +31,7 @@ public class DigistoreInventorySyncPacket extends NetworkMessage {
 		inventoryUpdateTag = buffer.readNbt();
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {

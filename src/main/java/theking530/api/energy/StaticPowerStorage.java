@@ -156,8 +156,8 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	}
 
 	@Override
-	public double getOutputVoltage() {
-		return outputVoltage.getVoltage();
+	public StaticPowerVoltage getOutputVoltage() {
+		return outputVoltage;
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		return ticker.getAveragePowerAddedPerTick();
 	}
 
-	public double getLastRecievedVoltage() {
+	public StaticPowerVoltage getLastRecievedVoltage() {
 		return ticker.getLastRecievedVoltage();
 	}
 

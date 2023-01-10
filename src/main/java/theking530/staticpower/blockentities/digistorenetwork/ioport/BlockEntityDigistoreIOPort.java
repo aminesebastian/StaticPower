@@ -28,7 +28,7 @@ public class BlockEntityDigistoreIOPort extends BlockEntityDigistoreBase {
 
 	@Override
 	public InteractionResult onBlockActivated(BlockState state, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (getLevel().isClientSide) {
+		if (getLevel().isClientSide()) {
 			return InteractionResult.CONSUME;
 		}
 

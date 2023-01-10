@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 
 public class PowerTooltips {
@@ -12,11 +13,11 @@ public class PowerTooltips {
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.transfomer_ratio", ChatFormatting.GREEN, PowerTextFormatting.formatTransformerRatioToString(ratio));
 	}
 
-	public static void addOutputVoltageTooltip(List<Component> tooltip, double outputVoltage) {
+	public static void addOutputVoltageTooltip(List<Component> tooltip, StaticPowerVoltage outputVoltage) {
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.output_voltage", ChatFormatting.BLUE, PowerTextFormatting.formatVoltageToString(outputVoltage));
 	}
 
-	public static void addMaxVoltageTooltip(List<Component> tooltip, double maxVoltage) {
+	public static void addMaxVoltageTooltip(List<Component> tooltip, StaticPowerVoltage maxVoltage) {
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_voltage", ChatFormatting.DARK_PURPLE, PowerTextFormatting.formatVoltageToString(maxVoltage));
 	}
 

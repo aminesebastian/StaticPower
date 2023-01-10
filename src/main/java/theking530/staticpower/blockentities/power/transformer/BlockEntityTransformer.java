@@ -55,18 +55,18 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 			@Override
 			public double addPower(Direction side, PowerStack stack, boolean simulate) {
 				double transformed = transformAndSupplyPower(side, stack, simulate);
-				
+
 				powerStorage.setCapacity(transformed);
 				super.addPower(new PowerStack(transformed, stack.getVoltage(), stack.getCurrentType()), simulate);
 				super.drainPower(transformed, simulate);
 				powerStorage.setCapacity(0);
-				
+
 				return transformed;
 			}
 		}.setSideConfiguration(ioSideConfiguration));
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getTransformerVoltageRange());
 		powerStorage.setOutputVoltage(StaticPowerVoltage.ZERO);
-		
+
 		powerStorage.setInputCurrentTypes(CurrentType.ALTERNATING);
 		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
@@ -89,7 +89,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 			return 0.0;
 		}
 
-		StaticPowerVoltage inputVoltageClass = StaticPowerVoltage.getVoltageClass(stack.getVoltage());
+		StaticPowerVoltage inputVoltageClass = stack.getVoltage();
 
 		BlockSide inputSide = SideConfigurationUtilities.getBlockSide(side, getFacingDirection());
 		boolean isInputOnShortSide = inputSide == BlockSide.FRONT;
@@ -115,9 +115,8 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		}
 
 		powerStorage.setOutputVoltage(outputVoltageClass);
-		double voltageSign = stack.getVoltage() < 0 ? -1 : 1;
 		double power = Math.min(stack.getPower(), powerStorage.getMaximumPowerOutput());
-		PowerStack transformedStack = new PowerStack(power, powerStorage.getOutputVoltage() * voltageSign, CurrentType.ALTERNATING);
+		PowerStack transformedStack = new PowerStack(power, powerStorage.getOutputVoltage(), CurrentType.ALTERNATING);
 
 		return powerDistributor.manuallyDistributePower(powerStorage, transformedStack, simulate);
 	}
@@ -127,20 +126,20 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		return new ContainerTransformer(windowId, inventory, this);
 	}
 
-	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (side != BlockSide.BACK && side != BlockSide.FRONT) {
-			return mode == MachineSideMode.Never;
-		}
-		return mode == MachineSideMode.Output || mode == MachineSideMode.Input;
-	}
-
 	public int getTransformerRatio() {
 		return transformerRatio;
 	}
 
 	public void setTransformerRatio(int transformerRatio) {
 		this.transformerRatio = transformerRatio;
+	}
+
+	@Override
+	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
+		if (side != BlockSide.BACK && side != BlockSide.FRONT) {
+			return mode == MachineSideMode.Never;
+		}
+		return mode == MachineSideMode.Output || mode == MachineSideMode.Input;
 	}
 
 	@Override

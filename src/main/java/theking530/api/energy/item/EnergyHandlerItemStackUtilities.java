@@ -6,6 +6,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 
 /**
@@ -87,10 +88,10 @@ public class EnergyHandlerItemStackUtilities {
 		return cap.getCapacity();
 	}
 
-	public static double getVoltageOutput(ItemStack container) {
+	public static StaticPowerVoltage getVoltageOutput(ItemStack container) {
 		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
 		if (cap == null) {
-			return 0;
+			return StaticPowerVoltage.ZERO;
 		}
 		return cap.getOutputVoltage();
 	}

@@ -72,7 +72,8 @@ public class JadePluginImplementation implements IWailaPlugin {
 			if (be != null) {
 				IStaticPowerStorage storage = be.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).orElse(null);
 				if (storage != null || (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.POWER_TAG))) {
-					double stored = 0, capacity = 0, outputVoltage = 0;
+					double stored = 0, capacity = 0;
+					StaticPowerVoltage outputVoltage = StaticPowerVoltage.ZERO;
 					StaticPowerVoltage minVoltage = StaticPowerVoltage.ZERO, maxVoltage = StaticPowerVoltage.ZERO;
 					boolean canAcceptExternalPower = false;
 					boolean canOutputExternalPower = false;
@@ -85,7 +86,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 						canOutputExternalPower = svData.getBoolean("canOutputExternalPower");
 
 						if (svData.contains("output_voltage")) {
-							outputVoltage = svData.getDouble("output_voltage");
+							outputVoltage = StaticPowerVoltage.values()[svData.getByte("output_voltage")];
 						}
 
 						isAlternating = svData.getBoolean("is_alternating");

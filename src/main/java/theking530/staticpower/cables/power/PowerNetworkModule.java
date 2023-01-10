@@ -79,7 +79,8 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	@Override
 	public void preWorldTick(Level world) {
 		lastTransferedPower.setPower(0);
-		lastTransferedPower.setVoltage(0);
+		lastTransferedPower.setVoltage(StaticPowerVoltage.ZERO);
+		lastTransferedPower.setType(CurrentType.DIRECT);
 		currentTickCurrentMap.clear();
 	}
 
@@ -155,17 +156,14 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		}
 		{
 			Component usedPowerComponent = PowerTextFormatting.formatPowerToString(lastTransferedPower.getPower(), false, true);
-			Component maxPowerComponent = PowerTextFormatting.formatPowerRateToString(properties.maxCurrent * lastTransferedPower.getVoltage());
+			Component maxPowerComponent = PowerTextFormatting.formatPowerRateToString(properties.maxCurrent * lastTransferedPower.getVoltage().getValue());
 
 			output.add(Component.translatable("gui.staticpower.power").append(": ")
 					.append(ChatFormatting.GOLD.toString() + String.format("%1$s/%2$s", usedPowerComponent.getString(), maxPowerComponent.getString())));
 		}
 
-		output.add(Component.translatable("gui.staticpower.power_loss").append(": ")
-				.append(ChatFormatting.GOLD.toString() + PowerTextFormatting
-						.formatPowerToString(
-								StaticPowerVoltage.adjustPowerLossByVoltage(StaticPowerVoltage.getVoltageClass(lastTransferedPower.getVoltage()), properties.powerLoss))
-						.getString()));
+		output.add(Component.translatable("gui.staticpower.power_loss").append(": ").append(ChatFormatting.GOLD.toString()
+				+ PowerTextFormatting.formatPowerToString(StaticPowerVoltage.adjustPowerLossByVoltage(lastTransferedPower.getVoltage(), properties.powerLoss)).getString()));
 
 		output.add(Component.translatable("gui.staticpower.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.length()));
 	}
@@ -236,7 +234,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		}
 
 		// Adjust the power loss by the transfered voltage.
-		double cablePowerLoss = StaticPowerVoltage.adjustPowerLossByVoltage(StaticPowerVoltage.getVoltageClass(stack.getVoltage()), properties.powerLoss);
+		double cablePowerLoss = StaticPowerVoltage.adjustPowerLossByVoltage(stack.getVoltage(), properties.powerLoss);
 
 		// Subtract that power loss from the total amount of power that we were
 		// provided.
@@ -310,9 +308,13 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		return suppliedPower;
 	}
 
-	private void updateTransferedPower(CablePowerSupplyEvent supplyEvent, double voltage, CurrentType currentType) {
+	private void updateTransferedPower(CablePowerSupplyEvent supplyEvent, StaticPowerVoltage voltage, CurrentType currentType) {
 		lastTransferedPower.setPower(lastTransferedPower.getPower() + supplyEvent.getTotalPower());
-		lastTransferedPower.setVoltage(Math.max(lastTransferedPower.getVoltage(), Math.abs(voltage)));
+
+		if (voltage.isGreaterThan(lastTransferedPower.getVoltage())) {
+			lastTransferedPower.setVoltage(voltage);
+		}
+
 		if (currentType == CurrentType.ALTERNATING) {
 			lastTransferedPower.setType(CurrentType.ALTERNATING);
 		}
@@ -361,7 +363,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	}
 
 	@Override
-	public double getOutputVoltage() {
+	public StaticPowerVoltage getOutputVoltage() {
 		return lastTransferedPower.getVoltage();
 	}
 

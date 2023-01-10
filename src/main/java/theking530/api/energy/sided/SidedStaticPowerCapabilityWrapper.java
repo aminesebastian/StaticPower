@@ -10,6 +10,7 @@ import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerEnergyTracker;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 
 /**
@@ -66,7 +67,7 @@ public class SidedStaticPowerCapabilityWrapper {
 		}
 
 		@Override
-		public final double getOutputVoltage() {
+		public final StaticPowerVoltage getOutputVoltage() {
 			return proxy.getOutputVoltage(representedSide);
 		}
 

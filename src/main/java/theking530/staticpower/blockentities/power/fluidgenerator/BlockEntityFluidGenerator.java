@@ -82,7 +82,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 	}
 
 	protected ProcessingCheckState processingCompleted(FluidGeneratorRecipe recipe) {
-		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage().getVoltage()), false);
+		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage()), false);
 		fluidTankComponent.drain(recipe.getFluid().getAmount(), FluidAction.EXECUTE);
 		return ProcessingCheckState.ok();
 	}
@@ -124,7 +124,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe, ProcessingOutputContainer outputContainer) {
-		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage().getVoltage()), false);
+		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage()), false);
 		fluidTankComponent.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
 	}
 }

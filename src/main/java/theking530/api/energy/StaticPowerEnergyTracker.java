@@ -85,7 +85,7 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 		double currentTickAverageVoltage = 0;
 		double currentTickAverageCurrent = 0;
 		for (PowerStack stack : currentTickRecievedPower) {
-			currentTickAverageVoltage += stack.getVoltage();
+			currentTickAverageVoltage += stack.getVoltage().getValue();
 			currentTickAverageCurrent += stack.getCurrent();
 		}
 		currentTickAverageVoltage /= Math.max(1, currentTickRecievedPower.size());
@@ -158,8 +158,8 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 		return averageRecieved;
 	}
 
-	public double getLastRecievedVoltage() {
-		return averageVoltage;
+	public StaticPowerVoltage getLastRecievedVoltage() {
+		return StaticPowerVoltage.getVoltageClass(averageVoltage);
 	}
 
 	public double getLastRecievedCurrent() {

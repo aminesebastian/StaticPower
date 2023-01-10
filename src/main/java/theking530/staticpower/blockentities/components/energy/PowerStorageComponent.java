@@ -382,7 +382,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	@Override
-	public double getOutputVoltage() {
+	public StaticPowerVoltage getOutputVoltage() {
 		return storage.getOutputVoltage();
 	}
 
@@ -463,7 +463,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		return storage.getAveragePowerAddedPerTick();
 	}
 
-	public double getLastRecievedVoltage() {
+	public StaticPowerVoltage getLastRecievedVoltage() {
 		return storage.getLastRecievedVoltage();
 	}
 

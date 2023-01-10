@@ -12,6 +12,7 @@ import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -112,11 +113,11 @@ public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	public double getOutputVoltage() {
+	public StaticPowerVoltage getOutputVoltage() {
 		if (hasController()) {
 			return getController().powerStorage.getOutputVoltage();
 		}
-		return 0;
+		return StaticPowerVoltage.ZERO;
 	}
 
 	@Override

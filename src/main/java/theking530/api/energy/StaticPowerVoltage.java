@@ -28,7 +28,7 @@ public enum StaticPowerVoltage {
 		return unlocalizedName;
 	}
 
-	public double getVoltage() {
+	public double getValue() {
 		return voltageSupplier.get();
 	}
 
@@ -76,7 +76,7 @@ public enum StaticPowerVoltage {
 	public static StaticPowerVoltage getVoltageClass(double voltage) {
 		voltage = Math.abs(voltage);
 		for (StaticPowerVoltage tier : StaticPowerVoltage.values()) {
-			if (voltage <= tier.getVoltage()) {
+			if (voltage <= tier.getValue()) {
 				return tier;
 			}
 		}
