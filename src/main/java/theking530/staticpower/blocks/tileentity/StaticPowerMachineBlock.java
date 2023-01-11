@@ -95,7 +95,6 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 		if (getMaximumInputPower() > 0) {
 			PowerTooltips.addMaximumInputPowerTooltip(tooltip, getMaximumInputPower());
 		}
-
 	}
 
 	@Override

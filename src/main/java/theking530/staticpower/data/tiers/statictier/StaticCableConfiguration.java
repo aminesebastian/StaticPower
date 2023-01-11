@@ -57,7 +57,7 @@ public class StaticCableConfiguration {
 
 		@Override
 		protected double getCableMaxCurrent() {
-			return 10;
+			return 20;
 		}
 
 		@Override
@@ -72,7 +72,7 @@ public class StaticCableConfiguration {
 
 		@Override
 		protected double getWireTerminalMaxCurrent() {
-			return 25;
+			return 20;
 		}
 
 		@Override
@@ -87,7 +87,7 @@ public class StaticCableConfiguration {
 
 		@Override
 		protected double getWireCoilMaxCurrent() {
-			return 10;
+			return 20;
 		}
 
 		@Override

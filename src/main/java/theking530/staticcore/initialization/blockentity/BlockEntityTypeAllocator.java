@@ -31,13 +31,14 @@ public class BlockEntityTypeAllocator<T extends BlockEntityBase> {
 
 	private final String name;
 	private final TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory;
-	private final RegistryObject<? extends Block> block;
+	private final RegistryObject<? extends Block> blocks[];
 	protected BlockEntityType<T> type;
 
-	public BlockEntityTypeAllocator(String name, TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory, RegistryObject<? extends Block> block) {
+	@SafeVarargs
+	public BlockEntityTypeAllocator(String name, TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory, RegistryObject<? extends Block>... blocks) {
 		this.name = name;
 		this.factory = factory;
-		this.block = block;
+		this.blocks = blocks;
 	}
 
 	public String getName() {
@@ -63,7 +64,11 @@ public class BlockEntityTypeAllocator<T extends BlockEntityBase> {
 	public BlockEntityType<T> getType() {
 		if (type == null) {
 			BlockEntityInitializer<T> initializer = new BlockEntityInitializer<T>(this);
-			type = BlockEntityType.Builder.of(initializer, block.get()).build(null);
+			Block[] resolvedBlocks = new Block[blocks.length];
+			for (int i = 0; i < blocks.length; i++) {
+				resolvedBlocks[i] = blocks[i].get();
+			}
+			type = BlockEntityType.Builder.of(initializer, resolvedBlocks).build(null);
 		}
 		return type;
 	}

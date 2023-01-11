@@ -1,6 +1,11 @@
 package theking530.staticpower.blockentities.power.circuit_breaker;
 
+import com.mojang.math.Vector3f;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -14,18 +19,21 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
+import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityCircuitBreaker extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCircuitBreaker> TYPE_5_A = new BlockEntityTypeAllocator<BlockEntityCircuitBreaker>("circuit_braker_5",
-			(allocator, pos, state) -> new BlockEntityCircuitBreaker(allocator, pos, state), ModBlocks.CircuitBreaker5A);
+	public static final BlockEntityTypeAllocator<BlockEntityCircuitBreaker> TYPE = new BlockEntityTypeAllocator<BlockEntityCircuitBreaker>("circuit_braker",
+			(allocator, pos, state) -> new BlockEntityCircuitBreaker(allocator, pos, state), ModBlocks.CircuitBreaker2A, ModBlocks.CircuitBreaker5A, ModBlocks.CircuitBreaker10A,
+			ModBlocks.CircuitBreaker20A, ModBlocks.CircuitBreaker50A, ModBlocks.CircuitBreaker100A);
 
 	public final PowerStorageComponent powerStorage;
 	private final PowerDistributionComponent powerDistributor;
@@ -87,6 +95,10 @@ public class BlockEntityCircuitBreaker extends BlockEntityConfigurable {
 	}
 
 	public double transferPower(PowerStack stack, boolean simulate) {
+		if (getLevel().isClientSide()) {
+			return 0;
+		}
+
 		if (isTripped) {
 			return 0;
 		}
@@ -98,10 +110,13 @@ public class BlockEntityCircuitBreaker extends BlockEntityConfigurable {
 
 		double transferedCurrent = simulatedTransfer / stack.getVoltage().getValue();
 		if (transferedCurrent > getTripCurrent()) {
+			System.out.println(transferedCurrent);
 			isTripped = true;
 			lastUntripProgressTick = getLevel().getGameTime();
-			getLevel().playSound(null, getBlockPos(), SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 1.5f, 1.25f);
-			getLevel().playSound(null, getBlockPos(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 0.5f, 1.25f);
+			getLevel().playSound(null, getBlockPos(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 1.25f, 1.25f);
+			getLevel().playSound(null, getBlockPos(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 0.25f, 1.25f);
+			((ServerLevel) getLevel()).sendParticles(ParticleTypes.POOF, getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.75, getBlockPos().getZ() + 0.5, 10, 0.1, 0.1, 0.1, 0);
+			getLevel().setBlock(getBlockPos(), this.getBlockState().setValue(StaticPowerMachineBlock.IS_ON, false), 2);
 			return 0;
 		}
 
@@ -109,11 +124,15 @@ public class BlockEntityCircuitBreaker extends BlockEntityConfigurable {
 	}
 
 	public boolean resetTrippedState(Player player) {
+		if (getLevel().isClientSide()) {
+			return false;
+		}
+
 		if (isTripped) {
 			isTripped = false;
 			resetProgress = 0;
 			getLevel().playSound(null, getBlockPos(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 1.25f, 1.25f);
-			getLevel().playSound(null, getBlockPos(), SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 1.0f, 0.75f);
+			getLevel().setBlock(getBlockPos(), this.getBlockState().setValue(StaticPowerMachineBlock.IS_ON, true), 2);
 			return true;
 		}
 		return false;
@@ -133,17 +152,37 @@ public class BlockEntityCircuitBreaker extends BlockEntityConfigurable {
 			return InteractionResult.CONSUME;
 		}
 
-		if (isTripped) {
-			if (resetProgress <= 0) {
-				getLevel().playSound(null, getBlockPos(), SoundEvents.CROSSBOW_LOADING_START, SoundSource.BLOCKS, 1.5f, 1.0f);
+		if (player.isCrouching()) {
+			if (!isTripped) {
+				isTripped = true;
+				resetProgress = 0;
+				getLevel().playSound(null, getBlockPos(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 1.25f, 1.25f);
+				getLevel().setBlock(getBlockPos(), this.getBlockState().setValue(StaticPowerMachineBlock.IS_ON, false), 2);
 			}
+		} else {
+			if (isTripped) {
+				if (resetProgress <= 0) {
+					getLevel().playSound(null, getBlockPos(), SoundEvents.CROSSBOW_LOADING_START, SoundSource.BLOCKS, 1.0f, 0.75f);
+				}
 
-			resetProgress += 0.1f;
-			lastUntripProgressTick = getLevel().getGameTime();
-			if (resetProgress >= 1) {
-				resetTrippedState(player);
+				float red = SDMath.lerp(1, 0, resetProgress);
+				float green = SDMath.lerp(0, 1, resetProgress);
+
+				((ServerLevel) getLevel()).sendParticles(new DustParticleOptions(new Vector3f(red, green, 0.25f), 1.0f), getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.9,
+						getBlockPos().getZ() + 0.5, 1, 0.1, 0.1, 0.1, 0);
+
+				// To prevent the sound from going too long.
+				if (resetProgress < 0.6f) {
+					getLevel().playSound(null, getBlockPos(), SoundEvents.CROSSBOW_LOADING_MIDDLE, SoundSource.BLOCKS, 0.1f, SDMath.lerp(0.75f, 1.25f, resetProgress));
+				}
+
+				resetProgress += 0.1f;
+				lastUntripProgressTick = getLevel().getGameTime();
+				if (resetProgress >= 1) {
+					resetTrippedState(player);
+				}
+				return InteractionResult.SUCCESS;
 			}
-			return InteractionResult.SUCCESS;
 		}
 
 		return InteractionResult.PASS;

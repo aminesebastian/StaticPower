@@ -39,8 +39,17 @@ public class BlockBattery extends StaticPowerMachineBlock {
 		return HasGuiType.ALWAYS;
 	}
 
+	@Override
 	public StaticVoltageRange getInputVoltageRange() {
 		return StaticPowerConfig.getTier(tier).powerConfiguration.getMaximumBatteryInputVoltage();
+	}
+
+	@Override
+	public double getMaximumInputPower() {
+		if (tier == null) {
+			return 0;
+		}
+		return StaticPowerConfig.getTier(tier).powerConfiguration.batteryMaximumPowerInput.get();
 	}
 
 	@OnlyIn(Dist.CLIENT)

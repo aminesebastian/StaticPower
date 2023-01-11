@@ -57,7 +57,7 @@ public class LumumCableConfiguration {
 
 		@Override
 		protected double getCableMaxCurrent() {
-			return 50;
+			return 100;
 		}
 
 		@Override
@@ -87,7 +87,7 @@ public class LumumCableConfiguration {
 
 		@Override
 		protected double getWireCoilMaxCurrent() {
-			return 50;
+			return 100;
 		}
 
 		@Override

@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -32,13 +33,11 @@ public class BlockCircuitBreaker extends StaticPowerMachineBlock {
 	public static final VoxelShape Z_AXIS_SHAPE;
 
 	static {
-		VoxelShape zAxis = Block.box(5D, 5D, 0.0D, 11D, 11D, 16.0D);
-		zAxis = Shapes.join(zAxis, Block.box(4.5D, 4.5D, 2D, 11.5D, 11.5D, 14D), BooleanOp.OR);
+		VoxelShape zAxis = Block.box(4.5D, 4.5D, 0.0D, 11.5D, 11.5D, 16.0D);
 		zAxis = Shapes.join(zAxis, Block.box(6.0D, 11.5D, 5.0D, 10.0D, 15.0D, 11.0D), BooleanOp.OR);
 		Z_AXIS_SHAPE = zAxis;
 
-		VoxelShape xAxis = Block.box(0, 5D, 5D, 16D, 11.5D, 11D);
-		xAxis = Shapes.join(xAxis, Block.box(2D, 4.5D, 4.5D, 14D, 11.5D, 11.5D), BooleanOp.OR);
+		VoxelShape xAxis = Block.box(0, 4.5D, 4.5D, 16D, 11.5D, 11.5D);
 		xAxis = Shapes.join(xAxis, Block.box(5.0D, 11.5D, 6.0D, 11.0D, 15.0D, 10.0D), BooleanOp.OR);
 		X_AXIS_SHAPE = xAxis;
 	}
@@ -77,6 +76,12 @@ public class BlockCircuitBreaker extends StaticPowerMachineBlock {
 
 	}
 
+	@Nullable
+	public BlockState getStateForPlacement(BlockPlaceContext p_49820_) {
+		BlockState parent = super.getStateForPlacement(p_49820_);
+		return parent.setValue(IS_ON, true);
+	}
+
 	public Component getDisplayName(ItemStack stack) {
 		return Component.translatable("block.staticpower.circuit_breaker").append(" (").append(PowerTextFormatting.formatCurrentToString(getTripCurrent()).append(")"));
 	}
@@ -87,6 +92,11 @@ public class BlockCircuitBreaker extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return BlockEntityCircuitBreaker.TYPE_5_A.create(pos, state);
+		return BlockEntityCircuitBreaker.TYPE.create(pos, state);
+	}
+
+	@Override
+	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+		return 0;
 	}
 }

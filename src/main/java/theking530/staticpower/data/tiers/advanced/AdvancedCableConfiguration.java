@@ -114,7 +114,7 @@ public class AdvancedCableConfiguration {
 
 		@Override
 		protected double getCableMaxCurrent() {
-			return 5;
+			return 10;
 		}
 
 		@Override
@@ -144,7 +144,7 @@ public class AdvancedCableConfiguration {
 
 		@Override
 		protected double getWireCoilMaxCurrent() {
-			return 5;
+			return 10;
 		}
 
 		@Override
