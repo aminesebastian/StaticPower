@@ -75,7 +75,7 @@ public interface IStaticPowerStorage {
 	 * @return
 	 */
 	@Nullable
-	public default StaticPowerEnergyTracker getEnergyTracker() {
+	public default IStaticPowerEnergyTracker getEnergyTracker() {
 		return null;
 	}
 }

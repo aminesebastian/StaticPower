@@ -7,9 +7,9 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.Direction;
 import theking530.api.energy.CurrentType;
+import theking530.api.energy.IStaticPowerEnergyTracker;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
-import theking530.api.energy.StaticPowerEnergyTracker;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 
@@ -112,7 +112,7 @@ public class SidedStaticPowerCapabilityWrapper {
 		}
 
 		@Override
-		public final StaticPowerEnergyTracker getEnergyTracker() {
+		public final IStaticPowerEnergyTracker getEnergyTracker() {
 			return proxy.getEnergyTracker(representedSide);
 		}
 	}

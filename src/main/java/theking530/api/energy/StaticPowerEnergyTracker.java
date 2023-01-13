@@ -6,10 +6,9 @@ import java.util.Queue;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.INBTSerializable;
 import theking530.staticpower.StaticPower;
 
-public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
+public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 10;
 	private long lastTickTime;
 
@@ -47,6 +46,7 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 		lastCurrentType = CurrentType.DIRECT;
 	}
 
+	@Override
 	public void tick(Level level) {
 		if (lastTickTime == level.getGameTime()) {
 			StaticPower.LOGGER.error("StaticPowerStorageTicker#tick should only be called once per tick!");
@@ -138,6 +138,7 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 		currentTickRecievedPower.clear();
 	}
 
+	@Override
 	public void powerAdded(PowerStack stack) {
 		currentFrameEnergyReceived += stack.getPower();
 		currentTickRecievedPower.add(stack.copy());
@@ -146,26 +147,32 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 		}
 	}
 
+	@Override
 	public void powerDrained(double power) {
 		currentFrameEnergyExtracted -= power;
 	}
 
-	public double getAveragePowerUsedPerTick() {
+	@Override
+	public double getAveragePowerDrainedPerTick() {
 		return averageExtracted;
 	}
 
+	@Override
 	public double getAveragePowerAddedPerTick() {
 		return averageRecieved;
 	}
 
+	@Override
 	public StaticPowerVoltage getLastRecievedVoltage() {
 		return StaticPowerVoltage.getVoltageClass(averageVoltage);
 	}
 
+	@Override
 	public double getLastRecievedCurrent() {
 		return averageCurrent;
 	}
 
+	@Override
 	public CurrentType getLastRecievedCurrentType() {
 		return lastCurrentType;
 	}

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable<CompoundTag> {
@@ -42,14 +41,6 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	protected StaticPowerStorage() {
 		acceptableCurrentTypes = new HashSet<>();
 		ticker = new StaticPowerEnergyTracker();
-	}
-
-	/**
-	 * Caches the current energy IO metric and starts capturing a new one. This
-	 * should be called once per tick.
-	 */
-	public void tick(Level level) {
-		ticker.tick(level);
 	}
 
 	public StaticPowerStorage setCapacity(double capacity) {
@@ -217,7 +208,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	}
 
 	public double getAveragePowerUsedPerTick() {
-		return ticker.getAveragePowerUsedPerTick();
+		return ticker.getAveragePowerDrainedPerTick();
 	}
 
 	public double getAveragePowerAddedPerTick() {

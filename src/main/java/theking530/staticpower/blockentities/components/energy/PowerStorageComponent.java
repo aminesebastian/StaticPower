@@ -11,8 +11,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
+import theking530.api.energy.IStaticPowerEnergyTracker;
 import theking530.api.energy.PowerStack;
-import theking530.api.energy.StaticPowerEnergyTracker;
 import theking530.api.energy.StaticPowerStorage;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
@@ -124,7 +124,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 				handleNetworkSynchronization();
 			}
 
-			storage.tick(getLevel());
+			storage.getEnergyTracker().tick(getLevel());
 			receivedExplosivePowerLastTick = receivedExplosivePowerCurrentTick;
 			receivedExplosivePowerCurrentTick = false;
 		}
@@ -451,7 +451,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	@Override
-	public StaticPowerEnergyTracker getEnergyTracker() {
+	public IStaticPowerEnergyTracker getEnergyTracker() {
 		return storage.getEnergyTracker();
 	}
 

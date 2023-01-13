@@ -119,14 +119,14 @@ public class ElectricalOverlayRenderer implements ICustomRenderer {
 				Vector3D offset = new Vector3D(0.0f, 0.0f, 0.0f);
 				if (isFocused) {
 					offset.add(0, 0.1f, 0);
-					drawString(PowerTextFormatting.formatPowerRateToString(storage.getEnergyTracker().getAveragePowerUsedPerTick()).getString(), SDColor.EIGHT_BIT_RED, offset,
+					drawString(PowerTextFormatting.formatPowerRateToString(storage.getEnergyTracker().getAveragePowerDrainedPerTick()).getString(), SDColor.EIGHT_BIT_RED, offset,
 							0.01f, stack, buffer, true);
 
 					offset.add(0, 0.1f, 0);
 					drawString(PowerTextFormatting.formatPowerRateToString(storage.getEnergyTracker().getAveragePowerAddedPerTick()).getString(), SDColor.EIGHT_BIT_WHITE, offset,
 							0.01f, stack, buffer, true);
 				} else {
-					double delta = storage.getEnergyTracker().getAveragePowerAddedPerTick() + storage.getEnergyTracker().getAveragePowerUsedPerTick();
+					double delta = storage.getEnergyTracker().getAveragePowerAddedPerTick() + storage.getEnergyTracker().getAveragePowerDrainedPerTick();
 					drawString(PowerTextFormatting.formatPowerRateToString(delta).getString(), SDColor.EIGHT_BIT_WHITE, offset, 0.01f, stack, buffer, true);
 				}
 
