@@ -3,13 +3,13 @@
 	"textures": {
 		"particle": "staticpower:blocks/power/circuit_breaker/circuit_breaker",
 		"body": "staticpower:blocks/power/circuit_breaker/circuit_breaker",
-		"label": "staticpower:blocks/power/circuit_breaker/50"
+		"label": "staticpower:blocks/power/circuit_breaker/2"
 	},
 	"elements": [
 		{
 			"name": "NorthFace",
-			"from": [4.5, 4.5, 0.01],
-			"to": [11.5, 11.5, 2.01],
+			"from": [4.5, 4.5, 0],
+			"to": [11.5, 11.5, 2],
 			"faces": {
 				"north": {"uv": [9.5, 3.5, 13, 7], "texture": "#body"},
 				"east": {"uv": [10.5, 7, 11.5, 10.5], "rotation": 180, "texture": "#body"},
@@ -21,8 +21,8 @@
 		},
 		{
 			"name": "SouthFace",
-			"from": [4.5, 4.5, 13.99],
-			"to": [11.5, 11.5, 15.99],
+			"from": [4.5, 4.5, 14],
+			"to": [11.5, 11.5, 16],
 			"faces": {
 				"north": {"uv": [9.5, 3.5, 13, 7], "texture": "#body"},
 				"east": {"uv": [9.5, 7, 10.5, 10.5], "texture": "#body"},
@@ -74,8 +74,8 @@
 		},
 		{
 			"name": "Label",
-			"from": [4.475, 5.5, 5.5],
-			"to": [11.525, 10.5, 10.5],
+			"from": [4.49, 5.5, 5.5],
+			"to": [11.51, 10.5, 10.5],
 			"faces": {
 				"east": {"uv": [0, 0, 16, 16], "texture": "#label"},
 				"west": {"uv": [0, 0, 16, 16], "texture": "#label"}

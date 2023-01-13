@@ -36,6 +36,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.digistorenetwork.severrack.BlockEntityDigistoreServerRack;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.client.rendering.utilities.QuadUtilities;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.DigistoreStackedCard;
@@ -105,7 +106,7 @@ public class ServerRackModel extends AbstractBakedModel {
 			}
 
 			// Transform the card's quads.
-			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, scale, FACING_ROTATIONS.get(facing), side, state, rand, renderLayer);
+			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, scale, QuadUtilities.getRotationForDirection(facing), side, state, rand, renderLayer);
 			newQuads.addAll(bakedCardQuads);
 
 			// If we are rendering a mono card, render the filled bar.
@@ -162,7 +163,7 @@ public class ServerRackModel extends AbstractBakedModel {
 
 					// Add all the bar's quads transformed with the same offset and rotation as the
 					// card.
-					newQuads.addAll(transformQuads(barQuadList, offset, new Vector3f(1.0f, 1.0f, 1.0f), FACING_ROTATIONS.get(facing)));
+					newQuads.addAll(transformQuads(barQuadList, offset, new Vector3f(1.0f, 1.0f, 1.0f), QuadUtilities.getRotationForDirection(facing)));
 				}
 			}
 		}

@@ -38,7 +38,6 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerItemBlockCustomRenderer;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
-import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
 import theking530.staticpower.client.rendering.items.dynamic.ItemTankSpecialRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -85,11 +84,11 @@ public class BlockTank extends StaticPowerBlockEntityBlock implements ICustomMod
 			// If the cauldron already has contents, attempt to fill the held item,
 			// otherwise, fill the cauldron.
 			if (cauldron.fluidTankComponent.getFluidAmount() > 0) {
-				actionResult = FluidUtil.tryFillContainerAndStow(heldItem, cauldron.fluidTankComponent,
-						player.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null), 1000, player, true);
+				actionResult = FluidUtil.tryFillContainerAndStow(heldItem, cauldron.fluidTankComponent, player.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null), 1000,
+						player, true);
 			} else {
-				actionResult = FluidUtil.tryEmptyContainerAndStow(heldItem, cauldron.fluidTankComponent,
-						player.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null), 1000, player, true);
+				actionResult = FluidUtil.tryEmptyContainerAndStow(heldItem, cauldron.fluidTankComponent, player.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null), 1000,
+						player, true);
 			}
 
 			// Check what happened.
@@ -146,22 +145,7 @@ public class BlockTank extends StaticPowerBlockEntityBlock implements ICustomMod
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		if (tier == StaticPowerTiers.IRON) {
-			return new TankMachineBakedModel(existingModel, StaticPowerSprites.IRON_TANK);
-		} else if (tier == StaticPowerTiers.BASIC) {
-			return new TankMachineBakedModel(existingModel, StaticPowerSprites.BASIC_TANK);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return new TankMachineBakedModel(existingModel, StaticPowerSprites.ADVANCED_TANK);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return new TankMachineBakedModel(existingModel, StaticPowerSprites.STATIC_TANK);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return new TankMachineBakedModel(existingModel, StaticPowerSprites.ENERGIZED_TANK);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return new TankMachineBakedModel(existingModel, StaticPowerSprites.LUMUM_TANK);
-		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return new TankMachineBakedModel(existingModel, StaticPowerSprites.CREATIVE_TANK);
-		}
-		return null;
+		return new TankMachineBakedModel(existingModel);
 	}
 
 	@Override

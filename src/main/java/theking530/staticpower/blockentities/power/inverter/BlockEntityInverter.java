@@ -36,14 +36,7 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(PowerStack stack, boolean simulate) {
-				double transfered = transferPower(stack, simulate);
-
-				powerStorage.setCapacity(transfered);
-				super.addPower(new PowerStack(transfered, stack.getVoltage(), stack.getCurrentType()), simulate);
-				super.drainPower(transfered, simulate);
-				powerStorage.setCapacity(0);
-
-				return transfered;
+				return transferPower(stack, simulate);
 			}
 		}.setSideConfiguration(ioSideConfiguration));
 
@@ -59,15 +52,20 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 		powerStorage.setCapacity(0);
 	}
 
-	@Override
-	public void process() {
-	}
-
 	public double transferPower(PowerStack stack, boolean simulate) {
+		if (getLevel().isClientSide()) {
+			return 0;
+		}
 		if (stack.getCurrentType() == CurrentType.DIRECT) {
-			powerStorage.setOutputVoltage(stack.getVoltage());
 			PowerStack alternatingVersion = new PowerStack(stack.getPower(), stack.getVoltage(), CurrentType.ALTERNATING);
-			return powerDistributor.manuallyDistributePower(powerStorage, alternatingVersion, simulate);
+
+			double transfered = powerDistributor.manuallyDistributePower(powerStorage, alternatingVersion, simulate);
+			if (!simulate) {
+				powerStorage.getEnergyTracker().powerAdded(new PowerStack(transfered, stack.getVoltage(), stack.getCurrentType()));
+				powerStorage.getEnergyTracker().powerDrained(transfered);
+				powerStorage.setOutputVoltage(stack.getVoltage());
+			}
+			return transfered;
 		}
 		return 0;
 	}

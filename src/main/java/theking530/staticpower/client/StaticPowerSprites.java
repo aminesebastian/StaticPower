@@ -33,6 +33,16 @@ public class StaticPowerSprites {
 	public static final ResourceLocation MACHINE_SIDE_PURPLE = registerSprite("blocks/machines/sides_modes/machine_side_purple");
 	public static final ResourceLocation MACHINE_SIDE_MAGENTA = registerSprite("blocks/machines/sides_modes/machine_side_magenta");
 	public static final ResourceLocation MACHINE_SIDE_AQUA = registerSprite("blocks/machines/sides_modes/machine_side_aqua");
+	
+	public static final ResourceLocation MINI_MACHINE_SIDE_NORMAL = registerSprite("blocks/machines/sides_modes/mini_machine_side_regular");
+	public static final ResourceLocation MINI_MACHINE_SIDE_INPUT = registerSprite("blocks/machines/sides_modes/mini_machine_side_input");
+	public static final ResourceLocation MINI_MACHINE_SIDE_OUTPUT = registerSprite("blocks/machines/sides_modes/mini_machine_side_output");
+	public static final ResourceLocation MINI_MACHINE_SIDE_DISABLED = registerSprite("blocks/machines/sides_modes/mini_machine_side_disabled");
+	public static final ResourceLocation MINI_MACHINE_SIDE_GREEN = registerSprite("blocks/machines/sides_modes/mini_machine_side_green");
+	public static final ResourceLocation MINI_MACHINE_SIDE_YELLOW = registerSprite("blocks/machines/sides_modes/mini_machine_side_yellow");
+	public static final ResourceLocation MINI_MACHINE_SIDE_PURPLE = registerSprite("blocks/machines/sides_modes/mini_machine_side_purple");
+	public static final ResourceLocation MINI_MACHINE_SIDE_MAGENTA = registerSprite("blocks/machines/sides_modes/mini_machine_side_magenta");
+	public static final ResourceLocation MINI_MACHINE_SIDE_AQUA = registerSprite("blocks/machines/sides_modes/mini_machine_side_aqua");
 
 	public static final ResourceLocation BASIC_BATTERY_TOP = registerSprite("blocks/machines/batteries/battery_basic_top");
 	public static final ResourceLocation BASIC_BATTERY_SIDE = registerSprite("blocks/machines/batteries/battery_basic_side");
@@ -47,6 +57,8 @@ public class StaticPowerSprites {
 
 	public static final ResourceLocation BATTERY_BLOCK_BASIC = registerSprite("blocks/machines/batteries/battery_block_basic");
 	public static final ResourceLocation BATTERY_BLOCK_BAR = registerSprite("blocks/machines/batteries/battery_block_side_filled");
+	
+	public static final ResourceLocation CIRCUIT_BREAKER_DIGITS = registerSprite("blocks//power/circuit_breaker/digits");
 
 	public static final ResourceLocation GUI_POWER_BAR_FG = registerSprite("gui/power_bar_power");
 	public static final ResourceLocation GUI_POWER_BAR_BG = registerSprite("gui/power_bar_bg");

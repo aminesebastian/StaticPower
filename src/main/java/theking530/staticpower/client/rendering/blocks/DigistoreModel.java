@@ -25,6 +25,7 @@ import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockEntityDigistore;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.client.rendering.utilities.QuadUtilities;
 import theking530.staticpower.items.DigistoreCard;
 
 @OnlyIn(Dist.CLIENT)
@@ -71,7 +72,7 @@ public class DigistoreModel extends AbstractBakedModel {
 			Vector3f offset = SDMath.transformVectorByDirection(facing, new Vector3f(xOffset, yOffset, zOffset));
 
 			// Transform the card's quads.
-			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, new Vector3f(1.46f, .6f, 1.0f), FACING_ROTATIONS.get(facing), side, state, rand, renderLayer);
+			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, new Vector3f(1.46f, .6f, 1.0f), QuadUtilities.getRotationForDirection(facing), side, state, rand, renderLayer);
 			newQuads.addAll(bakedCardQuads);
 
 		}

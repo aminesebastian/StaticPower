@@ -742,6 +742,7 @@
 	"block.staticpower.inverter": "Inverter",
 	"block.staticpower.rectifier": "Rectifier",
 	"block.staticpower.circuit_breaker": "Circuit Breaker",
+	"block.staticpower.resistor": "Resistor",
 	
 	"block.staticpower.wire_terminal_lv": "LV Wire Terminal",
 	"block.staticpower.wire_terminal_mv": "MV Wire Terminal",

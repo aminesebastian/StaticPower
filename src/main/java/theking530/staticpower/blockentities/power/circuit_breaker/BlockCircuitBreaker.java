@@ -5,9 +5,11 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -16,6 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -23,14 +27,16 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.wrench.RegularWrenchMode;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
-import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockCircuitBreaker extends StaticPowerMachineBlock {
+public class BlockCircuitBreaker extends StaticPowerBlockEntityBlock {
 	public static final VoxelShape X_AXIS_SHAPE;
 	public static final VoxelShape Z_AXIS_SHAPE;
+
+	public static final BooleanProperty TRIPPED = BooleanProperty.create("tripped");
 
 	static {
 		VoxelShape zAxis = Block.box(4.5D, 4.5D, 0.0D, 11.5D, 11.5D, 16.0D);
@@ -49,6 +55,21 @@ public class BlockCircuitBreaker extends StaticPowerMachineBlock {
 		this.tripCurrent = tripCurrent;
 	}
 
+	public double getTripCurrent() {
+		return tripCurrent;
+	}
+
+	@Override
+	protected BlockState getDefaultState() {
+		return stateDefinition.any().setValue(TRIPPED, false);
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(TRIPPED);
+	}
+
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		if (state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING).getAxis() == Axis.Z) {
@@ -61,6 +82,18 @@ public class BlockCircuitBreaker extends StaticPowerMachineBlock {
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.NEVER;
+	}
+
+	@Override
+	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
+		if (facing != Direction.UP && facing != Direction.DOWN) {
+			if (facing != world.getBlockState(pos).getValue(getFacingType())) {
+				world.setBlock(pos, world.getBlockState(pos).setValue(getFacingType(), facing), 1 | 2);
+			} else {
+				world.setBlock(pos, world.getBlockState(pos).setValue(getFacingType(), facing.getOpposite()), 1 | 2);
+			}
+		}
+		return InteractionResult.SUCCESS;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -79,24 +112,16 @@ public class BlockCircuitBreaker extends StaticPowerMachineBlock {
 	@Nullable
 	public BlockState getStateForPlacement(BlockPlaceContext p_49820_) {
 		BlockState parent = super.getStateForPlacement(p_49820_);
-		return parent.setValue(IS_ON, true);
+		return parent.setValue(TRIPPED, false);
 	}
 
+	@Override
 	public Component getDisplayName(ItemStack stack) {
 		return Component.translatable("block.staticpower.circuit_breaker").append(" (").append(PowerTextFormatting.formatCurrentToString(getTripCurrent()).append(")"));
-	}
-
-	public double getTripCurrent() {
-		return tripCurrent;
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		return BlockEntityCircuitBreaker.TYPE.create(pos, state);
-	}
-
-	@Override
-	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-		return 0;
 	}
 }

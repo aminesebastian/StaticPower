@@ -14,18 +14,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.mojang.math.Vector3f;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,15 +27,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
-import theking530.staticpower.client.StaticPowerSprites;
-import theking530.staticpower.utilities.ModelUtilities;
+import theking530.staticpower.client.rendering.utilities.SideModeQuadGenerator;
 
 @OnlyIn(Dist.CLIENT)
 public class DefaultMachineBakedModel extends AbstractBakedModel {
@@ -49,9 +41,15 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
 	private final HashMap<Direction, Boolean> sideConfigurationRenderControl;
 	private final HashMap<BlockSide, Vector3f> sideOffsets;
+	private final boolean useMiniSideModeQuads;
 
 	public DefaultMachineBakedModel(BakedModel baseModel) {
+		this(baseModel, false);
+	}
+
+	public DefaultMachineBakedModel(BakedModel baseModel, boolean useMiniSideModeQuads) {
 		super(baseModel);
+		this.useMiniSideModeQuads = useMiniSideModeQuads;
 		sideConfigurationRenderControl = new HashMap<Direction, Boolean>();
 		sideOffsets = new HashMap<BlockSide, Vector3f>();
 
@@ -112,103 +110,28 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		// textures based on the configuration.
 		List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data, renderLayer);
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
+		newQuads.addAll(baseQuads);
 
 		// Get the block atlas texture.
 		try {
-			// Iterate through all the quads.
-			for (BakedQuad quad : baseQuads) {
-				// Get the rendering side.
-				Direction renderingSide = side == null ? quad.getDirection() : side;
-
-				// Get the side mode.
-				MachineSideMode sideMode = sideConfigurations.get()[renderingSide.ordinal()];
-				try {
-					// Attempt to render the quad for the side.
-					renderQuadsForSide(state, newQuads, renderingSide, quad, sideMode);
-				} catch (Exception e) {
-					LOGGER.warn("An error occured when attempting to render the model.", e);
-				}
-
+			if (side != null) {
+				MachineSideMode sideMode = sideConfigurations.get()[side.ordinal()];
+				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
+				renderSideMode(state, newQuads, side, blockSide, sideMode);
 			}
 		} catch (Exception e) {
-			// Silence!
+			LOGGER.warn("An error occured when attempting to render the model.", e);
 		}
 
 		// Build and return the new quad list.
 		return newQuads.build();
 	}
 
-	protected void renderQuadsForSide(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
-		// Add the original quads.
-		newQuads.add(originalQuad);
-
-		// Add the side config color if it's not NEVER and if its enabled.
-		if (sideConfigurationRenderControl.get(side) && sideConfiguration != MachineSideMode.Never) {
-			// Get the texture sprite for the side.
-			TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideConfiguration, side);
-
-			// Vectors for quads are relative to the face direction, so we need to only work
-			// in the positive direction vectors.
-			Direction offsetSide = side;
-			if (side == Direction.EAST) {
-				offsetSide = Direction.WEST;
-			} else if (side == Direction.SOUTH) {
-				offsetSide = Direction.NORTH;
-			} else if (side == Direction.DOWN) {
-				offsetSide = Direction.UP;
-			}
-
-			BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.005f, 0.005f, 15.995f, 15.995f }, 0);
-			BlockElementFace blockPartFace = new BlockElementFace(side, -1, sideSprite.getName().toString(), blockFaceUV);
-			Vector3f posOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, 0.005f));
-			posOffset.add(16.0f, 16.0f, 16.0f);
-
-			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.005f));
-
-			// Check if we have a facing property.
-			if (state != null && state.hasProperty(StaticPowerBlockEntityBlock.HORIZONTAL_FACING)) {
-				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
-
-				// If we do, see if we have a requested offset. If we do, apply it.
-				if (sideOffsets.containsKey(blockSide)) {
-					Vector3f offset = sideOffsets.get(blockSide);
-
-					// Make sure we handle positive vs negative side offsets.
-					if (blockSide.getSign() == Direction.AxisDirection.POSITIVE) {
-						posOffset.add(offset.x(), offset.y(), offset.z());
-					} else {
-						negOffset.add(-1 * offset.x(), -1 * offset.y(), -1 * offset.z());
-					}
-				}
-			}
-
-			BakedQuad newQuad = FaceBaker.bakeQuad(negOffset, posOffset, blockPartFace, sideSprite, side, ModelUtilities.IDENTITY, null, true, new ResourceLocation("dummy_name"));
-			newQuads.add(newQuad);
-		}
-	}
-
-	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, Direction side) {
-		switch (mode) {
-		case Input:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.MACHINE_SIDE_INPUT);
-		case Input2:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.MACHINE_SIDE_PURPLE);
-		case Input3:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.MACHINE_SIDE_MAGENTA);
-		case Output:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.MACHINE_SIDE_OUTPUT);
-		case Output2:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.MACHINE_SIDE_GREEN);
-		case Output3:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.MACHINE_SIDE_YELLOW);
-		case Output4:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.MACHINE_SIDE_AQUA);
-		case Disabled:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.MACHINE_SIDE_DISABLED);
-		case Never:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.EMPTY_TEXTURE);
-		default:
-			return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.MACHINE_SIDE_NORMAL);
+	protected void renderSideMode(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, BlockSide blockSide, MachineSideMode sideMode) {
+		if (useMiniSideModeQuads) {
+			SideModeQuadGenerator.renderMiniSideModeQuad(state, newQuads, side, sideMode, sideOffsets.containsKey(blockSide) ? sideOffsets.get(blockSide) : null);
+		} else {
+			SideModeQuadGenerator.renderSideModeQuad(state, newQuads, side, sideMode, sideOffsets.containsKey(blockSide) ? sideOffsets.get(blockSide) : null);
 		}
 	}
 

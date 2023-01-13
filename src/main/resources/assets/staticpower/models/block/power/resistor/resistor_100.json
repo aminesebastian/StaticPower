@@ -1,0 +1,70 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "staticpower:blocks/machines/sides_modes/machine_side_input",
+		"2": "staticpower:blocks/machines/sides_modes/machine_side_output",
+		"particle": "staticpower:blocks/power/resistor/texture",
+		"body": "staticpower:blocks/power/resistor/texture"
+	},
+	"elements": [
+		{
+			"name": "Body",
+			"from": [4.5, 4.5, 0.01],
+			"to": [11.5, 11.5, 16],
+			"faces": {
+				"north": {"uv": [0, 9, 7, 16], "texture": "#body"},
+				"east": {"uv": [0, 0, 16, 7], "texture": "#body"},
+				"south": {"uv": [9, 9, 16, 16], "texture": "#body"},
+				"west": {"uv": [0, 0, 16, 7], "rotation": 180, "texture": "#body"},
+				"up": {"uv": [16, 7, 0, 0], "rotation": 90, "texture": "#body"},
+				"down": {"uv": [0, 7, 16, 0], "rotation": 90, "texture": "#body"}
+			}
+		},
+		{
+			"name": "NorthFace",
+			"from": [5.005, 5, 0],
+			"to": [11.005, 11, 0],
+			"faces": {
+				"north": {"uv": [5, 5, 11, 11], "texture": "#1"}
+			}
+		},
+		{
+			"name": "SouthFace",
+			"from": [5, 5, 16.005],
+			"to": [11, 11, 16.005],
+			"faces": {
+				"south": {"uv": [5, 5, 11, 11], "texture": "#2"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 135, 0],
+			"translation": [0, 1.5, 0],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 135, 0],
+			"translation": [0, 1.5, 0],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.3, 0.3, 0.3]
+		},
+		"gui": {
+			"rotation": [30, -135, 0],
+			"scale": [0.75, 0.75, 0.75]
+		}
+	}
+}

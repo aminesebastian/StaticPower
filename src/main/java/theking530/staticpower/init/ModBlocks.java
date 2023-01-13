@@ -83,6 +83,7 @@ import theking530.staticpower.blockentities.power.inverter.BlockInverter;
 import theking530.staticpower.blockentities.power.lightsocket.BlockLightSocket;
 import theking530.staticpower.blockentities.power.powermonitor.BlockPowerMonitor;
 import theking530.staticpower.blockentities.power.rectifier.BlockRectifier;
+import theking530.staticpower.blockentities.power.resistor.BlockResistor;
 import theking530.staticpower.blockentities.power.solarpanels.BlockSolarPanel;
 import theking530.staticpower.blockentities.power.solidgenerator.BlockSolidGenerator;
 import theking530.staticpower.blockentities.power.transformer.BlockTransformer;
@@ -546,6 +547,9 @@ public class ModBlocks {
 	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker20A = registerBlock("circuit_breaker_20", () -> new BlockCircuitBreaker(20));
 	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker50A = registerBlock("circuit_breaker_50", () -> new BlockCircuitBreaker(50));
 	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker100A = registerBlock("circuit_breaker_100", () -> new BlockCircuitBreaker(100));
+	
+	// Resistors
+	public static final RegistryObject<BlockResistor> Resistor100W = registerBlock("resistor_100", () -> new BlockResistor(100));
 
 	// Wire Terminals
 	public static final RegistryObject<BlockWireConnector> WireConnectorLV = registerBlock("wire_terminal_lv", () -> new BlockWireConnector(StaticPowerTiers.BASIC));

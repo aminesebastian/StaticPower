@@ -1,5 +1,7 @@
 package theking530.staticpower.blockentities.components.energy;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.core.Direction;
@@ -7,7 +9,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
-import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -50,9 +51,9 @@ public class PowerDistributionComponent extends AbstractBlockEntityComponent {
 		}
 	}
 
-	public double manuallyDistributePower(IStaticPowerStorage source, PowerStack stack, boolean simulate) {
+	public double manuallyDistributePower(Direction[] sides, IStaticPowerStorage source, PowerStack stack, boolean simulate) {
 		double providedTotal = 0;
-		for (Direction facing : Direction.values()) {
+		for (Direction facing : sides) {
 			if (canOutputFromSide(facing)) {
 				double provided = distributeOnSide(source, facing, stack, simulate);
 				providedTotal += provided;
@@ -62,6 +63,16 @@ public class PowerDistributionComponent extends AbstractBlockEntityComponent {
 			}
 		}
 		return providedTotal;
+	}
+
+	public double manuallyDistributePower(List<Direction> sides, IStaticPowerStorage source, PowerStack stack, boolean simulate) {
+		Direction[] sidesArray = new Direction[sides.size()];
+		sides.toArray(sidesArray);
+		return manuallyDistributePower(sidesArray, source, stack, simulate);
+	}
+
+	public double manuallyDistributePower(IStaticPowerStorage source, PowerStack stack, boolean simulate) {
+		return manuallyDistributePower(Direction.values(), source, stack, simulate);
 	}
 
 	protected double distributeOnSide(IStaticPowerStorage source, Direction facing, PowerStack stack, boolean simulate) {

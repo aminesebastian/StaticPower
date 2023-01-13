@@ -42,7 +42,11 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 
 	protected StaticPowerMachineBlock(ResourceLocation tier, Properties properies) {
 		super(tier, properies);
-		this.registerDefaultState(stateDefinition.any().setValue(IS_ON, false));
+	}
+
+	@Override
+	protected BlockState getDefaultState() {
+		return stateDefinition.any().setValue(IS_ON, false);
 	}
 
 	@Override
@@ -78,8 +82,8 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 			CompoundTag nbt = IBreakSerializeable.getSerializeDataFromItemStack(stack);
 			if (nbt.contains("MainEnergyStorage") && nbt.getCompound("MainEnergyStorage").contains("storage")) {
 				StaticPowerStorage storage = StaticPowerStorage.fromTag(nbt.getCompound("MainEnergyStorage").getCompound("storage"));
-				if(storage.getStoredPower() > 0) {
-					PowerTooltips.addStoredPowerTooltip(tooltip, storage.getStoredPower());	
+				if (storage.getStoredPower() > 0) {
+					PowerTooltips.addStoredPowerTooltip(tooltip, storage.getStoredPower());
 				}
 			}
 		}

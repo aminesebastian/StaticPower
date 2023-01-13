@@ -15,7 +15,11 @@ import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 public class BlockRefineryBoiler extends StaticPowerBlock {
 	public BlockRefineryBoiler() {
 		super(Material.METAL);
-		registerDefaultState(stateDefinition.any().setValue(StaticPowerMachineBlock.IS_ON, false));
+	}
+
+	@Override
+	protected BlockState getDefaultState() {
+		return stateDefinition.any().setValue(StaticPowerMachineBlock.IS_ON, false);
 	}
 
 	@Override

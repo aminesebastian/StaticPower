@@ -42,7 +42,11 @@ public class BlockRefineryTower extends StaticPowerBlock {
 
 	public BlockRefineryTower() {
 		super(Material.METAL);
-		registerDefaultState(stateDefinition.any().setValue(TOWER_POSITION, TowerPiece.FULL));
+	}
+
+	@Override
+	protected BlockState getDefaultState() {
+		return stateDefinition.any().setValue(TOWER_POSITION, TowerPiece.FULL);
 	}
 
 	public BlockState getStateForPlacement(BlockPlaceContext context) {

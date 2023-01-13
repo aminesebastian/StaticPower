@@ -1,12 +1,12 @@
 {
     "variants": {
-		"facing=north,is_on=false": { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5_open" },
-        "facing=south,is_on=false": { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5_open", "y": 180 },
-        "facing=west,is_on=false":  { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5_open", "y": 270 },
-        "facing=east,is_on=false":  { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5_open", "y": 90 },
-		"facing=north,is_on=true": { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5" },
-        "facing=south,is_on=true": { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5", "y": 180 },
-        "facing=west,is_on=true":  { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5", "y": 270 },
-        "facing=east,is_on=true":  { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5", "y": 90 }
+		"facing=north,tripped=true": { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5_tripped" },
+        "facing=south,tripped=true": { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5_tripped", "y": 180 },
+        "facing=west,tripped=true":  { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5_tripped", "y": 270 },
+        "facing=east,tripped=true":  { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5_tripped", "y": 90 },
+		"facing=north,tripped=false": { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5" },
+        "facing=south,tripped=false": { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5", "y": 180 },
+        "facing=west,tripped=false":  { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5", "y": 270 },
+        "facing=east,tripped=false":  { "model": "staticpower:block/power/circuit_breaker/circuit_breaker_5", "y": 90 }
     }
 }

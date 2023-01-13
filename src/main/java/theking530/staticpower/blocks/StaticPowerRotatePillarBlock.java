@@ -12,7 +12,11 @@ import net.minecraft.world.level.block.state.StateDefinition;
 public class StaticPowerRotatePillarBlock extends StaticPowerBlock {
 	public StaticPowerRotatePillarBlock(Properties properties) {
 		super(properties);
-		this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.Y));
+	}
+
+	@Override
+	protected BlockState getDefaultState() {
+		return stateDefinition.any().setValue(AXIS, Direction.Axis.Y);
 	}
 
 	@Override

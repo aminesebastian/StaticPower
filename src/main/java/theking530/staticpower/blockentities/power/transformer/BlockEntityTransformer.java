@@ -54,14 +54,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(Direction side, PowerStack stack, boolean simulate) {
-				double transformed = transformAndSupplyPower(side, stack, simulate);
-
-				powerStorage.setCapacity(transformed);
-				super.addPower(new PowerStack(transformed, stack.getVoltage(), stack.getCurrentType()), simulate);
-				super.drainPower(transformed, simulate);
-				powerStorage.setCapacity(0);
-
-				return transformed;
+				return transformAndSupplyPower(side, stack, simulate);
 			}
 		}.setSideConfiguration(ioSideConfiguration));
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getTransformerVoltageRange());
@@ -78,11 +71,10 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		transformerRatio = getTierObject().powerConfiguration.transfomerRatio.get();
 	}
 
-	@Override
-	public void process() {
-	}
-
 	public double transformAndSupplyPower(Direction side, PowerStack stack, boolean simulate) {
+		if (getLevel().isClientSide()) {
+			return 0;
+		}
 		// Do nothing if this side is not an input side OR the supplied stack is not
 		// alternating.
 		if (!ioSideConfiguration.getWorldSpaceDirectionConfiguration(side).isInputMode() || stack.getCurrentType() != CurrentType.ALTERNATING) {
@@ -114,11 +106,16 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 			}
 		}
 
-		powerStorage.setOutputVoltage(outputVoltageClass);
 		double power = Math.min(stack.getPower(), powerStorage.getMaximumPowerOutput());
 		PowerStack transformedStack = new PowerStack(power, powerStorage.getOutputVoltage(), CurrentType.ALTERNATING);
 
-		return powerDistributor.manuallyDistributePower(powerStorage, transformedStack, simulate);
+		double transfered = powerDistributor.manuallyDistributePower(powerStorage, transformedStack, simulate);
+		if (!simulate) {
+			powerStorage.getEnergyTracker().powerAdded(new PowerStack(transfered, stack.getVoltage(), stack.getCurrentType()));
+			powerStorage.getEnergyTracker().powerDrained(transfered);
+			powerStorage.setOutputVoltage(outputVoltageClass);
+		}
+		return transfered;
 	}
 
 	@Override

@@ -77,6 +77,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	 */
 	public StaticPowerBlock(Block.Properties properties) {
 		super(properties);
+		registerDefaultState(getDefaultState());
 	}
 
 	/**
@@ -113,6 +114,10 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 
 	public Component getDisplayName(ItemStack stack) {
 		return Component.translatable(getDescriptionId());
+	}
+
+	protected BlockState getDefaultState() {
+		return stateDefinition.any();
 	}
 
 	/**
@@ -246,7 +251,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 		// Raise the inheritor's method.
 		onStaticPowerBlockReplaced(state, world, pos, newState, isMoving, state.getBlock() != newState.getBlock());
 
-	      if (!isMoving && !state.is(newState.getBlock())) {
+		if (!isMoving && !state.is(newState.getBlock())) {
 			// Raise the tile entity's broken method.
 			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
 				((BlockEntityBase) world.getBlockEntity(pos)).onBlockBroken(state, newState, isMoving);

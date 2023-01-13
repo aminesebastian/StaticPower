@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
-	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 5;
+	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 10;
 	private long lastTickTime;
 
 	protected int maxIoCaptureFrames;

@@ -1,10 +1,8 @@
 package theking530.staticpower.client.rendering.blocks;
 
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,33 +28,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.QuadTransformers;
 import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.common.util.TransformationHelper;
 
 public abstract class AbstractBakedModel implements BakedModel {
 	protected static final float UNIT = 1.0f / 16.0f;
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);
-	protected static final Map<Direction, Quaternion> FACING_ROTATIONS = new EnumMap<Direction, Quaternion>(Direction.class);
-	protected static final Map<Direction, Transformation> SIDE_TRANSFORMS = new EnumMap<>(Direction.class);
 
 	protected final HashSet<String> LoggedErrors = new HashSet<String>();
 	protected final FaceBakery FaceBaker = new FaceBakery();
 	protected final BakedModel BaseModel;
-
-	static {
-		for (Direction dir : Direction.values()) {
-			Quaternion quaternion;
-			if (dir == Direction.UP) {
-				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(90, 0, 0), true);
-			} else if (dir == Direction.DOWN) {
-				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(270, 0, 0), true);
-			} else {
-				double r = Math.PI * (360 - dir.getOpposite().get2DDataValue() * 90) / 180d;
-				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false);
-			}
-			FACING_ROTATIONS.put(dir, quaternion);
-			SIDE_TRANSFORMS.put(dir, new Transformation(null, quaternion, null, null).blockCenterToCorner());
-		}
-	}
 
 	public AbstractBakedModel(BakedModel baseModel) {
 		this.BaseModel = baseModel;
@@ -74,28 +53,6 @@ public abstract class AbstractBakedModel implements BakedModel {
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
 		return getQuads(state, side, rand, ModelData.EMPTY, null);
-	}
-
-	protected List<BakedQuad> rotateQuadsToFaceDirection(BakedModel model, Direction desiredRotation, Direction drawingSide, BlockState state, RandomSource rand) {
-		Transformation transformation = SIDE_TRANSFORMS.get(desiredRotation);
-		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
-
-		if (drawingSide != null && drawingSide.get2DDataValue() > -1) {
-			int faceOffset = 4 + Direction.NORTH.get2DDataValue() - desiredRotation.get2DDataValue();
-			drawingSide = Direction.from2DDataValue((drawingSide.get2DDataValue() + faceOffset) % 4);
-		}
-
-		// Build the output.
-		try {
-			IQuadTransformer transformer = QuadTransformers.applying(transformation);
-			for (BakedQuad quad : model.getQuads(state, drawingSide, rand, ModelData.EMPTY, null)) {
-				quads.add(transformer.process(quad));
-			}
-		} catch (Exception e) {
-			LOGGER.error(String.format("An error occured when attempting to rotate a model to face the desired rotation. Model: %1$s.", model), e);
-		}
-
-		return quads.build();
 	}
 
 	protected List<BakedQuad> transformQuads(BakedModel model, Vector3f translation, Vector3f scale, Quaternion rotation, Direction drawingSide, BlockState state,

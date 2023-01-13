@@ -69,9 +69,13 @@ public abstract class StaticPowerBlockEntityBlock extends StaticPowerBlock imple
 		super(properties);
 		this.shouldDropContents = true;
 		this.tier = tier;
-		if (getFacingType() != null) {
-			this.registerDefaultState(stateDefinition.any().setValue(getFacingType(), Direction.NORTH));
+	}
+
+	protected BlockState getDefaultState() {
+		if(getFacingType() != null) {
+			return stateDefinition.any().setValue(getFacingType(), Direction.NORTH);
 		}
+		return super.getDefaultState();
 	}
 
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

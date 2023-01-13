@@ -18,7 +18,11 @@ public class BlockAlloyFurnace extends StaticPowerBlockEntityBlock {
 
 	public BlockAlloyFurnace() {
 		super(StaticPowerTiers.ENERGIZED);
-		this.registerDefaultState(stateDefinition.any().setValue(StaticPowerMachineBlock.IS_ON, false));
+	}
+
+	@Override
+	protected BlockState getDefaultState() {
+		return stateDefinition.any().setValue(StaticPowerMachineBlock.IS_ON, false);
 	}
 
 	@Override
