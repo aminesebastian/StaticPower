@@ -17,8 +17,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticpower.cables.power.PowerNetworkModule;
 import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.items.StaticPowerItem;
@@ -42,18 +42,18 @@ public class Multimeter extends StaticPowerItem {
 			}
 
 			// If we right clicked on a cable.
-			if (CableNetworkManager.get(world).isTrackingCable(pos)) {
+			if (CableNetworkAccessor.get(world).isTrackingCable(pos)) {
 				// Get the cable.
-				ServerCable cable = CableNetworkManager.get(world).getCable(pos);
+				Cable cable = CableNetworkAccessor.get(world).getCable(pos);
 				if (isPendingSecondLocation(item)) {
 					BlockPos firstLocation = getFirstLocation(item);
 					clearPendingLocation(item);
 
-					if (!CableNetworkManager.get(world).isTrackingCable(pos)) {
+					if (!CableNetworkAccessor.get(world).isTrackingCable(pos)) {
 						player.sendSystemMessage(Component.translatable("gui.staticpower.invalid_multimeter_second_location"));
 						return InteractionResult.PASS;
 					} else {
-						ServerCable firstPositionCable = CableNetworkManager.get(world).getCable(firstLocation);
+						Cable firstPositionCable = CableNetworkAccessor.get(world).getCable(firstLocation);
 						if (firstPositionCable.getNetwork() != cable.getNetwork()) {
 							player.sendSystemMessage(Component.translatable("gui.staticpower.invalid_multimeter_second_location"));
 							return InteractionResult.PASS;

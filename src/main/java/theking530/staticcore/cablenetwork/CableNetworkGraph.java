@@ -8,17 +8,18 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.StaticPower;
 
 public class CableNetworkGraph {
 	protected static final Logger LOGGER = LogManager.getLogger(CableNetworkGraph.class);
 	private final CableNetwork owningNetwork;
-	private HashMap<BlockPos, ServerCable> cables;
+	private HashMap<BlockPos, Cable> cables;
 	private HashMap<BlockPos, DestinationWrapper> destinations;
 
 	public CableNetworkGraph(CableNetwork network) {
-		cables = new HashMap<BlockPos, ServerCable>();
+		cables = new HashMap<BlockPos, Cable>();
 		destinations = new HashMap<BlockPos, DestinationWrapper>();
 		owningNetwork = network;
 	}
@@ -29,7 +30,7 @@ public class CableNetworkGraph {
 
 		try {
 			// If the cable is bad, return early.
-			if (!CableNetworkManager.get(world).isTrackingCable(scanStartPosition)) {
+			if (!CableNetworkAccessor.get(world).isTrackingCable(scanStartPosition)) {
 				StaticPower.LOGGER.error(String.format("Encountered a null starting cable at position: %1$s when attempting to scan the network.", scanStartPosition));
 				return mapper;
 			}
@@ -70,7 +71,7 @@ public class CableNetworkGraph {
 		return mapper;
 	}
 
-	public HashMap<BlockPos, ServerCable> getCables() {
+	public HashMap<BlockPos, Cable> getCables() {
 		return cables;
 	}
 

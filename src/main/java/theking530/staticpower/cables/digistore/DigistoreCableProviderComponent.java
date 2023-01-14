@@ -7,9 +7,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
@@ -130,8 +130,8 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	public void updatePowerUsage() {
 		// Update the power usage on the server.
 		if (!getLevel().isClientSide()) {
-			if (CableNetworkManager.get(getLevel()).isTrackingCable(getPos())) {
-				updatePowerUsage(CableNetworkManager.get(getLevel()).getCable(getPos()));
+			if (CableNetworkAccessor.get(getLevel()).isTrackingCable(getPos())) {
+				updatePowerUsage(CableNetworkAccessor.get(getLevel()).getCable(getPos()));
 			}
 		} else {
 			StaticPower.LOGGER.warn(
@@ -139,7 +139,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		}
 	}
 
-	protected void updatePowerUsage(ServerCable cable) {
+	protected void updatePowerUsage(Cable cable) {
 		// Throw this in a try catch because I'm skeptical about doing this.
 		try {
 			// Update the cable value on the server.
@@ -182,7 +182,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		// Update the power usage.
 		updatePowerUsage(cable);

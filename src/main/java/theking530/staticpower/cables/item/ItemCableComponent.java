@@ -21,9 +21,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.PacketDistributor;
 import theking530.staticcore.cablenetwork.CableNetwork;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
@@ -86,9 +86,9 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		// Only perform the following on the server.
 		if (!isClientSide()) {
 			// Get the network.
-			CableNetwork network = CableNetworkManager.get(getLevel()).getCable(getPos()).getNetwork();
+			CableNetwork network = CableNetworkAccessor.get(getLevel()).getCable(getPos()).getNetwork();
 			if (network == null) {
-				CableNetworkManager.get(getLevel()).removeCable(getPos());
+				CableNetworkAccessor.get(getLevel()).removeCable(getPos());
 				throw new RuntimeException(String.format("Encountered a null network for an ItemCableComponent at position: %1$s.", getPos()));
 			}
 
@@ -161,7 +161,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putDouble(ITEM_CABLE_MAX_TRANSFER_SPEED, maxTransferSpeed);
 		cable.getDataTag().putDouble(ITEM_CABLE_FRICTION_FACTOR_TAG, frictionFactor);
@@ -184,7 +184,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 				} else {
 					// If the cable is not valid, just assume disabled. Could be that the cable is
 					// not yet initailized server side.
-					Optional<ServerCable> cable = getCable();
+					Optional<Cable> cable = getCable();
 					disabled = cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}

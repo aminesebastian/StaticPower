@@ -7,7 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapability;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.utilities.SDMath;
@@ -21,7 +21,7 @@ public class FluidCableCapability extends ServerCableCapability {
 	private boolean isIndustrial;
 	private final Map<Direction, Float> sidedFlowMap;
 
-	public FluidCableCapability(ServerCableCapabilityType type, ServerCable owningCable) {
+	public FluidCableCapability(ServerCableCapabilityType type, Cable owningCable) {
 		super(type, owningCable);
 		this.fluidStorage = new StaticPowerFluidTank(0);
 		sidedFlowMap = new HashMap<>();
@@ -108,7 +108,7 @@ public class FluidCableCapability extends ServerCableCapability {
 
 	public static class FluidCableCapabilityType extends ServerCableCapabilityType {
 		@Override
-		public FluidCableCapability create(ServerCable owningCable) {
+		public FluidCableCapability create(Cable owningCable) {
 			return new FluidCableCapability(this, owningCable);
 		}
 	}

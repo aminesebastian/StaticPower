@@ -14,9 +14,9 @@ import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.cablenetwork.CableNetwork;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -39,7 +39,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 	@Override
 	public void getReaderOutput(List<Component> components, BlockPos pos) {
 		float averageThermalConductivity = 0.0f;
-		for (ServerCable cable : Network.getGraph().getCables().values()) {
+		for (Cable cable : Network.getGraph().getCables().values()) {
 			averageThermalConductivity += cable.getDataTag().getDouble(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 		}
 		averageThermalConductivity /= Network.getGraph().getCables().size();
@@ -66,15 +66,15 @@ public class HeatNetworkModule extends CableNetworkModule {
 
 		// Capture the cables in an array because the passive heating can affect the
 		// list of cables.
-		ServerCable[] cables = new ServerCable[Network.getGraph().getCables().size()];
+		Cable[] cables = new Cable[Network.getGraph().getCables().size()];
 		Network.getGraph().getCables().values().toArray(cables);
 
 		// Handle the passive heating/cooling. Each iteration we limit the thermal
 		// transfer rate to the current cable's. Do not put this in the IF heat > 0
 		// check.
-		for (ServerCable cable : cables) {
+		for (Cable cable : cables) {
 			// Skip cables that were at some point removed.
-			if (!CableNetworkManager.get(world).isTrackingCable(cable.getPos())) {
+			if (!CableNetworkAccessor.get(world).isTrackingCable(cable.getPos())) {
 				continue;
 			}
 
@@ -106,7 +106,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 					// Distribute the heat to the destinations.
 					for (IHeatStorage wrapper : destinations.keySet()) {
 						// Get the thermal conductivity of the cable connected to this destination.
-						double cableConductivity = CableNetworkManager.get(world).getCable(destinations.get(wrapper).getFirstConnectedCable()).getDataTag()
+						double cableConductivity = CableNetworkAccessor.get(world).getCable(destinations.get(wrapper).getFirstConnectedCable()).getDataTag()
 								.getDouble(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 
 						// Get the thermal conductivity of the attached cable.
@@ -131,7 +131,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 		int total = 0;
 
 		// Get all the cables in the network and get their cable components.
-		for (ServerCable cable : mapper.getDiscoveredCables()) {
+		for (Cable cable : mapper.getDiscoveredCables()) {
 			// If they have a heat cable component, get the capacity.
 			if (cable.getDataTag().contains(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY)) {
 				total += cable.getDataTag().getInt(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY);

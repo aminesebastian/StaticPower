@@ -215,7 +215,7 @@ public class CableNetwork {
 		return graph.getCables().isEmpty();
 	}
 
-	public boolean canAcceptCable(ServerCable currentNetworkCable, ServerCable newCable) {
+	public boolean canAcceptCable(Cable currentNetworkCable, Cable newCable) {
 		for (CableNetworkModule module : modules.values()) {
 			if (!module.canAcceptCable(currentNetworkCable, newCable)) {
 				return false;

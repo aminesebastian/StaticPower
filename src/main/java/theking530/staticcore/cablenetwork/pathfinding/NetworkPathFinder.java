@@ -13,8 +13,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.CableNetworkGraph;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.pathfinding.Path.PathEntry;
 import theking530.staticcore.cablenetwork.scanning.CableScanLocation;
@@ -31,10 +31,10 @@ public class NetworkPathFinder {
 	private final Queue<BlockPos> bfsQueue;
 	private final Level world;
 	private final boolean destinationIsCable;
-	private final BiFunction<ServerCable, Float, Float> lengthProvider;
+	private final BiFunction<Cable, Float, Float> lengthProvider;
 
 	public NetworkPathFinder(CableNetworkGraph graph, Level world, BlockPos startingCablePosition, BlockPos endingPosition, CableNetworkModuleType supportedNetworkType,
-			BiFunction<ServerCable, Float, Float> lengthProvider) {
+			BiFunction<Cable, Float, Float> lengthProvider) {
 		// Capture all the positions in the network graph.
 		existingCables = new HashSet<BlockPos>();
 		graph.getCables().values().forEach(cable -> {
@@ -46,10 +46,10 @@ public class NetworkPathFinder {
 		// Capture all the terminus nodes in the network graph (the final cables before
 		// the target), if they support the network type.
 		destinationAdjacentCables = new HashSet<BlockPos>();
-		destinationIsCable = CableNetworkManager.get(world).isTrackingCable(endingPosition);
+		destinationIsCable = CableNetworkAccessor.get(world).isTrackingCable(endingPosition);
 		if (!destinationIsCable) {
 			for (Direction dir : Direction.values()) {
-				ServerCable cable = CableNetworkManager.get(world).getCable(endingPosition.relative(dir));
+				Cable cable = CableNetworkAccessor.get(world).getCable(endingPosition.relative(dir));
 				if (cable != null && cable.supportsNetworkModule(supportedNetworkType) && !cable.isDisabledOnSide(dir.getOpposite())) {
 					destinationAdjacentCables.add(endingPosition.relative(dir));
 				}
@@ -87,7 +87,7 @@ public class NetworkPathFinder {
 		while (!bfsQueue.isEmpty()) {
 			// Get the current position off the queue.
 			BlockPos curr = bfsQueue.poll();
-			ServerCable cable = CableNetworkManager.get(world).getCable(curr);
+			Cable cable = CableNetworkAccessor.get(world).getCable(curr);
 			if (cable == null) {
 				throw new RuntimeException(String.format("Attempted to use a null cable in a network path find. Error occured at location: %1$s.", curr));
 			}
@@ -181,8 +181,8 @@ public class NetworkPathFinder {
 		// Take the distance, then multiply by 10, clamp to int, and then divide.
 		// This should give us a distance with a single decimal.
 		float distance = (float) (Math.sqrt(starting.distSqr(ending)));
-		if (CableNetworkManager.get(world).isTrackingCable(starting)) {
-			distance = lengthProvider.apply(CableNetworkManager.get(world).getCable(starting), (float)Math.round(distance));
+		if (CableNetworkAccessor.get(world).isTrackingCable(starting)) {
+			distance = lengthProvider.apply(CableNetworkAccessor.get(world).getCable(starting), (float)Math.round(distance));
 		}
 		return distance;
 	}

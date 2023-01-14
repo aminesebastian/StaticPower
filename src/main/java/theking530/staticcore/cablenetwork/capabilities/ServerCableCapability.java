@@ -2,18 +2,18 @@ package theking530.staticcore.cablenetwork.capabilities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 
 public abstract class ServerCableCapability {
 	private final ServerCableCapabilityType type;
-	private final ServerCable owningCable;
+	private final Cable owningCable;
 
-	public ServerCableCapability(ServerCableCapabilityType type, ServerCable owningCable) {
+	public ServerCableCapability(ServerCableCapabilityType type, Cable owningCable) {
 		this.type = type;
 		this.owningCable = owningCable;
 	}
 
-	public final ServerCable getOwningCable() {
+	public final Cable getOwningCable() {
 		return owningCable;
 	}
 

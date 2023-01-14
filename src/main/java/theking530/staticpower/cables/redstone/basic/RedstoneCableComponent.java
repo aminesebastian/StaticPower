@@ -20,12 +20,12 @@ import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.CableUtilities;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -90,7 +90,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());
 	}
@@ -160,8 +160,8 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 			getTileEntity().addRenderingUpdateRequest();
 		} else {
-			if (CableNetworkManager.get(getLevel()).isTrackingCable(getPos())) {
-				CableNetworkManager.get(getLevel()).getCable(getPos()).getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());
+			if (CableNetworkAccessor.get(getLevel()).isTrackingCable(getPos())) {
+				CableNetworkAccessor.get(getLevel()).getCable(getPos()).getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());
 				getLevel().updateNeighborsAt(this.getPos(), getLevel().getBlockState(getPos()).getBlock());
 			}
 		}

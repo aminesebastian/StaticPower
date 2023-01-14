@@ -7,8 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.CableNetwork;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
@@ -42,7 +42,7 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 		captureInputOutputCables(world, mapper);
 
 		// Read in all the input signals.
-		for (Map.Entry<ServerCable, CableConfigurationWrapper> entry : inputCables.entrySet()) {
+		for (Map.Entry<Cable, CableConfigurationWrapper> entry : inputCables.entrySet()) {
 			// Check all sides of the cable, and capture the max input for that side's
 			// selector.
 			for (Direction dir : Direction.values()) {
@@ -56,7 +56,7 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 
 		// Update all output cables.
 		if (!signals.equals(getPreviousSignals())) {
-			for (ServerCable cable : outputCables.keySet()) {
+			for (Cable cable : outputCables.keySet()) {
 				updateAroundCable(world, cable);
 			}
 		}
@@ -75,8 +75,8 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 		try {
 			// If this is another cable in ANOTHER network but of a different selector, also
 			// skip it.
-			if (CableNetworkManager.get(world).isTrackingCable(targetPos)) {
-				ServerCable otherCable = CableNetworkManager.get(world).getCable(targetPos);
+			if (CableNetworkAccessor.get(world).isTrackingCable(targetPos)) {
+				Cable otherCable = CableNetworkAccessor.get(world).getCable(targetPos);
 				if (otherCable.getDataTag().contains(RedstoneCableComponent.CONFIGURATION_KEY)) {
 					// Get the configuration for the other cable
 					RedstoneCableConfiguration otherConfiguration = getConfigurationForCable(otherCable);

@@ -18,7 +18,7 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.sided.ISidedStaticPowerStorage;
 import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -76,7 +76,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putByte(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
 		cable.getDataTag().putDouble(POWER_LOSS, powerLoss);

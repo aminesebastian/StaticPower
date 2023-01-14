@@ -15,7 +15,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticcore.cablenetwork.CableNetwork;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
@@ -33,7 +33,7 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 	public static final int CRAFTING_TIME = 10;
 
 	private final List<IDigistoreInventory> digistores;
-	private final List<ServerCable> powerUsingDigistores;
+	private final List<Cable> powerUsingDigistores;
 	private final List<BlockEntityPatternStorage> patternStorages;
 	private final List<CraftingInterfaceWrapper> craftingInterfaces;
 
@@ -46,7 +46,7 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 		super(ModCableModules.Digistore.get());
 		digistores = new LinkedList<IDigistoreInventory>();
 		transactionManager = new DigistoreNetworkTransactionManager(this);
-		powerUsingDigistores = new LinkedList<ServerCable>();
+		powerUsingDigistores = new LinkedList<Cable>();
 		craftingInterfaces = new LinkedList<CraftingInterfaceWrapper>();
 		patternStorages = new LinkedList<BlockEntityPatternStorage>();
 		craftingManager = new DigistoreNetworkCraftingManager(this);
@@ -77,7 +77,7 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 		manager = null;
 
 		// Cache all the digistores in the network.
-		for (ServerCable cable : mapper.getDiscoveredCables()) {
+		for (Cable cable : mapper.getDiscoveredCables()) {
 			// Get the cable's tile entity.
 			BlockEntity te = Network.getWorld().getChunkAt(cable.getPos()).getBlockEntity(cable.getPos(), LevelChunk.EntityCreationType.QUEUED);
 			// If it's not null.
@@ -161,7 +161,7 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 
 	public int getPowerUsage() {
 		int usage = 0;
-		for (ServerCable cable : powerUsingDigistores) {
+		for (Cable cable : powerUsingDigistores) {
 			usage += cable.getDataTag().getInt(DigistoreCableProviderComponent.POWER_USAGE_TAG);
 		}
 		return usage;

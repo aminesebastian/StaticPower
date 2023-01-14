@@ -42,7 +42,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.ITooltipProvider;
@@ -77,9 +77,9 @@ public class StaticPowerForgeEventsCommon {
 	public static void worldTickEvent(TickEvent.LevelTickEvent event) {
 		if (!event.level.isClientSide) {
 			if (event.phase == TickEvent.Phase.START) {
-				CableNetworkManager.get(event.level).preWorldTick();
+				CableNetworkAccessor.get(event.level).preWorldTick();
 			} else if (event.phase == TickEvent.Phase.END) {
-				CableNetworkManager.get(event.level).tick();
+				CableNetworkAccessor.get(event.level).tick();
 				StaticPowerGameDataManager.tickGameData(event.level);
 			}
 		}

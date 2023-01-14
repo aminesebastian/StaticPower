@@ -10,23 +10,23 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 
 public class NetworkMapper {
-	private final Collection<ServerCable> initialCables;
-	private final Set<ServerCable> discoveredCables;
-	private final Set<ServerCable> newlyAddedCables;
-	private final Set<ServerCable> removedCables;
+	private final Collection<Cable> initialCables;
+	private final Set<Cable> discoveredCables;
+	private final Set<Cable> newlyAddedCables;
+	private final Set<Cable> removedCables;
 	private HashMap<BlockPos, DestinationWrapper> destinations;
 	private BlockPos startingPosition;
 
-	public NetworkMapper(Collection<ServerCable> startingCables) {
+	public NetworkMapper(Collection<Cable> startingCables) {
 		this.initialCables = startingCables;
-		this.discoveredCables = new LinkedHashSet<ServerCable>();
-		this.newlyAddedCables = new LinkedHashSet<ServerCable>();
-		this.removedCables = new LinkedHashSet<ServerCable>();
+		this.discoveredCables = new LinkedHashSet<Cable>();
+		this.newlyAddedCables = new LinkedHashSet<Cable>();
+		this.removedCables = new LinkedHashSet<Cable>();
 		this.destinations = new HashMap<BlockPos, DestinationWrapper>();
 		this.removedCables.addAll(startingCables);
 	}
@@ -41,22 +41,22 @@ public class NetworkMapper {
 
 		// Check the starting position. We make the assumption that the starting cable
 		// is a valid one.
-		ServerCable startingCable = CableNetworkManager.get(world).getCable(startingPos);
+		Cable startingCable = CableNetworkAccessor.get(world).getCable(startingPos);
 		discoverCable(startingCable);
 
 		// Kick off the recursion.
 		recurseAroundCable(world, visited, startingPos);
 	}
 
-	public Set<ServerCable> getDiscoveredCables() {
+	public Set<Cable> getDiscoveredCables() {
 		return discoveredCables;
 	}
 
-	public Set<ServerCable> getNewlyAddedCables() {
+	public Set<Cable> getNewlyAddedCables() {
 		return newlyAddedCables;
 	}
 
-	public Set<ServerCable> getRemovedCables() {
+	public Set<Cable> getRemovedCables() {
 		return removedCables;
 	}
 
@@ -69,11 +69,11 @@ public class NetworkMapper {
 	}
 
 	protected void recurseAroundCable(Level world, HashSet<BlockPos> visited, BlockPos currentPosition) {
-		if (!CableNetworkManager.get(world).isTrackingCable(currentPosition)) {
+		if (!CableNetworkAccessor.get(world).isTrackingCable(currentPosition)) {
 			return;
 		}
 
-		ServerCable cable = CableNetworkManager.get(world).getCable(currentPosition);
+		Cable cable = CableNetworkAccessor.get(world).getCable(currentPosition);
 		for (CableScanLocation scanLoc : cable.getScanLocations()) {
 			BlockPos linkPosition = scanLoc.getLocation();
 			if (visited.contains(linkPosition)) {
@@ -102,7 +102,7 @@ public class NetworkMapper {
 	 * @param location
 	 * @return True if we should continue recursing, false otherwise.
 	 */
-	protected boolean scanForCompatibleCable(Level world, ServerCable scanningCable, CableScanLocation scanLocation) {
+	protected boolean scanForCompatibleCable(Level world, Cable scanningCable, CableScanLocation scanLocation) {
 		// Skip air blocks. This also ensures we skip any blocks that may have been
 		// removed but whose tile entity may linger for a moment. (A check for isRemoved
 		// on the tile entity does not catch this edge case...).
@@ -111,7 +111,7 @@ public class NetworkMapper {
 		}
 
 		// Check the starting position.
-		ServerCable otherCable = CableNetworkManager.get(world).getCable(scanLocation.getLocation());
+		Cable otherCable = CableNetworkAccessor.get(world).getCable(scanLocation.getLocation());
 		if (otherCable != null && scanningCable.shouldConnectToCable(otherCable)) {
 			// If the cable is disabled on the side opposite from the one we approached
 			// from, do not discover it and do not continue searching in that direction.
@@ -126,7 +126,7 @@ public class NetworkMapper {
 		return false;
 	}
 
-	protected void scanForCompatibleDestination(Level world, ServerCable scanningCable, CableScanLocation scanLocation) {
+	protected void scanForCompatibleDestination(Level world, Cable scanningCable, CableScanLocation scanLocation) {
 		BlockPos location = scanLocation.getLocation();
 		Direction sideOfCable = scanLocation.getSide();
 
@@ -144,7 +144,7 @@ public class NetworkMapper {
 		}
 	}
 
-	protected void discoverCable(ServerCable cable) {
+	protected void discoverCable(Cable cable) {
 		// Add the cable as a discovered cable.
 		discoveredCables.add(cable);
 

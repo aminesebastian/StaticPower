@@ -18,7 +18,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
@@ -29,7 +29,7 @@ import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class FluidNetworkModule extends CableNetworkModule {
-	protected record CachedFluidDestination(Direction connectedSide, ServerCable cable, BlockPos desintationPos) {
+	protected record CachedFluidDestination(Direction connectedSide, Cable cable, BlockPos desintationPos) {
 	}
 
 	// Map of cable pos to connected destinations.
@@ -187,7 +187,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 	}
 
 	public Optional<FluidCableCapability> getFluidCableCapability(BlockPos pos) {
-		ServerCable cable = Network.getGraph().getCables().get(pos);
+		Cable cable = Network.getGraph().getCables().get(pos);
 		if (cable == null) {
 			return Optional.empty();
 		}
@@ -235,7 +235,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 		fluidCapabilities.clear();
 		destinations.clear();
 
-		for (ServerCable cable : Network.getGraph().getCables().values()) {
+		for (Cable cable : Network.getGraph().getCables().values()) {
 			Optional<FluidCableCapability> capability = cable.getCapability(ModCableCapabilities.Fluid.get());
 			if (capability.isPresent()) {
 				fluidCapabilities.add(capability.get());
@@ -275,7 +275,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 	}
 
 	@Nullable
-	public CachedFluidDestination getInterfaceForDesination(ServerCable connectedCable, DestinationWrapper wrapper) {
+	public CachedFluidDestination getInterfaceForDesination(Cable connectedCable, DestinationWrapper wrapper) {
 		if (!wrapper.getConnectedCables().containsKey(connectedCable.getPos())) {
 			return null;
 		}

@@ -13,7 +13,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
@@ -150,7 +150,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putDouble(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.getDataTag().putDouble(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
@@ -170,7 +170,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 				if (isClientSide()) {
 					disabled = isSideDisabled(side);
 				} else {
-					Optional<ServerCable> cable = getCable();
+					Optional<Cable> cable = getCable();
 					disabled = cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}

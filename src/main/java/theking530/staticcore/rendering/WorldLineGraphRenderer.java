@@ -46,7 +46,7 @@ public class WorldLineGraphRenderer {
 
 	private void renderData(float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
 		// Do nothing if there is no data.
-		if (dataSets.size() == 0 || dataSets.get(0) == null) {
+		if (dataSets.size() == 0) {
 			return;
 		}
 
@@ -106,15 +106,16 @@ public class WorldLineGraphRenderer {
 		int yLines = (int) Math.ceil(1f / gridSpacing * aspectRatio);
 
 		for (int i = 0; i < xLines; i++) {
-			WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(i * gridSpacing, 0.0f, 0.0f), new Vector3D(i * gridSpacing, 1.0f, 0.0f), 10.0f, new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
+			WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(i * gridSpacing, 0.0f, 0.0f), new Vector3D(i * gridSpacing, 1.0f, 0.0f), 10.0f,
+					new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
 		}
 		for (int i = 0; i < yLines; i++) {
 			if (i == yLines / 2) {
-				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
-						10.0f, new SDColor(0.5f, 0.5f, 0.525f, 0.2f));
+				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
+						new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), 10.0f, new SDColor(0.5f, 0.5f, 0.525f, 0.2f));
 			} else {
-				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
-						10.0f, new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
+				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
+						new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), 10.0f, new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
 			}
 		}
 	}

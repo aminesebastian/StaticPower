@@ -49,7 +49,7 @@ import net.minecraftforge.network.PacketDistributor;
 import theking530.api.IBreakSerializeable;
 import theking530.staticcore.cablenetwork.CableStateSyncPacket;
 import theking530.staticcore.cablenetwork.ICableStateSyncTarget;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
@@ -777,7 +777,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	}
 
-	public void synchronizeServerToClient(ServerCable cable, CompoundTag tag) {
+	public void synchronizeServerToClient(Cable cable, CompoundTag tag) {
 		if (getLevel().isClientSide()) {
 			throw new RuntimeException("#synchronizeServerToClient() should never be called from the client!");
 		}

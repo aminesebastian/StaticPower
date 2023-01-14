@@ -27,9 +27,9 @@ import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.pathfinding.Path;
@@ -52,7 +52,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		}
 	}
 
-	private record ElectricalPathProperties(double powerLoss, double maxCurrent, double length, List<ServerCable> cables) {
+	private record ElectricalPathProperties(double powerLoss, double maxCurrent, double length, List<Cable> cables) {
 		public static final ElectricalPathProperties EMPTY = new ElectricalPathProperties(0, 0, 0, Collections.emptyList());
 	}
 
@@ -95,7 +95,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		// Check to make sure we have power and valid desinations.
 		if (mapper.getDestinations().size() > 0) {
 			mapper.getDestinations().forEach((pos, wrapper) -> {
-				if (!CableNetworkManager.get(getNetwork().getWorld()).isTrackingCable(wrapper.getFirstConnectedCable())) {
+				if (!CableNetworkAccessor.get(getNetwork().getWorld()).isTrackingCable(wrapper.getFirstConnectedCable())) {
 					return;
 				}
 
@@ -169,14 +169,14 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	}
 
 	public ElectricalPathProperties getPropertiesBetweenPoints(BlockPos start, BlockPos end) {
-		if (!CableNetworkManager.get(Network.getWorld()).isTrackingCable(start)) {
+		if (!CableNetworkAccessor.get(Network.getWorld()).isTrackingCable(start)) {
 			return ElectricalPathProperties.EMPTY;
 		}
 
 		if (start.equals(end)) {
 			// A single cable connection does not have anypower loss (for gameplay reasons,
 			// no need to be too mean).
-			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(end);
+			Cable cable = CableNetworkAccessor.get(this.Network.getWorld()).getCable(end);
 			double maxPower = cable.getDataTag().getDouble(PowerCableComponent.CURRENT_MAX);
 			return new ElectricalPathProperties(0, maxPower, 1, List.of(cable));
 		}
@@ -187,7 +187,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		}
 
 		Path path = paths.get(0);
-		Set<ServerCable> cables = new LinkedHashSet<ServerCable>(); // Use a LinkedHashSet to maintain order.
+		Set<Cable> cables = new LinkedHashSet<Cable>(); // Use a LinkedHashSet to maintain order.
 		double cablePowerLoss = 0;
 		double lowestMaxCurrent = Double.MAX_VALUE;
 		for (PathEntry entry : path.getEntries()) {
@@ -196,7 +196,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			// don't just check if the entry position != the end is when using the
 			// multimeter, you can scan between two cables, not just a cable and a
 			// destination.
-			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(entry.getPosition());
+			Cable cable = CableNetworkAccessor.get(this.Network.getWorld()).getCable(entry.getPosition());
 			if (cable != null) {
 				if (cables.contains(cable)) {
 					continue;
@@ -294,7 +294,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 		// If any cables were over-currented, break them.
 		for (Entry<BlockPos, PowerStack> entry : currentTickCurrentMap.entrySet()) {
-			ServerCable cable = CableNetworkManager.get(getNetwork().getWorld()).getCable(entry.getKey());
+			Cable cable = CableNetworkAccessor.get(getNetwork().getWorld()).getCable(entry.getKey());
 			if (cable != null) {
 				double currentThroughCable = currentTickCurrentMap.get(cable.getPos()).getCurrent();
 				double maxCurrent = cable.getDataTag().getDouble(PowerCableComponent.CURRENT_MAX);

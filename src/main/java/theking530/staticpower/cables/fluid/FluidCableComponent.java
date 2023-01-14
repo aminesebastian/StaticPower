@@ -21,7 +21,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.fluid.ISidedFluidHandler;
 import theking530.staticcore.fluid.SidedFluidHandlerCapabilityWrapper;
@@ -171,7 +171,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		FluidCableCapability fluidCapability = ModCableCapabilities.Fluid.get().create(cable);
 		fluidCapability.initialize(capacity, transferRate, isIndustrial);
@@ -179,7 +179,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected void onCableFirstAddedToNetwork(ServerCable cable, BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+	protected void onCableFirstAddedToNetwork(Cable cable, BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		super.onCableFirstAddedToNetwork(cable, context, state, placer, stack);
 		List<Direction> sidesToDisable = new ArrayList<>();
 

@@ -9,8 +9,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class CableNetworkAnalyzer extends StaticPowerItem {
@@ -24,9 +24,9 @@ public class CableNetworkAnalyzer extends StaticPowerItem {
 		// If on the server.
 		if (!world.isClientSide) {
 			// If we right clicked on a cable.
-			if (CableNetworkManager.get(world).isTrackingCable(pos)) {
+			if (CableNetworkAccessor.get(world).isTrackingCable(pos)) {
 				// Get the cable.
-				ServerCable cable = CableNetworkManager.get(world).getCable(pos);
+				Cable cable = CableNetworkAccessor.get(world).getCable(pos);
 				// Get all the messages that should be written to the output and write them.
 				for (Component text : cable.getNetwork().getReaderOutput(pos)) {
 					player.sendSystemMessage(text);

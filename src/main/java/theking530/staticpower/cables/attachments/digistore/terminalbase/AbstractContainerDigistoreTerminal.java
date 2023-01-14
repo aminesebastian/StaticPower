@@ -15,8 +15,8 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.container.ContainerOpener;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -382,7 +382,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		}
 
 		// Get the server cable for this manager.
-		ServerCable cable = CableNetworkManager.get(getCableComponent().getLevel()).getCable(getCableComponent().getPos());
+		Cable cable = CableNetworkAccessor.get(getCableComponent().getLevel()).getCable(getCableComponent().getPos());
 
 		// If it or it's network are null, return null.
 		if (cable == null || cable.getNetwork() == null) {

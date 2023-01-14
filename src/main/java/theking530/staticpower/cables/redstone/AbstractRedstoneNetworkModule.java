@@ -13,16 +13,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
+import theking530.staticcore.cablenetwork.manager.CableNetworkManager;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 
 public abstract class AbstractRedstoneNetworkModule extends CableNetworkModule {
-	protected Map<ServerCable, CableConfigurationWrapper> outputCables;
-	protected Map<ServerCable, CableConfigurationWrapper> inputCables;
+	protected Map<Cable, CableConfigurationWrapper> outputCables;
+	protected Map<Cable, CableConfigurationWrapper> inputCables;
 	protected SignalContainer signals;
 	protected SignalContainer previousSignals;
 	protected NetworkMapper lastNetworkMap;
@@ -35,8 +36,8 @@ public abstract class AbstractRedstoneNetworkModule extends CableNetworkModule {
 		super(type);
 		signals = new SignalContainer();
 		canProvidePower = true;
-		outputCables = new HashMap<ServerCable, CableConfigurationWrapper>();
-		inputCables = new HashMap<ServerCable, CableConfigurationWrapper>();
+		outputCables = new HashMap<Cable, CableConfigurationWrapper>();
+		inputCables = new HashMap<Cable, CableConfigurationWrapper>();
 	}
 
 	@Override
@@ -105,20 +106,20 @@ public abstract class AbstractRedstoneNetworkModule extends CableNetworkModule {
 		return previousSignals;
 	}
 
-	protected RedstoneCableConfiguration getConfigurationForCable(ServerCable cable) {
+	protected RedstoneCableConfiguration getConfigurationForCable(Cable cable) {
 		RedstoneCableConfiguration configuration = new RedstoneCableConfiguration();
 		configuration.deserializeNBT(cable.getDataTag().getCompound(RedstoneCableComponent.CONFIGURATION_KEY));
 		return configuration;
 	}
 
 	protected void updateAllCables(Level world, NetworkMapper mapper) {
-		for (ServerCable cable : mapper.getDiscoveredCables()) {
+		for (Cable cable : mapper.getDiscoveredCables()) {
 			updateAroundCable(world, cable);
 		}
 	}
 
-	protected void updateAroundCable(Level world, ServerCable cable) {
-		CableNetworkManager manager = CableNetworkManager.get(world);
+	protected void updateAroundCable(Level world, Cable cable) {
+		CableNetworkManager manager = CableNetworkAccessor.get(world);
 		try {
 			// Skip cables in this network.
 			if (neighborNotifyEvent(world, cable.getPos(), world.getBlockState(cable.getPos()))) {
@@ -168,7 +169,7 @@ public abstract class AbstractRedstoneNetworkModule extends CableNetworkModule {
 		outputCables.clear();
 		inputCables.clear();
 
-		for (ServerCable cable : mapper.getDiscoveredCables()) {
+		for (Cable cable : mapper.getDiscoveredCables()) {
 			// Get the configuration for the cable
 			RedstoneCableConfiguration configuration = getConfigurationForCable(cable);
 
@@ -189,10 +190,10 @@ public abstract class AbstractRedstoneNetworkModule extends CableNetworkModule {
 	}
 
 	public class CableConfigurationWrapper {
-		public final ServerCable cable;
+		public final Cable cable;
 		public final RedstoneCableConfiguration configuration;
 
-		public CableConfigurationWrapper(ServerCable cable, RedstoneCableConfiguration configuration) {
+		public CableConfigurationWrapper(Cable cable, RedstoneCableConfiguration configuration) {
 			this.cable = cable;
 			this.configuration = configuration;
 		}

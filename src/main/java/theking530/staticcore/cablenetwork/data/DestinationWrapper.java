@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.RegistryManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticpower.StaticPowerRegistries;
 
@@ -52,7 +52,7 @@ public class DestinationWrapper {
 	 * 
 	 * @return
 	 */
-	public boolean hasSupportedDestinationTypes(Direction side, ServerCable cable) {
+	public boolean hasSupportedDestinationTypes(Direction side, Cable cable) {
 		// If we have no types on that side, forget it.
 		if (!supportedDestinationTypes.containsKey(side) || cable.getSupportedDestinationTypes().isEmpty()) {
 			return false;

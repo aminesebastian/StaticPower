@@ -23,7 +23,6 @@ import net.minecraftforge.event.level.LevelEvent.Save;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.events.StaticPowerForgeEventsCommon;
-import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class StaticPowerGameDataManager {
 	private static final HashMap<ResourceLocation, Connection> DATABASE_CONNECTIONS = new LinkedHashMap<>();

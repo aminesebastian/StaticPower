@@ -22,7 +22,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -566,7 +565,6 @@ public class GuiDrawUtilities {
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		BakedModel model = renderer.getBlockModel(state);
 		ModelData data = model.getModelData(Minecraft.getInstance().level, pos, state, modelData);
-		ChunkRenderTypeSet renderTypes = model.getRenderTypes(state, Minecraft.getInstance().level.getRandom(), data);
 		pose.pushPose();
 		pose.translate(translation.getX(), translation.getY(), translation.getZ());
 		pose.scale(scale.getX(), scale.getY(), scale.getZ());

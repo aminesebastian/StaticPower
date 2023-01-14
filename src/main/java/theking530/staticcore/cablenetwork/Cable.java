@@ -27,6 +27,7 @@ import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.scanning.CableScanLocation;
 import theking530.staticpower.StaticPowerRegistries;
@@ -35,7 +36,7 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.utilities.NBTUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class ServerCable {
+public class Cable {
 	protected final Level level;
 	private final BlockPos position;
 	protected CableNetwork network;
@@ -49,7 +50,7 @@ public class ServerCable {
 	private final Set<CableDestination> supportedDestinationTypes;
 	private final Map<ServerCableCapabilityType, ServerCableCapability> capabilities;
 
-	public ServerCable(Level level, BlockPos position, boolean canAcceptSparseLink, Set<CableNetworkModuleType> supportedNetworkModules,
+	public Cable(Level level, BlockPos position, boolean canAcceptSparseLink, Set<CableNetworkModuleType> supportedNetworkModules,
 			Set<CableDestination> supportedDestinationTypes) {
 		this.position = position;
 		this.level = level;
@@ -68,14 +69,14 @@ public class ServerCable {
 
 	public SparseCableLink addSparseLink(BlockPos linkToPosition, CompoundTag data) {
 		if (!linkToPosition.equals(getPos()) && !isLinkedTo(linkToPosition)) {
-			long linkId = CableNetworkManager.get(getWorld()).getAndIncrementCurentSparseLinkId();
-			ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(linkToPosition);
+			long linkId = CableNetworkAccessor.get(getWorld()).getAndIncrementCurentSparseLinkId();
+			Cable otherCable = CableNetworkAccessor.get(getWorld()).getCable(linkToPosition);
 			otherCable.sparseLinks.put(getPos(), new SparseCableLink(linkId, getPos(), data, SparseCableConnectionType.STARTING));
 			otherCable.synchronizeServerState();
 
 			SparseCableLink endLink = new SparseCableLink(linkId, linkToPosition, data, SparseCableConnectionType.ENDING);
 			sparseLinks.put(linkToPosition, endLink);
-			CableNetworkManager.get(getWorld()).joinSparseCables(this, otherCable);
+			CableNetworkAccessor.get(getWorld()).joinSparseCables(this, otherCable);
 			synchronizeServerState();
 			return endLink;
 		}
@@ -88,11 +89,11 @@ public class ServerCable {
 
 	public List<SparseCableLink> removeSparseLinks(BlockPos... linkedToPosition) {
 		List<SparseCableLink> output = new ArrayList<SparseCableLink>();
-		List<ServerCable> targets = new ArrayList<ServerCable>();
+		List<Cable> targets = new ArrayList<Cable>();
 		for (BlockPos pos : linkedToPosition) {
 			SparseCableLink removedLink = sparseLinks.remove(pos);
 			if (removedLink != null) {
-				ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(pos);
+				Cable otherCable = CableNetworkAccessor.get(getWorld()).getCable(pos);
 				otherCable.sparseLinks.remove(getPos());
 				targets.add(otherCable);
 				output.add(removedLink);
@@ -101,8 +102,8 @@ public class ServerCable {
 
 		// If we did break any connections, try to separate ourselves off those targets.
 		if (output.size() > 0) {
-			CableNetworkManager.get(getWorld()).separateSparseCables(this, targets);
-			for (ServerCable other : targets) {
+			CableNetworkAccessor.get(getWorld()).separateSparseCables(this, targets);
+			for (Cable other : targets) {
 				other.synchronizeServerState();
 			}
 			synchronizeServerState();
@@ -146,11 +147,11 @@ public class ServerCable {
 		return output;
 	}
 
-	public List<ServerCable> getAdjacents() {
-		List<ServerCable> wrappers = new ArrayList<ServerCable>();
+	public List<Cable> getAdjacents() {
+		List<Cable> wrappers = new ArrayList<Cable>();
 		for (CableScanLocation scanLoc : getScanLocations()) {
 			if (scanLoc.isSparseLink()) {
-				ServerCable cable = CableNetworkManager.get(getWorld()).getCable(scanLoc.getLocation());
+				Cable cable = CableNetworkAccessor.get(getWorld()).getCable(scanLoc.getLocation());
 				wrappers.add(cable);
 			} else {
 				// Skip checking that side if that side is disabled.
@@ -160,7 +161,7 @@ public class ServerCable {
 
 				// Check if a cable exists on the provided side and it is enabled on that side
 				// and of the same type.
-				ServerCable adjacent = CableNetworkManager.get(getWorld()).getCable(scanLoc.getLocation());
+				Cable adjacent = CableNetworkAccessor.get(getWorld()).getCable(scanLoc.getLocation());
 
 				if (adjacent == null) {
 					continue;
@@ -302,7 +303,7 @@ public class ServerCable {
 	}
 
 	public void onRemoved() {
-		for (ServerCable otherCable : network.getGraph().getCables().values()) {
+		for (Cable otherCable : network.getGraph().getCables().values()) {
 			if (otherCable.isLinkedTo(getPos())) {
 				otherCable.sparseLinks.remove(getPos());
 				otherCable.synchronizeServerState();
@@ -318,7 +319,7 @@ public class ServerCable {
 		return supportedNetworkModules.contains(moduleType);
 	}
 
-	public boolean shouldConnectToCable(ServerCable otherCable) {
+	public boolean shouldConnectToCable(Cable otherCable) {
 		for (CableNetworkModuleType moduleType : otherCable.getSupportedNetworkModules()) {
 			if (supportsNetworkModule(moduleType)) {
 				return true;
@@ -351,7 +352,7 @@ public class ServerCable {
 			// after a ServerCable is created but before it's added to the manager, so we do
 			// this check to be safe.
 			if (network != null) {
-				CableNetworkManager.get(level).refreshCable(this);
+				CableNetworkAccessor.get(level).refreshCable(this);
 			}
 
 			synchronizeServerState();
@@ -385,7 +386,7 @@ public class ServerCable {
 		}
 	}
 
-	public ServerCable(Level world, CompoundTag tag) {
+	public Cable(Level world, CompoundTag tag) {
 		// Set the world.
 		level = world;
 
@@ -526,7 +527,7 @@ public class ServerCable {
 		if (other == null || getClass() != other.getClass()) {
 			return false;
 		}
-		ServerCable cable = (ServerCable) other;
+		Cable cable = (Cable) other;
 		return level.equals(cable.level) && position.equals(cable.position);
 	}
 

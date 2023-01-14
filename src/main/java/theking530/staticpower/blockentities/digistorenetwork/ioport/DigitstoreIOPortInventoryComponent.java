@@ -10,8 +10,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.init.cables.ModCableModules;
@@ -73,7 +73,7 @@ public class DigitstoreIOPortInventoryComponent extends AbstractBlockEntityCompo
 		}
 
 		// Get the module if it exists.
-		ServerCable cable = CableNetworkManager.get(getLevel()).getCable(getPos());
+		Cable cable = CableNetworkAccessor.get(getLevel()).getCable(getPos());
 		if (cable.getNetwork() != null && cable.getNetwork().hasModule(ModCableModules.Digistore.get())) {
 			return Optional.of(cable.getNetwork().getModule(ModCableModules.Digistore.get()));
 		}

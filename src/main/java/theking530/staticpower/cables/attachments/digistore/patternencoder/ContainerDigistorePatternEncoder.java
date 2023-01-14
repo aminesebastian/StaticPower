@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -262,7 +262,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		ItemStack encodedRecipe = ItemStack.EMPTY;
 
 		// Get the pattern id.
-		long id = CableNetworkManager.get(getCableComponent().getLevel()).getCurrentPatternId();
+		long id = CableNetworkAccessor.get(getCableComponent().getLevel()).getCurrentPatternId();
 
 		// If we're in crafting mode, also cache the recipe Id. If not, just use the
 		// inputs and outputs.
@@ -277,11 +277,11 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 			CraftingRecipe recipe = getCableComponent().getLevel().getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getCableComponent().getLevel()).orElse(null);
 			if (recipe != null) {
 				encodedRecipe = ModItems.PatternCard.get().getPatternForRecipe(new EncodedDigistorePattern(id, inputs, recipe));
-				CableNetworkManager.get(getCableComponent().getLevel()).incrementCurrentPatternId();
+				CableNetworkAccessor.get(getCableComponent().getLevel()).incrementCurrentPatternId();
 			}
 		} else {
 			encodedRecipe = ModItems.PatternCard.get().getPatternForRecipe(new EncodedDigistorePattern(id, inputs, output, currentRecipeType));
-			CableNetworkManager.get(getCableComponent().getLevel()).incrementCurrentPatternId();
+			CableNetworkAccessor.get(getCableComponent().getLevel()).incrementCurrentPatternId();
 		}
 
 		// Check to make sure the output slot can stack with this encoded recipe (odd

@@ -26,9 +26,9 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.cablenetwork.CableNetwork;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.pathfinding.Path;
 import theking530.staticcore.utilities.SDMath;
@@ -154,7 +154,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 	protected ItemStack transferItemStack(ItemStack stack, BlockPos cablePosition, @Nullable Direction pulledFromDirection, boolean simulate, boolean startHalfWay,
 			double blocksPerSecond) {
 		// Mark the network manager as dirty.
-		CableNetworkManager.get(Network.getWorld()).setDirty();
+		CableNetworkAccessor.get(Network.getWorld()).setDirty();
 
 		// The source position can be null. This value is only used to not bounce items
 		// back to the inventory it came from IF it comes from one.
@@ -184,7 +184,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 	 */
 	protected ItemStack transferItemStack(ItemStack stack, Path path, @Nullable Direction pulledFromDirection, boolean simulate, boolean startHalfWay, double blocksPerSecond) {
 		// Mark the network manager as dirty.
-		CableNetworkManager.get(Network.getWorld()).setDirty();
+		CableNetworkAccessor.get(Network.getWorld()).setDirty();
 
 		// Route the item.
 		return routeItem(stack, path, pulledFromDirection, path.getSourceCableLocation(), simulate, startHalfWay, blocksPerSecond);
@@ -306,7 +306,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 
 					// Create the new item routing packet and initialize it with the transfer speed
 					// of the cable it was pulled out of.
-					ItemRoutingParcel packet = new ItemRoutingParcel(CableNetworkManager.get(Network.getWorld()).getCurrentCraftingId(), stackToTransfer, path,
+					ItemRoutingParcel packet = new ItemRoutingParcel(CableNetworkAccessor.get(Network.getWorld()).getCurrentCraftingId(), stackToTransfer, path,
 							pulledFromDirection);
 					packet.setMovementTime((int) (20 / blocksPerSecond));
 
@@ -389,7 +389,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 			// Get the current and next max move times (how many ticks it takes to travele
 			// through a single pipe).
 			int currentMoveTime = packet.getCurrentMoveTime();
-			int nextPipeMinMoveTime = (int) (20 / CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDataTag()
+			int nextPipeMinMoveTime = (int) (20 / CableNetworkAccessor.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDataTag()
 					.getDouble(ItemCableComponent.ITEM_CABLE_MAX_TRANSFER_SPEED));
 			nextPipeMinMoveTime = SDMath.clamp(nextPipeMinMoveTime, 1, Integer.MAX_VALUE);
 
@@ -400,11 +400,11 @@ public class ItemNetworkModule extends CableNetworkModule {
 			// pipe's min move time, and we cannot go slower than the maximum default move
 			// time.
 			if (currentMoveTime < nextPipeMinMoveTime) {
-				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDataTag()
+				currentMoveTime *= CableNetworkAccessor.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDataTag()
 						.getDouble(ItemCableComponent.ITEM_CABLE_FRICTION_FACTOR_TAG);
 				currentMoveTime = SDMath.clamp(currentMoveTime, 2, nextPipeMinMoveTime);
 			} else if (currentMoveTime > nextPipeMinMoveTime) {
-				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDataTag()
+				currentMoveTime *= CableNetworkAccessor.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDataTag()
 						.getDouble(ItemCableComponent.ITEM_CABLE_ACCELERATION_FACTOR_TAG);
 				currentMoveTime = SDMath.clamp(currentMoveTime, nextPipeMinMoveTime, ItemCableComponent.MAXIMUM_MOVE_TIME);
 			}
@@ -447,8 +447,8 @@ public class ItemNetworkModule extends CableNetworkModule {
 
 		// If the next position is a cable, make sure its not disabled on the side we
 		// need to enter it from.
-		if (CableNetworkManager.get(Network.getWorld()).isTrackingCable(parcel.getNextEntry().getPosition())) {
-			return !CableNetworkManager.get(Network.getWorld()).getCable(parcel.getNextEntry().getPosition()).isDisabledOnSide(parcel.getOutDirection().getOpposite());
+		if (CableNetworkAccessor.get(Network.getWorld()).isTrackingCable(parcel.getNextEntry().getPosition())) {
+			return !CableNetworkAccessor.get(Network.getWorld()).getCable(parcel.getNextEntry().getPosition()).isDisabledOnSide(parcel.getOutDirection().getOpposite());
 		}
 
 		// If we pass all the previous checks, return true.
@@ -562,7 +562,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 	 */
 	protected boolean transferParcelToAnotherNetwork(ItemRoutingParcel parcel) {
 		// Check to see if the parcel's current location is still a cable.
-		ServerCable otherNetworkCable = CableNetworkManager.get(Network.getWorld()).getCable(parcel.getCurrentEntry().getPosition());
+		Cable otherNetworkCable = CableNetworkAccessor.get(Network.getWorld()).getCable(parcel.getCurrentEntry().getPosition());
 		if (otherNetworkCable == null) {
 			return false;
 		}
@@ -823,7 +823,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 		// static parcel id.
 		parcel.incrementCurrentPathIndex(startHalfWay);
 
-		CableNetworkManager.get(Network.getWorld()).incrementCurrentCraftingId();
+		CableNetworkAccessor.get(Network.getWorld()).incrementCurrentCraftingId();
 	}
 
 	protected LinkedList<ItemStack> getItemsTravlingToDestination(BlockPos destination) {

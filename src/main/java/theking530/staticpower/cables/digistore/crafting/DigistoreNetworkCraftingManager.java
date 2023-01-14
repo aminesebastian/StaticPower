@@ -16,7 +16,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
@@ -132,7 +132,7 @@ public class DigistoreNetworkCraftingManager {
 		if (!bundle.hasCraftableOutput()) {
 			return null;
 		}
-		long id = CableNetworkManager.get(module.getNetwork().getWorld()).getAndIncrementCurrentCraftingId();
+		long id = CableNetworkAccessor.get(module.getNetwork().getWorld()).getAndIncrementCurrentCraftingId();
 		CraftingRequestResponse response = new CraftingRequestResponse(id, bundle.getCraftableAmount(), bundle.getOutput(), bundle);
 		craftingRequests.put(response.getId(), response);
 		return response;

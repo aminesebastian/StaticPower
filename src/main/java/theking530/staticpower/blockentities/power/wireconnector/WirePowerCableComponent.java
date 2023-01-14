@@ -15,11 +15,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import theking530.api.energy.StaticPowerVoltage;
-import theking530.staticcore.cablenetwork.CableNetworkManager;
-import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.SparseCableLink;
 import theking530.staticcore.cablenetwork.SparseCableLink.SparseCableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
+import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
@@ -39,7 +39,7 @@ public class WirePowerCableComponent extends PowerCableComponent {
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 
 		Direction attachToSide = state.getValue(StaticPowerBlock.FACING).getOpposite();
@@ -85,7 +85,7 @@ public class WirePowerCableComponent extends PowerCableComponent {
 	@Override
 	public void onOwningBlockEntityBroken(BlockState state, BlockState newState, boolean isMoving) {
 		if (!isClientSide()) {
-			ServerCable cable = CableNetworkManager.get(getLevel()).getCable(getPos());
+			Cable cable = CableNetworkAccessor.get(getLevel()).getCable(getPos());
 			for (SparseCableLink link : cable.getSparseLinks()) {
 				ItemStack wireStack = ItemStack.of(link.data().getCompound("wire"));
 				WorldUtilities.dropItem(getLevel(), getPos(), wireStack);
