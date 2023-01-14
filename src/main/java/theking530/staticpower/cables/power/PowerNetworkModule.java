@@ -275,20 +275,40 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			return 0;
 		}
 
+		Map<Integer, Double> powerToSupply = new HashMap<>();
+		double totalSimulatedPower = 0;
+		for (int i = 0; i < destinations.size(); i++) {
+			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, fromCablePos, new PowerStack(Double.MAX_VALUE, power.getVoltage(), power.getCurrentType()),
+					destinations.get(i), true);
+			powerToSupply.put(i, supplyEvent.getTotalPower());
+			totalSimulatedPower += supplyEvent.getTotalPower();
+		}
+
+		if (totalSimulatedPower <= 0) {
+			updateTransferedPower(CablePowerSupplyEvent.EMPTY, power.getVoltage(), power.getCurrentType());
+			return 0;
+		}
+
+		for (Entry<Integer, Double> toSupplyPairs : powerToSupply.entrySet()) {
+			toSupplyPairs.setValue(toSupplyPairs.getValue() / totalSimulatedPower);
+		}
+
 		PowerStack powerCopy = power.copy();
 		double suppliedPower = 0;
 		for (int i = 0; i < destinations.size(); i++) {
-			lastSuppliedDestinationIndex = (lastSuppliedDestinationIndex + 1) % destinations.size();
-			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, fromCablePos, powerCopy, destinations.get(lastSuppliedDestinationIndex), simulate);
+			double toSupplyForDesination = power.getPower() * powerToSupply.get(i);
+			if (toSupplyForDesination <= 0) {
+				continue;
+			}
+
+			PowerStack stack = new PowerStack(toSupplyForDesination, power.getVoltage(), power.getCurrentType());
+			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, fromCablePos, stack, destinations.get(i), simulate);
 
 			powerCopy.setPower(powerCopy.getPower() - supplyEvent.getTotalPower());
 			suppliedPower += supplyEvent.getTotalPower();
 
 			if (!simulate) {
 				updateTransferedPower(supplyEvent, power.getVoltage(), power.getCurrentType());
-			}
-			if (powerCopy.isEmpty()) {
-				break;
 			}
 		}
 

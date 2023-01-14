@@ -552,10 +552,10 @@ public class ModBlocks {
 	public static final RegistryObject<BlockResistor> Resistor1W = registerBlock("resistor_1", () -> new BlockResistor(1));
 	public static final RegistryObject<BlockResistor> Resistor5W = registerBlock("resistor_5", () -> new BlockResistor(5));
 	public static final RegistryObject<BlockResistor> Resistor10W = registerBlock("resistor_10", () -> new BlockResistor(10));
-	public static final RegistryObject<BlockResistor> Resistor20W = registerBlock("resistor_20", () -> new BlockResistor(20));
+	public static final RegistryObject<BlockResistor> Resistor25W = registerBlock("resistor_25", () -> new BlockResistor(25));
 	public static final RegistryObject<BlockResistor> Resistor50W = registerBlock("resistor_50", () -> new BlockResistor(50));
 	public static final RegistryObject<BlockResistor> Resistor100W = registerBlock("resistor_100", () -> new BlockResistor(100));
-	public static final RegistryObject<BlockResistor> Resistor200W = registerBlock("resistor_200", () -> new BlockResistor(200));
+	public static final RegistryObject<BlockResistor> Resistor250W = registerBlock("resistor_250", () -> new BlockResistor(250));
 	public static final RegistryObject<BlockResistor> Resistor500W = registerBlock("resistor_500", () -> new BlockResistor(500));
 	public static final RegistryObject<BlockResistor> Resistor1KW = registerBlock("resistor_1000", () -> new BlockResistor(1000));
 

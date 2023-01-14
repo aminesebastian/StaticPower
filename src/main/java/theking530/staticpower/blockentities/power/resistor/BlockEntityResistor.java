@@ -19,8 +19,8 @@ import theking530.staticpower.init.ModBlocks;
 public class BlockEntityResistor extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityResistor> TYPE = new BlockEntityTypeAllocator<BlockEntityResistor>("resistor",
-			(allocator, pos, state) -> new BlockEntityResistor(allocator, pos, state), ModBlocks.Resistor1W, ModBlocks.Resistor5W, ModBlocks.Resistor10W, ModBlocks.Resistor20W,
-			ModBlocks.Resistor50W, ModBlocks.Resistor100W, ModBlocks.Resistor200W, ModBlocks.Resistor500W, ModBlocks.Resistor1KW);
+			(allocator, pos, state) -> new BlockEntityResistor(allocator, pos, state), ModBlocks.Resistor1W, ModBlocks.Resistor5W, ModBlocks.Resistor10W, ModBlocks.Resistor25W,
+			ModBlocks.Resistor50W, ModBlocks.Resistor100W, ModBlocks.Resistor250W, ModBlocks.Resistor500W, ModBlocks.Resistor1KW);
 
 	public final PowerStorageComponent powerStorage;
 	private final PowerDistributionComponent powerDistributor;

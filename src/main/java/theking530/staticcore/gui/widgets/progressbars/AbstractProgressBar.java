@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -165,7 +166,9 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 			if (currentProgress > 0) {
 				MutableComponent remainingTime = GuiTextUtilities.formatTicksToTimeUnit((int) ((maxProgress - currentProgress) / (tickDownRate)));
 				tooltips.add(Component.translatable("gui.staticpower.remaining").append(": ").append(remainingTime));
-			} else {
+			}
+
+			if (currentProgress <= 0 || Minecraft.getInstance().screen.hasShiftDown()) {
 				MutableComponent maxTime = GuiTextUtilities.formatTicksToTimeUnit((int) (maxProgress / (tickDownRate)));
 				tooltips.add(Component.translatable("gui.staticpower.max").append(": ").append(maxTime));
 			}

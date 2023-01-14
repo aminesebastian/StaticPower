@@ -1,6 +1,6 @@
 {
 	"parent": "staticpower:block/power/resistor/resistor_1",
 	"textures": {
-		"value_texture": "staticpower:blocks/power/resistor/100"
+		"value_texture": "staticpower:blocks/power/resistor/500"
 	}
 }

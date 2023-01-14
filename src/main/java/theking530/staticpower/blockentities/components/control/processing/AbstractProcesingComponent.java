@@ -29,7 +29,6 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public abstract class AbstractProcesingComponent<T extends AbstractProcesingComponent<?>> extends AbstractBlockEntityComponent {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
 	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
-	private static final double POWER_SATISFACTION_SMOOTHING = 1;
 
 	private ProductionTrackingComponent productionTrackingComponent;
 	private PowerProductionStack powerProductionStack;
@@ -69,7 +68,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	protected double defaultPowerUsage;
 
 	private boolean modulateProcessingTimeByPowerSatisfaction;
-	private double smoothedPowerSatisfaction;
+	private double powerSatisfaction;
 
 	/**
 	 * The power multiplier as calculated from the speed upgrade.
@@ -101,7 +100,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		this.processingErrorMessage = Component.literal("");
 		this.processingStoppedDueToError = false;
 		this.modulateProcessingTimeByPowerSatisfaction = true;
-		this.smoothedPowerSatisfaction = 0;
+		this.powerSatisfaction = 0;
 	}
 
 	@Override
@@ -128,8 +127,8 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 			if (modulateProcessingTimeByPowerSatisfaction) {
 				// Slow down processing proportionally to the power satisfaction.
 				// The lower the satisfaction, the slower the processing.
-				if (smoothedPowerSatisfaction > 0) {
-					fullSatisfactionProcessingTime /= smoothedPowerSatisfaction;
+				if (powerSatisfaction > 0) {
+					fullSatisfactionProcessingTime /= powerSatisfaction;
 				}
 			}
 		}
@@ -170,14 +169,16 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 			sendSynchronizationPacket();
 		}
 
-		// Smooth the power satisfaction upwards. Instantly move it downwards though.
-		double currentPowerSatisfaction = getPowerSatisfaction();
-		if (currentPowerSatisfaction > smoothedPowerSatisfaction) {
-			smoothedPowerSatisfaction = (currentPowerSatisfaction + (smoothedPowerSatisfaction * POWER_SATISFACTION_SMOOTHING)) / (POWER_SATISFACTION_SMOOTHING + 1);
-		} else {
-			smoothedPowerSatisfaction = currentPowerSatisfaction;
+		double smoothing = 10;
+		double currentTickPowerSatisfaction = getPowerSatisfaction();
+		powerSatisfaction = (currentTickPowerSatisfaction + (powerSatisfaction * smoothing)) / (smoothing + 1);
+		if (powerSatisfaction < 0.001) {
+			if (currentTickPowerSatisfaction > 0) {
+				powerSatisfaction = currentTickPowerSatisfaction;
+			} else {
+				powerSatisfaction = 0;
+			}
 		}
-
 		// Check if we have not started.
 		if (!hasStarted) {
 			// If we have not, check the starting state.
@@ -339,10 +340,31 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	}
 
 	public double getPowerSatisfaction() {
-		if (fullSatisfactionPowerUsage == 0) {
+		if (getPowerUsageAtFullSatisfaction() == 0 || powerComponent == null) {
 			return 1;
 		}
-		return powerComponent == null ? 1.0 : Math.min(1.0, powerComponent.getStoredPower() / fullSatisfactionPowerUsage);
+		return Math.min(1.0, getMaximumPowerSupply() / getPowerUsageAtFullSatisfaction());
+	}
+
+	public double getPowerUsageAtFullSatisfaction() {
+		return fullSatisfactionPowerUsage;
+	}
+
+	public double getPowerUsage() {
+		// If we are processing, then we already know we have enough power so no sense
+		// to check here.
+		// Instead, since we know we have sufficient power, use power up to but not
+		// exceeding the full satisfaction power usage.
+		return Math.min(fullSatisfactionPowerUsage, getMaximumPowerSupply());
+	}
+
+	protected double getMaximumPowerSupply() {
+		if (powerComponent == null) {
+			return 0;
+		}
+
+		double storedPower = Math.min(powerComponent.getCapacity(), powerComponent.getStoredPower());
+		return storedPower;
 	}
 
 	protected void updateProductionStatistics(TeamComponent teamComp) {
@@ -520,14 +542,6 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		return (T) this;
 	}
 
-	public double getPowerUsageAtFullSatisfaction() {
-		return fullSatisfactionPowerUsage;
-	}
-
-	public double getPowerUsage() {
-		return fullSatisfactionPowerUsage * smoothedPowerSatisfaction;
-	}
-
 	protected void handleUpgrades() {
 		// Do nothing if there is no upgrade inventory.
 		if (upgradeInventory == null) {
@@ -601,7 +615,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		if (fullSatisfactionPowerUsage > 0) {
 			if (powerComponent != null) {
 				if (modulateProcessingTimeByPowerSatisfaction) {
-					if (smoothedPowerSatisfaction <= 0) {
+					if (powerSatisfaction <= 0) {
 						return ProcessingCheckState.error(Component.literal("Not Enough Power!").getString());
 					}
 				} else {

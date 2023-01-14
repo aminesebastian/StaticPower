@@ -11,6 +11,12 @@ public class MetricConverter {
 	private String Suffix;
 
 	public MetricConverter(double value, int initialOffset) {
+		// Make sure we round after a sufficient number of decimals to avoid funky
+		// values (like returning 1000mw/t)
+		BigDecimal a = new BigDecimal(Value);
+		BigDecimal roundOff = a.setScale(5, RoundingMode.HALF_UP);
+		Value = roundOff.doubleValue();
+
 		if (value == 0 || Double.isInfinite(Value) || value == Double.MAX_VALUE) {
 			Value = value;
 			Suffix = "";
@@ -21,12 +27,6 @@ public class MetricConverter {
 		// For each iteration of the loop, increment the suffix index.
 		int suffixIndex = 8 + initialOffset;
 		this.Value = Math.abs(value);
-
-		// Make sure we round after a sufficient number of decimals to avoid funky
-		// values (like returning 1000mw/t)
-		BigDecimal a = new BigDecimal(Value);
-		BigDecimal roundOff = a.setScale(5, RoundingMode.HALF_EVEN);
-		Value = roundOff.doubleValue();
 
 		if (Value > 1) {
 			while (Value / 1000 >= 1) {
@@ -52,7 +52,7 @@ public class MetricConverter {
 		}
 
 		// Cache the suffix.
-		if (suffixIndex < SUFFIXES.length - 1) {
+		if (suffixIndex >= 0 && suffixIndex < SUFFIXES.length - 1) {
 			Suffix = SUFFIXES[suffixIndex];
 		} else {
 			Suffix = "OUT_OF_RANGE_C'MON";
