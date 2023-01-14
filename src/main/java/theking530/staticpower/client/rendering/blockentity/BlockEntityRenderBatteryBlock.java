@@ -29,7 +29,7 @@ public class BlockEntityRenderBatteryBlock extends StaticPowerBlockEntitySpecial
 			int combinedOverlay) {
 		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Battery");
 		// Get the energy percentage.
-		float height = (float) StaticPowerEnergyUtilities.getStoredEnergyPercentScaled(tileEntity.powerStorage, 1.0f);
+		float height = (float) StaticPowerEnergyUtilities.getStoredEnergyPercentScaled(tileEntity.powerStorage, 0.955f);
 
 		// Calculate the UV to use when rendering.
 		Vector4D uv = new Vector4D(0.0f, 1.0f - height, 1.0f, 1.0f);
@@ -49,8 +49,8 @@ public class BlockEntityRenderBatteryBlock extends StaticPowerBlockEntitySpecial
 			WorldRenderingUtilities.rotateMatrixToFaceSide(dir, matrixStack);
 
 			// Render the bar.
-			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.BATTERY_BLOCK_BAR, matrixStack, buffer, new Vector3D(0.225f, 0.225f, -0.03f),
-					new Vector3D(0.55f, height, 1.0f), uv, SDColor.WHITE);
+			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.BATTERY_BLOCK_BAR, matrixStack, buffer, new Vector3D(0.237f, 0.238f, -0.03f),
+					new Vector3D(0.526f, height, 1.0f), uv, SDColor.WHITE);
 
 			matrixStack.popPose();
 		}

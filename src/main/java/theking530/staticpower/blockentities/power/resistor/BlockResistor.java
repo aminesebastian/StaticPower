@@ -28,8 +28,8 @@ import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockResistor extends StaticPowerBlockEntityBlock {
-	public static final VoxelShape X_AXIS_SHAPE = Block.box(0, 4.5D, 4.5D, 16D, 11.5D, 11.5D);
-	public static final VoxelShape Z_AXIS_SHAPE = Block.box(4.5D, 4.5D, 0.0D, 11.5D, 11.5D, 16.0D);
+	public static final VoxelShape X_AXIS_SHAPE = Block.box(0, 5D, 5D, 16D, 11D, 11D);
+	public static final VoxelShape Z_AXIS_SHAPE = Block.box(5D, 5D, 0.0D, 11D, 11D, 16.0D);
 
 	private final double powerLimit;
 

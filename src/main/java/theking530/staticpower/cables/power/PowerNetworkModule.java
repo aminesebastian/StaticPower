@@ -287,7 +287,6 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			if (!simulate) {
 				updateTransferedPower(supplyEvent, power.getVoltage(), power.getCurrentType());
 			}
-
 			if (powerCopy.isEmpty()) {
 				break;
 			}

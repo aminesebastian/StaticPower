@@ -549,7 +549,15 @@ public class ModBlocks {
 	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker100A = registerBlock("circuit_breaker_100", () -> new BlockCircuitBreaker(100));
 	
 	// Resistors
+	public static final RegistryObject<BlockResistor> Resistor1W = registerBlock("resistor_1", () -> new BlockResistor(1));
+	public static final RegistryObject<BlockResistor> Resistor5W = registerBlock("resistor_5", () -> new BlockResistor(5));
+	public static final RegistryObject<BlockResistor> Resistor10W = registerBlock("resistor_10", () -> new BlockResistor(10));
+	public static final RegistryObject<BlockResistor> Resistor20W = registerBlock("resistor_20", () -> new BlockResistor(20));
+	public static final RegistryObject<BlockResistor> Resistor50W = registerBlock("resistor_50", () -> new BlockResistor(50));
 	public static final RegistryObject<BlockResistor> Resistor100W = registerBlock("resistor_100", () -> new BlockResistor(100));
+	public static final RegistryObject<BlockResistor> Resistor200W = registerBlock("resistor_200", () -> new BlockResistor(200));
+	public static final RegistryObject<BlockResistor> Resistor500W = registerBlock("resistor_500", () -> new BlockResistor(500));
+	public static final RegistryObject<BlockResistor> Resistor1KW = registerBlock("resistor_1000", () -> new BlockResistor(1000));
 
 	// Wire Terminals
 	public static final RegistryObject<BlockWireConnector> WireConnectorLV = registerBlock("wire_terminal_lv", () -> new BlockWireConnector(StaticPowerTiers.BASIC));

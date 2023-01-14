@@ -35,7 +35,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class PowerStorageComponent extends AbstractBlockEntityComponent implements ISidedStaticPowerStorage {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 64;
-	private static final double ENERGY_SYNC_MAX_DELTA = 10;
+	private static final double ENERGY_SYNC_MAX_DELTA_PERCENT = 0.01;
 
 	@UpdateSerialize
 	protected final StaticPowerStorage storage;
@@ -197,7 +197,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		double delta = Math.abs(getStoredPower() - lastSyncEnergy);
 
 		// Determine if we should sync.
-		boolean shouldSync = delta > ENERGY_SYNC_MAX_DELTA;
+		boolean shouldSync = (delta / getCapacity()) >= ENERGY_SYNC_MAX_DELTA_PERCENT;
 		if (!shouldSync) {
 			shouldSync = getStoredPower() == 0 && lastSyncEnergy != 0;
 		}
@@ -231,6 +231,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		PowerStorageComponentSyncPacket msg = new PowerStorageComponentSyncPacket(getPos(), this);
 		StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
 		lastSyncEnergy = getStoredPower();
+		pendingManualSync = false;
 	}
 
 	protected void tickVoltageBasedExplosion() {
@@ -262,9 +263,11 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	protected void resetExplosionTimer() {
-		electricalExplosionTimeRemaining = -1;
-		isPendingOverVoltageExplostion = false;
-		sendSynchronizationPacket();
+		if (electricalExplosionTimeRemaining >= 0) {
+			electricalExplosionTimeRemaining = -1;
+			isPendingOverVoltageExplostion = false;
+			sendSynchronizationPacket();
+		}
 	}
 
 	protected boolean isPendingElectricalExplosion() {
@@ -277,6 +280,10 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	public PowerStorageComponent setCapacity(double capacity) {
+		if (capacity == storage.getCapacity()) {
+			return this;
+		}
+
 		storage.setCapacity(capacity);
 		baseCapacity = capacity;
 		markDirty();
@@ -284,6 +291,10 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	public PowerStorageComponent setOutputVoltage(StaticPowerVoltage voltageOutput) {
+		if (voltageOutput == storage.getOutputVoltage()) {
+			return this;
+		}
+
 		storage.setOutputVoltage(voltageOutput);
 		baseVoltageOutput = voltageOutput;
 		markDirty();
@@ -291,6 +302,10 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	public PowerStorageComponent setMaximumOutputPower(double powerOutput) {
+		if (powerOutput == storage.getMaximumPowerOutput()) {
+			return this;
+		}
+
 		storage.setMaximumOutputPower(powerOutput);
 		baseMaximumOutputPower = powerOutput;
 		markDirty();
@@ -298,12 +313,20 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	public PowerStorageComponent setExposeAsCapability(boolean exposeAsCapability) {
+		if (exposeAsCapability == this.exposeAsCapability) {
+			return this;
+		}
+
 		this.exposeAsCapability = exposeAsCapability;
 		markDirty();
 		return this;
 	}
 
 	public PowerStorageComponent setInputVoltageRange(StaticVoltageRange voltageRange) {
+		if (voltageRange.equals(storage.getInputVoltageRange())) {
+			return this;
+		}
+
 		storage.setInputVoltageRange(voltageRange);
 		baseInputVoltageRange = voltageRange;
 		markDirty();
@@ -311,6 +334,10 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	public PowerStorageComponent setMaximumInputPower(double powerInput) {
+		if (powerInput == storage.getMaximumPowerInput()) {
+			return this;
+		}
+
 		storage.setMaximumInputPower(powerInput);
 		baseMaximumInputPower = powerInput;
 		markDirty();
@@ -319,25 +346,42 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 
 	public PowerStorageComponent setInputCurrentTypes(CurrentType... types) {
 		storage.setInputCurrentTypes(types);
+		markDirty();
 		return this;
 	}
 
 	public PowerStorageComponent setOutputCurrentType(CurrentType type) {
+		if (type == storage.getOutputCurrentType()) {
+			return this;
+		}
+
 		storage.setOutputCurrentType(type);
 		return this;
 	}
 
 	public PowerStorageComponent setCanAcceptExternalPower(boolean canAcceptExternalPower) {
+		if (canAcceptExternalPower == storage.canAcceptExternalPower()) {
+			return this;
+		}
+
 		storage.setCanAcceptExternalPower(canAcceptExternalPower);
 		return this;
 	}
 
 	public PowerStorageComponent setCanOutputExternalPower(boolean canOutputExternalPower) {
+		if (canOutputExternalPower == storage.canOutputExternalPower()) {
+			return this;
+		}
+
 		storage.setCanOutputExternalPower(canOutputExternalPower);
 		return this;
 	}
 
 	public PowerStorageComponent setShouldExplodeWhenOverVolted(boolean shouldExplodeWhenOverVolted) {
+		if (shouldExplodeWhenOverVolted == this.shouldExplodeWhenOverVolted) {
+			return this;
+		}
+
 		this.shouldExplodeWhenOverVolted = shouldExplodeWhenOverVolted;
 		markDirty();
 		return this;

@@ -1,5 +1,7 @@
 package theking530.staticpower.utilities;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class MetricConverter {
@@ -20,6 +22,12 @@ public class MetricConverter {
 		int suffixIndex = 8 + initialOffset;
 		this.Value = Math.abs(value);
 
+		// Make sure we round after a sufficient number of decimals to avoid funky
+		// values (like returning 1000mw/t)
+		BigDecimal a = new BigDecimal(Value);
+		BigDecimal roundOff = a.setScale(5, RoundingMode.HALF_EVEN);
+		Value = roundOff.doubleValue();
+
 		if (Value > 1) {
 			while (Value / 1000 >= 1) {
 				Value /= 1000;
@@ -28,7 +36,7 @@ public class MetricConverter {
 					break;
 				}
 			}
-		} else if(Value < 1){
+		} else if (Value < 1) {
 			while (Value < 1) {
 				Value *= 1000;
 				suffixIndex--;

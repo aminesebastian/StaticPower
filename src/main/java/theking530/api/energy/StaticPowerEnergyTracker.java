@@ -2,47 +2,45 @@ package theking530.api.energy;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
-	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 10;
+	public static final int SMOOTHING_FACTOR = 5;
+	protected final int smoothingFactor;
+
 	private long lastTickTime;
 
-	protected int maxIoCaptureFrames;
-	protected Queue<Double> ioCaptureFrames;
-	protected Queue<Double> receiveCaptureFrames;
-	protected Queue<Double> extractCaptureFrames;
+	protected List<PowerStack> currentFrameRecieved;
+	protected double averageRecievedPower;
 
-	protected Queue<Double> voltageCaptureFrames;
-	protected Queue<Double> currentCaptureFrames;
+	protected List<Double> currentFrameExtracted;
+	protected double averageDrainedPower;
 
-	protected List<PowerStack> currentTickRecievedPower;
+	protected StaticPowerVoltage lastRecievedVoltage;
 
-	protected double currentFrameEnergyReceived;
-	protected double currentFrameEnergyExtracted;
-	protected double averageRecieved;
-	protected double averageExtracted;
-
-	protected double averageVoltage;
-	protected double averageCurrent;
+	protected double lastRecievedCurrent;
+	protected CurrentType currentFrameCurrentType;
 	protected CurrentType lastCurrentType;
 
 	public StaticPowerEnergyTracker() {
-		this(MAXIMUM_IO_CAPTURE_FRAMES);
+		this(SMOOTHING_FACTOR);
 	}
 
-	public StaticPowerEnergyTracker(int maxIoCaptureFrames) {
-		this.maxIoCaptureFrames = maxIoCaptureFrames;
-		ioCaptureFrames = new LinkedList<>();
-		receiveCaptureFrames = new LinkedList<>();
-		extractCaptureFrames = new LinkedList<>();
-		voltageCaptureFrames = new LinkedList<>();
-		currentCaptureFrames = new LinkedList<>();
-		currentTickRecievedPower = new LinkedList<>();
+	public StaticPowerEnergyTracker(int smoothingFactor) {
+		this.smoothingFactor = smoothingFactor;
+		currentFrameRecieved = new LinkedList<>();
+		averageRecievedPower = 0;
+
+		currentFrameExtracted = new LinkedList<>();
+		averageDrainedPower = 0;
+
+		lastRecievedVoltage = StaticPowerVoltage.ZERO;
+		lastRecievedCurrent = 0;
+
+		currentFrameCurrentType = CurrentType.DIRECT;
 		lastCurrentType = CurrentType.DIRECT;
 	}
 
@@ -62,114 +60,73 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 	 * should be called once per tick.
 	 */
 	protected void captureEnergyMetric() {
-		// IO Capture
-		double transfered = currentFrameEnergyReceived + currentFrameEnergyExtracted;
+		averageRecievedPower = interpolatePowerTowards(averageRecievedPower, currentFrameRecieved.stream().mapToDouble((stack) -> stack.getPower()).sum());
+		averageDrainedPower = interpolatePowerTowards(averageDrainedPower, currentFrameExtracted.stream().mapToDouble((power) -> power).sum());
 
-		ioCaptureFrames.add(transfered);
-		if (ioCaptureFrames.size() > maxIoCaptureFrames) {
-			ioCaptureFrames.poll();
+		// Capture the average received voltages and current.
+		if (currentFrameRecieved.size() > 0) {
+			double totalRecievedVoltage = 0;
+			for (PowerStack stack : currentFrameRecieved) {
+				totalRecievedVoltage += stack.getVoltage().getValue();
+			}
+			lastRecievedVoltage = StaticPowerVoltage.getVoltageClass(totalRecievedVoltage / currentFrameRecieved.size());
+			lastRecievedCurrent = averageRecievedPower / lastRecievedVoltage.getValue();
+		} else {
+			lastRecievedVoltage = StaticPowerVoltage.ZERO;
+			lastRecievedCurrent = 0;
 		}
 
-		// Capture Received Amounts
-		receiveCaptureFrames.add(currentFrameEnergyReceived);
-		if (receiveCaptureFrames.size() > maxIoCaptureFrames) {
-			receiveCaptureFrames.poll();
-		}
+		lastCurrentType = currentFrameCurrentType;
 
-		// Capture Extracted Amounts
-		extractCaptureFrames.add(currentFrameEnergyExtracted);
-		if (extractCaptureFrames.size() > maxIoCaptureFrames) {
-			extractCaptureFrames.poll();
-		}
+		// Reset the current frame values.
+		currentFrameRecieved.clear();
+		currentFrameExtracted.clear();
+		currentFrameCurrentType = CurrentType.DIRECT;
+	}
 
-		double currentTickAverageVoltage = 0;
-		double currentTickAverageCurrent = 0;
-		for (PowerStack stack : currentTickRecievedPower) {
-			currentTickAverageVoltage += stack.getVoltage().getValue();
-			currentTickAverageCurrent += stack.getCurrent();
+	protected double interpolatePowerTowards(double currentValue, double totalPower) {
+		double newAverage = (totalPower + (currentValue * smoothingFactor)) / (smoothingFactor + 1);
+		if (newAverage < 0.001) {
+			if (totalPower > 0) {
+				newAverage = totalPower;
+			} else {
+				newAverage = 0;
+			}
 		}
-		currentTickAverageVoltage /= Math.max(1, currentTickRecievedPower.size());
-		currentTickAverageCurrent /= Math.max(1, currentTickRecievedPower.size());
-
-		// Capture Voltage
-		voltageCaptureFrames.add(currentTickAverageVoltage);
-		if (voltageCaptureFrames.size() > maxIoCaptureFrames) {
-			voltageCaptureFrames.poll();
-		}
-
-		// Capture Current
-		currentCaptureFrames.add(currentTickAverageCurrent);
-		if (currentCaptureFrames.size() > maxIoCaptureFrames) {
-			currentCaptureFrames.poll();
-		}
-
-		// Cache the average extracted rate.
-		averageExtracted = 0;
-		for (double value : extractCaptureFrames) {
-			averageExtracted += value;
-		}
-		averageExtracted /= Math.max(1, extractCaptureFrames.size());
-
-		// Cache the average recieved rate.
-		averageRecieved = 0;
-		for (double value : receiveCaptureFrames) {
-			averageRecieved += value;
-		}
-		averageRecieved /= Math.max(1, receiveCaptureFrames.size());
-
-		// Cache the average voltage.
-		averageVoltage = 0;
-		for (double value : voltageCaptureFrames) {
-			averageVoltage += value;
-		}
-		averageVoltage /= Math.max(1, voltageCaptureFrames.size());
-
-		// Cache the average current.
-		averageCurrent = 0;
-		for (double value : currentCaptureFrames) {
-			averageCurrent += value;
-		}
-		averageCurrent /= Math.max(1, currentCaptureFrames.size());
-
-		// Reset the values.
-		currentFrameEnergyReceived = 0;
-		currentFrameEnergyExtracted = 0;
-		lastCurrentType = CurrentType.DIRECT;
-		currentTickRecievedPower.clear();
+		return newAverage;
 	}
 
 	@Override
 	public void powerAdded(PowerStack stack) {
-		currentFrameEnergyReceived += stack.getPower();
-		currentTickRecievedPower.add(stack.copy());
+		currentFrameRecieved.add(stack);
 		if (stack.getCurrentType() == CurrentType.ALTERNATING) {
-			lastCurrentType = CurrentType.ALTERNATING;
+			currentFrameCurrentType = CurrentType.ALTERNATING;
 		}
 	}
 
 	@Override
 	public void powerDrained(double power) {
-		currentFrameEnergyExtracted -= power;
+		currentFrameExtracted.add(power);
 	}
 
 	@Override
 	public double getAveragePowerDrainedPerTick() {
-		return averageExtracted;
+		return -averageDrainedPower;
 	}
 
 	@Override
 	public double getAveragePowerAddedPerTick() {
-		return averageRecieved;
+		return averageRecievedPower;
 	}
 
 	@Override
 	public StaticPowerVoltage getLastRecievedVoltage() {
-		return StaticPowerVoltage.getVoltageClass(averageVoltage);
+		return lastRecievedVoltage;
 	}
 
 	@Override
 	public double getLastRecievedCurrent() {
-		return averageCurrent;
+		return lastRecievedCurrent;
 	}
 
 	@Override
@@ -180,23 +137,23 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 	@Override
 	public CompoundTag serializeNBT() {
 		CompoundTag output = new CompoundTag();
-		output.putDouble("avgRe", averageRecieved);
-		output.putDouble("avgEx", averageExtracted);
+		output.putDouble("r", averageRecievedPower);
+		output.putDouble("e", averageDrainedPower);
 
-		output.putDouble("avgV", averageVoltage);
-		output.putDouble("avgC", averageCurrent);
-		output.putByte("lastCT", (byte) lastCurrentType.ordinal());
+		output.putByte("v", (byte) lastRecievedVoltage.ordinal());
+		output.putDouble("c", lastRecievedCurrent);
+		output.putByte("t", (byte) lastCurrentType.ordinal());
 
 		return output;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
-		averageRecieved = nbt.getDouble("avgRe");
-		averageExtracted = nbt.getDouble("avgEx");
+		averageRecievedPower = nbt.getDouble("r");
+		averageDrainedPower = nbt.getDouble("e");
 
-		averageVoltage = nbt.getDouble("avgV");
-		averageCurrent = nbt.getDouble("avgC");
-		lastCurrentType = CurrentType.values()[nbt.getByte("lastCT")];
+		lastRecievedVoltage = StaticPowerVoltage.values()[nbt.getByte("v")];
+		lastRecievedCurrent = nbt.getDouble("c");
+		lastCurrentType = CurrentType.values()[nbt.getByte("t")];
 	}
 }
