@@ -1,16 +1,30 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
+	"textures": {
+		"cable_texture": "staticpower:blocks/cables/cable_power_basic"
+	},
 	"elements": [
 		{
 			"name": "CableExtension",
 			"from": [6, 6, 0],
 			"to": [10, 10, 6],
 			"faces": {
-				"east": {"uv": [0, 10, 6, 6], "rotation": 180, "texture": "#cable_texture"},
-				"west": {"uv": [10, 10, 16, 6], "rotation": 180, "texture": "#cable_texture"},
-				"up": {"uv": [6, 0, 10, 6], "texture": "#cable_texture"},
-				"down": {"uv": [6, 10, 10, 16], "texture": "#cable_texture"}
+				"east": {"uv": [4.5, 6, 8.5, 0], "rotation": 270, "texture": "#cable_texture"},
+				"west": {"uv": [8.5, 6, 4.5, 0], "rotation": 90, "texture": "#cable_texture"},
+				"up": {"uv": [4.5, 0, 8.5, 6], "texture": "#cable_texture"},
+				"down": {"uv": [8.5, 0, 4.5, 6], "rotation": 180, "texture": "#cable_texture"}
+			}
+		},
+		{
+			"name": "CableExtension inverted",
+			"from": [10, 10, 6],
+			"to": [6, 6, 0],
+			"faces": {
+				"east": {"uv": [4.5, 6, 8.5, 0], "rotation": 90, "texture": "#cable_texture"},
+				"west": {"uv": [8.5, 6, 4.5, 0], "rotation": 270, "texture": "#cable_texture"},
+				"up": {"uv": [4.5, 0, 8.5, 6], "rotation": 180, "texture": "#cable_texture"},
+				"down": {"uv": [8.5, 0, 4.5, 6], "texture": "#cable_texture"}
 			}
 		}
 	]

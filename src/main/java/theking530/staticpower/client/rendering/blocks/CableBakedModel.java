@@ -77,7 +77,7 @@ public class CableBakedModel extends AbstractBakedModel {
 		}
 
 		// Render the covers when we're on the NULL render side. Reason for this is, as
-		// much as we lose some render optimization, if we don't do this, chests placed
+		// much as we lose some render optimization, if we don't do this, solid blocks placed
 		// on a cover will stop rendering the cover.
 		if (side == null) {
 			for (Direction dir : Direction.values()) {

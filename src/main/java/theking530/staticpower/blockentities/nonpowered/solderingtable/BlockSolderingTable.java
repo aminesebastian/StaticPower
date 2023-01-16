@@ -13,9 +13,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 
-public class BlockSolderingTable extends StaticPowerBlockEntityBlock {
+public class BlockSolderingTable extends StaticPowerRotateableBlockEntityBlock {
 	protected static final VoxelShape SHAPE;
 
 	static {

@@ -179,8 +179,14 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		double actualPowerDelta = 0;
 		double absPower = Math.abs(stack.getPower());
 
+		double maxInputRate = this.getMaximumPowerInput() - this.getEnergyTracker().getCurrentFrameAdded();
+		if (maxInputRate <= 0) {
+			return 0;
+		}
+
 		double maxPowerDelta = Math.min(getMaximumPowerInput(), capacity - storedPower);
 		actualPowerDelta = Math.min(absPower, maxPowerDelta);
+		actualPowerDelta = Math.min(actualPowerDelta, maxInputRate);
 
 		if (!simulate) {
 			ticker.powerAdded(new PowerStack(actualPowerDelta, stack.getVoltage(), stack.getCurrentType()));
@@ -193,9 +199,12 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	@Override
 	public PowerStack drainPower(double power, boolean simulate) {
 		if (power > 0) {
-			double maxPowerDrain = getMaximumPowerOutput();
+			double maxPowerDrain = getMaximumPowerOutput() - this.getEnergyTracker().getCurrentFrameDrained();
 			double maxUsedPower = Math.min(power, maxPowerDrain);
 			maxUsedPower = Math.min(maxUsedPower, getStoredPower());
+			if (maxUsedPower <= 0) {
+				return PowerStack.EMPTY;
+			}
 
 			if (!simulate) {
 				storedPower -= maxUsedPower;
@@ -216,11 +225,11 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	}
 
 	public StaticPowerVoltage getLastRecievedVoltage() {
-		return ticker.getLastRecievedVoltage();
+		return ticker.getAverageVoltage();
 	}
 
 	public double getLastRecievedCurrent() {
-		return ticker.getLastRecievedCurrent();
+		return ticker.getAverageCurrent();
 	}
 
 	public CurrentType getLastRecievedCurrentType() {

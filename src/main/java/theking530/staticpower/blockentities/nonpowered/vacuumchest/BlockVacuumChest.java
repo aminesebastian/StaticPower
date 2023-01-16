@@ -11,9 +11,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 
-public class BlockVacuumChest extends StaticPowerBlockEntityBlock {
+public class BlockVacuumChest extends StaticPowerRotateableBlockEntityBlock {
 	protected static final VoxelShape SHAPE = Block.box(3, 3, 3, 13, 13, 13);
 
 	public BlockVacuumChest() {

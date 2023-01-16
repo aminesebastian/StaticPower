@@ -25,7 +25,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.util.TransformationHelper;
 import theking530.staticpower.blockentities.power.lightsocket.BlockEntityLightSocket;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.utilities.QuadUtilities;
 
 @OnlyIn(Dist.CLIENT)
@@ -60,7 +60,7 @@ public class LightSocketModel extends AbstractBakedModel {
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
 		newQuads.addAll(baseQuads);
 
-		Direction facing = state.getValue(StaticPowerBlockEntityBlock.FACING);
+		Direction facing = state.getValue(StaticPowerRotateableBlockEntityBlock.FACING);
 		Vector3f offset = Vector3f.ZERO;
 		Vector3f scale = new Vector3f(1, 1, 1);
 		Vector3f rotation = QuadUtilities.getRotationForDirection(facing).toXYZDegrees();

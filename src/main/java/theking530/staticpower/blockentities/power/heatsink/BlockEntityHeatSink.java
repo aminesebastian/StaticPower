@@ -8,8 +8,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -58,11 +57,9 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 			// Damage entities if too hot.
 			if (heatStorage.getCurrentHeat() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold.get()) {
 				AABB aabb = new AABB(this.worldPosition.offset(0.0, 0, 0.0), this.worldPosition.offset(1.0, 2.0, 1.0));
-				List<Entity> list = this.level.getEntitiesOfClass(Entity.class, aabb);
-				for (Entity entity : list) {
-					if (!(entity instanceof ItemEntity)) {
-						entity.hurt(DamageSource.HOT_FLOOR, 1.0f);
-					}
+				List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, aabb);
+				for (LivingEntity entity : list) {
+					entity.hurt(DamageSource.HOT_FLOOR, 1.0f);
 				}
 			}
 		}
@@ -70,7 +67,7 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 		// If under water, generate bubbles.
 		// TODO: Tweak this number to == the temp we say water boils.
 		if (heatStorage.getCurrentHeat() >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
-			float randomOffset = (3 * getLevel().random.nextFloat()) - 1.5f;
+			float randomOffset = (3 * getLevel().getRandom().nextFloat()) - 1.5f;
 			if (SDMath.diceRoll(0.25f) && level.getBlockState(getBlockPos().relative(Direction.UP)).getBlock() == Blocks.WATER) {
 				randomOffset /= 3.5f;
 				getLevel().addParticle(ParticleTypes.BUBBLE, getBlockPos().getX() + 0.5f + randomOffset, getBlockPos().getY() + 1.1f, getBlockPos().getZ() + 0.5f + randomOffset,

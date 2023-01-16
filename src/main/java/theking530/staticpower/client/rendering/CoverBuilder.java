@@ -39,11 +39,7 @@ import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 
 /**
- * The FacadeBuilder builds for facades..
- *
- * MASSIVE THANKS to the below. Huge help and fantastic code to learn from!
- *
- * @author covers1624
+ * MASSIVE THANKS to covers1624. Huge help and fantastic code to learn from!
  */
 @OnlyIn(Dist.CLIENT)
 public class CoverBuilder {

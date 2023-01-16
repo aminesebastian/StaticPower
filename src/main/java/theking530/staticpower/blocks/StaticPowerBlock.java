@@ -245,7 +245,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 
 	}
 
-	@Deprecated
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		// Raise the inheritor's method.

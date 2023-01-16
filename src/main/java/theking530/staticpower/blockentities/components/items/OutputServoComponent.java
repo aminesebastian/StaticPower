@@ -16,7 +16,7 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class OutputServoComponent extends AbstractBlockEntityComponent {
@@ -98,7 +98,7 @@ public class OutputServoComponent extends AbstractBlockEntityComponent {
 				// If we can output from that side.
 				if (canOutputFromSide(side)) {
 					// Get the facing direction of that side.
-					Direction facing = getLevel().getBlockState(getPos()).getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
+					Direction facing = getLevel().getBlockState(getPos()).getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING);
 					Direction direction = SideConfigurationUtilities.getDirectionFromSide(side, facing);
 
 					// Get the tile entity in that direction.

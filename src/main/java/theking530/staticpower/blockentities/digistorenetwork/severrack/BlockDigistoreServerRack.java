@@ -20,10 +20,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.item.ICustomModelSupplier;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.ServerRackModel;
 
-public class BlockDigistoreServerRack extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
+public class BlockDigistoreServerRack extends StaticPowerRotateableBlockEntityBlock implements ICustomModelSupplier {
 
 	public BlockDigistoreServerRack() {
 		super(Block.Properties.of(Material.METAL));

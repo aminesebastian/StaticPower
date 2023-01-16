@@ -23,7 +23,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
 public class BlockInverter extends StaticPowerMachineBlock {
@@ -53,7 +53,7 @@ public class BlockInverter extends StaticPowerMachineBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING).getAxis() == Axis.Z) {
+		if (state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING).getAxis() == Axis.Z) {
 			return Z_AXIS_SHAPE;
 		} else {
 			return X_AXIS_SHAPE;

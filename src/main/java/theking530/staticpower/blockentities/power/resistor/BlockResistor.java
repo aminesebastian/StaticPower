@@ -24,10 +24,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockResistor extends StaticPowerBlockEntityBlock {
+public class BlockResistor extends StaticPowerRotateableBlockEntityBlock {
 	public static final VoxelShape X_AXIS_SHAPE = Block.box(0, 5D, 5D, 16D, 11D, 11D);
 	public static final VoxelShape Z_AXIS_SHAPE = Block.box(5D, 5D, 0.0D, 11D, 11D, 16.0D);
 
@@ -44,7 +44,7 @@ public class BlockResistor extends StaticPowerBlockEntityBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING).getAxis() == Axis.Z) {
+		if (state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING).getAxis() == Axis.Z) {
 			return Z_AXIS_SHAPE;
 		} else {
 			return X_AXIS_SHAPE;

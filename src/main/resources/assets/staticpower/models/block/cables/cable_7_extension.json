@@ -29,6 +29,20 @@
 				"up": {"uv": [4.5, 2, 11.5, 4.5], "texture": "#cable_texture"},
 				"down": {"uv": [4.5, 11.5, 11.5, 14], "texture": "#cable_texture"}
 			}
+		},
+		{
+			"name": "Extension inverted",
+			"from": [11.5, 11.5, 4.5],
+			"to": [4.5, 4.5, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 6]},
+			"faces": {
+				"north": {"uv": [4.5, 11.5, 11.5, 4.5], "texture": "#cable_texture", "cullface": "south"},
+				"east": {"uv": [2, 11.5, 4.5, 4.5], "texture": "#cable_texture"},
+				"south": {"uv": [0, 7, 7, 0], "texture": "#cable_texture"},
+				"west": {"uv": [11.5, 11.5, 14, 4.5], "texture": "#cable_texture"},
+				"up": {"uv": [11.5, 11.5, 4.5, 14], "texture": "#cable_texture"},
+				"down": {"uv": [11.5, 2, 4.5, 4.5], "texture": "#cable_texture"}
+			}
 		}
 	]
 }

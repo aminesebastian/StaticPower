@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -68,13 +67,11 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 		return HasGuiType.NEVER;
 	}
 
-	@Deprecated
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return cableBoundsCache.getShape(state, worldIn, pos, context, false);
 	}
 
-	@Deprecated
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return cableBoundsCache.getShape(state, worldIn, pos, context, true);
@@ -83,11 +80,6 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 	@Override
 	public boolean hasModelOverride(BlockState state) {
 		return true;
-	}
-
-	@Override
-	public DirectionProperty getFacingType() {
-		return null;
 	}
 
 	@Override

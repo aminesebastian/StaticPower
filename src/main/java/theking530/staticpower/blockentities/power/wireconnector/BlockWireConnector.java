@@ -31,11 +31,11 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockWireConnector extends StaticPowerBlockEntityBlock {
+public class BlockWireConnector extends StaticPowerRotateableBlockEntityBlock {
 	public static final Map<Direction, VoxelShape> SHAPES = new HashMap<>();
 	static {
 		for (Direction shape : Direction.values()) {

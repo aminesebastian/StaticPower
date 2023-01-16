@@ -19,9 +19,9 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 	protected List<Double> currentFrameExtracted;
 	protected double averageDrainedPower;
 
-	protected StaticPowerVoltage lastRecievedVoltage;
+	protected StaticPowerVoltage averageVoltage;
+	protected double averageCurrent;
 
-	protected double lastRecievedCurrent;
 	protected CurrentType currentFrameCurrentType;
 	protected CurrentType lastCurrentType;
 
@@ -37,8 +37,8 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 		currentFrameExtracted = new LinkedList<>();
 		averageDrainedPower = 0;
 
-		lastRecievedVoltage = StaticPowerVoltage.ZERO;
-		lastRecievedCurrent = 0;
+		averageVoltage = StaticPowerVoltage.ZERO;
+		averageCurrent = 0;
 
 		currentFrameCurrentType = CurrentType.DIRECT;
 		lastCurrentType = CurrentType.DIRECT;
@@ -69,11 +69,11 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 			for (PowerStack stack : currentFrameRecieved) {
 				totalRecievedVoltage += stack.getVoltage().getValue();
 			}
-			lastRecievedVoltage = StaticPowerVoltage.getVoltageClass(totalRecievedVoltage / currentFrameRecieved.size());
-			lastRecievedCurrent = averageRecievedPower / lastRecievedVoltage.getValue();
+			averageVoltage = StaticPowerVoltage.getVoltageClass(totalRecievedVoltage / currentFrameRecieved.size());
+			averageCurrent = averageRecievedPower / averageVoltage.getValue();
 		} else {
-			lastRecievedVoltage = StaticPowerVoltage.ZERO;
-			lastRecievedCurrent = 0;
+			averageVoltage = StaticPowerVoltage.ZERO;
+			averageCurrent = 0;
 		}
 
 		lastCurrentType = currentFrameCurrentType;
@@ -109,6 +109,14 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 		currentFrameExtracted.add(power);
 	}
 
+	public double getCurrentFrameAdded() {
+		return currentFrameRecieved.stream().mapToDouble((stack) -> stack.getPower()).sum();
+	}
+
+	public double getCurrentFrameDrained() {
+		return currentFrameExtracted.stream().mapToDouble((power) -> power).sum();
+	}
+
 	@Override
 	public double getAveragePowerDrainedPerTick() {
 		return -averageDrainedPower;
@@ -120,13 +128,13 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 	}
 
 	@Override
-	public StaticPowerVoltage getLastRecievedVoltage() {
-		return lastRecievedVoltage;
+	public StaticPowerVoltage getAverageVoltage() {
+		return averageVoltage;
 	}
 
 	@Override
-	public double getLastRecievedCurrent() {
-		return lastRecievedCurrent;
+	public double getAverageCurrent() {
+		return averageCurrent;
 	}
 
 	@Override
@@ -140,8 +148,8 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 		output.putDouble("r", averageRecievedPower);
 		output.putDouble("e", averageDrainedPower);
 
-		output.putByte("v", (byte) lastRecievedVoltage.ordinal());
-		output.putDouble("c", lastRecievedCurrent);
+		output.putByte("v", (byte) averageVoltage.ordinal());
+		output.putDouble("c", averageCurrent);
 		output.putByte("t", (byte) lastCurrentType.ordinal());
 
 		return output;
@@ -152,8 +160,8 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 		averageRecievedPower = nbt.getDouble("r");
 		averageDrainedPower = nbt.getDouble("e");
 
-		lastRecievedVoltage = StaticPowerVoltage.values()[nbt.getByte("v")];
-		lastRecievedCurrent = nbt.getDouble("c");
+		averageVoltage = StaticPowerVoltage.values()[nbt.getByte("v")];
+		averageCurrent = nbt.getDouble("c");
 		lastCurrentType = CurrentType.values()[nbt.getByte("t")];
 	}
 }

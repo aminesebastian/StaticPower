@@ -25,8 +25,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
@@ -158,7 +158,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 
 		// The source position can be null. This value is only used to not bounce items
 		// back to the inventory it came from IF it comes from one.
-		BlockPos sourcePosition = pulledFromDirection != null ? cablePosition.relative(pulledFromDirection) : null;
+		BlockPos sourcePosition = pulledFromDirection != null ? cablePosition.relative(pulledFromDirection.getOpposite()) : null;
 
 		// Calculate the path and see if its not null.
 		Path path = getPathForItem(stack, cablePosition, sourcePosition, pulledFromDirection, false);

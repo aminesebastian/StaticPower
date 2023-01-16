@@ -56,14 +56,14 @@ public interface IStaticPowerEnergyTracker extends INBTSerializable<CompoundTag>
 	 * 
 	 * @return
 	 */
-	public StaticPowerVoltage getLastRecievedVoltage();
+	public StaticPowerVoltage getAverageVoltage();
 
 	/**
 	 * Gets the amount of current that was received by the owning energy storage.
 	 * 
 	 * @return
 	 */
-	public double getLastRecievedCurrent();
+	public double getAverageCurrent();
 
 	/**
 	 * Gets the type of current that was last received by the owning energy storage.

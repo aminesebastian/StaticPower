@@ -43,7 +43,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.LightSocketModel;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTags;
@@ -51,7 +51,7 @@ import theking530.staticpower.utilities.RaytracingUtilities;
 import theking530.staticpower.utilities.RaytracingUtilities.AdvancedRayTraceResult;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class BlockLightSocket extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
+public class BlockLightSocket extends StaticPowerRotateableBlockEntityBlock implements ICustomModelSupplier {
 	public static final Map<Direction, VoxelShape> SHAPES = new HashMap<>();
 	public static final Map<Direction, VoxelShape> BULB_SHAPES = new HashMap<>();
 	static {

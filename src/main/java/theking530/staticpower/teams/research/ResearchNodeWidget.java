@@ -186,7 +186,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 	@Override
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
-		if (isHovered()) {
+		if (isHovered() && (button <= 1)) {
 			if (button == 0) {
 				boolean isAvailable = manager.isResearchAvailable(research.getId());
 				if (isAvailable) {
@@ -199,7 +199,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 				} else {
 					playSoundLocally(SoundEvents.VILLAGER_NO, 1.0f, 2.0f);
 				}
-			} else {
+			} else if (button == 1) {
 				// The only research we CAN'T clear is the first research. This is to ensure
 				// there is always either a selected OR last completed research to display in
 				// the UI.
@@ -220,10 +220,12 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], x, y, 1, 8f, 8f);
 
 		if (instance != null) {
-			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount() - instance.getRequirementFullfillment(requirementIndex)).getString(), x + 8f,
-					y + 6.5f, 10, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose,
+					GuiTextUtilities.formatNumberAsString(requirement.getCount() - instance.getRequirementFullfillment(requirementIndex)).getString(), x + 8f, y + 6.5f, 10, 0.5f,
+					SDColor.EIGHT_BIT_WHITE, true);
 		} else {
-			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 8f, y + 6.5f, 10, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 8f, y + 6.5f, 10, 0.5f,
+					SDColor.EIGHT_BIT_WHITE, true);
 		}
 	}
 

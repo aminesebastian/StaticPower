@@ -30,6 +30,7 @@ import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -89,7 +90,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 				return component.getConnectionTypeOnSide(cableSide) == CableConnectionType.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
 			}
 		} else {
-			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));
+			StaticPower.LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));
 		}
 		return HasGuiType.NEVER;
 	}

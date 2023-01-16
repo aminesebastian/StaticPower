@@ -1336,5 +1336,8 @@
 	"config.jade.plugin_staticpower.heat": "Heat",
 	"config.jade.plugin_staticpower.processing": "Processing",
 	"config.jade.plugin_staticpower.digistore_master_presence": "Digistore",
-	"config.jade.plugin_staticpower.static_voltage": "Static Power"
+	"config.jade.plugin_staticpower.static_voltage": "Static Power",
+	
+	"death.attack.staticpower_electrocution": "%1$s was electrocuted!",
+	"death.attack.staticpower_electrocution.player": "%1$s electrocuted themselves whilst fighting %2$s"
 }

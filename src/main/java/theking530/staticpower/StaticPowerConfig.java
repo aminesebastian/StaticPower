@@ -248,6 +248,10 @@ public class StaticPowerConfig {
 		public final ConfigValue<Double> extremeVoltage;
 		public final ConfigValue<Double> bonkersVoltage;
 
+		public final ConfigValue<Boolean> enableElectricalDamage;
+		public final ConfigValue<Double> electricalDamageThreshold;
+		public final ConfigValue<Double> electricalDamageMultiplier;
+
 		public final ConfigValue<Double> drillPowerUsePerBlock;
 		public final ConfigValue<Double> chainsawPowerUsePerBlock;
 
@@ -335,21 +339,6 @@ public class StaticPowerConfig {
 
 				}
 				builder.pop();
-			}
-			builder.pop();
-
-			builder.push("Power");
-			{
-				lowVoltage = builder.comment("The voltage level associated with low voltage power.").translation(StaticPower.MOD_ID + ".config." + "lowVoltage")
-						.define("LowVoltage", 10.0);
-				mediumVoltage = builder.comment("The voltage level associated with medium voltage power.").translation(StaticPower.MOD_ID + ".config." + "mediumVoltage")
-						.define("MediumVoltage", 100.0);
-				highVoltage = builder.comment("The voltage level associated with high voltage power.").translation(StaticPower.MOD_ID + ".config." + "highVoltage")
-						.define("HighVoltage", 1000.0);
-				extremeVoltage = builder.comment("The voltage level associated with extreme voltage power.").translation(StaticPower.MOD_ID + ".config." + "extremeVoltage")
-						.define("ExtremeVoltage", 10000.0);
-				bonkersVoltage = builder.comment("The voltage level associated with bonkers voltage power.").translation(StaticPower.MOD_ID + ".config." + "bonkersVoltage")
-						.define("BonkersVoltage", 100000.0);
 			}
 			builder.pop();
 
@@ -441,8 +430,27 @@ public class StaticPowerConfig {
 
 			builder.push("Power");
 			{
+
+				lowVoltage = builder.comment("The voltage level associated with low voltage power.").translation(StaticPower.MOD_ID + ".config." + "lowVoltage")
+						.define("LowVoltage", 10.0);
+				mediumVoltage = builder.comment("The voltage level associated with medium voltage power.").translation(StaticPower.MOD_ID + ".config." + "mediumVoltage")
+						.define("MediumVoltage", 100.0);
+				highVoltage = builder.comment("The voltage level associated with high voltage power.").translation(StaticPower.MOD_ID + ".config." + "highVoltage")
+						.define("HighVoltage", 1000.0);
+				extremeVoltage = builder.comment("The voltage level associated with extreme voltage power.").translation(StaticPower.MOD_ID + ".config." + "extremeVoltage")
+						.define("ExtremeVoltage", 10000.0);
+				bonkersVoltage = builder.comment("The voltage level associated with bonkers voltage power.").translation(StaticPower.MOD_ID + ".config." + "bonkersVoltage")
+						.define("BonkersVoltage", 100000.0);
+
 				overvoltageExplodeTime = builder.comment("Defines how many ticks it takes before a machine explodes from recieveing too high a voltage.")
 						.translation(StaticPower.MOD_ID + ".config." + "overvoltageExplodeTime").define("OvervoltageExplodeTime", 40);
+
+				enableElectricalDamage = builder.comment("If true, players can be damaged when contacting electrical sources without wearing protective equiement.")
+						.translation(StaticPower.MOD_ID + ".config." + "enableElectricalDamage").define("EnableElectricalDamage", true);
+				electricalDamageThreshold = builder.comment("Defines the minimum amount of current that is required to damage a player.")
+						.translation(StaticPower.MOD_ID + ".config." + "currentDamageThreshold").define("CurrentDamageThreshold", 0.1);
+				electricalDamageMultiplier = builder.comment("Defines the damage multiplier applied to the current when damaging a player.")
+						.translation(StaticPower.MOD_ID + ".config." + "currentDamageMultiplier").define("CurrentDamageMultiplier", 1.0);
 			}
 			builder.pop();
 

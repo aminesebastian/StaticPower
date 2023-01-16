@@ -17,7 +17,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.utilities.ModelUtilities;
 
@@ -63,8 +63,8 @@ public class SideModeQuadGenerator {
 			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.0075f));
 
 			// Check if we have a facing property.
-			if (state != null && state.hasProperty(StaticPowerBlockEntityBlock.HORIZONTAL_FACING)) {
-				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
+			if (state != null && state.hasProperty(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING)) {
+				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING));
 
 				// If we do, see if we have a requested offset. If we do, apply it.
 				if (offset != null) {

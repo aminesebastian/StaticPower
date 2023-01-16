@@ -32,7 +32,7 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.utilities.SideModeQuadGenerator;
 
 @OnlyIn(Dist.CLIENT)
@@ -116,7 +116,7 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		try {
 			if (side != null) {
 				MachineSideMode sideMode = sideConfigurations.get()[side.ordinal()];
-				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
+				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING));
 				renderSideMode(state, newQuads, side, blockSide, sideMode);
 			}
 		} catch (Exception e) {

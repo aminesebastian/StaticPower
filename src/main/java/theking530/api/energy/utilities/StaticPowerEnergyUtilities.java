@@ -1,10 +1,18 @@
 package theking530.api.energy.utilities;
 
+import java.util.List;
+
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticEnergyDamangeSource;
 import theking530.api.energy.StaticPowerVoltage;
+import theking530.staticpower.StaticPowerConfig;
 
 public class StaticPowerEnergyUtilities {
 	public enum ElectricalExplosionTrigger {
@@ -104,7 +112,7 @@ public class StaticPowerEnergyUtilities {
 			return ElectricalExplosionTrigger.NONE;
 		}
 
-		// If the voltage is alternating and we don't accept alternative current, that's
+		// If the current is alternating and we don't accept alternating current, that's
 		// bad!
 		if (stack.getCurrentType() == CurrentType.ALTERNATING && !storage.canAcceptCurrentType(stack.getCurrentType())) {
 			return ElectricalExplosionTrigger.INCOMPATIBLE_CURRENT_TYPE;
@@ -116,5 +124,27 @@ public class StaticPowerEnergyUtilities {
 		}
 
 		return ElectricalExplosionTrigger.NONE;
+	}
+
+	public static <T extends Entity> int applyElectricalDamageInArea(Class<T> entityClass, Level level, AABB area, double current, double damageMultiplier) {
+		int hitEntities = 0;
+		List<T> list = level.getEntitiesOfClass(entityClass, area);
+		for (T entity : list) {
+			StaticPowerEnergyUtilities.applyElectricalDamage(entity, current, StaticPowerConfig.SERVER.electricalDamageMultiplier.get());
+			hitEntities++;
+		}
+		return hitEntities;
+	}
+
+	public static <T extends Entity> boolean applyElectricalDamage(T entity, double current, double damageMultiplier) {
+		// Don't try to hurt something that is invulnerable (it will cause a shakey
+		// screen for players).
+		if (entity.invulnerableTime <= 10) {
+			if (entity.hurt(StaticEnergyDamangeSource.get(), (float) (current * damageMultiplier))) {
+				entity.getLevel().playSound(null, entity.getOnPos(), SoundEvents.BEE_POLLINATE, SoundSource.HOSTILE, 2.0f, 0.4f);
+				return true;
+			}
+		}
+		return false;
 	}
 }

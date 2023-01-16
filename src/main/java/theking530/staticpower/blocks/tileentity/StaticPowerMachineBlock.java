@@ -29,7 +29,7 @@ import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 
-public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
+public abstract class StaticPowerMachineBlock extends StaticPowerRotateableBlockEntityBlock implements ICustomModelSupplier {
 	/**
 	 * This property is used by blocks that can be turned on and off and change
 	 * their model accordingly.

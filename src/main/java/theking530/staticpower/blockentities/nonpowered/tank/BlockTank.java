@@ -37,13 +37,13 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerItemBlockCustomRenderer;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
 import theking530.staticpower.client.rendering.items.dynamic.ItemTankSpecialRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockTank extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
+public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements ICustomModelSupplier {
 
 	public BlockTank(ResourceLocation tier) {
 		super(tier, Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());

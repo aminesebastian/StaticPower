@@ -29,8 +29,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTier;
 
@@ -68,15 +68,15 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 		cacheVoxelShapes();
 		// Get the appropriate shape.
 		if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player) {
-			return INTERACTION_SHAPES.get(state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
+			return INTERACTION_SHAPES.get(state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING));
 		} else {
-			return ENTITY_SHAPES.get(state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
+			return ENTITY_SHAPES.get(state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING));
 		}
 	}
 
 	@Override
 	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
-		return ENTITY_SHAPES.get(state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
+		return ENTITY_SHAPES.get(state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING));
 	}
 
 	@Override

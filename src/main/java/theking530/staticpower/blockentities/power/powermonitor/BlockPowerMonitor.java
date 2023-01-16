@@ -25,7 +25,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -66,7 +66,7 @@ public class BlockPowerMonitor extends StaticPowerMachineBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		Direction facingDirection = state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
+		Direction facingDirection = state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING);
 		if (facingDirection.getAxis() == Direction.Axis.Z) {
 			return Z_AXIS_SHAPE;
 		} else {

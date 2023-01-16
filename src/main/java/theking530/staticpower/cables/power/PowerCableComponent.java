@@ -13,6 +13,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
+import theking530.api.energy.IStaticPowerEnergyTracker;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
@@ -205,5 +206,16 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public PowerStack drainPower(double power, boolean simulate) {
 		return PowerStack.EMPTY;
+	}
+
+	@Override
+	public IStaticPowerEnergyTracker getEnergyTracker() {
+		if (!isClientSide()) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.getEnergyTracker();
+			}
+		}
+		return null;
 	}
 }

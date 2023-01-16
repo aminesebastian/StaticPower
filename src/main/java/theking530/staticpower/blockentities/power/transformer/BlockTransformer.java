@@ -28,7 +28,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.gui.text.TooltipUtilities;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -78,7 +78,7 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		Direction facing = state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
+		Direction facing = state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING);
 		return SHAPES.get(facing);
 	}
 

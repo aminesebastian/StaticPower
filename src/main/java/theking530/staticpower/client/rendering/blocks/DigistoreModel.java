@@ -24,7 +24,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockEntityDigistore;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.utilities.QuadUtilities;
 import theking530.staticpower.items.DigistoreCard;
 
@@ -48,7 +48,7 @@ public class DigistoreModel extends AbstractBakedModel {
 		}
 
 		// Get the data used in rendering.
-		Direction facing = state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
+		Direction facing = state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING);
 		ItemStack card = data.get(BlockEntityDigistore.RENDERING_STATE).card;
 
 		// Create the output array.

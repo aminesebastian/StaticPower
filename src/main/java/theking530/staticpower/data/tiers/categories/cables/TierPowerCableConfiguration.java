@@ -6,7 +6,7 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticpower.StaticPower;
 
 public abstract class TierPowerCableConfiguration {
-	public final ConfigValue<Double> cablerMaxCurrent;
+	public final ConfigValue<Double> cableMaxCurrent;
 	public final ConfigValue<Double> cablePowerLossPerBlock;
 
 	public final ConfigValue<Double> cableIndustrialPowerMaxPower;
@@ -23,12 +23,11 @@ public abstract class TierPowerCableConfiguration {
 
 	public TierPowerCableConfiguration(ForgeConfigSpec.Builder builder) {
 		builder.push("Power");
-		cablerMaxCurrent = builder.comment("The amount of current a cable of this tier can transfer.").translation(StaticPower.MOD_ID + ".config." + "cablerMaxCurrent")
-				.define("CablerMaxCurrent", getCableMaxCurrent());
+		cableMaxCurrent = builder.comment("The amount of current a cable of this tier can transfer.").translation(StaticPower.MOD_ID + ".config." + "cableMaxCurrent")
+				.define("CableMaxCurrent", getCableMaxCurrent());
 		cablePowerLossPerBlock = builder.comment(
 				"The resistance of this cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "cablePowerLossPerBlock").define("CablePowerLossPerBlock", this.getCablePowerLossPerBlock());
-
 
 		cableIndustrialPowerMaxPower = builder.comment("The amount of power an industrial cable of this tier can transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerMaxPower").define("CableIndustrialPowerMaxPower", getCableIndustrialPowerMaxCurrent());
@@ -50,7 +49,7 @@ public abstract class TierPowerCableConfiguration {
 				.define("WireCoilMaxDistance", getWireCoilMaxDistance());
 		insulatedWireCoilMaxDistance = builder.comment("The maximum distance an insulated wire of this tier can extend.")
 				.translation(StaticPower.MOD_ID + ".config." + "insulatedWireCoilMaxDistance").define("InsulatedWireCoilMaxDistance", getInsulatedWireCoilMaxDistance());
-		
+
 		wireCoilMaxCurrent = builder.comment("The amount of current a wire of this tier can transfer.").translation(StaticPower.MOD_ID + ".config." + "wireCoilMaxCurrent")
 				.define("WireCoilMaxCurrent", getWireCoilMaxCurrent());
 		wireCoilPowerLossPerBlock = builder.comment(
