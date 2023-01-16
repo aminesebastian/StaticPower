@@ -21,8 +21,8 @@ public class BlockAlloyFurnace extends StaticPowerRotateableBlockEntityBlock {
 	}
 
 	@Override
-	protected BlockState getDefaultState() {
-		return stateDefinition.any().setValue(StaticPowerMachineBlock.IS_ON, false);
+	protected BlockState getDefaultStateForRegistration() {
+		return super.getDefaultStateForRegistration().setValue(StaticPowerMachineBlock.IS_ON, false);
 	}
 
 	@Override

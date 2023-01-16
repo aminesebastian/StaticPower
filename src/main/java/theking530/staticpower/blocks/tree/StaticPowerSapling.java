@@ -80,6 +80,7 @@ public class StaticPowerSapling extends BushBlock implements BonemealableBlock, 
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(STAGE);
 	}
 

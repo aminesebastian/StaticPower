@@ -3,9 +3,6 @@ package theking530.staticpower.cables;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -35,13 +32,13 @@ import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHove
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.network.NetworkGUI;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
-	public static final Logger LOGGER = LogManager.getLogger(AbstractCableBlock.class);
 	public final CableBoundsCache cableBoundsCache;
 	public final float coverHoleSize;
 
@@ -78,6 +75,20 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 	}
 
 	@Override
+	public VoxelShape getOcclusionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
+		return cableBoundsCache.getShape(state, worldIn, pos, CollisionContext.empty(), false);
+	}
+
+	@Override
+	public VoxelShape getVisualShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return cableBoundsCache.getShape(state, worldIn, pos, context, false);
+	}
+
+	protected boolean canBeWaterlogged() {
+		return true;
+	}
+
+	@Override
 	public boolean hasModelOverride(BlockState state) {
 		return true;
 	}
@@ -87,7 +98,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 		// Get the component at the location.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {
-			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the Attachment Gui.", pos));
+			StaticPower.LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the Attachment Gui.", pos));
 			return InteractionResult.FAIL;
 		}
 

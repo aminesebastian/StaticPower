@@ -45,8 +45,8 @@ public class BlockRefineryTower extends StaticPowerBlock {
 	}
 
 	@Override
-	protected BlockState getDefaultState() {
-		return stateDefinition.any().setValue(TOWER_POSITION, TowerPiece.FULL);
+	protected BlockState getDefaultStateForRegistration() {
+		return super.getDefaultStateForRegistration().setValue(TOWER_POSITION, TowerPiece.FULL);
 	}
 
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -88,10 +88,12 @@ public class BlockRefineryTower extends StaticPowerBlock {
 	}
 
 	public BlockState updateShape(BlockState p_53323_, Direction p_53324_, BlockState p_53325_, LevelAccessor p_53326_, BlockPos p_53327_, BlockPos blockPos) {
-		return p_53323_.setValue(TOWER_POSITION, getTowerPiece(p_53327_, p_53326_));
+		BlockState state = super.updateShape(p_53323_, p_53324_, p_53325_, p_53326_, blockPos, blockPos);
+		return state.setValue(TOWER_POSITION, getTowerPiece(p_53327_, p_53326_));
 	}
 
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_53334_) {
+		super.createBlockStateDefinition(p_53334_);
 		p_53334_.add(TOWER_POSITION);
 	}
 }

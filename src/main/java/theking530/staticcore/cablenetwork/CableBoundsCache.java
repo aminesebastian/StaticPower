@@ -62,7 +62,7 @@ public class CableBoundsCache {
 	 * @param ctx
 	 * @return
 	 */
-	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext ctx, boolean forCollision) {
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, @Nullable CollisionContext ctx, boolean forCollision) {
 		// Cache the shapes if need be.
 		if (!IsCached) {
 			// Cache the shapes
@@ -93,7 +93,7 @@ public class CableBoundsCache {
 		// outlines for unattached attachments to disturb collision). Don't perform an
 		// OR here, let it take in the
 		// original and modify that internally.
-		if (!forCollision && ctx instanceof EntityCollisionContext) {
+		if (!forCollision && ctx != null && ctx instanceof EntityCollisionContext) {
 			EntityCollisionContext entityCtx = (EntityCollisionContext) ctx;
 			if (entityCtx.getEntity() != null && entityCtx.getEntity() instanceof Player) {
 				output = addAttachmentOutline(pos, (Player) entityCtx.getEntity(), ctx, output, forCollision);

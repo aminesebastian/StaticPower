@@ -36,6 +36,11 @@ public class BlockVacuumChest extends StaticPowerRotateableBlockEntityBlock {
 	}
 
 	@Override
+	protected boolean canBeWaterlogged() {
+		return true;
+	}
+
+	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		return BlockEntityVacuumChest.TYPE.create(pos, state);
 	}

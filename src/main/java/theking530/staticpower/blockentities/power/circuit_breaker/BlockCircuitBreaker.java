@@ -60,8 +60,8 @@ public class BlockCircuitBreaker extends StaticPowerRotateableBlockEntityBlock {
 	}
 
 	@Override
-	protected BlockState getDefaultState() {
-		return stateDefinition.any().setValue(TRIPPED, false);
+	protected BlockState getDefaultStateForRegistration() {
+		return super.getDefaultStateForRegistration().setValue(TRIPPED, false);
 	}
 
 	@Override
@@ -77,6 +77,11 @@ public class BlockCircuitBreaker extends StaticPowerRotateableBlockEntityBlock {
 		} else {
 			return X_AXIS_SHAPE;
 		}
+	}
+
+	@Override
+	protected boolean canBeWaterlogged() {
+		return true;
 	}
 
 	@Override

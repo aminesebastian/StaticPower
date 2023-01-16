@@ -15,8 +15,8 @@ public class StaticPowerRotatePillarBlock extends StaticPowerBlock {
 	}
 
 	@Override
-	protected BlockState getDefaultState() {
-		return stateDefinition.any().setValue(AXIS, Direction.Axis.Y);
+	protected BlockState getDefaultStateForRegistration() {
+		return super.getDefaultStateForRegistration().setValue(AXIS, Direction.Axis.Y);
 	}
 
 	@Override
@@ -39,6 +39,7 @@ public class StaticPowerRotatePillarBlock extends StaticPowerBlock {
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(AXIS);
 	}
 

@@ -40,15 +40,16 @@ public abstract class StaticPowerRotateableBlockEntityBlock extends StaticPowerB
 	}
 
 	@Override
-	protected BlockState getDefaultState() {
+	protected BlockState getDefaultStateForRegistration() {
 		if (getFacingType() != null) {
-			return stateDefinition.any().setValue(getFacingType(), Direction.NORTH);
+			return super.getDefaultStateForRegistration().setValue(getFacingType(), Direction.NORTH);
 		}
-		return super.getDefaultState();
+		return super.getDefaultStateForRegistration();
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		if (getFacingType() != null) {
 			builder.add(getFacingType());
 		}

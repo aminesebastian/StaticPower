@@ -52,6 +52,11 @@ public class BlockResistor extends StaticPowerRotateableBlockEntityBlock {
 	}
 
 	@Override
+	protected boolean canBeWaterlogged() {
+		return true;
+	}
+
+	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.NEVER;
 	}

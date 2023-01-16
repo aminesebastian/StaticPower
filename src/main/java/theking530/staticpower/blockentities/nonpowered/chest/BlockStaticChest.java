@@ -49,6 +49,11 @@ public class BlockStaticChest extends StaticPowerRotateableBlockEntityBlock {
 	}
 
 	@Override
+	protected boolean canBeWaterlogged() {
+		return true;
+	}
+
+	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
 		return AABB;
 	}

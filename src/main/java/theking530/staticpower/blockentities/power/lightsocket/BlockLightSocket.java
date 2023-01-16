@@ -95,7 +95,7 @@ public class BlockLightSocket extends StaticPowerRotateableBlockEntityBlock impl
 	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		BlockEntityLightSocket socket = (BlockEntityLightSocket) world.getBlockEntity(pos);
 		Direction facingDirection = state.getValue(FACING);
-		
+
 		if (socket.hasLightBulb()) {
 			ItemStack removed = socket.removeLightbulb();
 			if (!world.isClientSide() && !player.isCreative()) {

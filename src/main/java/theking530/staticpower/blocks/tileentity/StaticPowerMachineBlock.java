@@ -45,8 +45,8 @@ public abstract class StaticPowerMachineBlock extends StaticPowerRotateableBlock
 	}
 
 	@Override
-	protected BlockState getDefaultState() {
-		return stateDefinition.any().setValue(IS_ON, false);
+	protected BlockState getDefaultStateForRegistration() {
+		return super.getDefaultStateForRegistration().setValue(IS_ON, false);
 	}
 
 	@Override

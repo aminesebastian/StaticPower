@@ -1,6 +1,7 @@
 package theking530.staticpower.blocks;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -9,6 +10,8 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -16,17 +19,23 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -48,7 +57,7 @@ import theking530.staticpower.items.tools.StaticWrench;
  * @author Amine Sebastian
  *
  */
-public class StaticPowerBlock extends Block implements IItemBlockProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider {
+public class StaticPowerBlock extends Block implements IItemBlockProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider, SimpleWaterloggedBlock {
 	/**
 	 * Rotation property used by blocks who don't use {@link #HORIZONTAL_FACING} but
 	 * still need the option to rotate to either face X, Y, or Z. (Does not have to
@@ -77,7 +86,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	 */
 	public StaticPowerBlock(Block.Properties properties) {
 		super(properties);
-		registerDefaultState(getDefaultState());
+		registerDefaultState(getDefaultStateForRegistration());
 	}
 
 	/**
@@ -116,8 +125,43 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 		return Component.translatable(getDescriptionId());
 	}
 
-	protected BlockState getDefaultState() {
+	protected boolean canBeWaterlogged() {
+		return false;
+	}
+
+	protected BlockState getDefaultStateForRegistration() {
+		if (canBeWaterlogged()) {
+			return stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false);
+		}
 		return stateDefinition.any();
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		if (canBeWaterlogged()) {
+			builder.add(BlockStateProperties.WATERLOGGED);
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		if (!canBeWaterlogged()) {
+			return super.getFluidState(state);
+		}
+		return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		BlockState state = super.getStateForPlacement(context);
+		if (canBeWaterlogged()) {
+			FluidState fluid = context.getLevel().getFluidState(context.getClickedPos());
+			System.out.println(fluid.getType());
+			state = state.setValue(BlockStateProperties.WATERLOGGED, fluid.is(FluidTags.WATER));
+		}
+		return state;
 	}
 
 	/**
@@ -321,6 +365,11 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	@Override
 	public BlockState updateShape(BlockState state, Direction dir, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
 		super.updateShape(state, dir, facingState, world, pos, facingPos);
+
+		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
+			world.scheduleTick(facingPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+		}
+
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
 			((BlockEntityBase) world.getBlockEntity(pos)).onNeighborReplaced(state, dir, facingState, facingPos);
 		}
@@ -336,5 +385,54 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 			((BlockEntityBase) world.getBlockEntity(pos)).onNeighborChanged(state, fromPos, isMoving);
 		}
 		onStaticPowerNeighborChanged(state, world, pos, fromPos, isMoving);
+	}
+
+	@Override
+	public boolean canPlaceLiquid(BlockGetter p_56301_, BlockPos p_56302_, BlockState p_56303_, Fluid p_56304_) {
+		if (!canBeWaterlogged()) {
+			return false;
+		}
+		return !p_56303_.getValue(BlockStateProperties.WATERLOGGED) && p_56304_ == Fluids.WATER;
+	}
+
+	@Override
+	public boolean placeLiquid(LevelAccessor p_56306_, BlockPos p_56307_, BlockState p_56308_, FluidState p_56309_) {
+		if (!canBeWaterlogged()) {
+			return false;
+		}
+
+		if (!p_56308_.getValue(BlockStateProperties.WATERLOGGED) && p_56309_.getType() == Fluids.WATER) {
+			if (!p_56306_.isClientSide()) {
+				p_56306_.setBlock(p_56307_, p_56308_.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)), 3);
+				p_56306_.scheduleTick(p_56307_, p_56309_.getType(), p_56309_.getType().getTickDelay(p_56306_));
+			}
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public ItemStack pickupBlock(LevelAccessor p_154560_, BlockPos p_154561_, BlockState p_154562_) {
+		if (!canBeWaterlogged()) {
+			return ItemStack.EMPTY;
+		}
+
+		if (p_154562_.getValue(BlockStateProperties.WATERLOGGED)) {
+			p_154560_.setBlock(p_154561_, p_154562_.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false)), 3);
+			if (!p_154562_.canSurvive(p_154560_, p_154561_)) {
+				p_154560_.destroyBlock(p_154561_, true);
+			}
+
+			return new ItemStack(Items.WATER_BUCKET);
+		} else {
+			return ItemStack.EMPTY;
+		}
+	}
+
+	@Override
+	public Optional<SoundEvent> getPickupSound() {
+		return Fluids.WATER.getPickupSound();
 	}
 }
