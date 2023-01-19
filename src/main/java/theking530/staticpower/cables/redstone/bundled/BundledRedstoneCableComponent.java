@@ -39,7 +39,7 @@ public class BundledRedstoneCableComponent extends AbstractCableProviderComponen
 					intersection.add(ModCableModules.RedstoneModules.get(color).get());
 				}
 				intersection.retainAll(otherProvider.getSupportedNetworkModuleTypes());
-				return intersection.size() > 0 ? CableConnectionType.TILE_ENTITY : CableConnectionType.NONE;
+				return intersection.size() > 0 ? CableConnectionType.DESTINATION : CableConnectionType.NONE;
 			}
 		}
 		return CableConnectionType.NONE;

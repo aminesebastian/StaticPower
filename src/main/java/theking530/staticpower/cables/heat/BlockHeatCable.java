@@ -40,30 +40,30 @@ public class BlockHeatCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		BakedModel extensionModel = null;
-		BakedModel straightModel = null;
-		BakedModel attachmentModel = null;
+		ResourceLocation extensionModel = null;
+		ResourceLocation straightModel = null;
+		ResourceLocation attachmentModel = null;
 
 		if (tier == StaticPowerTiers.COPPER) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_COPPER_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_COPPER_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_COPPER_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_COPPER_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_COPPER_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_COPPER_ATTACHMENT;
 		} else if (tier == StaticPowerTiers.TIN) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_TIN_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_TIN_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_TIN_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_TIN_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_TIN_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_TIN_ATTACHMENT;
 		} else if (tier == StaticPowerTiers.SILVER) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_SILVER_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_SILVER_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_SILVER_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_SILVER_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_SILVER_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_SILVER_ATTACHMENT;
 		} else if (tier == StaticPowerTiers.GOLD) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_GOLD_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_GOLD_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_GOLD_ATTACHMENT;
 		} else if (tier == StaticPowerTiers.ALUMINUM) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_ATTACHMENT;
 		}
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}

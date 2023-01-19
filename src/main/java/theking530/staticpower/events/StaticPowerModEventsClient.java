@@ -1,5 +1,9 @@
 package theking530.staticpower.events;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,6 +58,7 @@ import theking530.staticpower.teams.research.GuiResearchMenu;
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class StaticPowerModEventsClient {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerModEventsClient.class);
+	public static final Map<BakedModel, ResourceLocation> REVERSE_MODEL_MAP = new HashMap<>();
 
 	@SubscribeEvent
 	public static void registerKeyBindings(RegisterKeyMappingsEvent event) {
@@ -191,6 +196,12 @@ public class StaticPowerModEventsClient {
 				}
 			}
 		}
+
+		REVERSE_MODEL_MAP.clear();
+		for (Entry<ResourceLocation, BakedModel> entry : event.getModels().entrySet()) {
+			REVERSE_MODEL_MAP.put(entry.getValue(), entry.getKey());
+		}
+
 		LOGGER.info("Static Power Model Overrides Completed!");
 	}
 
@@ -232,4 +243,5 @@ public class StaticPowerModEventsClient {
 		LOGGER.info("Registering Tile Entity Special Renderers!");
 		StaticCoreRegistry.registerBlockEntityRenderers(event);
 	}
+
 }

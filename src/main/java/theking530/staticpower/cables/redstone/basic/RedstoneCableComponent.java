@@ -73,12 +73,12 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 			} else {
 				return getSupportedNetworkModuleTypes().contains(ModCableModules.NakedRedstone.get())
 						|| otherProvider.getSupportedNetworkModuleTypes().contains(ModCableModules.BundledRedstone.get())
-						|| otherProvider.getSupportedNetworkModuleTypes().contains(ModCableModules.NakedRedstone.get()) ? CableConnectionType.TILE_ENTITY
+						|| otherProvider.getSupportedNetworkModuleTypes().contains(ModCableModules.NakedRedstone.get()) ? CableConnectionType.DESTINATION
 								: CableConnectionType.NONE;
 			}
 		} else if (!firstWorldLoaded && otherProvider == null) {
 			if (canConnectTo(getLevel(), getPos(), side.getOpposite())) {
-				return CableConnectionType.TILE_ENTITY;
+				return CableConnectionType.DESTINATION;
 			}
 		}
 		return CableConnectionType.NONE;
@@ -199,7 +199,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 
 	@Override
 	protected ResourceLocation getAttachmentModel(Direction side, CableSideConnectionState connectionState) {
-		if (connectionState.getConnectionType() == CableConnectionType.TILE_ENTITY) {
+		if (connectionState.getConnectionType() == CableConnectionType.DESTINATION) {
 			if (configuration.getSideConfig(side).isInputSide()) {
 				return StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT;
 			} else if (configuration.getSideConfig(side).isOutputSide()) {

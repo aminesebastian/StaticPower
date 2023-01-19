@@ -17,9 +17,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -54,7 +57,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 	 *                             this cable passes through a cover.
 	 */
 	public AbstractCableBlock(ResourceLocation tier, CableBoundsCache cableBoundsCache, float coverHoleSize) {
-		super(tier, Block.Properties.of(Material.METAL).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
+		super(tier, Block.Properties.of(Material.METAL).sound(SoundType.COPPER).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
 		this.cableBoundsCache = cableBoundsCache;
 		this.coverHoleSize = coverHoleSize;
 	}
@@ -82,6 +85,16 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 	@Override
 	public VoxelShape getVisualShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return cableBoundsCache.getShape(state, worldIn, pos, context, false);
+	}
+
+	@Override
+	public boolean propagatesSkylightDown(BlockState p_52348_, BlockGetter p_52349_, BlockPos p_52350_) {
+		return !p_52348_.getValue(BlockStateProperties.WATERLOGGED);
+	}
+
+	@Override
+	public boolean isPathfindable(BlockState p_52333_, BlockGetter p_52334_, BlockPos p_52335_, PathComputationType p_52336_) {
+		return false;
 	}
 
 	protected boolean canBeWaterlogged() {

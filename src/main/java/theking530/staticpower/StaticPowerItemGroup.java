@@ -20,7 +20,7 @@ public class StaticPowerItemGroup extends CreativeModeTab {
 	private List<ItemStack> subTypes = null;
 
 	public StaticPowerItemGroup() {
-		super("StaticPower");
+		super("staticpower");
 	}
 
 	@OnlyIn(Dist.CLIENT)

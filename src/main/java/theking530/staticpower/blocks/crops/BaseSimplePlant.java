@@ -35,6 +35,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.IPlantable;
+import theking530.staticpower.blocks.IBlockLootTableSupplier;
 import theking530.staticpower.blocks.StaticPowerFarmland;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
@@ -44,7 +45,7 @@ import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
  * @author Amine Sebastian
  *
  */
-public class BaseSimplePlant extends CropBlock implements IPlantable, BonemealableBlock, IRenderLayerProvider {
+public class BaseSimplePlant extends CropBlock implements IPlantable, IBlockLootTableSupplier, BonemealableBlock, IRenderLayerProvider {
 	public static final Logger LOGGER = LogManager.getLogger(BaseSimplePlant.class);
 
 	/**
@@ -342,5 +343,10 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 			return defaultBlockState();
 		}
 		return state;
+	}
+
+	@Override
+	public BlockDropType getBlockDropType() {
+		return BlockDropType.CUSTOM;
 	}
 }

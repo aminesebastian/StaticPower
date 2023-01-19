@@ -1,11 +1,23 @@
 package theking530.staticcore.cablenetwork.data;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 
 public class CableSideConnectionState {
-	public enum CableConnectionType {
-		NONE, CABLE, TILE_ENTITY
+	public enum CableConnectionType implements StringRepresentable {
+		NONE("none"), CABLE("cable"), DESTINATION("destination");
+
+		private final String serializedName;
+
+		private CableConnectionType(String serializedName) {
+			this.serializedName = serializedName;
+		}
+
+		@Override
+		public String getSerializedName() {
+			return serializedName;
+		}
 	}
 
 	private CableConnectionType connectionType;

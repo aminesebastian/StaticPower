@@ -57,7 +57,7 @@ import theking530.staticpower.items.tools.StaticWrench;
  * @author Amine Sebastian
  *
  */
-public class StaticPowerBlock extends Block implements IItemBlockProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider, SimpleWaterloggedBlock {
+public class StaticPowerBlock extends Block implements IItemBlockProvider, IBlockLootTableSupplier, IRenderLayerProvider, IWrenchable, ITooltipProvider, SimpleWaterloggedBlock {
 	/**
 	 * Rotation property used by blocks who don't use {@link #HORIZONTAL_FACING} but
 	 * still need the option to rotate to either face X, Y, or Z. (Does not have to
@@ -158,7 +158,6 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 		BlockState state = super.getStateForPlacement(context);
 		if (canBeWaterlogged()) {
 			FluidState fluid = context.getLevel().getFluidState(context.getClickedPos());
-			System.out.println(fluid.getType());
 			state = state.setValue(BlockStateProperties.WATERLOGGED, fluid.is(FluidTags.WATER));
 		}
 		return state;

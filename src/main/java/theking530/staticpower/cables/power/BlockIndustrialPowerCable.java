@@ -45,7 +45,7 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-		
+
 		PowerTooltips.addMaximumCurrentTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerMaxPower.get());
 		PowerTooltips.addPowerLossPerBlockTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerLossPerBlock.get());
 		tooltip.add(Component.translatable("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
@@ -54,28 +54,28 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		BakedModel extensionModel = null;
-		BakedModel straightModel = null;
-		BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_DEFAULT_ATTACHMENT);
+		ResourceLocation extensionModel = null;
+		ResourceLocation straightModel = null;
+		ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_DEFAULT_ATTACHMENT;
 
 		if (tier == StaticPowerTiers.BASIC) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_BASIC_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_BASIC_STRAIGHT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_BASIC_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_BASIC_STRAIGHT;
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ADVANCED_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ADVANCED_STRAIGHT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ADVANCED_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ADVANCED_STRAIGHT;
 		} else if (tier == StaticPowerTiers.STATIC) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_STATIC_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_STATIC_STRAIGHT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_STATIC_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_STATIC_STRAIGHT;
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ENERGIZED_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ENERGIZED_STRAIGHT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ENERGIZED_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_ENERGIZED_STRAIGHT;
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_LUMUM_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_LUMUM_STRAIGHT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_LUMUM_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_LUMUM_STRAIGHT;
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_CREATIVE_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_CREATIVE_STRAIGHT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_CREATIVE_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_INDUSTRIAL_CREATIVE_STRAIGHT;
 		}
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
@@ -83,19 +83,6 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
-			return BlockEntityPowerCable.TYPE_INDUSTRIAL_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return BlockEntityPowerCable.TYPE_INDUSTRIAL_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return BlockEntityPowerCable.TYPE_INDUSTRIAL_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return BlockEntityPowerCable.TYPE_INDUSTRIAL_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return BlockEntityPowerCable.TYPE_INDUSTRIAL_LUMUM.create(pos, state);
-		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return BlockEntityPowerCable.TYPE_INDUSTRIAL_CREATIVE.create(pos, state);
-		}
-		return null;
+		return BlockEntityPowerCable.TYPE_INDUSTRIAL.create(pos, state);
 	}
 }

@@ -22,12 +22,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
+import theking530.staticpower.client.rendering.ItemModel;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.items.tools.chainsaw.ChainsawBlade;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("deprecation")
-public class ChainsawBladeItemModel implements BakedModel {
+public class ChainsawBladeItemModel extends ItemModel {
 	private final BakedModel baseChainsawBlade;
 
 	public ChainsawBladeItemModel(BakedModel emptyDrillModel) {
@@ -99,11 +100,11 @@ public class ChainsawBladeItemModel implements BakedModel {
 				return output;
 			}
 
-			// Get the drill bit item.
-			ChainsawBlade bit = (ChainsawBlade) stack.getItem();
+			// Get the chainsaw blade item.
+			ChainsawBlade blade = (ChainsawBlade) stack.getItem();
 
 			// Add all the quads.
-			List<BakedQuad> layers = bit.getRenderLayers().getOrderedRenderQuads(stack, attributable, state, side, rand, data);
+			List<BakedQuad> layers = blade.getRenderLayers().getOrderedRenderQuads(stack, attributable, state, side, rand, data);
 			output.addAll(layers);
 
 			return output;

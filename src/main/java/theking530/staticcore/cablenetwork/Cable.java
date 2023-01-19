@@ -26,6 +26,7 @@ import theking530.staticcore.cablenetwork.capabilities.ServerCableCapability;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
@@ -288,7 +289,10 @@ public class Cable {
 			if (network.getGraph().getCables().containsKey(toTest)) {
 				sidedData[dir.ordinal()].setConnectionType(CableConnectionType.CABLE);
 			} else if (network.getGraph().getDestinations().containsKey(toTest)) {
-				sidedData[dir.ordinal()].setConnectionType(CableConnectionType.TILE_ENTITY);
+				DestinationWrapper wrapper = network.getGraph().getDestinations().get(toTest);
+				if (wrapper.hasSupportedDestinationTypes(dir.getOpposite(), this)) {
+					sidedData[dir.ordinal()].setConnectionType(CableConnectionType.DESTINATION);
+				}
 			} else {
 				sidedData[dir.ordinal()].setConnectionType(CableConnectionType.NONE);
 			}

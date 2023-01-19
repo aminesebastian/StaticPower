@@ -26,8 +26,8 @@ import theking530.staticpower.entities.smeep.EntitySmeep;
 import theking530.staticpower.entities.smeep.TypeSmeep;
 
 public class ModEntities {
-	private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, StaticPower.MOD_ID);
-	private static final List<AbstractEntityBuilder<?>> ENTITIES = new ArrayList<>();
+	public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, StaticPower.MOD_ID);
+	public static final List<AbstractEntityBuilder<?>> ENTITIES = new ArrayList<>();
 
 	public static final AbstractEntityBuilder<EntitySmeep> Smeep = registerEntity("smeep", new TypeSmeep());
 	public static final AbstractEntityBuilder<EntityEnox> Enox = registerEntity("enox", new TypeEnox());

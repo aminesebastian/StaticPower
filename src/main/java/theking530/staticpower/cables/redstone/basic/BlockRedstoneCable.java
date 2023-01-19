@@ -8,6 +8,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
@@ -43,7 +44,8 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	private final String color;
 
 	public BlockRedstoneCable(String color) {
-		super(new BasicRedstoneCableBoundsCache(color.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)),color.contains("naked") ? 1.0f : 1.5f);
+		super(new BasicRedstoneCableBoundsCache(color.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)),
+				color.contains("naked") ? 1.0f : 1.5f);
 
 		// String the color from the last section of the registry name.
 		this.color = color;
@@ -59,14 +61,14 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		if (color.equals("naked")) {
-			BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT);
-			BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION);
-			BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			ResourceLocation straightModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT;
+			ResourceLocation extensionModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION;
+			ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT;
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		} else {
-			BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0]);
-			BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1]);
-			BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			ResourceLocation straightModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0];
+			ResourceLocation extensionModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1];
+			ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT;
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		}
 	}
@@ -87,7 +89,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 			if (hoverResult.type == CableBoundsHoverType.DEFAULT_ATTACHMENT) {
 				Direction cableSide = hoverResult.direction;
-				return component.getConnectionTypeOnSide(cableSide) == CableConnectionType.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
+				return component.getConnectionTypeOnSide(cableSide) == CableConnectionType.DESTINATION ? HasGuiType.ALWAYS : HasGuiType.NEVER;
 			}
 		} else {
 			StaticPower.LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));

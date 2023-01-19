@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -36,9 +37,9 @@ public class BlockBundledRedstoneCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_STRAIGHT);
-		BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_EXTENSION);
-		BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_ATTACHMENT);
+		ResourceLocation straightModel = StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_STRAIGHT;
+		ResourceLocation extensionModel = StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_EXTENSION;
+		ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_ATTACHMENT;
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}
 

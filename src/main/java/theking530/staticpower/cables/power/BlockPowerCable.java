@@ -29,9 +29,15 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockPowerCable extends AbstractCableBlock {
+	private final boolean insulated;
 
-	public BlockPowerCable(ResourceLocation tier) {
+	public BlockPowerCable(ResourceLocation tier, boolean insulated) {
 		super(tier, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
+		this.insulated = insulated;
+	}
+
+	public boolean isInsulated() {
+		return insulated;
 	}
 
 	@Override
@@ -51,34 +57,34 @@ public class BlockPowerCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		BakedModel extensionModel = null;
-		BakedModel straightModel = null;
-		BakedModel attachmentModel = null;
+		ResourceLocation extensionModel = null;
+		ResourceLocation straightModel = null;
+		ResourceLocation attachmentModel = null;
 
 		if (tier == StaticPowerTiers.BASIC) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_BASIC_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_BASIC_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_BASIC_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_BASIC_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_BASIC_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_BASIC_ATTACHMENT;
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_ADVANCED_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_ADVANCED_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_ADVANCED_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_ADVANCED_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_ADVANCED_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_ADVANCED_ATTACHMENT;
 		} else if (tier == StaticPowerTiers.STATIC) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_STATIC_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_STATIC_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_STATIC_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_STATIC_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_STATIC_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_STATIC_ATTACHMENT;
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_ENERGIZED_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_ENERGIZED_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_ENERGIZED_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_ENERGIZED_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_ENERGIZED_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_ENERGIZED_ATTACHMENT;
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_LUMUM_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_LUMUM_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_LUMUM_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_LUMUM_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_LUMUM_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_LUMUM_ATTACHMENT;
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_CREATIVE_EXTENSION);
-			straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_CREATIVE_STRAIGHT);
-			attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_POWER_CREATIVE_ATTACHMENT);
+			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_CREATIVE_EXTENSION;
+			straightModel = StaticPowerAdditionalModels.CABLE_POWER_CREATIVE_STRAIGHT;
+			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_CREATIVE_ATTACHMENT;
 		}
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
@@ -86,19 +92,6 @@ public class BlockPowerCable extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
-			return BlockEntityPowerCable.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return BlockEntityPowerCable.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return BlockEntityPowerCable.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return BlockEntityPowerCable.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return BlockEntityPowerCable.TYPE_LUMUM.create(pos, state);
-		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return BlockEntityPowerCable.TYPE_CREATIVE.create(pos, state);
-		}
-		return null;
+		return BlockEntityPowerCable.TYPE.create(pos, state);
 	}
 }

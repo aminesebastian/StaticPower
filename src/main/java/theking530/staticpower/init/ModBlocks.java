@@ -451,12 +451,25 @@ public class ModBlocks {
 	public static final RegistryObject<BlockItemCable> ItemCableLumum = registerBlock("cable_item_lumum", () -> new BlockItemCable(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BlockItemCable> ItemCableCreative = registerBlock("cable_item_creative", () -> new BlockItemCable(StaticPowerTiers.CREATIVE));
 
-	public static final RegistryObject<BlockPowerCable> PowerCableBasic = registerBlock("cable_power_basic", () -> new BlockPowerCable(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockPowerCable> PowerCableAdvanced = registerBlock("cable_power_advanced", () -> new BlockPowerCable(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockPowerCable> PowerCableStatic = registerBlock("cable_power_static", () -> new BlockPowerCable(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockPowerCable> PowerCableEnergized = registerBlock("cable_power_energized", () -> new BlockPowerCable(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockPowerCable> PowerCableLumum = registerBlock("cable_power_lumum", () -> new BlockPowerCable(StaticPowerTiers.LUMUM));
-	public static final RegistryObject<BlockPowerCable> PowerCableCreative = registerBlock("cable_power_creative", () -> new BlockPowerCable(StaticPowerTiers.CREATIVE));
+	public static final RegistryObject<BlockPowerCable> PowerCableBasic = registerBlock("cable_power_basic", () -> new BlockPowerCable(StaticPowerTiers.BASIC, false));
+	public static final RegistryObject<BlockPowerCable> PowerCableAdvanced = registerBlock("cable_power_advanced", () -> new BlockPowerCable(StaticPowerTiers.ADVANCED, false));
+	public static final RegistryObject<BlockPowerCable> PowerCableStatic = registerBlock("cable_power_static", () -> new BlockPowerCable(StaticPowerTiers.STATIC, false));
+	public static final RegistryObject<BlockPowerCable> PowerCableEnergized = registerBlock("cable_power_energized", () -> new BlockPowerCable(StaticPowerTiers.ENERGIZED, false));
+	public static final RegistryObject<BlockPowerCable> PowerCableLumum = registerBlock("cable_power_lumum", () -> new BlockPowerCable(StaticPowerTiers.LUMUM, false));
+	public static final RegistryObject<BlockPowerCable> PowerCableCreative = registerBlock("cable_power_creative", () -> new BlockPowerCable(StaticPowerTiers.CREATIVE, false));
+
+	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableBasic = registerBlock("cable_insulated_power_basic",
+			() -> new BlockPowerCable(StaticPowerTiers.BASIC, true));
+	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableAdvanced = registerBlock("cable_insulated_power_advanced",
+			() -> new BlockPowerCable(StaticPowerTiers.ADVANCED, true));
+	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableStatic = registerBlock("cable_insulated_power_static",
+			() -> new BlockPowerCable(StaticPowerTiers.STATIC, true));
+	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableEnergized = registerBlock("cable_insulated_power_energized",
+			() -> new BlockPowerCable(StaticPowerTiers.ENERGIZED, true));
+	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableLumum = registerBlock("cable_insulated_power_lumum",
+			() -> new BlockPowerCable(StaticPowerTiers.LUMUM, true));
+	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableCreative = registerBlock("cable_insulated_power_creative",
+			() -> new BlockPowerCable(StaticPowerTiers.CREATIVE, true));
 
 	public static final RegistryObject<BlockIndustrialPowerCable> IndustrialPowerCableBasic = registerBlock("cable_industrial_power_basic",
 			() -> new BlockIndustrialPowerCable(StaticPowerTiers.BASIC));
@@ -547,7 +560,7 @@ public class ModBlocks {
 	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker20A = registerBlock("circuit_breaker_20", () -> new BlockCircuitBreaker(20));
 	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker50A = registerBlock("circuit_breaker_50", () -> new BlockCircuitBreaker(50));
 	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker100A = registerBlock("circuit_breaker_100", () -> new BlockCircuitBreaker(100));
-	
+
 	// Resistors
 	public static final RegistryObject<BlockResistor> Resistor1W = registerBlock("resistor_1", () -> new BlockResistor(1));
 	public static final RegistryObject<BlockResistor> Resistor5W = registerBlock("resistor_5", () -> new BlockResistor(5));

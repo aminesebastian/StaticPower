@@ -80,7 +80,7 @@ public class CableBoundsCache {
 		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(world, pos);
 		for (Direction dir : Direction.values()) {
 			if ((cable != null && cable.hasAttachment(dir)) || CableUtilities.getConnectionState(world, pos, dir) == CableConnectionType.CABLE
-					|| CableUtilities.getConnectionState(world, pos, dir) == CableConnectionType.TILE_ENTITY) {
+					|| CableUtilities.getConnectionState(world, pos, dir) == CableConnectionType.DESTINATION) {
 				if (!cable.isSideDisabled(dir)) {
 					output = Shapes.or(output, CableExtensionShapes.get(dir));
 				}
@@ -176,7 +176,7 @@ public class CableBoundsCache {
 
 			// If the side has neither an attachment, nor a cover, but is still attached to
 			// a tile entity, check the default attachment.
-			if (CableUtilities.getConnectionState(entity.level, pos, dir) == CableConnectionType.TILE_ENTITY && cable.getCover(dir).isEmpty()
+			if (CableUtilities.getConnectionState(entity.level, pos, dir) == CableConnectionType.DESTINATION && cable.getCover(dir).isEmpty()
 					&& cable.getAttachment(dir).isEmpty()) {
 				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, ItemStack.EMPTY, dir), dir,
 						CableBoundsHoverType.DEFAULT_ATTACHMENT));
@@ -185,7 +185,7 @@ public class CableBoundsCache {
 			// Finally, put the bounds for the cable. Include the bounds for the default
 			// attachment too if an attachment does not exist.
 			if (CableUtilities.getConnectionState(entity.level, pos, dir) == CableConnectionType.CABLE
-					|| CableUtilities.getConnectionState(entity.level, pos, dir) == CableConnectionType.TILE_ENTITY) {
+					|| CableUtilities.getConnectionState(entity.level, pos, dir) == CableConnectionType.DESTINATION) {
 				bounds.add(new CableHoverCheckRequest(CableExtensionShapes.get(dir), dir, CableBoundsHoverType.CABLE));
 			}
 
@@ -322,13 +322,13 @@ public class CableBoundsCache {
 					}
 					break;
 				default:
-					if (cable.getConnectionTypeOnSide(hoveredDirection) == CableConnectionType.TILE_ENTITY) {
+					if (cable.getConnectionTypeOnSide(hoveredDirection) == CableConnectionType.DESTINATION) {
 						shape = getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, null, hoveredDirection);
 					}
 				}
 
 				// Also include the extension shape if required.
-				if (cable.getConnectionTypeOnSide(hoveredDirection) == CableConnectionType.TILE_ENTITY || cable.hasAttachment(hoveredDirection)) {
+				if (cable.getConnectionTypeOnSide(hoveredDirection) == CableConnectionType.DESTINATION || cable.hasAttachment(hoveredDirection)) {
 					shape = Shapes.or(shape, CableExtensionShapes.get(hoveredDirection));
 				}
 			}
@@ -339,7 +339,7 @@ public class CableBoundsCache {
 						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getCover(dir), dir));
 					} else if (cable.hasAttachment(dir)) {
 						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getAttachment(dir), dir));
-					} else if (cable.getConnectionTypeOnSide(dir) == CableConnectionType.TILE_ENTITY && !cable.hasAttachment(dir)) {
+					} else if (cable.getConnectionTypeOnSide(dir) == CableConnectionType.DESTINATION && !cable.hasAttachment(dir)) {
 						shape = Shapes.or(shape, getAttachmentShapeForSide(cable.getLevel(), pos, null, dir));
 					}
 				}

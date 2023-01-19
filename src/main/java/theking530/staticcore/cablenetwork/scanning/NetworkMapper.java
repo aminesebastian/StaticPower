@@ -140,7 +140,10 @@ public class NetworkMapper {
 				destinations.put(location, wrapper);
 			}
 		} else {
-			destinations.get(location).addConnectedCable(scanningCable.getPos(), sideOfCable);
+			DestinationWrapper wrapper = destinations.get(location);
+			if (wrapper.hasSupportedDestinationTypes(sideOfCable.getOpposite(), scanningCable)) {
+				wrapper.addConnectedCable(scanningCable.getPos(), sideOfCable);
+			}
 		}
 	}
 

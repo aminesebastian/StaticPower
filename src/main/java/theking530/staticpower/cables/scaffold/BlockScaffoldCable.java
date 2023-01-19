@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,9 +24,9 @@ public class BlockScaffoldCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		BakedModel extensionModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_SCAFFOLD_EXTENSION);
-		BakedModel straightModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_SCAFFOLD_STRAIGHT);
-		BakedModel attachmentModel = event.getModels().get(StaticPowerAdditionalModels.CABLE_SCAFFOLD_ATTACHMENT);
+		ResourceLocation extensionModel = StaticPowerAdditionalModels.CABLE_SCAFFOLD_EXTENSION;
+		ResourceLocation straightModel = StaticPowerAdditionalModels.CABLE_SCAFFOLD_STRAIGHT;
+		ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_SCAFFOLD_ATTACHMENT;
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}

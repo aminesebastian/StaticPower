@@ -1,4 +1,4 @@
-package theking530.staticpower.client.rendering.items;
+ package theking530.staticpower.client.rendering.items;
 
 import java.util.ArrayList;
 import java.util.Collections;

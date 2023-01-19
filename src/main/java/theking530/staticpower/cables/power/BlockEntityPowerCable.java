@@ -17,45 +17,18 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityPowerCable extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_basic",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableBasic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_advanced",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableAdvanced);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_static",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableStatic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_energized",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableEnergized);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_lumum",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableLumum);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_creative",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.PowerCableCreative);
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_basic",
+			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.InsulatedPowerCableBasic, ModBlocks.InsulatedPowerCableAdvanced,
+			ModBlocks.InsulatedPowerCableStatic, ModBlocks.InsulatedPowerCableEnergized, ModBlocks.InsulatedPowerCableLumum, ModBlocks.InsulatedPowerCableCreative);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_BASIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_industrial_basic",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableBasic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_ADVANCED = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
-			"cable_power_industrial_advanced", (allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableAdvanced);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_STATIC = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
-			"cable_power_industrial_static", (allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableStatic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
-			"cable_power_industrial_energized", (allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableEnergized);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_LUMUM = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_industrial_lumum",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableLumum);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL_CREATIVE = new BlockEntityTypeAllocator<BlockEntityPowerCable>(
-			"cable_power_industrial_creative", (allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableCreative);
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_industrial_power_basic",
+			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableBasic, ModBlocks.IndustrialPowerCableAdvanced,
+			ModBlocks.IndustrialPowerCableStatic, ModBlocks.IndustrialPowerCableEnergized, ModBlocks.IndustrialPowerCableLumum, ModBlocks.IndustrialPowerCableCreative);
 
 	public final PowerCableComponent powerCableComponent;
 	public final AABB damageRadius;
+	private final boolean isInsulated;
 
 	public BlockEntityPowerCable(BlockEntityTypeAllocator<BlockEntityPowerCable> allocator, BlockPos pos, BlockState state, boolean isIndustrial) {
 		super(allocator, pos, state);
@@ -65,17 +38,31 @@ public class BlockEntityPowerCable extends BlockEntityBase {
 		registerComponent(powerCableComponent = new PowerCableComponent("PowerCableComponent", isIndustrial, StaticPowerVoltage.BONKERS, maxPower, resistance));
 
 		damageRadius = new AABB(pos.getX() + 0.25, pos.getY() + 0.25, pos.getZ() + 0.25, pos.getX() + 0.75, pos.getY() + 0.75, pos.getZ() + 0.75);
+
+		if (state.getBlock() instanceof BlockPowerCable) {
+			BlockPowerCable powerCableBlock = (BlockPowerCable) state.getBlock();
+			isInsulated = powerCableBlock.isInsulated();
+		} else {
+			isInsulated = false;
+		}
 	}
 
 	@Override
 	public void process() {
-		if (!getLevel().isClientSide()) {
-			double averageCurrent = powerCableComponent.getEnergyTracker().getAverageCurrent();
-			if (averageCurrent >= StaticPowerConfig.SERVER.electricalDamageThreshold.get()) {
-				StaticPowerEnergyUtilities.applyElectricalDamageInArea(LivingEntity.class, level, damageRadius, averageCurrent,
-						StaticPowerConfig.SERVER.electricalDamageMultiplier.get());
+		if (!isInsulated()) {
+			if (!getLevel().isClientSide() && powerCableComponent.getEnergyTracker() != null) {
+				double averageCurrent = powerCableComponent.getEnergyTracker().getAverageCurrent();
+				if (averageCurrent >= StaticPowerConfig.SERVER.electricalDamageThreshold.get()) {
+					StaticPowerEnergyUtilities.applyElectricalDamageInArea(LivingEntity.class, level, damageRadius, averageCurrent,
+							StaticPowerConfig.SERVER.electricalDamageMultiplier.get());
+				}
 			}
 		}
+
+	}
+
+	public boolean isInsulated() {
+		return isInsulated;
 	}
 
 	@Override

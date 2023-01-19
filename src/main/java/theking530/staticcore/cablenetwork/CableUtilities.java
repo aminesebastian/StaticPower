@@ -54,7 +54,7 @@ public class CableUtilities {
 		for (Direction dir : Direction.values()) {
 			if (!renderingState.isDisabledOnSide(dir) && renderingState.getConnectionType(dir) == CableConnectionType.CABLE) {
 				cableConnections++;
-			} else if (renderingState.getConnectionType(dir) == CableConnectionType.TILE_ENTITY) {
+			} else if (renderingState.getConnectionType(dir) == CableConnectionType.DESTINATION) {
 				return false;
 			}
 		}

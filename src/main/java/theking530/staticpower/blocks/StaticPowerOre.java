@@ -77,4 +77,9 @@ public class StaticPowerOre extends StaticPowerBlock {
 		}
 		return 0;
 	}
+
+	@Override
+	public BlockDropType getBlockDropType() {
+		return BlockDropType.CUSTOM;
+	}
 }
