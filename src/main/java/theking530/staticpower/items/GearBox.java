@@ -6,10 +6,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.registries.RegistryObject;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.GearBoxModel;
 
-public class GearBox extends StaticPowerItem implements ICustomModelSupplier {
+public class GearBox extends StaticPowerItem implements ICustomModelProvider {
 	public final RegistryObject<StaticPowerItem> baseGearItem;
 
 	public GearBox(RegistryObject<StaticPowerItem> baseGearItem) {
@@ -23,7 +23,7 @@ public class GearBox extends StaticPowerItem implements ICustomModelSupplier {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new GearBoxModel(baseGearItem.get());
 	}
 }

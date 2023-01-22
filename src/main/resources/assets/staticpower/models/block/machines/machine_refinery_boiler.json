@@ -1,7 +1,0 @@
-{
-    "parent": "staticpower:block/machines/base_refinery_block",
-    "textures": {
-		"side_overlay": "staticpower:blocks/machines/machine_refinery_boiler_face",
-		"io_frame": "staticpower:blocks/empty_texture"
-    }
-}

@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=east,is_on=false": {
+      "model": "staticpower:block/machine_refinery_heat_vent_off"
+    },
+    "facing=east,is_on=true": {
+      "model": "staticpower:block/machine_refinery_heat_vent_on"
+    },
+    "facing=north,is_on=false": {
+      "model": "staticpower:block/machine_refinery_heat_vent_off"
+    },
+    "facing=north,is_on=true": {
+      "model": "staticpower:block/machine_refinery_heat_vent_on"
+    },
+    "facing=south,is_on=false": {
+      "model": "staticpower:block/machine_refinery_heat_vent_off"
+    },
+    "facing=south,is_on=true": {
+      "model": "staticpower:block/machine_refinery_heat_vent_on"
+    },
+    "facing=west,is_on=false": {
+      "model": "staticpower:block/machine_refinery_heat_vent_off"
+    },
+    "facing=west,is_on=true": {
+      "model": "staticpower:block/machine_refinery_heat_vent_on"
+    }
+  }
+}

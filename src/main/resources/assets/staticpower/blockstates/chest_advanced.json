@@ -1,8 +1,0 @@
-{
-    "variants": {
-		"facing=north": { "model": "staticpower:block/chests/advanced" },
-        "facing=south": { "model": "staticpower:block/chests/advanced", "y": 180 },
-        "facing=west":  { "model": "staticpower:block/chests/advanced", "y": 270 },
-        "facing=east":  { "model": "staticpower:block/chests/advanced", "y": 90 }
-    }
-}

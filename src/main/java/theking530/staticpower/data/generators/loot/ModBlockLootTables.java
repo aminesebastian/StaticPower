@@ -16,8 +16,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.registries.RegistryObject;
-import theking530.staticpower.blocks.IBlockLootTableSupplier;
-import theking530.staticpower.blocks.IBlockLootTableSupplier.BlockDropType;
+import theking530.staticcore.block.IBlockLootTableProvider;
+import theking530.staticcore.block.IBlockLootTableProvider.BlockDropType;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 
@@ -26,7 +26,7 @@ public class ModBlockLootTables extends BlockLoot {
 	@Override
 	protected void addTables() {
 		for (Block block : getKnownBlocks()) {
-			IBlockLootTableSupplier provider = (IBlockLootTableSupplier) block;
+			IBlockLootTableProvider provider = (IBlockLootTableProvider) block;
 			BlockDropType dropType = provider.getBlockDropType();
 			if (dropType == BlockDropType.SELF) {
 				dropSelf(block);
@@ -105,8 +105,8 @@ public class ModBlockLootTables extends BlockLoot {
 
 	protected Stream<Block> getApplicableBlocks() {
 		return ModBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get).filter((block) -> {
-			if (block instanceof IBlockLootTableSupplier) {
-				IBlockLootTableSupplier provider = (IBlockLootTableSupplier) block;
+			if (block instanceof IBlockLootTableProvider) {
+				IBlockLootTableProvider provider = (IBlockLootTableProvider) block;
 				BlockDropType dropType = provider.getBlockDropType();
 				return dropType != BlockDropType.NONE;
 			}

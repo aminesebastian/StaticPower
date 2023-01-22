@@ -1,7 +1,0 @@
-{
-	"parent": "staticpower:block/chests/base_chest",
-    "textures": {
-        "particle": "staticpower:entity/chest/energized_chest",
-        "texture": "staticpower:entity/chest/energized_chest"
-    }
-}

@@ -36,7 +36,7 @@ public class BlockBundledRedstoneCable extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		ResourceLocation straightModel = StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_STRAIGHT;
 		ResourceLocation extensionModel = StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_EXTENSION;
 		ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_BUNDLED_REDSTONE_ATTACHMENT;

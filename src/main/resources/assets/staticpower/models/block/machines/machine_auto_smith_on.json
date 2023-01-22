@@ -1,6 +1,0 @@
-{
-    "parent": "staticpower:block/machines/machine_auto_smith",
-    "textures": {
-		"front_overlay": "staticpower:blocks/machines/auto_smith_on"
-    }
-}

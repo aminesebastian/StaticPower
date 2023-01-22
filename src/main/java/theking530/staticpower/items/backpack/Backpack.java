@@ -33,7 +33,7 @@ import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
@@ -42,7 +42,7 @@ import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class Backpack extends StaticPowerItem implements ICustomModelSupplier {
+public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 	public enum BackpackMode {
 		DEFAULT("gui.staticpower.backpack_mode.default"), REFIL("gui.staticpower.backpack_mode.refill"), LOCKED("gui.staticpower.backpack_mode.locked"),
 		RELOAD("gui.staticpower.backpack_mode.reload");
@@ -295,7 +295,7 @@ public class Backpack extends StaticPowerItem implements ICustomModelSupplier {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		// TODO: Implement open model format.
 		return new BackpackItemModel(existingModel, null);
 	}

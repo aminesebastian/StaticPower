@@ -1,6 +1,0 @@
-{
-    "parent": "staticpower:block/machines/machine_caster",
-	"textures": {
-		"front_overlay": "staticpower:blocks/machines/caster_face_on"
-    }
-}

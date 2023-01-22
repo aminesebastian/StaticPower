@@ -19,11 +19,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.ServerRackModel;
 
-public class BlockDigistoreServerRack extends StaticPowerRotateableBlockEntityBlock implements ICustomModelSupplier {
+public class BlockDigistoreServerRack extends StaticPowerRotateableBlockEntityBlock implements ICustomModelProvider {
 
 	public BlockDigistoreServerRack() {
 		super(Block.Properties.of(Material.METAL));
@@ -31,7 +31,7 @@ public class BlockDigistoreServerRack extends StaticPowerRotateableBlockEntityBl
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new ServerRackModel(existingModel);
 	}
 

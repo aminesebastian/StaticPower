@@ -24,12 +24,12 @@ import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
 import theking530.api.IBreakSerializeable;
 import theking530.api.energy.StaticPowerStorage;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.gui.text.PowerTooltips;
-import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 
-public abstract class StaticPowerMachineBlock extends StaticPowerRotateableBlockEntityBlock implements ICustomModelSupplier {
+public abstract class StaticPowerMachineBlock extends StaticPowerRotateableBlockEntityBlock implements ICustomModelProvider {
 	/**
 	 * This property is used by blocks that can be turned on and off and change
 	 * their model accordingly.
@@ -103,7 +103,7 @@ public abstract class StaticPowerMachineBlock extends StaticPowerRotateableBlock
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, BakingCompleted event) {
 		return new DefaultMachineBakedModel(existingModel);
 	}
 

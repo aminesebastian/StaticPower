@@ -1,4 +1,4 @@
-// 1.19.2	2023-01-19T01:23:32.3986333	LootTables
+// 1.19.2	2023-01-20T01:31:11.8632188	LootTables
 5f1c4bd7d919817df3c517022b2bb5c6d61b5d9d data/staticpower/loot_tables/blocks/alloy_furnace.json
 ec0346cd8a4b004d8afe4ac900233eb8bfd496e4 data/staticpower/loot_tables/blocks/automatic_placer.json
 f782be601a12395d5e5c205629f67cdcf8579ac0 data/staticpower/loot_tables/blocks/battery_block_advanced.json
@@ -313,4 +313,4 @@ a2356ca5e8d5eeda3e68dd4005fd784798954cb7 data/staticpower/loot_tables/blocks/wir
 89ee9d89979008c48b3a63b57a084f9cc1ef6ef9 data/staticpower/loot_tables/blocks/wire_terminal_lv.json
 63a02005b757d69fc6c57db166d21ea77d90116a data/staticpower/loot_tables/blocks/wire_terminal_mv.json
 35e8b0487db35e6704eafcf5110a481f60d718e9 data/staticpower/loot_tables/entities/enox.json
-e949bfa2f0dc60345f9225557cd12df2581ca4a0 data/staticpower/loot_tables/entities/smeep.json
+f8e451d60488c43223212c3a79eb7f4c31fb4152 data/staticpower/loot_tables/entities/smeep.json

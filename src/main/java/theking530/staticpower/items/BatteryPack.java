@@ -25,12 +25,12 @@ import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.BatteryPackItemModel;
 
-public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustomModelSupplier {
+public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustomModelProvider {
 	private static final String ACTIVATED_TAG = "activated";
 	public final ResourceLocation tier;
 
@@ -146,7 +146,7 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new BatteryPackItemModel(existingModel);
 	}
 

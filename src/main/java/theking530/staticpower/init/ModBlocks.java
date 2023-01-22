@@ -121,7 +121,7 @@ public class ModBlocks {
 	// Decorative
 	public static final RegistryObject<Lamp> StaticLamp = registerBlock("lamp_static", () -> new Lamp());
 	public static final RegistryObject<Lamp> EnergizedLamp = registerBlock("lamp_energized", () -> new Lamp());
-	public static final RegistryObject<Lamp> LumumLam = registerBlock("lamp_lumum", () -> new Lamp());
+	public static final RegistryObject<Lamp> LumumLamp = registerBlock("lamp_lumum", () -> new Lamp());
 	public static final RegistryObject<StaticPowerGlassBlock> ObsidianGlass = registerBlock("glass_obsidian", () -> new StaticPowerGlassBlock());
 	public static final RegistryObject<StaticPowerBlock> SmeepWool = registerBlock("smeep_wool", () -> new StaticPowerBlock(Properties.copy(Blocks.LIME_WOOL)));
 
@@ -277,8 +277,6 @@ public class ModBlocks {
 	public static final RegistryObject<BlockTank> CreativeTank = registerBlock("tank_creative", () -> new BlockTank(StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<PumpTube> PumpTube = registerBlock("pump_tube", () -> new PumpTube());
-	// public static final RegistryObject<BlockPump> IronPump =
-	// registerBlock("pump_iron", () -> new BlockPump(StaticPowerTiers.IRON));
 	public static final RegistryObject<BlockPump> BasicPump = registerBlock("pump_basic", () -> new BlockPump(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BlockPump> AdvancedPump = registerBlock("pump_advanced", () -> new BlockPump(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<BlockPump> StaticPump = registerBlock("pump_static", () -> new BlockPump(StaticPowerTiers.STATIC));
@@ -306,7 +304,9 @@ public class ModBlocks {
 	public static final RegistryObject<BlockCrucible> Crucible = registerBlock("machine_crucible", () -> new BlockCrucible());
 	public static final RegistryObject<BlockSqueezer> Squeezer = registerBlock("machine_squeezer", () -> new BlockSqueezer());
 	public static final RegistryObject<BlockBottler> Bottler = registerBlock("machine_bottler", () -> new BlockBottler());
+	
 	public static final RegistryObject<BlockSolderingTable> SolderingTable = registerBlock("soldering_table", () -> new BlockSolderingTable());
+	
 	public static final RegistryObject<BlockAutoSolderingTable> AutoSolderingTable = registerBlock("machine_industrial_soldering_table", () -> new BlockAutoSolderingTable());
 	public static final RegistryObject<BlockAutoCraftingTable> AutoCraftingTable = registerBlock("machine_industrial_crafting_table", () -> new BlockAutoCraftingTable());
 	public static final RegistryObject<BlockFluidInfuser> FluidInfuser = registerBlock("machine_fluid_infuser", () -> new BlockFluidInfuser());
@@ -324,11 +324,13 @@ public class ModBlocks {
 	public static final RegistryObject<BlockTumbler> Tumbler = registerBlock("machine_tumbler", () -> new BlockTumbler());
 	public static final RegistryObject<BlockTurbine> Turbine = registerBlock("machine_turbine", () -> new BlockTurbine());
 	public static final RegistryObject<BlockPackager> Packager = registerBlock("machine_packager", () -> new BlockPackager());
+	
 	public static final RegistryObject<BlockExperienceHopper> ExperienceHopper = registerBlock("experience_hopper", () -> new BlockExperienceHopper());
 	public static final RegistryObject<BlockCauldron> RustyCauldron = registerBlock("rusty_cauldron", () -> new BlockCauldron(false));
 	public static final RegistryObject<BlockCauldron> CleanCauldron = registerBlock("clean_cauldron", () -> new BlockCauldron(true));
 	public static final RegistryObject<BlockDirectDropper> DirectDropper = registerBlock("direct_dropper", () -> new BlockDirectDropper());
 	public static final RegistryObject<BlockAutomaticPlacer> AutomaticPlacer = registerBlock("automatic_placer", () -> new BlockAutomaticPlacer());
+	
 	public static final RegistryObject<BlockEnchanter> Enchanter = registerBlock("machine_enchanter", () -> new BlockEnchanter());
 
 	public static final RegistryObject<BlockRandomItemGenerator> RandomItemGenerator = registerBlock("random_item_generator", () -> new BlockRandomItemGenerator(null));

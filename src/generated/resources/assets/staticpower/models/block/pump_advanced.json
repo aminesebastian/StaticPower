@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/base_models/pump_block",
+  "textures": {
+    "particle": "staticpower:blocks/machines/pumps/pump_advanced",
+    "pump": "staticpower:blocks/machines/pumps/pump_advanced"
+  }
+}

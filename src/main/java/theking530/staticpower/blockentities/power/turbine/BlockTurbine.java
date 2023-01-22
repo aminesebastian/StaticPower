@@ -34,7 +34,7 @@ public class BlockTurbine extends StaticPowerMachineBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new DefaultMachineBakedModel(existingModel).setSideConfigVisiblity(Direction.UP, false).setSideConfigVisiblity(Direction.DOWN, false);
 	}
 }

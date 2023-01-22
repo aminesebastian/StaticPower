@@ -1,8 +1,0 @@
-{
-	"parent": "staticpower:block/power/resistor/resistor_1000",
-	"textures": {
-		"band_1": "staticpower:blocks/power/resistor/5",
-		"band_2": "staticpower:blocks/power/resistor/0",
-		"band_3": "staticpower:blocks/power/resistor/0"
-	}
-}

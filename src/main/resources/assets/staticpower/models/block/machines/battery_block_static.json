@@ -1,8 +1,0 @@
-{
-	"parent": "staticpower:block/machines/battery_block_basic",
-	"textures": {
-		"particle": "staticpower:blocks/machines/batteries/battery_block_static",
-		"base": "staticpower:blocks/machines/sides/static_machine_top",
-		"battery_extras": "staticpower:blocks/machines/batteries/battery_block_static"
-	}
-}

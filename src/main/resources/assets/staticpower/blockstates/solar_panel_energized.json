@@ -1,8 +1,0 @@
-{
-    "variants": {
-		"facing=north": { "model": "staticpower:block/power/solar_panels/solar_panel_energized" },
-        "facing=south": { "model": "staticpower:block/power/solar_panels/solar_panel_energized", "y": 180 },
-        "facing=west":  { "model": "staticpower:block/power/solar_panels/solar_panel_energized", "y": 270 },
-        "facing=east":  { "model": "staticpower:block/power/solar_panels/solar_panel_energized", "y": 90 }
-    }
-}

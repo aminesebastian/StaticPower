@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "side": "staticpower:blocks/decorative/farmland_lumum_side",
+    "top": "staticpower:blocks/decorative/farmland_lumum_top"
+  }
+}

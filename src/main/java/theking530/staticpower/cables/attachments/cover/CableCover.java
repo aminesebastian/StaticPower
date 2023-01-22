@@ -22,13 +22,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.cablenetwork.CableUtilities;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.client.rendering.CoverBuilder;
 import theking530.staticpower.client.rendering.items.CoverItemModelProvider;
 
-public class CableCover extends Item implements ICustomModelSupplier {
+public class CableCover extends Item implements ICustomModelProvider {
 	public static final String COVER_BLOCK_STATE_TAG = "target";
 	public static final MutableComponent COVER_TRANSLATION_COMPONENT = Component.translatable("item.staticpower.cover");
 
@@ -96,7 +96,7 @@ public class CableCover extends Item implements ICustomModelSupplier {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new CoverItemModelProvider(existingModel, new CoverBuilder());
 	}
 }

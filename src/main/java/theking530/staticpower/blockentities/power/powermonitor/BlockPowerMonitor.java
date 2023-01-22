@@ -51,7 +51,7 @@ public class BlockPowerMonitor extends StaticPowerMachineBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		DefaultMachineBakedModel model = new DefaultMachineBakedModel(existingModel);
 		model.setSideOffset(BlockSide.TOP, new Vector3f(0, -3, 0));
 		model.setSideOffset(BlockSide.BOTTOM, new Vector3f(0, -3, 0));

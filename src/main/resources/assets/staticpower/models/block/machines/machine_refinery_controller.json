@@ -1,8 +1,0 @@
-{
-    "parent": "staticpower:block/machines/base_blocks/machine_block_industrial",
-    "textures": {
-		"front": "staticpower:blocks/machines/sides/industrial_machine_front",
-		"front_overlay": "staticpower:blocks/machines/refinery_controller_face",		
-		"io_frame": "staticpower:blocks/empty_texture"
-    }
-}

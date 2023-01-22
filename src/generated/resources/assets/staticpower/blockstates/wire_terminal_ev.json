@@ -1,0 +1,29 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "staticpower:block/wire_terminal_ev",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "staticpower:block/wire_terminal_ev",
+      "x": -90,
+      "y": -90
+    },
+    "facing=north": {
+      "model": "staticpower:block/wire_terminal_ev",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "staticpower:block/wire_terminal_ev",
+      "x": -90
+    },
+    "facing=up": {
+      "model": "staticpower:block/wire_terminal_ev"
+    },
+    "facing=west": {
+      "model": "staticpower:block/wire_terminal_ev",
+      "x": -90,
+      "y": 90
+    }
+  }
+}

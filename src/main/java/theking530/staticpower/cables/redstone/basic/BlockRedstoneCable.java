@@ -59,7 +59,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		if (color.equals("naked")) {
 			ResourceLocation straightModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT;
 			ResourceLocation extensionModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION;

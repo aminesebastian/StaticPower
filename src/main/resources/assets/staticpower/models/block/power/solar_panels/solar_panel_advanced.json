@@ -1,7 +1,0 @@
-{
-	"parent": "staticpower:block/power/solar_panels/solar_panel_basic",
-	"textures": {
-		"panel": "staticpower:blocks/machines/solar_panel/solar_panel_top_advanced",
-		"particle": "staticpower:blocks/machines/solar_panel/solar_panel_top_advanced"
-	}
-}

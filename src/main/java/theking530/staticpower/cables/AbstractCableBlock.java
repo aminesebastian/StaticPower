@@ -32,8 +32,8 @@ import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHoverType;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.cablenetwork.CableUtilities;
-import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
@@ -41,7 +41,7 @@ import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
+public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock implements ICustomModelProvider {
 	public final CableBoundsCache cableBoundsCache;
 	public final float coverHoleSize;
 

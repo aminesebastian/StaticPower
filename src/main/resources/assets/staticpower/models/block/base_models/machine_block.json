@@ -1,0 +1,7 @@
+{
+	"parent": "staticpower:block/base_models/machine_block_basic",
+	"textures": {
+		"front": "staticpower:blocks/machines/sides/basic_machine_side",
+		"io_frame": "staticpower:blocks/empty_texture"
+	}
+}

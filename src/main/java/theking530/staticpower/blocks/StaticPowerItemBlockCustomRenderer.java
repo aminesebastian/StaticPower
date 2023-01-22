@@ -15,10 +15,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.ItemCustomRendererPassthroughModel;
 
-public class StaticPowerItemBlockCustomRenderer extends StaticPowerItemBlock implements ICustomModelSupplier {
+public class StaticPowerItemBlockCustomRenderer extends StaticPowerItemBlock implements ICustomModelProvider {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerItemBlockCustomRenderer.class);
 	private final BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> renderer;
 
@@ -43,7 +43,7 @@ public class StaticPowerItemBlockCustomRenderer extends StaticPowerItemBlock imp
 	}
 
 	@Override
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new ItemCustomRendererPassthroughModel(existingModel);
 	}
 }

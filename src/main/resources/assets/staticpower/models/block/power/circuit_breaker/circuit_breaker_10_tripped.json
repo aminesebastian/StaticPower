@@ -1,6 +1,0 @@
-{
-	"parent": "staticpower:block/power/circuit_breaker/circuit_breaker_2_tripped",
-	"textures": {
-		"label": "staticpower:blocks/power/circuit_breaker/10"
-	}
-}

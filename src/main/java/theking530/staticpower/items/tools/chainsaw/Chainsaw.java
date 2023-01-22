@@ -57,8 +57,8 @@ import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.api.multipartitem.AbstractMultiPartSlot;
 import theking530.api.multipartitem.MultiPartSlots;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
@@ -71,7 +71,7 @@ import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSupplier {
+public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelProvider {
 	private static final List<AbstractMultiPartSlot> PARTS = new ArrayList<AbstractMultiPartSlot>();
 	private static final int MAX_RECURSION = 100;
 	public final ResourceLocation tier;
@@ -382,7 +382,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new ChainsawItemModel(existingModel);
 	}
 

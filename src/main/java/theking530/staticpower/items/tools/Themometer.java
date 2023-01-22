@@ -32,7 +32,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.ThermometerItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -41,7 +41,7 @@ import theking530.staticpower.data.crafting.wrappers.thermalconductivity.Thermal
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.RaytracingUtilities;
 
-public class Themometer extends StaticPowerItem implements ICustomModelSupplier {
+public class Themometer extends StaticPowerItem implements ICustomModelProvider {
 
 	public Themometer() {
 		super(new Item.Properties().stacksTo(1));
@@ -112,7 +112,7 @@ public class Themometer extends StaticPowerItem implements ICustomModelSupplier 
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new ThermometerItemModel(existingModel);
 	}
 

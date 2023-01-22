@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "staticpower:block/tank_static",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "staticpower:block/tank_static"
+    },
+    "facing=south": {
+      "model": "staticpower:block/tank_static",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "staticpower:block/tank_static",
+      "y": 270
+    }
+  }
+}

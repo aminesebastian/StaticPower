@@ -1,8 +1,0 @@
-{
-	"parent": "staticpower:block/machines/battery_block_basic",
-	"textures": {
-		"particle": "staticpower:blocks/machines/batteries/battery_block_lumum",
-		"base": "staticpower:blocks/machines/sides/lumum_machine_top",
-		"battery_extras": "staticpower:blocks/machines/batteries/battery_block_lumum"
-	}
-}

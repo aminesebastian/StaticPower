@@ -23,7 +23,7 @@ public class BlockScaffoldCable extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		ResourceLocation extensionModel = StaticPowerAdditionalModels.CABLE_SCAFFOLD_EXTENSION;
 		ResourceLocation straightModel = StaticPowerAdditionalModels.CABLE_SCAFFOLD_STRAIGHT;
 		ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_SCAFFOLD_ATTACHMENT;

@@ -1,6 +1,0 @@
-{
-    "variants": {
-		"is_on=false": { "model": "staticpower:block/machines/machine_refinery_fluid_input" },
-        "is_on=true":  { "model": "staticpower:block/machines/machine_refinery_fluid_input_on" }
-    }
-}

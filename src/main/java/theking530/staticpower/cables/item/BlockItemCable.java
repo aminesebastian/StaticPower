@@ -52,7 +52,7 @@ public class BlockItemCable extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		ResourceLocation extensionModel = null;
 		ResourceLocation straightModel = null;
 		ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_ITEM_DEFAULT_ATTACHMENT;

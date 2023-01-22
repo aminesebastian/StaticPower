@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "staticpower:blocks/machines/chest_vacuum",
-		"particle": "staticpower:blocks/machines/chest_vacuum"
+		"particle": "staticpower:blocks/machines/chest_vacuum",
+		"texture": "staticpower:blocks/machines/chest_vacuum"
 	},
 	"elements": [
 		{
@@ -12,12 +12,12 @@
 			"to": [13, 13, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [10, 10, 10]},
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#texture"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#texture"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#texture"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#texture"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#texture"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#texture"}
 			}
 		}
 	],
@@ -50,13 +50,5 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	},
-	"groups": [
-		{
-			"name": "Model",
-			"origin": [8, 8, 8],
-			"color": 0,
-			"children": [0]
-		}
-	]
+	}
 }

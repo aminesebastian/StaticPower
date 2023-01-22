@@ -1,6 +1,0 @@
-{
-    "parent": "staticpower:block/machines/machine_crucible",
-	"textures": {
-		"front_overlay": "staticpower:blocks/machines/crucible_face_on"
-    }
-}

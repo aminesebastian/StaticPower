@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "is_on=false": {
+      "model": "staticpower:block/machine_refinery_boiler_off"
+    },
+    "is_on=true": {
+      "model": "staticpower:block/machine_refinery_boiler_on"
+    }
+  }
+}

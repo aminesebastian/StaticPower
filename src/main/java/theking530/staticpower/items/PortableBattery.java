@@ -8,11 +8,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.PortableBatteryItemModel;
 
-public class PortableBattery extends StaticPowerEnergyStoringItem implements ICustomModelSupplier {
+public class PortableBattery extends StaticPowerEnergyStoringItem implements ICustomModelProvider {
 	public final ResourceLocation tier;
 
 	public PortableBattery(ResourceLocation tier) {
@@ -26,7 +26,7 @@ public class PortableBattery extends StaticPowerEnergyStoringItem implements ICu
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new PortableBatteryItemModel(existingModel);
 	}
 

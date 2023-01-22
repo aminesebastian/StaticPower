@@ -1,6 +1,0 @@
-{
-	"parent": "staticpower:block/machines/base_blocks/machine_block_lumum",
-	"textures": {
-		"front_overlay": "staticpower:blocks/machines/enchanter_face_off"
-	}
-}

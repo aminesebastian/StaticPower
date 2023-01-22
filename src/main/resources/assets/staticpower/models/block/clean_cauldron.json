@@ -1,7 +1,0 @@
-{
-	"parent":"staticpower:block/rusty_cauldron",
-	"textures": {
-		"0": "staticpower:blocks/clean_cauldron",
-		"particle": "staticpower:blocks/clean_cauldron"
-	}
-}

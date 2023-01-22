@@ -1,6 +1,0 @@
-{
-    "parent": "staticpower:block/machines/machine_vulcanizer",
-    "textures": {
-		"front_overlay": "staticpower:blocks/machines/vulcanizer_face_on"
-    }
-}

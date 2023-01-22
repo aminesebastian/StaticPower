@@ -14,12 +14,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.items.PatternCardItemModel;
 
-public class DigistorePatternCard extends StaticPowerItem implements ICustomModelSupplier {
+public class DigistorePatternCard extends StaticPowerItem implements ICustomModelProvider {
 	public static final String ENCODED_PATTERN_TAG = "pattern";
 
 	public DigistorePatternCard() {
@@ -108,7 +108,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		BakedModel encodedModel = event.getModels().get(StaticPowerAdditionalModels.DIGISTORE_PATTERN_CARD_ENCODED);
 		return new PatternCardItemModel(existingModel, encodedModel);
 	}

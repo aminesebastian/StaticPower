@@ -38,14 +38,14 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.ForgeRegistries;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplier {
+public class FluidCapsule extends StaticPowerItem implements ICustomModelProvider {
 	public final ResourceLocation tier;
 
 	public FluidCapsule(ResourceLocation tier) {
@@ -176,7 +176,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new FluidCapsuleItemModel(existingModel);
 	}
 

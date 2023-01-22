@@ -45,6 +45,7 @@ import theking530.api.IBreakSerializeable;
 import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
+import theking530.staticcore.block.IBlockLootTableProvider;
 import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
@@ -57,7 +58,7 @@ import theking530.staticpower.items.tools.StaticWrench;
  * @author Amine Sebastian
  *
  */
-public class StaticPowerBlock extends Block implements IItemBlockProvider, IBlockLootTableSupplier, IRenderLayerProvider, IWrenchable, ITooltipProvider, SimpleWaterloggedBlock {
+public class StaticPowerBlock extends Block implements IItemBlockProvider, IBlockLootTableProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider, SimpleWaterloggedBlock {
 	/**
 	 * Rotation property used by blocks who don't use {@link #HORIZONTAL_FACING} but
 	 * still need the option to rotate to either face X, Y, or Z. (Does not have to

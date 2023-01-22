@@ -1,8 +1,0 @@
-{
-    "variants": {
-		"facing=north": { "model": "staticpower:block/machines/battery_block_basic" },
-        "facing=south": { "model": "staticpower:block/machines/battery_block_basic", "y": 180 },
-        "facing=west":  { "model": "staticpower:block/machines/battery_block_basic", "y": 270 },
-        "facing=east":  { "model": "staticpower:block/machines/battery_block_basic", "y": 90 }
-    }
-}

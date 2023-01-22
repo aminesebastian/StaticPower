@@ -14,12 +14,12 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 import theking530.api.attributes.defenitions.AbstractHardenedDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerItem;
 
-public abstract class AbstractToolPart extends StaticPowerItem implements ICustomModelSupplier {
+public abstract class AbstractToolPart extends StaticPowerItem implements ICustomModelProvider {
 	protected final ResourceLocation tier;
 	protected final AttributableItemRenderLayers renderLayers;
 

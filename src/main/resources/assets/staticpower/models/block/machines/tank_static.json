@@ -1,7 +1,0 @@
-{
-	"parent": "staticpower:block/machines/tank_basic",
-	"textures": {
-		"0": "staticpower:blocks/machines/tank_static",
-		"particle": "staticpower:blocks/machines/tank_static"
-	}
-}

@@ -31,8 +31,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.initialization.StaticCoreRegistry;
-import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.productivity.ProductMetricTileRendererRegistry;
 import theking530.staticcore.productivity.ProductMetricTileRendererRegistry.RegisterEvent;
 import theking530.staticcore.productivity.product.fluid.FluidStackProductMetricRenderer;
@@ -153,10 +153,10 @@ public class StaticPowerModEventsClient {
 	public static void modelBakeEvent(ModelEvent.BakingCompleted event) {
 		// Loop through all the blocks, and check to see if they are a model supplier.
 		for (Block block : ForgeRegistries.BLOCKS) {
-			if (block instanceof ICustomModelSupplier) {
+			if (block instanceof ICustomModelProvider) {
 
 				// Get the supplier.
-				ICustomModelSupplier supplier = ((ICustomModelSupplier) block);
+				ICustomModelProvider supplier = ((ICustomModelProvider) block);
 
 				// Loop through all the blockstates and override their models if they have an
 				// override.
@@ -165,7 +165,7 @@ public class StaticPowerModEventsClient {
 						// Get the existing model.
 						ModelResourceLocation variantMRL = BlockModelShaper.stateToModelLocation(blockState);
 						BakedModel existingModel = event.getModels().get(variantMRL);
-						BakedModel override = supplier.getModelOverride(blockState, existingModel, event);
+						BakedModel override = supplier.getBlockModeOverride(blockState, existingModel, event);
 						if (override != null) {
 							event.getModels().put(variantMRL, override);
 						} else {
@@ -176,21 +176,21 @@ public class StaticPowerModEventsClient {
 			}
 		}
 		for (Item item : ForgeRegistries.ITEMS) {
-			if (item instanceof ICustomModelSupplier) {
+			if (item instanceof ICustomModelProvider) {
 
 				// Get the supplier.
-				ICustomModelSupplier supplier = ((ICustomModelSupplier) item);
+				ICustomModelProvider supplier = ((ICustomModelProvider) item);
 
 				if (supplier.hasModelOverride(null)) {
 					// Get the existing model.
 					ModelResourceLocation modelLocation = new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(item), "inventory");
-					BakedModel existingModel = supplier.getBaseModelOverride(event);
+					BakedModel existingModel = supplier.getItemModelOverride(event);
 					if (existingModel == null) {
 						existingModel = event.getModelManager().getModel(modelLocation);
 					}
 
 					if (existingModel != null) {
-						BakedModel override = supplier.getModelOverride(null, existingModel, event);
+						BakedModel override = supplier.getBlockModeOverride(null, existingModel, event);
 						event.getModels().put(modelLocation, override);
 					}
 				}

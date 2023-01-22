@@ -22,12 +22,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.HeatedItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.entities.anvilentity.AnvilForgeEntity;
 
-public class HeatedIngot extends StaticPowerItem implements ICustomModelSupplier {
+public class HeatedIngot extends StaticPowerItem implements ICustomModelProvider {
 	public static final int HEAT_LASTING_TIME = 400;
 	public static final String HEATED_TAG = "heated_time";
 	private final Supplier<Item> cooledVariantSupplier;
@@ -147,7 +147,7 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelSupplier
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new HeatedItemModel(existingModel);
 	}
 }

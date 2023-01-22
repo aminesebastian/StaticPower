@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=east,tripped=false,waterlogged=false": {
+      "model": "staticpower:block/circuit_breaker_50",
+      "y": 90
+    },
+    "facing=east,tripped=false,waterlogged=true": {
+      "model": "staticpower:block/circuit_breaker_50",
+      "y": 90
+    },
+    "facing=east,tripped=true,waterlogged=false": {
+      "model": "staticpower:block/circuit_breaker_50_tripped",
+      "y": 90
+    },
+    "facing=east,tripped=true,waterlogged=true": {
+      "model": "staticpower:block/circuit_breaker_50_tripped",
+      "y": 90
+    },
+    "facing=north,tripped=false,waterlogged=false": {
+      "model": "staticpower:block/circuit_breaker_50"
+    },
+    "facing=north,tripped=false,waterlogged=true": {
+      "model": "staticpower:block/circuit_breaker_50"
+    },
+    "facing=north,tripped=true,waterlogged=false": {
+      "model": "staticpower:block/circuit_breaker_50_tripped"
+    },
+    "facing=north,tripped=true,waterlogged=true": {
+      "model": "staticpower:block/circuit_breaker_50_tripped"
+    },
+    "facing=south,tripped=false,waterlogged=false": {
+      "model": "staticpower:block/circuit_breaker_50",
+      "y": 180
+    },
+    "facing=south,tripped=false,waterlogged=true": {
+      "model": "staticpower:block/circuit_breaker_50",
+      "y": 180
+    },
+    "facing=south,tripped=true,waterlogged=false": {
+      "model": "staticpower:block/circuit_breaker_50_tripped",
+      "y": 180
+    },
+    "facing=south,tripped=true,waterlogged=true": {
+      "model": "staticpower:block/circuit_breaker_50_tripped",
+      "y": 180
+    },
+    "facing=west,tripped=false,waterlogged=false": {
+      "model": "staticpower:block/circuit_breaker_50",
+      "y": 270
+    },
+    "facing=west,tripped=false,waterlogged=true": {
+      "model": "staticpower:block/circuit_breaker_50",
+      "y": 270
+    },
+    "facing=west,tripped=true,waterlogged=false": {
+      "model": "staticpower:block/circuit_breaker_50_tripped",
+      "y": 270
+    },
+    "facing=west,tripped=true,waterlogged=true": {
+      "model": "staticpower:block/circuit_breaker_50_tripped",
+      "y": 270
+    }
+  }
+}

@@ -15,11 +15,11 @@ import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.digistore.DigistoreInventoryCapabilityProvider;
 import theking530.api.digistore.IDigistoreInventory;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.DigistoreMonoCardItemModel;
 
-public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupplier {
+public class DigistoreMonoCard extends DigistoreCard implements ICustomModelProvider {
 
 	public DigistoreMonoCard(ResourceLocation tierType, ResourceLocation model) {
 		this(tierType, model, false);
@@ -66,7 +66,7 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new DigistoreMonoCardItemModel(existingModel);
 	}
 }

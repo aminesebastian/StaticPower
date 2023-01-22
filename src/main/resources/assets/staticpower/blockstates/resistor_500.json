@@ -1,8 +1,0 @@
-{
-    "variants": {
-		"facing=north": { "model": "staticpower:block/power/resistor/resistor_500" },
-        "facing=south": { "model": "staticpower:block/power/resistor/resistor_500", "y": 180 },
-        "facing=west":  { "model": "staticpower:block/power/resistor/resistor_500", "y": 270 },
-        "facing=east":  { "model": "staticpower:block/power/resistor/resistor_500", "y": 90 }
-    }
-}

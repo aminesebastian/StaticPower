@@ -1,0 +1,11 @@
+{
+  "parent": "staticpower:block/base_models/machine_base",
+  "textures": {
+    "front": "staticpower:blocks/machines/sides/lumum_machine_front",
+    "front_overlay": "staticpower:blocks/machines/enchanter",
+    "io_frame": "staticpower:blocks/machines/sides/lumum_io_frame",
+    "particle": "staticpower:blocks/machines/sides/lumum_machine_side",
+    "side": "staticpower:blocks/machines/sides/lumum_machine_side",
+    "top": "staticpower:blocks/machines/sides/lumum_machine_top"
+  }
+}

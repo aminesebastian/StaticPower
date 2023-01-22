@@ -28,7 +28,7 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		ResourceLocation extensionModel = StaticPowerAdditionalModels.CABLE_DIGISTORE_EXTENSION;
 		ResourceLocation straightModel = StaticPowerAdditionalModels.CABLE_DIGISTORE_STRAIGHT;
 		ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_DIGISTORE_ATTACHMENT;

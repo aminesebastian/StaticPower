@@ -32,7 +32,7 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
@@ -43,7 +43,7 @@ import theking530.staticpower.client.rendering.items.dynamic.ItemTankSpecialRend
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements ICustomModelSupplier {
+public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements ICustomModelProvider {
 
 	public BlockTank(ResourceLocation tier) {
 		super(tier, Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
@@ -144,7 +144,7 @@ public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements 
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		return new TankMachineBakedModel(existingModel);
 	}
 
