@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:squeezer",
+	"input": {
+		"item": "staticpower:fruit_energized"
+	},
+	"outputs": {
+		"item": {
+			"item": "staticpower:fruit_depleted",
+			"count": 1
+		},
+		"fluid": {
+			"fluid": "staticpower:fluid_energized",
+			"volume": 100
+		}
+	}
+}

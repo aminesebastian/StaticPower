@@ -133,9 +133,9 @@ public class ModBlocks {
 	public static final RegistryObject<EnergizedGrass> EnergizedGrass = registerBlock("grass_energized", () -> new EnergizedGrass());
 
 	// Plants
-	public static final RegistryObject<BaseSimplePlant> StaticPlant = registerBlock("plant_static", () -> new BaseSimplePlant(() -> ModItems.StaticSeeds.get()));
-	public static final RegistryObject<BaseSimplePlant> EnergizedPlant = registerBlock("plant_energized", () -> new BaseSimplePlant(() -> ModItems.EnergizedSeeds.get()));
-	public static final RegistryObject<BaseSimplePlant> LumumPlant = registerBlock("plant_lumum", () -> new BaseSimplePlant(() -> ModItems.LumumSeeds.get()));
+	public static final RegistryObject<BaseSimplePlant> StaticCrop = registerBlock("crop_static", () -> new BaseSimplePlant(() -> ModItems.StaticSeeds.get()));
+	public static final RegistryObject<BaseSimplePlant> EnergizedCrop = registerBlock("crop_energized", () -> new BaseSimplePlant(() -> ModItems.EnergizedSeeds.get()));
+	public static final RegistryObject<BaseSimplePlant> LumumCrop = registerBlock("crop_lumum", () -> new BaseSimplePlant(() -> ModItems.LumumSeeds.get()));
 
 	// Wood
 	public static final RegistryObject<StaticPowerRotatePillarBlock> StaticLog = registerBlock("log_static",
@@ -304,9 +304,9 @@ public class ModBlocks {
 	public static final RegistryObject<BlockCrucible> Crucible = registerBlock("machine_crucible", () -> new BlockCrucible());
 	public static final RegistryObject<BlockSqueezer> Squeezer = registerBlock("machine_squeezer", () -> new BlockSqueezer());
 	public static final RegistryObject<BlockBottler> Bottler = registerBlock("machine_bottler", () -> new BlockBottler());
-	
+
 	public static final RegistryObject<BlockSolderingTable> SolderingTable = registerBlock("soldering_table", () -> new BlockSolderingTable());
-	
+
 	public static final RegistryObject<BlockAutoSolderingTable> AutoSolderingTable = registerBlock("machine_industrial_soldering_table", () -> new BlockAutoSolderingTable());
 	public static final RegistryObject<BlockAutoCraftingTable> AutoCraftingTable = registerBlock("machine_industrial_crafting_table", () -> new BlockAutoCraftingTable());
 	public static final RegistryObject<BlockFluidInfuser> FluidInfuser = registerBlock("machine_fluid_infuser", () -> new BlockFluidInfuser());
@@ -324,13 +324,13 @@ public class ModBlocks {
 	public static final RegistryObject<BlockTumbler> Tumbler = registerBlock("machine_tumbler", () -> new BlockTumbler());
 	public static final RegistryObject<BlockTurbine> Turbine = registerBlock("machine_turbine", () -> new BlockTurbine());
 	public static final RegistryObject<BlockPackager> Packager = registerBlock("machine_packager", () -> new BlockPackager());
-	
+
 	public static final RegistryObject<BlockExperienceHopper> ExperienceHopper = registerBlock("experience_hopper", () -> new BlockExperienceHopper());
 	public static final RegistryObject<BlockCauldron> RustyCauldron = registerBlock("rusty_cauldron", () -> new BlockCauldron(false));
 	public static final RegistryObject<BlockCauldron> CleanCauldron = registerBlock("clean_cauldron", () -> new BlockCauldron(true));
 	public static final RegistryObject<BlockDirectDropper> DirectDropper = registerBlock("direct_dropper", () -> new BlockDirectDropper());
 	public static final RegistryObject<BlockAutomaticPlacer> AutomaticPlacer = registerBlock("automatic_placer", () -> new BlockAutomaticPlacer());
-	
+
 	public static final RegistryObject<BlockEnchanter> Enchanter = registerBlock("machine_enchanter", () -> new BlockEnchanter());
 
 	public static final RegistryObject<BlockRandomItemGenerator> RandomItemGenerator = registerBlock("random_item_generator", () -> new BlockRandomItemGenerator(null));
@@ -438,14 +438,15 @@ public class ModBlocks {
 	public static final RegistryObject<BlockSolarPanel> SolarPanelLumum = registerBlock("solar_panel_lumum", () -> new BlockSolarPanel(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BlockSolarPanel> SolarPanelCreative = registerBlock("solar_panel_creative", () -> new BlockSolarPanel(StaticPowerTiers.CREATIVE));
 
-	public static final RegistryObject<BlockDigistoreNetworkWire> DigistoreWire = registerBlock("cable_digistore", () -> new BlockDigistoreNetworkWire());
 	public static final RegistryObject<BlockDigistoreManager> DigistoreManager = registerBlock("digistore_manager", () -> new BlockDigistoreManager());
 	public static final RegistryObject<BlockDigistoreIOPort> DigistoreIOPort = registerBlock("digistore_io_port", () -> new BlockDigistoreIOPort());
 	public static final RegistryObject<BlockDigistore> Digistore = registerBlock("digistore", () -> new BlockDigistore());
 	public static final RegistryObject<BlockDigistoreServerRack> DigistoreServerRack = registerBlock("digistore_server_rack", () -> new BlockDigistoreServerRack());
-	public static final RegistryObject<BlockPatternStorage> PatternStorage = registerBlock("digistore_pattern_storage", () -> new BlockPatternStorage());
+	public static final RegistryObject<BlockPatternStorage> DigistorePatternStorage = registerBlock("digistore_pattern_storage", () -> new BlockPatternStorage());
 
 	// Cables
+	public static final RegistryObject<BlockDigistoreNetworkWire> DigistoreWire = registerBlock("cable_digistore", () -> new BlockDigistoreNetworkWire());
+
 	public static final RegistryObject<BlockItemCable> ItemCableBasic = registerBlock("cable_item_basic", () -> new BlockItemCable(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BlockItemCable> ItemCableAdvanced = registerBlock("cable_item_advanced", () -> new BlockItemCable(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<BlockItemCable> ItemCableStatic = registerBlock("cable_item_static", () -> new BlockItemCable(StaticPowerTiers.STATIC));

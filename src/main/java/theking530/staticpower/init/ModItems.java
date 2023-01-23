@@ -44,8 +44,8 @@ import theking530.staticpower.items.ResearchItem;
 import theking530.staticpower.items.StaticPowerFood;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.backpack.Backpack;
-import theking530.staticpower.items.crops.DepletedCrop;
-import theking530.staticpower.items.crops.StaticPlantCrop;
+import theking530.staticpower.items.crops.DepletedFruit;
+import theking530.staticpower.items.crops.StaticCropFruit;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 import theking530.staticpower.items.itemfilter.ItemFilter;
@@ -93,16 +93,16 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> RustyIronScrap = ITEMS.register("rusty_iron_scrap", () -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> ApplePie = ITEMS.register("pie_apple", () -> new StaticPowerFood(Foods.PUMPKIN_PIE));
+	public static final RegistryObject<StaticPowerItem> StaticPie = ITEMS.register("pie_static", () -> new StaticPowerFood(ModFoods.STATIC_PIE));
+	public static final RegistryObject<StaticPowerItem> EnergizedPie = ITEMS.register("pie_energized", () -> new StaticPowerFood(ModFoods.ENERGIZED_PIE));
+	public static final RegistryObject<StaticPowerItem> LumumPie = ITEMS.register("pie_lumum", () -> new StaticPowerFood(ModFoods.LUMUM_PIE));
 	public static final RegistryObject<StaticPowerItem> CookedEeef = ITEMS.register("eeef_cooked", () -> new StaticPowerFood(ModFoods.COOKED_EEEF));
 	public static final RegistryObject<StaticPowerItem> CookedSmutton = ITEMS.register("smutton_cooked", () -> new StaticPowerFood(ModFoods.COOKED_SMUTTON));
 	public static final RegistryObject<StaticPowerItem> Eather = ITEMS.register("eather", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> EnergizedPie = ITEMS.register("pie_energized", () -> new StaticPowerFood(ModFoods.ENERGIZED_PIE));
-	public static final RegistryObject<StaticPowerItem> LumumPie = ITEMS.register("pie_lumum", () -> new StaticPowerFood(ModFoods.LUMUM_PIE));
 	public static final RegistryObject<StaticPowerItem> PotatoBread = ITEMS.register("bread_potato", () -> new StaticPowerFood(Foods.BREAD));
 	public static final RegistryObject<StaticPowerItem> PotatoFlour = ITEMS.register("flour_potato", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RawEeef = ITEMS.register("eeef_raw", () -> new StaticPowerFood(ModFoods.EEEF));
 	public static final RegistryObject<StaticPowerItem> RawSmutton = ITEMS.register("smutton_raw", () -> new StaticPowerFood(ModFoods.SMUTTON));
-	public static final RegistryObject<StaticPowerItem> StaticPie = ITEMS.register("pie_static", () -> new StaticPowerFood(ModFoods.STATIC_PIE));
 	public static final RegistryObject<StaticPowerItem> WheatFlour = ITEMS.register("flour_wheat", () -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> MoldBlade = ITEMS.register("mold_blade", () -> new StaticPowerItem());
@@ -205,7 +205,6 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> PlateTungsten = ITEMS.register("plate_tungsten", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> PlateZinc = ITEMS.register("plate_zinc", () -> new StaticPowerItem());
 
-//	public static final RegistryObject<StaticPowerItem> GearAluminum = ITEMS.register("gear_aluminum", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GearBrass = ITEMS.register("gear_brass", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GearBronze = ITEMS.register("gear_bronze", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GearCopper = ITEMS.register("gear_copper", () -> new StaticPowerItem());
@@ -213,35 +212,16 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> GearGold = ITEMS.register("gear_gold", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GearInertInfusion = ITEMS.register("gear_inert_infusion", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GearIron = ITEMS.register("gear_iron", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> GearLead = ITEMS.register("gear_lead", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GearLumum = ITEMS.register("gear_lumum", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> GearMagnesium = ITEMS.register("gear_magnesium", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> GearPlatinum = ITEMS.register("gear_platinum", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> GearRedstoneAlloy = ITEMS.register("gear_redstone_alloy", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> GearSilver = ITEMS.register("gear_silver", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GearStatic = ITEMS.register("gear_static", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GearTin = ITEMS.register("gear_tin", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> GearTungsten = ITEMS.register("gear_tungsten", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> GearZinc = ITEMS.register("gear_zinc", () -> new StaticPowerItem());
 
-//	public static final RegistryObject<GearBox> GearBoxAluminum = ITEMS.register("gear_box_aluminum", () -> new GearBox(GearAluminum));
 	public static final RegistryObject<GearBox> GearBoxBrass = ITEMS.register("gear_box_brass", () -> new GearBox(GearBrass));
-//	public static final RegistryObject<GearBox> GearBoxBronze = ITEMS.register("gear_box_bronze", () -> new GearBox(GearBronze));
-//	public static final RegistryObject<GearBox> GearBoxCopper = ITEMS.register("gear_box_copper", () -> new GearBox(GearCopper));
 	public static final RegistryObject<GearBox> GearBoxEnergized = ITEMS.register("gear_box_energized", () -> new GearBox(GearEnergized));
-//	public static final RegistryObject<GearBox> GearBoxGold = ITEMS.register("gear_box_gold", () -> new GearBox(GearGold));
 	public static final RegistryObject<GearBox> GearBoxInertInfusion = ITEMS.register("gear_box_inert_infusion", () -> new GearBox(GearInertInfusion));
-//	public static final RegistryObject<GearBox> GearBoxIron = ITEMS.register("gear_box_iron", () -> new GearBox(GearIron));
-//	public static final RegistryObject<GearBox> GearBoxLead = ITEMS.register("gear_box_lead", () -> new GearBox(GearLead));
 	public static final RegistryObject<GearBox> GearBoxLumum = ITEMS.register("gear_box_lumum", () -> new GearBox(GearLumum));
-//	public static final RegistryObject<GearBox> GearBoxMagnesium = ITEMS.register("gear_box_magnesium", () -> new GearBox(GearMagnesium));
-//	public static final RegistryObject<GearBox> GearBoxPlatinum = ITEMS.register("gear_box_platinum", () -> new GearBox(GearPlatinum));
-//	public static final RegistryObject<GearBox> GearBoxRedstoneAlloy = ITEMS.register("gear_box_redstone_alloy", () -> new GearBox(GearRedstoneAlloy));
-//	public static final RegistryObject<GearBox> GearBoxSilver = ITEMS.register("gear_box_silver", () -> new GearBox(GearSilver));
 	public static final RegistryObject<GearBox> GearBoxStatic = ITEMS.register("gear_box_static", () -> new GearBox(GearStatic));
 	public static final RegistryObject<GearBox> GearBoxTin = ITEMS.register("gear_box_tin", () -> new GearBox(GearTin));
-//	public static final RegistryObject<GearBox> GearBoxTungsten = ITEMS.register("gear_box_tungsten", () -> new GearBox(GearTungsten));
-//	public static final RegistryObject<GearBox> GearBoxZinc = ITEMS.register("gear_box_zinc", () -> new GearBox(GearZinc));
 
 	public static final RegistryObject<StaticPowerItem> DustAluminum = ITEMS.register("dust_aluminum", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DustBrass = ITEMS.register("dust_brass", () -> new StaticPowerItem());
@@ -295,32 +275,12 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> ChunksTungsten = ITEMS.register("chunks_tungsten", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> ChunksZinc = ITEMS.register("chunks_zinc", () -> new StaticPowerItem());
 
-//	public static final RegistryObject<StaticPowerItem> RodAluminum = ITEMS.register("rod_aluminum", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RodBrass = ITEMS.register("rod_brass", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodBronze = ITEMS.register("rod_bronze", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodCoal = ITEMS.register("rod_coal", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodCopper = ITEMS.register("rod_copper", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodDiamond = ITEMS.register("rod_diamond", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodEmerald = ITEMS.register("rod_emerald", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RodEnergized = ITEMS.register("rod_energized", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodGold = ITEMS.register("rod_gold", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RodInertInfusion = ITEMS.register("rod_inert_infusion", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodIron = ITEMS.register("rod_iron", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodLapis = ITEMS.register("rod_lapis", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodLatex = ITEMS.register("rod_latex", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodLead = ITEMS.register("rod_lead", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RodLumum = ITEMS.register("rod_lumum", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodMagnesium = ITEMS.register("rod_magnesium", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodPlatinum = ITEMS.register("rod_platinum", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodQuartz = ITEMS.register("rod_quartz", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodRedstoneAlloy = ITEMS.register("rod_redstone_alloy", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodRuby = ITEMS.register("rod_ruby", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodSapphire = ITEMS.register("rod_sapphire", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodSilver = ITEMS.register("rod_silver", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RodStatic = ITEMS.register("rod_static", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RodTin = ITEMS.register("rod_tin", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodTungsten = ITEMS.register("rod_tungsten", () -> new StaticPowerItem());
-//	public static final RegistryObject<StaticPowerItem> RodZinc = ITEMS.register("rod_zinc", () -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> GemRuby = ITEMS.register("gem_ruby", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GemSapphire = ITEMS.register("gem_sapphire", () -> new StaticPowerItem());
@@ -508,14 +468,14 @@ public class ModItems {
 	public static final RegistryObject<BatteryPack> LumumBatteryPack = ITEMS.register("battery_pack_lumum", () -> new BatteryPack(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BatteryPack> CreativeBatteryPack = ITEMS.register("battery_pack_creative", () -> new BatteryPack(StaticPowerTiers.CREATIVE));
 
-	public static final RegistryObject<StaticPlantSeeds> StaticSeeds = ITEMS.register("seed_static", () -> new StaticPlantSeeds(ModBlocks.StaticPlant.get()));
-	public static final RegistryObject<StaticPlantSeeds> EnergizedSeeds = ITEMS.register("seed_energized", () -> new StaticPlantSeeds(ModBlocks.EnergizedPlant.get()));
-	public static final RegistryObject<StaticPlantSeeds> LumumSeeds = ITEMS.register("seed_lumum", () -> new StaticPlantSeeds(ModBlocks.LumumPlant.get()));
+	public static final RegistryObject<StaticPlantSeeds> StaticSeeds = ITEMS.register("seed_static", () -> new StaticPlantSeeds(ModBlocks.StaticCrop.get()));
+	public static final RegistryObject<StaticPlantSeeds> EnergizedSeeds = ITEMS.register("seed_energized", () -> new StaticPlantSeeds(ModBlocks.EnergizedCrop.get()));
+	public static final RegistryObject<StaticPlantSeeds> LumumSeeds = ITEMS.register("seed_lumum", () -> new StaticPlantSeeds(ModBlocks.LumumCrop.get()));
 
-	public static final RegistryObject<StaticPlantCrop> StaticCrop = ITEMS.register("crop_static", () -> new StaticPlantCrop(ModFoods.STATIC_CROP));
-	public static final RegistryObject<StaticPlantCrop> EnergizedCrop = ITEMS.register("crop_energized", () -> new StaticPlantCrop(ModFoods.ENERGIZED_CROP));
-	public static final RegistryObject<StaticPlantCrop> LumumCrop = ITEMS.register("crop_lumum", () -> new StaticPlantCrop(ModFoods.LUMUM_CROP));
-	public static final RegistryObject<DepletedCrop> DepletedCrop = ITEMS.register("crop_depleted", () -> new DepletedCrop());
+	public static final RegistryObject<StaticCropFruit> StaticFruit = ITEMS.register("fruid_static", () -> new StaticCropFruit(ModFoods.STATIC_FRUIT));
+	public static final RegistryObject<StaticCropFruit> EnergizedFruit = ITEMS.register("fruit_energized", () -> new StaticCropFruit(ModFoods.ENERGIZED_FRUIT));
+	public static final RegistryObject<StaticCropFruit> LumumFruit = ITEMS.register("fruit_lumum", () -> new StaticCropFruit(ModFoods.LUMUM_FRUIT));
+	public static final RegistryObject<DepletedFruit> DepletedFruit = ITEMS.register("fruit_depleted", () -> new DepletedFruit());
 
 	public static final RegistryObject<Hammer> IronMetalHammer = ITEMS.register("hammer_iron", () -> new Hammer(StaticPowerTiers.IRON, () -> Items.IRON_INGOT));
 	public static final RegistryObject<Hammer> CopperMetalHammer = ITEMS.register("hammer_zinc", () -> new Hammer(StaticPowerTiers.ZINC, () -> ModItems.IngotZinc.get()));

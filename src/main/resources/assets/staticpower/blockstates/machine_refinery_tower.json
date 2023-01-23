@@ -1,8 +1,0 @@
-{
-    "variants": {
-		"position=full": { "model": "staticpower:block/machines/refinery_tower/full" },
-        "position=middle": { "model": "staticpower:block/machines/refinery_tower/middle"},
-        "position=top":  { "model": "staticpower:block/machines/refinery_tower/top"},
-        "position=bottom":  { "model": "staticpower:block/machines/refinery_tower/bottom"}
-    }
-}

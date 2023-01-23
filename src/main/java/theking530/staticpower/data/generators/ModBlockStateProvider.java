@@ -13,18 +13,34 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.machines.refinery.tower.BlockRefineryTower;
+import theking530.staticpower.blockentities.machines.refinery.tower.BlockRefineryTower.TowerPiece;
 import theking530.staticpower.blockentities.power.circuit_breaker.BlockCircuitBreaker;
+import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModFluids;
 
 public class ModBlockStateProvider extends BlockStateProvider {
-
 	public ModBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
 		super(gen, StaticPower.MOD_ID, exFileHelper);
 	}
 
 	@Override
 	protected void registerStatesAndModels() {
+		// Dummy Blocks
+		simpleBlockWithCustomTexture(ModBlocks.RandomItemGenerator.get(), "placeholder_texture");
+		simpleBlockWithCustomTexture(ModBlocks.RandomOreGenerator.get(), "placeholder_texture");
+		simpleBlockWithCustomTexture(ModBlocks.ResearchCheater.get(), "placeholder_texture");
+
+		makeCrop(ModBlocks.StaticCrop.get(), "crops/static");
+		makeCrop(ModBlocks.EnergizedCrop.get(), "crops/energized");
+		makeCrop(ModBlocks.LumumCrop.get(), "crops/lumum");
+
+		cauldron(ModBlocks.CleanCauldron.get(), "clean_cauldron");
+		cauldron(ModBlocks.RustyCauldron.get(), "rusty_cauldron");
+
 		simpleBlockWithCustomTexture(ModBlocks.StaticLamp.get(), "decorative/lamp_static");
 		simpleBlockWithCustomTexture(ModBlocks.EnergizedLamp.get(), "decorative/lamp_energized");
 		simpleBlockWithCustomTexture(ModBlocks.LumumLamp.get(), "decorative/lamp_lumum");
@@ -140,6 +156,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		pumpBlock(ModBlocks.LumumPump.get(), "lumum");
 		pumpBlock(ModBlocks.CreativePump.get(), "creative");
 
+		orientableWithCustomModel(ModBlocks.VacuumChest.get(), "chest_vacuum");
 		chest(ModBlocks.BasicChest.get(), "basic");
 		chest(ModBlocks.AdvancedChest.get(), "advanced");
 		chest(ModBlocks.StaticChest.get(), "static");
@@ -236,6 +253,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		wireTerminal(ModBlocks.WireConnectorBV.get(), "bv_terminal");
 		wireTerminal(ModBlocks.WireConnectorDigistore.get(), "digistore_terminal");
 
+		basicCustomModelOnOff(ModBlocks.AlloyFurnace.get(), "alloy_furnace");
+		basicCustomModelOnOff(ModBlocks.DirectDropper.get(), "direct_dropper");
+		basicCustomModelOnOff(ModBlocks.AutomaticPlacer.get(), "automatic_placer");
+		basicCustomModel(ModBlocks.PumpTube.get(), "pump_tube");
+
 		simpleBlockWithCustomTexture(ModBlocks.RubberTreeLeaves.get(), "trees/rubber_tree_leaves");
 		rotatedPillarBlockWithCustomTexture(ModBlocks.RubberTreeLog.get(), "trees/rubber_tree_log");
 		rotatedPillarBlockWithCustomTexture(ModBlocks.RubberTreeStrippedLog.get(), "trees/rubber_tree_stripped_log");
@@ -243,10 +265,68 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		simpleBlockWithCustomTexture(ModBlocks.RubberTreeStrippedWood.get(), "trees/rubber_tree_stripped_log");
 		simpleBlockWithCustomTexture(ModBlocks.RubberTreePlanks.get(), "trees/rubber_tree_planks");
 		sapling(ModBlocks.RubberTreeSapling.get(), "rubber_tree_sapling");
-	}
 
-	public void basicCustomModel(Block block, String modelName) {
-		simpleBlock(block, models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/" + modelName)));
+		digistore(ModBlocks.DigistoreManager.get(), "digistore/manager_front", "digistore/manager_side", true, true);
+		digistore(ModBlocks.DigistoreIOPort.get(), "digistore/io_port", "digistore/io_port", true, true);
+		digistore(ModBlocks.Digistore.get(), "digistore/digistore_front", "empty_texture", true, false);
+		orientableWithCustomModel(ModBlocks.DigistoreServerRack.get(), "digistore_server_rack");
+		digistore(ModBlocks.DigistorePatternStorage.get(), "digistore/pattern_storage", "digistore/pattern_storage", true, true);
+
+		orientableWithCustomModel(ModBlocks.Inverter.get(), "inverter");
+		orientableWithCustomModel(ModBlocks.Rectifier.get(), "rectifier");
+		orientableWithCustomModel(ModBlocks.SolderingTable.get(), "soldering_table");
+		orientableWithCustomModel(ModBlocks.Turbine.get(), "machine_turbine");
+		orientableWithCustomModel(ModBlocks.HydroponicPod.get(), "machine_hydroponic_pod");
+		basicCustomModel(ModBlocks.ExperienceHopper.get(), "experience_hopper");
+		orientableWithCustomModel(ModBlocks.PowerMonitor.get(), "power_monitor");
+
+		refineryTower(ModBlocks.RefineryTower.get());
+		lightSocket(ModBlocks.LightSocket.get());
+
+		conveyorStraight(ModBlocks.StraightConveyorBasic.get(), "basic");
+		conveyorStraight(ModBlocks.StraightConveyorAdvanced.get(), "advanced");
+		conveyorStraight(ModBlocks.StraightConveyorStatic.get(), "static");
+		conveyorStraight(ModBlocks.StraightConveyorEnergized.get(), "energized");
+		conveyorStraight(ModBlocks.StraightConveyorLumum.get(), "lumum");
+
+		conveyorHopper(ModBlocks.ConveyorHopperBasic.get(), "basic", false);
+		conveyorHopper(ModBlocks.ConveyorHopperAdvanced.get(), "advanced", false);
+		conveyorHopper(ModBlocks.ConveyorHopperStatic.get(), "static", false);
+		conveyorHopper(ModBlocks.ConveyorHopperEnergized.get(), "energized", false);
+		conveyorHopper(ModBlocks.ConveyorHopperLumum.get(), "lumum", false);
+
+		conveyorHopper(ModBlocks.ConveyorFilteredHopperBasic.get(), "basic", true);
+		conveyorHopper(ModBlocks.ConveyorFilteredHopperAdvanced.get(), "advanced", true);
+		conveyorHopper(ModBlocks.ConveyorFilteredHopperStatic.get(), "static", true);
+		conveyorHopper(ModBlocks.ConveyorFilteredHopperEnergized.get(), "energized", true);
+		conveyorHopper(ModBlocks.ConveyorFilteredHopperLumum.get(), "lumum", true);
+
+		converyorSupplier(ModBlocks.ConveyorSupplierBasic.get(), "basic");
+		converyorSupplier(ModBlocks.ConveyorSupplierAdvanced.get(), "advanced");
+		converyorSupplier(ModBlocks.ConveyorSupplierStatic.get(), "static");
+		converyorSupplier(ModBlocks.ConveyorSupplierEnergized.get(), "energized");
+		converyorSupplier(ModBlocks.ConveyorSupplierLumum.get(), "lumum");
+
+		conveyorExtractor(ModBlocks.ConveyorExtractorBasic.get(), "basic");
+		conveyorExtractor(ModBlocks.ConveyorExtractorAdvanced.get(), "advanced");
+		conveyorExtractor(ModBlocks.ConveyorExtractorStatic.get(), "static");
+		conveyorExtractor(ModBlocks.ConveyorExtractorEnergized.get(), "energized");
+		conveyorExtractor(ModBlocks.ConveyorExtractorLumum.get(), "lumum");
+
+		/**********
+		 * Fluids *
+		 **********/
+		for (StaticPowerFluidBundle fluid : ModFluids.FLUID_BUNDLES) {
+			if (!ModFluids.CONCRETE.containsValue(fluid) && !ModFluids.DYES.containsValue(fluid)) {
+				simpleBlockWithCustomTexture(fluid.block.get(), "fluids/" + fluid.source.getKey().location().getPath() + "_still");
+			}
+		}
+		for (StaticPowerFluidBundle fluid : ModFluids.CONCRETE.values()) {
+			simpleBlockWithCustomTexture(fluid.block.get(), "fluids/concrete_still");
+		}
+		for (StaticPowerFluidBundle fluid : ModFluids.DYES.values()) {
+			simpleBlockWithCustomTexture(fluid.block.get(), "fluids/dye_still");
+		}
 	}
 
 	public void rotatedPillarBlockWithCustomTexture(Block block, String texture) {
@@ -274,9 +354,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
 	}
 
 	public void farmlandWithCustomTexture(Block block, String texture) {
-		ResourceLocation side = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + texture + "_side");
+		ResourceLocation dirt = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + texture + "_side");
 		ResourceLocation top = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + texture + "_top");
-		ModelFile model = models().withExistingParent(name(block), "block/template_farmland").texture("side", side).texture("top", top);
+		ModelFile model = models().withExistingParent(name(block), "block/template_farmland").texture("dirt", dirt).texture("top", top).texture("particle", top);
 		simpleBlock(block, model);
 	}
 
@@ -296,7 +376,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		ResourceLocation frontOverlayOff = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + machine);
 		ResourceLocation frontOverlayOn = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + machine + (differentModelForOnState ? "_on" : ""));
 
-		ModelFile offModel = models().withExistingParent(name(block) + "_off", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/machine_base")).texture("side", side)
+		ModelFile offModel = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/machine_base")).texture("side", side)
 				.texture("top", top).texture("front", front).texture("io_frame", ioFrame).texture("front_overlay", frontOverlayOff).texture("particle", side);
 
 		ModelFile onModel = models().withExistingParent(name(block) + "_on", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/machine_base")).texture("side", side)
@@ -354,7 +434,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 	public void onOffBlock(Block block, String modelName) {
 		getVariantBuilder(block).forAllStates(state -> {
-			ModelFile offModel = models().withExistingParent(name(block) + "_off", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/" + modelName));
+			ModelFile offModel = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/" + modelName));
 			ModelFile onModel = models().withExistingParent(name(block) + "_on", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/" + modelName + "_on"));
 			return ConfiguredModel.builder().modelFile(state.getValue(StaticPowerMachineBlock.IS_ON) ? onModel : offModel).build();
 		});
@@ -362,7 +442,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 	public void refineryBlock(Block block, String overlayName) {
 		ResourceLocation sideOverlay = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/refinery/" + overlayName);
-		ModelFile offModel = models().withExistingParent(name(block) + "_off", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/refinery_block")).texture("side_overlay",
+		ModelFile offModel = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/refinery_block")).texture("side_overlay",
 				sideOverlay);
 		ModelFile onModel = models().withExistingParent(name(block) + "_on", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/refinery_block")).texture("side_overlay",
 				sideOverlay);
@@ -421,28 +501,29 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		getVariantBuilder(block).forAllStates(state -> {
 			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(model);
 			Direction facing = state.getValue(BlockStateProperties.FACING);
-			switch (facing) {
-			case DOWN:
-				builder.rotationX(180);
-				break;
-			case EAST:
-				builder.rotationX(-90);
-				builder.rotationY(-90);
-				break;
-			case NORTH:
-				builder.rotationX(90);
-				break;
-			case SOUTH:
-				builder.rotationX(-90);
-				break;
-			case WEST:
-				builder.rotationX(-90);
-				builder.rotationY(90);
-				break;
-			default:
-				break;
-			}
+			applySixSidedRotation(builder, facing);
 			return builder.build();
+		});
+	}
+
+	public void lightSocket(Block block) {
+		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/light_socket"));
+
+		getVariantBuilder(block).forAllStates(state -> {
+			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(model);
+			Direction facing = state.getValue(BlockStateProperties.FACING);
+			applySixSidedRotation(builder, facing);
+			return builder.build();
+		});
+	}
+
+	public void makeCrop(BaseSimplePlant block, String baseTexture) {
+		getVariantBuilder(block).forAllStates(state -> {
+			int age = state.getValue(block.getAgeProperty());
+			ResourceLocation texture = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + baseTexture + "_" + age);
+			ModelFile model = models().withExistingParent(name(block), "block/crop").texture("crop", texture).texture("particle", texture);
+
+			return ConfiguredModel.builder().modelFile(model).build();
 		});
 	}
 
@@ -451,11 +532,178 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		simpleBlock(block, models().cross(name(block), panelTexture));
 	}
 
+	public void orientableWithCustomTexture(Block block, String side, String front, String top) {
+		ResourceLocation sideTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + side);
+		ResourceLocation frontTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + front);
+		ResourceLocation topTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + top);
+
+		ModelFile model = models().orientable(name(block), sideTexture, frontTexture, topTexture);
+
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(model).rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();
+		});
+	}
+
+	public void basicCustomModel(Block block, String modelName) {
+		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/" + modelName));
+		simpleBlock(block, model);
+	}
+
+	public void basicCustomModelOnOff(Block block, String modelName) {
+		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/" + modelName));
+		ModelFile modelOn = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/" + modelName + "_on"));
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(state.getValue(StaticPowerMachineBlock.IS_ON) ? modelOn : model)
+					.rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();
+		});
+	}
+
+	public void conveyorStraight(Block block, String textureSet) {
+		ResourceLocation side = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_side");
+		ResourceLocation bottom = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_top");
+		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/conveyor_straight")).texture("base_side", side)
+				.texture("base_bottom", bottom);
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(model).rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();
+		});
+	}
+
+	public void conveyorHopper(Block block, String textureSet, boolean filtered) {
+		ResourceLocation base = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_front");
+		ResourceLocation filter = new ResourceLocation(StaticPower.MOD_ID, "empty_texture");
+		if (filtered) {
+			filter = new ResourceLocation("block/iron_trapdoor");
+		}
+
+		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/conveyor_hopper")).texture("base", base)
+				.texture("filter", filter);
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(model).rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();
+		});
+	}
+
+	public void converyorSupplier(Block block, String textureSet) {
+		ResourceLocation side = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_front");
+		ResourceLocation sideWithBolts = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_side");
+		ResourceLocation bottom = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_top");
+		ResourceLocation ioFrame = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_io_frame");
+
+		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/conveyor_supplier")).texture("side", side)
+				.texture("side_with_bolts", sideWithBolts).texture("bottom", bottom).texture("io_frame", ioFrame);
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(model).rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();
+		});
+	}
+
+	public void conveyorExtractor(Block block, String textureSet) {
+		ResourceLocation side = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_front");
+		ResourceLocation sideWithBolts = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_side");
+		ResourceLocation bottom = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_top");
+		ResourceLocation ioFrame = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_io_frame");
+
+		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/conveyor_extractor")).texture("side", side)
+				.texture("side_with_bolts", sideWithBolts).texture("bottom", bottom).texture("io_frame", ioFrame);
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(model).rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();
+		});
+	}
+
+	public void orientableWithCustomModel(Block block, String modelPath) {
+		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/" + modelPath));
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(model).rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();
+		});
+	}
+
+	public void digistore(Block block, String front, String side, boolean hasFrontOn, boolean hasSideOn) {
+		ResourceLocation frontTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + front);
+		ResourceLocation sideTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + side);
+
+		ResourceLocation frontOnTexture = frontTexture;
+		ResourceLocation sideOnTexture = sideTexture;
+
+		if (hasFrontOn) {
+			frontOnTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + front + "_on");
+		}
+
+		if (hasSideOn) {
+			sideOnTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + side + "_on");
+		}
+
+		ModelFile modelOff = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/digistore_base"))
+				.texture("front_overlay", frontTexture).texture("side_overlay", sideTexture);
+		ModelFile modelOn = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/digistore_base"))
+				.texture("front_overlay", frontOnTexture).texture("side_overlay", sideOnTexture);
+
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(state.getValue(StaticPowerMachineBlock.IS_ON) ? modelOn : modelOff)
+					.rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();
+		});
+	}
+
+	public void cauldron(Block block, String texture) {
+		ResourceLocation textureLocation = new ResourceLocation(StaticPower.MOD_ID, "blocks/" + texture);
+		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cauldron")).texture("texture", textureLocation)
+				.texture("particle", textureLocation);
+		simpleBlock(block, model);
+	}
+
+	public void refineryTower(Block block) {
+		ModelFile bottom = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/refinery_tower/bottom"));
+		ModelFile full = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/refinery_tower/full"));
+		ModelFile middle = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/refinery_tower/middle"));
+		ModelFile top = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/refinery_tower/top"));
+
+		getVariantBuilder(block).forAllStates(state -> {
+			ModelFile file = null;
+			TowerPiece piece = state.getValue(BlockRefineryTower.TOWER_POSITION);
+			switch (piece) {
+			case BOTTOM:
+				file = bottom;
+				break;
+			case FULL:
+				file = full;
+				break;
+			case MIDDLE:
+				file = middle;
+				break;
+			case TOP:
+				file = top;
+				break;
+			}
+			return ConfiguredModel.builder().modelFile(file).build();
+		});
+	}
+
 	private String name(Block block) {
 		return key(block).getPath();
 	}
 
 	private ResourceLocation key(Block block) {
 		return ForgeRegistries.BLOCKS.getKey(block);
+	}
+
+	private void applySixSidedRotation(ConfiguredModel.Builder<?> builder, Direction facing) {
+		switch (facing) {
+		case DOWN:
+			builder.rotationX(180);
+			break;
+		case EAST:
+			builder.rotationX(-90);
+			builder.rotationY(-90);
+			break;
+		case NORTH:
+			builder.rotationX(90);
+			break;
+		case SOUTH:
+			builder.rotationX(-90);
+			break;
+		case WEST:
+			builder.rotationX(-90);
+			builder.rotationY(90);
+			break;
+		default:
+			break;
+		}
 	}
 }

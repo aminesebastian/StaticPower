@@ -17,7 +17,7 @@ import theking530.staticpower.items.DigistorePatternCard;
 public class BlockEntityPatternStorage extends BlockEntityDigistoreBase {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPatternStorage> TYPE = new BlockEntityTypeAllocator<>("digistore_pattern_storage",
-			(type, pos, state) -> new BlockEntityPatternStorage(pos, state), ModBlocks.PatternStorage);
+			(type, pos, state) -> new BlockEntityPatternStorage(pos, state), ModBlocks.DigistorePatternStorage);
 
 	public final InventoryComponent patternInventory;
 

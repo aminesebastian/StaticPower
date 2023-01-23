@@ -1,7 +1,7 @@
 {
   "variants": {
     "facing=east,is_on=false": {
-      "model": "staticpower:block/machine_powered_furnace_off",
+      "model": "staticpower:block/machine_powered_furnace",
       "y": 90
     },
     "facing=east,is_on=true": {
@@ -9,13 +9,13 @@
       "y": 90
     },
     "facing=north,is_on=false": {
-      "model": "staticpower:block/machine_powered_furnace_off"
+      "model": "staticpower:block/machine_powered_furnace"
     },
     "facing=north,is_on=true": {
       "model": "staticpower:block/machine_powered_furnace_on"
     },
     "facing=south,is_on=false": {
-      "model": "staticpower:block/machine_powered_furnace_off",
+      "model": "staticpower:block/machine_powered_furnace",
       "y": 180
     },
     "facing=south,is_on=true": {
@@ -23,7 +23,7 @@
       "y": 180
     },
     "facing=west,is_on=false": {
-      "model": "staticpower:block/machine_powered_furnace_off",
+      "model": "staticpower:block/machine_powered_furnace",
       "y": 270
     },
     "facing=west,is_on=true": {

@@ -44,18 +44,6 @@ public class StaticPowerSprites {
 	public static final ResourceLocation MINI_MACHINE_SIDE_MAGENTA = registerSprite("blocks/machines/sides_modes/mini_machine_side_magenta");
 	public static final ResourceLocation MINI_MACHINE_SIDE_AQUA = registerSprite("blocks/machines/sides_modes/mini_machine_side_aqua");
 
-	public static final ResourceLocation BASIC_BATTERY_TOP = registerSprite("blocks/machines/batteries/battery_basic_top");
-	public static final ResourceLocation BASIC_BATTERY_SIDE = registerSprite("blocks/machines/batteries/battery_basic_side");
-
-	public static final ResourceLocation IRON_TANK = registerSprite("blocks/machines/tank_iron");
-	public static final ResourceLocation BASIC_TANK = registerSprite("blocks/machines/tank_basic");
-	public static final ResourceLocation ADVANCED_TANK = registerSprite("blocks/machines/tank_advanced");
-	public static final ResourceLocation STATIC_TANK = registerSprite("blocks/machines/tank_static");
-	public static final ResourceLocation ENERGIZED_TANK = registerSprite("blocks/machines/tank_energized");
-	public static final ResourceLocation LUMUM_TANK = registerSprite("blocks/machines/tank_lumum");
-	public static final ResourceLocation CREATIVE_TANK = registerSprite("blocks/machines/tank_creative");
-
-	public static final ResourceLocation BATTERY_BLOCK_BASIC = registerSprite("blocks/machines/batteries/battery_block_basic");
 	public static final ResourceLocation BATTERY_BLOCK_BAR = registerSprite("blocks/machines/batteries/battery_block_side_filled");
 	
 	public static final ResourceLocation CIRCUIT_BREAKER_DIGITS = registerSprite("blocks//power/circuit_breaker/digits");
@@ -83,13 +71,13 @@ public class StaticPowerSprites {
 	public static final ResourceLocation SEARCH_MODE_ONE_WAY = registerSprite("gui/search_mode_one_way");
 	public static final ResourceLocation SEARCH_MODE_TWO_WAY = registerSprite("gui/search_mode_two_way");
 
-	public static final ResourceLocation PORTABLE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_filled_bar");
-	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_creative_filled_bar");
+	public static final ResourceLocation PORTABLE_BATTERY_FILL_BAR = registerSprite("items/tools/batteries/portable_battery_filled_bar");
+	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_FILL_BAR = registerSprite("items/tools/batteries/portable_battery_creative_filled_bar");
 
 	public static final ResourceLocation THERMOMETER_FILL_BAR = registerSprite("items/tools/thermometer_fill");
 
-	public static final ResourceLocation PORTABLE_BATTERY_PACK_FILL_BAR = registerSprite("items/batteries/battery_pack_filled_bar");
-	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_PACK_FILL_BAR = registerSprite("items/batteries/battery_pack_creative_filled_bar");
+	public static final ResourceLocation PORTABLE_BATTERY_PACK_FILL_BAR = registerSprite("items/tools/batteries/battery_pack_filled_bar");
+	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_PACK_FILL_BAR = registerSprite("items/tools/batteries/battery_pack_creative_filled_bar");
 
 	public static final ResourceLocation CANCEL = registerSprite("gui/cancel");
 	public static final ResourceLocation GREEN_CHECK = registerSprite("gui/check");

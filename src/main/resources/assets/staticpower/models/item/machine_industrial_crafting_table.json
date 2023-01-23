@@ -1,6 +1,0 @@
-{
-    "parent": "staticpower:block/machines/machine_industrial_crafting_table",
-	"textures": {
-		"io_frame": "staticpower:blocks/empty_texture"
-	}
-}

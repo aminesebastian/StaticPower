@@ -1,6 +1,0 @@
-{
-	"parent": "staticpower:block/conveyors/conveyor_hopper_filtered_basic",
-	"textures": {
-		"base": "staticpower:blocks/machines/sides/advanced_machine_front"
-	}
-}

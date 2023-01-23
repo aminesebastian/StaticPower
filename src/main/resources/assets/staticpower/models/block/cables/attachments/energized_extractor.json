@@ -1,8 +1,0 @@
-{
-	"parent": "staticpower:block/cables/cable_attachment",
-	"textures": {
-		"0": "staticpower:blocks/cables/attachments/cable_energized_extractor_attachment",
-		"1": "staticpower:blocks/cables/attachments/cable_attachment_extract_off",
-		"particle": "staticpower:blocks/cables/attachments/cable_energized_extractor_attachment"
-	}
-}

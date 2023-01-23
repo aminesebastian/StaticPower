@@ -1,6 +1,0 @@
-{
-    "parent": "staticpower:block/machines/machine_refinery_fluid_output",
-	"textures": {
-		"io_frame": "staticpower:blocks/empty_texture"
-	}
-}

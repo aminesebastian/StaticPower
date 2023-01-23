@@ -1,8 +1,0 @@
-{
-	"parent": "staticpower:block/cables/cable_3_attachment_full_block",
-	"textures": {
-		"0": "staticpower:blocks/cables/attachments/cable_digistore_base_full_attachment",
-		"1": "staticpower:blocks/cables/attachments/digistore_screen_on",
-		"particle": "staticpower:blocks/cables/attachments/cable_digistore_base_full_attachment"
-	}
-}

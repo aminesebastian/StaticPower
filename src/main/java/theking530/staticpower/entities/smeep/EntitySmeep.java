@@ -40,7 +40,7 @@ public class EntitySmeep extends Sheep {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(3, new TemptGoal(this, 1.1D, Ingredient.of(ModItems.StaticCrop.get()), false));
+		this.goalSelector.addGoal(3, new TemptGoal(this, 1.1D, Ingredient.of(ModItems.StaticFruit.get()), false));
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class EntitySmeep extends Sheep {
 
 	@Override
 	public boolean isFood(ItemStack stack) {
-		return stack.getItem() == ModItems.StaticCrop.get();
+		return stack.getItem() == ModItems.StaticFruit.get();
 	}
 
 }

@@ -26,7 +26,7 @@ public class StaticPowerItemGroup extends CreativeModeTab {
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack makeIcon() {
 		calculateSubTypes();
-		return new ItemStack(ModItems.StaticCrop.get());
+		return new ItemStack(ModItems.StaticFruit.get());
 	}
 
 	@Override

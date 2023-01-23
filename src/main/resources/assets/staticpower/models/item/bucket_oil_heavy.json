@@ -1,9 +1,0 @@
-{
-	"parent": "forge:item/bucket",
-	"loader": "forge:bucket",
-	"textures": {
-		"base": "item/bucket",
-		"fluid": "staticpower:items/buckets/bucket_oil_mask"
-	},
-	"fluid": "staticpower:oil_heavy"
-}

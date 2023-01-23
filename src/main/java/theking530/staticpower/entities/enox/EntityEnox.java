@@ -32,12 +32,12 @@ public class EntityEnox extends Cow {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(3, new TemptGoal(this, 1.1D, Ingredient.of(ModItems.EnergizedCrop.get()), false));
+		this.goalSelector.addGoal(3, new TemptGoal(this, 1.1D, Ingredient.of(ModItems.EnergizedFruit.get()), false));
 	}
 
 	@Override
 	public boolean isFood(ItemStack stack) {
-		return stack.getItem() == ModItems.EnergizedCrop.get();
+		return stack.getItem() == ModItems.EnergizedFruit.get();
 	}
 
 }

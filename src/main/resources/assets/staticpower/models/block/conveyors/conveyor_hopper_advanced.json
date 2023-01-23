@@ -1,6 +1,0 @@
-{
-	"parent": "staticpower:block/conveyors/conveyor_hopper_filtered_advanced",
-	"textures": {
-		"filter": "staticpower:blocks/empty_texture"
-	}
-}

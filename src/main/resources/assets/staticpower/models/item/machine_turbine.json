@@ -1,6 +1,0 @@
-{
-	"parent": "staticpower:block/machines/machine_turbine",
-	"textures": {
-		"texture": "staticpower:blocks/machines/turbine_item"
-	}
-}

@@ -1,6 +1,0 @@
-{
-    "parent": "staticpower:block/machines/machine_hydroponic_farmer",
-	"textures": {
-		"io_frame": "staticpower:blocks/empty_texture"
-	}
-}

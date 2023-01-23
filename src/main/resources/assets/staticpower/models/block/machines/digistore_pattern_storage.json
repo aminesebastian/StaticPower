@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-        "top": "staticpower:blocks/digistore/pattern_storage_top",
-        "front": "staticpower:blocks/digistore/pattern_storage_side",
-        "side": "staticpower:blocks/digistore/pattern_storage_side"
-    }
-}

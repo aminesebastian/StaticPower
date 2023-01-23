@@ -71,9 +71,9 @@ public class ModBlockLootTables extends BlockLoot {
 
 		addOreDropWithCounts(ModBlocks.OreRustyIron.get(), ModItems.RustyIronScrap.get(), 4, 5);
 
-		addCrop(ModBlocks.StaticPlant.get(), ModItems.StaticCrop.get(), ModItems.StaticSeeds.get());
-		addCrop(ModBlocks.EnergizedPlant.get(), ModItems.EnergizedCrop.get(), ModItems.EnergizedSeeds.get());
-		addCrop(ModBlocks.LumumPlant.get(), ModItems.LumumCrop.get(), ModItems.LumumSeeds.get());
+		addCrop(ModBlocks.StaticCrop.get(), ModItems.StaticFruit.get(), ModItems.StaticSeeds.get());
+		addCrop(ModBlocks.EnergizedCrop.get(), ModItems.EnergizedFruit.get(), ModItems.EnergizedSeeds.get());
+		addCrop(ModBlocks.LumumCrop.get(), ModItems.LumumFruit.get(), ModItems.LumumSeeds.get());
 
 		addLeavesDrops(ModBlocks.RubberTreeLeaves.get(), ModBlocks.RubberTreeSapling.get(), 0.05f, 0.0625f, 0.083333336f, 0.1f);
 	}

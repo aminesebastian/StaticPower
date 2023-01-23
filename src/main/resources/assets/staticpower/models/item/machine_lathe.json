@@ -1,6 +1,0 @@
-{
-    "parent": "staticpower:block/machines/machine_lathe",
-	"textures": {
-		"io_frame": "staticpower:blocks/empty_texture"
-	}
-}
