@@ -57,10 +57,10 @@ public class SideModeQuadGenerator {
 			}
 
 			BlockElementFace blockPartFace = new BlockElementFace(side, -1, sideSprite.getName().toString(), blockFaceUV);
-			Vector3f posOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, 0.0075f));
+			Vector3f posOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, 0.01f));
 			posOffset.add(16.0f, 16.0f, 16.0f);
 
-			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.0075f));
+			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.01f));
 
 			// Check if we have a facing property.
 			if (state != null && state.hasProperty(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING)) {

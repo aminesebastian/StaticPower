@@ -42,15 +42,26 @@ public class RotatedModelCache {
 	}
 	private static final Map<ResourceLocation, Map<Direction, BakedModel>> MODEL_MAP = new HashMap<>();
 
+	public static void bakeForAllDirections(ResourceLocation modelLocation) {
+		// This option exists to avoid concurrent modification exceptions for
+		// multi-threaded rendering.
+		for (Direction dir : Direction.values()) {
+			get(modelLocation, dir);
+		}
+	}
+
 	public static BakedModel get(ResourceLocation modelLocation, Direction direction) {
 		if (!MODEL_MAP.containsKey(modelLocation)) {
 			MODEL_MAP.put(modelLocation, new HashMap<>());
 		}
-		return MODEL_MAP.get(modelLocation).computeIfAbsent(direction,
-				(dir) -> Minecraft.getInstance().getModelManager().getModelBakery().bake(modelLocation, SIDE_TRANSFORMS.get(dir), (material) -> {
-					StaticPower.LOGGER.debug(String.format("Generating rotated model: %1$s facing direction: %2$s.", modelLocation, dir.toString()));
-					return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(material.texture());
-				}));
+		if (!MODEL_MAP.get(modelLocation).containsKey(direction)) {
+			BakedModel model = Minecraft.getInstance().getModelManager().getModelBakery().bake(modelLocation, SIDE_TRANSFORMS.get(direction), (material) -> {
+				StaticPower.LOGGER.debug(String.format("Generating rotated model: %1$s facing direction: %2$s.", modelLocation, direction.toString()));
+				return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(material.texture());
+			});
+			MODEL_MAP.get(modelLocation).put(direction, model);
+		}
+		return MODEL_MAP.get(modelLocation).get(direction);
 	}
 
 	public static List<BakedQuad> getQuads(ResourceLocation modelLocation, Direction direction, @Nullable BlockState state, @Nullable Direction renderSide,

@@ -22,6 +22,7 @@ import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -53,31 +54,8 @@ public class BlockItemCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		ResourceLocation extensionModel = null;
-		ResourceLocation straightModel = null;
-		ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_ITEM_DEFAULT_ATTACHMENT;
-
-		if (tier == StaticPowerTiers.BASIC) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_ITEM_BASIC_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_ITEM_BASIC_STRAIGHT;
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_ITEM_ADVANCED_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_ITEM_ADVANCED_STRAIGHT;
-		} else if (tier == StaticPowerTiers.STATIC) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_ITEM_STATIC_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_ITEM_STATIC_STRAIGHT;
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_ITEM_ENERGIZED_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_ITEM_ENERGIZED_STRAIGHT;
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_ITEM_LUMUM_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_ITEM_LUMUM_STRAIGHT;
-		} else if (tier == StaticPowerTiers.CREATIVE) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_ITEM_CREATIVE_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_ITEM_CREATIVE_STRAIGHT;
-		}
-
-		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
+		CableModelSet model = StaticPowerAdditionalModels.ITEM_CABLES.get(tier);
+		return new CableBakedModel(existingModel, model);
 	}
 
 	@OnlyIn(Dist.CLIENT)

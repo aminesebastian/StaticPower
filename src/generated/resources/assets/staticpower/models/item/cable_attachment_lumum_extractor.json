@@ -1,8 +1,8 @@
 {
-  "parent": "staticpower:block/cables/cable_attachment",
+  "parent": "staticpower:block/base_models/cables/cable_5_attachment",
   "gui_light": "front",
   "textures": {
-    "base": "staticpower:blocks/cables/attachments/cable_lumum_attachment",
-    "overlay": "staticpower:blocks/cables/attachments/cable_lumum_attachment"
+    "cable_texture": "staticpower:blocks/cables/attachments/cable_lumum_attachment",
+    "overlay": "staticpower:blocks/cables/attachments/cable_attachment_extract_off"
   }
 }

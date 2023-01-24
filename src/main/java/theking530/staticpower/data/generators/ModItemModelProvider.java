@@ -16,7 +16,11 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.entities.AbstractEntityBuilder;
+import theking530.staticpower.entities.AbstractSpawnableMobType;
+import theking530.staticpower.entities.smeep.TypeSmeep;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModItems;
 
 public class ModItemModelProvider extends ItemModelProvider {
@@ -112,7 +116,12 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		// Bed Frame
+		for (AbstractEntityBuilder<?> entity : ModEntities.ENTITIES) {
+			if (entity instanceof AbstractSpawnableMobType) {
+				spawnEgg(((AbstractSpawnableMobType<?>) entity).getEgg());
+			}
+		}
+
 		simpleItem(ModItems.DistilleryGrain.get(), "misc/distillery_grain");
 		simpleItem(ModItems.RustyIronScrap.get(), "materials/rusty_iron_scrap");
 
@@ -324,7 +333,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 		simpleItem(ModItems.IOPort.get(), "components/io_port");
 		simpleItem(ModItems.Motor.get(), "components/motor");
 		simpleItem(ModItems.Plug.get(), "components/plug");
-		simpleItem(ModItems.DigistoreCore.get(), "components/portable_smelting_core");
+		simpleItem(ModItems.DigistoreCore.get(), "components/digistore_core");
 
 		simpleItem(ModItems.BasicCard.get(), "components/card_basic");
 		simpleItem(ModItems.AdvancedCard.get(), "components/card_advanced");
@@ -558,6 +567,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 		fromExistingModel(ModItems.SprinklerAttachment.get(), "item/sprinkler");
 		fromExistingModel(ModItems.DrainAttachment.get(), "item/drain");
+		fromExistingModel(ModBlocks.RefineryTower.get().asItem(), "block/refinery_tower/full");
 
 		simpleItem(ModItems.PatternCard.get(), "digistore/digistore_pattern_card_empty");
 		simpleItem(ModItems.DigistoreWirelessTerminal.get(), "tools/digistore_wireless_terminal");
@@ -653,6 +663,51 @@ public class ModItemModelProvider extends ItemModelProvider {
 		upgrade(ModItems.EnergizedHeatUpgrade.get(), "upgrades/upgrade_heat", "overlay_upgrade_energized");
 		upgrade(ModItems.LumumHeatUpgrade.get(), "upgrades/upgrade_heat", "overlay_upgrade_lumum");
 
+		cable3Inventory(ModBlocks.DigistoreWire.get().asItem(), "cable_digistore");
+		cable5Inventory(ModBlocks.ScaffoldCable.get().asItem(), "cable_scaffold");
+
+		cable5Inventory(ModBlocks.PowerCableBasic.get().asItem(), "cable_power_basic");
+		cable5Inventory(ModBlocks.PowerCableAdvanced.get().asItem(), "cable_power_advanced");
+		cable5Inventory(ModBlocks.PowerCableStatic.get().asItem(), "cable_power_static");
+		cable5Inventory(ModBlocks.PowerCableEnergized.get().asItem(), "cable_power_energized");
+		cable5Inventory(ModBlocks.PowerCableLumum.get().asItem(), "cable_power_lumum");
+		cable5Inventory(ModBlocks.PowerCableCreative.get().asItem(), "cable_power_creative");
+
+		cable7Inventory(ModBlocks.IndustrialPowerCableBasic.get().asItem(), "cable_industrial_power_basic");
+		cable7Inventory(ModBlocks.IndustrialPowerCableAdvanced.get().asItem(), "cable_industrial_power_advanced");
+		cable7Inventory(ModBlocks.IndustrialPowerCableStatic.get().asItem(), "cable_industrial_power_static");
+		cable7Inventory(ModBlocks.IndustrialPowerCableEnergized.get().asItem(), "cable_industrial_power_energized");
+		cable7Inventory(ModBlocks.IndustrialPowerCableLumum.get().asItem(), "cable_industrial_power_lumum");
+		cable7Inventory(ModBlocks.IndustrialPowerCableCreative.get().asItem(), "cable_industrial_power_creative");
+
+		cable5Inventory(ModBlocks.InsulatedPowerCableBasic.get().asItem(), "cable_power_basic_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableAdvanced.get().asItem(), "cable_power_advanced_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableStatic.get().asItem(), "cable_power_static_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableEnergized.get().asItem(), "cable_power_energized_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableLumum.get().asItem(), "cable_power_lumum_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableCreative.get().asItem(), "cable_power_creative_insulated");
+
+		cable5Inventory(ModBlocks.ItemCableBasic.get().asItem(), "cable_item_basic");
+		cable5Inventory(ModBlocks.ItemCableAdvanced.get().asItem(), "cable_item_advanced");
+		cable5Inventory(ModBlocks.ItemCableStatic.get().asItem(), "cable_item_static");
+		cable5Inventory(ModBlocks.ItemCableEnergized.get().asItem(), "cable_item_energized");
+		cable5Inventory(ModBlocks.ItemCableLumum.get().asItem(), "cable_item_lumum");
+		cable5Inventory(ModBlocks.ItemCableCreative.get().asItem(), "cable_item_creative");
+
+		cable5Inventory(ModBlocks.FluidCableBasic.get().asItem(), "cable_fluid_basic");
+		cable5Inventory(ModBlocks.FluidCableAdvanced.get().asItem(), "cable_fluid_advanced");
+		cable5Inventory(ModBlocks.FluidCableStatic.get().asItem(), "cable_fluid_static");
+		cable5Inventory(ModBlocks.FluidCableEnergized.get().asItem(), "cable_fluid_energized");
+		cable5Inventory(ModBlocks.FluidCableLumum.get().asItem(), "cable_fluid_lumum");
+		cable5Inventory(ModBlocks.FluidCableCreative.get().asItem(), "cable_fluid_creative");
+
+		cable7Inventory(ModBlocks.IndustrialFluidCableBasic.get().asItem(), "cable_industrial_fluid_basic");
+		cable7Inventory(ModBlocks.IndustrialFluidCableAdvanced.get().asItem(), "cable_industrial_fluid_advanced");
+		cable7Inventory(ModBlocks.IndustrialFluidCableStatic.get().asItem(), "cable_industrial_fluid_static");
+		cable7Inventory(ModBlocks.IndustrialFluidCableEnergized.get().asItem(), "cable_industrial_fluid_energized");
+		cable7Inventory(ModBlocks.IndustrialFluidCableLumum.get().asItem(), "cable_industrial_fluid_lumum");
+		cable7Inventory(ModBlocks.IndustrialFluidCableCreative.get().asItem(), "cable_industrial_fluid_creative");
+
 		for (RegistryObject<Block> block : ModBlocks.BLOCKS.getEntries()) {
 			if (customModelBlockItems.contains(block.get())) {
 				continue;
@@ -662,11 +717,19 @@ public class ModItemModelProvider extends ItemModelProvider {
 			}
 			basicItemBlock(block.get());
 		}
+
+		simpleItem(ModItems.StaticSeeds.get(), "plants/seed_static");
+		simpleItem(ModItems.EnergizedSeeds.get(), "plants/seed_energized");
+		simpleItem(ModItems.LumumSeeds.get(), "plants/seed_lumum");
 	}
 
 	private ItemModelBuilder lightbulb(Item item, String color) {
 		ResourceLocation bulbGlass = new ResourceLocation(StaticPower.MOD_ID, "items/light_bulb/" + color + "_bulb");
 		return withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "item/base_models/light_bulb")).texture("glass", bulbGlass);
+	}
+
+	private ItemModelBuilder spawnEgg(Item item) {
+		return withExistingParent(name(item), new ResourceLocation("item/template_spawn_egg"));
 	}
 
 	private ItemModelBuilder simpleItem(Item item, String texturePath) {
@@ -678,7 +741,9 @@ public class ModItemModelProvider extends ItemModelProvider {
 	}
 
 	public ItemModelBuilder basicItemBlock(Block block) {
-		return withExistingParent(name(block.asItem()), new ResourceLocation(StaticPower.MOD_ID, "block/" + block.asItem()));
+		ResourceLocation blockModelLocation = new ResourceLocation(StaticPower.MOD_ID, "block/" + block.asItem());
+		ItemModelBuilder builder = withExistingParent(name(block.asItem()), blockModelLocation);
+		return builder;
 	}
 
 	private ItemModelBuilder upgrade(Item item, String upgradeTexturePath, String plateTexturePath) {
@@ -691,9 +756,9 @@ public class ModItemModelProvider extends ItemModelProvider {
 	}
 
 	private ItemModelBuilder regularSizeAttachment(Item item, String baseTexturePath, String overlayTexturePath) {
-		return withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "block/cables/cable_attachment"))
-				.texture("base", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + baseTexturePath))
-				.texture("overlay", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + baseTexturePath)).guiLight(GuiLight.FRONT);
+		return withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cables/cable_5_attachment"))
+				.texture("cable_texture", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + baseTexturePath))
+				.texture("overlay", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + overlayTexturePath)).guiLight(GuiLight.FRONT);
 	}
 
 	private ItemModelBuilder digistoreAttachment(Item item, String texturePath) {
@@ -705,6 +770,33 @@ public class ModItemModelProvider extends ItemModelProvider {
 		return withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "item/base_models/digistore_large_attachment"))
 				.texture("base", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + texturePath))
 				.texture("overlay", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + overlayTexturePath)).guiLight(GuiLight.FRONT);
+	}
+
+	private ItemModelBuilder cable7Inventory(Item item, String texturePath) {
+		return cableInventory(item, "cable_7_inventory", texturePath);
+	}
+
+	private ItemModelBuilder cable5Inventory(Item item, String texturePath) {
+		return cableInventory(item, "cable_5_inventory", texturePath);
+	}
+
+	private ItemModelBuilder cable3Inventory(Item item, String texturePath) {
+		return cableInventory(item, "cable_3_inventory", texturePath);
+	}
+
+	@SuppressWarnings("unused")
+	private ItemModelBuilder cable2Inventory(Item item, String texturePath) {
+		return cableInventory(item, "cable_2_inventory", texturePath);
+	}
+
+	@SuppressWarnings("unused")
+	private ItemModelBuilder cable1Inventory(Item item, String texturePath) {
+		return cableInventory(item, "cable_1_inventory", texturePath);
+	}
+
+	private ItemModelBuilder cableInventory(Item item, String modelPath, String texturePath) {
+		return withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "item/base_models/" + modelPath)).texture("cable_texture",
+				new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/" + texturePath));
 	}
 
 	private void fromExistingModel(Item item, String modelPath) {

@@ -6,155 +6,49 @@ import java.util.Map;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class StaticPowerAdditionalModels {
 	public static final HashSet<ResourceLocation> MODELS = new HashSet<ResourceLocation>();
 
-	public static final ResourceLocation CABLE_POWER_BASIC_STRAIGHT = registerModel("block/cables/power/basic/straight");
-	public static final ResourceLocation CABLE_POWER_BASIC_EXTENSION = registerModel("block/cables/power/basic/extension");
-	public static final ResourceLocation CABLE_POWER_BASIC_ATTACHMENT = registerModel("block/cables/power/basic/attachment");
+	public record CableModelSet(ResourceLocation straight, ResourceLocation extension, ResourceLocation attachment) {
+	}
 
-	public static final ResourceLocation CABLE_POWER_ADVANCED_STRAIGHT = registerModel("block/cables/power/advanced/straight");
-	public static final ResourceLocation CABLE_POWER_ADVANCED_EXTENSION = registerModel("block/cables/power/advanced/extension");
-	public static final ResourceLocation CABLE_POWER_ADVANCED_ATTACHMENT = registerModel("block/cables/power/advanced/attachment");
+	@SuppressWarnings("unchecked")
+	private static final Tuple<ResourceLocation, String>[] CABLE_TIERS = new Tuple[] { new Tuple<ResourceLocation, String>(StaticPowerTiers.BASIC, "basic"),
+			new Tuple<ResourceLocation, String>(StaticPowerTiers.ADVANCED, "advanced"), new Tuple<ResourceLocation, String>(StaticPowerTiers.STATIC, "static"),
+			new Tuple<ResourceLocation, String>(StaticPowerTiers.ENERGIZED, "energized"), new Tuple<ResourceLocation, String>(StaticPowerTiers.LUMUM, "lumum"),
+			new Tuple<ResourceLocation, String>(StaticPowerTiers.CREATIVE, "creative") };
 
-	public static final ResourceLocation CABLE_POWER_STATIC_STRAIGHT = registerModel("block/cables/power/static/straight");
-	public static final ResourceLocation CABLE_POWER_STATIC_EXTENSION = registerModel("block/cables/power/static/extension");
-	public static final ResourceLocation CABLE_POWER_STATIC_ATTACHMENT = registerModel("block/cables/power/static/attachment");
+	public static final Map<ResourceLocation, CableModelSet> POWER_CABLES = new HashMap<>();
+	public static final Map<ResourceLocation, CableModelSet> INSULATED_POWER_CABLES = new HashMap<>();
+	public static final Map<ResourceLocation, CableModelSet> INDUSTRIAL_POWER_CABLES = new HashMap<>();
+	public static final Map<ResourceLocation, CableModelSet> FLUID_CABLES = new HashMap<>();
+	public static final Map<ResourceLocation, CableModelSet> INDUSTRIAL_FLUID_CABLES = new HashMap<>();
+	public static final Map<ResourceLocation, CableModelSet> ITEM_CABLES = new HashMap<>();
 
-	public static final ResourceLocation CABLE_POWER_ENERGIZED_STRAIGHT = registerModel("block/cables/power/energized/straight");
-	public static final ResourceLocation CABLE_POWER_ENERGIZED_EXTENSION = registerModel("block/cables/power/energized/extension");
-	public static final ResourceLocation CABLE_POWER_ENERGIZED_ATTACHMENT = registerModel("block/cables/power/energized/attachment");
+	static {
+		for (Tuple<ResourceLocation, String> tier : CABLE_TIERS) {
+			POWER_CABLES.put(tier.getA(), registerCable("block/cable_power_" + tier.getB()));
+			INSULATED_POWER_CABLES.put(tier.getA(), registerCable("block/cable_insulated_power_" + tier.getB()));
+			INDUSTRIAL_POWER_CABLES.put(tier.getA(), registerCable("block/cable_industrial_power_" + tier.getB()));
+			FLUID_CABLES.put(tier.getA(), registerCable("block/cable_fluid_" + tier.getB()));
+			INDUSTRIAL_FLUID_CABLES.put(tier.getA(), registerCable("block/cable_industrial_fluid_" + tier.getB()));
+			ITEM_CABLES.put(tier.getA(), registerCable("block/cable_item_" + tier.getB()));
+		}
+	}
 
-	public static final ResourceLocation CABLE_POWER_LUMUM_STRAIGHT = registerModel("block/cables/power/lumum/straight");
-	public static final ResourceLocation CABLE_POWER_LUMUM_EXTENSION = registerModel("block/cables/power/lumum/extension");
-	public static final ResourceLocation CABLE_POWER_LUMUM_ATTACHMENT = registerModel("block/cables/power/lumum/attachment");
+	public static final CableModelSet CABLE_HEAT_COPPER = registerCable("block/cable_heat_copper");
+	public static final CableModelSet CABLE_HEAT_GOLD = registerCable("block/cable_heat_gold");
+	public static final CableModelSet CABLE_HEAT_ALUMINUM = registerCable("block/cable_heat_aluminum");
 
-	public static final ResourceLocation CABLE_POWER_CREATIVE_STRAIGHT = registerModel("block/cables/power/creative/straight");
-	public static final ResourceLocation CABLE_POWER_CREATIVE_EXTENSION = registerModel("block/cables/power/creative/extension");
-	public static final ResourceLocation CABLE_POWER_CREATIVE_ATTACHMENT = registerModel("block/cables/power/creative/attachment");
-
-	public static final ResourceLocation CABLE_ITEM_BASIC_STRAIGHT = registerModel("block/cables/item/basic/straight");
-	public static final ResourceLocation CABLE_ITEM_BASIC_EXTENSION = registerModel("block/cables/item/basic/extension");
-
-	public static final ResourceLocation CABLE_ITEM_ADVANCED_STRAIGHT = registerModel("block/cables/item/advanced/straight");
-	public static final ResourceLocation CABLE_ITEM_ADVANCED_EXTENSION = registerModel("block/cables/item/advanced/extension");
-
-	public static final ResourceLocation CABLE_ITEM_STATIC_STRAIGHT = registerModel("block/cables/item/static/straight");
-	public static final ResourceLocation CABLE_ITEM_STATIC_EXTENSION = registerModel("block/cables/item/static/extension");
-
-	public static final ResourceLocation CABLE_ITEM_ENERGIZED_STRAIGHT = registerModel("block/cables/item/energized/straight");
-	public static final ResourceLocation CABLE_ITEM_ENERGIZED_EXTENSION = registerModel("block/cables/item/energized/extension");
-
-	public static final ResourceLocation CABLE_ITEM_LUMUM_STRAIGHT = registerModel("block/cables/item/lumum/straight");
-	public static final ResourceLocation CABLE_ITEM_LUMUM_EXTENSION = registerModel("block/cables/item/lumum/extension");
-
-	public static final ResourceLocation CABLE_ITEM_CREATIVE_STRAIGHT = registerModel("block/cables/item/creative/straight");
-	public static final ResourceLocation CABLE_ITEM_CREATIVE_EXTENSION = registerModel("block/cables/item/creative/extension");
-
-	public static final ResourceLocation CABLE_ITEM_DEFAULT_ATTACHMENT = registerModel("block/cables/item/attachment");
-
-	public static final ResourceLocation CABLE_DIGISTORE_STRAIGHT = registerModel("block/cables/digistore/straight");
-	public static final ResourceLocation CABLE_DIGISTORE_EXTENSION = registerModel("block/cables/digistore/extension");
-	public static final ResourceLocation CABLE_DIGISTORE_ATTACHMENT = registerModel("block/cables/digistore/attachment");
-
-	public static final ResourceLocation CABLE_FLUID_BASIC_STRAIGHT = registerModel("block/cables/fluid/basic/straight");
-	public static final ResourceLocation CABLE_FLUID_BASIC_EXTENSION = registerModel("block/cables/fluid/basic/extension");
-	public static final ResourceLocation CABLE_FLUID_BASIC_ATTACHMENT = registerModel("block/cables/fluid/basic/attachment");
-
-	public static final ResourceLocation CABLE_FLUID_ADVANCED_STRAIGHT = registerModel("block/cables/fluid/advanced/straight");
-	public static final ResourceLocation CABLE_FLUID_ADVANCED_EXTENSION = registerModel("block/cables/fluid/advanced/extension");
-	public static final ResourceLocation CABLE_FLUID_ADVANCED_ATTACHMENT = registerModel("block/cables/fluid/advanced/attachment");
-
-	public static final ResourceLocation CABLE_FLUID_STATIC_STRAIGHT = registerModel("block/cables/fluid/static/straight");
-	public static final ResourceLocation CABLE_FLUID_STATIC_EXTENSION = registerModel("block/cables/fluid/static/extension");
-	public static final ResourceLocation CABLE_FLUID_STATIC_ATTACHMENT = registerModel("block/cables/fluid/static/attachment");
-
-	public static final ResourceLocation CABLE_FLUID_ENERGIZED_STRAIGHT = registerModel("block/cables/fluid/energized/straight");
-	public static final ResourceLocation CABLE_FLUID_ENERGIZED_EXTENSION = registerModel("block/cables/fluid/energized/extension");
-	public static final ResourceLocation CABLE_FLUID_ENERGIZED_ATTACHMENT = registerModel("block/cables/fluid/energized/attachment");
-
-	public static final ResourceLocation CABLE_FLUID_LUMUM_STRAIGHT = registerModel("block/cables/fluid/lumum/straight");
-	public static final ResourceLocation CABLE_FLUID_LUMUM_EXTENSION = registerModel("block/cables/fluid/lumum/extension");
-	public static final ResourceLocation CABLE_FLUID_LUMUM_ATTACHMENT = registerModel("block/cables/fluid/lumum/attachment");
-
-	public static final ResourceLocation CABLE_FLUID_CREATIVE_STRAIGHT = registerModel("block/cables/fluid/creative/straight");
-	public static final ResourceLocation CABLE_FLUID_CREATIVE_EXTENSION = registerModel("block/cables/fluid/creative/extension");
-	public static final ResourceLocation CABLE_FLUID_CREATIVE_ATTACHMENT = registerModel("block/cables/fluid/creative/attachment");
-
-	public static final ResourceLocation CABLE_FLUID_DEFAULT_ATTACHMENT = registerModel("block/cables/fluid/attachment");
-
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_BASIC_STRAIGHT = registerModel("block/cables/industrial_fluid/basic/straight");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_BASIC_EXTENSION = registerModel("block/cables/industrial_fluid/basic/extension");
-
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ADVANCED_STRAIGHT = registerModel("block/cables/industrial_fluid/advanced/straight");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ADVANCED_EXTENSION = registerModel("block/cables/industrial_fluid/advanced/extension");
-
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_STATIC_STRAIGHT = registerModel("block/cables/industrial_fluid/static/straight");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_STATIC_EXTENSION = registerModel("block/cables/industrial_fluid/static/extension");
-
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ENERGIZED_STRAIGHT = registerModel("block/cables/industrial_fluid/energized/straight");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ENERGIZED_EXTENSION = registerModel("block/cables/industrial_fluid/energized/extension");
-
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_LUMUM_STRAIGHT = registerModel("block/cables/industrial_fluid/lumum/straight");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_LUMUM_EXTENSION = registerModel("block/cables/industrial_fluid/lumum/extension");
-
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_CREATIVE_STRAIGHT = registerModel("block/cables/industrial_fluid/creative/straight");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_CREATIVE_EXTENSION = registerModel("block/cables/industrial_fluid/creative/extension");
-
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_DEFAULT_ATTACHMENT = registerModel("block/cables/industrial_fluid/attachment");
-
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_BASIC_STRAIGHT = registerModel("block/cables/industrial_power/basic/straight");
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_BASIC_EXTENSION = registerModel("block/cables/industrial_power/basic/extension");
-
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_ADVANCED_STRAIGHT = registerModel("block/cables/industrial_power/advanced/straight");
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_ADVANCED_EXTENSION = registerModel("block/cables/industrial_power/advanced/extension");
-
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_STATIC_STRAIGHT = registerModel("block/cables/industrial_power/static/straight");
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_STATIC_EXTENSION = registerModel("block/cables/industrial_power/static/extension");
-
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_ENERGIZED_STRAIGHT = registerModel("block/cables/industrial_power/energized/straight");
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_ENERGIZED_EXTENSION = registerModel("block/cables/industrial_power/energized/extension");
-
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_LUMUM_STRAIGHT = registerModel("block/cables/industrial_power/lumum/straight");
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_LUMUM_EXTENSION = registerModel("block/cables/industrial_power/lumum/extension");
-
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_CREATIVE_STRAIGHT = registerModel("block/cables/industrial_power/creative/straight");
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_CREATIVE_EXTENSION = registerModel("block/cables/industrial_power/creative/extension");
-
-	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_DEFAULT_ATTACHMENT = registerModel("block/cables/industrial_power/attachment");
-
-	public static final ResourceLocation CABLE_HEAT_COPPER_STRAIGHT = registerModel("block/cables/heat/copper/straight");
-	public static final ResourceLocation CABLE_HEAT_COPPER_EXTENSION = registerModel("block/cables/heat/copper/extension");
-	public static final ResourceLocation CABLE_HEAT_COPPER_ATTACHMENT = registerModel("block/cables/heat/copper/attachment");
-
-	public static final ResourceLocation CABLE_HEAT_TIN_STRAIGHT = registerModel("block/cables/heat/tin/straight");
-	public static final ResourceLocation CABLE_HEAT_TIN_EXTENSION = registerModel("block/cables/heat/tin/extension");
-	public static final ResourceLocation CABLE_HEAT_TIN_ATTACHMENT = registerModel("block/cables/heat/tin/attachment");
-
-	public static final ResourceLocation CABLE_HEAT_SILVER_STRAIGHT = registerModel("block/cables/heat/silver/straight");
-	public static final ResourceLocation CABLE_HEAT_SILVER_EXTENSION = registerModel("block/cables/heat/silver/extension");
-	public static final ResourceLocation CABLE_HEAT_SILVER_ATTACHMENT = registerModel("block/cables/heat/silver/attachment");
-
-	public static final ResourceLocation CABLE_HEAT_GOLD_STRAIGHT = registerModel("block/cables/heat/gold/straight");
-	public static final ResourceLocation CABLE_HEAT_GOLD_EXTENSION = registerModel("block/cables/heat/gold/extension");
-	public static final ResourceLocation CABLE_HEAT_GOLD_ATTACHMENT = registerModel("block/cables/heat/gold/attachment");
-
-	public static final ResourceLocation CABLE_HEAT_PLATINUM_STRAIGHT = registerModel("block/cables/heat/platinum/straight");
-	public static final ResourceLocation CABLE_HEAT_PLATINUM_EXTENSION = registerModel("block/cables/heat/platinum/extension");
-	public static final ResourceLocation CABLE_HEAT_PLATINUM_ATTACHMENT = registerModel("block/cables/heat/platinum/attachment");
-
-	public static final ResourceLocation CABLE_HEAT_ALUMINUM_STRAIGHT = registerModel("block/cables/heat/aluminum/straight");
-	public static final ResourceLocation CABLE_HEAT_ALUMINUM_EXTENSION = registerModel("block/cables/heat/aluminum/extension");
-	public static final ResourceLocation CABLE_HEAT_ALUMINUM_ATTACHMENT = registerModel("block/cables/heat/aluminum/attachment");
-
-	public static final ResourceLocation CABLE_SCAFFOLD_STRAIGHT = registerModel("block/cables/scaffold/straight");
-	public static final ResourceLocation CABLE_SCAFFOLD_EXTENSION = registerModel("block/cables/scaffold/extension");
-	public static final ResourceLocation CABLE_SCAFFOLD_ATTACHMENT = registerModel("block/cables/scaffold/attachment");
+	public static final CableModelSet CABLE_DIGISTORE = registerCable("block/cable_digistore");
+	public static final CableModelSet CABLE_SCAFFOLD = registerCable("block/cable_scaffold");
 
 	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT = registerModel("block/cables/redstone/basic/attachment_input");
 	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_OUTPUT = registerModel("block/cables/redstone/basic/attachment_output");
@@ -270,6 +164,13 @@ public class StaticPowerAdditionalModels {
 			event.register(model);
 			StaticPower.LOGGER.trace(String.format("Loading additional model: %1$s.", model.toString()));
 		}
+	}
+
+	private static CableModelSet registerCable(String cablePath) {
+		ResourceLocation straightModel = registerModel(cablePath + "_straight");
+		ResourceLocation extensionModel = registerModel(cablePath + "_extension");
+		ResourceLocation attachmentModel = registerModel(cablePath + "_attachment");
+		return new CableModelSet(straightModel, extensionModel, attachmentModel);
 	}
 
 	/**

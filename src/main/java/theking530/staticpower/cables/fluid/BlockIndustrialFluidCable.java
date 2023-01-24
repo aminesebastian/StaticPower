@@ -27,6 +27,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -48,31 +49,8 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		ResourceLocation extensionModel = null;
-		ResourceLocation straightModel = null;
-		ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_DEFAULT_ATTACHMENT;
-
-		if (tier == StaticPowerTiers.BASIC) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_BASIC_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_BASIC_STRAIGHT;
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ADVANCED_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ADVANCED_STRAIGHT;
-		} else if (tier == StaticPowerTiers.STATIC) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_STATIC_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_STATIC_STRAIGHT;
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ENERGIZED_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ENERGIZED_STRAIGHT;
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_LUMUM_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_LUMUM_STRAIGHT;
-		} else if (tier == StaticPowerTiers.CREATIVE) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_CREATIVE_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_CREATIVE_STRAIGHT;
-		}
-
-		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
+		CableModelSet model = StaticPowerAdditionalModels.INDUSTRIAL_FLUID_CABLES.get(tier);
+		return new CableBakedModel(existingModel, model);
 	}
 
 	@Override

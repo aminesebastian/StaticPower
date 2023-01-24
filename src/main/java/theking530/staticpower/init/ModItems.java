@@ -472,7 +472,7 @@ public class ModItems {
 	public static final RegistryObject<StaticPlantSeeds> EnergizedSeeds = ITEMS.register("seed_energized", () -> new StaticPlantSeeds(ModBlocks.EnergizedCrop.get()));
 	public static final RegistryObject<StaticPlantSeeds> LumumSeeds = ITEMS.register("seed_lumum", () -> new StaticPlantSeeds(ModBlocks.LumumCrop.get()));
 
-	public static final RegistryObject<StaticCropFruit> StaticFruit = ITEMS.register("fruid_static", () -> new StaticCropFruit(ModFoods.STATIC_FRUIT));
+	public static final RegistryObject<StaticCropFruit> StaticFruit = ITEMS.register("fruit_static", () -> new StaticCropFruit(ModFoods.STATIC_FRUIT));
 	public static final RegistryObject<StaticCropFruit> EnergizedFruit = ITEMS.register("fruit_energized", () -> new StaticCropFruit(ModFoods.ENERGIZED_FRUIT));
 	public static final RegistryObject<StaticCropFruit> LumumFruit = ITEMS.register("fruit_lumum", () -> new StaticCropFruit(ModFoods.LUMUM_FRUIT));
 	public static final RegistryObject<DepletedFruit> DepletedFruit = ITEMS.register("fruit_depleted", () -> new DepletedFruit());

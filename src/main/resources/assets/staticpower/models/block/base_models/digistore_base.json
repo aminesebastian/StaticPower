@@ -1,9 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"base_front": "staticpower:blocks/machines/sides/basic_machine_front",
-		"base_side": "staticpower:blocks/machines/sides/basic_machine_side_empty",
-		"particle": "staticpower:blocks/digistore/digistore_manager_front",
+		"4": "staticpower:blocks/machines/sides/basic_machine_front",
+		"particle": "staticpower:blocks/machines/sides/basic_machine_side",
+		"base_front": "staticpower:blocks/machines/sides/basic_machine_side",
+		"base_side": "staticpower:blocks/machines/sides/basic_machine_top",
 		"front_overlay": "staticpower:blocks/digistore/digistore_manager_front",
 		"side_overlay": "staticpower:blocks/digistore/manager_side_off"
 	},
@@ -13,10 +14,10 @@
 			"from": [0, 0, 0],
 			"to": [16, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#base_front"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#base_side"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#base_side"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#base_side"},
+				"north": {"uv": [0, 0, 16, 16], "texture": "#4"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#base_front"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#base_front"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#base_front"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#base_side"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#base_side"}
 			}

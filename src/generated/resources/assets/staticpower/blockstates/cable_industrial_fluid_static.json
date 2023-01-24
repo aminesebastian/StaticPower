@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "waterlogged=false": {
+      "model": "staticpower:block/cable_industrial_fluid_static_core"
+    },
+    "waterlogged=true": {
+      "model": "staticpower:block/cable_industrial_fluid_static_core"
+    }
+  }
+}

@@ -21,6 +21,7 @@ import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -40,32 +41,16 @@ public class BlockHeatCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		ResourceLocation extensionModel = null;
-		ResourceLocation straightModel = null;
-		ResourceLocation attachmentModel = null;
+		CableModelSet model = null;
 
 		if (tier == StaticPowerTiers.COPPER) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_COPPER_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_COPPER_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_COPPER_ATTACHMENT;
-		} else if (tier == StaticPowerTiers.TIN) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_TIN_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_TIN_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_TIN_ATTACHMENT;
-		} else if (tier == StaticPowerTiers.SILVER) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_SILVER_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_SILVER_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_SILVER_ATTACHMENT;
+			model = StaticPowerAdditionalModels.CABLE_HEAT_COPPER;
 		} else if (tier == StaticPowerTiers.GOLD) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_GOLD_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_GOLD_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_GOLD_ATTACHMENT;
+			model = StaticPowerAdditionalModels.CABLE_HEAT_GOLD;
 		} else if (tier == StaticPowerTiers.ALUMINUM) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_ATTACHMENT;
+			model = StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM;
 		}
-		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
+		return new CableBakedModel(existingModel, model);
 	}
 
 	@Override

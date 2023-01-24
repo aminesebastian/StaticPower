@@ -1,5 +1,5 @@
 {
-	"parent": "staticpower:block/machines/turbine_blades/turbine_blades_basic",
+	"parent": "staticpower:block/turbine_blades/turbine_blades_basic",
 	"textures": {
 		"particle": "staticpower:blocks/machines/turbine_blades/turbine_blades_static",
 		"texture": "staticpower:blocks/machines/turbine_blades/turbine_blades_static"

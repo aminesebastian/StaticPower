@@ -1,4 +1,4 @@
-// 1.19.2	2023-01-22T20:31:11.1971436	LootTables
+// 1.19.2	2023-01-24T02:18:39.9188506	LootTables
 5f1c4bd7d919817df3c517022b2bb5c6d61b5d9d data/staticpower/loot_tables/blocks/alloy_furnace.json
 ec0346cd8a4b004d8afe4ac900233eb8bfd496e4 data/staticpower/loot_tables/blocks/automatic_placer.json
 f782be601a12395d5e5c205629f67cdcf8579ac0 data/staticpower/loot_tables/blocks/battery_block_advanced.json
@@ -155,7 +155,7 @@ eb4b845025d2302491589657680915f5edec9fe5 data/staticpower/loot_tables/blocks/con
 a9f621f3cfa8499a5c13867d34237f8cbb242df8 data/staticpower/loot_tables/blocks/conveyor_supplier_static.json
 b38a111650540d73f3e9de6f29e5c8d22dbf16ff data/staticpower/loot_tables/blocks/crop_energized.json
 df513115c77083686bb1e1c245428410da672933 data/staticpower/loot_tables/blocks/crop_lumum.json
-26a436dd43ff780434ffedd305ddbd4d506fab3d data/staticpower/loot_tables/blocks/crop_static.json
+d9a1dc2072d7ea5ceba34191d1d3140b6f5f81ae data/staticpower/loot_tables/blocks/crop_static.json
 c7a21200a42316829351e8652b663bbfa892c8ae data/staticpower/loot_tables/blocks/digistore.json
 7544c15a27607f772bb3743e1b1510fa5c9e14f5 data/staticpower/loot_tables/blocks/digistore_io_port.json
 3a6afcc6b6178a52744b9e1ffbaa16b3824aa177 data/staticpower/loot_tables/blocks/digistore_manager.json

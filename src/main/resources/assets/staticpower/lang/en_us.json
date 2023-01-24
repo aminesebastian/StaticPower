@@ -656,9 +656,9 @@
 	
 	"block.staticpower.light_socket": "Light Socket",
 	
-	"block.staticpower.crop_static": "Static Seed",
-	"block.staticpower.crop_energized": "Energized Seed",
-	"block.staticpower.crop_lumum": "Lumum Seed",
+	"block.staticpower.crop_static": "Static Crop",
+	"block.staticpower.crop_energized": "Energized Crop",
+	"block.staticpower.crop_lumum": "Lumum Crop",
 	
 	"block.staticpower.grass_static": "Static Grass",
 	"block.staticpower.grass_energized": "Energized Grass",

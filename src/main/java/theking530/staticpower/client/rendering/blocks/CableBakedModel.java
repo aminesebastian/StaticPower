@@ -26,6 +26,7 @@ import theking530.staticcore.cablenetwork.CableRenderingState;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.CoverBuilder;
 import theking530.staticpower.client.rendering.RotatedModelCache;
 
@@ -37,12 +38,20 @@ public class CableBakedModel extends AbstractBakedModel {
 	private final ResourceLocation Attachment;
 	private final CoverBuilder coverBuilder;
 
+	public CableBakedModel(BakedModel coreModel, CableModelSet modelSet) {
+		this(coreModel, modelSet.extension(), modelSet.straight(), modelSet.attachment());
+	}
+
 	public CableBakedModel(BakedModel coreModel, ResourceLocation extensionModel, ResourceLocation straightModel, ResourceLocation attachmentModel) {
 		super(coreModel);
 		Extension = extensionModel;
 		Straight = straightModel;
 		Attachment = attachmentModel;
 		coverBuilder = new CoverBuilder();
+
+		RotatedModelCache.bakeForAllDirections(extensionModel);
+		RotatedModelCache.bakeForAllDirections(straightModel);
+		RotatedModelCache.bakeForAllDirections(attachmentModel);
 	}
 
 	@Override

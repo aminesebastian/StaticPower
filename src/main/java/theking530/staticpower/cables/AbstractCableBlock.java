@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +18,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -27,13 +27,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.util.ForgeSoundType;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHoverType;
-import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.cablenetwork.CableUtilities;
+import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
@@ -42,6 +43,11 @@ import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock implements ICustomModelProvider {
+	public static final ForgeSoundType METAL_CABLE = new ForgeSoundType(1.0F, 0.75F, () -> SoundEvents.COPPER_BREAK, () -> SoundEvents.COPPER_STEP, () -> SoundEvents.COPPER_PLACE,
+			() -> SoundEvents.COPPER_HIT, () -> SoundEvents.COPPER_FALL);
+	public static final ForgeSoundType CLOTH_CABLE = new ForgeSoundType(1.0F, 1.0F, () -> SoundEvents.WOOL_BREAK, () -> SoundEvents.WOOL_STEP, () -> SoundEvents.WOOL_PLACE,
+			() -> SoundEvents.WOOL_HIT, () -> SoundEvents.WOOL_FALL);
+
 	public final CableBoundsCache cableBoundsCache;
 	public final float coverHoleSize;
 
@@ -57,7 +63,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 	 *                             this cable passes through a cover.
 	 */
 	public AbstractCableBlock(ResourceLocation tier, CableBoundsCache cableBoundsCache, float coverHoleSize) {
-		super(tier, Block.Properties.of(Material.METAL).sound(SoundType.COPPER).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
+		super(tier, Block.Properties.of(Material.METAL).sound(METAL_CABLE).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
 		this.cableBoundsCache = cableBoundsCache;
 		this.coverHoleSize = coverHoleSize;
 	}

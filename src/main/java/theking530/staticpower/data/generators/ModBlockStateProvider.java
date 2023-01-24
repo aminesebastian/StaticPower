@@ -313,6 +313,55 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		conveyorExtractor(ModBlocks.ConveyorExtractorEnergized.get(), "energized");
 		conveyorExtractor(ModBlocks.ConveyorExtractorLumum.get(), "lumum");
 
+		cable3Thickness(ModBlocks.DigistoreWire.get(), "cable_digistore", "attachments/cable_digistore_attachment");
+		cable5Thickness(ModBlocks.ScaffoldCable.get(), "cable_scaffold", "attachments/cable_scaffold_attachment");
+
+		cable5Thickness(ModBlocks.PowerCableBasic.get(), "cable_power_basic", "attachments/cable_power_basic_attachment");
+		cable5Thickness(ModBlocks.PowerCableAdvanced.get(), "cable_power_advanced", "attachments/cable_power_advanced_attachment");
+		cable5Thickness(ModBlocks.PowerCableStatic.get(), "cable_power_static", "attachments/cable_power_static_attachment");
+		cable5Thickness(ModBlocks.PowerCableEnergized.get(), "cable_power_energized", "attachments/cable_power_energized_attachment");
+		cable5Thickness(ModBlocks.PowerCableLumum.get(), "cable_power_lumum", "attachments/cable_power_lumum_attachment");
+		cable5Thickness(ModBlocks.PowerCableCreative.get(), "cable_power_creative", "attachments/cable_power_creative_attachment");
+
+		cable7Thickness(ModBlocks.IndustrialPowerCableBasic.get(), "cable_industrial_power_basic", "cable_industrial_power_basic");
+		cable7Thickness(ModBlocks.IndustrialPowerCableAdvanced.get(), "cable_industrial_power_advanced", "cable_industrial_power_advanced");
+		cable7Thickness(ModBlocks.IndustrialPowerCableStatic.get(), "cable_industrial_power_static", "cable_industrial_power_static");
+		cable7Thickness(ModBlocks.IndustrialPowerCableEnergized.get(), "cable_industrial_power_energized", "cable_industrial_power_energized");
+		cable7Thickness(ModBlocks.IndustrialPowerCableLumum.get(), "cable_industrial_power_lumum", "cable_industrial_power_lumum");
+		cable7Thickness(ModBlocks.IndustrialPowerCableCreative.get(), "cable_industrial_power_creative", "cable_industrial_power_creative");
+
+		cable5Thickness(ModBlocks.InsulatedPowerCableBasic.get(), "cable_power_basic_insulated", "attachments/cable_power_basic_attachment");
+		cable5Thickness(ModBlocks.InsulatedPowerCableAdvanced.get(), "cable_power_advanced_insulated", "attachments/cable_power_advanced_attachment");
+		cable5Thickness(ModBlocks.InsulatedPowerCableStatic.get(), "cable_power_static_insulated", "attachments/cable_power_static_attachment");
+		cable5Thickness(ModBlocks.InsulatedPowerCableEnergized.get(), "cable_power_energized_insulated", "attachments/cable_power_energized_attachment");
+		cable5Thickness(ModBlocks.InsulatedPowerCableLumum.get(), "cable_power_lumum_insulated", "attachments/cable_power_lumum_attachment");
+		cable5Thickness(ModBlocks.InsulatedPowerCableCreative.get(), "cable_power_creative_insulated", "attachments/cable_power_creative_attachment");
+
+		cable5Thickness(ModBlocks.ItemCableBasic.get(), "cable_item_basic", "attachments/cable_item_attachment");
+		cable5Thickness(ModBlocks.ItemCableAdvanced.get(), "cable_item_advanced", "attachments/cable_item_attachment");
+		cable5Thickness(ModBlocks.ItemCableStatic.get(), "cable_item_static", "attachments/cable_item_attachment");
+		cable5Thickness(ModBlocks.ItemCableEnergized.get(), "cable_item_energized", "attachments/cable_item_attachment");
+		cable5Thickness(ModBlocks.ItemCableLumum.get(), "cable_item_lumum", "attachments/cable_item_attachment");
+		cable5Thickness(ModBlocks.ItemCableCreative.get(), "cable_item_creative", "attachments/cable_item_attachment");
+
+		cable5Thickness(ModBlocks.FluidCableBasic.get(), "cable_fluid_basic", "attachments/cable_fluid_attachment");
+		cable5Thickness(ModBlocks.FluidCableAdvanced.get(), "cable_fluid_advanced", "attachments/cable_fluid_attachment");
+		cable5Thickness(ModBlocks.FluidCableStatic.get(), "cable_fluid_static", "attachments/cable_fluid_attachment");
+		cable5Thickness(ModBlocks.FluidCableEnergized.get(), "cable_fluid_energized", "attachments/cable_fluid_attachment");
+		cable5Thickness(ModBlocks.FluidCableLumum.get(), "cable_fluid_lumum", "attachments/cable_fluid_attachment");
+		cable5Thickness(ModBlocks.FluidCableCreative.get(), "cable_fluid_creative", "attachments/cable_fluid_attachment");
+
+		cable7Thickness(ModBlocks.IndustrialFluidCableBasic.get(), "cable_industrial_fluid_basic", "cable_industrial_fluid_basic");
+		cable7Thickness(ModBlocks.IndustrialFluidCableAdvanced.get(), "cable_industrial_fluid_advanced", "cable_industrial_fluid_advanced");
+		cable7Thickness(ModBlocks.IndustrialFluidCableStatic.get(), "cable_industrial_fluid_static", "cable_industrial_fluid_static");
+		cable7Thickness(ModBlocks.IndustrialFluidCableEnergized.get(), "cable_industrial_fluid_energized", "cable_industrial_fluid_energized");
+		cable7Thickness(ModBlocks.IndustrialFluidCableLumum.get(), "cable_industrial_fluid_lumum", "cable_industrial_fluid_lumum");
+		cable7Thickness(ModBlocks.IndustrialFluidCableCreative.get(), "cable_industrial_fluid_creative", "cable_industrial_fluid_creative");
+
+		cable5Thickness(ModBlocks.AluminumHeatCable.get(), "cable_aluminum_heat", "attachments/cable_aluminum_attachment");
+		cable5Thickness(ModBlocks.CopperHeatCable.get(), "cable_copper_heat", "attachments/cable_copper_attachment");
+		cable5Thickness(ModBlocks.GoldHeatCable.get(), "cable_gold_heat", "attachments/cable_gold_attachment");
+
 		/**********
 		 * Fluids *
 		 **********/
@@ -632,7 +681,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 		ModelFile modelOff = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/digistore_base"))
 				.texture("front_overlay", frontTexture).texture("side_overlay", sideTexture);
-		ModelFile modelOn = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/digistore_base"))
+		ModelFile modelOn = models().withExistingParent(name(block) + "_on", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/digistore_base"))
 				.texture("front_overlay", frontOnTexture).texture("side_overlay", sideOnTexture);
 
 		getVariantBuilder(block).forAllStates(state -> {
@@ -672,6 +721,44 @@ public class ModBlockStateProvider extends BlockStateProvider {
 				break;
 			}
 			return ConfiguredModel.builder().modelFile(file).build();
+		});
+	}
+
+	public void cable7Thickness(Block block, String texturePath, String attachmentTexturePath) {
+		cableBlock(block, "cable_7_core", "cable_7_extension", "cable_7_straight", "cable_7_attachment", texturePath, attachmentTexturePath);
+	}
+
+	public void cable5Thickness(Block block, String texturePath, String attachmentTexturePath) {
+		cableBlock(block, "cable_5_core", "cable_5_extension", "cable_5_straight", "cable_5_attachment", texturePath, attachmentTexturePath);
+	}
+
+	public void cable3Thickness(Block block, String texturePath, String attachmentTexturePath) {
+		cableBlock(block, "cable_3_core", "cable_3_extension", "cable_3_straight", "cable_3_attachment", texturePath, attachmentTexturePath);
+	}
+
+	public void cable2Thickness(Block block, String texturePath, String attachmentTexturePath) {
+		cableBlock(block, "cable_2_core", "cable_2_extension", "cable_2_straight", "cable_2_attachment", texturePath, attachmentTexturePath);
+	}
+
+	public void cable1Thickness(Block block, String texturePath, String attachmentTexturePath) {
+		cableBlock(block, "cable_1_core", "cable_1_extension", "cable_1_straight", "cable_1_attachment", texturePath, attachmentTexturePath);
+	}
+
+	public void cableBlock(Block block, String coreModel, String extensionModel, String straightModel, String attachmentModel, String texturePath, String attachmentTexturePath) {
+		ResourceLocation texture = new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/" + texturePath);
+		ResourceLocation attachmentTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/" + attachmentTexturePath);
+
+		ModelFile core = models().withExistingParent("block/" + name(block) + "_core", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cables/" + coreModel))
+				.texture("cable_texture", texture).texture("particle", texture);
+		models().withExistingParent("block/" + name(block) + "_extension", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cables/" + extensionModel))
+				.texture("cable_texture", texture).texture("particle", texture);
+		models().withExistingParent("block/" + name(block) + "_straight", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cables/" + straightModel))
+				.texture("cable_texture", texture).texture("particle", texture);
+		models().withExistingParent("block/" + name(block) + "_attachment", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cables/" + attachmentModel))
+				.texture("cable_texture", attachmentTexture).texture("particle", attachmentTexture);
+
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(core).build();
 		});
 	}
 

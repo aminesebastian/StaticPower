@@ -5,21 +5,21 @@
       "y": 90
     },
     "facing=east,is_on=true": {
-      "model": "staticpower:block/digistore_io_port",
+      "model": "staticpower:block/digistore_io_port_on",
       "y": 90
     },
     "facing=north,is_on=false": {
       "model": "staticpower:block/digistore_io_port"
     },
     "facing=north,is_on=true": {
-      "model": "staticpower:block/digistore_io_port"
+      "model": "staticpower:block/digistore_io_port_on"
     },
     "facing=south,is_on=false": {
       "model": "staticpower:block/digistore_io_port",
       "y": 180
     },
     "facing=south,is_on=true": {
-      "model": "staticpower:block/digistore_io_port",
+      "model": "staticpower:block/digistore_io_port_on",
       "y": 180
     },
     "facing=west,is_on=false": {
@@ -27,7 +27,7 @@
       "y": 270
     },
     "facing=west,is_on=true": {
-      "model": "staticpower:block/digistore_io_port",
+      "model": "staticpower:block/digistore_io_port_on",
       "y": 270
     }
   }

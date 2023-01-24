@@ -24,9 +24,9 @@ import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockPowerCable extends AbstractCableBlock {
 	private final boolean insulated;
@@ -57,37 +57,8 @@ public class BlockPowerCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		ResourceLocation extensionModel = null;
-		ResourceLocation straightModel = null;
-		ResourceLocation attachmentModel = null;
-
-		if (tier == StaticPowerTiers.BASIC) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_BASIC_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_POWER_BASIC_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_BASIC_ATTACHMENT;
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_ADVANCED_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_POWER_ADVANCED_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_ADVANCED_ATTACHMENT;
-		} else if (tier == StaticPowerTiers.STATIC) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_STATIC_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_POWER_STATIC_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_STATIC_ATTACHMENT;
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_ENERGIZED_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_POWER_ENERGIZED_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_ENERGIZED_ATTACHMENT;
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_LUMUM_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_POWER_LUMUM_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_LUMUM_ATTACHMENT;
-		} else if (tier == StaticPowerTiers.CREATIVE) {
-			extensionModel = StaticPowerAdditionalModels.CABLE_POWER_CREATIVE_EXTENSION;
-			straightModel = StaticPowerAdditionalModels.CABLE_POWER_CREATIVE_STRAIGHT;
-			attachmentModel = StaticPowerAdditionalModels.CABLE_POWER_CREATIVE_ATTACHMENT;
-		}
-
-		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
+		CableModelSet model = insulated ? StaticPowerAdditionalModels.INSULATED_POWER_CABLES.get(tier) : StaticPowerAdditionalModels.POWER_CABLES.get(tier);
+		return new CableBakedModel(existingModel, model);
 	}
 
 	@Override
