@@ -59,7 +59,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 		// Initialize the side configuration.
 		configuration = new RedstoneCableConfiguration();
 		for (Direction dir : Direction.values()) {
-			configuration.getSideConfig(dir).setSelector(color.getName());
+			configuration.getSideConfig(dir).setSelector(color == null ? "" : color.getName());
 		}
 	}
 

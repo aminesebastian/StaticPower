@@ -131,6 +131,7 @@ public class BlockEntityDigistore extends BlockEntityDigistoreBase implements II
 					}
 				}
 			}
+			return InteractionResult.SUCCESS;
 		} else {
 			if (!level.isClientSide) {
 				// Keep track of if any items changed.

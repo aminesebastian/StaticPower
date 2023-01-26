@@ -70,7 +70,7 @@ public class RotatedModelCache {
 	}
 
 	public static Vector3f getRotation(Direction direction) {
-		return SIDE_ROTATIONS.get(direction);
+		return SIDE_ROTATIONS.get(direction).copy();
 	}
 
 	public void clear() {

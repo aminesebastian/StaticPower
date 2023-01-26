@@ -63,18 +63,14 @@ public class DigistoreModel extends AbstractBakedModel {
 		if (!card.isEmpty()) {
 			// Get the model of the card.
 			BakedModel model = Minecraft.getInstance().getModelManager().getModel(((DigistoreCard) card.getItem()).model);
+			Vector3f rotation = RotatedModelCache.getRotation(facing);
+			rotation.set(0, rotation.y() + 180, 0);
 
-			// Calculate the offset for the current card's model.
-			float xOffset = 0.0f;
-			float yOffset = -UNIT * 0.415f;
-			float zOffset = -0.75f * UNIT;
-
-			// Create a vector from that offset.
-			Vector3f offset = SDMath.transformVectorByDirection(facing, new Vector3f(xOffset, yOffset, zOffset));
+			float zOffset = -0.5f * UNIT;
+			Vector3f offset = SDMath.transformVectorByDirection(facing, new Vector3f(0, UNIT * 1.85f, zOffset));
 
 			// Transform the card's quads.
-			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, new Vector3f(1.46f, .6f, 1.0f), Quaternion.fromXYZDegrees(RotatedModelCache.getRotation(facing)), side,
-					state, rand, renderLayer);
+			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, new Vector3f(1.55f, 0.85f, 1.0f), Quaternion.fromXYZDegrees(rotation), side, state, rand, renderLayer);
 			newQuads.addAll(bakedCardQuads);
 
 		}

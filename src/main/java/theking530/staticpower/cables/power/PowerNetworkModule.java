@@ -301,6 +301,9 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			toSupplyPairs.setValue(toSupplyPairs.getValue() / totalSimulatedPower);
 		}
 
+		// We track the power provided separately instead of using power.getPower() -
+		// powerCopy.getPower() due to precision issues.
+		double powerProvided = 0;
 		PowerStack powerCopy = power.copy();
 		for (int i = 0; i < destinations.size(); i++) {
 			double toSupplyForDesination = power.getPower() * powerToSupply.get(i);
@@ -318,6 +321,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 			// Reduce the remaining power by the TOTAL supplied amount.
 			powerCopy.setPower(powerCopy.getPower() - supplyEvent.getTotalPower());
+			powerProvided += supplyEvent.getTotalPower();
 
 			if (!simulate) {
 				energyTracker.powerTransfered(new PowerStack(supplyEvent.getTotalPower(), power.getVoltage(), power.getCurrentType()));
@@ -339,7 +343,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		// The total amount of power used will be the original supplied amount minus the
 		// remaining amount.
 		getNetwork().getWorld().getProfiler().pop();
-		return power.getPower() - powerCopy.getPower();
+		return powerProvided;
 	}
 
 	private void breakCable(BlockPos cablePos) {

@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"particle": "staticpower:blocks/machines/pump_iron",
-		"texture": "staticpower:blocks/machines/pump_iron"
+		"particle": "staticpower:blocks/machines/pumps/pump_tube",
+		"texture": "staticpower:blocks/machines/pumps/pump_tube"
 	},
 	"elements": [
 		{

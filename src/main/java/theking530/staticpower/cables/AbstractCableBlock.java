@@ -84,22 +84,12 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 	}
 
 	@Override
-	public VoxelShape getOcclusionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
-		return cableBoundsCache.getShape(state, worldIn, pos, CollisionContext.empty(), false);
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+		return !state.getValue(BlockStateProperties.WATERLOGGED);
 	}
 
 	@Override
-	public VoxelShape getVisualShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		return cableBoundsCache.getShape(state, worldIn, pos, context, false);
-	}
-
-	@Override
-	public boolean propagatesSkylightDown(BlockState p_52348_, BlockGetter p_52349_, BlockPos p_52350_) {
-		return !p_52348_.getValue(BlockStateProperties.WATERLOGGED);
-	}
-
-	@Override
-	public boolean isPathfindable(BlockState p_52333_, BlockGetter p_52334_, BlockPos p_52335_, PathComputationType p_52336_) {
+	public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

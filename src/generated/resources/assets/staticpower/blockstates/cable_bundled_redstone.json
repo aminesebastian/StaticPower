@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "waterlogged=false": {
+      "model": "staticpower:block/cable_bundled_redstone_core"
+    },
+    "waterlogged=true": {
+      "model": "staticpower:block/cable_bundled_redstone_core"
+    }
+  }
+}

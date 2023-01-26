@@ -1,8 +1,0 @@
-newmtl lambert2SG
-map_Kd staticpower:blocks/conveyors/conveyor_top
-newmtl lambert4SG
-map_Kd staticpower:blocks/conveyors/conveyor_belt
-newmtl lambert5SG
-map_Kd staticpower:blocks/machines/sides/basic_machine_front
-newmtl lambert6SG
-map_Kd staticpower:blocks/machines/sides/basic_machine_top

@@ -34,7 +34,7 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 					new Vector2D(0.4f, 0.4f), partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
 			drawFillBar(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 			MetricConverter metric = new MetricConverter(tileEntity.inventory.getTotalContainedCount());
-			WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, metric.getValueAsString(true), SDColor.EIGHT_BIT_WHITE, new Vector3D(0.5f, 0.323f, 1.0001f), 0.007f, matrixStack,
+			WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, metric.getValueAsString(true), SDColor.EIGHT_BIT_WHITE, new Vector3D(0.5f, 0.276f, 1.001f), 0.007f, matrixStack,
 					buffer, combinedLight, combinedOverlay);
 		}
 		drawIndicators(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
@@ -72,11 +72,11 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 			int combinedOverlay) {
 		float filledRatio = tileEntity.inventory.getFilledRatio();
 		if (filledRatio < 1.0f) {
-			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_FILL_BAR, matrixStack, buffer, new Vector3D(0.293f, 0.192f, 0.047f),
-					new Vector3D(0.413f * filledRatio, 0.029f, 1.0f), Vector4D.DEFAULT_UV, SDColor.WHITE);
+			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_FILL_BAR, matrixStack, buffer, new Vector3D(0.281f, 0.217f, 0.0315f),
+					new Vector3D(0.438f * filledRatio, 0.04f, 1.0f), Vector4D.DEFAULT_UV, SDColor.WHITE);
 		} else {
-			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_FILL_BAR_FULL, matrixStack, buffer, new Vector3D(0.293f, 0.192f, 0.047f),
-					new Vector3D(0.413f * filledRatio, 0.029f, 1.0f), Vector4D.DEFAULT_UV, SDColor.WHITE);
+			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_FILL_BAR_FULL, matrixStack, buffer, new Vector3D(0.281f, 0.217f, 0.0315f),
+					new Vector3D(0.438f * filledRatio, 0.04f, 1.0f), Vector4D.DEFAULT_UV, SDColor.WHITE);
 		}
 	}
 }

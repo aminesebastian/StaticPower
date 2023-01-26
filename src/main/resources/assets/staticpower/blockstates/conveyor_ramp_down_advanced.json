@@ -1,8 +1,0 @@
-{
-    "variants": {
-		"facing=north": { "model": "staticpower:block/conveyors/conveyor_ramp_down_advanced" },
-        "facing=south": { "model": "staticpower:block/conveyors/conveyor_ramp_down_advanced", "y": 180 },
-        "facing=west":  { "model": "staticpower:block/conveyors/conveyor_ramp_down_advanced", "y": 270 },
-        "facing=east":  { "model": "staticpower:block/conveyors/conveyor_ramp_down_advanced", "y": 90 }
-    }
-}

@@ -313,6 +313,38 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		conveyorExtractor(ModBlocks.ConveyorExtractorEnergized.get(), "energized");
 		conveyorExtractor(ModBlocks.ConveyorExtractorLumum.get(), "lumum");
 
+		conveyorRamp(ModBlocks.RampUpConveyorBasic.get(), "basic", true);
+		conveyorRamp(ModBlocks.RampUpConveyorAdvanced.get(), "advanced", true);
+		conveyorRamp(ModBlocks.RampUpConveyorStatic.get(), "static", true);
+		conveyorRamp(ModBlocks.RampUpConveyorEnergized.get(), "energized", true);
+		conveyorRamp(ModBlocks.RampUpConveyorLumum.get(), "lumum", true);
+
+		conveyorRamp(ModBlocks.RampDownConveyorBasic.get(), "basic", false);
+		conveyorRamp(ModBlocks.RampDownConveyorAdvanced.get(), "advanced", false);
+		conveyorRamp(ModBlocks.RampDownConveyorStatic.get(), "static", false);
+		conveyorRamp(ModBlocks.RampDownConveyorEnergized.get(), "energized", false);
+		conveyorRamp(ModBlocks.RampDownConveyorLumum.get(), "lumum", false);
+
+		cable1Thickness(ModBlocks.BasicRedstoneCableNaked.get(), "redstone/cable_basic_redstone_naked", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableBlack.get(), "redstone/cable_basic_redstone_black", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableDarkBlue.get(), "redstone/cable_basic_redstone_dark_blue", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableDarkGreen.get(), "redstone/cable_basic_redstone_dark_green", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableDarkAqua.get(), "redstone/cable_basic_redstone_dark_aqua", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableDarkRed.get(), "redstone/cable_basic_redstone_dark_red", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableDarkPurple.get(), "redstone/cable_basic_redstone_dark_purple", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableGold.get(), "redstone/cable_basic_redstone_gold", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableGray.get(), "redstone/cable_basic_redstone_gray", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableDarkGray.get(), "redstone/cable_basic_redstone_dark_gray", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableBlue.get(), "redstone/cable_basic_redstone_blue", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableGreen.get(), "redstone/cable_basic_redstone_green", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableAqua.get(), "redstone/cable_basic_redstone_aqua", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableRed.get(), "redstone/cable_basic_redstone_red", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableLightPurple.get(), "redstone/cable_basic_redstone_light_purple", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableYellow.get(), "redstone/cable_basic_redstone_yellow", null);
+		cable2Thickness(ModBlocks.BasicRedstoneCableWhite.get(), "redstone/cable_basic_redstone_white", null);
+
+		cable5Thickness(ModBlocks.BundledRedstoneCable.get(), "redstone/cable_bundled_redstone", null);
+
 		cable3Thickness(ModBlocks.DigistoreWire.get(), "cable_digistore", "attachments/cable_digistore_attachment");
 		cable5Thickness(ModBlocks.ScaffoldCable.get(), "cable_scaffold", "attachments/cable_scaffold_attachment");
 
@@ -465,7 +497,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 	public void chest(Block block, String textureSet) {
 		ResourceLocation chest = new ResourceLocation(StaticPower.MOD_ID, "entity/chest/" + textureSet + "_chest");
-		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/base_chest")).texture("pump", chest)
+		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/base_chest")).texture("texture", chest)
 				.texture("particle", chest);
 		getVariantBuilder(block).forAllStates(state -> {
 			return ConfiguredModel.builder().modelFile(model).rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build();
@@ -657,6 +689,18 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		});
 	}
 
+	public void conveyorRamp(Block block, String textureSet, boolean slopeUp) {
+		ResourceLocation side = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_front");
+		ResourceLocation bottom = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/sides/" + textureSet + "_machine_top");
+		String modelPath = slopeUp ? "block/base_models/conveyor_slope_up" : "block/base_models/conveyor_slope_down";
+		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, modelPath)).texture("side_texture", side)
+				.texture("bottom_texture", bottom).texture("particle", bottom);
+		getVariantBuilder(block).forAllStates(state -> {
+			return ConfiguredModel.builder().modelFile(model).rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + (!slopeUp ? 180 : 0)) % 360)
+					.build();
+		});
+	}
+
 	public void orientableWithCustomModel(Block block, String modelPath) {
 		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/" + modelPath));
 		getVariantBuilder(block).forAllStates(state -> {
@@ -746,7 +790,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 	public void cableBlock(Block block, String coreModel, String extensionModel, String straightModel, String attachmentModel, String texturePath, String attachmentTexturePath) {
 		ResourceLocation texture = new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/" + texturePath);
-		ResourceLocation attachmentTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/" + attachmentTexturePath);
 
 		ModelFile core = models().withExistingParent("block/" + name(block) + "_core", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cables/" + coreModel))
 				.texture("cable_texture", texture).texture("particle", texture);
@@ -754,8 +797,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
 				.texture("cable_texture", texture).texture("particle", texture);
 		models().withExistingParent("block/" + name(block) + "_straight", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cables/" + straightModel))
 				.texture("cable_texture", texture).texture("particle", texture);
-		models().withExistingParent("block/" + name(block) + "_attachment", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cables/" + attachmentModel))
-				.texture("cable_texture", attachmentTexture).texture("particle", attachmentTexture);
+
+		if (attachmentTexturePath != null) {
+			ResourceLocation attachmentTexture = new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/" + attachmentTexturePath);
+			models().withExistingParent("block/" + name(block) + "_attachment", new ResourceLocation(StaticPower.MOD_ID, "block/base_models/cables/" + attachmentModel))
+					.texture("cable_texture", attachmentTexture).texture("particle", attachmentTexture);
+		}
 
 		getVariantBuilder(block).forAllStates(state -> {
 			return ConfiguredModel.builder().modelFile(core).build();

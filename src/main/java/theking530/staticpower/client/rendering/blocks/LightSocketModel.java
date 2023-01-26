@@ -63,19 +63,20 @@ public class LightSocketModel extends AbstractBakedModel {
 		Direction facing = state.getValue(StaticPowerRotateableBlockEntityBlock.FACING);
 		Vector3f offset = new Vector3f(0, 0, 0);
 		Vector3f scale = new Vector3f(1, 1, 1);
-		Vector3f rotation = RotatedModelCache.getRotation(facing).copy();
+		Vector3f rotation = RotatedModelCache.getRotation(facing);
 
 		if (facing.getAxis() == Axis.X) {
+			rotation.setY(0);
 			rotation.setZ(rotation.z() - (90 * facing.getAxisDirection().getStep()));
 			offset = new Vector3f(0.075f * facing.getAxisDirection().getStep(), 0, 0);
 		} else if (facing.getAxis() == Axis.Z) {
-			rotation.setX(rotation.x() + (90 * facing.getAxisDirection().getStep()));
+			rotation.setX(rotation.x() - (90 * facing.getAxisDirection().getStep()));
 			offset = new Vector3f(0, 0f, 0.075f * facing.getAxisDirection().getStep());
 		} else if (facing == Direction.UP) {
-			rotation.setX(rotation.x() - (90 * facing.getAxisDirection().getStep()));
+			rotation.setX(rotation.x() + (90 * facing.getAxisDirection().getStep()));
 			offset = new Vector3f(0, 0.075f, 0);
 		} else {
-			rotation.setX(rotation.x() + (90 * facing.getAxisDirection().getStep()));
+			rotation.setX(rotation.x() - (90 * facing.getAxisDirection().getStep()));
 			offset = new Vector3f(0, -0.075f, 0);
 		}
 

@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "": { "model": "staticpower:block/block_cut_zinc" }
+  "variants": {
+    "": {
+      "model": "staticpower:block/block_cut_zinc"
     }
+  }
 }

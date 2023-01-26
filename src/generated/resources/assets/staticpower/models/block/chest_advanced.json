@@ -2,6 +2,6 @@
   "parent": "staticpower:block/base_models/base_chest",
   "textures": {
     "particle": "staticpower:entity/chest/advanced_chest",
-    "pump": "staticpower:entity/chest/advanced_chest"
+    "texture": "staticpower:entity/chest/advanced_chest"
   }
 }

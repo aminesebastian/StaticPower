@@ -18,7 +18,6 @@ import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.entities.AbstractEntityBuilder;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
-import theking530.staticpower.entities.smeep.TypeSmeep;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModItems;
@@ -31,87 +30,6 @@ public class ModItemModelProvider extends ItemModelProvider {
 		customModelBlockItems = new HashSet<Block>();
 
 		customModelBlockItems.add(ModBlocks.RefineryTower.get());
-
-		customModelBlockItems.add(ModBlocks.RampUpConveyorBasic.get());
-		customModelBlockItems.add(ModBlocks.RampUpConveyorAdvanced.get());
-		customModelBlockItems.add(ModBlocks.RampUpConveyorStatic.get());
-		customModelBlockItems.add(ModBlocks.RampUpConveyorEnergized.get());
-		customModelBlockItems.add(ModBlocks.RampUpConveyorLumum.get());
-
-		customModelBlockItems.add(ModBlocks.RampDownConveyorBasic.get());
-		customModelBlockItems.add(ModBlocks.RampDownConveyorAdvanced.get());
-		customModelBlockItems.add(ModBlocks.RampDownConveyorStatic.get());
-		customModelBlockItems.add(ModBlocks.RampDownConveyorEnergized.get());
-		customModelBlockItems.add(ModBlocks.RampDownConveyorLumum.get());
-
-		customModelBlockItems.add(ModBlocks.DigistoreWire.get());
-
-		customModelBlockItems.add(ModBlocks.ItemCableBasic.get());
-		customModelBlockItems.add(ModBlocks.ItemCableAdvanced.get());
-		customModelBlockItems.add(ModBlocks.ItemCableStatic.get());
-		customModelBlockItems.add(ModBlocks.ItemCableEnergized.get());
-		customModelBlockItems.add(ModBlocks.ItemCableLumum.get());
-		customModelBlockItems.add(ModBlocks.ItemCableCreative.get());
-
-		customModelBlockItems.add(ModBlocks.PowerCableBasic.get());
-		customModelBlockItems.add(ModBlocks.PowerCableAdvanced.get());
-		customModelBlockItems.add(ModBlocks.PowerCableStatic.get());
-		customModelBlockItems.add(ModBlocks.PowerCableEnergized.get());
-		customModelBlockItems.add(ModBlocks.PowerCableLumum.get());
-		customModelBlockItems.add(ModBlocks.PowerCableCreative.get());
-
-		customModelBlockItems.add(ModBlocks.InsulatedPowerCableBasic.get());
-		customModelBlockItems.add(ModBlocks.InsulatedPowerCableAdvanced.get());
-		customModelBlockItems.add(ModBlocks.InsulatedPowerCableStatic.get());
-		customModelBlockItems.add(ModBlocks.InsulatedPowerCableEnergized.get());
-		customModelBlockItems.add(ModBlocks.InsulatedPowerCableLumum.get());
-		customModelBlockItems.add(ModBlocks.InsulatedPowerCableCreative.get());
-
-		customModelBlockItems.add(ModBlocks.IndustrialPowerCableBasic.get());
-		customModelBlockItems.add(ModBlocks.IndustrialPowerCableAdvanced.get());
-		customModelBlockItems.add(ModBlocks.IndustrialPowerCableStatic.get());
-		customModelBlockItems.add(ModBlocks.IndustrialPowerCableEnergized.get());
-		customModelBlockItems.add(ModBlocks.IndustrialPowerCableLumum.get());
-		customModelBlockItems.add(ModBlocks.IndustrialPowerCableCreative.get());
-
-		customModelBlockItems.add(ModBlocks.FluidCableBasic.get());
-		customModelBlockItems.add(ModBlocks.FluidCableAdvanced.get());
-		customModelBlockItems.add(ModBlocks.FluidCableStatic.get());
-		customModelBlockItems.add(ModBlocks.FluidCableEnergized.get());
-		customModelBlockItems.add(ModBlocks.FluidCableLumum.get());
-		customModelBlockItems.add(ModBlocks.FluidCableCreative.get());
-
-		customModelBlockItems.add(ModBlocks.IndustrialFluidCableBasic.get());
-		customModelBlockItems.add(ModBlocks.IndustrialFluidCableAdvanced.get());
-		customModelBlockItems.add(ModBlocks.IndustrialFluidCableStatic.get());
-		customModelBlockItems.add(ModBlocks.IndustrialFluidCableEnergized.get());
-		customModelBlockItems.add(ModBlocks.IndustrialFluidCableLumum.get());
-		customModelBlockItems.add(ModBlocks.IndustrialFluidCableCreative.get());
-
-		customModelBlockItems.add(ModBlocks.AluminumHeatCable.get());
-		customModelBlockItems.add(ModBlocks.CopperHeatCable.get());
-		customModelBlockItems.add(ModBlocks.GoldHeatCable.get());
-
-		customModelBlockItems.add(ModBlocks.ScaffoldCable.get());
-
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableNaked.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableBlack.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableDarkBlue.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableDarkGreen.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableDarkAqua.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableDarkRed.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableDarkPurple.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableGold.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableGray.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableDarkGray.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableBlue.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableGreen.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableAqua.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableRed.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableLightPurple.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableYellow.get());
-		customModelBlockItems.add(ModBlocks.BasicRedstoneCableWhite.get());
-		customModelBlockItems.add(ModBlocks.BundledRedstoneCable.get());
 	}
 
 	@Override
@@ -663,50 +581,73 @@ public class ModItemModelProvider extends ItemModelProvider {
 		upgrade(ModItems.EnergizedHeatUpgrade.get(), "upgrades/upgrade_heat", "overlay_upgrade_energized");
 		upgrade(ModItems.LumumHeatUpgrade.get(), "upgrades/upgrade_heat", "overlay_upgrade_lumum");
 
-		cable3Inventory(ModBlocks.DigistoreWire.get().asItem(), "cable_digistore");
-		cable5Inventory(ModBlocks.ScaffoldCable.get().asItem(), "cable_scaffold");
+		cable1Inventory(ModBlocks.BasicRedstoneCableNaked.get(), "redstone/cable_basic_redstone_naked");
+		cable2Inventory(ModBlocks.BasicRedstoneCableBlack.get(), "redstone/cable_basic_redstone_black");
+		cable2Inventory(ModBlocks.BasicRedstoneCableDarkBlue.get(), "redstone/cable_basic_redstone_dark_blue");
+		cable2Inventory(ModBlocks.BasicRedstoneCableDarkGreen.get(), "redstone/cable_basic_redstone_dark_green");
+		cable2Inventory(ModBlocks.BasicRedstoneCableDarkAqua.get(), "redstone/cable_basic_redstone_dark_aqua");
+		cable2Inventory(ModBlocks.BasicRedstoneCableDarkRed.get(), "redstone/cable_basic_redstone_dark_red");
+		cable2Inventory(ModBlocks.BasicRedstoneCableDarkPurple.get(), "redstone/cable_basic_redstone_dark_purple");
+		cable2Inventory(ModBlocks.BasicRedstoneCableGold.get(), "redstone/cable_basic_redstone_gold");
+		cable2Inventory(ModBlocks.BasicRedstoneCableGray.get(), "redstone/cable_basic_redstone_gray");
+		cable2Inventory(ModBlocks.BasicRedstoneCableDarkGray.get(), "redstone/cable_basic_redstone_dark_gray");
+		cable2Inventory(ModBlocks.BasicRedstoneCableBlue.get(), "redstone/cable_basic_redstone_blue");
+		cable2Inventory(ModBlocks.BasicRedstoneCableGreen.get(), "redstone/cable_basic_redstone_green");
+		cable2Inventory(ModBlocks.BasicRedstoneCableAqua.get(), "redstone/cable_basic_redstone_aqua");
+		cable2Inventory(ModBlocks.BasicRedstoneCableRed.get(), "redstone/cable_basic_redstone_red");
+		cable2Inventory(ModBlocks.BasicRedstoneCableLightPurple.get(), "redstone/cable_basic_redstone_light_purple");
+		cable2Inventory(ModBlocks.BasicRedstoneCableYellow.get(), "redstone/cable_basic_redstone_yellow");
+		cable2Inventory(ModBlocks.BasicRedstoneCableWhite.get(), "redstone/cable_basic_redstone_white");
+		cable5Inventory(ModBlocks.BundledRedstoneCable.get(), "redstone/cable_bundled_redstone");
+		
+		cable3Inventory(ModBlocks.DigistoreWire.get(), "cable_digistore");
+		cable5Inventory(ModBlocks.ScaffoldCable.get(), "cable_scaffold");
 
-		cable5Inventory(ModBlocks.PowerCableBasic.get().asItem(), "cable_power_basic");
-		cable5Inventory(ModBlocks.PowerCableAdvanced.get().asItem(), "cable_power_advanced");
-		cable5Inventory(ModBlocks.PowerCableStatic.get().asItem(), "cable_power_static");
-		cable5Inventory(ModBlocks.PowerCableEnergized.get().asItem(), "cable_power_energized");
-		cable5Inventory(ModBlocks.PowerCableLumum.get().asItem(), "cable_power_lumum");
-		cable5Inventory(ModBlocks.PowerCableCreative.get().asItem(), "cable_power_creative");
+		cable5Inventory(ModBlocks.AluminumHeatCable.get(), "cable_aluminum_heat");
+		cable5Inventory(ModBlocks.CopperHeatCable.get(), "cable_copper_heat");
+		cable5Inventory(ModBlocks.GoldHeatCable.get(), "cable_gold_heat");
+		
+		cable5Inventory(ModBlocks.PowerCableBasic.get(), "cable_power_basic");
+		cable5Inventory(ModBlocks.PowerCableAdvanced.get(), "cable_power_advanced");
+		cable5Inventory(ModBlocks.PowerCableStatic.get(), "cable_power_static");
+		cable5Inventory(ModBlocks.PowerCableEnergized.get(), "cable_power_energized");
+		cable5Inventory(ModBlocks.PowerCableLumum.get(), "cable_power_lumum");
+		cable5Inventory(ModBlocks.PowerCableCreative.get(), "cable_power_creative");
 
-		cable7Inventory(ModBlocks.IndustrialPowerCableBasic.get().asItem(), "cable_industrial_power_basic");
-		cable7Inventory(ModBlocks.IndustrialPowerCableAdvanced.get().asItem(), "cable_industrial_power_advanced");
-		cable7Inventory(ModBlocks.IndustrialPowerCableStatic.get().asItem(), "cable_industrial_power_static");
-		cable7Inventory(ModBlocks.IndustrialPowerCableEnergized.get().asItem(), "cable_industrial_power_energized");
-		cable7Inventory(ModBlocks.IndustrialPowerCableLumum.get().asItem(), "cable_industrial_power_lumum");
-		cable7Inventory(ModBlocks.IndustrialPowerCableCreative.get().asItem(), "cable_industrial_power_creative");
+		cable7Inventory(ModBlocks.IndustrialPowerCableBasic.get(), "cable_industrial_power_basic");
+		cable7Inventory(ModBlocks.IndustrialPowerCableAdvanced.get(), "cable_industrial_power_advanced");
+		cable7Inventory(ModBlocks.IndustrialPowerCableStatic.get(), "cable_industrial_power_static");
+		cable7Inventory(ModBlocks.IndustrialPowerCableEnergized.get(), "cable_industrial_power_energized");
+		cable7Inventory(ModBlocks.IndustrialPowerCableLumum.get(), "cable_industrial_power_lumum");
+		cable7Inventory(ModBlocks.IndustrialPowerCableCreative.get(), "cable_industrial_power_creative");
 
-		cable5Inventory(ModBlocks.InsulatedPowerCableBasic.get().asItem(), "cable_power_basic_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableAdvanced.get().asItem(), "cable_power_advanced_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableStatic.get().asItem(), "cable_power_static_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableEnergized.get().asItem(), "cable_power_energized_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableLumum.get().asItem(), "cable_power_lumum_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableCreative.get().asItem(), "cable_power_creative_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableBasic.get(), "cable_power_basic_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableAdvanced.get(), "cable_power_advanced_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableStatic.get(), "cable_power_static_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableEnergized.get(), "cable_power_energized_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableLumum.get(), "cable_power_lumum_insulated");
+		cable5Inventory(ModBlocks.InsulatedPowerCableCreative.get(), "cable_power_creative_insulated");
 
-		cable5Inventory(ModBlocks.ItemCableBasic.get().asItem(), "cable_item_basic");
-		cable5Inventory(ModBlocks.ItemCableAdvanced.get().asItem(), "cable_item_advanced");
-		cable5Inventory(ModBlocks.ItemCableStatic.get().asItem(), "cable_item_static");
-		cable5Inventory(ModBlocks.ItemCableEnergized.get().asItem(), "cable_item_energized");
-		cable5Inventory(ModBlocks.ItemCableLumum.get().asItem(), "cable_item_lumum");
-		cable5Inventory(ModBlocks.ItemCableCreative.get().asItem(), "cable_item_creative");
+		cable5Inventory(ModBlocks.ItemCableBasic.get(), "cable_item_basic");
+		cable5Inventory(ModBlocks.ItemCableAdvanced.get(), "cable_item_advanced");
+		cable5Inventory(ModBlocks.ItemCableStatic.get(), "cable_item_static");
+		cable5Inventory(ModBlocks.ItemCableEnergized.get(), "cable_item_energized");
+		cable5Inventory(ModBlocks.ItemCableLumum.get(), "cable_item_lumum");
+		cable5Inventory(ModBlocks.ItemCableCreative.get(), "cable_item_creative");
 
-		cable5Inventory(ModBlocks.FluidCableBasic.get().asItem(), "cable_fluid_basic");
-		cable5Inventory(ModBlocks.FluidCableAdvanced.get().asItem(), "cable_fluid_advanced");
-		cable5Inventory(ModBlocks.FluidCableStatic.get().asItem(), "cable_fluid_static");
-		cable5Inventory(ModBlocks.FluidCableEnergized.get().asItem(), "cable_fluid_energized");
-		cable5Inventory(ModBlocks.FluidCableLumum.get().asItem(), "cable_fluid_lumum");
-		cable5Inventory(ModBlocks.FluidCableCreative.get().asItem(), "cable_fluid_creative");
+		cable5Inventory(ModBlocks.FluidCableBasic.get(), "cable_fluid_basic");
+		cable5Inventory(ModBlocks.FluidCableAdvanced.get(), "cable_fluid_advanced");
+		cable5Inventory(ModBlocks.FluidCableStatic.get(), "cable_fluid_static");
+		cable5Inventory(ModBlocks.FluidCableEnergized.get(), "cable_fluid_energized");
+		cable5Inventory(ModBlocks.FluidCableLumum.get(), "cable_fluid_lumum");
+		cable5Inventory(ModBlocks.FluidCableCreative.get(), "cable_fluid_creative");
 
-		cable7Inventory(ModBlocks.IndustrialFluidCableBasic.get().asItem(), "cable_industrial_fluid_basic");
-		cable7Inventory(ModBlocks.IndustrialFluidCableAdvanced.get().asItem(), "cable_industrial_fluid_advanced");
-		cable7Inventory(ModBlocks.IndustrialFluidCableStatic.get().asItem(), "cable_industrial_fluid_static");
-		cable7Inventory(ModBlocks.IndustrialFluidCableEnergized.get().asItem(), "cable_industrial_fluid_energized");
-		cable7Inventory(ModBlocks.IndustrialFluidCableLumum.get().asItem(), "cable_industrial_fluid_lumum");
-		cable7Inventory(ModBlocks.IndustrialFluidCableCreative.get().asItem(), "cable_industrial_fluid_creative");
+		cable7Inventory(ModBlocks.IndustrialFluidCableBasic.get(), "cable_industrial_fluid_basic");
+		cable7Inventory(ModBlocks.IndustrialFluidCableAdvanced.get(), "cable_industrial_fluid_advanced");
+		cable7Inventory(ModBlocks.IndustrialFluidCableStatic.get(), "cable_industrial_fluid_static");
+		cable7Inventory(ModBlocks.IndustrialFluidCableEnergized.get(), "cable_industrial_fluid_energized");
+		cable7Inventory(ModBlocks.IndustrialFluidCableLumum.get(), "cable_industrial_fluid_lumum");
+		cable7Inventory(ModBlocks.IndustrialFluidCableCreative.get(), "cable_industrial_fluid_creative");
 
 		for (RegistryObject<Block> block : ModBlocks.BLOCKS.getEntries()) {
 			if (customModelBlockItems.contains(block.get())) {
@@ -772,29 +713,31 @@ public class ModItemModelProvider extends ItemModelProvider {
 				.texture("overlay", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + overlayTexturePath)).guiLight(GuiLight.FRONT);
 	}
 
-	private ItemModelBuilder cable7Inventory(Item item, String texturePath) {
-		return cableInventory(item, "cable_7_inventory", texturePath);
+	private ItemModelBuilder cable7Inventory(Block block, String texturePath) {
+		return cableInventory(block, "cable_7_inventory", texturePath);
 	}
 
-	private ItemModelBuilder cable5Inventory(Item item, String texturePath) {
-		return cableInventory(item, "cable_5_inventory", texturePath);
+	private ItemModelBuilder cable5Inventory(Block block, String texturePath) {
+		return cableInventory(block, "cable_5_inventory", texturePath);
 	}
 
-	private ItemModelBuilder cable3Inventory(Item item, String texturePath) {
-		return cableInventory(item, "cable_3_inventory", texturePath);
-	}
-
-	@SuppressWarnings("unused")
-	private ItemModelBuilder cable2Inventory(Item item, String texturePath) {
-		return cableInventory(item, "cable_2_inventory", texturePath);
+	private ItemModelBuilder cable3Inventory(Block block, String texturePath) {
+		return cableInventory(block, "cable_3_inventory", texturePath);
 	}
 
 	@SuppressWarnings("unused")
-	private ItemModelBuilder cable1Inventory(Item item, String texturePath) {
-		return cableInventory(item, "cable_1_inventory", texturePath);
+	private ItemModelBuilder cable2Inventory(Block block, String texturePath) {
+		return cableInventory(block, "cable_2_inventory", texturePath);
 	}
 
-	private ItemModelBuilder cableInventory(Item item, String modelPath, String texturePath) {
+	@SuppressWarnings("unused")
+	private ItemModelBuilder cable1Inventory(Block block, String texturePath) {
+		return cableInventory(block, "cable_1_inventory", texturePath);
+	}
+
+	private ItemModelBuilder cableInventory(Block block, String modelPath, String texturePath) {
+		Item item = block.asItem();
+		customModelBlockItems.add(block);
 		return withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "item/base_models/" + modelPath)).texture("cable_texture",
 				new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/" + texturePath));
 	}

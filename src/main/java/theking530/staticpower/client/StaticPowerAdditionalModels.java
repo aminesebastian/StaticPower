@@ -53,56 +53,54 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT = registerModel("block/cables/redstone/basic/attachment_input");
 	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_OUTPUT = registerModel("block/cables/redstone/basic/attachment_output");
 	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT_OUTPUT = registerModel("block/cables/redstone/basic/attachment_input_output");
-	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_STRAIGHT = registerModel("block/cables/redstone/basic/naked/straight");
-	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_EXTENSION = registerModel("block/cables/redstone/basic/naked/extension");
+	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_STRAIGHT = registerModel("block/cable_redstone_basic_naked_straight");
+	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_EXTENSION = registerModel("block/cable_redstone_basic_naked_extension");
 
 	public static final ResourceLocation CABLE_BUNDLED_REDSTONE_ATTACHMENT = registerModel("block/cables/redstone/bundled/attachment");
-	public static final ResourceLocation CABLE_BUNDLED_REDSTONE_STRAIGHT = registerModel("block/cables/redstone/bundled/straight");
-	public static final ResourceLocation CABLE_BUNDLED_REDSTONE_EXTENSION = registerModel("block/cables/redstone/bundled/extension");
+	public static final ResourceLocation CABLE_BUNDLED_REDSTONE_STRAIGHT = registerModel("block/cable_bundled_redstone_straight");
+	public static final ResourceLocation CABLE_BUNDLED_REDSTONE_EXTENSION = registerModel("block/cable_bundled_redstone_extension");
 
-	public static final Map<String, ResourceLocation[]> CABLE_REDSTONE_BASIC;
+	public static final ResourceLocation CABLE_BASIC_EXTRACTOR_ATTACHMENT = registerModel("item/cable_attachment_basic_extractor");
+	public static final ResourceLocation CABLE_ADVANCED_EXTRACTOR_ATTACHMENT = registerModel("item/cable_attachment_advanced_extractor");
+	public static final ResourceLocation CABLE_STATIC_EXTRACTOR_ATTACHMENT = registerModel("item/cable_attachment_static_extractor");
+	public static final ResourceLocation CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT = registerModel("item/cable_attachment_energized_extractor");
+	public static final ResourceLocation CABLE_LUMUM_EXTRACTOR_ATTACHMENT = registerModel("item/cable_attachment_lumum_extractor");
 
-	public static final ResourceLocation CABLE_BASIC_EXTRACTOR_ATTACHMENT = registerModel("item/basic_extractor");
-	public static final ResourceLocation CABLE_ADVANCED_EXTRACTOR_ATTACHMENT = registerModel("item/advanced_extractor");
-	public static final ResourceLocation CABLE_STATIC_EXTRACTOR_ATTACHMENT = registerModel("item/static_extractor");
-	public static final ResourceLocation CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT = registerModel("item/energized_extractor");
-	public static final ResourceLocation CABLE_LUMUM_EXTRACTOR_ATTACHMENT = registerModel("item/lumum_extractor");
+	public static final ResourceLocation CABLE_BASIC_FILTER_ATTACHMENT = registerModel("item/cable_attachment_basic_filter");
+	public static final ResourceLocation CABLE_ADVANCED_FILTER_ATTACHMENT = registerModel("item/cable_attachment_advanced_filter");
+	public static final ResourceLocation CABLE_STATIC_FILTER_ATTACHMENT = registerModel("item/cable_attachment_static_filter");
+	public static final ResourceLocation CABLE_ENERGIZED_FILTER_ATTACHMENT = registerModel("item/cable_attachment_energized_filter");
+	public static final ResourceLocation CABLE_LUMUM_FILTER_ATTACHMENT = registerModel("item/cable_attachment_lumum_filter");
 
-	public static final ResourceLocation CABLE_BASIC_FILTER_ATTACHMENT = registerModel("item/basic_filter");
-	public static final ResourceLocation CABLE_ADVANCED_FILTER_ATTACHMENT = registerModel("item/advanced_filter");
-	public static final ResourceLocation CABLE_STATIC_FILTER_ATTACHMENT = registerModel("item/static_filter");
-	public static final ResourceLocation CABLE_ENERGIZED_FILTER_ATTACHMENT = registerModel("item/energized_filter");
-	public static final ResourceLocation CABLE_LUMUM_FILTER_ATTACHMENT = registerModel("item/lumum_filter");
+	public static final ResourceLocation CABLE_BASIC_RETRIEVER_ATTACHMENT = registerModel("item/cable_attachment_basic_retriever");
+	public static final ResourceLocation CABLE_ADVANCED_RETRIEVER_ATTACHMENT = registerModel("item/cable_attachment_advanced_retriever");
+	public static final ResourceLocation CABLE_STATIC_RETRIEVER_ATTACHMENT = registerModel("item/cable_attachment_static_retriever");
+	public static final ResourceLocation CABLE_ENERGIZED_RETRIEVER_ATTACHMENT = registerModel("item/cable_attachment_energized_retriever");
+	public static final ResourceLocation CABLE_LUMUM_RETRIEVER_ATTACHMENT = registerModel("item/cable_attachment_lumum_retriever");
 
-	public static final ResourceLocation CABLE_BASIC_RETRIEVER_ATTACHMENT = registerModel("item/basic_retriever");
-	public static final ResourceLocation CABLE_ADVANCED_RETRIEVER_ATTACHMENT = registerModel("item/advanced_retriever");
-	public static final ResourceLocation CABLE_STATIC_RETRIEVER_ATTACHMENT = registerModel("item/static_retriever");
-	public static final ResourceLocation CABLE_ENERGIZED_RETRIEVER_ATTACHMENT = registerModel("item/energized_retriever");
-	public static final ResourceLocation CABLE_LUMUM_RETRIEVER_ATTACHMENT = registerModel("item/lumum_retriever");
+	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_terminal_attachment");
+	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT = registerModel("item/cable_attachment_digistore_terminal_attachment_off");
 
-	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON = registerModel("item/digistore_terminal_attachment");
-	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT = registerModel("item/digistore_terminal_attachment_off");
+	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_crafting_terminal_attachment");
+	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT = registerModel("item/cable_attachment_digistore_crafting_terminal_attachment_off");
 
-	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT_ON = registerModel("item/digistore_crafting_terminal_attachment");
-	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT = registerModel("item/digistore_crafting_terminal_attachment_off");
+	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_pattern_encoder_attachment");
+	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT = registerModel("item/cable_attachment_digistore_pattern_encoder_attachment_off");
 
-	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON = registerModel("item/digistore_pattern_encoder_attachment");
-	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT = registerModel("item/digistore_pattern_encoder_attachment_off");
+	public static final ResourceLocation CABLE_DIGISTORE_SCREEN_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_screen");
+	public static final ResourceLocation CABLE_DIGISTORE_SCREEN_ATTACHMENT = registerModel("item/cable_attachment_digistore_screen_off");
 
-	public static final ResourceLocation CABLE_DIGISTORE_SCREEN_ATTACHMENT_ON = registerModel("item/digistore_screen");
-	public static final ResourceLocation CABLE_DIGISTORE_SCREEN_ATTACHMENT = registerModel("item/digistore_screen_off");
+	public static final ResourceLocation CABLE_DIGISTORE_LIGHT_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_light");
+	public static final ResourceLocation CABLE_DIGISTORE_LIGHT_ATTACHMENT = registerModel("item/cable_attachment_digistore_light_off");
 
-	public static final ResourceLocation CABLE_DIGISTORE_LIGHT_ATTACHMENT_ON = registerModel("item/digistore_light");
-	public static final ResourceLocation CABLE_DIGISTORE_LIGHT_ATTACHMENT = registerModel("item/digistore_light_off");
+	public static final ResourceLocation CABLE_DIGISTORE_EXPORTER_ATTACHMENT = registerModel("item/cable_attachment_digistore_exporter");
+	public static final ResourceLocation CABLE_DIGISTORE_IMPORTER_ATTACHMENT = registerModel("item/cable_attachment_digistore_importer");
+	public static final ResourceLocation CABLE_DIGISTORE_IO_BUS_ATTACHMENT = registerModel("item/cable_attachment_digistore_io_bus");
+	public static final ResourceLocation CABLE_DIGISTORE_REGULATOR_ATTACHMENT = registerModel("item/cable_attachment_digistore_regulator");
+	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_INTERFACE_ATTACHMENT = registerModel("item/cable_attachment_digistore_crafting_interface");
 
-	public static final ResourceLocation CABLE_DIGISTORE_EXPORTER_ATTACHMENT = registerModel("item/digistore_exporter");
-	public static final ResourceLocation CABLE_DIGISTORE_IMPORTER_ATTACHMENT = registerModel("item/digistore_importer");
-	public static final ResourceLocation CABLE_DIGISTORE_IO_BUS_ATTACHMENT = registerModel("item/digistore_io_bus");
-	public static final ResourceLocation CABLE_DIGISTORE_REGULATOR_ATTACHMENT = registerModel("item/digistore_regulator");
-	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_INTERFACE_ATTACHMENT = registerModel("item/digistore_crafting_interface");
-
-	public static final ResourceLocation SPRINKLER = registerModel("item/sprinkler");
-	public static final ResourceLocation DRAIN = registerModel("item/drain");
+	public static final ResourceLocation SPRINKLER = registerModel("item/cable_attachment_sprinkler");
+	public static final ResourceLocation DRAIN = registerModel("item/cable_attachment_drain");
 
 	public static final ResourceLocation BASIC_DIGISTORE_CARD = registerModel("block/digistore_cards/digistore_card_basic");
 	public static final ResourceLocation ADVANCVED_DIGISTORE_CARD = registerModel("block/digistore_cards/digistore_card_advanced");
@@ -148,13 +146,15 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation TURBINE_BLADES_LUMUM = registerModel("block/turbine_blades/turbine_blades_lumum");
 	public static final ResourceLocation TURBINE_BLADES_CREATIVE = registerModel("block/turbine_blades/turbine_blades_creative");
 
+	public static final Map<String, ResourceLocation[]> CABLE_REDSTONE_BASIC;
+
 	static {
 		CABLE_REDSTONE_BASIC = new HashMap<>();
 		for (int i = 0; i < 16; i++) {
 			ChatFormatting formatting = ChatFormatting.values()[i];
 			String name = formatting.name().toLowerCase();
-			CABLE_REDSTONE_BASIC.put(name, new ResourceLocation[] { registerModel("block/cables/redstone/basic/" + name + "/straight"),
-					registerModel("block/cables/redstone/basic/" + name + "/extension") });
+			CABLE_REDSTONE_BASIC.put(name, new ResourceLocation[] { registerModel("block/cable_redstone_basic_" + name + "_straight"),
+					registerModel("block/cable_redstone_basic_" + name + "_extension") });
 		}
 	}
 
