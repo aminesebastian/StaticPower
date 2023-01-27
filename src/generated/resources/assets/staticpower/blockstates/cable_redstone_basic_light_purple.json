@@ -1,9 +1,6 @@
 {
   "variants": {
-    "waterlogged=false": {
-      "model": "staticpower:block/cable_redstone_basic_light_purple_core"
-    },
-    "waterlogged=true": {
+    "": {
       "model": "staticpower:block/cable_redstone_basic_light_purple_core"
     }
   }

@@ -99,7 +99,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		this.powerUsageIncreaseMultiplier = 1.0f;
 		this.processingErrorMessage = Component.literal("");
 		this.processingStoppedDueToError = false;
-		this.modulateProcessingTimeByPowerSatisfaction = true;
+		this.modulateProcessingTimeByPowerSatisfaction = false;
 		this.powerSatisfaction = 0;
 	}
 
@@ -509,6 +509,13 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	@SuppressWarnings("unchecked")
 	public T setPowerComponent(PowerStorageComponent energyComponent) {
 		this.powerComponent = energyComponent;
+		modulateProcessingTimeByPowerSatisfaction = true;
+		return (T) this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T setShouldModuleProcessingTimeByPowerSatisfaction(boolean enabled) {
+		this.modulateProcessingTimeByPowerSatisfaction = enabled;
 		return (T) this;
 	}
 

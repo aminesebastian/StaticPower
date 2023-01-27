@@ -6,16 +6,6 @@ import theking530.staticpower.StaticPower;
 public class GuiTextures {
 	public static final ResourceLocation GENERIC_GUI = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/generic_gui_sampler.png");
 
-	public static final ResourceLocation GREEN_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/green_tab.png");
-	public static final ResourceLocation PURPLE_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/purple_tab.png");
-	public static final ResourceLocation RED_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/red_tab.png");
-	public static final ResourceLocation BLUE_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/blue_tab.png");
-	public static final ResourceLocation YELLOW_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/yellow_tab.png");
-	public static final ResourceLocation AQUA_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/aqua_tab.png");
-	public static final ResourceLocation ORANGE_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/orange_tab.png");
-	public static final ResourceLocation SEA_FOAM_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/sea_foam_tab.png");
-	public static final ResourceLocation MAGENTA_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/magenta_tab.png");
-
 	public static final ResourceLocation POWER_BAR_FG = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/power_bar_power.png");
 	public static final ResourceLocation POWER_BAR_BG = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/power_bar_bg.png");
 
@@ -32,7 +22,7 @@ public class GuiTextures {
 
 	public static final ResourceLocation UP_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/up_indicator.png");
 	public static final ResourceLocation DOWN_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/down_indicator.png");
-	
+
 	public static final ResourceLocation AC_POWER_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/power_ac_signal.png");
 	public static final ResourceLocation DC_POWER_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/power_dc_symbol.png");
 	public static final ResourceLocation POWER_VOLTAGE_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/power_voltage_indicator.png");

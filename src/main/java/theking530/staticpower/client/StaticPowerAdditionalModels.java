@@ -50,13 +50,12 @@ public class StaticPowerAdditionalModels {
 	public static final CableModelSet CABLE_DIGISTORE = registerCable("block/cable_digistore");
 	public static final CableModelSet CABLE_SCAFFOLD = registerCable("block/cable_scaffold");
 
-	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT = registerModel("block/cables/redstone/basic/attachment_input");
-	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_OUTPUT = registerModel("block/cables/redstone/basic/attachment_output");
-	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT_OUTPUT = registerModel("block/cables/redstone/basic/attachment_input_output");
+	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT = registerModel("block/redstone_cable_attachment_input");
+	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_OUTPUT = registerModel("block/redstone_cable_attachment_output");
+	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT_OUTPUT = registerModel("block/redstone_cable_attachment_input_output");
 	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_STRAIGHT = registerModel("block/cable_redstone_basic_naked_straight");
 	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_EXTENSION = registerModel("block/cable_redstone_basic_naked_extension");
 
-	public static final ResourceLocation CABLE_BUNDLED_REDSTONE_ATTACHMENT = registerModel("block/cables/redstone/bundled/attachment");
 	public static final ResourceLocation CABLE_BUNDLED_REDSTONE_STRAIGHT = registerModel("block/cable_bundled_redstone_straight");
 	public static final ResourceLocation CABLE_BUNDLED_REDSTONE_EXTENSION = registerModel("block/cable_bundled_redstone_extension");
 
@@ -78,14 +77,14 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_ENERGIZED_RETRIEVER_ATTACHMENT = registerModel("item/cable_attachment_energized_retriever");
 	public static final ResourceLocation CABLE_LUMUM_RETRIEVER_ATTACHMENT = registerModel("item/cable_attachment_lumum_retriever");
 
-	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_terminal_attachment");
-	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT = registerModel("item/cable_attachment_digistore_terminal_attachment_off");
+	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_terminal");
+	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT = registerModel("item/cable_attachment_digistore_terminal_off");
 
-	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_crafting_terminal_attachment");
-	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT = registerModel("item/cable_attachment_digistore_crafting_terminal_attachment_off");
+	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_crafting_terminal");
+	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT = registerModel("item/cable_attachment_digistore_crafting_terminal_off");
 
-	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_pattern_encoder_attachment");
-	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT = registerModel("item/cable_attachment_digistore_pattern_encoder_attachment_off");
+	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_pattern_encoder");
+	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT = registerModel("item/cable_attachment_digistore_pattern_encoder_off");
 
 	public static final ResourceLocation CABLE_DIGISTORE_SCREEN_ATTACHMENT_ON = registerModel("item/cable_attachment_digistore_screen");
 	public static final ResourceLocation CABLE_DIGISTORE_SCREEN_ATTACHMENT = registerModel("item/cable_attachment_digistore_screen_off");

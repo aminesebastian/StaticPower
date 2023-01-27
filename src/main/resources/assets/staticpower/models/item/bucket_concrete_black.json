@@ -1,5 +1,5 @@
 {
-	"parent": "forge:item/bucket",
+	"parent": "forge:fluid_container",
 	"loader": "forge:bucket",
 	"textures": {
 		"base": "item/bucket",

@@ -56,9 +56,9 @@ public class RotatedModelCache {
 		}
 		if (!MODEL_MAP.get(modelLocation).containsKey(direction)) {
 			BakedModel model = Minecraft.getInstance().getModelManager().getModelBakery().bake(modelLocation, SIDE_TRANSFORMS.get(direction), (material) -> {
-				StaticPower.LOGGER.debug(String.format("Generating rotated model: %1$s facing direction: %2$s.", modelLocation, direction.toString()));
 				return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(material.texture());
 			});
+			StaticPower.LOGGER.debug(String.format("Generating rotated model: %1$s facing direction: %2$s.", modelLocation, direction.toString()));
 			MODEL_MAP.get(modelLocation).put(direction, model);
 		}
 		return MODEL_MAP.get(modelLocation).get(direction);

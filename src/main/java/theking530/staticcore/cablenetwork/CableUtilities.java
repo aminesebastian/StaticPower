@@ -57,6 +57,10 @@ public class CableUtilities {
 			} else if (renderingState.getConnectionType(dir) == CableConnectionType.DESTINATION) {
 				return false;
 			}
+			
+			if(renderingState.hasAttachment(dir)) {
+				return false;
+			}
 		}
 		
 		// If only two sides are connected, check to see which sides. If they are

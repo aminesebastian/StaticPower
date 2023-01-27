@@ -804,9 +804,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
 					.texture("cable_texture", attachmentTexture).texture("particle", attachmentTexture);
 		}
 
-		getVariantBuilder(block).forAllStates(state -> {
-			return ConfiguredModel.builder().modelFile(core).build();
-		});
+		// Ignore the blockstates here.
+		simpleBlock(block, core);
 	}
 
 	private String name(Block block) {

@@ -29,12 +29,11 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTier;
 
-public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock implements IConveyorBlock {
+public abstract class AbstractConveyorBlock extends StaticPowerRotateableBlockEntityBlock implements IConveyorBlock {
 	protected final Map<Direction, VoxelShape> ENTITY_SHAPES = new HashMap<>();
 	protected final Map<Direction, VoxelShape> INTERACTION_SHAPES = new HashMap<>();
 
@@ -56,11 +55,6 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.NEVER;
-	}
-
-	@Override
-	public boolean hasModelOverride(BlockState state) {
-		return false;
 	}
 
 	@Override

@@ -477,16 +477,19 @@ public class ModItemModelProvider extends ItemModelProvider {
 		digistoreAttachment(ModItems.RegulatorAttachment.get(), "cable_digistore_regulator_attachment");
 		digistoreAttachment(ModItems.DigistoreCraftingInterfaceAttachment.get(), "cable_digistore_crafting_interface_attachment");
 
-		digistoreFullBlockAttachment(ModItems.DigistoreTerminalAttachment.get(), "cable_digistore_base_full_attachment", "digistore_terminal_on");
-		digistoreFullBlockAttachment(ModItems.DigistoreCraftingTerminalAttachment.get(), "cable_digistore_base_full_attachment", "digistore_crafting_terminal_on");
-		digistoreFullBlockAttachment(ModItems.DigistorePatternEncoderAttachment.get(), "cable_digistore_base_full_attachment", "digistore_pattern_encoder_on");
-		digistoreFullBlockAttachment(ModItems.DigistoreScreenAttachment.get(), "cable_digistore_base_full_attachment", "digistore_screen_on");
-		digistoreFullBlockAttachment(ModItems.DigistoreLightAttachment.get(), "cable_digistore_base_full_attachment", "digistore_light_on");
+		digistoreFullBlockAttachment(ModItems.DigistoreTerminalAttachment.get(), "cable_digistore_base_full_attachment", "digistore_terminal");
+		digistoreFullBlockAttachment(ModItems.DigistoreCraftingTerminalAttachment.get(), "cable_digistore_base_full_attachment", "digistore_crafting_terminal");
+		digistoreFullBlockAttachment(ModItems.DigistorePatternEncoderAttachment.get(), "cable_digistore_base_full_attachment", "digistore_pattern_encoder");
+		digistoreFullBlockAttachment(ModItems.DigistoreScreenAttachment.get(), "cable_digistore_base_full_attachment", "digistore_screen");
+		digistoreFullBlockAttachment(ModItems.DigistoreLightAttachment.get(), "cable_digistore_base_full_attachment", "digistore_light");
 
 		fromExistingModel(ModItems.SprinklerAttachment.get(), "item/sprinkler");
 		fromExistingModel(ModItems.DrainAttachment.get(), "item/drain");
 		fromExistingModel(ModBlocks.RefineryTower.get().asItem(), "block/refinery_tower/full");
 
+		simpleItem(ModItems.PatternCard.get(), "digistore/digistore_pattern_card_encoded");
+		namedGeneratedModel("digistore_pattern_card_encoded", "digistore/digistore_pattern_card_encoded");
+		
 		simpleItem(ModItems.PatternCard.get(), "digistore/digistore_pattern_card_empty");
 		simpleItem(ModItems.DigistoreWirelessTerminal.get(), "tools/digistore_wireless_terminal");
 
@@ -599,14 +602,14 @@ public class ModItemModelProvider extends ItemModelProvider {
 		cable2Inventory(ModBlocks.BasicRedstoneCableYellow.get(), "redstone/cable_basic_redstone_yellow");
 		cable2Inventory(ModBlocks.BasicRedstoneCableWhite.get(), "redstone/cable_basic_redstone_white");
 		cable5Inventory(ModBlocks.BundledRedstoneCable.get(), "redstone/cable_bundled_redstone");
-		
+
 		cable3Inventory(ModBlocks.DigistoreWire.get(), "cable_digistore");
 		cable5Inventory(ModBlocks.ScaffoldCable.get(), "cable_scaffold");
 
 		cable5Inventory(ModBlocks.AluminumHeatCable.get(), "cable_aluminum_heat");
 		cable5Inventory(ModBlocks.CopperHeatCable.get(), "cable_copper_heat");
 		cable5Inventory(ModBlocks.GoldHeatCable.get(), "cable_gold_heat");
-		
+
 		cable5Inventory(ModBlocks.PowerCableBasic.get(), "cable_power_basic");
 		cable5Inventory(ModBlocks.PowerCableAdvanced.get(), "cable_power_advanced");
 		cable5Inventory(ModBlocks.PowerCableStatic.get(), "cable_power_static");
@@ -673,6 +676,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 		return withExistingParent(name(item), new ResourceLocation("item/template_spawn_egg"));
 	}
 
+	private ItemModelBuilder namedGeneratedModel(String name, String texturePath) {
+		return withExistingParent(name, new ResourceLocation("item/generated")).texture("layer0", new ResourceLocation(StaticPower.MOD_ID, "items/" + texturePath));
+	}
+
 	private ItemModelBuilder simpleItem(Item item, String texturePath) {
 		return withExistingParent(name(item), new ResourceLocation("item/generated")).texture("layer0", new ResourceLocation(StaticPower.MOD_ID, "items/" + texturePath));
 	}
@@ -702,15 +709,19 @@ public class ModItemModelProvider extends ItemModelProvider {
 				.texture("overlay", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + overlayTexturePath)).guiLight(GuiLight.FRONT);
 	}
 
-	private ItemModelBuilder digistoreAttachment(Item item, String texturePath) {
-		return withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "item/base_models/digistore_basic_attachment"))
+	private void digistoreAttachment(Item item, String texturePath) {
+		withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "item/base_models/digistore_basic_attachment"))
 				.texture("texture", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + texturePath)).guiLight(GuiLight.FRONT);
 	}
 
-	private ItemModelBuilder digistoreFullBlockAttachment(Item item, String texturePath, String overlayTexturePath) {
-		return withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "item/base_models/digistore_large_attachment"))
+	private void digistoreFullBlockAttachment(Item item, String texturePath, String overlayTexturePath) {
+		withExistingParent(name(item) + "_off", new ResourceLocation(StaticPower.MOD_ID, "item/base_models/digistore_large_attachment"))
 				.texture("base", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + texturePath))
 				.texture("overlay", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + overlayTexturePath)).guiLight(GuiLight.FRONT);
+
+		withExistingParent(name(item), new ResourceLocation(StaticPower.MOD_ID, "item/base_models/digistore_large_attachment"))
+				.texture("base", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + texturePath))
+				.texture("overlay", new ResourceLocation(StaticPower.MOD_ID, "blocks/cables/attachments/" + overlayTexturePath + "_on")).guiLight(GuiLight.FRONT);
 	}
 
 	private ItemModelBuilder cable7Inventory(Block block, String texturePath) {

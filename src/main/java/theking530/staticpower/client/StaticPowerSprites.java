@@ -17,13 +17,6 @@ public class StaticPowerSprites {
 	public static final ResourceLocation DIGISTORE_FILL_BAR = registerSprite("blocks/digistore/digistore_fill_bar");
 	public static final ResourceLocation DIGISTORE_FILL_BAR_FULL = registerSprite("blocks/digistore/digistore_fill_bar_full");
 
-	public static final ResourceLocation LOGIC_GATE_INPUT = registerSprite("blocks/logicgates/logic_gate_input");
-	public static final ResourceLocation LOGIC_GATE_OUTPUT = registerSprite("blocks/logicgates/logic_gate_output");
-	public static final ResourceLocation LOGIC_GATE_OUTPUT_EXTRA = registerSprite("blocks/logicgates/logic_gate_extra_output");
-
-	public static final ResourceLocation LOGIC_GATE_BASE_ON = registerSprite("blocks/logicgates/logic_gate_base_on");
-	public static final ResourceLocation LOGIC_GATE_BASE_OFF = registerSprite("blocks/logicgates/logic_gate_base_off");
-
 	public static final ResourceLocation MACHINE_SIDE_NORMAL = registerSprite("blocks/machines/sides_modes/machine_side_regular");
 	public static final ResourceLocation MACHINE_SIDE_INPUT = registerSprite("blocks/machines/sides_modes/machine_side_input");
 	public static final ResourceLocation MACHINE_SIDE_OUTPUT = registerSprite("blocks/machines/sides_modes/machine_side_output");
@@ -45,8 +38,6 @@ public class StaticPowerSprites {
 	public static final ResourceLocation MINI_MACHINE_SIDE_AQUA = registerSprite("blocks/machines/sides_modes/mini_machine_side_aqua");
 
 	public static final ResourceLocation BATTERY_BLOCK_BAR = registerSprite("blocks/machines/batteries/battery_block_side_filled");
-	
-	public static final ResourceLocation CIRCUIT_BREAKER_DIGITS = registerSprite("blocks//power/circuit_breaker/digits");
 
 	public static final ResourceLocation GUI_POWER_BAR_FG = registerSprite("gui/power_bar_power");
 	public static final ResourceLocation GUI_POWER_BAR_BG = registerSprite("gui/power_bar_bg");

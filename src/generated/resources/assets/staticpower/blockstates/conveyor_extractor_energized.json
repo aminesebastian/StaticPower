@@ -1,32 +1,17 @@
 {
   "variants": {
-    "facing=east,is_on=false": {
+    "facing=east": {
       "model": "staticpower:block/conveyor_extractor_energized",
       "y": 90
     },
-    "facing=east,is_on=true": {
-      "model": "staticpower:block/conveyor_extractor_energized",
-      "y": 90
-    },
-    "facing=north,is_on=false": {
+    "facing=north": {
       "model": "staticpower:block/conveyor_extractor_energized"
     },
-    "facing=north,is_on=true": {
-      "model": "staticpower:block/conveyor_extractor_energized"
-    },
-    "facing=south,is_on=false": {
+    "facing=south": {
       "model": "staticpower:block/conveyor_extractor_energized",
       "y": 180
     },
-    "facing=south,is_on=true": {
-      "model": "staticpower:block/conveyor_extractor_energized",
-      "y": 180
-    },
-    "facing=west,is_on=false": {
-      "model": "staticpower:block/conveyor_extractor_energized",
-      "y": 270
-    },
-    "facing=west,is_on=true": {
+    "facing=west": {
       "model": "staticpower:block/conveyor_extractor_energized",
       "y": 270
     }
