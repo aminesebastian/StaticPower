@@ -6,6 +6,7 @@ import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
@@ -46,8 +47,8 @@ public class BlockEntityInverter extends BlockEntityConfigurable {
 		powerStorage.setInputCurrentTypes(CurrentType.DIRECT);
 		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
-		powerStorage.setMaximumInputPower(Double.MAX_VALUE);
-		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		powerStorage.setMaximumInputPower(StaticPowerEnergyUtilities.getMaximumPower());
+		powerStorage.setMaximumOutputPower(StaticPowerEnergyUtilities.getMaximumPower());
 
 		powerStorage.setCapacity(0);
 	}

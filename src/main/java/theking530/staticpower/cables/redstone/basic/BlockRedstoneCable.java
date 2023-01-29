@@ -28,7 +28,7 @@ import net.minecraftforge.network.NetworkHooks;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticcore.cablenetwork.CableUtilities;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPower;

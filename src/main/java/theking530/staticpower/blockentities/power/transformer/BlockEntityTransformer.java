@@ -10,6 +10,7 @@ import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.transformation.PowerTransformDirection;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
@@ -63,8 +64,8 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		powerStorage.setInputCurrentTypes(CurrentType.ALTERNATING);
 		powerStorage.setOutputCurrentType(CurrentType.ALTERNATING);
 
-		powerStorage.setMaximumInputPower(Double.MAX_VALUE);
-		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		powerStorage.setMaximumInputPower(StaticPowerEnergyUtilities.getMaximumPower());
+		powerStorage.setMaximumOutputPower(StaticPowerEnergyUtilities.getMaximumPower());
 
 		powerStorage.setCapacity(0);
 
@@ -107,7 +108,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		}
 
 		double power = Math.min(stack.getPower(), powerStorage.getMaximumPowerOutput());
-		PowerStack transformedStack = new PowerStack(power, powerStorage.getOutputVoltage(), CurrentType.ALTERNATING);
+		PowerStack transformedStack = new PowerStack(power, outputVoltageClass, CurrentType.ALTERNATING);
 
 		double transfered = powerDistributor.manuallyDistributePower(powerStorage, transformedStack, simulate);
 		if (!simulate) {

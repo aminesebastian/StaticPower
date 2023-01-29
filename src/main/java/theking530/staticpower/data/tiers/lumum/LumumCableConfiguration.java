@@ -61,8 +61,8 @@ public class LumumCableConfiguration {
 		}
 
 		@Override
-		protected double getCablePowerLossPerBlock() {
-			return 0.05;
+		protected double getCablePowerResistance() {
+			return 0.005;
 		}
 
 		@Override

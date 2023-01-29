@@ -12,6 +12,7 @@ import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityMachine;
@@ -101,8 +102,8 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", powerStorage));
 
 		if (this.getTier() == StaticPowerTiers.CREATIVE) {
-			powerStorage.setMaximumInputPower(Double.MAX_VALUE);
-			powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+			powerStorage.setMaximumInputPower(StaticPowerEnergyUtilities.getMaximumPower());
+			powerStorage.setMaximumOutputPower(StaticPowerEnergyUtilities.getMaximumPower());
 		}
 
 		// Add a battery input.
@@ -117,7 +118,7 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		if (!getLevel().isClientSide()) {
 			// If this is a creative battery, always keep the power at max.
 			if (getTier() == StaticPowerTiers.CREATIVE) {
-				powerStorage.addPower(new PowerStack(Double.MAX_VALUE, StaticPowerVoltage.LOW), false);
+				powerStorage.addPower(new PowerStack(StaticPowerEnergyUtilities.getMaximumPower(), StaticPowerVoltage.LOW), false);
 			}
 
 			// Charge up the item in the input slot.
@@ -127,7 +128,7 @@ public class BlockEntityBattery extends BlockEntityMachine {
 				// If it's not empty and is an energy storing item.
 				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
 					if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
-						PowerStack maxOutput = powerStorage.drainPower(Double.MAX_VALUE, true);
+						PowerStack maxOutput = powerStorage.drainPower(StaticPowerEnergyUtilities.getMaximumPower(), true);
 						double charged = EnergyHandlerItemStackUtilities.addPower(stack, maxOutput, false);
 						powerStorage.drainPower(charged, false);
 					}

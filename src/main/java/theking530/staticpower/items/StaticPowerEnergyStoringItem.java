@@ -19,6 +19,7 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.StaticPowerConfig;
@@ -57,7 +58,7 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 
 	public ItemStack getFilledVariant() {
 		ItemStack output = new ItemStack(this, 1);
-		EnergyHandlerItemStackUtilities.setStoredPower(output, Double.MAX_VALUE);
+		EnergyHandlerItemStackUtilities.setStoredPower(output, StaticPowerEnergyUtilities.getMaximumPower());
 		return output;
 	}
 

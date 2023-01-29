@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.SDColor;

@@ -39,7 +39,7 @@ public class PowerWireCoil extends AbstractWireCoil {
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		PowerTooltips.addMaximumCurrentTooltip(tooltip, getMaxCurrent(stack));
-		PowerTooltips.addPowerLossPerBlockTooltip(tooltip, getPowerLoss(stack));
+		PowerTooltips.addResistanceTooltip(tooltip, getPowerLoss(stack));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

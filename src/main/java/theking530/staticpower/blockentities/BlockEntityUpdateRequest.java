@@ -1,26 +1,36 @@
 package theking530.staticpower.blockentities;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockEntityUpdateRequest {
 	private final int flags;
 	private final boolean dataSync;
 	private final boolean renderOnDataSync;
+	private final BlockState newState;
 
 	private BlockEntityUpdateRequest(int flags) {
-		this.flags = flags;
-		this.dataSync = false;
-		renderOnDataSync = false;
+		this(flags, false, false, null);
 	}
 
 	private BlockEntityUpdateRequest(int flags, boolean dataSync, boolean renderOnDataSync) {
+		this(flags, dataSync, renderOnDataSync, null);
+
+	}
+
+	private BlockEntityUpdateRequest(int flags, boolean dataSync, boolean renderOnDataSync, BlockState newState) {
 		this.flags = flags;
 		this.dataSync = dataSync;
 		this.renderOnDataSync = renderOnDataSync;
+		this.newState = newState;
 	}
 
 	public int getFlags() {
 		return this.flags;
+	}
+
+	public BlockState getNewBlockState() {
+		return newState;
 	}
 
 	public boolean getShouldSyncData() {
@@ -41,6 +51,10 @@ public class BlockEntityUpdateRequest {
 
 	public static BlockEntityUpdateRequest blockUpdateAndNotifyNeighborsAndRender() {
 		return new BlockEntityUpdateRequest(Block.UPDATE_ALL_IMMEDIATE);
+	}
+
+	public static BlockEntityUpdateRequest updateBlockState(BlockState state) {
+		return new BlockEntityUpdateRequest(Block.UPDATE_ALL_IMMEDIATE, false, false, state);
 	}
 
 	public static BlockEntityUpdateRequest render() {

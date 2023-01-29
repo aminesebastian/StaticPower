@@ -45,6 +45,11 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 
 	public StaticPowerStorage setCapacity(double capacity) {
 		this.capacity = capacity;
+
+		// Can't have more power stored than we can actually store.
+		if (storedPower > capacity) {
+			storedPower = capacity;
+		}
 		return this;
 	}
 

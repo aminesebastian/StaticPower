@@ -1092,6 +1092,9 @@
 	"gui.staticpower.max_output_current": "Max. Output Current",
 	"gui.staticpower.current_unit": "A",
 	
+	"gui.staticpower.resistance": "Resistance",
+	"gui.staticpower.resistance_unit": "Ω",
+	
 	"gui.staticpower.stored_power": "Stored Power",
 	"gui.staticpower.power_unit": "W",
 	"gui.staticpower.power_unit_per_tick": "W/t",
@@ -1221,7 +1224,6 @@
 	"gui.staticpower.pump_rate_format": "Pumps every %1$s seconds",
 	"gui.staticpower.item_cable_transfer_rate": "%1$d %2$s/s",
 	"gui.staticpower.max_transfer_rate": "Maximum Transfer Rate",
-	"gui.staticpower.power_cable_resistance": "Resistance",
 	"gui.staticpower.max_fluid_rate": "Maximum Fluid Rate",
 	"gui.staticpower.item_cable_acceleration": "Acceleration: %1$d%%",
 	"gui.staticpower.item_cable_friction": "Friction: -%1$d%%",

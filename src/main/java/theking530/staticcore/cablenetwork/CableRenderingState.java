@@ -6,8 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.data.ClientCableConnectionState;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 
 public class CableRenderingState {
@@ -15,13 +14,13 @@ public class CableRenderingState {
 	 * Cache for the connection states. This is updated every time a new baked model
 	 * is requested AND also, on first placement.
 	 */
-	private final CableSideConnectionState[] connectionStates;
+	private final ClientCableConnectionState[] connectionStates;
 	private final ResourceLocation[] attachmentModels;
 	private final BlockState[] coverBlockStates;
 	private final BlockPos pos;
 	private BlockAndTintGetter level;
 
-	public CableRenderingState(CableSideConnectionState[] connectionStates, ResourceLocation[] attachmentModels, BlockPos pos) {
+	public CableRenderingState(ClientCableConnectionState[] connectionStates, ResourceLocation[] attachmentModels, BlockPos pos) {
 		super();
 		this.connectionStates = connectionStates;
 		this.attachmentModels = attachmentModels;
@@ -29,17 +28,13 @@ public class CableRenderingState {
 		this.coverBlockStates = new BlockState[6];
 		for (Direction side : Direction.values()) {
 			// No need to check for #hasCover, this returns null for empty covers.
-			CableSideConnectionState state = connectionStates[side.ordinal()];
+			ClientCableConnectionState state = connectionStates[side.ordinal()];
 			coverBlockStates[side.ordinal()] = CableCover.getBlockStateForCover(state.getCover());
 		}
 	}
 
 	public boolean isDisabledOnSide(Direction side) {
 		return connectionStates[side.ordinal()].isDisabled();
-	}
-
-	public CableConnectionType getConnectionType(Direction side) {
-		return connectionStates[side.ordinal()].getConnectionType();
 	}
 
 	public boolean hasCover(Direction side) {

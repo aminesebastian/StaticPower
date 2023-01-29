@@ -30,8 +30,9 @@ import theking530.staticcore.cablenetwork.CableRenderingState;
 import theking530.staticcore.cablenetwork.CableStateSyncRequestPacket;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.SparseCableLink;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.data.CableConnectionState;
+import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.data.ClientCableConnectionState;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.manager.CableNetworkManager;
@@ -56,7 +57,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	/** The client replicated list of sparse links. */
 	private final Map<Long, SparseCableLink> clientSparseLinks;
 	/** The client replicated list of connection states. */
-	private final CableSideConnectionState[] clientConnectionStates;
+	private final ClientCableConnectionState[] clientConnectionStates;
 
 	public AbstractCableProviderComponent(String name, CableNetworkModuleType... supportedModules) {
 		super(name);
@@ -71,9 +72,9 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 
 		// Initialize the sided data. Initialize the disabled sides to true until we
 		// recieve an update from the server.
-		clientConnectionStates = new CableSideConnectionState[6];
+		clientConnectionStates = new ClientCableConnectionState[6];
 		for (Direction dir : Direction.values()) {
-			clientConnectionStates[dir.ordinal()] = CableSideConnectionState.createEmpty();
+			clientConnectionStates[dir.ordinal()] = ClientCableConnectionState.createEmpty();
 			clientConnectionStates[dir.ordinal()].setDisabled(true);
 		}
 		clientSparseLinks = new HashMap<Long, SparseCableLink>();
@@ -119,9 +120,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	@Override
 	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
 		super.onNeighborReplaced(state, direction, facingState, FacingPos);
-		if (state != facingState) {
-			updateRenderingStateForCable();
-		}
+		updateRenderingStateForCable();
 	}
 
 	@Override
@@ -356,11 +355,11 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 
 	public CableConnectionType getConnectionTypeOnSide(Direction side) {
 		if (!isClientSide()) {
-			if (this.getCable().isPresent()) {
+			if (getCable().isPresent()) {
 				return getCable().get().getConnectionType(side);
 			}
 		}
-		return clientConnectionStates[side.ordinal()].getConnectionType();
+		return getTileEntity().getBlockState().getValue(AbstractCableBlock.CONNECTION_TYPES.get(side));
 	}
 
 	/**
@@ -510,9 +509,9 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		for (Direction dir : Direction.values()) {
 			BlockPos side = cable.getPos().relative(dir);
-			if(CableNetworkAccessor.get(getLevel()).isTrackingCable(side)) {
+			if (CableNetworkAccessor.get(getLevel()).isTrackingCable(side)) {
 				Cable adjacentCable = CableNetworkAccessor.get(getLevel()).getCable(side);
-				if(adjacentCable.isDisabledOnSide(dir.getOpposite())) {
+				if (adjacentCable.isDisabledOnSide(dir.getOpposite())) {
 					cable.setDisabledStateOnSide(dir, true);
 				}
 			}
@@ -520,7 +519,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	}
 
 	protected void onCableFirstAddedToNetwork(Cable cable, BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		
+
 	}
 
 	public boolean areCableCompatible(AbstractCableProviderComponent otherProvider, Direction side) {
@@ -681,7 +680,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		return ItemStack.EMPTY;
 	}
 
-	protected ResourceLocation getAttachmentModel(Direction side, CableSideConnectionState connectionState) {
+	protected ResourceLocation getAttachmentModel(Direction side, ClientCableConnectionState connectionState) {
 		if (!hasAttachment(side)) {
 			return null;
 		}
@@ -711,15 +710,6 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		return false;
 	}
 
-	/**
-	 * This method is called when we want to synchronize variables over from the
-	 * server to the client. The implementation of how this is handled is left to
-	 * the implementer. This is called from the {@link Cable}.
-	 */
-	public void gatherCableStateSynchronizationValues(Cable cable, CompoundTag tag) {
-
-	}
-
 	public void syncCableStateFromServer(CompoundTag tag) {
 		// Capture the existing ids.
 		Set<Long> changeDetection = new HashSet<Long>();
@@ -747,7 +737,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		// Deserialize the sided data.
 		ListTag sidedTags = tag.getList("sided_data", Tag.TAG_COMPOUND);
 		for (int i = 0; i < sidedTags.size(); i++) {
-			clientConnectionStates[i] = CableSideConnectionState.deserialize(sidedTags.getCompound(i));
+			clientConnectionStates[i] = CableConnectionState.deserialize(sidedTags.getCompound(i));
 		}
 
 		getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), false);

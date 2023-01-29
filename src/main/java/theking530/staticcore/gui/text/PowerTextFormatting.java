@@ -28,7 +28,7 @@ public class PowerTextFormatting {
 	public static final MutableComponent POWER_RATE_UNIT = Component.translatable("gui.staticpower.power_unit_per_tick");
 
 	/** Translation text component for Static Resistance (Ω). */
-	public static final MutableComponent RESISTANCE_UNIT = Component.translatable("gui.staticpower.power_resistance_unit");
+	public static final MutableComponent RESISTANCE_UNIT = Component.translatable("gui.staticpower.resistance_unit");
 
 	/**
 	 * Static initializer for number formatter.
@@ -52,8 +52,10 @@ public class PowerTextFormatting {
 		MutableComponent output;
 
 		// If the value is equal to the integer max, make it infinite.
-		if (Double.isInfinite(powerRate) || powerRate == Double.MAX_VALUE) {
+		if (Double.isInfinite(powerRate) || Double.isNaN(powerRate)) {
 			output = Component.literal("∞");
+		} else if (Double.isNaN(powerRate)) {
+			output = Component.literal("NaN");
 		} else {
 			MetricConverter metricRate = new MetricConverter(powerRate);
 			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).append(metricRate.getSuffix());
@@ -66,7 +68,7 @@ public class PowerTextFormatting {
 		MutableComponent output;
 
 		// If the value is equal to the integer max, make it infinite.
-		if (Double.isInfinite(power) || power == Double.MAX_VALUE) {
+		if (Double.isInfinite(power)) {
 			output = Component.literal("∞");
 		} else {
 			// Perform the metric conversion.
@@ -124,7 +126,7 @@ public class PowerTextFormatting {
 		MutableComponent output;
 
 		// If the value is equal to the integer max, make it infinite.
-		if (Double.isInfinite(resistance) || resistance == Double.MAX_VALUE) {
+		if (Double.isInfinite(resistance)) {
 			output = Component.literal("∞");
 		} else {
 			// Perform the metric conversion.
@@ -138,7 +140,7 @@ public class PowerTextFormatting {
 		}
 
 		if (includeUnits) {
-			output.append(CURRENT_UNIT);
+			output.append(RESISTANCE_UNIT);
 		}
 		return output;
 	}
@@ -156,7 +158,7 @@ public class PowerTextFormatting {
 		MutableComponent output;
 
 		// If the value is equal to the integer max, make it infinite.
-		if (Double.isInfinite(current) || current == Double.MAX_VALUE) {
+		if (Double.isInfinite(current)) {
 			output = Component.literal("∞");
 		} else {
 			// Perform the metric conversion.

@@ -47,7 +47,7 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 
 		PowerTooltips.addMaximumCurrentTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerMaxPower.get());
-		PowerTooltips.addPowerLossPerBlockTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerLossPerBlock.get());
+		PowerTooltips.addResistanceTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerResistance.get());
 		tooltip.add(Component.translatable("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
 	}
 

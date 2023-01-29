@@ -11,22 +11,20 @@ public class MetricConverter {
 	private String Suffix;
 
 	public MetricConverter(double value, int initialOffset) {
-		// Make sure we round after a sufficient number of decimals to avoid funky
-		// values (like returning 1000mw/t)
-		BigDecimal a = new BigDecimal(Value);
-		BigDecimal roundOff = a.setScale(5, RoundingMode.HALF_UP);
-		Value = roundOff.doubleValue();
-
-		if (value == 0 || Double.isInfinite(Value) || value == Double.MAX_VALUE) {
+		if (value == 0 || Double.isInfinite(value) || Double.isNaN(value)) {
 			Value = value;
 			Suffix = "";
 			return;
 		}
 
+		// Make sure we round after a sufficient number of decimals to avoid funky
+		// values (like returning 1000mw/t)
+		BigDecimal roundOff = new BigDecimal(value).setScale(5, RoundingMode.HALF_UP);
+		Value = Math.abs(roundOff.doubleValue());
+
 		// Keep dividing the Value by 1000 until we hit a current value of < 1000.
 		// For each iteration of the loop, increment the suffix index.
 		int suffixIndex = 8 + initialOffset;
-		this.Value = Math.abs(value);
 
 		if (Value > 1) {
 			while (Value / 1000 >= 1) {

@@ -26,28 +26,6 @@ public class BlockEntityRenderFluidCable extends AbstractCableTileEntityRenderer
 					tileEntity.fluidCableComponent);
 		}
 
-//		for (Direction dir : tileEntity.fluidCableComponent.flowMap.keySet()) {
-//			float flowAmount = tileEntity.fluidCableComponent.flowMap.get(dir);
-//			if (flowAmount == 0) {
-//				continue;
-//			}
-//
-//			Vector3D position = new Vector3D(0.5f, 1.0f, 0.5f);
-//			Vector3D offset = new Vector3D(dir.getNormal());
-//			offset.multiply(0.25f);
-//			position.add(offset);
-//
-//			matrixStack.pushPose();
-//			matrixStack.translate(position.getX(), position.getY(), position.getZ());
-//			float playerRot = Minecraft.getInstance().player.getViewYRot(1.0f);
-//			matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -playerRot + 180, true));
-//			matrixStack.translate(-position.getX(), -position.getY(), -position.getZ());
-//
-//			WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, GuiTextUtilities.formatNumberAsString(flowAmount).getString(), SDColor.EIGHT_BIT_WHITE, position,
-//					0.007f, matrixStack, buffer, combinedLight, combinedOverlay);
-//			matrixStack.popPose();
-//		}
-
 		Minecraft.getInstance().getProfiler().pop();
 	}
 

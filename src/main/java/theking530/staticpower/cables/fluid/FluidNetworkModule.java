@@ -149,7 +149,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return 0;
 		}
 
-		IFluidHandler handler = cable.getOwningCable().getWorld().getBlockEntity(destination.desintationPos())
+		IFluidHandler handler = cable.getOwningCable().getLevel().getBlockEntity(destination.desintationPos())
 				.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, destination.connectedSide()).orElse(null);
 		if (handler != null) {
 			// Create the stack to supply.

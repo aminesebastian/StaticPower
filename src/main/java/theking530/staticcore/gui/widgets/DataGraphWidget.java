@@ -87,8 +87,8 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 
 	protected Vector2D getTotalYValueRange() {
 		// Allocate the min and max values.
-		double min = Double.MAX_VALUE;
-		double max = Double.MIN_VALUE;
+		double min = Integer.MAX_VALUE;
+		double max = Integer.MIN_VALUE;
 
 		// Calculate the min and max values.
 		for (String dataLabel : dataSets.keySet()) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import theking530.api.energy.StaticPowerVoltage;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticpower.data.tiers.categories.TierPowerConfiguration;
 
 public class CreativePowerConfiguration extends TierPowerConfiguration {
@@ -15,12 +16,12 @@ public class CreativePowerConfiguration extends TierPowerConfiguration {
 
 	@Override
 	protected double getPortableBatteryCapacity() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override
 	protected double getDefaultPowerCapacity() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override
@@ -30,7 +31,7 @@ public class CreativePowerConfiguration extends TierPowerConfiguration {
 
 	@Override
 	protected double getDefaultMaximumPowerInput() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override
@@ -45,27 +46,27 @@ public class CreativePowerConfiguration extends TierPowerConfiguration {
 
 	@Override
 	protected double getDefaultMaximumPowerOutput() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override
 	protected double getBatteryCapacity() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override
 	protected double getBatteryMaximumPowerOutput() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override
 	protected double getSolarPanelPowerGeneration() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override
 	protected double getSolarPanelPowerStorage() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override

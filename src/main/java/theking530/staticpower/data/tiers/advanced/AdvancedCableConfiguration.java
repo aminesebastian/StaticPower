@@ -118,8 +118,8 @@ public class AdvancedCableConfiguration {
 		}
 
 		@Override
-		protected double getCablePowerLossPerBlock() {
-			return 0.5;
+		protected double getCablePowerResistance() {
+			return 0.050;
 		}
 
 		@Override

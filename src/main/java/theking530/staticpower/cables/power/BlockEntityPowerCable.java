@@ -33,8 +33,8 @@ public class BlockEntityPowerCable extends BlockEntityBase {
 	public BlockEntityPowerCable(BlockEntityTypeAllocator<BlockEntityPowerCable> allocator, BlockPos pos, BlockState state, boolean isIndustrial) {
 		super(allocator, pos, state);
 		double maxPower = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerMaxPower.get() : getTierObject().cablePowerConfiguration.cableMaxCurrent.get();
-		double resistance = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerLossPerBlock.get()
-				: getTierObject().cablePowerConfiguration.cablePowerLossPerBlock.get();
+		double resistance = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerResistance.get()
+				: getTierObject().cablePowerConfiguration.cablePowerResistance.get();
 		registerComponent(powerCableComponent = new PowerCableComponent("PowerCableComponent", isIndustrial, StaticPowerVoltage.BONKERS, maxPower, resistance));
 
 		damageRadius = new AABB(pos.getX() + 0.25, pos.getY() + 0.25, pos.getZ() + 0.25, pos.getX() + 0.75, pos.getY() + 0.75, pos.getZ() + 0.75);

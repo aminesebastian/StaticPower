@@ -1,7 +1,9 @@
 package theking530.staticpower.cables;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +22,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -34,6 +38,7 @@ import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticcore.cablenetwork.CableUtilities;
+import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.StaticPower;
@@ -47,6 +52,12 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 			() -> SoundEvents.COPPER_HIT, () -> SoundEvents.COPPER_FALL);
 	public static final ForgeSoundType CLOTH_CABLE = new ForgeSoundType(1.0F, 1.0F, () -> SoundEvents.WOOL_BREAK, () -> SoundEvents.WOOL_STEP, () -> SoundEvents.WOOL_PLACE,
 			() -> SoundEvents.WOOL_HIT, () -> SoundEvents.WOOL_FALL);
+	public static final Map<Direction, EnumProperty<CableConnectionType>> CONNECTION_TYPES = new HashMap<>();
+	static {
+		for (Direction dir : Direction.values()) {
+			CONNECTION_TYPES.put(dir, EnumProperty.create(dir.getName(), CableConnectionType.class));
+		}
+	}
 
 	public final CableBoundsCache cableBoundsCache;
 	public final float coverHoleSize;
@@ -279,5 +290,22 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 			return cableComponent.isSideDisabled(direction);
 		}
 		return true;
+	}
+
+	@Override
+	protected BlockState getDefaultStateForRegistration() {
+		BlockState superCall = super.getDefaultStateForRegistration();
+		for (Direction dir : Direction.values()) {
+			superCall = superCall.setValue(CONNECTION_TYPES.get(dir), CableConnectionType.NONE);
+		}
+		return superCall;
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		for (Direction dir : Direction.values()) {
+			builder.add(CONNECTION_TYPES.get(dir));
+		}
 	}
 }

@@ -17,6 +17,7 @@ import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
@@ -68,8 +69,8 @@ public class BlockEntityCircuitBreaker extends BlockEntityConfigurable {
 		powerStorage.setInputCurrentTypes(CurrentType.ALTERNATING);
 		powerStorage.setOutputCurrentType(CurrentType.DIRECT);
 
-		powerStorage.setMaximumInputPower(Double.MAX_VALUE);
-		powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		powerStorage.setMaximumInputPower(StaticPowerEnergyUtilities.getMaximumPower());
+		powerStorage.setMaximumOutputPower(StaticPowerEnergyUtilities.getMaximumPower());
 
 		powerStorage.setCapacity(0);
 	}

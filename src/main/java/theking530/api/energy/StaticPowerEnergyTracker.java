@@ -8,8 +8,9 @@ import net.minecraft.world.level.Level;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
-	public static final int SMOOTHING_FACTOR = 5;
-	protected final int smoothingFactor;
+	public static final double INSTANT_SNAP_DELTA_THRESHOLD = 1e4;
+	public static final double SMOOTHING_FACTOR = 1.0 / 5.0;
+	protected final double smoothingFactor;
 
 	private long lastTickTime;
 
@@ -29,7 +30,13 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 		this(SMOOTHING_FACTOR);
 	}
 
-	public StaticPowerEnergyTracker(int smoothingFactor) {
+	/**
+	 * 
+	 * @param smoothingFactor The smoothness of the averaging algorithm. Higher
+	 *                        values are more responsive. Must be between (0.0,
+	 *                        1.0].
+	 */
+	public StaticPowerEnergyTracker(double smoothingFactor) {
 		this.smoothingFactor = smoothingFactor;
 		currentFrameRecieved = new LinkedList<>();
 		averageRecievedPower = 0;
@@ -85,7 +92,12 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 	}
 
 	protected double interpolatePowerTowards(double currentValue, double totalPower) {
-		double newAverage = (totalPower + (currentValue * smoothingFactor)) / (smoothingFactor + 1);
+		// If the difference is sufficiently large, just snap to the new target.
+		if (Math.abs(currentValue - totalPower) > INSTANT_SNAP_DELTA_THRESHOLD) {
+			return totalPower;
+		}
+
+		double newAverage = smoothingFactor * totalPower + (1.0 - smoothingFactor) * currentValue;
 		if (newAverage < 0.001) {
 			if (totalPower > 0) {
 				newAverage = totalPower;

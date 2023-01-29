@@ -29,6 +29,7 @@ import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerEnergyTracker;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
@@ -54,7 +55,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		}
 	}
 
-	private record ElectricalPathProperties(double powerLoss, double maxCurrent, double length, List<Cable> cables) {
+	private record ElectricalPathProperties(double resistance, double maxCurrent, double length, List<Cable> cables) {
 		public static final ElectricalPathProperties EMPTY = new ElectricalPathProperties(0, 0, 0, Collections.emptyList());
 	}
 
@@ -159,8 +160,8 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 					.append(ChatFormatting.GOLD.toString() + String.format("%1$s/%2$s", usedPowerComponent.getString(), maxPowerComponent.getString())));
 		}
 
-		output.add(Component.translatable("gui.staticpower.power_loss").append(": ").append(ChatFormatting.GOLD.toString()
-				+ PowerTextFormatting.formatPowerToString(StaticPowerVoltage.adjustPowerLossByVoltage(energyTracker.getAverageVoltage(), properties.powerLoss)).getString()));
+		output.add(Component.translatable("gui.staticpower.resistance").append(": ")
+				.append(ChatFormatting.GOLD.toString() + PowerTextFormatting.formatResistanceToString(properties.resistance).getString()));
 
 		output.add(Component.translatable("gui.staticpower.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.length()));
 	}
@@ -185,8 +186,8 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 		Path path = paths.get(0);
 		Set<Cable> cables = new LinkedHashSet<Cable>(); // Use a LinkedHashSet to maintain order.
-		double cablePowerLoss = 0;
-		double lowestMaxCurrent = Double.MAX_VALUE;
+		double resistance = 0;
+		double lowestMaxCurrent = StaticPowerEnergyUtilities.getMaximumPower();
 		for (PathEntry entry : path.getEntries()) {
 			// Make sure the cable is not null. The cable will be null when checking the
 			// last point in an actual run, as this will be the destination. The reason we
@@ -198,7 +199,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 				if (cables.contains(cable)) {
 					continue;
 				}
-				cablePowerLoss += (cable.getDataTag().getDouble(PowerCableComponent.POWER_LOSS));
+				resistance += (cable.getDataTag().getDouble(PowerCableComponent.RESISTANCE));
 
 				if (!cables.contains(cable)) {
 					cables.add(cable);
@@ -208,9 +209,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 				lowestMaxCurrent = Math.min(lowestMaxCurrent, cableMaxCurrent);
 			}
 		}
-		cablePowerLoss /= cables.size();
-		cablePowerLoss *= path.getLength();
-		return new ElectricalPathProperties(cablePowerLoss, lowestMaxCurrent, path.getLength(), cables.stream().toList());
+		return new ElectricalPathProperties(resistance, lowestMaxCurrent, path.getLength(), cables.stream().toList());
 	}
 
 	protected CablePowerSupplyEvent supplyPower(BlockPos powerSourcePos, BlockPos powerSourceCable, PowerStack stack, CachedPowerDestination destination, boolean simulate) {
@@ -234,39 +233,37 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			return CablePowerSupplyEvent.EMPTY;
 		}
 
-		// Adjust the power loss by the transfered voltage.
-		double cablePowerLoss = StaticPowerVoltage.adjustPowerLossByVoltage(stack.getVoltage(), properties.powerLoss);
-
-		// Subtract that power loss from the total amount of power that we were
-		// provided.
-		double leftoverPower = maxCanSupply - cablePowerLoss;
-
 		// Simulate adding power to the destination. If the destination doens't need
 		// power, OR we are simulating, just return the simulated power.
-		double simulatedMachineUsage = destination.power.addPower(new PowerStack(leftoverPower, stack.getVoltage(), stack.getCurrentType()), true);
-		if (simulatedMachineUsage == 0) {
+		double maximumMachineUsage = destination.power.addPower(stack.copy(), true);
+		if (maximumMachineUsage == 0) {
 			return CablePowerSupplyEvent.EMPTY;
 		}
 
+		// Calculate the power loss along the line and then determine how much we can
+		// supply to the machine after considering the loss.
+		double machineCurrent = maximumMachineUsage / stack.getVoltage().getValue();
+		double powerLoss = (machineCurrent * machineCurrent) * properties.resistance;
+		double maximumMachineSupply = Math.max(maximumMachineUsage - powerLoss, stack.getPower());
 		if (simulate) {
-			return new CablePowerSupplyEvent(simulatedMachineUsage, cablePowerLoss);
+			return new CablePowerSupplyEvent(maximumMachineSupply, powerLoss);
 		}
 
 		// Break any cables that should burn given the current we are transferring.
 		for (int i = 0; i < properties.cables.size(); i++) {
 			currentTickCurrentMap.compute(properties.cables.get(i).getPos(), (pos, existing) -> {
 				if (existing != null) {
-					existing.setPower(existing.getPower() + simulatedMachineUsage);
+					existing.setPower(existing.getPower() + maximumMachineUsage);
 					return existing;
 				}
-				return new PowerStack(simulatedMachineUsage, stack.getVoltage(), stack.getCurrentType());
+				return new PowerStack(maximumMachineUsage, stack.getVoltage(), stack.getCurrentType());
 			});
 		}
 
 		// If we made it this far, actually supply the power and then return the power
 		// usage + the power loss;
-		double machineUsedPower = destination.power.addPower(new PowerStack(leftoverPower, stack.getVoltage(), stack.getCurrentType()), simulate);
-		return new CablePowerSupplyEvent(machineUsedPower, cablePowerLoss);
+		double machineUsedPower = destination.power.addPower(new PowerStack(maximumMachineSupply, stack.getVoltage(), stack.getCurrentType()), simulate);
+		return new CablePowerSupplyEvent(machineUsedPower, powerLoss);
 	}
 
 	public double addPower(BlockPos powerSourcePos, BlockPos powerSourceCable, PowerStack power, boolean simulate) {
@@ -283,7 +280,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		Map<Integer, Double> powerToSupply = new HashMap<>();
 		double totalSimulatedPower = 0;
 		for (int i = 0; i < destinations.size(); i++) {
-			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, powerSourceCable, new PowerStack(Double.MAX_VALUE, power.getVoltage(), power.getCurrentType()),
+			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, powerSourceCable, new PowerStack(StaticPowerEnergyUtilities.getMaximumPower(), power.getVoltage(), power.getCurrentType()),
 					destinations.get(i), true);
 			powerToSupply.put(i, supplyEvent.getTotalPower());
 			totalSimulatedPower += supplyEvent.getTotalPower();
@@ -370,7 +367,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 	@Override
 	public double getMaximumPowerInput() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override

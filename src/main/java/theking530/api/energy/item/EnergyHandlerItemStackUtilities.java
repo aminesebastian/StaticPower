@@ -8,6 +8,7 @@ import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 
 /**
  * Library class containing useful functions to interact with an static power
@@ -52,7 +53,7 @@ public class EnergyHandlerItemStackUtilities {
 
 	public static void setStoredPower(ItemStack container, double power) {
 		EnergyHandlerItemStackUtilities.getEnergyContainer(container).ifPresent((cap) -> {
-			cap.setStoredPower(Double.MAX_VALUE);
+			cap.setStoredPower(StaticPowerEnergyUtilities.getMaximumPower());
 		});
 	}
 

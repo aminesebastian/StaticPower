@@ -33,7 +33,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.cablenetwork.CableRenderingState;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.CableUtilities;
+import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
@@ -115,7 +116,7 @@ public class CoverBuilder {
 		QuadTinter tinter = pipeline.getElement("tinter", QuadTinter.class);
 		QuadCornerKicker kicker = pipeline.getElement("corner_kicker", QuadCornerKicker.class);
 
-		List<AABB> holeStrips = getBoxes(facadeBox, state, cableState.getConnectionType(dir),
+		List<AABB> holeStrips = getBoxes(facadeBox, state, CableUtilities.getConnectionTypeOnSide(coverBlockState, dir),
 				!cableState.hasAttachment(dir) ? null : (AbstractCableAttachment) cableState.getAttachment(dir).getItem(), dir.getAxis());
 
 		// calculate the side mask.

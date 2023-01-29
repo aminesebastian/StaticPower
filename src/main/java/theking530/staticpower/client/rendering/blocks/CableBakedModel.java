@@ -24,7 +24,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticcore.cablenetwork.CableRenderingState;
 import theking530.staticcore.cablenetwork.CableUtilities;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.CoverBuilder;
@@ -99,8 +99,8 @@ public class CableBakedModel extends AbstractBakedModel {
 
 		// If we have a simple straight connection, just add that mode. Otherwise, add
 		// the core and then apply any additional models.
-		if (Straight != null && CableUtilities.isCableStraightConnection(renderingState)) {
-			newQuads.addAll(RotatedModelCache.getQuads(Straight, CableUtilities.getStraightConnectionSide(renderingState), state, side, rand, data, renderLayer));
+		if (Straight != null && CableUtilities.isCableStraightConnection(state, renderingState)) {
+			newQuads.addAll(RotatedModelCache.getQuads(Straight, CableUtilities.getStraightConnectionSide(state, renderingState), state, side, rand, data, renderLayer));
 			for (Direction dir : Direction.values()) {
 				if (renderingState.hasAttachment(dir)) {
 					newQuads.addAll(RotatedModelCache.getQuads(renderingState.getAttachmentModelId(dir), dir, state, side, rand, data, renderLayer));
@@ -119,7 +119,7 @@ public class CableBakedModel extends AbstractBakedModel {
 				}
 
 				// Get the connection state.
-				CableConnectionType connectionState = renderingState.getConnectionType(dir);
+				CableConnectionType connectionState = CableUtilities.getConnectionTypeOnSide(state, dir);
 
 				// Decide what to render based on the connection state.
 				if (connectionState == CableConnectionType.CABLE) {

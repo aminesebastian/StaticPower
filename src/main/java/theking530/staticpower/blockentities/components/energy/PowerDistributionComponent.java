@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -44,7 +45,7 @@ public class PowerDistributionComponent extends AbstractBlockEntityComponent {
 		if (autoDistributionSource != null && autoDistributionSource.getStoredPower() > 0) {
 			for (Direction facing : Direction.values()) {
 				if (canOutputFromSide(facing)) {
-					PowerStack maxDrain = autoDistributionSource.drainPower(Double.MAX_VALUE, true);
+					PowerStack maxDrain = autoDistributionSource.drainPower(StaticPowerEnergyUtilities.getMaximumPower(), true);
 					distributeOnSide(autoDistributionSource, facing, maxDrain, false);
 				}
 			}

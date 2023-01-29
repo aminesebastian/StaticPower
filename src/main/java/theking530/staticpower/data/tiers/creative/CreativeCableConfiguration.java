@@ -2,6 +2,7 @@ package theking530.staticpower.data.tiers.creative;
 
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import theking530.api.energy.StaticPowerVoltage;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticpower.data.tiers.categories.cables.TierFluidCableConfiguration;
 import theking530.staticpower.data.tiers.categories.cables.TierItemCableConfiguration;
 import theking530.staticpower.data.tiers.categories.cables.TierPowerCableConfiguration;
@@ -57,11 +58,11 @@ public class CreativeCableConfiguration {
 
 		@Override
 		protected double getCableMaxCurrent() {
-			return Double.MAX_VALUE;
+			return StaticPowerEnergyUtilities.getMaximumPower();
 		}
 
 		@Override
-		protected double getCablePowerLossPerBlock() {
+		protected double getCablePowerResistance() {
 			return 0;
 		}
 
@@ -77,7 +78,7 @@ public class CreativeCableConfiguration {
 
 		@Override
 		protected double getWireTerminalMaxCurrent() {
-			return Double.MAX_VALUE;
+			return StaticPowerEnergyUtilities.getMaximumPower();
 		}
 
 		@Override
@@ -87,7 +88,7 @@ public class CreativeCableConfiguration {
 
 		@Override
 		protected double getWireCoilMaxCurrent() {
-			return Double.MAX_VALUE;
+			return StaticPowerEnergyUtilities.getMaximumPower();
 		}
 
 		@Override

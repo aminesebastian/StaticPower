@@ -61,8 +61,8 @@ public class StaticCableConfiguration {
 		}
 
 		@Override
-		protected double getCablePowerLossPerBlock() {
-			return 0.25;
+		protected double getCablePowerResistance() {
+			return 0.025;
 		}
 
 		@Override

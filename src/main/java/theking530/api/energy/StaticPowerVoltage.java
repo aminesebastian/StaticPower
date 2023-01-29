@@ -62,15 +62,8 @@ public enum StaticPowerVoltage {
 	}
 
 	public StaticPowerVoltage downgrade(int ratio) {
-		int newOrdinal = SDMath.clamp(ordinal() - ratio, 0, StaticPowerVoltage.values().length - 1);
+		int newOrdinal = SDMath.clamp(ordinal() - ratio, 1, StaticPowerVoltage.values().length - 1);
 		return StaticPowerVoltage.values()[newOrdinal];
-	}
-
-	public static double adjustPowerLossByVoltage(StaticPowerVoltage voltage, double powerLoss) {
-		// Offset by 1 because ordinal 0 is the zero voltage.
-		int adjustedOrdinal = Math.max(0, voltage.ordinal() - 1);
-		double powerLossFactor = Math.pow(2, adjustedOrdinal);
-		return powerLoss / powerLossFactor;
 	}
 
 	public static StaticPowerVoltage getVoltageClass(double voltage) {

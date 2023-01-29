@@ -47,8 +47,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 import theking530.api.IBreakSerializeable;
-import theking530.staticcore.cablenetwork.Cable;
-import theking530.staticcore.cablenetwork.CableStateSyncPacket;
 import theking530.staticcore.cablenetwork.ICableStateSyncTarget;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.network.NetworkMessage;
@@ -152,6 +150,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 			int flags = 0;
 			boolean shouldSync = false;
 			boolean renderOnDataSync = false;
+			BlockState newState = getBlockState();
 			while (!updateRequestQueue.isEmpty()) {
 				BlockEntityUpdateRequest request = updateRequestQueue.poll();
 				flags |= request.getFlags();
@@ -160,6 +159,9 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 				}
 				if (request.getShouldRenderOnDataSync()) {
 					renderOnDataSync = true;
+				}
+				if (request.getNewBlockState() != null) {
+					newState = request.getNewBlockState();
 				}
 			}
 
@@ -170,7 +172,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 			// Perform the block update.
 			if (flags > 0) {
-				level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), getBlockState(), getBlockState(), flags, 512);
+				level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), getBlockState(), newState, flags, 512);
 			}
 
 			// Perform a data sync if requested.
@@ -285,7 +287,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 			comp.onOwningBlockEntityBroken(state, newState, isMoving);
 		}
 		isValid = false;
-		
+
 		// Drop all the items currently in an inventory.
 		for (InventoryComponent comp : getComponents(InventoryComponent.class)) {
 			// Skip components that should not drop their contents.
@@ -775,24 +777,6 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	protected void getAdditionalModelData(Builder builder) {
 
-	}
-
-	public void synchronizeServerToClient(Cable cable, CompoundTag tag) {
-		if (getLevel().isClientSide()) {
-			throw new RuntimeException("#synchronizeServerToClient() should never be called from the client!");
-		}
-
-		// Iterate through all the cable providers (should realistically just be one).
-		for (AbstractBlockEntityComponent component : components.values()) {
-			if (component instanceof AbstractCableProviderComponent) {
-				AbstractCableProviderComponent cableComp = (AbstractCableProviderComponent) component;
-				cableComp.gatherCableStateSynchronizationValues(cable, tag);
-			}
-		}
-
-		// Send the sync packet.
-		CableStateSyncPacket syncPacket = new CableStateSyncPacket(getBlockPos(), tag);
-		StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), 64, syncPacket);
 	}
 
 	public void recieveCableSyncState(CompoundTag tag) {

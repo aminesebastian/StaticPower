@@ -24,8 +24,8 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.staticcore.cablenetwork.SparseCableLink.SparseCableConnectionType;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapability;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.data.CableConnectionState;
+import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
@@ -33,7 +33,9 @@ import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.scanning.CableScanLocation;
 import theking530.staticpower.StaticPowerRegistries;
 import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.utilities.NBTUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -44,7 +46,7 @@ public class Cable {
 	protected final Set<CableNetworkModuleType> supportedNetworkModules;
 
 	private final CompoundTag dataTag;
-	private final CableSideConnectionState[] sidedData;
+	private final CableConnectionState[] sidedData;
 
 	private final boolean canAcceptSparseLink;
 	private final Map<BlockPos, SparseCableLink> sparseLinks;
@@ -62,22 +64,22 @@ public class Cable {
 		sparseLinks = new HashMap<>();
 		capabilities = new HashMap<>();
 
-		sidedData = new CableSideConnectionState[6];
+		sidedData = new CableConnectionState[6];
 		for (Direction dir : Direction.values()) {
-			sidedData[dir.ordinal()] = CableSideConnectionState.createEmpty();
+			sidedData[dir.ordinal()] = CableConnectionState.createEmpty();
 		}
 	}
 
 	public SparseCableLink addSparseLink(BlockPos linkToPosition, CompoundTag data) {
 		if (!linkToPosition.equals(getPos()) && !isLinkedTo(linkToPosition)) {
-			long linkId = CableNetworkAccessor.get(getWorld()).getAndIncrementCurentSparseLinkId();
-			Cable otherCable = CableNetworkAccessor.get(getWorld()).getCable(linkToPosition);
+			long linkId = CableNetworkAccessor.get(getLevel()).getAndIncrementCurentSparseLinkId();
+			Cable otherCable = CableNetworkAccessor.get(getLevel()).getCable(linkToPosition);
 			otherCable.sparseLinks.put(getPos(), new SparseCableLink(linkId, getPos(), data, SparseCableConnectionType.STARTING));
 			otherCable.synchronizeServerState();
 
 			SparseCableLink endLink = new SparseCableLink(linkId, linkToPosition, data, SparseCableConnectionType.ENDING);
 			sparseLinks.put(linkToPosition, endLink);
-			CableNetworkAccessor.get(getWorld()).joinSparseCables(this, otherCable);
+			CableNetworkAccessor.get(getLevel()).joinSparseCables(this, otherCable);
 			synchronizeServerState();
 			return endLink;
 		}
@@ -94,7 +96,7 @@ public class Cable {
 		for (BlockPos pos : linkedToPosition) {
 			SparseCableLink removedLink = sparseLinks.remove(pos);
 			if (removedLink != null) {
-				Cable otherCable = CableNetworkAccessor.get(getWorld()).getCable(pos);
+				Cable otherCable = CableNetworkAccessor.get(getLevel()).getCable(pos);
 				otherCable.sparseLinks.remove(getPos());
 				targets.add(otherCable);
 				output.add(removedLink);
@@ -103,7 +105,7 @@ public class Cable {
 
 		// If we did break any connections, try to separate ourselves off those targets.
 		if (output.size() > 0) {
-			CableNetworkAccessor.get(getWorld()).separateSparseCables(this, targets);
+			CableNetworkAccessor.get(getLevel()).separateSparseCables(this, targets);
 			for (Cable other : targets) {
 				other.synchronizeServerState();
 			}
@@ -152,7 +154,7 @@ public class Cable {
 		List<Cable> wrappers = new ArrayList<Cable>();
 		for (CableScanLocation scanLoc : getScanLocations()) {
 			if (scanLoc.isSparseLink()) {
-				Cable cable = CableNetworkAccessor.get(getWorld()).getCable(scanLoc.getLocation());
+				Cable cable = CableNetworkAccessor.get(getLevel()).getCable(scanLoc.getLocation());
 				wrappers.add(cable);
 			} else {
 				// Skip checking that side if that side is disabled.
@@ -162,7 +164,7 @@ public class Cable {
 
 				// Check if a cable exists on the provided side and it is enabled on that side
 				// and of the same type.
-				Cable adjacent = CableNetworkAccessor.get(getWorld()).getCable(scanLoc.getLocation());
+				Cable adjacent = CableNetworkAccessor.get(getLevel()).getCable(scanLoc.getLocation());
 
 				if (adjacent == null) {
 					continue;
@@ -253,7 +255,7 @@ public class Cable {
 		return network;
 	}
 
-	public Level getWorld() {
+	public Level getLevel() {
 		return level;
 	}
 
@@ -368,7 +370,17 @@ public class Cable {
 	}
 
 	public void synchronizeServerState() {
-		ICableStateSyncTarget target = (ICableStateSyncTarget) getWorld().getExistingBlockEntity(getPos());
+		BlockState cableState = getLevel().getBlockState(getPos());
+
+		// Arbitrary check to see if this block has cable connection types.
+		if (cableState.hasProperty(AbstractCableBlock.CONNECTION_TYPES.get(Direction.DOWN))) {
+			for (Direction dir : Direction.values()) {
+				cableState = cableState.setValue(AbstractCableBlock.CONNECTION_TYPES.get(dir), sidedData[dir.ordinal()].getConnectionType());
+			}
+			getLevel().setBlockAndUpdate(getPos(), cableState);
+		}
+
+		ICableStateSyncTarget target = (ICableStateSyncTarget) getLevel().getExistingBlockEntity(getPos());
 		if (target != null) {
 			CompoundTag defaultData = new CompoundTag();
 
@@ -381,12 +393,14 @@ public class Cable {
 
 			// Serialize the connection data.
 			ListTag sidedTags = new ListTag();
-			for (CableSideConnectionState data : sidedData) {
+			for (CableConnectionState data : sidedData) {
 				sidedTags.add(data.serialize());
 			}
 			defaultData.put("sided_data", sidedTags);
 
-			target.synchronizeServerToClient(this, defaultData);
+			// Send the sync packet.
+			CableStateSyncPacket syncPacket = new CableStateSyncPacket(getPos(), defaultData);
+			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 64, syncPacket);
 		}
 	}
 
@@ -416,9 +430,9 @@ public class Cable {
 
 		// Deserialize the sided data.
 		ListTag sidedTags = tag.getList("sided_data", Tag.TAG_COMPOUND);
-		sidedData = new CableSideConnectionState[sidedTags.size()];
+		sidedData = new CableConnectionState[sidedTags.size()];
 		for (int i = 0; i < sidedTags.size(); i++) {
-			sidedData[i] = CableSideConnectionState.deserialize(sidedTags.getCompound(i));
+			sidedData[i] = CableConnectionState.deserialize(sidedTags.getCompound(i));
 		}
 
 		// Deserialize the destination types.
@@ -465,7 +479,7 @@ public class Cable {
 
 		// Serialize the sided data.
 		ListTag sidedTags = new ListTag();
-		for (CableSideConnectionState data : sidedData) {
+		for (CableConnectionState data : sidedData) {
 			sidedTags.add(data.serialize());
 		}
 		tag.put("sided_data", sidedTags);

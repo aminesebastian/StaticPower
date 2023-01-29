@@ -20,10 +20,10 @@ import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.Cable;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.CableUtilities;
+import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.data.ClientCableConnectionState;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
@@ -198,8 +198,8 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	protected ResourceLocation getAttachmentModel(Direction side, CableSideConnectionState connectionState) {
-		if (connectionState.getConnectionType() == CableConnectionType.DESTINATION) {
+	protected ResourceLocation getAttachmentModel(Direction side, ClientCableConnectionState connectionState) {
+		if (getConnectionTypeOnSide(side) == CableConnectionType.DESTINATION) {
 			if (configuration.getSideConfig(side).isInputSide()) {
 				return StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT;
 			} else if (configuration.getSideConfig(side).isOutputSide()) {

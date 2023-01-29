@@ -19,6 +19,7 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.sided.ISidedStaticPowerStorage;
 import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
@@ -29,7 +30,7 @@ import theking530.staticpower.init.cables.ModCableModules;
 public class PowerCableComponent extends AbstractCableProviderComponent implements ISidedStaticPowerStorage {
 	public static final String VOLTAGE_ORDINAL = "power_voltage_ordinal";
 	public static final String CURRENT_MAX = "power_max_current";
-	public static final String POWER_LOSS = "power_resistance";
+	public static final String RESISTANCE = "power_resistance";
 	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
 
 	private final CableNetworkModuleType moduleType;
@@ -80,7 +81,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putByte(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
-		cable.getDataTag().putDouble(POWER_LOSS, powerLoss);
+		cable.getDataTag().putDouble(RESISTANCE, powerLoss);
 		cable.getDataTag().putDouble(CURRENT_MAX, maxCurrent);
 		cable.getDataTag().putBoolean(POWER_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 	}
@@ -113,7 +114,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public double getMaximumPowerInput() {
-		return Double.MAX_VALUE;
+		return StaticPowerEnergyUtilities.getMaximumPower();
 	}
 
 	@Override

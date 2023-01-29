@@ -5,18 +5,25 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
-import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
+import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
 import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 
 public class CableUtilities {
 
 	public static CableConnectionType getConnectionState(BlockGetter world, BlockPos pos, Direction side) {
-		AbstractCableProviderComponent cableComponent = getCableWrapperComponent(world, pos);
-		if (cableComponent != null) {
-			return cableComponent.getConnectionTypeOnSide(side);
+		BlockState state = world.getBlockState(pos);
+		if (!doesBlockStateHaveConnectionProperty(state)) {
+			return CableConnectionType.NONE;
 		}
-		return CableConnectionType.NONE;
+
+		return world.getBlockState(pos).getValue(AbstractCableBlock.CONNECTION_TYPES.get(side));
+	}
+
+	public static boolean doesBlockStateHaveConnectionProperty(BlockState state) {
+		return state.hasProperty(AbstractCableBlock.CONNECTION_TYPES.get(Direction.DOWN));
 	}
 
 	public static boolean isSideConnectionDisabled(BlockGetter world, BlockPos pos, Direction side) {
@@ -46,29 +53,29 @@ public class CableUtilities {
 		return null;
 	}
 
-	public static boolean isCableStraightConnection(CableRenderingState renderingState) {
+	public static boolean isCableStraightConnection(BlockState blockState, CableRenderingState renderingState) {
 		int cableConnections = 0;
 
 		// Get the number of sides that are connected to a cable. If a side is connected
 		// to a tile entity, instantly return false;.
 		for (Direction dir : Direction.values()) {
-			if (!renderingState.isDisabledOnSide(dir) && renderingState.getConnectionType(dir) == CableConnectionType.CABLE) {
+			if (!renderingState.isDisabledOnSide(dir) && getConnectionTypeOnSide(blockState, dir) == CableConnectionType.CABLE) {
 				cableConnections++;
-			} else if (renderingState.getConnectionType(dir) == CableConnectionType.DESTINATION) {
+			} else if (getConnectionTypeOnSide(blockState, dir) == CableConnectionType.DESTINATION) {
 				return false;
 			}
-			
-			if(renderingState.hasAttachment(dir)) {
+
+			if (renderingState.hasAttachment(dir)) {
 				return false;
 			}
 		}
-		
+
 		// If only two sides are connected, check to see which sides. If they are
 		// opposites, we can use a straight cable model.
 		if (cableConnections == 2) {
 			for (int i = 0; i < 6; i += 2) {
 				Direction dir = Direction.values()[i];
-				if (renderingState.getConnectionType(dir) == CableConnectionType.CABLE && renderingState.getConnectionType(dir.getOpposite()) == CableConnectionType.CABLE) {
+				if (getConnectionTypeOnSide(blockState, dir) == CableConnectionType.CABLE && getConnectionTypeOnSide(blockState, dir.getOpposite()) == CableConnectionType.CABLE) {
 					return true;
 				}
 			}
@@ -77,11 +84,11 @@ public class CableUtilities {
 		return false;
 	}
 
-	public static @Nullable Direction getStraightConnectionSide(CableRenderingState renderingState) {
-		if (isCableStraightConnection(renderingState)) {
+	public static @Nullable Direction getStraightConnectionSide(BlockState blockState, CableRenderingState renderingState) {
+		if (isCableStraightConnection(blockState, renderingState)) {
 			for (int i = 0; i < 6; i += 2) {
 				Direction dir = Direction.values()[i];
-				if (!renderingState.isDisabledOnSide(dir) && renderingState.getConnectionType(dir) == CableConnectionType.CABLE) {
+				if (!renderingState.isDisabledOnSide(dir) && getConnectionTypeOnSide(blockState, dir) == CableConnectionType.CABLE) {
 					return dir;
 				}
 			}
@@ -97,8 +104,12 @@ public class CableUtilities {
 				connectionTypes[dir.ordinal()] = connectionComponent.getConnectionTypeOnSide(dir);
 			}
 
-			return isCableStraightConnection(connectionComponent.getRenderingState());
+			return isCableStraightConnection(world.getBlockState(pos), connectionComponent.getRenderingState());
 		}
 		return false;
+	}
+
+	public static CableConnectionType getConnectionTypeOnSide(BlockState state, Direction side) {
+		return state.getValue(AbstractCableBlock.CONNECTION_TYPES.get(side));
 	}
 }

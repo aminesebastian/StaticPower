@@ -105,9 +105,9 @@ public class CableNetworkManager extends SavedData implements ICableNetworkManag
 		// If we have a non sparse cable, see if it can join an adjacent network.
 		List<Cable> adjacents = cable.getAdjacents();
 		if (adjacents.isEmpty()) {
-			formNetworkAt(cable.getWorld(), cable.getPos());
+			formNetworkAt(cable.getLevel(), cable.getPos());
 		} else {
-			mergeNetworksIntoOne(adjacents, cable.getWorld(), cable.getPos());
+			mergeNetworksIntoOne(adjacents, cable.getLevel(), cable.getPos());
 		}
 	}
 
@@ -161,10 +161,10 @@ public class CableNetworkManager extends SavedData implements ICableNetworkManag
 		List<Cable> adjacents = cable.getAdjacents();
 		adjacents.add(cable);
 		if (!adjacents.isEmpty()) {
-			mergeNetworksIntoOne(adjacents, cable.getWorld(), cable.getPos());
+			mergeNetworksIntoOne(adjacents, cable.getLevel(), cable.getPos());
 		} else {
 			cable.onNetworkLeft(cable.getNetwork());
-			formNetworkAt(cable.getWorld(), cable.getPos());
+			formNetworkAt(cable.getLevel(), cable.getPos());
 		}
 
 		// After the new graph has been updated, loop through the original network
@@ -178,9 +178,9 @@ public class CableNetworkManager extends SavedData implements ICableNetworkManag
 				// If there are no adjacents, create a new network. Otherwise, attempt to join
 				// it.
 				if (newAdjacents.isEmpty()) {
-					formNetworkAt(cable.getWorld(), originalCable.getPos());
+					formNetworkAt(cable.getLevel(), originalCable.getPos());
 				} else {
-					mergeNetworksIntoOne(newAdjacents, originalCable.getWorld(), originalCable.getPos());
+					mergeNetworksIntoOne(newAdjacents, originalCable.getLevel(), originalCable.getPos());
 				}
 			}
 		}
@@ -432,7 +432,7 @@ public class CableNetworkManager extends SavedData implements ICableNetworkManag
 			network.setOrigin(firstAdjacentCable.getPos());
 
 			// Then, remap the network.
-			NetworkMapper result = network.updateGraph(firstAdjacentCable.getWorld(), firstAdjacentCable.getPos(), true);
+			NetworkMapper result = network.updateGraph(firstAdjacentCable.getLevel(), firstAdjacentCable.getPos(), true);
 
 			// Keep track of any new networks.
 			List<CableNetwork> newNetworks = new ArrayList<CableNetwork>();
@@ -452,7 +452,7 @@ public class CableNetworkManager extends SavedData implements ICableNetworkManag
 
 				// If the removed does not have a network, create a network.
 				if (removed.getNetwork() == null) {
-					newNetworks.add(formNetworkAt(removed.getWorld(), removed.getPos()));
+					newNetworks.add(formNetworkAt(removed.getLevel(), removed.getPos()));
 				}
 			}
 

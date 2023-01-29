@@ -55,6 +55,7 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.api.multipartitem.AbstractMultiPartSlot;
 import theking530.api.multipartitem.MultiPartSlots;
 import theking530.staticcore.client.ICustomModelProvider;
@@ -123,7 +124,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 	public ItemStack getFilledVariant() {
 		ItemStack output = new ItemStack(this, 1);
 		EnergyHandlerItemStackUtilities.getEnergyContainer(output).ifPresent((cap) -> {
-			cap.setStoredPower(Double.MAX_VALUE);
+			cap.setStoredPower(StaticPowerEnergyUtilities.getMaximumPower());
 		});
 		return output;
 	}

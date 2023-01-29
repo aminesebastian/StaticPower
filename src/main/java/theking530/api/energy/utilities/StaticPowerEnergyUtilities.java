@@ -29,6 +29,10 @@ public class StaticPowerEnergyUtilities {
 		return (int) (SV * FE_TO_SP_CONVERSION);
 	}
 
+	public static double getMaximumPower() {
+		return Integer.MAX_VALUE;
+	}
+
 	public static double getStoredEnergyPercentScaled(IStaticPowerStorage storage, float scale) {
 		return (storage.getStoredPower() / storage.getCapacity()) * scale;
 	}

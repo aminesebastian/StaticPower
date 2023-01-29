@@ -51,7 +51,7 @@ public class BlockPowerCable extends AbstractCableBlock {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 
 		PowerTooltips.addMaximumCurrentTooltip(tooltip, tierObject.cablePowerConfiguration.cableMaxCurrent.get());
-		PowerTooltips.addPowerLossPerBlockTooltip(tooltip, tierObject.cablePowerConfiguration.cablePowerLossPerBlock.get());
+		PowerTooltips.addResistanceTooltip(tooltip, tierObject.cablePowerConfiguration.cablePowerResistance.get());
 	}
 
 	@Override
