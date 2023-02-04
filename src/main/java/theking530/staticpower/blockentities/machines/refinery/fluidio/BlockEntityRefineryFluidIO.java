@@ -35,6 +35,7 @@ public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implemen
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityRefineryFluidIO> OUTPUT_TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryFluidIO>("refinery_fluid_output",
 			(type, pos, state) -> new BlockEntityRefineryFluidIO(type, pos, state, true), ModBlocks.RefineryFluidOutput);
+	public static final StaticPowerFluidTank EMPTY = new StaticPowerFluidTank(0);
 
 	private final RefineryFluidInterface[] tankInterfaces;
 	private final boolean outputMode;
@@ -120,7 +121,7 @@ public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implemen
 		if (hasController()) {
 			return getController().getTank(tank);
 		}
-		return StaticPowerFluidTank.EMPTY;
+		return EMPTY;
 	}
 
 	@Override

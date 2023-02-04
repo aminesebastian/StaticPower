@@ -51,7 +51,7 @@ public class Cable {
 	private final boolean canAcceptSparseLink;
 	private final Map<BlockPos, SparseCableLink> sparseLinks;
 	private final Set<CableDestination> supportedDestinationTypes;
-	private final Map<ServerCableCapabilityType, ServerCableCapability> capabilities;
+	private final Map<ServerCableCapabilityType<?>, ServerCableCapability> capabilities;
 
 	public Cable(Level level, BlockPos position, boolean canAcceptSparseLink, Set<CableNetworkModuleType> supportedNetworkModules,
 			Set<CableDestination> supportedDestinationTypes) {
@@ -449,7 +449,7 @@ public class Cable {
 		NBTUtilities.deserialize(tag.getList("capability_types", Tag.TAG_COMPOUND), (rawTag) -> {
 			CompoundTag capabilityTag = (CompoundTag) rawTag;
 			ResourceLocation key = new ResourceLocation(capabilityTag.getString("type"));
-			ServerCableCapabilityType type = StaticPowerRegistries.CableCapabilityRegistry().getValue(key);
+			ServerCableCapabilityType<?> type = StaticPowerRegistries.CableCapabilityRegistry().getValue(key);
 			ServerCableCapability cap = type.create(this, capabilityTag);
 			capabilities.put(cap.getType(), cap);
 			return cap;
@@ -522,7 +522,7 @@ public class Cable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends ServerCableCapability> Optional<T> getCapability(ServerCableCapabilityType capabilityType) {
+	public <T extends ServerCableCapability> Optional<T> getCapability(ServerCableCapabilityType<?> capabilityType) {
 		if (capabilities.containsKey(capabilityType)) {
 			return (Optional<T>) Optional.of(capabilities.get(capabilityType));
 		} else {

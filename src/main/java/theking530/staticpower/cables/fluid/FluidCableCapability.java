@@ -1,47 +1,38 @@
 package theking530.staticpower.cables.fluid;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapability;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
-import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.fluid.StaticPowerFluidTank;
 
 public class FluidCableCapability extends ServerCableCapability {
-	public static float CABLE_FRICTION = 1.0f;
+	public static final float INTERPOLATION_RATE = 0.1f;
+	public static final int MAX_PIPE_PRESSURE = 32;
 
-	private StaticPowerFluidTank fluidStorage;
+	private FluidStack containedFluid;
+	private float pressure;
+	private float targetPressure;
+	private int capacity;
 	private int transferRate;
 	private boolean isIndustrial;
-	private final Map<Direction, Float> sidedFlowMap;
 
-	public FluidCableCapability(ServerCableCapabilityType type, Cable owningCable) {
+	public FluidCableCapability(ServerCableCapabilityType<?> type, Cable owningCable) {
 		super(type, owningCable);
-		this.fluidStorage = new StaticPowerFluidTank(0);
-		sidedFlowMap = new HashMap<>();
-		for (Direction dir : Direction.values()) {
-			sidedFlowMap.put(dir, 0.0f);
-		}
+		this.containedFluid = FluidStack.EMPTY.copy();
+		this.pressure = 0;
+		this.targetPressure = 0;
 	}
 
 	public void initialize(int capacity, int transferRate, boolean isIndustrial) {
 		this.isIndustrial = isIndustrial;
 		this.transferRate = transferRate;
-		this.fluidStorage.setCapacity(capacity);
+		this.capacity = capacity;
 	}
 
-	public StaticPowerFluidTank getFluidStorage() {
-		return this.fluidStorage;
-	}
-
-	public int getPressure() {
-		return (int) (16 * (float) getFluidStorage().getFluidAmount() / getFluidStorage().getCapacity());
+	public FluidStack getFluidStorage() {
+		return this.containedFluid;
 	}
 
 	public int getTransferRate() {
@@ -52,61 +43,118 @@ public class FluidCableCapability extends ServerCableCapability {
 		return isIndustrial;
 	}
 
-	public int fill(Direction fromDir, float flowRate, FluidStack fluid, FluidAction action) {
-		if (fluid.isEmpty()) {
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public int getFluidAmount() {
+		return containedFluid.getAmount();
+	}
+
+	public boolean isEmpty() {
+		return containedFluid.isEmpty();
+	}
+
+	/**
+	 * Note: DO NOT MODIFY THIS FLUID. Use the provided methods
+	 * {@link #drain(int, FluidAction)} and {@link #fill(FluidStack, FluidAction)}
+	 * to interact with the contained fluid.
+	 * 
+	 * @return
+	 */
+	public FluidStack getFluid() {
+		return containedFluid;
+	}
+
+	public boolean isFluidValid(FluidStack fluid) {
+		return containedFluid.isEmpty() ? true : fluid.isFluidEqual(containedFluid);
+	}
+
+	public float getTargetPressure() {
+		return targetPressure;
+	}
+
+	public void setTargetPressure(float targetRate) {
+		targetPressure = targetRate;
+	}
+
+	public float getPressure() {
+		return pressure;
+	}
+
+	public int fill(FluidStack fluid, FluidAction action) {
+		if (!containedFluid.isEmpty() && !fluid.isFluidEqual(containedFluid)) {
 			return 0;
 		}
 
-		FluidStack limitedStack = fluid.copy();
-		limitedStack.setAmount(Math.min(fluid.getAmount(), getTransferRate()));
-
-		if (action == FluidAction.EXECUTE) {
-			setFlowRateOfDirection(fromDir, flowRate);
+		int maxInput = capacity - containedFluid.getAmount();
+		maxInput = Math.min(maxInput, fluid.getAmount());
+		if (maxInput == 0) {
+			return 0;
 		}
 
-		return fluidStorage.fill(fluid, action);
+		if (action != FluidAction.SIMULATE) {
+			if (containedFluid.isEmpty()) {
+				containedFluid = fluid.copy();
+				containedFluid.setAmount(maxInput);
+			} else {
+				containedFluid.grow(maxInput);
+			}
+		}
+
+		return maxInput;
 	}
 
 	public FluidStack drain(int amount, FluidAction action) {
-		return fluidStorage.drain(amount, action);
-	}
-
-	public void setFlowRateOfDirection(Direction direction, float flowRate) {
-		float newRate = SDMath.clamp(flowRate, 0, 32);
-		if (Math.abs(newRate) <= 0.1f) {
-			newRate = 0;
+		int maxDrain = Math.min(amount, getFluid().getAmount());
+		if (maxDrain <= 0) {
+			return FluidStack.EMPTY;
 		}
-		sidedFlowMap.put(direction, newRate);
+
+		FluidStack output = getFluid().copy();
+		output.setAmount(maxDrain);
+		if (action == FluidAction.EXECUTE) {
+			getFluid().shrink(maxDrain);
+
+		}
+		return output;
 	}
 
-	public float getFlowRateOfDirection(Direction direction) {
-		return sidedFlowMap.get(direction);
-	}
-
-	public Map<Direction, Float> getFlowMap() {
-		return sidedFlowMap;
+	public void updatePressure() {
+		float newValue = (1.0f - INTERPOLATION_RATE) * pressure + INTERPOLATION_RATE * targetPressure;
+		if (newValue < 0.1f) {
+			newValue = 0;
+		}
+		pressure = newValue;
 	}
 
 	@Override
 	public void save(CompoundTag tag) {
-		tag.put("f", this.fluidStorage.serializeNBT());
-		tag.putInt("t", transferRate);
-		tag.putBoolean("i", isIndustrial);
+		containedFluid.writeToNBT(tag);
+		tag.putFloat("Pressure", pressure);
+		tag.putFloat("TargetPressure", targetPressure);
+		tag.putInt("Capacity", capacity);
+		tag.putInt("TransferRate", transferRate);
+		tag.putBoolean("IsIndustrial", isIndustrial);
 	}
 
 	@Override
 	public void load(CompoundTag tag) {
-		fluidStorage.deserializeNBT(tag.getCompound("f"));
-		transferRate = tag.getInt("t");
-		isIndustrial = tag.getBoolean("i");
+		containedFluid = FluidStack.loadFluidStackFromNBT(tag);
+		pressure = tag.getFloat("Pressure");
+		targetPressure = tag.getFloat("TargetPressure");
+		capacity = tag.getInt("Capacity");
+		transferRate = tag.getInt("TransferRate");
+		isIndustrial = tag.getBoolean("IsIndustrial");
 	}
 
 	@Override
 	public String toString() {
-		return "FluidCableCapability [fluidStorage=" + fluidStorage + ", pressure=" + getPressure() + ", transferRate=" + transferRate + ", isIndustrial=" + isIndustrial + "]";
+		return "FluidCableCapability [accumulatedFluid=" + containedFluid + ", pressure=" + pressure + ", targetPressure=" + targetPressure + ", capacity=" + capacity
+				+ ", transferRate=" + transferRate + ", isIndustrial=" + isIndustrial + "]";
 	}
 
-	public static class FluidCableCapabilityType extends ServerCableCapabilityType {
+	public static class FluidCableCapabilityType extends ServerCableCapabilityType<FluidCableCapability> {
 		@Override
 		public FluidCableCapability create(Cable owningCable) {
 			return new FluidCableCapability(this, owningCable);

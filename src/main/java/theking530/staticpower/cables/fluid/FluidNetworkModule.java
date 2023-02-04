@@ -1,10 +1,12 @@
 package theking530.staticpower.cables.fluid;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
@@ -14,22 +16,31 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticpower.init.cables.ModCableCapabilities;
 import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
-import theking530.staticpower.utilities.MetricConverter;
 
 public class FluidNetworkModule extends CableNetworkModule {
 	protected record CachedFluidDestination(Direction connectedSide, Cable cable, BlockPos desintationPos) {
+	}
+
+	private static final List<Direction> FLOW_DIRECTION_PRIORITY = new ArrayList<>();
+	static {
+		FLOW_DIRECTION_PRIORITY.add(Direction.DOWN);
+		FLOW_DIRECTION_PRIORITY.add(Direction.EAST);
+		FLOW_DIRECTION_PRIORITY.add(Direction.WEST);
+		FLOW_DIRECTION_PRIORITY.add(Direction.NORTH);
+		FLOW_DIRECTION_PRIORITY.add(Direction.DOWN);
+		FLOW_DIRECTION_PRIORITY.add(Direction.UP);
 	}
 
 	// Map of cable pos to connected destinations.
@@ -44,149 +55,89 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	@Override
 	public void preWorldTick(Level world) {
-
+		// We want to slowly move the target fluid pressure back to 0.
+		for (FluidCableCapability cable : fluidCapabilities) {
+			cable.setTargetPressure(0);
+		}
 	}
 
 	@Override
 	public void tick(Level world) {
-		world.getProfiler().push("FluidNetworkModule.Balancing");
+		getNetwork().getWorld().getProfiler().push("FluidNetworkModule.SimulatingFlow");
 		{
-			world.getProfiler().push("FluidNetworkModule.Balancing.Fluid");
-			simulateFlow();
-			world.getProfiler().pop();
+			getNetwork().getWorld().getProfiler().push("FluidNetworkModule.UpdatingCablePressures");
+			updatePressures();
+			getNetwork().getWorld().getProfiler().pop();
 		}
-		world.getProfiler().pop();
-
+		{
+			getNetwork().getWorld().getProfiler().push("FluidNetworkModule.Balancing");
+			simulateBalancing();
+			getNetwork().getWorld().getProfiler().pop();
+		}
+		{
+			getNetwork().getWorld().getProfiler().push("FluidNetworkModule.Distribution");
+			distributeToDestinations();
+			getNetwork().getWorld().getProfiler().pop();
+		}
+		getNetwork().getWorld().getProfiler().pop();
 	}
 
-	protected void simulateFlow() {
-		// Sort so we flow from high to low pressure.
-		if (!fluidCapabilities.isEmpty()) {
-			List<FluidCableCapability> storedCables = fluidCapabilities.stream()
-					.sorted((first, second) -> (int) Math.signum(second.getFluidStorage().getFluidAmount() - first.getFluidStorage().getFluidAmount())).toList();
-
-			simulate(storedCables.get(0), new HashSet<BlockPos>());
-
-			for (FluidCableCapability cap : fluidCapabilities) {
-				cap.getFluidStorage().captureFluidMetrics();
-			}
+	public int fill(BlockPos cablePos, Direction fromDirection, FluidStack resource, FluidAction action) {
+		Optional<FluidCableCapability> cable = getFluidCableCapability(cablePos);
+		if (cable.isEmpty()) {
+			return 0;
 		}
+
+		return simulateFlowFrom(resource, 16, cable.get(), action);
 	}
 
-	protected void simulate(FluidCableCapability cable, Set<BlockPos> visited) {
-		if (visited.contains(cable.getPos())) {
-			return;
+	public FluidStack supply(BlockPos cablePos, int amount, FluidAction action) {
+		Optional<FluidCableCapability> cable = getFluidCableCapability(cablePos);
+		if (cable.isEmpty()) {
+			return FluidStack.EMPTY;
 		}
-		visited.add(cable.getPos());
+		return cable.get().drain(amount, action);
+	}
 
-		Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
+	@Override
+	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
+		fluidCapabilities.clear();
+		destinations.clear();
 
-		// If the cable is empty, just recurse and leave.
-		if (cable.getFluidStorage().isEmpty()) {
-			for (Direction dir : Direction.values()) {
-				if (adjacents.containsKey(dir)) {
-					simulate(adjacents.get(dir), visited);
-				}
-			}
-			return;
-		}
+		for (Cable cable : Network.getGraph().getCables().values()) {
+			Optional<FluidCableCapability> capability = cable.getCapability(ModCableCapabilities.Fluid.get());
+			if (capability.isPresent()) {
+				fluidCapabilities.add(capability.get());
 
-		Map<Direction, CachedFluidDestination> destinations = getAdjacentCableDestinations(cable.getPos());
+				// Cache all the destinations adjacent to this cable.
+				List<CachedFluidDestination> fluidDest = new LinkedList<>();
+				for (Direction dir : Direction.values()) {
+					BlockPos testPos = cable.getPos().relative(dir);
 
-		// Get the total amount of fluid we could possibly output.
-		FluidStack maxOutput = cable.getFluidStorage().getFluid().copy();
-		float totalPotentialOutput = 0;
-		Map<Direction, Integer> outputRatios = new HashMap<>();
-		for (Direction dir : Direction.values()) {
-			if (!visited.contains(cable.getPos().relative(dir))) {
-				int simulateSupply = 0;
-				if (destinations.containsKey(dir)) {
-					simulateSupply = supplyToDestination(cable, cable.getTransferRate(), destinations.get(dir), FluidAction.SIMULATE);
-					outputRatios.put(dir, simulateSupply);
-				} else if (adjacents.containsKey(dir)) {
-					simulateSupply = adjacents.get(dir).fill(dir, 16, maxOutput, FluidAction.SIMULATE);
-					outputRatios.put(dir, simulateSupply);
-				}
-				totalPotentialOutput += simulateSupply;
-			}
-		}
-
-		int initialAmount = cable.getFluidStorage().getFluidAmount();
-		for (Direction dir : Direction.values()) {
-			if (!outputRatios.containsKey(dir)) {
-				continue;
-			}
-
-			float supplyRatio = outputRatios.get(dir) / totalPotentialOutput;
-			int maxSupply = (int) (initialAmount * supplyRatio);
-			if (maxSupply == 0 && supplyRatio != 0 && cable.getFluidStorage().getFluidAmount() > 0) {
-				maxSupply = cable.getFluidStorage().getFluidAmount();
-			}
-
-			if (destinations.containsKey(dir)) {
-				if (!cable.getFluidStorage().isEmpty()) {
-					supplyToDestination(cable, maxSupply, destinations.get(dir), FluidAction.EXECUTE);
-				}
-			} else if (adjacents.containsKey(dir)) {
-				FluidCableCapability adjacent = adjacents.get(dir);
-				if (!visited.contains(adjacent.getPos())) {
-					int delta = cable.getFluidStorage().getFluidAmount() - adjacent.getFluidStorage().getFluidAmount();
-					if (delta > 0) {
-						delta = Math.min(delta, maxSupply);
-
-						FluidStack simulatedDrain = cable.drain(delta, FluidAction.SIMULATE);
-						int supplied = adjacent.fill(dir, 16, simulatedDrain, FluidAction.EXECUTE);
-						cable.drain(supplied, FluidAction.EXECUTE);
+					if (mapper.getDestinations().containsKey(testPos)) {
+						CachedFluidDestination dest = getInterfaceForDesination(cable, mapper.getDestinations().get(testPos));
+						if (dest != null) {
+							fluidDest.add(dest);
+						}
 					}
-					simulate(adjacent, visited);
 				}
+				destinations.put(cable.getPos(), fluidDest);
 			}
 		}
 	}
 
-	protected int supplyToDestination(FluidCableCapability cable, int maxSupply, CachedFluidDestination destination, FluidAction action) {
-		if (cable.getFluidStorage().isEmpty()) {
-			return 0;
-		}
-
-		IFluidHandler handler = cable.getOwningCable().getLevel().getBlockEntity(destination.desintationPos())
-				.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, destination.connectedSide()).orElse(null);
-		if (handler != null) {
-			// Create the stack to supply.
-			FluidStack toSupply = cable.getFluidStorage().getFluid().copy();
-			toSupply.setAmount(Math.min(toSupply.getAmount(), cable.getTransferRate()));
-			toSupply.setAmount(Math.min(toSupply.getAmount(), maxSupply));
-
-			int simulatedFill = handler.fill(toSupply, FluidAction.SIMULATE);
-			FluidStack actualDrain = cable.drain(simulatedFill, action);
-			return handler.fill(actualDrain, action);
-		}
-		return 0;
-	}
-
-	public int fill(BlockPos fromPos, Direction fromSide, FluidStack resource, FluidAction action) {
-		Optional<FluidCableCapability> capability = this.getFluidCableCapability(fromPos);
+	@Override
+	public void getReaderOutput(List<Component> output, BlockPos pos) {
+		Optional<FluidCableCapability> capability = this.getFluidCableCapability(pos);
 		if (capability.isEmpty()) {
-			return 0;
+			return;
 		}
-		int filled = capability.get().fill(fromSide, 32, resource, action);
-		return filled;
+
+		output.add(Component.literal(String.valueOf(capability.get().getPressure())));
+		output.addAll(GuiFluidBarUtilities.getTooltip(capability.get().getFluidAmount(), capability.get().getCapacity(), capability.get().getFluid()));
 	}
 
-	public FluidStack supply(BlockPos fromPos, int amount, FluidAction action) {
-		if (amount == 0) {
-			return FluidStack.EMPTY;
-		}
-
-		Optional<FluidCableCapability> capability = this.getFluidCableCapability(fromPos);
-		if (capability.isEmpty()) {
-			return FluidStack.EMPTY;
-		}
-
-		return capability.get().drain(amount, action);
-	}
-
-	public Optional<FluidCableCapability> getFluidCableCapability(BlockPos pos) {
+	protected Optional<FluidCableCapability> getFluidCableCapability(BlockPos pos) {
 		Cable cable = Network.getGraph().getCables().get(pos);
 		if (cable == null) {
 			return Optional.empty();
@@ -230,52 +181,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 		return adjacencyMap;
 	}
 
-	@Override
-	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
-		fluidCapabilities.clear();
-		destinations.clear();
-
-		for (Cable cable : Network.getGraph().getCables().values()) {
-			Optional<FluidCableCapability> capability = cable.getCapability(ModCableCapabilities.Fluid.get());
-			if (capability.isPresent()) {
-				fluidCapabilities.add(capability.get());
-
-				// Cache all the destinations adjacent to this cable.
-				List<CachedFluidDestination> fluidDest = new LinkedList<>();
-				for (Direction dir : Direction.values()) {
-					BlockPos testPos = cable.getPos().relative(dir);
-
-					if (mapper.getDestinations().containsKey(testPos)) {
-						CachedFluidDestination dest = getInterfaceForDesination(cable, mapper.getDestinations().get(testPos));
-						if (dest != null) {
-							fluidDest.add(dest);
-						}
-					}
-				}
-				destinations.put(cable.getPos(), fluidDest);
-			}
-		}
-	}
-
-	@Override
-	public void getReaderOutput(List<Component> output, BlockPos pos) {
-		Optional<FluidCableCapability> capability = this.getFluidCableCapability(pos);
-		if (capability.isEmpty()) {
-			return;
-		}
-
-		String storedFluidAtPos = new MetricConverter(capability.get().getFluidStorage().getFluidAmount()).getValueAsString(true);
-		String capacityAtPos = new MetricConverter(capability.get().getFluidStorage().getCapacity()).getValueAsString(true);
-		String gainedPerTick = GuiTextUtilities.formatFluidRateToString(capability.get().getFluidStorage().getFilledPerTick()).getString();
-		String drainedPerTick = GuiTextUtilities.formatFluidRateToString(capability.get().getFluidStorage().getDrainedPerTick()).getString();
-
-		output.add(Component.literal(String.format("Pipe Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluidAtPos,
-				capability.get().getFluidStorage().getFluid().getDisplayName().getString(), capacityAtPos)));
-		output.add(Component.literal(String.format("Gained: %1$smB Drained: %2$s", drainedPerTick, gainedPerTick)));
-	}
-
 	@Nullable
-	public CachedFluidDestination getInterfaceForDesination(Cable connectedCable, DestinationWrapper wrapper) {
+	protected CachedFluidDestination getInterfaceForDesination(Cable connectedCable, DestinationWrapper wrapper) {
 		if (!wrapper.getConnectedCables().containsKey(connectedCable.getPos())) {
 			return null;
 		}
@@ -288,7 +195,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 		Direction connectedSide = wrapper.getConnectedCables().get(connectedCable.getPos());
 
 		if (wrapper.supportsType(ModCableDestinations.Fluid.get())) {
-			IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, connectedSide).orElse(null);
+			IFluidHandler handler = wrapper.getTileEntity().getCapability(ForgeCapabilities.FLUID_HANDLER, connectedSide).orElse(null);
 			if (handler != null) {
 				return new CachedFluidDestination(connectedSide, Network.getGraph().getCables().get(connectedCable.getPos()), wrapper.getPos());
 			}
@@ -296,15 +203,193 @@ public class FluidNetworkModule extends CableNetworkModule {
 		return null;
 	}
 
-	protected float calculateDeltaPressure(float currentPressure, float targetPressure) {
-		float deltaPressure = targetPressure - currentPressure;
-		if (deltaPressure == 0) {
+	protected int simulateFlowFrom(FluidStack fluid, float pressure, FluidCableCapability cable, FluidAction action) {
+		return propagateFlow(fluid, cable, pressure, action, new HashSet<FluidCableCapability>());
+	}
+
+	private int propagateFlow(FluidStack fluid, FluidCableCapability cable, float incomingPressure, FluidAction action, Set<FluidCableCapability> visited) {
+		// Tries to add the cable to the set. If it fails, that means it was already
+		// there, return early.
+		if (!visited.add(cable)) {
 			return 0;
 		}
 
-		int sign = (int) Math.signum(deltaPressure);
-		float absoluteDeltaPressure = Math.abs(deltaPressure);
-		float deltaToApply = Math.min(absoluteDeltaPressure, 1);
-		return deltaToApply * sign;
+		cable.setTargetPressure(incomingPressure);
+
+		if (incomingPressure <= 0) {
+			return 0;
+		}
+
+		if (fluid.isEmpty()) {
+			return 0;
+		}
+
+		float pressureRatio = incomingPressure / FluidCableCapability.MAX_PIPE_PRESSURE;
+		int maxAmount = action == FluidAction.EXECUTE ? fluid.getAmount() : (int) (pressureRatio * Math.min(fluid.getAmount(), fluid.getAmount()));
+
+		FluidStack maxFluid = fluid.copy();
+		maxFluid.setAmount(maxAmount);
+
+		if (fluid.getAmount() > 0 && maxAmount == 0) {
+			maxFluid.setAmount(1);
+		}
+
+		if (maxFluid.getAmount() == 0) {
+			return 0;
+		}
+
+		int filled = cable.fill(maxFluid, action);
+		Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
+
+		if (adjacents.size() > 0) {
+			FluidStack remainingFluid = fluid.copy();
+			remainingFluid.shrink(filled);
+			if (!remainingFluid.isEmpty()) {
+				for (Direction flowDir : FLOW_DIRECTION_PRIORITY) {
+					if (!adjacents.containsKey(flowDir)) {
+						continue;
+					}
+
+					if (flowDir == Direction.UP && cable.getFluidAmount() != cable.getCapacity()) {
+						continue;
+					}
+
+					FluidCableCapability adjacent = adjacents.get(flowDir);
+					if (flowDir == Direction.DOWN) {
+						filled += propagateFlow(remainingFluid, adjacent, incomingPressure + 1, action, visited);
+					} else {
+						filled += propagateFlow(remainingFluid, adjacent, incomingPressure - 1, action, visited);
+					}
+				}
+			}
+		}
+
+		fluid.shrink(filled);
+		return filled;
 	}
+
+	private void distributeToDestinations() {
+		for (FluidCableCapability cable : fluidCapabilities) {
+			Map<Direction, CachedFluidDestination> destinations = this.getAdjacentCableDestinations(cable.getPos());
+
+			for (Direction destDir : FLOW_DIRECTION_PRIORITY) {
+				if (!destinations.containsKey(destDir)) {
+					continue;
+				}
+
+				CachedFluidDestination dest = destinations.get(destDir);
+				FluidStack maxSupply = cable.getFluid().copy();
+				if (maxSupply.isEmpty()) {
+					continue;
+				}
+
+				IFluidHandler handler = getNetwork().getWorld().getBlockEntity(dest.desintationPos()).getCapability(ForgeCapabilities.FLUID_HANDLER, dest.connectedSide())
+						.orElse(null);
+				if (handler != null) {
+					maxSupply.setAmount(Math.min(maxSupply.getAmount(), cable.getTransferRate()));
+					int filled = handler.fill(maxSupply, FluidAction.EXECUTE);
+					cable.drain(filled, FluidAction.EXECUTE);
+				}
+			}
+		}
+	}
+
+	private void updatePressures() {
+		for (FluidCableCapability cable : fluidCapabilities) {
+			cable.updatePressure();
+		}
+	}
+
+	private void simulateBalancing() {
+		getNetwork().getWorld().getProfiler().push("FluidNetworkModule.InterpolatingFlowRate");
+
+		getNetwork().getWorld().getProfiler().pop();
+
+		getNetwork().getWorld().getProfiler().push("FluidNetworkModule.Balancing");
+
+		for (FluidCableCapability cable : fluidCapabilities) {
+			if (cable.isEmpty()) {
+				continue;
+			}
+
+			Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
+			List<FluidCableCapability> cablesToBalance = new ArrayList<>();
+			cablesToBalance.add(cable);
+
+			float totalFluid = cable.getFluidAmount();
+			float totalCapacity = cable.getCapacity();
+			for (Entry<Direction, FluidCableCapability> adjacent : adjacents.entrySet()) {
+				if (adjacent.getKey() == Direction.UP) {
+					continue;
+				}
+				totalFluid += adjacent.getValue().getFluidAmount();
+				totalCapacity += adjacent.getValue().getCapacity();
+				cablesToBalance.add(adjacent.getValue());
+			}
+
+			float targetRatio = totalFluid / totalCapacity;
+
+			FluidStack toDistribute = FluidStack.EMPTY;
+			for (FluidCableCapability adjacent : cablesToBalance) {
+				int targetValue = (int) (targetRatio * adjacent.getCapacity());
+				if (targetValue == 0 && targetRatio > 0) {
+					targetValue = 1;
+				}
+
+				int delta = adjacent.getFluidAmount() - targetValue;
+
+				if (delta > 0) {
+					if (toDistribute.isEmpty()) {
+						toDistribute = adjacent.getFluid().copy();
+						toDistribute.setAmount(delta);
+					} else {
+						toDistribute.grow(delta);
+					}
+				}
+			}
+
+			int initialToDistributeAmount = toDistribute.getAmount();
+
+			for (FluidCableCapability adjacent : cablesToBalance) {
+				int targetValue = (int) (targetRatio * adjacent.getCapacity());
+				if (targetValue == 0 && targetRatio > 0) {
+					targetValue = 1;
+				}
+
+				int delta = adjacent.getFluidAmount() - targetValue;
+				int maxDelta = (int) (delta * 0.1f);
+				if (maxDelta == 0 && Math.abs(delta) > 0) {
+					maxDelta = delta;
+				}
+
+				if (toDistribute.isEmpty()) {
+					break;
+				}
+
+				if (delta < 0) {
+					int maxCanSupply = Math.min(toDistribute.getAmount(), -maxDelta);
+					FluidStack toSupply = cable.getFluid().copy();
+					toSupply.setAmount(maxCanSupply);
+					int filled = adjacent.fill(toSupply, FluidAction.EXECUTE);
+					toDistribute.shrink(filled);
+				}
+			}
+
+			int usedFluid = initialToDistributeAmount - toDistribute.getAmount();
+
+			for (FluidCableCapability adjacent : cablesToBalance) {
+				int fluidAmount = adjacent.getFluidAmount();
+				int toDrain = Math.min(fluidAmount, usedFluid);
+				adjacent.drain(toDrain, FluidAction.EXECUTE);
+				usedFluid -= toDrain;
+
+				if (usedFluid == 0) {
+					break;
+				}
+			}
+		}
+
+		getNetwork().getWorld().getProfiler().pop();
+	}
+
 }

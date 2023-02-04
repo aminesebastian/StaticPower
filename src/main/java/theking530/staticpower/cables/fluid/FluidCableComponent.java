@@ -83,11 +83,11 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			if (capability.isEmpty()) {
 				return;
 			}
-			boolean shouldUpdate = !capability.get().getFluidStorage().getFluid().isFluidEqual(lastUpdateFluidStack);
+			boolean shouldUpdate = !capability.get().getFluid().isFluidEqual(lastUpdateFluidStack);
 			int delta = Math.abs(lastUpdateFluidStack.getAmount() - getFluidInTank(0).getAmount());
 			if (delta > FLUID_UPDATE_THRESHOLD) {
 				shouldUpdate = true;
-			} else if (!capability.get().getFluidStorage().getFluid().isEmpty()) {
+			} else if (!capability.get().getFluid().isEmpty()) {
 				subThresholdUpdateTime++;
 			}
 
@@ -103,7 +103,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public void updateBeforeRendering(float partialTicks) {
 		if (visualFilledPercentage != lastUpdateFilledPercentage) {
 			float difference = visualFilledPercentage - lastUpdateFilledPercentage;
-			visualFilledPercentage -= difference * (partialTicks / 100.0f);
+			visualFilledPercentage -= difference * (partialTicks / 10.0f);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				return;
 			}
 
-			lastUpdateFluidStack = capability.get().getFluidStorage().getFluid().copy();
+			lastUpdateFluidStack = capability.get().getFluid().copy();
 			lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
 
 			CompoundTag data = new CompoundTag();
@@ -122,7 +122,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			lastUpdateFluidStack.writeToNBT(fluid);
 			data.put("f", fluid);
 			data.putFloat("%", lastUpdateFilledPercentage);
-			data.putInt("p", capability.get().getPressure());
+			data.putFloat("p", capability.get().getPressure());
 			FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), data);
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, packet);
 		}
@@ -145,7 +145,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			if (module != null) {
 				Optional<FluidCableCapability> capability = getFluidCapability();
 				if (capability.isPresent()) {
-					return (float) capability.get().getFluidStorage().getFluidAmount() / capability.get().getFluidStorage().getCapacity();
+					return (float) capability.get().getFluid().getAmount() / capability.get().getCapacity();
 				}
 				return 0;
 			}
@@ -289,7 +289,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (!getTileEntity().getLevel().isClientSide) {
 			Optional<FluidCableCapability> capability = getFluidCapability();
 			if (capability.isPresent()) {
-				return capability.get().getFluidStorage().getFluid();
+				return capability.get().getFluid();
 			}
 			return FluidStack.EMPTY;
 		} else {
@@ -302,7 +302,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (!getTileEntity().getLevel().isClientSide) {
 			Optional<FluidCableCapability> capability = getFluidCapability();
 			if (capability.isPresent()) {
-				return capability.get().getFluidStorage().getCapacity();
+				return capability.get().getCapacity();
 			}
 			return 0;
 		} else {
@@ -315,7 +315,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (!getTileEntity().getLevel().isClientSide) {
 			Optional<FluidCableCapability> capability = getFluidCapability();
 			if (capability.isPresent()) {
-				return capability.get().getFluidStorage().isFluidValid(stack);
+				return capability.get().isFluidValid(stack);
 			}
 			return false;
 		} else {
