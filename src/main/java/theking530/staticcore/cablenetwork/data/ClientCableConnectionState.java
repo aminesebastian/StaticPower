@@ -6,12 +6,10 @@ import net.minecraft.world.item.ItemStack;
 public class ClientCableConnectionState {
 	private ItemStack attachment;
 	private ItemStack cover;
-	private boolean disabled;
 
-	public ClientCableConnectionState(ItemStack attachment, ItemStack cover, boolean disabled) {
+	public ClientCableConnectionState(ItemStack attachment, ItemStack cover) {
 		this.attachment = attachment;
 		this.cover = cover;
-		this.disabled = disabled;
 	}
 
 	public ItemStack getAttachment() {
@@ -50,32 +48,23 @@ public class ClientCableConnectionState {
 		return !cover.isEmpty();
 	}
 
-	public boolean isDisabled() {
-		return disabled;
-	}
-
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
-
 	public CompoundTag serialize() {
 		CompoundTag output = new CompoundTag();
 		output.put("a", attachment.serializeNBT());
 		output.put("c", cover.serializeNBT());
-		output.putBoolean("d", disabled);
 		return output;
 	}
 
 	public static ClientCableConnectionState deserialize(CompoundTag tag) {
-		return new ClientCableConnectionState(ItemStack.of(tag.getCompound("a")), ItemStack.of(tag.getCompound("c")), tag.getBoolean("d"));
+		return new ClientCableConnectionState(ItemStack.of(tag.getCompound("a")), ItemStack.of(tag.getCompound("c")));
 	}
 
 	public static ClientCableConnectionState createEmpty() {
-		return new ClientCableConnectionState(ItemStack.EMPTY, ItemStack.EMPTY, false);
+		return new ClientCableConnectionState(ItemStack.EMPTY, ItemStack.EMPTY);
 	}
 
 	@Override
 	public String toString() {
-		return "ClientCableSideConnectionState [attachment=" + attachment + ", cover=" + cover + ", disabled=" + disabled + "]";
+		return "ClientCableSideConnectionState [attachment=" + attachment + ", cover=" + cover + "]";
 	}
 }

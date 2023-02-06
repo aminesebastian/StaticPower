@@ -287,17 +287,23 @@ public class Cable {
 
 	public void onNetworkUpdated(CableNetwork network) {
 		for (Direction dir : Direction.values()) {
+			CableConnectionState connectionState = sidedData[dir.ordinal()];
+			if (connectionState.getConnectionType() == CableConnectionType.DISABLED) {
+				continue;
+			}
+
 			BlockPos toTest = getPos().relative(dir);
 			if (network.getGraph().getCables().containsKey(toTest)) {
-				sidedData[dir.ordinal()].setConnectionType(CableConnectionType.CABLE);
+				connectionState.setConnectionType(CableConnectionType.CABLE);
 			} else if (network.getGraph().getDestinations().containsKey(toTest)) {
 				DestinationWrapper wrapper = network.getGraph().getDestinations().get(toTest);
 				if (wrapper.hasSupportedDestinationTypes(dir.getOpposite(), this)) {
-					sidedData[dir.ordinal()].setConnectionType(CableConnectionType.DESTINATION);
+					connectionState.setConnectionType(CableConnectionType.DESTINATION);
 				}
 			} else {
-				sidedData[dir.ordinal()].setConnectionType(CableConnectionType.NONE);
+				connectionState.setConnectionType(CableConnectionType.NONE);
 			}
+
 		}
 		synchronizeServerState();
 	}
@@ -347,12 +353,16 @@ public class Cable {
 	}
 
 	public boolean isDisabledOnSide(Direction side) {
-		return sidedData[side.ordinal()].isDisabled();
+		return sidedData[side.ordinal()].getConnectionType() == CableConnectionType.DISABLED;
 	}
 
 	public void setDisabledStateOnSide(Direction side, boolean disabledState) {
-		if (sidedData[side.ordinal()].isDisabled() != disabledState) {
-			sidedData[side.ordinal()].setDisabled(disabledState);
+		if (isDisabledOnSide(side) != disabledState) {
+			if (disabledState) {
+				sidedData[side.ordinal()].setConnectionType(CableConnectionType.DISABLED);
+			} else {
+				sidedData[side.ordinal()].setConnectionType(CableConnectionType.NONE);
+			}
 
 			// Only do this if we are already part of a network. This method could be called
 			// after a ServerCable is created but before it's added to the manager, so we do
@@ -373,7 +383,7 @@ public class Cable {
 		BlockState cableState = getLevel().getBlockState(getPos());
 
 		// Arbitrary check to see if this block has cable connection types.
-		if (cableState.hasProperty(AbstractCableBlock.CONNECTION_TYPES.get(Direction.DOWN))) {
+		if (CableUtilities.doesBlockStateHaveConnectionProperty(cableState)) {
 			for (Direction dir : Direction.values()) {
 				cableState = cableState.setValue(AbstractCableBlock.CONNECTION_TYPES.get(dir), sidedData[dir.ordinal()].getConnectionType());
 			}

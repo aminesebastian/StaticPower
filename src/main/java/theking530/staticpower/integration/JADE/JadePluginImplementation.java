@@ -29,6 +29,7 @@ import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockDigistore;
+import theking530.staticpower.cables.fluid.FluidCableCapability;
 import theking530.staticpower.cables.power.PowerCableComponent;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
@@ -209,8 +210,9 @@ public class JadePluginImplementation implements IWailaPlugin {
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			if (accessor.isServerConnected() && accessor.getServerData().contains("pressure")) {
 				float pressure = accessor.getServerData().getFloat("pressure");
-				JadePluginImplementation.drawBar(tooltip, pressure, 16, MAIN_PROCESSING_COLOR, ALT_PROCESSING_COLOR, GuiTextUtilities.formatNumberAsString(pressure).append(" ")
-						.append(Component.translatable("gui.staticpower.pressure")).withStyle(ChatFormatting.WHITE), PROCESSING_BAR_RENDERER);
+				JadePluginImplementation.drawBar(tooltip, pressure / 2, FluidCableCapability.MAX_PIPE_PRESSURE / 2, MAIN_PROCESSING_COLOR, ALT_PROCESSING_COLOR,
+						GuiTextUtilities.formatNumberAsString(pressure / 2).append(" ").append(Component.translatable("gui.staticpower.pressure")).withStyle(ChatFormatting.WHITE),
+						PROCESSING_BAR_RENDERER);
 			}
 		}
 

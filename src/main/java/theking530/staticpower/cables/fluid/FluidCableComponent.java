@@ -17,9 +17,9 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
@@ -83,11 +83,11 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			if (capability.isEmpty()) {
 				return;
 			}
-			boolean shouldUpdate = !capability.get().getFluid().isFluidEqual(lastUpdateFluidStack);
+			boolean shouldUpdate = !capability.get().isFluidEqual(lastUpdateFluidStack);
 			int delta = Math.abs(lastUpdateFluidStack.getAmount() - getFluidInTank(0).getAmount());
 			if (delta > FLUID_UPDATE_THRESHOLD) {
 				shouldUpdate = true;
-			} else if (!capability.get().getFluid().isEmpty()) {
+			} else if (!capability.get().isEmpty()) {
 				subThresholdUpdateTime++;
 			}
 
@@ -103,7 +103,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public void updateBeforeRendering(float partialTicks) {
 		if (visualFilledPercentage != lastUpdateFilledPercentage) {
 			float difference = visualFilledPercentage - lastUpdateFilledPercentage;
-			visualFilledPercentage -= difference * (partialTicks / 10.0f);
+			visualFilledPercentage -= difference * (partialTicks / 15.0f);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				return;
 			}
 
-			lastUpdateFluidStack = capability.get().getFluid().copy();
+			lastUpdateFluidStack = capability.get().getFluid();
 			lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
 
 			CompoundTag data = new CompoundTag();
@@ -145,7 +145,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			if (module != null) {
 				Optional<FluidCableCapability> capability = getFluidCapability();
 				if (capability.isPresent()) {
-					return (float) capability.get().getFluid().getAmount() / capability.get().getCapacity();
+					return (float) capability.get().getFluidAmount() / capability.get().getCapacity();
 				}
 				return 0;
 			}
@@ -155,6 +155,22 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	public float getVisualFilledPercentage() {
 		return visualFilledPercentage;
+	}
+
+	public float getPressure() {
+		if (isClientSide()) {
+			return clientPressure;
+		} else {
+			FluidNetworkModule module = getFluidModule().orElse(null);
+			if (module != null) {
+				Optional<FluidCableCapability> capability = getFluidCapability();
+				if (capability.isPresent()) {
+					return (float) capability.get().getPressure();
+				}
+				return 0;
+			}
+			return 0;
+		}
 	}
 
 	public Optional<FluidNetworkModule> getFluidModule() {
@@ -191,7 +207,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				continue;
 			}
 
-			IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()).orElse(null);
+			IFluidHandler handler = te.getCapability(ForgeCapabilities.FLUID_HANDLER, dir.getOpposite()).orElse(null);
 			if (handler == null || handler.getTanks() <= 0) {
 				continue;
 
@@ -231,7 +247,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		// Only provide the fluid capability if we are not disabled on that side.
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if (cap == ForgeCapabilities.FLUID_HANDLER) {
 			if (side == null) {
 				return LazyOptional.of(() -> this).cast();
 			}

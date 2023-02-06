@@ -16,7 +16,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -25,6 +27,7 @@ import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.init.cables.ModCableCapabilities;
 import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
@@ -33,13 +36,16 @@ public class FluidNetworkModule extends CableNetworkModule {
 	protected record CachedFluidDestination(Direction connectedSide, Cable cable, BlockPos desintationPos) {
 	}
 
+	private static final List<Direction> HORIZONTAL_FLOW_PRIORITY = new ArrayList<>();
 	private static final List<Direction> FLOW_DIRECTION_PRIORITY = new ArrayList<>();
 	static {
+		HORIZONTAL_FLOW_PRIORITY.add(Direction.EAST);
+		HORIZONTAL_FLOW_PRIORITY.add(Direction.WEST);
+		HORIZONTAL_FLOW_PRIORITY.add(Direction.NORTH);
+		HORIZONTAL_FLOW_PRIORITY.add(Direction.SOUTH);
+
 		FLOW_DIRECTION_PRIORITY.add(Direction.DOWN);
-		FLOW_DIRECTION_PRIORITY.add(Direction.EAST);
-		FLOW_DIRECTION_PRIORITY.add(Direction.WEST);
-		FLOW_DIRECTION_PRIORITY.add(Direction.NORTH);
-		FLOW_DIRECTION_PRIORITY.add(Direction.DOWN);
+		FLOW_DIRECTION_PRIORITY.addAll(HORIZONTAL_FLOW_PRIORITY);
 		FLOW_DIRECTION_PRIORITY.add(Direction.UP);
 	}
 
@@ -82,13 +88,25 @@ public class FluidNetworkModule extends CableNetworkModule {
 		getNetwork().getWorld().getProfiler().pop();
 	}
 
+	public static float getFlowRateForFluid(FluidStack stack) {
+		if (stack.isEmpty()) {
+			return 1;
+		}
+
+		float waterViscocity = Fluids.WATER.getFluidType().getViscosity();
+		float ratio = waterViscocity / stack.getFluid().getFluidType().getViscosity();
+		return ratio;
+	}
+
 	public int fill(BlockPos cablePos, Direction fromDirection, FluidStack resource, FluidAction action) {
 		Optional<FluidCableCapability> cable = getFluidCableCapability(cablePos);
 		if (cable.isEmpty()) {
 			return 0;
 		}
 
-		return simulateFlowFrom(resource, 16, cable.get(), action);
+		FluidStack maxInput = resource.copy();
+		maxInput.setAmount(Math.min(maxInput.getAmount(), cable.get().getCapacity()));
+		return simulateFlowFrom(maxInput, 16, cable.get(), action);
 	}
 
 	public FluidStack supply(BlockPos cablePos, int amount, FluidAction action) {
@@ -204,7 +222,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 	}
 
 	protected int simulateFlowFrom(FluidStack fluid, float pressure, FluidCableCapability cable, FluidAction action) {
-		return propagateFlow(fluid, cable, pressure, action, new HashSet<FluidCableCapability>());
+		return propagateFlow(fluid.copy(), cable, pressure, action, new HashSet<FluidCableCapability>());
 	}
 
 	private int propagateFlow(FluidStack fluid, FluidCableCapability cable, float incomingPressure, FluidAction action, Set<FluidCableCapability> visited) {
@@ -216,82 +234,132 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 		cable.setTargetPressure(incomingPressure);
 
-		if (incomingPressure <= 0) {
-			return 0;
-		}
+		int filled = 0;
 
-		if (fluid.isEmpty()) {
-			return 0;
-		}
-
-		float pressureRatio = incomingPressure / FluidCableCapability.MAX_PIPE_PRESSURE;
-		int maxAmount = action == FluidAction.EXECUTE ? fluid.getAmount() : (int) (pressureRatio * Math.min(fluid.getAmount(), fluid.getAmount()));
-
-		FluidStack maxFluid = fluid.copy();
-		maxFluid.setAmount(maxAmount);
-
-		if (fluid.getAmount() > 0 && maxAmount == 0) {
-			maxFluid.setAmount(1);
-		}
-
-		if (maxFluid.getAmount() == 0) {
-			return 0;
-		}
-
-		int filled = cable.fill(maxFluid, action);
 		Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
 
-		if (adjacents.size() > 0) {
-			FluidStack remainingFluid = fluid.copy();
-			remainingFluid.shrink(filled);
-			if (!remainingFluid.isEmpty()) {
-				for (Direction flowDir : FLOW_DIRECTION_PRIORITY) {
-					if (!adjacents.containsKey(flowDir)) {
-						continue;
-					}
+		// Only fill ourselves first if we don't have a cable below us.
+		if (!adjacents.containsKey(Direction.DOWN)) {
+			// The pressure is factored in during the simulation, so when we execute assume
+			// full pressure.
+			FluidStack maxFluid = getMaximumFlowFluidStack(fluid, cable, action == FluidAction.EXECUTE ? FluidCableCapability.MAX_PIPE_PRESSURE : incomingPressure);
+			if (maxFluid.isEmpty()) {
+				return 0;
+			}
 
-					if (flowDir == Direction.UP && cable.getFluidAmount() != cable.getCapacity()) {
-						continue;
-					}
+			filled += cable.fill(maxFluid, action);
+		}
 
-					FluidCableCapability adjacent = adjacents.get(flowDir);
-					if (flowDir == Direction.DOWN) {
-						filled += propagateFlow(remainingFluid, adjacent, incomingPressure + 1, action, visited);
-					} else {
-						filled += propagateFlow(remainingFluid, adjacent, incomingPressure - 1, action, visited);
-					}
+		// This fluid gets passed through all the recursive calls directly.
+		// It is shrunk whenever it is used.
+		fluid.shrink(filled);
+
+		if (adjacents.size() > 0 && !fluid.isEmpty()) {
+			for (Direction flowDir : FLOW_DIRECTION_PRIORITY) {
+				if (fluid.isEmpty() || !adjacents.containsKey(flowDir)) {
+					continue;
 				}
+
+				// If there is a cable above us, only supply to it if we're already full.
+				if (flowDir == Direction.UP && cable.getFluidAmount() != cable.getCapacity()) {
+					continue;
+				}
+
+				FluidCableCapability adjacent = adjacents.get(flowDir);
+				float pressureDelta = flowDir == Direction.DOWN ? 2.0f : flowDir == Direction.UP ? -2.0f : -1f;
+				int supplied = propagateFlow(fluid, adjacent, incomingPressure + pressureDelta, action, visited);
+				filled += supplied;
 			}
 		}
 
-		fluid.shrink(filled);
+		// When there is a cable below us, only fill if it is already full.
+		if (adjacents.containsKey(Direction.DOWN) && !fluid.isEmpty()) {
+			FluidCableCapability cableBelow = adjacents.get(Direction.DOWN);
+			if (cableBelow.getFluidAmount() == cableBelow.getCapacity()) {
+				FluidStack maxFluid = getMaximumFlowFluidStack(fluid, cable, action == FluidAction.EXECUTE ? FluidCableCapability.MAX_PIPE_PRESSURE : incomingPressure);
+				filled += cable.fill(maxFluid, action);
+			}
+		}
+
 		return filled;
+	}
+
+	private FluidStack getMaximumFlowFluidStack(FluidStack fluid, FluidCableCapability cable, float pressure) {
+		if (fluid.isEmpty() || pressure == 0) {
+			return FluidStack.EMPTY;
+		}
+
+		float pressureRatio = pressure / FluidCableCapability.MAX_PIPE_PRESSURE;
+		int maxAmount = (int) SDMath.clamp(pressureRatio * fluid.getAmount(), 0, fluid.getAmount());
+		maxAmount = (int) Math.min(maxAmount, maxAmount * getFlowRateForFluid(fluid));
+
+		// Since we know there is fluid to be flowed, and the pressure is non zero, then
+		// the maxAmount being zero implies that the ratio * fluidAmount rounded down to
+		// zero. Force this value to be the remaining fluid and continue.
+		if (maxAmount == 0) {
+			maxAmount = fluid.getAmount();
+		}
+
+		FluidStack output = fluid.copy();
+		output.setAmount(maxAmount);
+		return output;
 	}
 
 	private void distributeToDestinations() {
 		for (FluidCableCapability cable : fluidCapabilities) {
-			Map<Direction, CachedFluidDestination> destinations = this.getAdjacentCableDestinations(cable.getPos());
+			if (cable.isEmpty()) {
+				continue;
+			}
 
-			for (Direction destDir : FLOW_DIRECTION_PRIORITY) {
-				if (!destinations.containsKey(destDir)) {
-					continue;
+			Map<Direction, CachedFluidDestination> adjacentDestinations = getAdjacentCableDestinations(cable.getPos());
+			if (adjacentDestinations.isEmpty()) {
+				continue;
+			}
+
+			Map<Direction, Float> supplyAmounts = new HashMap<>();
+			float totalSupplied = 0;
+			for (Direction dir : Direction.values()) {
+				int supplied = distributeOnCableSide(cable, adjacentDestinations, cable.getFluidAmount(), dir, FluidAction.SIMULATE);
+				supplyAmounts.put(dir, (float) supplied);
+				totalSupplied += supplied;
+			}
+
+			int initialFluidAmount = cable.getFluidAmount();
+			for (Direction dir : supplyAmounts.keySet()) {
+				float supplyRatio = supplyAmounts.get(dir) / totalSupplied;
+				int toSupplyAmount = (int) (initialFluidAmount * supplyRatio);
+				if (toSupplyAmount == 0 && supplyRatio > 0) {
+					toSupplyAmount = cable.getFluidAmount();
 				}
 
-				CachedFluidDestination dest = destinations.get(destDir);
-				FluidStack maxSupply = cable.getFluid().copy();
-				if (maxSupply.isEmpty()) {
-					continue;
-				}
-
-				IFluidHandler handler = getNetwork().getWorld().getBlockEntity(dest.desintationPos()).getCapability(ForgeCapabilities.FLUID_HANDLER, dest.connectedSide())
-						.orElse(null);
-				if (handler != null) {
-					maxSupply.setAmount(Math.min(maxSupply.getAmount(), cable.getTransferRate()));
-					int filled = handler.fill(maxSupply, FluidAction.EXECUTE);
-					cable.drain(filled, FluidAction.EXECUTE);
-				}
+				distributeOnCableSide(cable, adjacentDestinations, toSupplyAmount, dir, FluidAction.EXECUTE);
 			}
 		}
+	}
+
+	private int distributeOnCableSide(FluidCableCapability cable, Map<Direction, CachedFluidDestination> adjacentDestinations, int maxFluidAmount, Direction side,
+			FluidAction action) {
+		if (cable.isEmpty() || !adjacentDestinations.containsKey(side) || maxFluidAmount == 0) {
+			return 0;
+		}
+
+		IFluidHandler handler = getFluidHandler(adjacentDestinations.get(side)).orElse(null);
+		if (handler != null) {
+			int maxSupply = Math.min(cable.getFluidAmount(), cable.getTransferRate());
+			maxSupply = Math.min(maxSupply, maxFluidAmount);
+
+			FluidStack drained = cable.drain(maxSupply, FluidAction.SIMULATE);
+			int filled = handler.fill(drained, action);
+			if (action == FluidAction.EXECUTE) {
+				cable.drain(filled, FluidAction.EXECUTE);
+			}
+			return filled;
+		}
+		return 0;
+	}
+
+	private LazyOptional<IFluidHandler> getFluidHandler(CachedFluidDestination destination) {
+		return getNetwork().getWorld().getBlockEntity(destination.desintationPos()).getCapability(ForgeCapabilities.FLUID_HANDLER, destination.connectedSide());
 	}
 
 	private void updatePressures() {

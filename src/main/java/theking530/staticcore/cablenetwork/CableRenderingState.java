@@ -33,10 +33,6 @@ public class CableRenderingState {
 		}
 	}
 
-	public boolean isDisabledOnSide(Direction side) {
-		return connectionStates[side.ordinal()].isDisabled();
-	}
-
 	public boolean hasCover(Direction side) {
 		return connectionStates[side.ordinal()].hasCover();
 	}

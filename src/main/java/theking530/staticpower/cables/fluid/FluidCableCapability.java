@@ -1,13 +1,16 @@
 package theking530.staticpower.cables.fluid;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapability;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 
-public class FluidCableCapability extends ServerCableCapability {
+public class FluidCableCapability extends ServerCableCapability implements IFluidTank {
 	public static final float INTERPOLATION_RATE = 0.1f;
 	public static final int MAX_PIPE_PRESSURE = 32;
 
@@ -43,10 +46,12 @@ public class FluidCableCapability extends ServerCableCapability {
 		return isIndustrial;
 	}
 
+	@Override
 	public int getCapacity() {
 		return capacity;
 	}
 
+	@Override
 	public int getFluidAmount() {
 		return containedFluid.getAmount();
 	}
@@ -55,17 +60,7 @@ public class FluidCableCapability extends ServerCableCapability {
 		return containedFluid.isEmpty();
 	}
 
-	/**
-	 * Note: DO NOT MODIFY THIS FLUID. Use the provided methods
-	 * {@link #drain(int, FluidAction)} and {@link #fill(FluidStack, FluidAction)}
-	 * to interact with the contained fluid.
-	 * 
-	 * @return
-	 */
-	public FluidStack getFluid() {
-		return containedFluid;
-	}
-
+	@Override
 	public boolean isFluidValid(FluidStack fluid) {
 		return containedFluid.isEmpty() ? true : fluid.isFluidEqual(containedFluid);
 	}
@@ -82,6 +77,11 @@ public class FluidCableCapability extends ServerCableCapability {
 		return pressure;
 	}
 
+	public boolean isFluidEqual(FluidStack other) {
+		return containedFluid.isFluidEqual(other);
+	}
+
+	@Override
 	public int fill(FluidStack fluid, FluidAction action) {
 		if (!containedFluid.isEmpty() && !fluid.isFluidEqual(containedFluid)) {
 			return 0;
@@ -105,19 +105,33 @@ public class FluidCableCapability extends ServerCableCapability {
 		return maxInput;
 	}
 
+	@Override
 	public FluidStack drain(int amount, FluidAction action) {
-		int maxDrain = Math.min(amount, getFluid().getAmount());
+		int maxDrain = Math.min(amount, containedFluid.getAmount());
 		if (maxDrain <= 0) {
 			return FluidStack.EMPTY;
 		}
 
-		FluidStack output = getFluid().copy();
+		FluidStack output = containedFluid.copy();
 		output.setAmount(maxDrain);
 		if (action == FluidAction.EXECUTE) {
-			getFluid().shrink(maxDrain);
+			containedFluid.shrink(maxDrain);
 
 		}
 		return output;
+	}
+
+	@Override
+	public @NotNull FluidStack getFluid() {
+		return containedFluid;
+	}
+
+	@Override
+	public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+		if (!resource.isFluidEqual(containedFluid)) {
+			return FluidStack.EMPTY;
+		}
+		return drain(resource.getAmount(), action);
 	}
 
 	public void updatePressure() {
@@ -160,4 +174,5 @@ public class FluidCableCapability extends ServerCableCapability {
 			return new FluidCableCapability(this, owningCable);
 		}
 	}
+
 }

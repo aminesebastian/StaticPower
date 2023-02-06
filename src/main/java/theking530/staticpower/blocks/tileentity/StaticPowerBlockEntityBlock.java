@@ -165,9 +165,9 @@ public abstract class StaticPowerBlockEntityBlock extends StaticPowerBlock imple
 
 	@Override
 	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
-		BlockEntityBase TE = (BlockEntityBase) world.getBlockEntity(pos);
-		if (TE.hasComponentOfType(SideConfigurationComponent.class)) {
-			TE.getComponent(SideConfigurationComponent.class).modulateWorldSpaceSideMode(facing, SideIncrementDirection.FORWARD);
+		BlockEntityBase blockEntity = (BlockEntityBase) world.getBlockEntity(pos);
+		if (blockEntity.hasComponentOfType(SideConfigurationComponent.class)) {
+			blockEntity.getComponent(SideConfigurationComponent.class).modulateWorldSpaceSideMode(facing, SideIncrementDirection.FORWARD);
 			return InteractionResult.SUCCESS;
 		}
 		return super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);

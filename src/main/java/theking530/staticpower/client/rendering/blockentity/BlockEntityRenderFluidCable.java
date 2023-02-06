@@ -22,8 +22,8 @@ public class BlockEntityRenderFluidCable extends AbstractCableTileEntityRenderer
 			int combinedOverlay) {
 		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.FluidCable");
 		if (tileEntity.fluidCableComponent.getFilledPercentage() > 0 && !tileEntity.fluidCableComponent.getFluidInTank(0).isEmpty()) {
-			drawFluidCable(tileEntity.fluidCableComponent.getFluidInTank(0), tileEntity.fluidCableComponent.getVisualFilledPercentage(), tileEntity.fluidRenderRadius, matrixStack,
-					tileEntity.fluidCableComponent);
+			drawFluidCable(tileEntity, tileEntity.fluidCableComponent.getFluidInTank(0), tileEntity.fluidCableComponent.getVisualFilledPercentage(), tileEntity.fluidRenderRadius,
+					matrixStack, tileEntity.fluidCableComponent);
 		}
 
 		Minecraft.getInstance().getProfiler().pop();

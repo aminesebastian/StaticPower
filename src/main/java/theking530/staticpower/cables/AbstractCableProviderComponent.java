@@ -75,7 +75,6 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		clientConnectionStates = new ClientCableConnectionState[6];
 		for (Direction dir : Direction.values()) {
 			clientConnectionStates[dir.ordinal()] = ClientCableConnectionState.createEmpty();
-			clientConnectionStates[dir.ordinal()].setDisabled(true);
 		}
 		clientSparseLinks = new HashMap<Long, SparseCableLink>();
 	}
@@ -208,7 +207,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 			}
 			return true;
 		} else {
-			return clientConnectionStates[side.ordinal()].isDisabled();
+			return getTileEntity().getBlockState().getValue(AbstractCableBlock.CONNECTION_TYPES.get(side)) == CableConnectionType.DISABLED;
 		}
 	}
 

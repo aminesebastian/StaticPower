@@ -1,5 +1,8 @@
 package theking530.staticcore.cablenetwork;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -59,7 +62,7 @@ public class CableUtilities {
 		// Get the number of sides that are connected to a cable. If a side is connected
 		// to a tile entity, instantly return false;.
 		for (Direction dir : Direction.values()) {
-			if (!renderingState.isDisabledOnSide(dir) && getConnectionTypeOnSide(blockState, dir) == CableConnectionType.CABLE) {
+			if (getConnectionTypeOnSide(blockState, dir) == CableConnectionType.CABLE) {
 				cableConnections++;
 			} else if (getConnectionTypeOnSide(blockState, dir) == CableConnectionType.DESTINATION) {
 				return false;
@@ -88,7 +91,7 @@ public class CableUtilities {
 		if (isCableStraightConnection(blockState, renderingState)) {
 			for (int i = 0; i < 6; i += 2) {
 				Direction dir = Direction.values()[i];
-				if (!renderingState.isDisabledOnSide(dir) && getConnectionTypeOnSide(blockState, dir) == CableConnectionType.CABLE) {
+				if (getConnectionTypeOnSide(blockState, dir) == CableConnectionType.CABLE) {
 					return dir;
 				}
 			}
@@ -111,5 +114,16 @@ public class CableUtilities {
 
 	public static CableConnectionType getConnectionTypeOnSide(BlockState state, Direction side) {
 		return state.getValue(AbstractCableBlock.CONNECTION_TYPES.get(side));
+	}
+
+	public static List<Direction> getConnectedSides(BlockState state) {
+		List<Direction> output = new ArrayList<>();
+		for (Direction direction : Direction.values()) {
+			CableConnectionType connectionType = getConnectionTypeOnSide(state, direction);
+			if (connectionType.isConnected()) {
+				output.add(direction);
+			}
+		}
+		return output;
 	}
 }

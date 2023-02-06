@@ -113,13 +113,13 @@ public class CableBakedModel extends AbstractBakedModel {
 
 			// Add the attachments and connecting pieces.
 			for (Direction dir : Direction.values()) {
-				// If a side is disabled, skip it.
-				if (renderingState.isDisabledOnSide(dir)) {
-					continue;
-				}
-
 				// Get the connection state.
 				CableConnectionType connectionState = CableUtilities.getConnectionTypeOnSide(state, dir);
+
+				// If a side is disabled, skip it.
+				if (connectionState == CableConnectionType.DISABLED) {
+					continue;
+				}
 
 				// Decide what to render based on the connection state.
 				if (connectionState == CableConnectionType.CABLE) {

@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class CableConnectionState extends ClientCableConnectionState {
 	public enum CableConnectionType implements StringRepresentable {
-		NONE("none"), CABLE("cable"), DESTINATION("destination");
+		NONE("none"), DISABLED("disabled"), CABLE("cable"), DESTINATION("destination");
 
 		private final String serializedName;
 
@@ -18,12 +18,16 @@ public class CableConnectionState extends ClientCableConnectionState {
 		public String getSerializedName() {
 			return serializedName;
 		}
+
+		public boolean isConnected() {
+			return this == CABLE || this == DESTINATION;
+		}
 	}
 
 	private CableConnectionType connectionType;
 
-	public CableConnectionState(CableConnectionType connectionType, ItemStack attachment, ItemStack cover, boolean disabled) {
-		super(attachment, cover, disabled);
+	public CableConnectionState(CableConnectionType connectionType, ItemStack attachment, ItemStack cover) {
+		super(attachment, cover);
 		this.connectionType = connectionType;
 	}
 
@@ -42,16 +46,15 @@ public class CableConnectionState extends ClientCableConnectionState {
 	}
 
 	public static CableConnectionState deserialize(CompoundTag tag) {
-		return new CableConnectionState(CableConnectionType.values()[tag.getByte("t")], ItemStack.of(tag.getCompound("a")), ItemStack.of(tag.getCompound("c")),
-				tag.getBoolean("d"));
+		return new CableConnectionState(CableConnectionType.values()[tag.getByte("t")], ItemStack.of(tag.getCompound("a")), ItemStack.of(tag.getCompound("c")));
 	}
 
 	public static CableConnectionState createEmpty() {
-		return new CableConnectionState(CableConnectionType.NONE, ItemStack.EMPTY, ItemStack.EMPTY, false);
+		return new CableConnectionState(CableConnectionType.NONE, ItemStack.EMPTY, ItemStack.EMPTY);
 	}
 
 	@Override
 	public String toString() {
-		return "CableSideConnectionState [connectionType=" + connectionType + ", attachment=" + getAttachment() + ", cover=" + getCover() + ", disabled=" + isDisabled() + "]";
+		return "CableSideConnectionState [connectionType=" + connectionType + ", attachment=" + getAttachment() + ", cover=" + getCover() + "]";
 	}
 }

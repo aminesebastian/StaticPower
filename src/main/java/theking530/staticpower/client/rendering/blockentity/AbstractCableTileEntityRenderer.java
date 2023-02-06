@@ -1,5 +1,7 @@
 package theking530.staticpower.client.rendering.blockentity;
 
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
@@ -11,10 +13,14 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
+import theking530.staticcore.cablenetwork.CableRenderingState;
+import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.SDColor;
@@ -74,7 +80,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 		return new Vector3D(0, rotation, 0);
 	}
 
-	protected void drawFluidCable(FluidStack fluid, float filledPercentage, float radius, PoseStack matrixStack, AbstractCableProviderComponent cableComponent) {
+	protected void drawFluidCable(BlockEntity entity, FluidStack fluid, float filledPercentage, float radius, PoseStack pose, AbstractCableProviderComponent cableComponent) {
 		TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 		SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 		fluidColor.setAlpha(1.0f); // Force the opacity to 1.0f to have the texture control the opaicty.
@@ -83,47 +89,94 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 			fluidColor.setAlpha(filledPercentage * 10);
 		}
 
-		boolean wasExtensionDrawn = false;
-		for (Direction dir : Direction.values()) {
-			if (cableComponent.getConnectionTypeOnSide(dir) != CableConnectionType.NONE && !cableComponent.isSideDisabled(dir)) {
-				wasExtensionDrawn = true;
-				drawExtensions(dir, sprite, filledPercentage, radius, fluidColor, matrixStack);
+		ModelData data = entity.getModelData();
+		CableRenderingState renderingState = data.get(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
+		boolean isStraightConnection = CableUtilities.isCableStraightConnection(entity.getBlockState(), renderingState);
+		if (isStraightConnection) {
+			Direction straightConnectionSide = CableUtilities.getStraightConnectionSide(entity.getBlockState(), renderingState);
+			if (straightConnectionSide.getAxis() == Axis.Y) {
+				drawVerticalStraightConnection(pose, sprite, filledPercentage, radius, fluidColor);
+			} else {
+				drawHorizontalStraightConnection(pose, straightConnectionSide.getAxis(), sprite, filledPercentage, radius, fluidColor);
+			}
+
+		} else {
+			List<Direction> connectedSides = CableUtilities.getConnectedSides(entity.getBlockState());
+			if (connectedSides.size() == 1) {
+				drawExtension(pose, connectedSides.get(0), sprite, filledPercentage, radius, fluidColor);
+			} else {
+				// Check to see if all extensions are on the horizontal plane.
+				boolean areAllExtensionsHorizontal = connectedSides.stream().map((dir) -> dir.getAxis()).filter((axis) -> axis == Axis.Y).count() == 0;
+				if (areAllExtensionsHorizontal) {
+					drawCore(pose, sprite, filledPercentage, radius, fluidColor);
+					for (Direction dir : connectedSides) {
+						drawExtension(pose, dir, sprite, filledPercentage, radius, fluidColor);
+					}
+				} else {
+
+				}
 			}
 		}
-		if (!wasExtensionDrawn) {
-			drawFluidCore(sprite, filledPercentage, radius, fluidColor, matrixStack);
+	}
+
+	protected void drawVerticalStraightConnection(PoseStack pose, TextureAtlasSprite fluidSprite, float fillPercentage, float radius, SDColor color) {
+		radius -= 0.005f;
+		float diameter = radius * 2.0f - 0.01f;
+		BlockModel.drawCubeInWorld(pose, new Vector3f(0.5f - radius, 0, 0.5f - radius), new Vector3f(diameter, fillPercentage, diameter), color, fluidSprite);
+	}
+
+	protected void drawHorizontalStraightConnection(PoseStack pose, Axis axis, TextureAtlasSprite fluidSprite, float fillPercentage, float radius, SDColor color) {
+		radius -= 0.005f;
+		float diameter = radius * 2.0f - 0.01f;
+
+		if (axis == Axis.X) {
+			BlockModel.drawCubeInWorld(pose, new Vector3f(0, 0.5f - radius, 0.5f - radius), new Vector3f(1, diameter * fillPercentage, diameter), color, fluidSprite);
+		} else {
+			BlockModel.drawCubeInWorld(pose, new Vector3f(0.5f - radius, 0.5f - radius, 0), new Vector3f(diameter, diameter * fillPercentage, 1), color, fluidSprite);
 		}
 	}
 
-	protected void drawFluidCore(TextureAtlasSprite sprite, float filledAmount, float radius, SDColor fluidColor, PoseStack matrixStack) {
-		float diameter = radius * 2.0f - 0.01f;
+	protected void drawCore(PoseStack pose, TextureAtlasSprite fluidSprite, float fillPercentage, float radius, SDColor color) {
 		radius -= 0.005f;
-		float minWidth = 0.22f * filledAmount;
-		float minWidthOffset = (-0.1f * filledAmount) + 0.5f;
-		float floorOffset = 0.06f - (filledAmount * 0.06f);
-		BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius, minWidthOffset - floorOffset, 0.5f - radius), new Vector3f(diameter, minWidth, diameter), fluidColor,
-				sprite);
+		float diameter = radius * 2.0f - 0.01f;
+
+		// Draw the core
+		BlockModel.drawCubeInWorld(pose, new Vector3f(0.5f - radius, 0.5f - radius, 0.5f - radius), new Vector3f(diameter, diameter * fillPercentage, diameter), color,
+				fluidSprite);
 	}
 
-	protected void drawExtensions(Direction side, TextureAtlasSprite sprite, float filledAmount, float radius, SDColor fluidColor, PoseStack matrixStack) {
+	protected void drawExtension(PoseStack pose, Direction side, TextureAtlasSprite sprite, float fillPercentage, float radius, SDColor fluidColor) {
 		float diameter = (radius * 2.0f) - 0.01f;
 		radius -= 0.005f;
-		float yAxisOffset = radius * (1.0f - filledAmount);
 
-		if (side == Direction.SOUTH) {
-			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius, 0.5f - radius, 0.5f), new Vector3f(diameter, diameter * filledAmount, 0.5f), fluidColor, sprite);
-		} else if (side == Direction.NORTH) {
-			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius, 0.5f - radius, 0.0f), new Vector3f(diameter, diameter * filledAmount, 0.5f), fluidColor, sprite);
-		} else if (side == Direction.DOWN) {
-			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius + yAxisOffset, 0.0f, 0.5f - radius + yAxisOffset),
-					new Vector3f(diameter * filledAmount, 0.5f, diameter * filledAmount), fluidColor, sprite);
-		} else if (side == Direction.UP) {
-			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius + yAxisOffset, 0.5f, 0.5f - radius + yAxisOffset),
-					new Vector3f(diameter * filledAmount, 0.5f, diameter * filledAmount), fluidColor, sprite);
-		} else if (side == Direction.WEST) {
-			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.0f, 0.5f - radius, 0.5f - radius), new Vector3f(0.5f, diameter * filledAmount, diameter), fluidColor, sprite);
-		} else if (side == Direction.EAST) {
-			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f, 0.5f - radius, 0.5f - radius), new Vector3f(0.5f, diameter * filledAmount, diameter), fluidColor, sprite);
+		if (side.getAxis() == Axis.Y) {
+			if (side == Direction.UP) {
+				BlockModel.drawCubeInWorld(pose, new Vector3f(0.5f - radius, 0.5f - radius, 0.5f - radius), new Vector3f(diameter, 0.5f * fillPercentage + radius, diameter),
+						fluidColor, sprite);
+			} else {
+				BlockModel.drawCubeInWorld(pose, new Vector3f(0.5f - radius, 0.0f, 0.5f - radius), new Vector3f(diameter, (0.5f + radius) * fillPercentage, diameter), fluidColor,
+						sprite);
+			}
+		} else {
+			if (side == Direction.EAST) {
+				BlockModel.drawCubeInWorld(pose, new Vector3f(0.5f - radius, 0.5f - radius, 0.5f - radius), new Vector3f(0.5f + radius, diameter * fillPercentage, diameter),
+						fluidColor, sprite);
+			}
+
+			if (side == Direction.WEST) {
+				BlockModel.drawCubeInWorld(pose, new Vector3f(0.0f, 0.5f - radius, 0.5f - radius), new Vector3f(0.5f + radius, diameter * fillPercentage, diameter), fluidColor,
+						sprite);
+			}
+
+			if (side == Direction.NORTH) {
+				BlockModel.drawCubeInWorld(pose, new Vector3f(0.5f - radius, 0.5f - radius, 0.0f), new Vector3f(diameter, diameter * fillPercentage, 0.5f + radius), fluidColor,
+						sprite);
+			}
+
+			if (side == Direction.SOUTH) {
+				BlockModel.drawCubeInWorld(pose, new Vector3f(0.5f - radius, 0.5f - radius, 0.5f - radius), new Vector3f(diameter, diameter * fillPercentage, 0.5f + radius),
+						fluidColor, sprite);
+			}
 		}
 	}
 }
