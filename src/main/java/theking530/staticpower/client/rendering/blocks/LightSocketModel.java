@@ -82,8 +82,8 @@ public class LightSocketModel extends AbstractBakedModel {
 
 		// Transform the bulbs quads.
 		BakedModel bulbModel = Minecraft.getInstance().getItemRenderer().getModel(bulb, Minecraft.getInstance().level, null, 0);
-		List<BakedQuad> bakedCardQuads = transformQuads(bulbModel, offset, scale, TransformationHelper.quatFromXYZ(rotation, true), side, state, rand, renderLayer);
-		newQuads.addAll(bakedCardQuads);
+		List<BakedQuad> bakedBulbQuads = transformQuads(bulbModel, offset, scale, TransformationHelper.quatFromXYZ(rotation, true), side, state, rand, renderLayer);
+		newQuads.addAll(bakedBulbQuads);
 		return newQuads.build();
 	}
 

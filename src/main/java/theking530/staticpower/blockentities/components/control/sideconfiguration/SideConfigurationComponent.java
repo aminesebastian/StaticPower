@@ -1,6 +1,7 @@
 package theking530.staticpower.blockentities.components.control.sideconfiguration;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
@@ -11,6 +12,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
@@ -26,6 +29,8 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	public enum SideIncrementDirection {
 		FORWARD, BACKWARDS;
 	}
+	
+	private static final ModelProperty<MachineSideMode[]> SIDE_CONFIG = new ModelProperty<>();
 
 	public static final DefaultSideConfiguration DEFAULT_SIDE_CONFIGURATION = new DefaultSideConfiguration();
 	public static final DefaultSideConfiguration ALL_SIDES_NEVER = new DefaultSideConfiguration();
@@ -298,6 +303,10 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 			}
 		}
 		return count;
+	}
+
+	public void getModelData(ModelData.Builder builder) {
+		builder.with(SIDE_CONFIG, getWorldSpaceConfiguration());
 	}
 
 	@Override

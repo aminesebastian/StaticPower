@@ -120,7 +120,7 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 						? state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING)
 						: state.getValue(StaticPowerRotateableBlockEntityBlock.FACING);
 				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, machineFacing);
-				renderSideMode(state, newQuads, side, blockSide, sideMode);
+				renderSideMode(state, newQuads, side, blockSide, sideMode, data);
 			}
 		} catch (Exception e) {
 			LOGGER.warn("An error occured when attempting to render the model.", e);
@@ -130,7 +130,7 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		return newQuads.build();
 	}
 
-	protected void renderSideMode(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, BlockSide blockSide, MachineSideMode sideMode) {
+	protected void renderSideMode(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, BlockSide blockSide, MachineSideMode sideMode, ModelData data) {
 		if (useMiniSideModeQuads) {
 			SideModeQuadGenerator.renderMiniSideModeQuad(state, newQuads, side, sideMode, sideOffsets.containsKey(blockSide) ? sideOffsets.get(blockSide) : null);
 		} else {

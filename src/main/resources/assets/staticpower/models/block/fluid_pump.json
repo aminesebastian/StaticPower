@@ -7,7 +7,7 @@
 	},
 	"elements": [
 		{
-			"name": "Column4",
+			"name": "TopBeam",
 			"from": [3.5, 11, 4.5],
 			"to": [5, 12.5, 11.5],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
@@ -21,7 +21,7 @@
 			}
 		},
 		{
-			"name": "Column5",
+			"name": "TopBeam",
 			"from": [3.5, 3.5, 4.5],
 			"to": [5, 5, 11.5],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
@@ -35,7 +35,7 @@
 			}
 		},
 		{
-			"name": "Column6",
+			"name": "BottomBeam",
 			"from": [11, 3.5, 4.5],
 			"to": [12.5, 5, 11.5],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
@@ -49,7 +49,7 @@
 			}
 		},
 		{
-			"name": "Column5",
+			"name": "BottomBeam",
 			"from": [11, 11, 4.5],
 			"to": [12.5, 12.5, 11.5],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
@@ -63,7 +63,7 @@
 			}
 		},
 		{
-			"name": "Inner",
+			"name": "Glass",
 			"from": [4.5, 4.5, 4.5],
 			"to": [11.5, 11.5, 11.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 10]},
@@ -151,7 +151,21 @@
 			}
 		},
 		{
-			"name": "TubeTop",
+			"name": "TubeBotton8",
+			"from": [5, 5, 9.5],
+			"to": [11, 11, 10.5],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [13, 9.75, 16, 12.75], "rotation": 180, "texture": "#pump"},
+				"east": {"uv": [0, 7.5, 3, 8], "rotation": 270, "texture": "#pump"},
+				"south": {"uv": [13, 9.75, 16, 12.75], "texture": "#pump"},
+				"west": {"uv": [0, 7.5, 3, 8], "rotation": 90, "texture": "#pump"},
+				"up": {"uv": [0, 7.5, 3, 8], "rotation": 180, "texture": "#pump"},
+				"down": {"uv": [0, 7.5, 3, 8], "texture": "#pump"}
+			}
+		},
+		{
+			"name": "NorthEnd",
 			"from": [3.5, 3.5, 2.5],
 			"to": [12.5, 12.5, 4.5],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
@@ -165,7 +179,7 @@
 			}
 		},
 		{
-			"name": "TubeTop",
+			"name": "SouthEnd",
 			"from": [3.5, 3.5, 11.5],
 			"to": [12.5, 12.5, 13.5],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
@@ -176,20 +190,6 @@
 				"west": {"uv": [7.75, 6.25, 11.75, 7.25], "rotation": 90, "texture": "#pump"},
 				"up": {"uv": [7.75, 6.25, 11.75, 7.25], "rotation": 180, "texture": "#pump"},
 				"down": {"uv": [7.75, 6.25, 11.75, 7.25], "texture": "#pump"}
-			}
-		},
-		{
-			"name": "TubeBotton8",
-			"from": [5, 5, 9.5],
-			"to": [11, 11, 10.5],
-			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
-			"faces": {
-				"north": {"uv": [13, 9.75, 16, 12.75], "rotation": 180, "texture": "#pump"},
-				"east": {"uv": [0, 7.5, 3, 8], "rotation": 270, "texture": "#pump"},
-				"south": {"uv": [13, 9.75, 16, 12.75], "texture": "#pump"},
-				"west": {"uv": [0, 7.5, 3, 8], "rotation": 90, "texture": "#pump"},
-				"up": {"uv": [0, 7.5, 3, 8], "rotation": 180, "texture": "#pump"},
-				"down": {"uv": [0, 7.5, 3, 8], "texture": "#pump"}
 			}
 		},
 		{
@@ -282,17 +282,25 @@
 	},
 	"groups": [
 		{
-			"name": "MainTank",
+			"name": "Body",
 			"origin": [8, 8, 8],
 			"color": 0,
-			"children": [0, 1, 2, 3, 4]
+			"children": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				{
+					"name": "InnerFilter",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [5, 6, 7, 8, 9, 10, 11]
+				}
+			]
 		},
-		{
-			"name": "TopTube",
-			"origin": [8, 8, 8],
-			"color": 0,
-			"children": [5, 6, 7, 8, 9, 10, 11, 12, 13]
-		},
+		12,
+		13,
 		{
 			"name": "NorthInterface",
 			"origin": [8, 8, 8],
@@ -300,7 +308,7 @@
 			"children": [14, 15]
 		},
 		{
-			"name": "NorthInterface",
+			"name": "SouthInterface",
 			"origin": [8, 8, 8],
 			"color": 0,
 			"children": [16, 17]

@@ -34,7 +34,7 @@ import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
-import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
+import theking530.staticpower.client.rendering.blocks.FluidPumpBakedModel;
 
 public class BlockFluidPump extends StaticPowerRotateableBlockEntityBlock implements ICustomModelProvider {
 
@@ -114,7 +114,7 @@ public class BlockFluidPump extends StaticPowerRotateableBlockEntityBlock implem
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		return new DefaultMachineBakedModel(existingModel, true);
+		return new FluidPumpBakedModel(existingModel);
 	}
 
 	@Override

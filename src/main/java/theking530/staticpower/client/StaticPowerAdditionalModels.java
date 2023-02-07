@@ -145,6 +145,8 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation TURBINE_BLADES_LUMUM = registerModel("block/turbine_blades/turbine_blades_lumum");
 	public static final ResourceLocation TURBINE_BLADES_CREATIVE = registerModel("block/turbine_blades/turbine_blades_creative");
 
+	public static final ResourceLocation FLUID_PUMP_POWER_CONNECTOR = registerModel("block/fluid_pump_power_connector");
+
 	public static final Map<String, ResourceLocation[]> CABLE_REDSTONE_BASIC;
 
 	static {

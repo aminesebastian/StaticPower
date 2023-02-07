@@ -269,7 +269,7 @@ public class ModBlocks {
 	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockLumum = registerBlock("machine_block_lumum",
 			() -> new StaticPowerCutoutBlock(Properties.copy(Blocks.IRON_DOOR)));
 
-	public static final RegistryObject<BlockFluidPump> FluidPump = registerBlock("fluid_pump", () -> new BlockFluidPump(StaticPowerTiers.IRON));
+	public static final RegistryObject<BlockFluidPump> FluidPump = registerBlock("fluid_pump", () -> new BlockFluidPump(StaticPowerTiers.BASIC));
 
 	public static final RegistryObject<BlockTank> IronTank = registerBlock("tank_iron", () -> new BlockTank(StaticPowerTiers.IRON));
 	public static final RegistryObject<BlockTank> BasicTank = registerBlock("tank_basic", () -> new BlockTank(StaticPowerTiers.BASIC));
