@@ -35,6 +35,15 @@ public class SDMath {
 		return ThreadLocalRandom.current().nextInt(min, max + 1);
 	}
 
+	public static float mapValue(float value, float min, float max, float newMin, float newMax) {
+		float initialRange = max - min;
+		float initialRatio = value / initialRange;
+
+		float newRange = newMax - newMin;
+		float newRatio = initialRatio * newRange;
+		return SDMath.clamp(newRatio + newMin, newMin, newMax);
+	}
+
 	public static Vector4D getRandomVectorOffset() {
 		float randomX = (RANDOM.nextFloat() - 0.5f) * 2;
 		float randomY = (RANDOM.nextFloat() - 0.5f) * 2;

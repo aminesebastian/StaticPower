@@ -24,6 +24,7 @@ import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.SDColor;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -85,10 +86,6 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 		SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 		fluidColor.setAlpha(1.0f); // Force the opacity to 1.0f to have the texture control the opaicty.
 
-		if (filledPercentage < 0.1f) {
-			fluidColor.setAlpha(filledPercentage * 10);
-		}
-
 		ModelData data = entity.getModelData();
 		CableRenderingState renderingState = data.get(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
 		boolean isStraightConnection = CableUtilities.isCableStraightConnection(entity.getBlockState(), renderingState);
@@ -113,10 +110,44 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 						drawExtension(pose, dir, sprite, filledPercentage, radius, fluidColor);
 					}
 				} else {
+					float extensionDistance = getExtensionDistance(radius);
+					boolean hasDownConnection = connectedSides.contains(Direction.DOWN);
+					boolean hasUpConnection = connectedSides.contains(Direction.UP);
 
+					float horizontalFillPercentage = 0;
+					if (hasDownConnection && hasUpConnection) {
+						horizontalFillPercentage = SDMath.mapValue(filledPercentage, extensionDistance, extensionDistance + radius, 0, 1);
+					} else if (hasDownConnection) {
+						horizontalFillPercentage = SDMath.mapValue(filledPercentage, extensionDistance, 1, 0, 1);
+					} else if (hasUpConnection) {
+						horizontalFillPercentage = SDMath.mapValue(filledPercentage, 0, extensionDistance, 0, 1);
+					}
+
+					if (hasDownConnection) {
+						float lowerPortionFillPercentage = SDMath.mapValue(filledPercentage, 0, extensionDistance, 0, 1);
+						drawExtension(pose, Direction.DOWN, sprite, lowerPortionFillPercentage, radius, fluidColor);
+					}
+
+					if (horizontalFillPercentage > 0) {
+						drawCore(pose, sprite, horizontalFillPercentage, radius, fluidColor);
+						for (Direction dir : connectedSides) {
+							if (dir != Direction.UP && dir != Direction.DOWN) {
+								drawExtension(pose, dir, sprite, horizontalFillPercentage, radius, fluidColor);
+							}
+						}
+					}
+
+					if (hasUpConnection && filledPercentage >= extensionDistance + radius) {
+						float upExtensionFillPercentage = SDMath.mapValue(filledPercentage, extensionDistance + radius, 1, 0, 1);
+						drawExtension(pose, Direction.UP, sprite, upExtensionFillPercentage, radius, fluidColor);
+					}
 				}
 			}
 		}
+	}
+
+	protected float getExtensionDistance(float radius) {
+		return (0.5f - radius);
 	}
 
 	protected void drawVerticalStraightConnection(PoseStack pose, TextureAtlasSprite fluidSprite, float fillPercentage, float radius, SDColor color) {
@@ -146,8 +177,8 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 	}
 
 	protected void drawExtension(PoseStack pose, Direction side, TextureAtlasSprite sprite, float fillPercentage, float radius, SDColor fluidColor) {
-		float diameter = (radius * 2.0f) - 0.01f;
 		radius -= 0.005f;
+		float diameter = (radius * 2.0f) - 0.01f;
 
 		if (side.getAxis() == Axis.Y) {
 			if (side == Direction.UP) {

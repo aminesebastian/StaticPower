@@ -40,7 +40,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static final ResourceLocation INPUT_VOLTAGE_RENDERER = new ResourceLocation(StaticPower.MOD_ID, "input_voltage");
 	public static final ResourceLocation HEAT_BAR_RENDERER = new ResourceLocation(StaticPower.MOD_ID, "heat_bar");
 	public static final ResourceLocation PROCESSING_BAR_RENDERER = new ResourceLocation(StaticPower.MOD_ID, "processing_bar");
-	public static final ResourceLocation FLUID_BAR_RENDERER = new ResourceLocation(StaticPower.MOD_ID, "fluid_bar");
+	public static final ResourceLocation FLUID_HEAD_PRESSURE_RENDERER = new ResourceLocation(StaticPower.MOD_ID, "fluid_bar");
 
 	public static final SDColor MAIN_SV_COLOR = new SDColor(0, 0.6f, 0.8f).fromFloatToEightBit();
 	public static final SDColor ALT_SV_COLOR = new SDColor(0, 0.458f, 1.0f).fromFloatToEightBit();
@@ -50,6 +50,9 @@ public class JadePluginImplementation implements IWailaPlugin {
 
 	public static final SDColor MAIN_PROCESSING_COLOR = new SDColor(0.67f, 0.67f, 0.67f).fromFloatToEightBit();
 	public static final SDColor ALT_PROCESSING_COLOR = new SDColor(0.67f, 0.67f, 0.67f).fromFloatToEightBit();
+
+	public static final SDColor MAIN_PRESSURE_COLOR = new SDColor(0.67f, 0.67f, 0.67f).fromFloatToEightBit();
+	public static final SDColor ALT_PRESSURE_COLOR = new SDColor(0.6f, 0.6f, 0.6f).fromFloatToEightBit();
 
 	@Override
 	public void register(IWailaCommonRegistration registrar) {
@@ -208,11 +211,12 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static class FluidPipeDecorator implements IBlockComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-			if (accessor.isServerConnected() && accessor.getServerData().contains("pressure")) {
-				float pressure = accessor.getServerData().getFloat("pressure");
-				JadePluginImplementation.drawBar(tooltip, pressure / 2, FluidCableCapability.MAX_PIPE_PRESSURE / 2, MAIN_PROCESSING_COLOR, ALT_PROCESSING_COLOR,
-						GuiTextUtilities.formatNumberAsString(pressure / 2).append(" ").append(Component.translatable("gui.staticpower.pressure")).withStyle(ChatFormatting.WHITE),
-						PROCESSING_BAR_RENDERER);
+			if (accessor.isServerConnected() && accessor.getServerData().contains("head_pressure")) {
+				float pressure = accessor.getServerData().getFloat("head_pressure");
+				JadePluginImplementation.drawBar(
+						tooltip, pressure / 2, FluidCableCapability.MAX_PIPE_PRESSURE / 2, MAIN_PRESSURE_COLOR, ALT_PRESSURE_COLOR, GuiTextUtilities
+								.formatNumberAsStringOneDecimal(pressure / 2).append(" ").append(Component.translatable("gui.staticpower.head_pressure")).withStyle(ChatFormatting.WHITE),
+						FLUID_HEAD_PRESSURE_RENDERER);
 			}
 		}
 

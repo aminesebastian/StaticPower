@@ -15,7 +15,7 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 	public static final int MAX_PIPE_PRESSURE = 32;
 
 	private FluidStack containedFluid;
-	private float pressure;
+	private float headPressure;
 	private float targetPressure;
 	private int capacity;
 	private int transferRate;
@@ -24,7 +24,7 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 	public FluidCableCapability(ServerCableCapabilityType<?> type, Cable owningCable) {
 		super(type, owningCable);
 		this.containedFluid = FluidStack.EMPTY.copy();
-		this.pressure = 0;
+		this.headPressure = 0;
 		this.targetPressure = 0;
 	}
 
@@ -65,16 +65,12 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 		return containedFluid.isEmpty() ? true : fluid.isFluidEqual(containedFluid);
 	}
 
-	public float getTargetPressure() {
-		return targetPressure;
-	}
-
-	public void setTargetPressure(float targetRate) {
+	public void setHeadPressure(float targetRate) {
 		targetPressure = targetRate;
 	}
 
-	public float getPressure() {
-		return pressure;
+	public float getHeadPressure() {
+		return headPressure;
 	}
 
 	public boolean isFluidEqual(FluidStack other) {
@@ -134,18 +130,18 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 		return drain(resource.getAmount(), action);
 	}
 
-	public void updatePressure() {
-		float newValue = (1.0f - INTERPOLATION_RATE) * pressure + INTERPOLATION_RATE * targetPressure;
+	public void updateHeadPressure() {
+		float newValue = (1.0f - INTERPOLATION_RATE) * headPressure + INTERPOLATION_RATE * targetPressure;
 		if (newValue < 0.1f) {
 			newValue = 0;
 		}
-		pressure = newValue;
+		headPressure = newValue;
 	}
 
 	@Override
 	public void save(CompoundTag tag) {
 		containedFluid.writeToNBT(tag);
-		tag.putFloat("Pressure", pressure);
+		tag.putFloat("HeadPressure", headPressure);
 		tag.putFloat("TargetPressure", targetPressure);
 		tag.putInt("Capacity", capacity);
 		tag.putInt("TransferRate", transferRate);
@@ -155,7 +151,7 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 	@Override
 	public void load(CompoundTag tag) {
 		containedFluid = FluidStack.loadFluidStackFromNBT(tag);
-		pressure = tag.getFloat("Pressure");
+		headPressure = tag.getFloat("HeadPressure");
 		targetPressure = tag.getFloat("TargetPressure");
 		capacity = tag.getInt("Capacity");
 		transferRate = tag.getInt("TransferRate");
@@ -164,7 +160,7 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 
 	@Override
 	public String toString() {
-		return "FluidCableCapability [accumulatedFluid=" + containedFluid + ", pressure=" + pressure + ", targetPressure=" + targetPressure + ", capacity=" + capacity
+		return "FluidCableCapability [accumulatedFluid=" + containedFluid + ", headPressure=" + headPressure + ", targetPressure=" + targetPressure + ", capacity=" + capacity
 				+ ", transferRate=" + transferRate + ", isIndustrial=" + isIndustrial + "]";
 	}
 

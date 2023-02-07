@@ -38,7 +38,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
 	// This is intentionally high, we only want to force update if the difference is
 	// VAST, otherwise, let the MAX_TICKS driven update do the work.
-	public static final float FLUID_UPDATE_THRESHOLD = 100;
+	public static final float FLUID_UPDATE_THRESHOLD = 10;
 	public static final float MAX_TICKS_BEFORE_UPDATE = 10;
 
 	private final SidedFluidHandlerCapabilityWrapper capabilityWrapper;
@@ -85,13 +85,9 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			}
 			boolean shouldUpdate = !capability.get().isFluidEqual(lastUpdateFluidStack);
 			int delta = Math.abs(lastUpdateFluidStack.getAmount() - getFluidInTank(0).getAmount());
-			if (delta > FLUID_UPDATE_THRESHOLD) {
-				shouldUpdate = true;
-			} else if (!capability.get().isEmpty()) {
-				subThresholdUpdateTime++;
-			}
-
+			shouldUpdate |= delta > FLUID_UPDATE_THRESHOLD;
 			shouldUpdate |= subThresholdUpdateTime >= MAX_TICKS_BEFORE_UPDATE;
+			subThresholdUpdateTime++;
 			if (shouldUpdate) {
 				synchronizeServerToClient();
 				subThresholdUpdateTime = 0;
@@ -103,7 +99,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public void updateBeforeRendering(float partialTicks) {
 		if (visualFilledPercentage != lastUpdateFilledPercentage) {
 			float difference = visualFilledPercentage - lastUpdateFilledPercentage;
-			visualFilledPercentage -= difference * (partialTicks / 15.0f);
+			visualFilledPercentage -= difference * (partialTicks / 10.0f);
 		}
 	}
 
@@ -122,7 +118,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			lastUpdateFluidStack.writeToNBT(fluid);
 			data.put("f", fluid);
 			data.putFloat("%", lastUpdateFilledPercentage);
-			data.putFloat("p", capability.get().getPressure());
+			data.putFloat("p", capability.get().getHeadPressure());
 			FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), data);
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, packet);
 		}
@@ -155,22 +151,6 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	public float getVisualFilledPercentage() {
 		return visualFilledPercentage;
-	}
-
-	public float getPressure() {
-		if (isClientSide()) {
-			return clientPressure;
-		} else {
-			FluidNetworkModule module = getFluidModule().orElse(null);
-			if (module != null) {
-				Optional<FluidCableCapability> capability = getFluidCapability();
-				if (capability.isPresent()) {
-					return (float) capability.get().getPressure();
-				}
-				return 0;
-			}
-			return 0;
-		}
 	}
 
 	public Optional<FluidNetworkModule> getFluidModule() {
@@ -244,6 +224,13 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		types.add(ModCableDestinations.Fluid.get());
 	}
 
+	public float getHeadPressure() {
+		if (isClientSide()) {
+			return clientPressure;
+		}
+		return getFluidCapability().get().getHeadPressure();
+	}
+
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		// Only provide the fluid capability if we are not disabled on that side.
@@ -287,7 +274,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (!getTileEntity().getLevel().isClientSide) {
 			FluidNetworkModule module = getFluidModule().orElse(null);
 			if (module != null) {
-				return module.fill(getPos(), direction.getOpposite(), resource, action);
+				return module.fill(getPos(), resource, action);
 			}
 			return 0;
 		} else {

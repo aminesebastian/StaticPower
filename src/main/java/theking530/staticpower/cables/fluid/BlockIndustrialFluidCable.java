@@ -68,7 +68,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.translucent();
+		return RenderType.cutout();
 	}
 
 	@Override

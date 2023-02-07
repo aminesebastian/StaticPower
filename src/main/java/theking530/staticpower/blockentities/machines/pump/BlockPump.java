@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,12 +23,14 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockPump extends StaticPowerBlockEntityBlock {
+public class BlockPump extends StaticPowerMachineBlock {
 
 	public BlockPump(ResourceLocation tier) {
 		super(tier, Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
@@ -56,6 +59,12 @@ public class BlockPump extends StaticPowerBlockEntityBlock {
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
 		return RenderType.cutout();
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, BakingCompleted event) {
+		return new DefaultMachineBakedModel(existingModel, true);
 	}
 
 	@Override

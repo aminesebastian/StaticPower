@@ -30,6 +30,7 @@ public class PluginTOP implements ICompatibilityPlugin {
 		input.registerProvider(new ProgressInfoProvider());
 		input.registerProvider(new HeatInfoProvider());
 		input.registerProvider(new DigistoreInfoProvider());
+		input.registerProvider(new FluidCableProvider());
 
 		return null;
 	}

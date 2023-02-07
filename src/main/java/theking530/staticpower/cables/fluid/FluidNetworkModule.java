@@ -63,7 +63,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 	public void preWorldTick(Level world) {
 		// We want to slowly move the target fluid pressure back to 0.
 		for (FluidCableCapability cable : fluidCapabilities) {
-			cable.setTargetPressure(0);
+			cable.setHeadPressure(0);
 		}
 	}
 
@@ -95,10 +95,14 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 		float waterViscocity = Fluids.WATER.getFluidType().getViscosity();
 		float ratio = waterViscocity / stack.getFluid().getFluidType().getViscosity();
-		return ratio;
+		return ratio * 2;
 	}
 
-	public int fill(BlockPos cablePos, Direction fromDirection, FluidStack resource, FluidAction action) {
+	public int fill(BlockPos cablePos, FluidStack resource, FluidAction action) {
+		return fill(cablePos, resource, 16, action);
+	}
+
+	public int fill(BlockPos cablePos, FluidStack resource, float pressure, FluidAction action) {
 		Optional<FluidCableCapability> cable = getFluidCableCapability(cablePos);
 		if (cable.isEmpty()) {
 			return 0;
@@ -106,7 +110,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 		FluidStack maxInput = resource.copy();
 		maxInput.setAmount(Math.min(maxInput.getAmount(), cable.get().getCapacity()));
-		return simulateFlowFrom(maxInput, 16, cable.get(), action);
+		return simulateFlowFrom(maxInput, pressure, cable.get(), action);
 	}
 
 	public FluidStack supply(BlockPos cablePos, int amount, FluidAction action) {
@@ -151,7 +155,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return;
 		}
 
-		output.add(Component.literal(String.valueOf(capability.get().getPressure())));
+		output.add(Component.literal(String.valueOf(capability.get().getHeadPressure())));
 		output.addAll(GuiFluidBarUtilities.getTooltip(capability.get().getFluidAmount(), capability.get().getCapacity(), capability.get().getFluid()));
 	}
 
@@ -232,7 +236,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return 0;
 		}
 
-		cable.setTargetPressure(incomingPressure);
+		cable.setHeadPressure(incomingPressure);
 
 		int filled = 0;
 
@@ -289,9 +293,10 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return FluidStack.EMPTY;
 		}
 
-		float pressureRatio = pressure / FluidCableCapability.MAX_PIPE_PRESSURE;
-		int maxAmount = (int) SDMath.clamp(pressureRatio * fluid.getAmount(), 0, fluid.getAmount());
-		maxAmount = (int) Math.min(maxAmount, maxAmount * getFlowRateForFluid(fluid));
+		// Multiply the pressure by 2.
+		float pressureRatio = (pressure * 2) / FluidCableCapability.MAX_PIPE_PRESSURE;
+		int maxAmount = (int) (fluid.getAmount() * getFlowRateForFluid(fluid) * pressureRatio);
+		maxAmount = (int) SDMath.clamp(pressureRatio * maxAmount, 0, fluid.getAmount());
 
 		// Since we know there is fluid to be flowed, and the pressure is non zero, then
 		// the maxAmount being zero implies that the ratio * fluidAmount rounded down to
@@ -323,7 +328,6 @@ public class FluidNetworkModule extends CableNetworkModule {
 				supplyAmounts.put(dir, (float) supplied);
 				totalSupplied += supplied;
 			}
-
 			int initialFluidAmount = cable.getFluidAmount();
 			for (Direction dir : supplyAmounts.keySet()) {
 				float supplyRatio = supplyAmounts.get(dir) / totalSupplied;
@@ -364,15 +368,11 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	private void updatePressures() {
 		for (FluidCableCapability cable : fluidCapabilities) {
-			cable.updatePressure();
+			cable.updateHeadPressure();
 		}
 	}
 
 	private void simulateBalancing() {
-		getNetwork().getWorld().getProfiler().push("FluidNetworkModule.InterpolatingFlowRate");
-
-		getNetwork().getWorld().getProfiler().pop();
-
 		getNetwork().getWorld().getProfiler().push("FluidNetworkModule.Balancing");
 
 		for (FluidCableCapability cable : fluidCapabilities) {
@@ -381,6 +381,18 @@ public class FluidNetworkModule extends CableNetworkModule {
 			}
 
 			Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
+
+			// First try to push all the fluid downwards.
+			if (adjacents.containsKey(Direction.DOWN)) {
+				FluidStack simDrained = cable.drain(cable.getTransferRate(), FluidAction.SIMULATE);
+				int filled = adjacents.get(Direction.DOWN).fill(simDrained, FluidAction.EXECUTE);
+				cable.drain(filled, FluidAction.EXECUTE);
+			}
+
+			if (cable.isEmpty()) {
+				continue;
+			}
+
 			List<FluidCableCapability> cablesToBalance = new ArrayList<>();
 			cablesToBalance.add(cable);
 

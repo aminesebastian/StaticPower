@@ -918,6 +918,7 @@
 	"block.staticpower.rubber_tree_leaves": "Rubber Tree Leaves",
 	"block.staticpower.rubber_tree_sapling": "Rubber Tree Sapling",
 	"block.staticpower.rubber_tree_planks": "Rubber Tree Planks",
+	"block.staticpower.fluid_pump": "In-Line Pump",
 	"block.staticpower.pump_tube": "Pump Tube",
 	"block.staticpower.pump_iron": "Iron Pump",
 	"block.staticpower.pump_basic": "Pump",
@@ -1134,6 +1135,8 @@
 	"gui.staticpower.voltage.short_name.bonkers_voltage": "BV",
 	
 	"gui.staticpower.pressure": "Pressure",
+	"gui.staticpower.head_pressure": "Head Pressure",
+	"gui.staticpower.head_pressure_short": "Head Press.",
 	
 	"gui.staticpower.variable": "Variable",
 	

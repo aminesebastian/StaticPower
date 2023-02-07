@@ -28,6 +28,7 @@ import theking530.staticpower.blockentities.machines.cropfarmer.BlockBasicFarmer
 import theking530.staticpower.blockentities.machines.crucible.BlockCrucible;
 import theking530.staticpower.blockentities.machines.enchanter.BlockEnchanter;
 import theking530.staticpower.blockentities.machines.fermenter.BlockFermenter;
+import theking530.staticpower.blockentities.machines.fluid_pump.BlockFluidPump;
 import theking530.staticpower.blockentities.machines.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.blockentities.machines.former.BlockFormer;
 import theking530.staticpower.blockentities.machines.fusionfurnace.BlockFusionFurnace;
@@ -267,6 +268,8 @@ public class ModBlocks {
 			() -> new StaticPowerCutoutBlock(Properties.copy(Blocks.IRON_DOOR)));
 	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockLumum = registerBlock("machine_block_lumum",
 			() -> new StaticPowerCutoutBlock(Properties.copy(Blocks.IRON_DOOR)));
+
+	public static final RegistryObject<BlockFluidPump> FluidPump = registerBlock("fluid_pump", () -> new BlockFluidPump(StaticPowerTiers.IRON));
 
 	public static final RegistryObject<BlockTank> IronTank = registerBlock("tank_iron", () -> new BlockTank(StaticPowerTiers.IRON));
 	public static final RegistryObject<BlockTank> BasicTank = registerBlock("tank_basic", () -> new BlockTank(StaticPowerTiers.BASIC));

@@ -42,7 +42,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.client.ICustomModelProvider;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.LightSocketModel;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -94,7 +93,6 @@ public class BlockLightSocket extends StaticPowerRotateableBlockEntityBlock impl
 	@Override
 	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		BlockEntityLightSocket socket = (BlockEntityLightSocket) world.getBlockEntity(pos);
-		Direction facingDirection = state.getValue(FACING);
 
 		if (socket.hasLightBulb()) {
 			ItemStack removed = socket.removeLightbulb();

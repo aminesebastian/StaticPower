@@ -33,7 +33,7 @@ public class SideConfigurationUtilities {
 			if (this == TOP) {
 				return BOTTOM;
 			}
-			if (this == BOTTOM) {	
+			if (this == BOTTOM) {
 				return TOP;
 			}
 			if (this == FRONT) {
@@ -59,6 +59,38 @@ public class SideConfigurationUtilities {
 	 *         relative blockside versus the requested hitside.
 	 */
 	public static BlockSide getBlockSide(Direction hitSide, Direction machineFacing) {
+		if (machineFacing == Direction.UP) {
+			switch (hitSide) {
+			case UP:
+				return BlockSide.FRONT;
+			case DOWN:
+				return BlockSide.BACK;
+			case EAST:
+				return BlockSide.RIGHT;
+			case NORTH:
+				return BlockSide.TOP;
+			case SOUTH:
+				return BlockSide.BOTTOM;
+			case WEST:
+				return BlockSide.LEFT;
+			}
+		} else if (machineFacing == Direction.DOWN) {
+			switch (hitSide) {
+			case UP:
+				return BlockSide.BACK;
+			case DOWN:
+				return BlockSide.FRONT;
+			case EAST:
+				return BlockSide.LEFT;
+			case NORTH:
+				return BlockSide.BOTTOM;
+			case SOUTH:
+				return BlockSide.TOP;
+			case WEST:
+				return BlockSide.RIGHT;
+			}
+		}
+
 		Vector3f facingNormal = new Vector3f(machineFacing.getNormal().getX(), machineFacing.getNormal().getY(), machineFacing.getNormal().getZ());
 		Vector3f hitNormal = new Vector3f(hitSide.getNormal().getX(), hitSide.getNormal().getY(), hitSide.getNormal().getZ());
 		double angle = Math.toDegrees(Math.acos(hitNormal.dot(facingNormal)));
@@ -79,6 +111,7 @@ public class SideConfigurationUtilities {
 		} else if (axis.y() < 0.0f) {
 			return BlockSide.RIGHT;
 		}
+
 		StaticPower.LOGGER.error(String.format("Encountered null BlockSide given %1$s hitSide and %2$s machineFacing.", hitSide, machineFacing));
 		return BlockSide.FRONT;
 	}

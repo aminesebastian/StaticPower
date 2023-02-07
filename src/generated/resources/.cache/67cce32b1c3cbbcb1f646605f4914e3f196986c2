@@ -1,4 +1,4 @@
-// 1.19.2	2023-01-25T21:36:22.6403812	LootTables
+// 1.19.2	2023-02-06T14:36:42.5713873	LootTables
 5f1c4bd7d919817df3c517022b2bb5c6d61b5d9d data/staticpower/loot_tables/blocks/alloy_furnace.json
 ec0346cd8a4b004d8afe4ac900233eb8bfd496e4 data/staticpower/loot_tables/blocks/automatic_placer.json
 f782be601a12395d5e5c205629f67cdcf8579ac0 data/staticpower/loot_tables/blocks/battery_block_advanced.json
@@ -166,6 +166,7 @@ c0e2e48480b431e360ff623964bbe37a35334e9d data/staticpower/loot_tables/blocks/exp
 8ed77c5b9105ca9ddd19dbf7450aeef9b11f4993 data/staticpower/loot_tables/blocks/farmland_energized.json
 63632953d5bff18bd03cfff53e33e6054a726f32 data/staticpower/loot_tables/blocks/farmland_lumum.json
 5bb5ad378048bc6f825323c27a32249c3a35287b data/staticpower/loot_tables/blocks/farmland_static.json
+20256ef6b1897f76bf9d12e302dee09d1d280518 data/staticpower/loot_tables/blocks/fluid_pump.json
 625cb9ac83f6895173789170e494ce338d1d0aea data/staticpower/loot_tables/blocks/glass_obsidian.json
 568a14b6c28e11bd758b5894fe01d6b6aabc381c data/staticpower/loot_tables/blocks/grass_energized.json
 e8892e8db0da73bce47c9d460d2d757d399881ac data/staticpower/loot_tables/blocks/grass_static.json

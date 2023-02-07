@@ -1,4 +1,4 @@
-// 1.19.2	2023-01-26T23:23:46.1285019	Block States: staticpower
+// 1.19.2	2023-02-07T03:41:26.0948632	Block States: staticpower
 c2522358e82c7a72664181fe69af3fd6d7634534 assets/staticpower/blockstates/alloy_furnace.json
 6b3b3d59e926b1f7713b29d8ae247432edc8bf2a assets/staticpower/blockstates/automatic_placer.json
 0767f7bfba3a728c4dbe5b9c9bb9fa69b5552f17 assets/staticpower/blockstates/battery_block_advanced.json
@@ -205,6 +205,7 @@ c3b3a9eec783abbab55037bf97bdad9db363eaef assets/staticpower/blockstates/farmland
 947f4a5b98f47d0384c2fd7bbb56e9a32e6a79ab assets/staticpower/blockstates/fertilizer.json
 c81818ffc35b71b48b0d8be91841123ee5ad0ff1 assets/staticpower/blockstates/fluid_energized.json
 e2acabf54fde40ddc8ce64fac84a2a068ee16326 assets/staticpower/blockstates/fluid_lumum.json
+b4fc9bdd5cc14df1bebbf985b20f2f4ed80fc898 assets/staticpower/blockstates/fluid_pump.json
 62b8e0b5a6d09b0a8afe07d06b99e1d42edc0a34 assets/staticpower/blockstates/fluid_static.json
 ba630f13f1c00c0af348503046a0227718bedf6b assets/staticpower/blockstates/fuel.json
 60e7a2e56ad83bd4ea0f434a415f7e01a66261e1 assets/staticpower/blockstates/glass_obsidian.json

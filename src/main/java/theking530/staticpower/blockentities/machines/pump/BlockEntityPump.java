@@ -114,8 +114,6 @@ public class BlockEntityPump extends BlockEntityMachine {
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", pumpRate, this::canProcess, this::canProcess, this::pump, true)
 				.setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage));
 
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
-
 		// Battery
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 

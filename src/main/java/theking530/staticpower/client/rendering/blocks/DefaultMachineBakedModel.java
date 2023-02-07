@@ -116,7 +116,10 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		try {
 			if (side != null) {
 				MachineSideMode sideMode = sideConfigurations.get()[side.ordinal()];
-				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING));
+				Direction machineFacing = state.hasProperty(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING)
+						? state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING)
+						: state.getValue(StaticPowerRotateableBlockEntityBlock.FACING);
+				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, machineFacing);
 				renderSideMode(state, newQuads, side, blockSide, sideMode);
 			}
 		} catch (Exception e) {

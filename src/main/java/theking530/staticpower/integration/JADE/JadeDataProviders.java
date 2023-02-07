@@ -55,8 +55,8 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 
 		if (te instanceof BlockEntityFluidCable) {
 			BlockEntityFluidCable fluidCable = (BlockEntityFluidCable) te;
-			float pressure = fluidCable.fluidCableComponent.getFluidCapability().get().getPressure();
-			data.putFloat("pressure", pressure);
+			float pressure = fluidCable.fluidCableComponent.getFluidCapability().get().getHeadPressure();
+			data.putFloat("head_pressure", pressure);
 		}
 
 		// Add static power data.

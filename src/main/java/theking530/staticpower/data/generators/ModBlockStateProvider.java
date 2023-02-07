@@ -170,6 +170,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		batteryBlock(ModBlocks.BatteryLumum.get(), "lumum");
 		batteryBlock(ModBlocks.BatteryCreative.get(), "creative");
 
+		fluidPump(ModBlocks.FluidPump.get());
+
 		machine(ModBlocks.ChargingStation.get(), "energized", "machines/charging_station");
 		machine(ModBlocks.PoweredFurnace.get(), "basic", "machines/powered_furnace");
 		machine(ModBlocks.PoweredGrinder.get(), "basic", "machines/powered_grinder");
@@ -479,6 +481,17 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		});
 	}
 
+	public void fluidPump(Block block) {
+		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/fluid_pump"));
+
+		getVariantBuilder(block).forAllStates(state -> {
+			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(model);
+			Direction facing = state.getValue(BlockStateProperties.FACING);
+			applySixSidedRotationFromnNorthBearing(builder, facing);
+			return builder.build();
+		});
+	}
+
 	public void tankBlock(Block block, String textureSet) {
 		ResourceLocation tank = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/tanks/tank_" + textureSet);
 		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/tank_block")).texture("tank", tank)
@@ -582,7 +595,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		getVariantBuilder(block).forAllStates(state -> {
 			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(model);
 			Direction facing = state.getValue(BlockStateProperties.FACING);
-			applySixSidedRotation(builder, facing);
+			applySixSidedRotationFromUpBearing(builder, facing);
 			return builder.build();
 		});
 	}
@@ -593,7 +606,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		getVariantBuilder(block).forAllStates(state -> {
 			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(model);
 			Direction facing = state.getValue(BlockStateProperties.FACING);
-			applySixSidedRotation(builder, facing);
+			applySixSidedRotationFromUpBearing(builder, facing);
 			return builder.build();
 		});
 	}
@@ -816,7 +829,29 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		return ForgeRegistries.BLOCKS.getKey(block);
 	}
 
-	private void applySixSidedRotation(ConfiguredModel.Builder<?> builder, Direction facing) {
+	private void applySixSidedRotationFromnNorthBearing(ConfiguredModel.Builder<?> builder, Direction facing) {
+		switch (facing) {
+		case DOWN:
+			builder.rotationX(-90);
+			break;
+		case UP:
+			builder.rotationX(90);
+			break;
+		case EAST:
+			builder.rotationY(-90);
+			break;
+		case SOUTH:
+			builder.rotationX(180);
+			break;
+		case WEST:
+			builder.rotationY(90);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void applySixSidedRotationFromUpBearing(ConfiguredModel.Builder<?> builder, Direction facing) {
 		switch (facing) {
 		case DOWN:
 			builder.rotationX(180);
