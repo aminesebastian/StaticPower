@@ -14,16 +14,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.items.CompoundInventoryComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
 
 public class BlockEntityConfigurable extends BlockEntityBase {
-	public static final DefaultSideConfiguration DEFAULT_NO_FACE_SIDE_CONFIGURATION = new DefaultSideConfiguration();
+	public static final SideConfigurationPreset DEFAULT_NO_FACE_SIDE_CONFIGURATION = new SideConfigurationPreset();
 	static {
 		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.TOP, true, MachineSideMode.Input);
 		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
@@ -45,14 +46,14 @@ public class BlockEntityConfigurable extends BlockEntityBase {
 	public BlockEntityConfigurable(BlockEntityTypeAllocator<? extends BlockEntityConfigurable> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		disableFaceInteraction();
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::isValidSideConfiguration, getDefaultSideConfiguration()));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", getDefaultSideConfiguration()));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 	}
 
 	@Override
 	protected void onLoadedInWorld(Level world, BlockPos pos, BlockState state) {
 		super.onLoadedInWorld(world, pos, state);
-		
+
 		// Get all inventories for this tile entitiy.
 		List<InventoryComponent> inventories = getComponents(InventoryComponent.class);
 
@@ -86,18 +87,6 @@ public class BlockEntityConfigurable extends BlockEntityBase {
 			// Create a compount inventory and register it for that side mode.
 			registerComponentOverride(new CompoundInventoryComponent("CompoundInventory" + mode, mode, modeInvs));
 		}
-	}
-
-	/* Side Control */
-	protected void onSidesConfigUpdate(BlockSide side, MachineSideMode newMode) {
-		if (isFaceInteractionDisabled() && ioSideConfiguration.getBlockSideConfiguration(BlockSide.FRONT) != MachineSideMode.Never) {
-			ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.FRONT, MachineSideMode.Never);
-			ioSideConfiguration.setBlockSideEnabledState(BlockSide.FRONT, false);
-		}
-	}
-
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input;
 	}
 
 	/**
@@ -147,11 +136,11 @@ public class BlockEntityConfigurable extends BlockEntityBase {
 		return true;
 	}
 
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
 		if (disableFaceInteraction) {
 			return DEFAULT_NO_FACE_SIDE_CONFIGURATION;
 		} else {
-			return SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION;
+			return SideConfigurationPresets.DEFAULT_SIDE_CONFIGURATION;
 		}
 	}
 }

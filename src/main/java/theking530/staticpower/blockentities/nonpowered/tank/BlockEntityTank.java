@@ -92,7 +92,6 @@ public class BlockEntityTank extends BlockEntityBase {
 		// Add the tank component.
 		int capacity = SDMath.multiplyRespectingOverflow(tierObject.defaultTankCapacity.get(), MACHINE_TANK_CAPACITY_MULTIPLIER);
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", capacity).setCapabilityExposedModes(MachineSideMode.Input, MachineSideMode.Output));
-		fluidTankComponent.setCanFill(true);
 		fluidTankComponent.setAutoSyncPacketsEnabled(true);
 		fluidTankComponent.setUpgradeInventory(voidUpgradeInventory);
 

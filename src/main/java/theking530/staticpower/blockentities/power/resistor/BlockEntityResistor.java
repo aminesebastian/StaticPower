@@ -11,7 +11,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
@@ -31,7 +31,7 @@ public class BlockEntityResistor extends BlockEntityConfigurable {
 
 		// Enable face interaction.
 		enableFaceInteraction();
-		ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.FRONT_BACK_INPUT_OUTPUT, true);
+		ioSideConfiguration.setPreset(SideConfigurationPresets.FRONT_BACK_INPUT_OUTPUT, true);
 
 		// Add the power distributor.
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));

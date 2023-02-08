@@ -62,7 +62,7 @@ public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 		// Setup the fluid tank.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get(),
 				(fluidStack) -> ModTags.tagContainsFluid(ModTags.WATER, fluidStack.getFluid())));
-		fluidTankComponent.setCanDrain(false).setAutoSyncPacketsEnabled(true).setUpgradeInventory(upgradesInventory).setCapabilityExposedModes(MachineSideMode.Input);
+		fluidTankComponent.setAutoSyncPacketsEnabled(true).setUpgradeInventory(upgradesInventory).setCapabilityExposedModes(MachineSideMode.Input);
 
 		// Create the fluid container component.
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));

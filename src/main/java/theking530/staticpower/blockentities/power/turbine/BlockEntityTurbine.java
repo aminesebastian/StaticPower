@@ -28,7 +28,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
@@ -182,8 +182,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 	}
 
 	@Override
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return new DefaultSideConfiguration().setSide(BlockSide.LEFT, true, MachineSideMode.Output).setSide(BlockSide.RIGHT, true, MachineSideMode.Output)
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return new SideConfigurationPreset().setSide(BlockSide.LEFT, true, MachineSideMode.Output).setSide(BlockSide.RIGHT, true, MachineSideMode.Output)
 				.setSide(BlockSide.FRONT, true, MachineSideMode.Output).setSide(BlockSide.BACK, true, MachineSideMode.Output);
 	}
 

@@ -18,7 +18,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
@@ -42,8 +42,7 @@ public class BlockEntityExperienceHopper extends BlockEntityConfigurable {
 
 	public BlockEntityExperienceHopper(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		registerComponent(
-				internalTank = new FluidTankComponent("InputFluidTank", 100).setCanFill(true).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
+		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 100).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, internalTank, MachineSideMode.Output));
 	}
 
@@ -70,7 +69,7 @@ public class BlockEntityExperienceHopper extends BlockEntityConfigurable {
 
 			// Play a sound and synchronize if there were any experience filled.
 			if (filled > 0) {
-				getLevel().playSound(null, worldPosition, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.15F, (getLevel().random.nextFloat() + 1) / 2);
+				getLevel().playSound(null, worldPosition, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.15F, (getLevel().getRandom().nextFloat() + 1) / 2);
 			}
 		}
 	}
@@ -122,7 +121,7 @@ public class BlockEntityExperienceHopper extends BlockEntityConfigurable {
 	}
 
 	@Override
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return new DefaultSideConfiguration().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return new SideConfigurationPreset().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
 	}
 }

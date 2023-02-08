@@ -7,9 +7,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
@@ -44,8 +44,8 @@ public class BlockEntityResearchCheater extends BlockEntityConfigurable implemen
 	}
 
 	@Override
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return SideConfigurationComponent.ALL_SIDES_OUTPUT;
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return SideConfigurationPresets.ALL_SIDES_OUTPUT;
 	}
 
 	@Override

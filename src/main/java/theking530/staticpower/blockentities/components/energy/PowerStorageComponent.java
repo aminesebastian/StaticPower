@@ -43,6 +43,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	protected float powerCapacityUpgradeMultiplier;
 	@UpdateSerialize
 	protected float powerOutputUpgradeMultiplier;
+	protected IPowerStorageComponentFilter powerFilter;
 
 	private double baseCapacity;
 	private StaticVoltageRange baseInputVoltageRange;
@@ -142,75 +143,6 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		}
 	}
 
-	protected void checkUpgrades() {
-		// Do nothing if there is no upgrade inventory.
-		if (upgradeInventory == null) {
-			return;
-		}
-		// Get the upgrade.
-		UpgradeItemWrapper upgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeTypes.POWER);
-
-		// If it is not valid, set the values back to the defaults. Otherwise, set the
-		// new processing speeds.
-		if (upgrade.isEmpty()) {
-			powerCapacityUpgradeMultiplier = 1.0f;
-			powerOutputUpgradeMultiplier = 1.0f;
-		} else {
-			powerCapacityUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().upgradeConfiguration.powerUpgrade.get() * upgrade.getUpgradeWeight()));
-			powerOutputUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().upgradeConfiguration.powerIOUpgrade.get() * upgrade.getUpgradeWeight()));
-		}
-
-		// Set the new values.
-		storage.setCapacity(baseCapacity * powerCapacityUpgradeMultiplier);
-		storage.setMaximumInputPower(baseMaximumInputPower * powerOutputUpgradeMultiplier);
-		storage.setOutputVoltage(baseVoltageOutput);
-		storage.setMaximumOutputPower(baseMaximumOutputPower * powerOutputUpgradeMultiplier);
-
-		// Handle the input transformer upgrade.
-		UpgradeItemWrapper powerUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeTypes.POWER_TRANSFORMER);
-		if (powerUpgrade.isEmpty()) {
-			storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), baseInputVoltageRange.maximumVoltage()));
-		} else {
-			if (powerUpgrade.getTierId() == StaticPowerTiers.ADVANCED) {
-				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.MEDIUM)) {
-					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.MEDIUM));
-				}
-			} else if (powerUpgrade.getTierId() == StaticPowerTiers.STATIC) {
-				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.HIGH)) {
-					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.HIGH));
-				}
-			} else if (powerUpgrade.getTierId() == StaticPowerTiers.ENERGIZED) {
-				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.EXTREME)) {
-					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.EXTREME));
-				}
-			} else if (powerUpgrade.getTierId() == StaticPowerTiers.LUMUM) {
-				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.BONKERS)) {
-					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.BONKERS));
-				}
-			}
-		}
-	}
-
-	protected void handleNetworkSynchronization() {
-		// Get the current delta between the amount of power we have and the power we
-		// had last tick.
-		double delta = Math.abs(getStoredPower() - lastSyncEnergy);
-
-		// Determine if we should sync.
-		boolean shouldSync = (delta / getCapacity()) >= ENERGY_SYNC_MAX_DELTA_PERCENT;
-		if (!shouldSync) {
-			shouldSync = getStoredPower() == 0 && lastSyncEnergy != 0;
-		}
-		if (!shouldSync) {
-			shouldSync = getStoredPower() == getCapacity() && lastSyncEnergy != getCapacity();
-		}
-
-		// If we should sync, perform the sync.
-		if (shouldSync) {
-			sendSynchronizationPacket();
-		}
-	}
-
 	public void markDirty() {
 		pendingManualSync = true;
 
@@ -221,61 +153,13 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		}
 	}
 
-	protected void sendSynchronizationPacket() {
-		if (getLevel().isClientSide()) {
-			StaticPower.LOGGER.warn("#synchronizeToClient (called at %1$s) should only be called from the server!", getPos().toString());
-			return;
-		}
-
-		// Send the packet to all clients within the requested radius.
-		PowerStorageComponentSyncPacket msg = new PowerStorageComponentSyncPacket(getPos(), this);
-		StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
-		lastSyncEnergy = getStoredPower();
-		pendingManualSync = false;
-	}
-
-	protected void tickVoltageBasedExplosion() {
-		if (!shouldExplodeWhenOverVolted) {
-			return;
-		}
-
-		if (!receivedExplosivePowerLastTick) {
-			resetExplosionTimer();
-			return;
-		}
-
-		if (!isPendingElectricalExplosion()) {
-			initiateExplosionTimer();
-		} else {
-			electricalExplosionTimeRemaining--;
-			if (electricalExplosionTimeRemaining <= 0) {
-				getLevel().explode(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, 1, Explosion.BlockInteraction.BREAK);
-			}
-		}
-	}
-
-	protected void initiateExplosionTimer() {
-		// TODO: Add particle effects here.
-		electricalExplosionTimeRemaining = StaticPowerConfig.SERVER.overvoltageExplodeTime.get();
-		getLevel().playSound(null, getPos(), SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0f, 1.5f);
-		isPendingOverVoltageExplostion = true;
-		sendSynchronizationPacket();
-	}
-
-	protected void resetExplosionTimer() {
-		if (electricalExplosionTimeRemaining >= 0) {
-			electricalExplosionTimeRemaining = -1;
-			isPendingOverVoltageExplostion = false;
-			sendSynchronizationPacket();
-		}
-	}
-
-	protected boolean isPendingElectricalExplosion() {
-		return isPendingOverVoltageExplostion;
-	}
-
 	public PowerStorageComponent setSideConfiguration(SideConfigurationComponent sideConfig) {
 		this.sideConfig = sideConfig;
+		return this;
+	}
+
+	public PowerStorageComponent setPowerStorageFilter(IPowerStorageComponentFilter filter) {
+		this.powerFilter = filter;
 		return this;
 	}
 
@@ -466,6 +350,12 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 			return 0;
 		}
 
+		if (powerFilter != null) {
+			if (!powerFilter.canAddPower(side, stack)) {
+				return 0;
+			}
+		}
+
 		if (sideConfig == null || sideConfig.getWorldSpaceDirectionConfiguration(side).isInputMode()) {
 			// Only when not simulating, check if we should initiate an explosion.
 			if (!simulate) {
@@ -488,6 +378,13 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		if (!storage.canOutputExternalPower()) {
 			return PowerStack.EMPTY;
 		}
+
+		if (powerFilter != null) {
+			if (!powerFilter.canDrainPower(side, power)) {
+				return PowerStack.EMPTY;
+			}
+		}
+
 		if (sideConfig == null || sideConfig.getWorldSpaceDirectionConfiguration(side).isOutputMode()) {
 			return drainPower(power, simulate);
 		}
@@ -584,4 +481,127 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		this.deserializeUpdateNbt(nbt, fromUpdate);
 
 	}
+
+	protected void checkUpgrades() {
+		// Do nothing if there is no upgrade inventory.
+		if (upgradeInventory == null) {
+			return;
+		}
+		// Get the upgrade.
+		UpgradeItemWrapper upgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeTypes.POWER);
+
+		// If it is not valid, set the values back to the defaults. Otherwise, set the
+		// new processing speeds.
+		if (upgrade.isEmpty()) {
+			powerCapacityUpgradeMultiplier = 1.0f;
+			powerOutputUpgradeMultiplier = 1.0f;
+		} else {
+			powerCapacityUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().upgradeConfiguration.powerUpgrade.get() * upgrade.getUpgradeWeight()));
+			powerOutputUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().upgradeConfiguration.powerIOUpgrade.get() * upgrade.getUpgradeWeight()));
+		}
+
+		// Set the new values.
+		storage.setCapacity(baseCapacity * powerCapacityUpgradeMultiplier);
+		storage.setMaximumInputPower(baseMaximumInputPower * powerOutputUpgradeMultiplier);
+		storage.setOutputVoltage(baseVoltageOutput);
+		storage.setMaximumOutputPower(baseMaximumOutputPower * powerOutputUpgradeMultiplier);
+
+		// Handle the input transformer upgrade.
+		UpgradeItemWrapper powerUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeTypes.POWER_TRANSFORMER);
+		if (powerUpgrade.isEmpty()) {
+			storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), baseInputVoltageRange.maximumVoltage()));
+		} else {
+			if (powerUpgrade.getTierId() == StaticPowerTiers.ADVANCED) {
+				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.MEDIUM)) {
+					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.MEDIUM));
+				}
+			} else if (powerUpgrade.getTierId() == StaticPowerTiers.STATIC) {
+				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.HIGH)) {
+					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.HIGH));
+				}
+			} else if (powerUpgrade.getTierId() == StaticPowerTiers.ENERGIZED) {
+				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.EXTREME)) {
+					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.EXTREME));
+				}
+			} else if (powerUpgrade.getTierId() == StaticPowerTiers.LUMUM) {
+				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.BONKERS)) {
+					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.BONKERS));
+				}
+			}
+		}
+	}
+
+	protected void handleNetworkSynchronization() {
+		// Get the current delta between the amount of power we have and the power we
+		// had last tick.
+		double delta = Math.abs(getStoredPower() - lastSyncEnergy);
+
+		// Determine if we should sync.
+		boolean shouldSync = (delta / getCapacity()) >= ENERGY_SYNC_MAX_DELTA_PERCENT;
+		if (!shouldSync) {
+			shouldSync = getStoredPower() == 0 && lastSyncEnergy != 0;
+		}
+		if (!shouldSync) {
+			shouldSync = getStoredPower() == getCapacity() && lastSyncEnergy != getCapacity();
+		}
+
+		// If we should sync, perform the sync.
+		if (shouldSync) {
+			sendSynchronizationPacket();
+		}
+	}
+
+	protected void sendSynchronizationPacket() {
+		if (getLevel().isClientSide()) {
+			StaticPower.LOGGER.warn("#synchronizeToClient (called at %1$s) should only be called from the server!", getPos().toString());
+			return;
+		}
+
+		// Send the packet to all clients within the requested radius.
+		PowerStorageComponentSyncPacket msg = new PowerStorageComponentSyncPacket(getPos(), this);
+		StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
+		lastSyncEnergy = getStoredPower();
+		pendingManualSync = false;
+	}
+
+	protected void tickVoltageBasedExplosion() {
+		if (!shouldExplodeWhenOverVolted) {
+			return;
+		}
+
+		if (!receivedExplosivePowerLastTick) {
+			resetExplosionTimer();
+			return;
+		}
+
+		if (!isPendingElectricalExplosion()) {
+			initiateExplosionTimer();
+		} else {
+			electricalExplosionTimeRemaining--;
+			if (electricalExplosionTimeRemaining <= 0) {
+				getLevel().explode(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, 1, Explosion.BlockInteraction.BREAK);
+			}
+		}
+	}
+
+	protected void initiateExplosionTimer() {
+		// TODO: Add particle effects here.
+		electricalExplosionTimeRemaining = StaticPowerConfig.SERVER.overvoltageExplodeTime.get();
+		getLevel().playSound(null, getPos(), SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0f, 1.5f);
+		isPendingOverVoltageExplostion = true;
+		sendSynchronizationPacket();
+	}
+
+	protected void resetExplosionTimer() {
+		if (electricalExplosionTimeRemaining >= 0) {
+			electricalExplosionTimeRemaining = -1;
+			isPendingOverVoltageExplostion = false;
+			sendSynchronizationPacket();
+		}
+	}
+
+	protected boolean isPendingElectricalExplosion() {
+		return isPendingOverVoltageExplostion;
+	}
+
 }

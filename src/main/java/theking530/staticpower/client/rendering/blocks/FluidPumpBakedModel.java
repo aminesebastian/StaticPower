@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,9 +25,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blockentities.machines.fluid_pump.BlockEntityFluidPump;
-import theking530.staticpower.blockentities.machines.fluid_pump.BlockEntityFluidPump.FluidPumpRenderingState;
-import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.blockentities.machines.pump.BlockEntityPump;
+import theking530.staticpower.blockentities.machines.pump.BlockEntityPump.FluidPumpRenderingState;
+import theking530.staticpower.blockentities.machines.pump.BlockPump;
 
 @OnlyIn(Dist.CLIENT)
 public class FluidPumpBakedModel extends DefaultMachineBakedModel {
@@ -44,13 +45,14 @@ public class FluidPumpBakedModel extends DefaultMachineBakedModel {
 	@Override
 	protected List<BakedQuad> getBakedQuadsFromModelData(@Nullable BlockState state, Direction side, @Nonnull RandomSource rand, @Nonnull ModelData data, RenderType renderLayer) {
 		// If the property is not there, return early.
-		if (!data.has(BlockEntityFluidPump.PUMP_RENDERING_STATE)) {
+		if (!data.has(BlockEntityPump.PUMP_RENDERING_STATE)) {
 			return Collections.emptyList();
 		}
 
 		// Get the data used in rendering.
-		FluidPumpRenderingState renderingState = data.get(BlockEntityFluidPump.PUMP_RENDERING_STATE);
-		BakedModel powerConnector = Minecraft.getInstance().getModelManager().getModel(StaticPowerAdditionalModels.FLUID_PUMP_POWER_CONNECTOR);
+		FluidPumpRenderingState renderingState = data.get(BlockEntityPump.PUMP_RENDERING_STATE);
+		ResourceLocation connectorModel = ((BlockPump) state.getBlock()).getConnectorModel();
+		BakedModel powerConnector = Minecraft.getInstance().getModelManager().getModel(connectorModel);
 
 		// Create the output array.
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
@@ -60,7 +62,7 @@ public class FluidPumpBakedModel extends DefaultMachineBakedModel {
 		newQuads.addAll(baseQuads);
 
 		for (Direction dir : Direction.values()) {
-			if (!renderingState.hasPowerConnectedStatus(dir)) {
+			if (!renderingState.hasConnection(dir)) {
 				continue;
 			}
 
@@ -81,12 +83,12 @@ public class FluidPumpBakedModel extends DefaultMachineBakedModel {
 		}
 
 		// If the property is not there, return early.
-		if (!data.has(BlockEntityFluidPump.PUMP_RENDERING_STATE)) {
+		if (!data.has(BlockEntityPump.PUMP_RENDERING_STATE)) {
 			return;
 		}
 
-		FluidPumpRenderingState renderingState = data.get(BlockEntityFluidPump.PUMP_RENDERING_STATE);
-		if (!renderingState.hasPowerConnectedStatus(side)) {
+		FluidPumpRenderingState renderingState = data.get(BlockEntityPump.PUMP_RENDERING_STATE);
+		if (!renderingState.hasConnection(side)) {
 			return;
 		}
 

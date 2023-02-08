@@ -19,7 +19,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.components.control.ConveyorMotionComponent;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
@@ -163,8 +163,8 @@ public class BlockEntityConveyorHopper extends AbstractConveyorBlockEntity {
 	}
 
 	@Override
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return new DefaultSideConfiguration().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return new SideConfigurationPreset().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
 	}
 
 	@Override

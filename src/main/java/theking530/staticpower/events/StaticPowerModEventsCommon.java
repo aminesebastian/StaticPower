@@ -17,6 +17,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.fluid.CapabilityStaticFluid;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
@@ -71,7 +72,7 @@ public class StaticPowerModEventsCommon {
 	public static void registerCustomRegistries(@Nonnull NewRegistryEvent event) {
 		event.create(new RegistryBuilder<CableDestination>().setName(StaticPowerRegistries.CABLE_DESTINATION_REGISTRY).setIDRange(0, Integer.MAX_VALUE - 1));
 		event.create(new RegistryBuilder<CableNetworkModuleType>().setName(StaticPowerRegistries.CABLE_MODULE_REGISTRY).setIDRange(0, Integer.MAX_VALUE - 1));
-		event.create(new RegistryBuilder<ServerCableCapabilityType>().setName(StaticPowerRegistries.CABLE_CAPABILITY_REGISTRY).setIDRange(0, Integer.MAX_VALUE - 1));
+		event.create(new RegistryBuilder<ServerCableCapabilityType<?>>().setName(StaticPowerRegistries.CABLE_CAPABILITY_REGISTRY).setIDRange(0, Integer.MAX_VALUE - 1));
 		event.create(new RegistryBuilder<ProductType<?>>().setName(StaticPowerRegistries.PRODUCT_REGISTRY).setIDRange(0, Integer.MAX_VALUE - 1));
 	}
 
@@ -83,6 +84,7 @@ public class StaticPowerModEventsCommon {
 		CapabilityAttributable.register(event);
 		CapabilityStaticPowerPlayerData.register(event);
 		CapabilityStaticPower.register(event);
+		CapabilityStaticFluid.register(event);
 	}
 
 	@SubscribeEvent

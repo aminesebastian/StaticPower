@@ -92,7 +92,6 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 		// Setup the fluid tank and fluid output servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
 				.setUpgradeInventory(upgradesInventory));
-		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 

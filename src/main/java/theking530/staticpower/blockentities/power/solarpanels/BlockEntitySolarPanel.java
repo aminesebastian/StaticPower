@@ -16,6 +16,7 @@ import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.ProductionTrackingComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
@@ -72,7 +73,7 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 
 		// Set the side config to only output on the bottom and disable on the rest.
 		registerComponent(sideConfiguration = new SideConfigurationComponent("SideConfig", this::sideConfigCallback, this::sideModeFilter,
-				SideConfigurationComponent.ALL_SIDES_NEVER.copy().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output)));
+				SideConfigurationPresets.ALL_SIDES_NEVER.copy().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output)));
 
 		// Set the distribution component.
 		registerComponent(new PowerDistributionComponent("PowerDistribution", powerStorage).setProvideAlternatingCurrent(true));

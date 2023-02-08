@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -71,14 +71,14 @@ public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implemen
 		}
 
 		if (outputMode) {
-			ioSideConfiguration.setDefaultConfiguration(
-					new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Output2).setSide(BlockSide.RIGHT, true, MachineSideMode.Output3)
+			ioSideConfiguration.setPreset(
+					new SideConfigurationPreset().setSide(BlockSide.TOP, true, MachineSideMode.Output2).setSide(BlockSide.RIGHT, true, MachineSideMode.Output3)
 							.setSide(BlockSide.FRONT, true, MachineSideMode.Output4).setSide(BlockSide.BOTTOM, true, MachineSideMode.Output2)
 							.setSide(BlockSide.LEFT, true, MachineSideMode.Output3).setSide(BlockSide.BACK, true, MachineSideMode.Output4),
 					true);
 		} else {
-			ioSideConfiguration.setDefaultConfiguration(
-					new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input2).setSide(BlockSide.RIGHT, true, MachineSideMode.Input2)
+			ioSideConfiguration.setPreset(
+					new SideConfigurationPreset().setSide(BlockSide.TOP, true, MachineSideMode.Input2).setSide(BlockSide.RIGHT, true, MachineSideMode.Input2)
 							.setSide(BlockSide.FRONT, true, MachineSideMode.Input2).setSide(BlockSide.BOTTOM, true, MachineSideMode.Input3)
 							.setSide(BlockSide.LEFT, true, MachineSideMode.Input3).setSide(BlockSide.BACK, true, MachineSideMode.Input3),
 					true);

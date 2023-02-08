@@ -36,15 +36,12 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 	@UpdateSerialize
 	protected long lastUpdateTime;
 	@UpdateSerialize
-	protected boolean canFill;
-	@UpdateSerialize
-	protected boolean canDrain;
-	@UpdateSerialize
 	protected boolean exposeAsCapability;
 	@UpdateSerialize
 	private float upgradeMultiplier;
 	@UpdateSerialize
 	private int defaultCapacity;
+	protected IFluidTankComponentFilter fluidFilter;
 
 	private final SidedFluidHandlerCapabilityWrapper capabilityWrapper;
 	private final Set<MachineSideMode> capabilityExposedModes;
@@ -66,8 +63,6 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 		fluidStorage = new StaticPowerFluidTank(capacity, fluidStackFilter);
 		capabilityWrapper = new SidedFluidHandlerCapabilityWrapper(this);
 		capabilityExposedModes = new HashSet<>();
-		canFill = true;
-		canDrain = true;
 		issueSyncPackets = true;
 		this.lastSyncFluidStack = FluidStack.EMPTY;
 		upgradeMultiplier = 1.0f;
@@ -136,6 +131,11 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 
 	public FluidTankComponent setExposeAsCapability(boolean expose) {
 		this.exposeAsCapability = expose;
+		return this;
+	}
+
+	public FluidTankComponent setFluidTankFilter(IFluidTankComponentFilter filter) {
+		this.fluidFilter = filter;
 		return this;
 	}
 
@@ -212,38 +212,8 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 
 	}
 
-	public boolean getCanFill() {
-		return canFill;
-	}
-
 	public StaticPowerFluidTank getStorage() {
 		return fluidStorage;
-	}
-
-	/**
-	 * Sets this tank's ability to fill. Only affects the tank interface exposed
-	 * through the capability. You can still insert through direct reference.
-	 * 
-	 * @param canFill
-	 */
-	public FluidTankComponent setCanFill(boolean canFill) {
-		this.canFill = canFill;
-		return this;
-	}
-
-	public boolean getCanDrain() {
-		return canDrain;
-	}
-
-	/**
-	 * Sets this tank's ability to drain. Only affects the tank interface exposed
-	 * through the capability. You can drain insert through direct reference.
-	 * 
-	 * @param canDrain
-	 */
-	public FluidTankComponent setCanDrain(boolean canDrain) {
-		this.canDrain = canDrain;
-		return this;
 	}
 
 	public boolean isEmpty() {
@@ -317,6 +287,12 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 
 	@Override
 	public int fill(Direction direction, FluidStack resource, FluidAction action) {
+		if (fluidFilter != null) {
+			if (!fluidFilter.canFill(direction, resource)) {
+				return 0;
+			}
+		}
+
 		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
 		if (sideConfig.isPresent()) {
 			if (!sideConfig.get().getWorldSpaceDirectionConfiguration(direction).isInputMode()) {
@@ -328,6 +304,12 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 
 	@Override
 	public FluidStack drain(Direction direction, FluidStack resource, FluidAction action) {
+		if (fluidFilter != null) {
+			if (!fluidFilter.canDrain(direction, resource)) {
+				return FluidStack.EMPTY;
+			}
+		}
+
 		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
 		if (sideConfig.isPresent()) {
 			if (!sideConfig.get().getWorldSpaceDirectionConfiguration(direction).isOutputMode()) {
@@ -339,6 +321,12 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 
 	@Override
 	public FluidStack drain(Direction direction, int maxDrain, FluidAction action) {
+		if (fluidFilter != null) {
+			if (!fluidFilter.canDrain(direction, maxDrain)) {
+				return FluidStack.EMPTY;
+			}
+		}
+
 		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
 		if (sideConfig.isPresent()) {
 			if (!sideConfig.get().getWorldSpaceDirectionConfiguration(direction).isOutputMode()) {

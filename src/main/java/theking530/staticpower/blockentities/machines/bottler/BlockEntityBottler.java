@@ -91,7 +91,6 @@ public class BlockEntityBottler extends BlockEntityMachine {
 		// Setup the fluid tanks and servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
 				.setUpgradeInventory(upgradesInventory));
-		fluidTankComponent.setCanDrain(false);
 
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));

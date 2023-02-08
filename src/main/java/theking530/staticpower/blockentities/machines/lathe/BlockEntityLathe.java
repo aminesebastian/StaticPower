@@ -80,7 +80,6 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 		// Setup the fluid tank and fluid servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
 				.setUpgradeInventory(upgradesInventory));
-		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Register components to allow the lumbermill to fill buckets in the GUI.

@@ -75,7 +75,6 @@ public class BlockEntityCaster extends BlockEntityMachine implements IRecipeProc
 		// Setup the fluid tanks and servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
 				.setUpgradeInventory(upgradesInventory));
-		fluidTankComponent.setCanDrain(false);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));

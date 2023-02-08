@@ -16,8 +16,8 @@ import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -51,7 +51,7 @@ public class BlockEntityBattery extends BlockEntityMachine {
 	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_creative",
 			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryCreative);
 
-	public static final DefaultSideConfiguration DEFAULT_SIDE_CONFIGURATION = new DefaultSideConfiguration();
+	public static final SideConfigurationPreset DEFAULT_SIDE_CONFIGURATION = new SideConfigurationPreset();
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -72,7 +72,7 @@ public class BlockEntityBattery extends BlockEntityMachine {
 	public BlockEntityBattery(BlockEntityTypeAllocator<BlockEntityBattery> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		enableFaceInteraction();
-		ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION, true);
+		ioSideConfiguration.setPreset(SideConfigurationPresets.DEFAULT_SIDE_CONFIGURATION, true);
 
 		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override

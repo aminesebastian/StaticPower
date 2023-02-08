@@ -28,9 +28,9 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
@@ -210,8 +210,8 @@ public class BlockEntityVacuumChest extends BlockEntityConfigurable implements M
 		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output;
 	}
 
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return SideConfigurationComponent.ALL_SIDES_OUTPUT;
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return SideConfigurationPresets.ALL_SIDES_OUTPUT;
 	}
 
 	/* Update Handling */

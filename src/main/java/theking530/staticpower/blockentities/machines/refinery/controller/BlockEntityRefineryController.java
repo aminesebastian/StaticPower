@@ -27,9 +27,9 @@ import theking530.staticpower.blockentities.components.control.processing.Proces
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
@@ -361,8 +361,8 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	@Override
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return SideConfigurationComponent.ALL_SIDES_NEVER;
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return SideConfigurationPresets.ALL_SIDES_NEVER;
 	}
 
 	@Override

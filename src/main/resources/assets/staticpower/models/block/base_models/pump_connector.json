@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"particle": "staticpower:blocks/machines/pumps/pump_iron",
-		"texture": "staticpower:blocks/machines/pumps/pump_iron"
+		"particle": "pump_iron",
+		"texture": "pump_iron"
 	},
 	"elements": [
 		{

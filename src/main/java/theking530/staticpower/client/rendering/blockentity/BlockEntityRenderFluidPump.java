@@ -15,19 +15,19 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.blockentities.machines.fluid_pump.BlockEntityFluidPump;
+import theking530.staticpower.blockentities.machines.pump.BlockEntityPump;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
-public class BlockEntityRenderFluidPump extends StaticPowerBlockEntitySpecialRenderer<BlockEntityFluidPump> {
+public class BlockEntityRenderFluidPump extends StaticPowerBlockEntitySpecialRenderer<BlockEntityPump> {
 
 	public BlockEntityRenderFluidPump(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderTileEntityBase(BlockEntityFluidPump tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+	protected void renderTileEntityBase(BlockEntityPump tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.FluidPump");
 		// Render the contained fluid if it exists.

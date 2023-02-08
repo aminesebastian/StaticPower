@@ -107,7 +107,6 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 		// Setup the fluid tanks and servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
 				.setUpgradeInventory(upgradesInventory));
-		fluidTankComponent.setCanDrain(false);
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 
 		// Create the fluid container component.

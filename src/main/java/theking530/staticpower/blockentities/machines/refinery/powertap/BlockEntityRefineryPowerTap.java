@@ -16,9 +16,10 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -45,8 +46,8 @@ public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return SideConfigurationComponent.ALL_SIDES_INPUT;
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return SideConfigurationPresets.ALL_SIDES_INPUT;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-06T14:36:42.5658827	Item Models: staticpower
+// 1.19.2	2023-02-07T19:32:14.3206837	Item Models: staticpower
 6027aa6d17b10a748c750596a1e41617fddb06da assets/staticpower/models/item/alloy_furnace.json
 a719b3e89ea4ecd25522280007f7e8b66eacafc0 assets/staticpower/models/item/automatic_placer.json
 32a59e36d1d4e959c6c1f1436a7c1d1efed2bf87 assets/staticpower/models/item/backpack.json
@@ -353,7 +353,6 @@ b487c80c14802ab2bf5b057b77e8cccf799de0a5 assets/staticpower/models/item/flour_wh
 7241864bd0d53b196f4f38b048993573e97747bc assets/staticpower/models/item/fluid_capsule_iron.json
 fed5dcae6e402dedc4a6abd0bdd911502d31deae assets/staticpower/models/item/fluid_capsule_lumum.json
 c7dc3341f8c3f27f44629f75ba6c08ae925e4669 assets/staticpower/models/item/fluid_capsule_static.json
-a3509dbc1c0579aa4f4078b6f30437ff237b7b83 assets/staticpower/models/item/fluid_pump.json
 d1c383651055e39162e9026cdb7d21f69a9cca0e assets/staticpower/models/item/fruit_depleted.json
 88c142ccd15092a06f0502fbd66973ab8b2f3935 assets/staticpower/models/item/fruit_energized.json
 de466706a5eb752fed6cfea369ea8b51eca67aa1 assets/staticpower/models/item/fruit_lumum.json

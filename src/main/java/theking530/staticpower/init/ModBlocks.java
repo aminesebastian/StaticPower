@@ -28,7 +28,6 @@ import theking530.staticpower.blockentities.machines.cropfarmer.BlockBasicFarmer
 import theking530.staticpower.blockentities.machines.crucible.BlockCrucible;
 import theking530.staticpower.blockentities.machines.enchanter.BlockEnchanter;
 import theking530.staticpower.blockentities.machines.fermenter.BlockFermenter;
-import theking530.staticpower.blockentities.machines.fluid_pump.BlockFluidPump;
 import theking530.staticpower.blockentities.machines.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.blockentities.machines.former.BlockFormer;
 import theking530.staticpower.blockentities.machines.fusionfurnace.BlockFusionFurnace;
@@ -115,6 +114,7 @@ import theking530.staticpower.cables.power.BlockPowerCable;
 import theking530.staticpower.cables.redstone.basic.BlockRedstoneCable;
 import theking530.staticpower.cables.redstone.bundled.BlockBundledRedstoneCable;
 import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
+import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class ModBlocks {
@@ -269,8 +269,6 @@ public class ModBlocks {
 	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockLumum = registerBlock("machine_block_lumum",
 			() -> new StaticPowerCutoutBlock(Properties.copy(Blocks.IRON_DOOR)));
 
-	public static final RegistryObject<BlockFluidPump> FluidPump = registerBlock("fluid_pump", () -> new BlockFluidPump(StaticPowerTiers.BASIC));
-
 	public static final RegistryObject<BlockTank> IronTank = registerBlock("tank_iron", () -> new BlockTank(StaticPowerTiers.IRON));
 	public static final RegistryObject<BlockTank> BasicTank = registerBlock("tank_basic", () -> new BlockTank(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BlockTank> AdvancedTank = registerBlock("tank_advanced", () -> new BlockTank(StaticPowerTiers.ADVANCED));
@@ -280,12 +278,18 @@ public class ModBlocks {
 	public static final RegistryObject<BlockTank> CreativeTank = registerBlock("tank_creative", () -> new BlockTank(StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<PumpTube> PumpTube = registerBlock("pump_tube", () -> new PumpTube());
-	public static final RegistryObject<BlockPump> BasicPump = registerBlock("pump_basic", () -> new BlockPump(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockPump> AdvancedPump = registerBlock("pump_advanced", () -> new BlockPump(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockPump> StaticPump = registerBlock("pump_static", () -> new BlockPump(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockPump> EnergizedPump = registerBlock("pump_energized", () -> new BlockPump(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockPump> LumumPump = registerBlock("pump_lumum", () -> new BlockPump(StaticPowerTiers.LUMUM));
-	public static final RegistryObject<BlockPump> CreativePump = registerBlock("pump_creative", () -> new BlockPump(StaticPowerTiers.CREATIVE));
+	public static final RegistryObject<BlockPump> BasicPump = registerBlock("pump_basic",
+			() -> new BlockPump(StaticPowerTiers.BASIC, StaticPowerAdditionalModels.PUMP_CONNECTOR_BASIC));
+	public static final RegistryObject<BlockPump> AdvancedPump = registerBlock("pump_advanced",
+			() -> new BlockPump(StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.PUMP_CONNECTOR_ADVANCED));
+	public static final RegistryObject<BlockPump> StaticPump = registerBlock("pump_static",
+			() -> new BlockPump(StaticPowerTiers.STATIC, StaticPowerAdditionalModels.PUMP_CONNECTOR_STATIC));
+	public static final RegistryObject<BlockPump> EnergizedPump = registerBlock("pump_energized",
+			() -> new BlockPump(StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.PUMP_CONNECTOR_ENERGIZED));
+	public static final RegistryObject<BlockPump> LumumPump = registerBlock("pump_lumum",
+			() -> new BlockPump(StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.PUMP_CONNECTOR_LUMUM));
+	public static final RegistryObject<BlockPump> CreativePump = registerBlock("pump_creative",
+			() -> new BlockPump(StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.PUMP_CONNECTOR_CREATIVE));
 
 	public static final RegistryObject<BlockVacuumChest> VacuumChest = registerBlock("chest_vacuum", () -> new BlockVacuumChest());
 	public static final RegistryObject<BlockStaticChest> BasicChest = registerBlock("chest_basic", () -> new BlockStaticChest(StaticPowerTiers.BASIC));

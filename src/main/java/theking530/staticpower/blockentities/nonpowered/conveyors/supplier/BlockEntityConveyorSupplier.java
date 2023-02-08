@@ -16,7 +16,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.control.ConveyorMotionComponent;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -131,8 +131,8 @@ public class BlockEntityConveyorSupplier extends AbstractConveyorBlockEntity {
 		}
 	}
 
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return new DefaultSideConfiguration() {
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return new SideConfigurationPreset() {
 			@Override
 			public boolean getSideDefaultEnabled(BlockSide side) {
 				if (side == BlockSide.FRONT) {

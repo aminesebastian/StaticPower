@@ -1,20 +1,16 @@
 package theking530.staticpower.blockentities.components.control.sideconfiguration;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.core.BlockPos;
+import com.google.common.base.Joiner;
+
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
-import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -29,107 +25,20 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	public enum SideIncrementDirection {
 		FORWARD, BACKWARDS;
 	}
-	
-	private static final ModelProperty<MachineSideMode[]> SIDE_CONFIG = new ModelProperty<>();
 
-	public static final DefaultSideConfiguration DEFAULT_SIDE_CONFIGURATION = new DefaultSideConfiguration();
-	public static final DefaultSideConfiguration ALL_SIDES_NEVER = new DefaultSideConfiguration();
-	public static final DefaultSideConfiguration ALL_SIDES_OUTPUT = new DefaultSideConfiguration();
-	public static final DefaultSideConfiguration ALL_SIDES_INPUT = new DefaultSideConfiguration();
-	public static final DefaultSideConfiguration TOP_SIDE_ONLY_OUTPUT = new DefaultSideConfiguration();
-	public static final DefaultSideConfiguration FRONT_BACK_INPUT_OUTPUT = new DefaultSideConfiguration();
-	public static final DefaultSideConfiguration BACK_INPUT_ONLY = new DefaultSideConfiguration();
-	public static final DefaultSideConfiguration BACK_OUTPUT_ONLY = new DefaultSideConfiguration();
+	public static final ModelProperty<MachineSideMode[]> SIDE_CONFIG = new ModelProperty<>();
 
-	static {
-		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.TOP, true, MachineSideMode.Input);
-		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
-		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.FRONT, true, MachineSideMode.Input);
-		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.BACK, true, MachineSideMode.Input);
-		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.LEFT, true, MachineSideMode.Input);
-		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.RIGHT, true, MachineSideMode.Input);
+	private Map<BlockSide, SideConfiguration> configuration;
+	private SideConfigurationPreset configurationPreset;
 
-		ALL_SIDES_NEVER.setSide(BlockSide.TOP, false, MachineSideMode.Never);
-		ALL_SIDES_NEVER.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
-		ALL_SIDES_NEVER.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
-		ALL_SIDES_NEVER.setSide(BlockSide.BACK, false, MachineSideMode.Never);
-		ALL_SIDES_NEVER.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
-		ALL_SIDES_NEVER.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
-
-		ALL_SIDES_OUTPUT.setSide(BlockSide.TOP, true, MachineSideMode.Output);
-		ALL_SIDES_OUTPUT.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
-		ALL_SIDES_OUTPUT.setSide(BlockSide.FRONT, true, MachineSideMode.Output);
-		ALL_SIDES_OUTPUT.setSide(BlockSide.BACK, true, MachineSideMode.Output);
-		ALL_SIDES_OUTPUT.setSide(BlockSide.LEFT, true, MachineSideMode.Output);
-		ALL_SIDES_OUTPUT.setSide(BlockSide.RIGHT, true, MachineSideMode.Output);
-
-		ALL_SIDES_INPUT.setSide(BlockSide.TOP, true, MachineSideMode.Input);
-		ALL_SIDES_INPUT.setSide(BlockSide.BOTTOM, true, MachineSideMode.Input);
-		ALL_SIDES_INPUT.setSide(BlockSide.FRONT, true, MachineSideMode.Input);
-		ALL_SIDES_INPUT.setSide(BlockSide.BACK, true, MachineSideMode.Input);
-		ALL_SIDES_INPUT.setSide(BlockSide.LEFT, true, MachineSideMode.Input);
-		ALL_SIDES_INPUT.setSide(BlockSide.RIGHT, true, MachineSideMode.Input);
-
-		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.TOP, true, MachineSideMode.Output);
-		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
-		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
-		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.BACK, false, MachineSideMode.Never);
-		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
-		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
-
-		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.TOP, false, MachineSideMode.Never);
-		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
-		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.FRONT, true, MachineSideMode.Input);
-		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.BACK, true, MachineSideMode.Output);
-		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
-		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
-
-		BACK_INPUT_ONLY.setSide(BlockSide.TOP, false, MachineSideMode.Never);
-		BACK_INPUT_ONLY.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
-		BACK_INPUT_ONLY.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
-		BACK_INPUT_ONLY.setSide(BlockSide.BACK, true, MachineSideMode.Input);
-		BACK_INPUT_ONLY.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
-		BACK_INPUT_ONLY.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
-
-		BACK_OUTPUT_ONLY.setSide(BlockSide.TOP, false, MachineSideMode.Never);
-		BACK_OUTPUT_ONLY.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
-		BACK_OUTPUT_ONLY.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
-		BACK_OUTPUT_ONLY.setSide(BlockSide.BACK, true, MachineSideMode.Output);
-		BACK_OUTPUT_ONLY.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
-		BACK_OUTPUT_ONLY.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
-	}
-
-	private MachineSideMode[] configuration;
-	private boolean[] enabledState;
-	private DefaultSideConfiguration defaultConfiguration;
-	private final BiConsumer<BlockSide, MachineSideMode> callback;
-	private final BiPredicate<BlockSide, MachineSideMode> sideModeFilter;
-
-	public SideConfigurationComponent(String name, BiConsumer<BlockSide, MachineSideMode> onConfigurationChangedCallback, BiPredicate<BlockSide, MachineSideMode> sideModeFilter) {
-		this(name, onConfigurationChangedCallback, sideModeFilter, DEFAULT_SIDE_CONFIGURATION);
-	}
-
-	public SideConfigurationComponent(String name, BiConsumer<BlockSide, MachineSideMode> onConfigurationChangedCallback, BiPredicate<BlockSide, MachineSideMode> sideModeFilter,
-			DefaultSideConfiguration defaultConfiguration) {
+	public SideConfigurationComponent(String name, SideConfigurationPreset preset) {
 		super(name);
-		this.callback = onConfigurationChangedCallback;
-		this.sideModeFilter = sideModeFilter;
-		this.defaultConfiguration = defaultConfiguration;
-		configuration = new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never,
-				MachineSideMode.Never };
-		enabledState = new boolean[] { false, false, false, false, false, false };
-		setToDefault(true);
-	}
+		this.configurationPreset = preset;
 
-	@Override
-	public void onRegistered(BlockEntityBase owner) {
-		super.onRegistered(owner);
-
-	}
-
-	@Override
-	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
-		super.onOwningBlockEntityLoaded(level, pos, state);
+		configuration = new HashMap<>();
+		for (BlockSide side : BlockSide.values()) {
+			configuration.put(side, new SideConfiguration(side, configurationPreset.getSideDefaultMode(side), configurationPreset.getSideDefaultEnabled(side)));
+		}
 	}
 
 	/**
@@ -145,7 +54,7 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 		Direction facing = getTileEntity().getFacingDirection();
 		for (Direction dir : Direction.values()) {
 			BlockSide side = SideConfigurationUtilities.getBlockSide(dir, facing);
-			output[dir.ordinal()] = configuration[side.ordinal()];
+			output[dir.ordinal()] = configuration.get(side).getMode();
 		}
 
 		return output;
@@ -163,7 +72,7 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	}
 
 	public MachineSideMode getBlockSideConfiguration(BlockSide side) {
-		return configuration[side.ordinal()];
+		return configuration.get(side).getMode();
 	}
 
 	public SideConfigurationComponent setWorldSpaceEnabledState(@Nonnull Direction direction, boolean enabled) {
@@ -178,12 +87,12 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	}
 
 	public SideConfigurationComponent setBlockSideEnabledState(@Nonnull BlockSide side, boolean enabled) {
-		enabledState[side.ordinal()] = enabled;
+		configuration.get(side).setEnabled(enabled);
 		return this;
 	}
 
 	public boolean getBlockSideEnabledState(@Nonnull BlockSide side) {
-		return enabledState[side.ordinal()];
+		return configuration.get(side).isEnabled();
 	}
 
 	/**
@@ -204,21 +113,20 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	 * @param newMode The new mode for that side.
 	 */
 	public void setBlockSpaceConfiguration(@Nonnull BlockSide side, @Nonnull MachineSideMode newMode) {
-		configuration[side.ordinal()] = newMode;
+		if (!isValidConfiguration(side, newMode)) {
+			return;
+		}
+
+		configuration.get(side).setMode(newMode);
 		getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
-		callback.accept(side, newMode);
+		sideChanged(side);
 	}
 
-	public void setDefaultConfiguration(DefaultSideConfiguration configuration, boolean setToDefault) {
-		defaultConfiguration = configuration;
+	public void setPreset(SideConfigurationPreset configuration, boolean setToDefault) {
+		configurationPreset = configuration;
 		if (setToDefault) {
 			setToDefault();
 		}
-
-	}
-
-	public void setDefaultConfiguration(DefaultSideConfiguration configuration) {
-		setDefaultConfiguration(configuration, false);
 	}
 
 	/**
@@ -235,7 +143,7 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 		int currentModeIndex = getWorldSpaceDirectionConfiguration(side).ordinal();
 		// Capture the original side mode.
 		MachineSideMode originalMode = getWorldSpaceDirectionConfiguration(side);
-		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(side, getTileEntity().getFacingDirection());
+		BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, getTileEntity().getFacingDirection());
 
 		MachineSideMode newMode;
 		// Loop until we hit an acceptable side mode.
@@ -252,13 +160,13 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 
 			// Set the new mode.
 			newMode = MachineSideMode.values()[currentModeIndex];
-			configuration[worldSpaceSide.ordinal()] = newMode;
-		} while (!sideModeFilter.test(worldSpaceSide, newMode) && newMode != originalMode);
+			configuration.get(blockSide).setMode(newMode);
+		} while (!isValidConfiguration(blockSide, newMode) && newMode != originalMode);
 
 		getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 
 		// Finally, raise the changed callback.
-		callback.accept(worldSpaceSide, newMode);
+		sideChanged(blockSide);
 
 		return newMode;
 	}
@@ -274,10 +182,10 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	private void setToDefault(boolean suppressEvent) {
 		// Get the block state and update the configuration.
 		for (BlockSide side : BlockSide.values()) {
-			configuration[side.ordinal()] = defaultConfiguration.getSideDefaultMode(side);
-			enabledState[side.ordinal()] = defaultConfiguration.getSideDefaultEnabled(side);
+			configuration.get(side).setMode(configurationPreset.getSideDefaultMode(side));
+			configuration.get(side).setEnabled(configurationPreset.getSideDefaultEnabled(side));
 			if (!suppressEvent) {
-				callback.accept(side, configuration[side.ordinal()]);
+				sideChanged(side);
 			}
 		}
 
@@ -297,8 +205,8 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	 */
 	public int getCountOfSidesWithMode(MachineSideMode mode) {
 		int count = 0;
-		for (MachineSideMode sideMode : configuration) {
-			if (sideMode == mode) {
+		for (SideConfiguration config : configuration.values()) {
+			if (config.getMode() == mode) {
 				count++;
 			}
 		}
@@ -312,11 +220,8 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	@Override
 	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
-		for (int i = 0; i < 6; i++) {
-			nbt.putInt("mode" + i, configuration[i].ordinal());
-		}
-		for (int i = 0; i < 6; i++) {
-			nbt.putBoolean("enabled" + i, enabledState[i]);
+		for (BlockSide side : BlockSide.values()) {
+			nbt.put(side.toString(), configuration.get(side).serialize());
 		}
 		return nbt;
 	}
@@ -324,16 +229,23 @@ public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	@Override
 	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
-		for (int i = 0; i < 6; i++) {
-			configuration[i] = MachineSideMode.values()[nbt.getInt("mode" + i)];
-		}
-		for (int i = 0; i < 6; i++) {
-			enabledState[i] = nbt.getBoolean("enabled" + i);
+		for (BlockSide side : BlockSide.values()) {
+			configuration.get(side).deserialize(nbt.getCompound(side.toString()));
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "SideConfiguration [configuration=" + Arrays.toString(configuration) + ", " + "enabledState=" + Arrays.toString(enabledState) + "]";
+		return "SideConfiguration [configuration=" + Joiner.on(",").withKeyValueSeparator("=").join(configuration) + "]";
+	}
+
+	public boolean isValidConfiguration(BlockSide side, MachineSideMode mode) {
+		return configurationPreset.validate(side, new SideConfiguration(side, mode, getBlockSideEnabledState(side)));
+	}
+
+	private void sideChanged(BlockSide side) {
+		if (configurationPreset != null) {
+			configurationPreset.modifyAfterChange(this);
+		}
 	}
 }

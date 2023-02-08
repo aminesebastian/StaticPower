@@ -65,12 +65,10 @@ public class BlockEntityEvaporator extends BlockEntityConfigurable {
 		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", tierObject.defaultTankCapacity.get(), (fluidStack) -> {
 			return isValidInput(fluidStack, true);
 		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
-		inputTankComponent.setCanDrain(false);
 		inputTankComponent.setAutoSyncPacketsEnabled(true);
 
 		registerComponent(outputTankComponent = new FluidTankComponent("OutputFluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
 				.setUpgradeInventory(upgradesInventory));
-		outputTankComponent.setCanFill(false);
 
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent, MachineSideMode.Input));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent, MachineSideMode.Output));

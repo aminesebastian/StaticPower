@@ -16,7 +16,7 @@ import theking530.staticpower.blockentities.components.control.processing.Proces
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
@@ -84,7 +84,6 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 		// Setup the fluid tank and fluid servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
 				.setUpgradeInventory(upgradesInventory));
-		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Register components to allow the lumbermill to fill buckets in the GUI.
@@ -135,7 +134,7 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
 		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.BACK, true, MachineSideMode.Output2).setSide(BlockSide.RIGHT, true, MachineSideMode.Output3);
 	}
 

@@ -170,8 +170,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		batteryBlock(ModBlocks.BatteryLumum.get(), "lumum");
 		batteryBlock(ModBlocks.BatteryCreative.get(), "creative");
 
-		fluidPump(ModBlocks.FluidPump.get());
-
 		machine(ModBlocks.ChargingStation.get(), "energized", "machines/charging_station");
 		machine(ModBlocks.PoweredFurnace.get(), "basic", "machines/powered_furnace");
 		machine(ModBlocks.PoweredGrinder.get(), "basic", "machines/powered_grinder");
@@ -481,17 +479,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		});
 	}
 
-	public void fluidPump(Block block) {
-		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/fluid_pump"));
-
-		getVariantBuilder(block).forAllStates(state -> {
-			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(model);
-			Direction facing = state.getValue(BlockStateProperties.FACING);
-			applySixSidedRotationFromnNorthBearing(builder, facing);
-			return builder.build();
-		});
-	}
-
 	public void tankBlock(Block block, String textureSet) {
 		ResourceLocation tank = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/tanks/tank_" + textureSet);
 		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/tank_block")).texture("tank", tank)
@@ -503,9 +490,15 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 	public void pumpBlock(Block block, String textureSet) {
 		ResourceLocation pump = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/pumps/pump_" + textureSet);
-		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/pump_block")).texture("pump", pump)
+		ModelFile model = models().withExistingParent(name(block), new ResourceLocation(StaticPower.MOD_ID, "block/base_models/pump_block")).texture("texture", pump)
 				.texture("particle", pump);
-		simpleBlock(block, model);
+
+		getVariantBuilder(block).forAllStates(state -> {
+			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(model);
+			Direction facing = state.getValue(BlockStateProperties.FACING);
+			applySixSidedRotationFromnNorthBearing(builder, facing);
+			return builder.build();
+		});
 	}
 
 	public void chest(Block block, String textureSet) {

@@ -14,18 +14,18 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.blockentities.machines.pump.BlockEntityPump;
+import theking530.staticpower.blockentities.machines.oldpump.OldBlockEntityPump;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
-public class BlockEntityRenderPump extends StaticPowerBlockEntitySpecialRenderer<BlockEntityPump> {
+public class BlockEntityRenderPump extends StaticPowerBlockEntitySpecialRenderer<OldBlockEntityPump> {
 	public BlockEntityRenderPump(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderTileEntityBase(BlockEntityPump tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+	protected void renderTileEntityBase(OldBlockEntityPump tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Pump");
 		if (tileEntity.fluidTankComponent.getFluidAmount() > 0) {

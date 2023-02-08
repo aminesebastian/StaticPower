@@ -238,8 +238,11 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 		cable.setHeadPressure(incomingPressure);
 
+		if (incomingPressure <= 0) {
+			return 0;
+		}
+		
 		int filled = 0;
-
 		Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
 
 		// Only fill ourselves first if we don't have a cable below us.

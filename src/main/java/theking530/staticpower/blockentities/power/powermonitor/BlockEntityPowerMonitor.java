@@ -18,7 +18,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
@@ -154,7 +154,7 @@ public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowe
 		return nbt;
 	}
 
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
 		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.TOP, false, MachineSideMode.Never).setSide(BlockSide.BOTTOM, false, MachineSideMode.Never)
 				.setSide(BlockSide.BACK, false, MachineSideMode.Never);
 	}

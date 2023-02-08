@@ -76,7 +76,6 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
 		fluidTankComponent.setUpgradeInventory(upgradesInventory);
-		fluidTankComponent.setCanDrain(false);
 
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 

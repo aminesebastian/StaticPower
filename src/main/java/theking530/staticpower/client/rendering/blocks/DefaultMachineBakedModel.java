@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -38,7 +37,6 @@ import theking530.staticpower.client.rendering.utilities.SideModeQuadGenerator;
 @OnlyIn(Dist.CLIENT)
 public class DefaultMachineBakedModel extends AbstractBakedModel {
 	private static final Logger LOGGER = LogManager.getLogger(DefaultMachineBakedModel.class);
-	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
 	private final HashMap<Direction, Boolean> sideConfigurationRenderControl;
 	private final HashMap<BlockSide, Vector3f> sideOffsets;
 	private final boolean useMiniSideModeQuads;
@@ -82,29 +80,21 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 	@Override
 	@Nonnull
 	public ModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull ModelData tileData) {
-		Optional<MachineSideMode[]> configurations = getSideConfigurations(world, pos);
-		ModelData.Builder modelDataMap = tileData.derive().with(SIDE_CONFIG, configurations);
-		return modelDataMap.build();
+		return tileData;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected List<BakedQuad> getBakedQuadsFromModelData(@Nullable BlockState state, Direction side, @Nonnull RandomSource rand, @Nonnull ModelData data, RenderType renderLayer) {
-		// Check if the data has the SIDE_CONFIG property. If not, something has gone
-		// wrong.
-		if (!data.has(SIDE_CONFIG)) {
-			conditionallyLogError("Encountered invalid side configuration data when attempting to bake quads for machine.");
-			return BaseModel.getQuads(state, side, rand);
-		}
-		// Attempt to get the side configuration.
-		Optional<MachineSideMode[]> sideConfigurations = data.get(SIDE_CONFIG);
-
 		// If we didn't get a side configuration, skip this block and just return the
 		// defaults.
-		if (!sideConfigurations.isPresent()) {
+		if (!data.has(SideConfigurationComponent.SIDE_CONFIG)) {
 			conditionallyLogError("Encountered no side configuration data when attempting to bake quads for machine.");
 			return BaseModel.getQuads(state, side, rand);
 		}
+
+		// Attempt to get the side configuration.
+		MachineSideMode[] sideConfigurations = data.get(SideConfigurationComponent.SIDE_CONFIG);
 
 		// Capture the default quads and retexture the sides to match the desired side
 		// textures based on the configuration.
@@ -115,7 +105,7 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		// Get the block atlas texture.
 		try {
 			if (side != null) {
-				MachineSideMode sideMode = sideConfigurations.get()[side.ordinal()];
+				MachineSideMode sideMode = sideConfigurations[side.ordinal()];
 				Direction machineFacing = state.hasProperty(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING)
 						? state.getValue(StaticPowerRotateableBlockEntityBlock.HORIZONTAL_FACING)
 						: state.getValue(StaticPowerRotateableBlockEntityBlock.FACING);
@@ -136,13 +126,6 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		} else {
 			SideModeQuadGenerator.renderSideModeQuad(state, newQuads, side, sideMode, sideOffsets.containsKey(blockSide) ? sideOffsets.get(blockSide) : null);
 		}
-	}
-
-	protected ModelData getEmptyModelData() {
-		ModelData.Builder builder = ModelData.builder();
-		builder.with(SIDE_CONFIG, Optional.empty());
-		ModelData modelDataMap = builder.build();
-		return modelDataMap;
 	}
 
 	protected Optional<MachineSideMode[]> getSideConfigurations(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos blockPos) {

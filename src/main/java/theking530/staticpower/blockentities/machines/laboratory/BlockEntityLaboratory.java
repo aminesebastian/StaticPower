@@ -21,7 +21,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -222,7 +222,7 @@ public class BlockEntityLaboratory extends BlockEntityMachine {
 	}
 
 	@Override
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
 		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.LEFT, true, MachineSideMode.Input).setSide(BlockSide.BACK, true, MachineSideMode.Input)
 				.setSide(BlockSide.RIGHT, true, MachineSideMode.Input).setSide(BlockSide.TOP, true, MachineSideMode.Input).setSide(BlockSide.BOTTOM, true, MachineSideMode.Input);
 	}

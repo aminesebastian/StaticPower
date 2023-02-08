@@ -60,7 +60,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.BASIC);
 
 		registerComponent(
-				internalTank = new FluidTankComponent("InputFluidTank", 1000).setCanFill(true).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
+				internalTank = new FluidTankComponent("InputFluidTank", 1000).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
 
 		// Only allow this to be heated by other sources.
 		registerComponent(

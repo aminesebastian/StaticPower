@@ -185,7 +185,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 				return module.canOutputExternalPower();
 			}
 		}
-		return false;
+		return true;
 	}
 
 	@Override

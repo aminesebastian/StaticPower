@@ -21,6 +21,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import theking530.api.fluid.CapabilityStaticFluid;
+import theking530.api.fluid.IStaticPowerFluidHandler;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.fluid.ISidedFluidHandler;
@@ -34,7 +36,7 @@ import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class FluidCableComponent extends AbstractCableProviderComponent implements ISidedFluidHandler {
+public class FluidCableComponent extends AbstractCableProviderComponent implements ISidedFluidHandler, IStaticPowerFluidHandler {
 	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
 	// This is intentionally high, we only want to force update if the difference is
 	// VAST, otherwise, let the MAX_TICKS driven update do the work.
@@ -224,13 +226,6 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		types.add(ModCableDestinations.Fluid.get());
 	}
 
-	public float getHeadPressure() {
-		if (isClientSide()) {
-			return clientPressure;
-		}
-		return getFluidCapability().get().getHeadPressure();
-	}
-
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		// Only provide the fluid capability if we are not disabled on that side.
@@ -243,6 +238,8 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			if (!disabled) {
 				return LazyOptional.of(() -> capabilityWrapper.get(side)).cast();
 			}
+		} else if (cap == CapabilityStaticFluid.STATIC_FLUID_CAPABILITY) {
+			return LazyOptional.of(() -> this).cast();
 		}
 		return LazyOptional.empty();
 
@@ -329,6 +326,27 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
 		return 0;
+	}
+
+	@Override
+	public int fill(FluidStack resource, float pressure, FluidAction action) {
+		if (!getTileEntity().getLevel().isClientSide) {
+			FluidNetworkModule module = getFluidModule().orElse(null);
+			if (module != null) {
+				return module.fill(getPos(), resource, pressure, action);
+			}
+			return 0;
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	public float getHeadPressure() {
+		if (isClientSide()) {
+			return clientPressure;
+		}
+		return getFluidCapability().get().getHeadPressure();
 	}
 
 	@Override

@@ -12,8 +12,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.staticpower.blocks.StaticPowerBlock;
 
 public class PumpTube extends StaticPowerBlock {
-	protected static final VoxelShape SHAPE = Shapes.join(Block.box(4.5, 0, 4.5, 11.5, 16, 11.5),
-			Shapes.join(Block.box(3.5, 0, 3.5, 12.5, 4, 12.5), Block.box(3.5, 12, 3.5, 12.5, 16, 12.5), BooleanOp.OR), BooleanOp.OR);
+	protected static final VoxelShape SHAPE;
+	static {
+		VoxelShape shape = Shapes.join(Block.box(6, 0, 6, 10, 16, 10), Shapes.join(Block.box(5, 0, 5, 11, 3, 11), Block.box(5, 13, 5, 11, 16, 11), BooleanOp.OR), BooleanOp.OR);
+		for (int i = 0; i < 5; i++) {
+			double start = 3.5 + (i * 2);
+			shape = Shapes.join(Block.box(5.5, start, 5.5, 10.5, start + 1, 10.5), shape, BooleanOp.OR);
+		}
+		SHAPE = shape;
+	}
 
 	public PumpTube() {
 		super(Material.METAL);
