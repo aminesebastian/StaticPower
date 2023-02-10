@@ -27,11 +27,12 @@ import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.AllSidesOutput;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
@@ -49,7 +50,7 @@ import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityVacuumChest extends BlockEntityConfigurable implements MenuProvider {
+public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvider {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityVacuumChest> TYPE = new BlockEntityTypeAllocator<>("vacuum_chest",
 			(type, pos, state) -> new BlockEntityVacuumChest(pos, state), ModBlocks.VacuumChest);
@@ -64,6 +65,8 @@ public class BlockEntityVacuumChest extends BlockEntityConfigurable implements M
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidTankComponent fluidTankComponent;
 	public final FluidOutputServoComponent fluidOutputServo;
+	public final SideConfigurationComponent ioSideConfiguration;
+	public final RedstoneControlComponent redstoneControlComponent;
 
 	@UpdateSerialize
 	protected float vacuumDiamater;
@@ -74,7 +77,6 @@ public class BlockEntityVacuumChest extends BlockEntityConfigurable implements M
 
 	public BlockEntityVacuumChest(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		this.enableFaceInteraction();
 		vacuumDiamater = DEFAULT_RANGE;
 		shouldTeleport = false;
 
@@ -86,6 +88,9 @@ public class BlockEntityVacuumChest extends BlockEntityConfigurable implements M
 				.setUpgradeInventory(upgradesInventory));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 		registerComponent(fluidOutputServo = new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
+
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AllSidesOutput.INSTANCE));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 
 		registerComponent(new OutputServoComponent("OutputServo", 2, inventory));
 	}
@@ -204,14 +209,6 @@ public class BlockEntityVacuumChest extends BlockEntityConfigurable implements M
 
 	public boolean showTank() {
 		return shouldVacuumExperience;
-	}
-
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output;
-	}
-
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return SideConfigurationPresets.ALL_SIDES_OUTPUT;
 	}
 
 	/* Update Handling */

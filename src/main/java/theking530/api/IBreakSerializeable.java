@@ -19,7 +19,7 @@ public interface IBreakSerializeable {
 
 	public void deserializeOnPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack);
 
-	public boolean shouldSerializeWhenBroken();
+	public boolean shouldSerializeWhenBroken(Player player);
 
 	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack);
 
@@ -57,7 +57,7 @@ public interface IBreakSerializeable {
 			// Get a handle to the serializeable tile entity.
 			IBreakSerializeable tempSerializeable = (IBreakSerializeable) world.getBlockEntity(pos);
 
-			if (tempSerializeable.shouldSerializeWhenBroken()) {
+			if (tempSerializeable.shouldSerializeWhenBroken(player)) {
 				// Create a new nbt to hold our serializeable data.
 				CompoundTag serializeabltNbt = new CompoundTag();
 

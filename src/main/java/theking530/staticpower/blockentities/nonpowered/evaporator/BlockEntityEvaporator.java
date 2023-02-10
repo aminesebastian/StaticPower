@@ -14,10 +14,14 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachineNoFacePreset;
 import theking530.staticpower.blockentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
@@ -30,7 +34,7 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
 import theking530.staticpower.init.ModBlocks;
 
-public class BlockEntityEvaporator extends BlockEntityConfigurable {
+public class BlockEntityEvaporator extends BlockEntityBase {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityEvaporator> TYPE = new BlockEntityTypeAllocator<BlockEntityEvaporator>("evaporator",
 			(type, pos, state) -> new BlockEntityEvaporator(pos, state), ModBlocks.Evaporator);
@@ -50,12 +54,16 @@ public class BlockEntityEvaporator extends BlockEntityConfigurable {
 	public final FluidTankComponent inputTankComponent;
 	public final FluidTankComponent outputTankComponent;
 	public final HeatStorageComponent heatStorage;
+	public final SideConfigurationComponent ioSideConfiguration;
+	public final RedstoneControlComponent redstoneControlComponent;
 
 	public BlockEntityEvaporator(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
 		// Get the tier.
 		StaticPowerTier tierObject = getTierObject();
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachineNoFacePreset.INSTANCE));
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess,

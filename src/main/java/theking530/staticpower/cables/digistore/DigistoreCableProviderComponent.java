@@ -78,7 +78,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			this.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
-					getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.syncDataOnly(true), false);
+					getBlockEntity().addUpdateRequest(BlockEntityUpdateRequest.syncDataOnly(true), false);
 				}
 
 				// Update the on/off state of the block.
@@ -159,7 +159,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		} catch (Exception e) {
 			StaticPower.LOGGER.error(
 					String.format("An error occured when attempting to update the power usage of a digistore cable provider owned by a tile entity at location: %1$s of type: %2$s",
-							getPos(), getTileEntity().getClass()));
+							getPos(), getBlockEntity().getClass()));
 		}
 	}
 

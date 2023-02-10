@@ -38,6 +38,10 @@ public class SideConfiguration {
 		this.enabled = enabled;
 	}
 
+	public SideConfiguration copy() {
+		return new SideConfiguration(side, mode, enabled);
+	}
+
 	public void deserialize(CompoundTag tag) {
 		side = BlockSide.values()[tag.getByte("side")];
 		mode = MachineSideMode.values()[tag.getByte("mode")];

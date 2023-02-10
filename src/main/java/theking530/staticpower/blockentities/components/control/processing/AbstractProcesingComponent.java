@@ -107,11 +107,11 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	public void onRegistered(BlockEntityBase owner) {
 		super.onRegistered(owner);
 		powerProductionStack = new PowerProductionStack(owner.getBlockState().getBlock());
-		if (getTileEntity().hasComponentOfType(ProductionTrackingComponent.class)) {
-			productionTrackingComponent = getTileEntity().getComponent(ProductionTrackingComponent.class);
+		if (getBlockEntity().hasComponentOfType(ProductionTrackingComponent.class)) {
+			productionTrackingComponent = getBlockEntity().getComponent(ProductionTrackingComponent.class);
 		} else {
 			productionTrackingComponent = new ProductionTrackingComponent(getComponentName() + "_productionTracker");
-			getTileEntity().registerComponent(productionTrackingComponent);
+			getBlockEntity().registerComponent(productionTrackingComponent);
 		}
 	}
 
@@ -237,7 +237,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 			}
 
 			// Update all the production statistics.
-			TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
+			TeamComponent teamComp = getBlockEntity().getComponent(TeamComponent.class);
 			if (teamComp != null && teamComp.getOwningTeam() != null) {
 				updateProductionStatistics(teamComp);
 			}

@@ -1,6 +1,7 @@
 package theking530.staticpower.blockentities.digistorenetwork;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticpower.blockentities.BlockEntityBase;
@@ -28,7 +29,7 @@ public abstract class BlockEntityDigistoreBase extends BlockEntityBase {
 	}
 
 	@Override
-	public boolean shouldSerializeWhenBroken() {
+	public boolean shouldSerializeWhenBroken(Player player) {
 		return true;
 	}
 }

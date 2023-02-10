@@ -1,18 +1,34 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
+	"textures": {
+		"cable_texture": "staticpower:blocks/cables/cable_capillary_fluid_basic"
+	},
 	"elements": [
 		{
 			"name": "Core",
 			"from": [6.75, 6.75, 6.75],
 			"to": [9.25, 9.25, 9.25],
 			"faces": {
-				"north": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
-				"east": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
-				"south": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
-				"west": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
-				"up": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
-				"down": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"}
+				"north": {"uv": [5.25, 8, 7.75, 10.5], "texture": "#cable_texture"},
+				"east": {"uv": [5.25, 8, 7.75, 10.5], "texture": "#cable_texture"},
+				"south": {"uv": [5.25, 8, 7.75, 10.5], "texture": "#cable_texture"},
+				"west": {"uv": [5.25, 8, 7.75, 10.5], "texture": "#cable_texture"},
+				"up": {"uv": [5.25, 8, 7.75, 10.5], "texture": "#cable_texture"},
+				"down": {"uv": [5.25, 8, 7.75, 10.5], "texture": "#cable_texture"}
+			}
+		},
+		{
+			"name": "Core inverted",
+			"from": [9.25, 9.25, 9.25],
+			"to": [6.75, 6.75, 6.75],
+			"faces": {
+				"north": {"uv": [5.25, 10.5, 7.75, 8], "texture": "#cable_texture"},
+				"east": {"uv": [5.25, 10.5, 7.75, 8], "texture": "#cable_texture"},
+				"south": {"uv": [5.25, 10.5, 7.75, 8], "texture": "#cable_texture"},
+				"west": {"uv": [5.25, 10.5, 7.75, 8], "texture": "#cable_texture"},
+				"up": {"uv": [7.75, 8, 5.25, 10.5], "texture": "#cable_texture"},
+				"down": {"uv": [7.75, 8, 5.25, 10.5], "texture": "#cable_texture"}
 			}
 		}
 	]

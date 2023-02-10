@@ -22,6 +22,7 @@ import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.api.fluid.IStaticPowerFluidHandler;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.gui.text.PowerTextFormatting;
@@ -29,7 +30,6 @@ import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockDigistore;
-import theking530.staticpower.cables.fluid.FluidCableCapability;
 import theking530.staticpower.cables.power.PowerCableComponent;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
@@ -214,7 +214,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 			if (accessor.isServerConnected() && accessor.getServerData().contains("head_pressure")) {
 				float pressure = accessor.getServerData().getFloat("head_pressure");
 				JadePluginImplementation.drawBar(
-						tooltip, pressure / 2, FluidCableCapability.MAX_PIPE_PRESSURE / 2, MAIN_PRESSURE_COLOR, ALT_PRESSURE_COLOR, GuiTextUtilities
+						tooltip, pressure / 2, IStaticPowerFluidHandler.MAX_PRESSURE / 2, MAIN_PRESSURE_COLOR, ALT_PRESSURE_COLOR, GuiTextUtilities
 								.formatNumberAsStringOneDecimal(pressure / 2).append(" ").append(Component.translatable("gui.staticpower.head_pressure")).withStyle(ChatFormatting.WHITE),
 						FLUID_HEAD_PRESSURE_RENDERER);
 			}

@@ -3,6 +3,7 @@ package theking530.staticpower.blockentities.power.lightsocket;
 import javax.annotation.Nonnull;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
@@ -12,6 +13,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -35,7 +37,6 @@ public class BlockEntityLightSocket extends BlockEntityMachine {
 	public BlockEntityLightSocket(BlockEntityTypeAllocator<BlockEntityLightSocket> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		lightbulb = ItemStack.EMPTY;
-		enableFaceInteraction();
 		powerStorage.setInputCurrentTypes(CurrentType.ALTERNATING, CurrentType.DIRECT);
 	}
 
@@ -110,8 +111,13 @@ public class BlockEntityLightSocket extends BlockEntityMachine {
 	}
 
 	@Override
-	public boolean shouldSerializeWhenBroken() {
+	public boolean shouldSerializeWhenBroken(Player player) {
 		return false;
+	}
+
+	@Override
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return LightSocketLightConfiguration.INSTANCE;
 	}
 
 	@Override

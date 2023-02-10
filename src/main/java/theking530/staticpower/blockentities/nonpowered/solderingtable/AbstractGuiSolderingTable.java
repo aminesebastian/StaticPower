@@ -63,6 +63,7 @@ public class AbstractGuiSolderingTable<T extends AbstractSolderingTable, K exten
 		return 0;
 	}
 
+	@SuppressWarnings("resource")
 	protected void recipeButtonPressed(StandardButton button, MouseButton mouse, int x, int y) {
 		// Update the slot.
 		recipeFakeSlots.get(x + (y * 3)).setItemStack(Minecraft.getInstance().player.containerMenu.getCarried());

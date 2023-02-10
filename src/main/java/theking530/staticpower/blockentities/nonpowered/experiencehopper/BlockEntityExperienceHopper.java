@@ -17,17 +17,16 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderHopper;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 
-public class BlockEntityExperienceHopper extends BlockEntityConfigurable {
+public class BlockEntityExperienceHopper extends BlockEntityBase {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityExperienceHopper> TYPE = new BlockEntityTypeAllocator<>("experience_hopper",
 			(type, pos, state) -> new BlockEntityExperienceHopper(pos, state), ModBlocks.ExperienceHopper);
@@ -39,11 +38,13 @@ public class BlockEntityExperienceHopper extends BlockEntityConfigurable {
 	}
 
 	public final FluidTankComponent internalTank;
+	public final SideConfigurationComponent ioSideConfiguration;
 
 	public BlockEntityExperienceHopper(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 100).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, internalTank, MachineSideMode.Output));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", ExperienceHopperPreset.INSTANCE));
 	}
 
 	@Override
@@ -110,18 +111,5 @@ public class BlockEntityExperienceHopper extends BlockEntityConfigurable {
 			}
 		}
 		return filled;
-	}
-
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (side == BlockSide.BOTTOM) {
-			return mode == MachineSideMode.Output;
-		} else {
-			return mode == MachineSideMode.Never;
-		}
-	}
-
-	@Override
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return new SideConfigurationPreset().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
 	}
 }

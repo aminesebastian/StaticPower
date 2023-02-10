@@ -24,17 +24,19 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.BackOutputOnly;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
@@ -49,13 +51,15 @@ import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements IRecipeProcessor<HydroponicFarmingRecipe> {
+public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipeProcessor<HydroponicFarmingRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityHydroponicPod> TYPE = new BlockEntityTypeAllocator<>("hydroponic_farmer_pod",
 			(type, pos, state) -> new BlockEntityHydroponicPod(pos, state), ModBlocks.HydroponicPod);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
+	public final RedstoneControlComponent redstoneControlComponent;
+	public final SideConfigurationComponent ioSideConfiguration;
 	public final RecipeProcessingComponent<HydroponicFarmingRecipe> processingComponent;
 
 	private BlockEntityHydroponicFarmer owningFarmer;
@@ -68,6 +72,8 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 
 	public BlockEntityHydroponicPod(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", BackOutputOnly.INSTANCE));
 
 		// Setup the inventories.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -230,16 +236,6 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainierHydroponicPod(windowId, inventory, this);
-	}
-
-	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return side == BlockSide.BACK ? (mode == MachineSideMode.Output || mode == MachineSideMode.Disabled) : false;
-	}
-
-	@Override
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return SideConfigurationPresets.BACK_OUTPUT_ONLY;
 	}
 
 	@Override

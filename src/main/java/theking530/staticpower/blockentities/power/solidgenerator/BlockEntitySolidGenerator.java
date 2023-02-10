@@ -36,8 +36,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRecipeProcessor<SolidFuelRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>("solid_generator", (type, pos, state) -> new BlockEntitySolidGenerator(pos, state),
-			ModBlocks.SolidGenerator);
+	public static final BlockEntityTypeAllocator<BlockEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>("solid_generator",
+			(type, pos, state) -> new BlockEntitySolidGenerator(pos, state), ModBlocks.SolidGenerator);
 
 	public final InventoryComponent inputInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -49,8 +49,6 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 
 	public BlockEntitySolidGenerator(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		disableFaceInteraction();
-
 		// Register the input inventory and only let it receive items if they are
 		// burnable.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {

@@ -22,6 +22,8 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.AllSidesInput;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -96,6 +98,11 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 				}
 			}
 		}
+	}
+
+	@Override
+	protected SideConfigurationPreset getDefaultSideConfiguration() {
+		return AllSidesInput.INSTANCE;
 	}
 
 	@Override

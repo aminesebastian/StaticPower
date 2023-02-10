@@ -15,16 +15,15 @@ import net.minecraftforge.common.ForgeHooks;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.loopingsound.LoopingSoundComponent;
@@ -35,25 +34,16 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements IRecipeProcessor<AlloyFurnaceRecipe> {
+public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeProcessor<AlloyFurnaceRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityAlloyFurnace> TYPE = new BlockEntityTypeAllocator<>("alloy_furnace",
 			(type, pos, state) -> new BlockEntityAlloyFurnace(pos, state), ModBlocks.AlloyFurnace);
-
-	public static final SideConfigurationPreset SIDE_CONFIGURATION = new SideConfigurationPreset();
-	static {
-		SIDE_CONFIGURATION.setSide(BlockSide.TOP, true, MachineSideMode.Input2);
-		SIDE_CONFIGURATION.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
-		SIDE_CONFIGURATION.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
-		SIDE_CONFIGURATION.setSide(BlockSide.BACK, true, MachineSideMode.Input3);
-		SIDE_CONFIGURATION.setSide(BlockSide.LEFT, true, MachineSideMode.Input3);
-		SIDE_CONFIGURATION.setSide(BlockSide.RIGHT, true, MachineSideMode.Input3);
-	}
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent outputInventory;
 	public final RecipeProcessingComponent<AlloyFurnaceRecipe> processingComponent;
+	public final SideConfigurationComponent ioSideConfiguration;
 	public final LoopingSoundComponent furnaceSoundComponent;
 
 	@UpdateSerialize
@@ -63,7 +53,6 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements 
 
 	public BlockEntityAlloyFurnace(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		disableFaceInteraction();
 
 		registerComponent(furnaceSoundComponent = new LoopingSoundComponent("FurnaceSoundComponent", 20));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
@@ -74,6 +63,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements 
 			}
 		}));
 
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AlloyFurnaceSideConfiguration.INSTANCE));
 		registerComponent(processingComponent = new RecipeProcessingComponent<AlloyFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
 				ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
@@ -164,14 +154,4 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements 
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerAlloyFurnace(windowId, inventory, this);
 	}
-
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return SIDE_CONFIGURATION;
-	}
-
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		// Stick with the default setup ONLy.
-		return mode == SIDE_CONFIGURATION.getSideDefaultMode(side);
-	}
-
 }

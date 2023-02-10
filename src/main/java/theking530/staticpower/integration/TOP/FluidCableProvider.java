@@ -16,10 +16,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.api.fluid.IStaticPowerFluidHandler;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.fluid.BlockEntityFluidCable;
-import theking530.staticpower.cables.fluid.FluidCableCapability;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.integration.JADE.JadePluginImplementation;
 
@@ -44,7 +44,7 @@ public class FluidCableProvider implements IProbeInfoProvider, IProbeConfigProvi
 		}
 
 		float pressure = fluidCable.fluidCableComponent.getHeadPressure() / 2;
-		int max = FluidCableCapability.MAX_PIPE_PRESSURE / 2;
+		int max = IStaticPowerFluidHandler.MAX_PRESSURE / 2;
 
 		MutableComponent label = GuiTextUtilities.formatNumberAsStringOneDecimal(pressure);
 		label.append(" ");

@@ -220,6 +220,7 @@ public class StaticPowerConfig {
 		public final ConfigValue<Integer> packagerProcessingTime;
 
 		public final ConfigValue<Double> pumpPowerUsage;
+		public final ConfigValue<Integer> pumpTankCapacity;
 
 		public final ConfigValue<Double> squeezerPowerUsage;
 		public final ConfigValue<Integer> squeezerProcessingTime;
@@ -685,6 +686,8 @@ public class StaticPowerConfig {
 					builder.push("Pump");
 					pumpPowerUsage = builder.comment("Controls how much power is used per pump action in this machine (in SW).")
 							.translation(StaticPower.MOD_ID + ".config." + "pumpPowerUsage").define("PumpPowerUsage", 200.0);
+					pumpTankCapacity = builder.comment("How many mB of fluid a pump can contain.")
+							.translation(StaticPower.MOD_ID + ".config." + "pumpTankCapacity").define("PumpTankCapacity", 1000);			
 					builder.pop();
 				}
 				{

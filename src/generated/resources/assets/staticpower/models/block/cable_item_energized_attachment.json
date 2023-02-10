@@ -1,7 +1,7 @@
 {
   "parent": "staticpower:block/base_models/cables/cable_5_attachment",
   "textures": {
-    "cable_texture": "staticpower:blocks/cables/attachments/cable_item_attachment",
-    "particle": "staticpower:blocks/cables/attachments/cable_item_attachment"
+    "cable_texture": "staticpower:blocks/cables/attachments/cable_energized_item_attachment",
+    "particle": "staticpower:blocks/cables/attachments/cable_energized_item_attachment"
   }
 }

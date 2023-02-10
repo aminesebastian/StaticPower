@@ -33,7 +33,7 @@ public abstract class AbstractBlockEntityComponent {
 
 	private String name;
 	private boolean isEnabled;
-	private BlockEntityBase tileEntity;
+	private BlockEntityBase blockEntity;
 
 	private final List<Field> saveSerializeableFields;
 	private final List<Field> updateSerializeableFields;
@@ -46,7 +46,7 @@ public abstract class AbstractBlockEntityComponent {
 	}
 
 	public void onRegistered(BlockEntityBase owner) {
-		this.tileEntity = owner;
+		this.blockEntity = owner;
 	}
 
 	public void onRemovedFromOwner(BlockEntityBase owner) {
@@ -187,24 +187,24 @@ public abstract class AbstractBlockEntityComponent {
 	public void setEnabled(boolean isEnabled) {
 		if (this.isEnabled != isEnabled) {
 			this.isEnabled = isEnabled;
-			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.syncDataOnly(true), true);
-			getTileEntity().setChanged();
+			getBlockEntity().addUpdateRequest(BlockEntityUpdateRequest.syncDataOnly(true), true);
+			getBlockEntity().setChanged();
 		}
 	}
 
-	public BlockEntityBase getTileEntity() {
-		return tileEntity;
+	public BlockEntityBase getBlockEntity() {
+		return blockEntity;
 	}
 
 	public BlockPos getPos() {
-		return getTileEntity().getBlockPos();
+		return getBlockEntity().getBlockPos();
 	}
 
 	public Level getLevel() {
-		return getTileEntity().getLevel();
+		return getBlockEntity().getLevel();
 	}
 
 	public boolean isClientSide() {
-		return getTileEntity().getLevel().isClientSide();
+		return getBlockEntity().getLevel().isClientSide();
 	}
 }

@@ -2,55 +2,33 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"cable_texture": "cable_digistore"
+		"cable_texture": "staticpower:blocks/cables/cable_capillary_fluid_basic"
 	},
 	"elements": [
 		{
 			"name": "FirstSection",
-			"from": [6.75, 6.75, 0],
-			"to": [9.25, 9.25, 4],
+			"from": [6.75, 6.75, 2],
+			"to": [9.25, 9.25, 14],
 			"faces": {
-				"north": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
-				"east": {"uv": [0.75, 7, 4.75, 9], "texture": "#cable_texture"},
-				"west": {"uv": [11.25, 7, 15.25, 9], "texture": "#cable_texture"},
-				"up": {"uv": [7, 0.75, 9, 4.75], "rotation": 180, "texture": "#cable_texture"},
-				"down": {"uv": [7, 11.25, 9, 15.25], "rotation": 180, "texture": "#cable_texture"}
+				"north": {"uv": [5.25, 8, 7.75, 10.5], "texture": "#cable_texture"},
+				"east": {"uv": [13.5, 0, 16, 12], "rotation": 90, "texture": "#cable_texture"},
+				"south": {"uv": [5.25, 8, 7.75, 10.5], "texture": "#cable_texture"},
+				"west": {"uv": [13.5, 0, 16, 12], "rotation": 90, "texture": "#cable_texture"},
+				"up": {"uv": [13.5, 0, 16, 12], "rotation": 180, "texture": "#cable_texture"},
+				"down": {"uv": [13.5, 0, 16, 12], "rotation": 180, "texture": "#cable_texture"}
 			}
 		},
 		{
-			"name": "SecondSection",
-			"from": [6.75, 6.75, 4],
-			"to": [9.25, 9.25, 8],
+			"name": "FirstSection inverted",
+			"from": [9.25, 9.25, 14],
+			"to": [6.75, 6.75, 2],
 			"faces": {
-				"east": {"uv": [0.75, 7, 4.75, 9], "texture": "#cable_texture"},
-				"south": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
-				"west": {"uv": [11.25, 7, 15.25, 9], "texture": "#cable_texture"},
-				"up": {"uv": [7, 0.75, 9, 4.75], "rotation": 180, "texture": "#cable_texture"},
-				"down": {"uv": [7, 11.25, 9, 15.25], "rotation": 180, "texture": "#cable_texture"}
-			}
-		},
-		{
-			"name": "ThirdSection",
-			"from": [6.75, 6.75, 8],
-			"to": [9.25, 9.25, 12],
-			"faces": {
-				"east": {"uv": [0.75, 7, 4.75, 9], "texture": "#cable_texture"},
-				"south": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
-				"west": {"uv": [11.25, 7, 15.25, 9], "texture": "#cable_texture"},
-				"up": {"uv": [7, 0.75, 9, 4.75], "rotation": 180, "texture": "#cable_texture"},
-				"down": {"uv": [7, 11.25, 9, 15.25], "rotation": 180, "texture": "#cable_texture"}
-			}
-		},
-		{
-			"name": "FourthSection",
-			"from": [6.75, 6.75, 12],
-			"to": [9.25, 9.25, 16],
-			"faces": {
-				"east": {"uv": [0.75, 7, 4.75, 9], "texture": "#cable_texture"},
-				"south": {"uv": [7, 7, 9, 9], "texture": "#cable_texture"},
-				"west": {"uv": [11.25, 7, 15.25, 9], "texture": "#cable_texture"},
-				"up": {"uv": [7, 0.75, 9, 4.75], "rotation": 180, "texture": "#cable_texture"},
-				"down": {"uv": [7, 11.25, 9, 15.25], "rotation": 180, "texture": "#cable_texture"}
+				"north": {"uv": [5.25, 15, 7.75, 12.5], "texture": "#cable_texture"},
+				"east": {"uv": [16, 0, 13.5, 12], "rotation": 90, "texture": "#cable_texture"},
+				"south": {"uv": [5.25, 15, 7.75, 12.5], "texture": "#cable_texture"},
+				"west": {"uv": [16, 0, 13.5, 12], "rotation": 90, "texture": "#cable_texture"},
+				"up": {"uv": [16, 0, 13.5, 12], "rotation": 180, "texture": "#cable_texture"},
+				"down": {"uv": [16, 0, 13.5, 12], "rotation": 180, "texture": "#cable_texture"}
 			}
 		}
 	],

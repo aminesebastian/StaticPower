@@ -1,5 +1,8 @@
 package theking530.staticpower.cables.power;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,14 +20,13 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityPowerCable extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power_basic",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false), ModBlocks.InsulatedPowerCableBasic, ModBlocks.InsulatedPowerCableAdvanced,
-			ModBlocks.InsulatedPowerCableStatic, ModBlocks.InsulatedPowerCableEnergized, ModBlocks.InsulatedPowerCableLumum, ModBlocks.InsulatedPowerCableCreative);
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_power",
+			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, false),
+			Lists.newArrayList(Iterables.unmodifiableIterable(Iterables.concat(ModBlocks.PowerCables.values(), ModBlocks.InsulatedPowerCables.values()))));
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_industrial_power_basic",
-			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCableBasic, ModBlocks.IndustrialPowerCableAdvanced,
-			ModBlocks.IndustrialPowerCableStatic, ModBlocks.IndustrialPowerCableEnergized, ModBlocks.IndustrialPowerCableLumum, ModBlocks.IndustrialPowerCableCreative);
+	public static final BlockEntityTypeAllocator<BlockEntityPowerCable> TYPE_INDUSTRIAL = new BlockEntityTypeAllocator<BlockEntityPowerCable>("cable_industrial_power",
+			(allocator, pos, state) -> new BlockEntityPowerCable(allocator, pos, state, true), ModBlocks.IndustrialPowerCables.values());
 
 	public final PowerCableComponent powerCableComponent;
 	public final AABB damageRadius;

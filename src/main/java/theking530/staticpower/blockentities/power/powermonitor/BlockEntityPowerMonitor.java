@@ -18,9 +18,6 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderPowerMonitor;
@@ -127,11 +124,6 @@ public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowe
 	}
 
 	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input;
-	}
-
-	@Override
 	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 
@@ -152,11 +144,6 @@ public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowe
 		nbt.putLong("input_limit", inputRFTick);
 		nbt.putLong("output_limit", outputRFTick);
 		return nbt;
-	}
-
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.TOP, false, MachineSideMode.Never).setSide(BlockSide.BOTTOM, false, MachineSideMode.Never)
-				.setSide(BlockSide.BACK, false, MachineSideMode.Never);
 	}
 
 	@Override

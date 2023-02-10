@@ -85,7 +85,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 	public void setRedstoneMode(ItemStack attachment, RedstoneMode mode, AbstractCableProviderComponent cable) {
 		getAttachmentTag(attachment).putInt(REDSTONE_MODE_TAG, mode.ordinal());
-		cable.getTileEntity().setChanged();
+		cable.getBlockEntity().setChanged();
 		if(cable.getCable().isPresent()) {
 			cable.getCable().get().synchronizeServerState();
 		}

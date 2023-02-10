@@ -12,11 +12,13 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -43,6 +45,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 	}
 
 	public final RecipeProcessingComponent<SolderingRecipe> processingComponent;
+	public final RedstoneControlComponent redstoneControlComponent;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final InventoryComponent outputInventory;
@@ -51,12 +54,12 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 	public BlockEntityAutoSolderingTable(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
-		disableFaceInteraction();
 		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, false));
 
 		// Set the inventory component to the input mode.
 		inventory.setMode(MachineSideMode.Input).setSlotsLockable(true);
 
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));

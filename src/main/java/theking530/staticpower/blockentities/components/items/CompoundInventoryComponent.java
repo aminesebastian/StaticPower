@@ -70,7 +70,7 @@ public class CompoundInventoryComponent extends AbstractBlockEntityComponent imp
 			if (cap == ForgeCapabilities.ITEM_HANDLER && inventoryMode != MachineSideMode.Never) {
 				// Check if the owner is side configurable. If it is, check to make sure it's
 				// not disabled, if not, return the inventory.
-				Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+				Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getBlockEntity());
 				if (side == null || !sideConfig.isPresent() || sideConfig.get().getWorldSpaceDirectionConfiguration(side) == inventoryMode) {
 					return LazyOptional.of(() -> this).cast();
 				}

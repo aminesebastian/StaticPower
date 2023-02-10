@@ -14,7 +14,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
@@ -22,7 +24,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityRandomItemGenerator extends BlockEntityConfigurable implements MenuProvider {
+public class BlockEntityRandomItemGenerator extends BlockEntityBase implements MenuProvider {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> ANY_ITEM = new BlockEntityTypeAllocator<>("random_item_generator",
 			(type, pos, state) -> new BlockEntityRandomItemGenerator(type, pos, state, null), ModBlocks.RandomItemGenerator);
@@ -31,13 +33,17 @@ public class BlockEntityRandomItemGenerator extends BlockEntityConfigurable impl
 			(type, pos, state) -> new BlockEntityRandomItemGenerator(type, pos, state, ModTags.ORE), ModBlocks.RandomOreGenerator);
 
 	private static final float GENERATION_RATE = 4;
+
+	public final RedstoneControlComponent redstoneControlComponent;
 	public final InventoryComponent inventory;
+
 	private final TagKey<Item> itemTag;
 	private float timer;
 
 	public BlockEntityRandomItemGenerator(BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> type, BlockPos pos, BlockState state, TagKey<Item> itemTag) {
 		super(type, pos, state);
 		this.itemTag = itemTag;
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Output).setShiftClickEnabled(true));
 		registerComponent(new OutputServoComponent("OutputServo", 2, inventory));
 	}

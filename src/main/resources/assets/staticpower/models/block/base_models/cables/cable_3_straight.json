@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"cable_texture": "staticpower:blocks/cables/cable_digistore",
-		"particle": "staticpower:blocks/cables/cable_item_advanced"
+		"particle": "staticpower:blocks/cables/cable_digistore",
+		"cable_texture": "staticpower:blocks/cables/cable_digistore"
 	},
 	"elements": [
 		{

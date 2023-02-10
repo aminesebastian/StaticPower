@@ -32,6 +32,7 @@ public class PacketPackagerSizeChange extends NetworkMessage {
 		buf.writeInt(size);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {

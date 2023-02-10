@@ -18,6 +18,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachinePreset;
 import theking530.staticpower.blockentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
@@ -96,10 +97,7 @@ public class BlockEntityTank extends BlockEntityBase {
 		fluidTankComponent.setUpgradeInventory(voidUpgradeInventory);
 
 		// Add the side configuration component.
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", (side, mode) -> {
-		}, (side, mode) -> {
-			return mode == MachineSideMode.Input || mode == MachineSideMode.Output || mode == MachineSideMode.Disabled;
-		}));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachinePreset.INSTANCE));
 
 		// Add the inventory for the fluid containers.
 		registerComponent(inputFluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo", fluidTankComponent));
@@ -126,7 +124,7 @@ public class BlockEntityTank extends BlockEntityBase {
 	}
 
 	@Override
-	public boolean shouldSerializeWhenBroken() {
+	public boolean shouldSerializeWhenBroken(Player player) {
 		return true;
 	}
 

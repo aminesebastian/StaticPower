@@ -34,7 +34,7 @@ public class TeamComponent extends AbstractBlockEntityComponent {
 
 	public void setTeam(String teamId) {
 		if (getLevel().isClientSide()) {
-			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketSetTeamComponentTeam(getTileEntity(), teamId));
+			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketSetTeamComponentTeam(getBlockEntity(), teamId));
 		} else {
 			this.teamId = teamId;
 		}

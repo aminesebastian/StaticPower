@@ -8,6 +8,7 @@ import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiStaticChest extends StaticPowerTileEntityGui<ContainerStaticChest, BlockEntityStaticChest> {
 
+	@SuppressWarnings("unused")
 	private GuiInfoTab infoTab;
 
 	public GuiStaticChest(ContainerStaticChest container, Inventory invPlayer, Component name) {

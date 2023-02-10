@@ -177,7 +177,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 					ItemStack remainingAmount = module.insertItem(extractedItem.copy(), false);
 					if (remainingAmount.getCount() < extractedItem.getCount()) {
 						target.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
-						cable.getTileEntity().setChanged();
+						cable.getBlockEntity().setChanged();
 						break;
 					}
 				}
@@ -222,7 +222,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 							// If we actually extracted something, now we perform the real extract.
 							if (remainingAmount.getCount() < extractedItem.getCount()) {
 								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
-								cable.getTileEntity().setChanged();
+								cable.getBlockEntity().setChanged();
 								output.set(true);
 								break;
 							}

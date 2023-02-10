@@ -108,7 +108,7 @@ public class WireDigistoreCableProviderComponent extends DigistoreCableProviderC
 	}
 
 	public Vec3 getWireAttachLocation() {
-		Vector3D normal = new Vector3D(getTileEntity().getFacingDirection().getNormal());
+		Vector3D normal = new Vector3D(getBlockEntity().getFacingDirection().getNormal());
 		normal.multiply(0.2f);
 		return new Vec3(getPos().getX() + 0.5f - normal.getX(), getPos().getY() + 0.5f - normal.getY(), getPos().getZ() + 0.5f - normal.getZ());
 	}

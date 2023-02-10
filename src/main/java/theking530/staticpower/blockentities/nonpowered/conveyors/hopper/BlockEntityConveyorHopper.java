@@ -19,9 +19,9 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.components.control.ConveyorMotionComponent;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.BottomOutputOnly;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlockEntity;
@@ -68,12 +68,14 @@ public class BlockEntityConveyorHopper extends AbstractConveyorBlockEntity {
 
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent filterInventory;
+	public final SideConfigurationComponent ioSideConfiguration;
 	protected AABB hopperBox;
 	protected boolean filtered;
 
 	public BlockEntityConveyorHopper(BlockEntityTypeAllocator<BlockEntityConveyorHopper> type, BlockPos pos, BlockState state, ResourceLocation tier, boolean filtered) {
 		super(type, pos, state, tier);
 		this.filtered = filtered;
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", BottomOutputOnly.INSTANCE));
 		registerComponent(
 				internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output).setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
 		registerComponent(
@@ -151,20 +153,6 @@ public class BlockEntityConveyorHopper extends AbstractConveyorBlockEntity {
 		component.setVelocity(new Vector3D((float) (0.05f * tier.conveyorSpeedMultiplier.get()), 0f, 0f));
 		// Make sure the front is output only.
 		ioSideConfiguration.setWorldSpaceDirectionConfiguration(Direction.DOWN, MachineSideMode.Output);
-	}
-
-	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (side == BlockSide.BOTTOM) {
-			return mode == MachineSideMode.Output;
-		} else {
-			return mode == MachineSideMode.Never;
-		}
-	}
-
-	@Override
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return new SideConfigurationPreset().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
 	}
 
 	@Override

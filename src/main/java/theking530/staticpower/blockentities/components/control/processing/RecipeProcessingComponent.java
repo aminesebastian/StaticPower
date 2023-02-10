@@ -189,7 +189,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 			System.out.println("wtf");
 		}
 
-		TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
+		TeamComponent teamComp = getBlockEntity().getComponent(TeamComponent.class);
 		if (teamComp != null) {
 			for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
 				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.COUNT_ONLY) {

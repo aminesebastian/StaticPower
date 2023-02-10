@@ -29,7 +29,6 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockFluidCable extends AbstractCableBlock {
 
@@ -71,19 +70,6 @@ public class BlockFluidCable extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
-			return BlockEntityFluidCable.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return BlockEntityFluidCable.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return BlockEntityFluidCable.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return BlockEntityFluidCable.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return BlockEntityFluidCable.TYPE_LUMUM.create(pos, state);
-		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return BlockEntityFluidCable.TYPE_CREATIVE.create(pos, state);
-		}
-		return null;
+		return BlockEntityFluidCable.TYPE_REGULAR.create(pos, state);
 	}
 }

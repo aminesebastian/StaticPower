@@ -37,7 +37,6 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRec
 
 	public BlockEntityFusionFurnace(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		this.disableFaceInteraction();
 
 		// Setup the input inventory with no filtering (no point since there are
 		// multiple inputs).

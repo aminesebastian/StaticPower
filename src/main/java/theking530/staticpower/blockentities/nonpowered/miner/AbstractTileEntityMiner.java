@@ -22,10 +22,14 @@ import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachineNoFacePreset;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent.HeatManipulationAction;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
@@ -42,7 +46,7 @@ import theking530.staticpower.items.tools.miningdrill.DrillBit;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
+public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 	public final InventoryComponent drillBitInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
@@ -52,17 +56,21 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 	public final HeatStorageComponent heatStorage;
 	public final LoopingSoundComponent miningSoundComponent;
 
+	public final SideConfigurationComponent ioSideConfiguration;
+	public final RedstoneControlComponent redstoneControlComponent;
+
 	private boolean shouldDrawRadiusPreview;
 	private final List<BlockPos> blocks;
 	private int currentBlockIndex;
 
 	public AbstractTileEntityMiner(BlockEntityTypeAllocator<? extends AbstractTileEntityMiner> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
-		disableFaceInteraction();
 		blocks = new ArrayList<BlockPos>();
 
 		// Get the tier.
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.STATIC);
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachineNoFacePreset.INSTANCE));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(
@@ -117,7 +125,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 				heatStorage.setCanHeat(true);
 				heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
 				heatStorage.setCanHeat(false);
-			}else {
+			} else {
 				processingComponent.getItemProductionToken().invalidate();
 			}
 

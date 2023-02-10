@@ -11,13 +11,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.RedstonePulseReactorComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityDirectDropper extends BlockEntityConfigurable {
+public class BlockEntityDirectDropper extends BlockEntityBase {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityDirectDropper> TYPE = new BlockEntityTypeAllocator<BlockEntityDirectDropper>("direct_dropper",
 			(type, pos, state) -> new BlockEntityDirectDropper(pos, state), ModBlocks.DirectDropper);
@@ -43,7 +43,7 @@ public class BlockEntityDirectDropper extends BlockEntityConfigurable {
 	}
 
 	@Override
-	public boolean shouldSerializeWhenBroken() {
+	public boolean shouldSerializeWhenBroken(Player player) {
 		return false;
 	}
 

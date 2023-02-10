@@ -76,7 +76,7 @@ public class OutputServoComponent extends AbstractBlockEntityComponent {
 		}
 
 		// If on the server, get the sides we can output to.
-		if (!getTileEntity().getLevel().isClientSide()) {
+		if (!getBlockEntity().getLevel().isClientSide()) {
 			// First, increment the output timer.
 			outputTimer++;
 
@@ -156,11 +156,11 @@ public class OutputServoComponent extends AbstractBlockEntityComponent {
 	}
 
 	public boolean canOutputFromSide(BlockSide blockSide) {
-		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
+		if (getBlockEntity().hasComponentOfType(SideConfigurationComponent.class)) {
 			// Get the side's machine side mode.
-			SideConfigurationComponent sideModeConfiguration = getTileEntity().getComponent(SideConfigurationComponent.class);
+			SideConfigurationComponent sideModeConfiguration = getBlockEntity().getComponent(SideConfigurationComponent.class);
 			MachineSideMode sideMode = sideModeConfiguration
-					.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection()));
+					.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getBlockEntity().getFacingDirection()));
 
 			// If the mode matches this servo's output mode OR the side is the generic
 			// output side and this output mode is an output mode and there are no output

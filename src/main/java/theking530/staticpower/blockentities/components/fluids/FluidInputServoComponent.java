@@ -49,7 +49,7 @@ public class FluidInputServoComponent extends AbstractBlockEntityComponent {
 		if (owningTank == null) {
 			return;
 		}
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			for (Direction dir : Direction.values()) {
 				// If we can't input from the provided side, skip it.
 				if (!canInputFromSide(dir)) {
@@ -83,8 +83,8 @@ public class FluidInputServoComponent extends AbstractBlockEntityComponent {
 	}
 
 	public boolean canInputFromSide(Direction side) {
-		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
-			return getTileEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side) == inputMode;
+		if (getBlockEntity().hasComponentOfType(SideConfigurationComponent.class)) {
+			return getBlockEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side) == inputMode;
 		}
 		return true;
 	}

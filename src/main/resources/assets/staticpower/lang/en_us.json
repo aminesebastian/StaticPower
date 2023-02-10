@@ -772,6 +772,13 @@
 	"block.staticpower.cable_fluid_lumum": "Lumum Fluid Pipe",
 	"block.staticpower.cable_fluid_creative": "Creative Fluid Pipe",
 	
+	"block.staticpower.cable_capillary_fluid_basic": "Capillary Fluid Pipe",
+	"block.staticpower.cable_capillary_fluid_advanced": "Advanced Capillary Fluid Pipe",
+	"block.staticpower.cable_capillary_fluid_static": "Static Capillary Fluid Pipe",
+	"block.staticpower.cable_capillary_fluid_energized": "Energized Capillary Fluid Pipe",
+	"block.staticpower.cable_capillary_fluid_lumum": "Lumum Capillary Fluid Pipe",
+	"block.staticpower.cable_capillary_fluid_creative": "Creative Capillary Fluid Pipe",
+	
 	"block.staticpower.cable_industrial_fluid_basic": "Industrial Fluid Pipe",
 	"block.staticpower.cable_industrial_fluid_advanced": "Advanced Industrial Fluid Pipe",
 	"block.staticpower.cable_industrial_fluid_static": "Static Industrial Fluid Pipe",

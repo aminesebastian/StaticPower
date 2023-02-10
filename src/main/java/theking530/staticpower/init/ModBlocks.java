@@ -1,7 +1,10 @@
 package theking530.staticpower.init;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -104,7 +107,10 @@ import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
 import theking530.staticpower.blocks.tree.StaticPowerSapling;
 import theking530.staticpower.blocks.tree.StaticPowerTreeLeaves;
 import theking530.staticpower.blocks.tree.StaticPowerTreeLog;
+import theking530.staticpower.cables.CableTiers;
+import theking530.staticpower.cables.CableTiers.CableTier;
 import theking530.staticpower.cables.digistore.BlockDigistoreNetworkWire;
+import theking530.staticpower.cables.fluid.BlockCapillaryFluidCable;
 import theking530.staticpower.cables.fluid.BlockFluidCable;
 import theking530.staticpower.cables.fluid.BlockIndustrialFluidCable;
 import theking530.staticpower.cables.heat.BlockHeatCable;
@@ -454,65 +460,25 @@ public class ModBlocks {
 	// Cables
 	public static final RegistryObject<BlockDigistoreNetworkWire> DigistoreWire = registerBlock("cable_digistore", () -> new BlockDigistoreNetworkWire());
 
-	public static final RegistryObject<BlockItemCable> ItemCableBasic = registerBlock("cable_item_basic", () -> new BlockItemCable(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockItemCable> ItemCableAdvanced = registerBlock("cable_item_advanced", () -> new BlockItemCable(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockItemCable> ItemCableStatic = registerBlock("cable_item_static", () -> new BlockItemCable(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockItemCable> ItemCableEnergized = registerBlock("cable_item_energized", () -> new BlockItemCable(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockItemCable> ItemCableLumum = registerBlock("cable_item_lumum", () -> new BlockItemCable(StaticPowerTiers.LUMUM));
-	public static final RegistryObject<BlockItemCable> ItemCableCreative = registerBlock("cable_item_creative", () -> new BlockItemCable(StaticPowerTiers.CREATIVE));
+	public static final Map<ResourceLocation, RegistryObject<BlockItemCable>> ItemCables = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockPowerCable>> PowerCables = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockPowerCable>> InsulatedPowerCables = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockIndustrialPowerCable>> IndustrialPowerCables = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockFluidCable>> FluidCables = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockCapillaryFluidCable>> CapillaryFluidCables = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockIndustrialFluidCable>> IndustrialFluidCables = new HashMap<>();
 
-	public static final RegistryObject<BlockPowerCable> PowerCableBasic = registerBlock("cable_power_basic", () -> new BlockPowerCable(StaticPowerTiers.BASIC, false));
-	public static final RegistryObject<BlockPowerCable> PowerCableAdvanced = registerBlock("cable_power_advanced", () -> new BlockPowerCable(StaticPowerTiers.ADVANCED, false));
-	public static final RegistryObject<BlockPowerCable> PowerCableStatic = registerBlock("cable_power_static", () -> new BlockPowerCable(StaticPowerTiers.STATIC, false));
-	public static final RegistryObject<BlockPowerCable> PowerCableEnergized = registerBlock("cable_power_energized", () -> new BlockPowerCable(StaticPowerTiers.ENERGIZED, false));
-	public static final RegistryObject<BlockPowerCable> PowerCableLumum = registerBlock("cable_power_lumum", () -> new BlockPowerCable(StaticPowerTiers.LUMUM, false));
-	public static final RegistryObject<BlockPowerCable> PowerCableCreative = registerBlock("cable_power_creative", () -> new BlockPowerCable(StaticPowerTiers.CREATIVE, false));
-
-	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableBasic = registerBlock("cable_insulated_power_basic",
-			() -> new BlockPowerCable(StaticPowerTiers.BASIC, true));
-	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableAdvanced = registerBlock("cable_insulated_power_advanced",
-			() -> new BlockPowerCable(StaticPowerTiers.ADVANCED, true));
-	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableStatic = registerBlock("cable_insulated_power_static",
-			() -> new BlockPowerCable(StaticPowerTiers.STATIC, true));
-	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableEnergized = registerBlock("cable_insulated_power_energized",
-			() -> new BlockPowerCable(StaticPowerTiers.ENERGIZED, true));
-	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableLumum = registerBlock("cable_insulated_power_lumum",
-			() -> new BlockPowerCable(StaticPowerTiers.LUMUM, true));
-	public static final RegistryObject<BlockPowerCable> InsulatedPowerCableCreative = registerBlock("cable_insulated_power_creative",
-			() -> new BlockPowerCable(StaticPowerTiers.CREATIVE, true));
-
-	public static final RegistryObject<BlockIndustrialPowerCable> IndustrialPowerCableBasic = registerBlock("cable_industrial_power_basic",
-			() -> new BlockIndustrialPowerCable(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockIndustrialPowerCable> IndustrialPowerCableAdvanced = registerBlock("cable_industrial_power_advanced",
-			() -> new BlockIndustrialPowerCable(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockIndustrialPowerCable> IndustrialPowerCableStatic = registerBlock("cable_industrial_power_static",
-			() -> new BlockIndustrialPowerCable(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockIndustrialPowerCable> IndustrialPowerCableEnergized = registerBlock("cable_industrial_power_energized",
-			() -> new BlockIndustrialPowerCable(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockIndustrialPowerCable> IndustrialPowerCableLumum = registerBlock("cable_industrial_power_lumum",
-			() -> new BlockIndustrialPowerCable(StaticPowerTiers.LUMUM));
-	public static final RegistryObject<BlockIndustrialPowerCable> IndustrialPowerCableCreative = registerBlock("cable_industrial_power_creative",
-			() -> new BlockIndustrialPowerCable(StaticPowerTiers.CREATIVE));
-
-	public static final RegistryObject<BlockFluidCable> FluidCableBasic = registerBlock("cable_fluid_basic", () -> new BlockFluidCable(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockFluidCable> FluidCableAdvanced = registerBlock("cable_fluid_advanced", () -> new BlockFluidCable(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockFluidCable> FluidCableStatic = registerBlock("cable_fluid_static", () -> new BlockFluidCable(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockFluidCable> FluidCableEnergized = registerBlock("cable_fluid_energized", () -> new BlockFluidCable(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockFluidCable> FluidCableLumum = registerBlock("cable_fluid_lumum", () -> new BlockFluidCable(StaticPowerTiers.LUMUM));
-	public static final RegistryObject<BlockFluidCable> FluidCableCreative = registerBlock("cable_fluid_creative", () -> new BlockFluidCable(StaticPowerTiers.CREATIVE));
-
-	public static final RegistryObject<BlockIndustrialFluidCable> IndustrialFluidCableBasic = registerBlock("cable_industrial_fluid_basic",
-			() -> new BlockIndustrialFluidCable(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockIndustrialFluidCable> IndustrialFluidCableAdvanced = registerBlock("cable_industrial_fluid_advanced",
-			() -> new BlockIndustrialFluidCable(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockIndustrialFluidCable> IndustrialFluidCableStatic = registerBlock("cable_industrial_fluid_static",
-			() -> new BlockIndustrialFluidCable(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockIndustrialFluidCable> IndustrialFluidCableEnergized = registerBlock("cable_industrial_fluid_energized",
-			() -> new BlockIndustrialFluidCable(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockIndustrialFluidCable> IndustrialFluidCableLumum = registerBlock("cable_industrial_fluid_lumum",
-			() -> new BlockIndustrialFluidCable(StaticPowerTiers.LUMUM));
-	public static final RegistryObject<BlockIndustrialFluidCable> IndustrialFluidCableCreative = registerBlock("cable_industrial_fluid_creative",
-			() -> new BlockIndustrialFluidCable(StaticPowerTiers.CREATIVE));
+	static {
+		for (CableTier tier : CableTiers.get()) {
+			ItemCables.put(tier.location(), registerBlock("cable_item_" + tier.name(), () -> new BlockItemCable(tier.location())));
+			PowerCables.put(tier.location(), registerBlock("cable_power_" + tier.name(), () -> new BlockPowerCable(tier.location(), false)));
+			InsulatedPowerCables.put(tier.location(), registerBlock("cable_insulated_power_" + tier.name(), () -> new BlockPowerCable(tier.location(), true)));
+			IndustrialPowerCables.put(tier.location(), registerBlock("cable_industrial_power_" + tier.name(), () -> new BlockIndustrialPowerCable(tier.location())));
+			FluidCables.put(tier.location(), registerBlock("cable_fluid_" + tier.name(), () -> new BlockFluidCable(tier.location())));
+			CapillaryFluidCables.put(tier.location(), registerBlock("cable_capillary_fluid_" + tier.name(), () -> new BlockCapillaryFluidCable(tier.location())));
+			IndustrialFluidCables.put(tier.location(), registerBlock("cable_industrial_fluid_" + tier.name(), () -> new BlockIndustrialFluidCable(tier.location())));
+		}
+	}
 
 	public static final RegistryObject<BlockHeatCable> AluminumHeatCable = registerBlock("cable_heat_aluminum", () -> new BlockHeatCable(StaticPowerTiers.ALUMINUM));
 	public static final RegistryObject<BlockHeatCable> CopperHeatCable = registerBlock("cable_heat_copper", () -> new BlockHeatCable(StaticPowerTiers.COPPER));

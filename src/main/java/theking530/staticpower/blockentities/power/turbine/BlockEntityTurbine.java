@@ -28,9 +28,8 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
@@ -74,7 +73,6 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 
 	public BlockEntityTurbine(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		enableFaceInteraction();
 		this.isGenerating = false;
 		this.renderingState = new TurbineRenderingState();
 
@@ -111,7 +109,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 
 	@Override
 	public void process() {
-		if (!getLevel().isClientSide) {
+		if (!getLevel().isClientSide()) {
 			boolean generated = false;
 
 			// Check redstone control.
@@ -161,7 +159,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 			if (isGenerating) {
 				// Render water particles.
 				if (SDMath.diceRoll(0.4f)) {
-					float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
+					float randomOffset = (2 * getLevel().getRandom().nextFloat()) - 1.0f;
 					randomOffset /= 2f;
 					getLevel().addParticle(ParticleTypes.FALLING_WATER, getBlockPos().getX() + 0.5 + randomOffset, getBlockPos().getY() - 0.5,
 							getBlockPos().getZ() + 0.5 + randomOffset, 0.0f, 0.01f, 0.0f);
@@ -171,20 +169,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 	}
 
 	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (side == BlockSide.TOP) {
-			return mode == MachineSideMode.Input;
-		}
-		if (side == BlockSide.BOTTOM) {
-			return mode == MachineSideMode.Never;
-		}
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output;
-	}
-
-	@Override
 	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return new SideConfigurationPreset().setSide(BlockSide.LEFT, true, MachineSideMode.Output).setSide(BlockSide.RIGHT, true, MachineSideMode.Output)
-				.setSide(BlockSide.FRONT, true, MachineSideMode.Output).setSide(BlockSide.BACK, true, MachineSideMode.Output);
+		return TurbineSideConfiguration.INSTANCE;
 	}
 
 	@Override

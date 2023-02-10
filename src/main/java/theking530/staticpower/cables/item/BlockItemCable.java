@@ -25,7 +25,6 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockItemCable extends AbstractCableBlock {
 
@@ -35,20 +34,7 @@ public class BlockItemCable extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
-			return BlockEntityItemCable.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return BlockEntityItemCable.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return BlockEntityItemCable.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return BlockEntityItemCable.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return BlockEntityItemCable.TYPE_LUMUM.create(pos, state);
-		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return BlockEntityItemCable.TYPE_CREATIVE.create(pos, state);
-		}
-		return null;
+		return BlockEntityItemCable.TYPE.create(pos, state);
 	}
 
 	@Override

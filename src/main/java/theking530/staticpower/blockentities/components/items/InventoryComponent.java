@@ -277,7 +277,7 @@ public class InventoryComponent extends AbstractBlockEntityComponent implements 
 				// Check if the owner is side configurable. If it is not, just return this.
 				// Otherwise, check to make sure this inventory's mode is equal to the
 				// configured side's mode.
-				Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+				Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getBlockEntity());
 				if (!sideConfig.isPresent() || (side != null && sideConfig.get().getWorldSpaceDirectionConfiguration(side) == inventoryMode)) {
 					return manuallyProvideCapability(cap, side);
 				}
@@ -549,21 +549,21 @@ public class InventoryComponent extends AbstractBlockEntityComponent implements 
 		if (changeCallback != null) {
 			changeCallback.accept(InventoryChangeType.ADDED, stack, slot);
 		}
-		getTileEntity().setChanged();
+		getBlockEntity().setChanged();
 	}
 
 	protected void onItemStackRemoved(ItemStack stack, int slot) {
 		if (changeCallback != null) {
 			changeCallback.accept(InventoryChangeType.REMOVED, stack, slot);
 		}
-		getTileEntity().setChanged();
+		getBlockEntity().setChanged();
 	}
 
 	protected void onItemStackModified(ItemStack stack, int slot) {
 		if (changeCallback != null) {
 			changeCallback.accept(InventoryChangeType.MODIFIED, stack, slot);
 		}
-		getTileEntity().setChanged();
+		getBlockEntity().setChanged();
 	}
 
 	public class InventoryComponentCapabilityInterface implements IItemHandler {

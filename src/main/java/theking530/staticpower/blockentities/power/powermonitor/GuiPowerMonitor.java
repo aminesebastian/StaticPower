@@ -20,9 +20,13 @@ import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiPowerMonitor extends StaticPowerTileEntityGui<ContainerPowerMonitor, BlockEntityPowerMonitor> {
+	@SuppressWarnings("unused")
 	private TextButton inputUp;
+	@SuppressWarnings("unused")
 	private TextButton inputDown;
+	@SuppressWarnings("unused")
 	private TextButton outputUp;
+	@SuppressWarnings("unused")
 	private TextButton outputDown;
 
 	public GuiPowerMonitor(ContainerPowerMonitor container, Inventory invPlayer, Component name) {

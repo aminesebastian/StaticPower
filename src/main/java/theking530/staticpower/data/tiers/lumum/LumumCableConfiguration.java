@@ -14,6 +14,11 @@ public class LumumCableConfiguration {
 		}
 
 		@Override
+		protected int getCableCapillaryFluidTransferRate() {
+			return 10;
+		}
+
+		@Override
 		protected int getCableFluidtransferRate() {
 			return 600;
 		}

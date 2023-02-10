@@ -36,6 +36,7 @@ public class PacketPowerMonitorSync extends NetworkMessage {
 		position = buffer.readBlockPos();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {

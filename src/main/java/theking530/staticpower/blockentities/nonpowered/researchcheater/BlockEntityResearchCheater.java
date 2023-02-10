@@ -6,29 +6,30 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.AllSidesOutput;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 
-public class BlockEntityResearchCheater extends BlockEntityConfigurable implements MenuProvider {
+public class BlockEntityResearchCheater extends BlockEntityBase implements MenuProvider {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityResearchCheater> TYPE = new BlockEntityTypeAllocator<>("research_cheater",
 			(type, pos, state) -> new BlockEntityResearchCheater(pos, state), ModBlocks.ResearchCheater);
 	private static final float GENERATION_RATE = 1;
+
 	public final InventoryComponent inventory;
+	public final SideConfigurationComponent ioSideConfiguration;
 	private float timer;
 
 	public BlockEntityResearchCheater(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		enableFaceInteraction();
 		registerComponent(inventory = new InventoryComponent("Inventory", 7, MachineSideMode.Output).setShiftClickEnabled(true));
 		registerComponent(new OutputServoComponent("OutputServo", 2, inventory));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AllSidesOutput.INSTANCE));
 	}
 
 	@Override
@@ -41,16 +42,6 @@ public class BlockEntityResearchCheater extends BlockEntityConfigurable implemen
 				timer = 0;
 			}
 		}
-	}
-
-	@Override
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return SideConfigurationPresets.ALL_SIDES_OUTPUT;
-	}
-
-	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Output;
 	}
 
 	private void populateResearch() {

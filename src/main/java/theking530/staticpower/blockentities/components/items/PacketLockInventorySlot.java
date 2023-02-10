@@ -23,7 +23,7 @@ public class PacketLockInventorySlot extends NetworkMessage {
 	}
 
 	public PacketLockInventorySlot(InventoryComponent inventoryComponent, int slot, boolean locked, ItemStack filteredIem) {
-		this.position = inventoryComponent.getTileEntity().getBlockPos();
+		this.position = inventoryComponent.getBlockEntity().getBlockPos();
 		this.componentName = inventoryComponent.getComponentName();
 		this.slot = slot;
 		this.locked = locked;

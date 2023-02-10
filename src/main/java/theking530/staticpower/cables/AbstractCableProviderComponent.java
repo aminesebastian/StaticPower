@@ -144,8 +144,8 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		// If we're on the server, get the cable manager and remove the cable at the
 		// current position.
 		if (!isClientSide()) {
-			CableNetworkManager manager = CableNetworkAccessor.get(getTileEntity().getLevel());
-			manager.removeCable(getTileEntity().getBlockPos());
+			CableNetworkManager manager = CableNetworkAccessor.get(getBlockEntity().getLevel());
+			manager.removeCable(getBlockEntity().getBlockPos());
 		}
 	}
 
@@ -177,15 +177,13 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 			// If we are not tracking this cable, then this is a new one.
 			if (!manager.isTrackingCable(getPos())) {
 				// Create and initialize it, then add it to the network manager.
-				Cable wrapper = createCable();
-				initializeCableProperties(wrapper, context, state, placer, stack);
-				manager.addCable(wrapper);
+				Cable cable = createCable();
+				initializeCableProperties(cable, context, state, placer, stack);
+				manager.addCable(cable);
 
 				// Raise an event on this component for any additional work that needs to be
 				// done.
-				onCableFirstAddedToNetwork(wrapper, context, state, placer, stack);
-			} else {
-				initializeCableProperties(manager.getCable(getPos()), context, state, placer, stack);
+				onCableFirstAddedToNetwork(cable, context, state, placer, stack);
 			}
 		}
 	}
@@ -207,7 +205,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 			}
 			return true;
 		} else {
-			return getTileEntity().getBlockState().getValue(AbstractCableBlock.CONNECTION_TYPES.get(side)) == CableConnectionType.DISABLED;
+			return getBlockEntity().getBlockState().getValue(AbstractCableBlock.CONNECTION_TYPES.get(side)) == CableConnectionType.DISABLED;
 		}
 	}
 
@@ -330,12 +328,12 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	public void updateRenderingStateOnAllAdjacent() {
 		// Only execute on the client.
 		if (getLevel().isClientSide()) {
-			getTileEntity().requestModelDataUpdate();
+			getBlockEntity().requestModelDataUpdate();
 			// Update the rendering state on all connected blocks.
 			for (Direction dir : Direction.values()) {
 				AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), getPos().relative(dir));
 				if (otherProvider != null) {
-					otherProvider.getTileEntity().addRenderingUpdateRequest();
+					otherProvider.getBlockEntity().addRenderingUpdateRequest();
 				}
 			}
 			StaticPower.LOGGER.debug(String.format("Performing cable rendering state update at position: %1$s and all adjacent cables.", getPos().toString()));
@@ -347,7 +345,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	public void updateRenderingStateForCable() {
 		// Only execute on the client.
 		if (getLevel().isClientSide()) {
-			getTileEntity().addRenderingUpdateRequest();
+			getBlockEntity().addRenderingUpdateRequest();
 			StaticPower.LOGGER.debug(String.format("Performing cable rendering state update at position: %1$s.", getPos().toString()));
 		}
 	}
@@ -358,7 +356,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 				return getCable().get().getConnectionType(side);
 			}
 		}
-		return getTileEntity().getBlockState().getValue(AbstractCableBlock.CONNECTION_TYPES.get(side));
+		return getBlockEntity().getBlockState().getValue(AbstractCableBlock.CONNECTION_TYPES.get(side));
 	}
 
 	/**
@@ -496,8 +494,8 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	 */
 	public Optional<Cable> getCable() {
 		if (!isClientSide()) {
-			CableNetworkManager manager = CableNetworkAccessor.get(getTileEntity().getLevel());
-			Cable cable = manager.getCable(getTileEntity().getBlockPos());
+			CableNetworkManager manager = CableNetworkAccessor.get(getBlockEntity().getLevel());
+			Cable cable = manager.getCable(getBlockEntity().getBlockPos());
 			if (cable != null && cable.getNetwork() != null) {
 				return Optional.of(cable);
 			}
@@ -739,7 +737,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 			clientConnectionStates[i] = CableConnectionState.deserialize(sidedTags.getCompound(i));
 		}
 
-		getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), false);
+		getBlockEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), false);
 	}
 
 	protected void requestServerCableSyncFromClient() {

@@ -11,8 +11,6 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.components.control.ConveyorMotionComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlockEntity;
@@ -43,7 +41,6 @@ public class BlockEntityStraightConveyor extends AbstractConveyorBlockEntity {
 	public BlockEntityStraightConveyor(BlockEntityTypeAllocator<BlockEntityStraightConveyor> type, BlockPos pos, BlockState state, ResourceLocation tier) {
 		super(type, pos, state, tier);
 		registerComponent(inventory = new InventoryComponent("Inventory", 1, MachineSideMode.Input));
-		enableFaceInteraction();
 	}
 
 	@Override
@@ -66,9 +63,5 @@ public class BlockEntityStraightConveyor extends AbstractConveyorBlockEntity {
 
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
 		return mode == MachineSideMode.Input;
-	}
-
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return SideConfigurationPresets.ALL_SIDES_INPUT;
 	}
 }

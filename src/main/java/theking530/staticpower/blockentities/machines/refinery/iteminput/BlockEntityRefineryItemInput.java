@@ -12,9 +12,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.AllSidesInput;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
@@ -24,24 +23,16 @@ public class BlockEntityRefineryItemInput extends BaseRefineryBlockEntity {
 	public static final BlockEntityTypeAllocator<BlockEntityRefineryItemInput> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryItemInput>("refinery_item_input",
 			(type, pos, state) -> new BlockEntityRefineryItemInput(pos, state), ModBlocks.RefineryItemInput);
 
+	public final SideConfigurationComponent ioSideConfiguration;
+
 	public BlockEntityRefineryItemInput(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
-		enableFaceInteraction();
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AllSidesInput.INSTANCE));
 	}
 
 	@Override
 	public void process() {
 
-	}
-
-	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Input;
-	}
-
-	@Override
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return SideConfigurationPresets.ALL_SIDES_INPUT;
 	}
 
 	@Override

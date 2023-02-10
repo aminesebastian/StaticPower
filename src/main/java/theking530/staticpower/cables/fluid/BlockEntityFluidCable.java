@@ -12,75 +12,73 @@ import theking530.staticpower.data.tiers.categories.cables.TierFluidCableConfigu
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityFluidCable extends BlockEntityBase {
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_basic",
-			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false), ModBlocks.FluidCableBasic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_advanced",
-			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false), ModBlocks.FluidCableAdvanced);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_static",
-			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false), ModBlocks.FluidCableStatic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_energized",
-			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false), ModBlocks.FluidCableEnergized);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_lumum",
-			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false), ModBlocks.FluidCableLumum);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_creative",
-			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false), ModBlocks.FluidCableCreative);
+	public enum FluidPipeType {
+		BASIC, INDUSTRIAL, CAPILLARY
+	}
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_INDUSTRIAL_BASIC = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_industrial_basic",
-			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true), ModBlocks.IndustrialFluidCableBasic);
+	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_REGULAR = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid",
+			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, FluidPipeType.BASIC), ModBlocks.FluidCables.values());
+
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_INDUSTRIAL_ADVANCED = new BlockEntityTypeAllocator<BlockEntityFluidCable>(
-			"cable_fluid_industrial_advanced", (allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true),
-			ModBlocks.IndustrialFluidCableAdvanced);
+	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_INDUSTRIAL = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_industrial",
+			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, FluidPipeType.INDUSTRIAL), ModBlocks.IndustrialFluidCables.values());
+
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_INDUSTRIAL_STATIC = new BlockEntityTypeAllocator<BlockEntityFluidCable>(
-			"cable_fluid_industrial_static", (allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true), ModBlocks.IndustrialFluidCableStatic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_INDUSTRIAL_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityFluidCable>(
-			"cable_fluid_industrial_energized", (allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true),
-			ModBlocks.IndustrialFluidCableEnergized);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_INDUSTRIAL_LUMUM = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_industrial_lumum",
-			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true), ModBlocks.IndustrialFluidCableLumum);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_INDUSTRIAL_CREATIVE = new BlockEntityTypeAllocator<BlockEntityFluidCable>(
-			"cable_fluid_industrial_creative", (allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true),
-			ModBlocks.IndustrialFluidCableCreative);
+	public static final BlockEntityTypeAllocator<BlockEntityFluidCable> TYPE_CAPILLARY = new BlockEntityTypeAllocator<BlockEntityFluidCable>("cable_fluid_capillary",
+			(allocator, pos, state) -> new BlockEntityFluidCable(allocator, pos, state, 1.25f / 16.0f, FluidPipeType.CAPILLARY), ModBlocks.CapillaryFluidCables.values());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			TYPE_BASIC.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_ADVANCED.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_STATIC.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_ENERGIZED.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_LUMUM.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_CREATIVE.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-
-			TYPE_INDUSTRIAL_BASIC.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_INDUSTRIAL_ADVANCED.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_INDUSTRIAL_STATIC.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_INDUSTRIAL_ENERGIZED.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_INDUSTRIAL_LUMUM.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
-			TYPE_INDUSTRIAL_CREATIVE.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
+			TYPE_REGULAR.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
+			TYPE_INDUSTRIAL.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
+			TYPE_CAPILLARY.setTileEntitySpecialRenderer(BlockEntityRenderFluidCable::new);
 		}
 	}
 
 	public FluidCableComponent fluidCableComponent;
 	public float fluidRenderRadius;
 
-	public BlockEntityFluidCable(BlockEntityTypeAllocator<BlockEntityFluidCable> allocator, BlockPos pos, BlockState state, float radius, boolean isIndustrial) {
+	public BlockEntityFluidCable(BlockEntityTypeAllocator<BlockEntityFluidCable> allocator, BlockPos pos, BlockState state, float radius, FluidPipeType type) {
 		super(allocator, pos, state);
 
 		TierFluidCableConfiguration config = getTierObject().cableFluidConfiguration;
-		int transferRate = isIndustrial ? config.cableIndustrialFluidTransferRate.get() : config.cableFluidTransferRate.get();
+		int transferRate = 0;
+		switch (type) {
+		case BASIC:
+			transferRate = config.cableFluidTransferRate.get();
+			break;
+		case CAPILLARY:
+			transferRate = config.cableCapillaryFluidTransferRate.get();
+			break;
+		case INDUSTRIAL:
+			transferRate = config.cableIndustrialFluidTransferRate.get();
+			break;
+		}
 
-		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", isIndustrial, transferRate * 4, transferRate));
+		float defaultPressureProperty = 0;
+		switch (type) {
+		case BASIC:
+			defaultPressureProperty = config.cableFluidPressureDissipation.get();
+			break;
+		case CAPILLARY:
+			defaultPressureProperty = config.cableCapillaryPressureDissipation.get();
+			break;
+		case INDUSTRIAL:
+			defaultPressureProperty = config.cableIndustrialPressureDissipation.get();
+			break;
+		}
+
+		PipePressureProperties pressureProperties;
+		if (type == FluidPipeType.CAPILLARY) {
+			pressureProperties = new PipePressureProperties(-2 * defaultPressureProperty, -defaultPressureProperty, 2 * defaultPressureProperty);
+		} else {
+			pressureProperties = new PipePressureProperties(2 * defaultPressureProperty, -defaultPressureProperty, -2 * defaultPressureProperty);
+		}
+
+		// Set capacity == 5 * transferRate so that a cable connected to a fluid source
+		// can supply on all other sides.
+		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", type, transferRate * 5, transferRate, pressureProperties));
 		fluidRenderRadius = radius;
 	}
 }

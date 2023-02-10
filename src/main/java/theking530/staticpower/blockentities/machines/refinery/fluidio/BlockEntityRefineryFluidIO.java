@@ -7,17 +7,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
@@ -37,13 +35,16 @@ public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implemen
 			(type, pos, state) -> new BlockEntityRefineryFluidIO(type, pos, state, true), ModBlocks.RefineryFluidOutput);
 	public static final StaticPowerFluidTank EMPTY = new StaticPowerFluidTank(0);
 
+	public final SideConfigurationComponent ioSideConfiguration;
 	private final RefineryFluidInterface[] tankInterfaces;
 	private final boolean outputMode;
 
 	public BlockEntityRefineryFluidIO(BlockEntityTypeAllocator<BlockEntityRefineryFluidIO> type, BlockPos pos, BlockState state, boolean outputMode) {
 		super(type, pos, state, StaticPowerTiers.ADVANCED);
-		enableFaceInteraction();
 		this.outputMode = outputMode;
+
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				outputMode ? RefineryFluidOutputSideConfiguration.INSTANCE : RefineryFluidInputSideConfiguration.INSTANCE));
 
 		if (outputMode) {
 			tankInterfaces = new RefineryFluidInterface[3];
@@ -69,35 +70,11 @@ public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implemen
 			registerComponent(new FluidInputServoComponent("FluidInputServo1", 100, tankInterfaces[1], MachineSideMode.Input3));
 			registerComponent(new FluidInputServoComponent("FluidOutputServo1", 100, tankInterfaces[1], MachineSideMode.Output3));
 		}
-
-		if (outputMode) {
-			ioSideConfiguration.setPreset(
-					new SideConfigurationPreset().setSide(BlockSide.TOP, true, MachineSideMode.Output2).setSide(BlockSide.RIGHT, true, MachineSideMode.Output3)
-							.setSide(BlockSide.FRONT, true, MachineSideMode.Output4).setSide(BlockSide.BOTTOM, true, MachineSideMode.Output2)
-							.setSide(BlockSide.LEFT, true, MachineSideMode.Output3).setSide(BlockSide.BACK, true, MachineSideMode.Output4),
-					true);
-		} else {
-			ioSideConfiguration.setPreset(
-					new SideConfigurationPreset().setSide(BlockSide.TOP, true, MachineSideMode.Input2).setSide(BlockSide.RIGHT, true, MachineSideMode.Input2)
-							.setSide(BlockSide.FRONT, true, MachineSideMode.Input2).setSide(BlockSide.BOTTOM, true, MachineSideMode.Input3)
-							.setSide(BlockSide.LEFT, true, MachineSideMode.Input3).setSide(BlockSide.BACK, true, MachineSideMode.Input3),
-					true);
-		}
 	}
 
 	@Override
 	public void process() {
 
-	}
-
-	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (outputMode) {
-			return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output2 || mode == MachineSideMode.Output3 || mode == MachineSideMode.Output4;
-		} else {
-			return mode == MachineSideMode.Disabled || mode == MachineSideMode.Input2 || mode == MachineSideMode.Input3 || mode == MachineSideMode.Output2
-					|| mode == MachineSideMode.Output3;
-		}
 	}
 
 	@Override
@@ -176,7 +153,7 @@ public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implemen
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		// Only provide the energy capability if we are not disabled on that side.
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if (cap == ForgeCapabilities.FLUID_HANDLER) {
 			if (side != null) {
 				MachineSideMode mode = getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side);
 				if (outputMode) {

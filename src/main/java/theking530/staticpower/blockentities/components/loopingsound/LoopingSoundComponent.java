@@ -64,6 +64,10 @@ public class LoopingSoundComponent extends AbstractBlockEntityComponent {
 	}
 
 	public void startPlayingSound(SoundEvent sound, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
+		if (isPlaying) {
+			return;
+		}
+
 		isPlaying = true;
 		ResourceLocation soundId = ForgeRegistries.SOUND_EVENTS.getKey(sound);
 		if (getLevel().isClientSide()) {

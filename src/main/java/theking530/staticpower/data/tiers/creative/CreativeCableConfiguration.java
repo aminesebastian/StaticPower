@@ -15,6 +15,11 @@ public class CreativeCableConfiguration {
 		}
 
 		@Override
+		protected int getCableCapillaryFluidTransferRate() {
+			return Integer.MAX_VALUE;
+		}
+
+		@Override
 		protected int getCableFluidtransferRate() {
 			return Integer.MAX_VALUE;
 		}

@@ -25,6 +25,14 @@ public abstract class ServerCableCapability {
 		return type;
 	}
 
+	public void preWorldTick() {
+
+	}
+
+	public void tick() {
+
+	}
+
 	public abstract void save(CompoundTag tag);
 
 	public abstract void load(CompoundTag tag);

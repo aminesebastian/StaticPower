@@ -244,7 +244,7 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 			return LazyOptional.empty();
 		}
 
-		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getBlockEntity());
 		if (!sideConfig.isPresent()) {
 			return manuallyGetCapability(cap, side);
 		}
@@ -293,7 +293,7 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 			}
 		}
 
-		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getBlockEntity());
 		if (sideConfig.isPresent()) {
 			if (!sideConfig.get().getWorldSpaceDirectionConfiguration(direction).isInputMode()) {
 				return 0;
@@ -310,7 +310,7 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 			}
 		}
 
-		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getBlockEntity());
 		if (sideConfig.isPresent()) {
 			if (!sideConfig.get().getWorldSpaceDirectionConfiguration(direction).isOutputMode()) {
 				return FluidStack.EMPTY;
@@ -327,7 +327,7 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 			}
 		}
 
-		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+		Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getBlockEntity());
 		if (sideConfig.isPresent()) {
 			if (!sideConfig.get().getWorldSpaceDirectionConfiguration(direction).isOutputMode()) {
 				return FluidStack.EMPTY;

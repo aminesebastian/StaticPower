@@ -90,7 +90,7 @@ public class PowerDistributionComponent extends AbstractBlockEntityComponent {
 	@Nullable
 	protected IStaticPowerStorage getPowerStorageOnSide(Direction facing) {
 		// Get the tile entity.
-		BlockEntity te = getTileEntity().getLevel().getBlockEntity(getTileEntity().getBlockPos().relative(facing.getOpposite()));
+		BlockEntity te = getBlockEntity().getLevel().getBlockEntity(getBlockEntity().getBlockPos().relative(facing.getOpposite()));
 
 		// If it does not exist, return null.
 		if (te == null) {
@@ -102,8 +102,8 @@ public class PowerDistributionComponent extends AbstractBlockEntityComponent {
 	}
 
 	protected boolean canOutputFromSide(Direction facing) {
-		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
-			return getTileEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(facing) == outputMode;
+		if (getBlockEntity().hasComponentOfType(SideConfigurationComponent.class)) {
+			return getBlockEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(facing) == outputMode;
 		}
 		return true;
 	}

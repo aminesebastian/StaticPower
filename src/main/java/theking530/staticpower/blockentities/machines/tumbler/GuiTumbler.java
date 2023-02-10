@@ -48,6 +48,7 @@ public class GuiTumbler extends StaticPowerTileEntityGui<ContainerTumbler, Block
 				ChatFormatting.GREEN);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	protected void drawBackgroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
@@ -55,7 +56,6 @@ public class GuiTumbler extends StaticPowerTileEntityGui<ContainerTumbler, Block
 		MetricConverter metric = new MetricConverter(getTileEntity().getCurrentSpeed());
 		String rpmText = metric.getValueAsString(true) + " RPM";
 		drawEmptySlot(stack, 123 - (Minecraft.getInstance().font.width(rpmText) / 2), 40, Minecraft.getInstance().font.width(rpmText) + 4, 11);
-		Minecraft.getInstance().font.drawShadow(stack, rpmText, 125 - (Minecraft.getInstance().font.width(rpmText) / 2), 42,
-				SDColor.EIGHT_BIT_WHITE.encodeInInteger());
+		Minecraft.getInstance().font.drawShadow(stack, rpmText, 125 - (Minecraft.getInstance().font.width(rpmText) / 2), 42, SDColor.EIGHT_BIT_WHITE.encodeInInteger());
 	}
 }

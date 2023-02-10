@@ -176,7 +176,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 					ItemStack remainingAmount = module.insertItem(extractedItem.copy(), false);
 					if (remainingAmount.getCount() < extractedItem.getCount()) {
 						target.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
-						cable.getTileEntity().setChanged();
+						cable.getBlockEntity().setChanged();
 						break;
 					}
 				}

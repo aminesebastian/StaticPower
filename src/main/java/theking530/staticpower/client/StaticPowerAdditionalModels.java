@@ -6,12 +6,12 @@ import java.util.Map;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.cables.CableTiers;
+import theking530.staticpower.cables.CableTiers.CableTier;
 
 public class StaticPowerAdditionalModels {
 	public static final HashSet<ResourceLocation> MODELS = new HashSet<ResourceLocation>();
@@ -19,27 +19,25 @@ public class StaticPowerAdditionalModels {
 	public record CableModelSet(ResourceLocation straight, ResourceLocation extension, ResourceLocation attachment) {
 	}
 
-	@SuppressWarnings("unchecked")
-	private static final Tuple<ResourceLocation, String>[] CABLE_TIERS = new Tuple[] { new Tuple<ResourceLocation, String>(StaticPowerTiers.BASIC, "basic"),
-			new Tuple<ResourceLocation, String>(StaticPowerTiers.ADVANCED, "advanced"), new Tuple<ResourceLocation, String>(StaticPowerTiers.STATIC, "static"),
-			new Tuple<ResourceLocation, String>(StaticPowerTiers.ENERGIZED, "energized"), new Tuple<ResourceLocation, String>(StaticPowerTiers.LUMUM, "lumum"),
-			new Tuple<ResourceLocation, String>(StaticPowerTiers.CREATIVE, "creative") };
-
 	public static final Map<ResourceLocation, CableModelSet> POWER_CABLES = new HashMap<>();
 	public static final Map<ResourceLocation, CableModelSet> INSULATED_POWER_CABLES = new HashMap<>();
 	public static final Map<ResourceLocation, CableModelSet> INDUSTRIAL_POWER_CABLES = new HashMap<>();
 	public static final Map<ResourceLocation, CableModelSet> FLUID_CABLES = new HashMap<>();
+	public static final Map<ResourceLocation, CableModelSet> CAPILLARY_FLUID_CABLES = new HashMap<>();
 	public static final Map<ResourceLocation, CableModelSet> INDUSTRIAL_FLUID_CABLES = new HashMap<>();
 	public static final Map<ResourceLocation, CableModelSet> ITEM_CABLES = new HashMap<>();
 
 	static {
-		for (Tuple<ResourceLocation, String> tier : CABLE_TIERS) {
-			POWER_CABLES.put(tier.getA(), registerCable("block/cable_power_" + tier.getB()));
-			INSULATED_POWER_CABLES.put(tier.getA(), registerCable("block/cable_insulated_power_" + tier.getB()));
-			INDUSTRIAL_POWER_CABLES.put(tier.getA(), registerCable("block/cable_industrial_power_" + tier.getB()));
-			FLUID_CABLES.put(tier.getA(), registerCable("block/cable_fluid_" + tier.getB()));
-			INDUSTRIAL_FLUID_CABLES.put(tier.getA(), registerCable("block/cable_industrial_fluid_" + tier.getB()));
-			ITEM_CABLES.put(tier.getA(), registerCable("block/cable_item_" + tier.getB()));
+		for (CableTier tier : CableTiers.get()) {
+			POWER_CABLES.put(tier.location(), registerCable("block/cable_power_" + tier.name()));
+			INSULATED_POWER_CABLES.put(tier.location(), registerCable("block/cable_insulated_power_" + tier.name()));
+			INDUSTRIAL_POWER_CABLES.put(tier.location(), registerCable("block/cable_industrial_power_" + tier.name()));
+
+			ITEM_CABLES.put(tier.location(), registerCable("block/cable_item_" + tier.name()));
+
+			FLUID_CABLES.put(tier.location(), registerCable("block/cable_fluid_" + tier.name()));
+			CAPILLARY_FLUID_CABLES.put(tier.location(), registerCable("block/cable_capillary_fluid_" + tier.name()));
+			INDUSTRIAL_FLUID_CABLES.put(tier.location(), registerCable("block/cable_industrial_fluid_" + tier.name()));
 		}
 	}
 

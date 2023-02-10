@@ -4,9 +4,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import javax.annotation.Nonnull;
@@ -56,7 +58,9 @@ import theking530.staticpower.blockentities.components.AbstractBlockEntityCompon
 import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.items.CompoundInventoryComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.serialization.SerializationUtilities;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
@@ -192,7 +196,39 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	protected void onLoadedInWorld(Level world, BlockPos pos, BlockState state) {
+		// Get all inventories for this tile entitiy.
+		List<InventoryComponent> inventories = getComponents(InventoryComponent.class);
 
+		// Declare a map to contain all the organized inventories.
+		Map<MachineSideMode, List<InventoryComponent>> modeList = new HashMap<MachineSideMode, List<InventoryComponent>>();
+
+		// Create the two compound inventory categories.
+		modeList.put(MachineSideMode.Input, new ArrayList<InventoryComponent>());
+		modeList.put(MachineSideMode.Output, new ArrayList<InventoryComponent>());
+
+		// Iterate through all the side modes and organize the inventories.
+		for (InventoryComponent inv : inventories) {
+			// Populate the input and output lists.
+			if (inv.getMode().isInputMode()) {
+				modeList.get(MachineSideMode.Input).add(inv);
+			} else if (inv.getMode().isOutputMode()) {
+				modeList.get(MachineSideMode.Output).add(inv);
+			}
+		}
+
+		// Iterate through all the organized side modes and create compounds for the
+		// ones with values.
+		for (MachineSideMode mode : modeList.keySet()) {
+			// Get all the inventories for that side mode.
+			List<InventoryComponent> modeInvs = modeList.get(mode);
+			// Skip empty lists or lists with just one value.
+			if (modeInvs.size() <= 1) {
+				continue;
+			}
+
+			// Create a compount inventory and register it for that side mode.
+			registerComponentOverride(new CompoundInventoryComponent("CompoundInventory" + mode, mode, modeInvs));
+		}
 	}
 
 	@Override
@@ -590,7 +626,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	@Override
-	public boolean shouldSerializeWhenBroken() {
+	public boolean shouldSerializeWhenBroken(Player player) {
 		return false;
 	}
 

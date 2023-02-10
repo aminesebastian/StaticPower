@@ -208,7 +208,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 									StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
 							if (remainingAmount.getCount() < extractedItem.getCount()) {
 								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
-								cable.getTileEntity().setChanged();
+								cable.getBlockEntity().setChanged();
 								output.set(true);
 								break;
 							}
@@ -244,7 +244,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 							StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
 					if (remainingAmount.getCount() < extractedItem.getCount()) {
 						inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
-						cable.getTileEntity().setChanged();
+						cable.getBlockEntity().setChanged();
 						break;
 					}
 				}

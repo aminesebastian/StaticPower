@@ -61,6 +61,10 @@ public class CableNetwork {
 				throw new RuntimeException(String.format("An error occured when attempting to pre-tick a graph module of type: %1$s.", module.getType().toString()), e);
 			}
 		}
+
+		for (Cable cable : graph.getCables().values()) {
+			cable.preWorldTick();
+		}
 	}
 
 	public void tick() {
@@ -77,6 +81,10 @@ public class CableNetwork {
 			} catch (Exception e) {
 				throw new RuntimeException(String.format("An error occured when attempting to tick a graph module of type: %1$s.", module.getType().toString()), e);
 			}
+		}
+
+		for (Cable cable : graph.getCables().values()) {
+			cable.tick();
 		}
 	}
 

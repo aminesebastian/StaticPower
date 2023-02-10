@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.api.ISolderingIron;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
@@ -20,7 +20,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 
-public abstract class AbstractSolderingTable extends BlockEntityConfigurable implements MenuProvider {
+public abstract class AbstractSolderingTable extends BlockEntityBase implements MenuProvider {
 	public final InventoryComponent patternInventory;
 	public final InventoryComponent solderingIronInventory;
 	public final InventoryComponent inventory;

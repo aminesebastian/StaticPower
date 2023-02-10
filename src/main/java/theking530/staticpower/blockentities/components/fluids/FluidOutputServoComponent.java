@@ -104,8 +104,8 @@ public class FluidOutputServoComponent extends AbstractBlockEntityComponent {
 	}
 
 	public boolean canOutputFromSide(Direction side) {
-		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
-			return getTileEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side) == mode;
+		if (getBlockEntity().hasComponentOfType(SideConfigurationComponent.class)) {
+			return getBlockEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side) == mode;
 		}
 		return true;
 	}

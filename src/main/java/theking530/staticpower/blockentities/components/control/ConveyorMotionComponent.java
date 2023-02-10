@@ -51,7 +51,7 @@ public class ConveyorMotionComponent extends AbstractBlockEntityComponent {
 		}
 
 		// Get the facing direction and vector.
-		Direction facing = getTileEntity().getFacingDirection();
+		Direction facing = getBlockEntity().getFacingDirection();
 
 		// Get all entities in the block space above this block.
 		List<Entity> entities = getLevel().getEntitiesOfClass(Entity.class, entitySearchBounds);

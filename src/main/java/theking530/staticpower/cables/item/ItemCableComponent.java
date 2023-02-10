@@ -112,7 +112,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())),
 					new ItemCableAddedPacket(this, routingPacket));
 		}
-		getTileEntity().setChanged();
+		getBlockEntity().setChanged();
 	}
 
 	public void removeTransferingItem(long parcelId) {
@@ -121,7 +121,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())),
 					new ItemCableRemovedPacket(this, parcelId));
 		}
-		getTileEntity().setChanged();
+		getBlockEntity().setChanged();
 	}
 
 	public Collection<ItemRoutingParcelClient> getContainedItems() {
@@ -266,7 +266,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 					ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), side.getOpposite(), false,
 							StaticPowerConfig.getTier(tier).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
 					if (remainingAmount.getCount() < insertStack.getCount()) {
-						getTileEntity().setChanged();
+						getBlockEntity().setChanged();
 						stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());
 					}
 				});

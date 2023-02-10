@@ -9,29 +9,36 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapability;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
+import theking530.staticpower.cables.fluid.BlockEntityFluidCable.FluidPipeType;
 
 public class FluidCableCapability extends ServerCableCapability implements IFluidTank {
-	public static final float INTERPOLATION_RATE = 0.1f;
-	public static final int MAX_PIPE_PRESSURE = 32;
+	public static final float INTERPOLATION_RATE = 0.5f;
 
 	private FluidStack containedFluid;
 	private float headPressure;
 	private float targetPressure;
 	private int capacity;
 	private int transferRate;
-	private boolean isIndustrial;
+	private PipePressureProperties pressureProperties;
+	private FluidPipeType type;
 
 	public FluidCableCapability(ServerCableCapabilityType<?> type, Cable owningCable) {
 		super(type, owningCable);
 		this.containedFluid = FluidStack.EMPTY.copy();
 		this.headPressure = 0;
 		this.targetPressure = 0;
+		this.pressureProperties = new PipePressureProperties(0, 0, 0);
 	}
 
-	public void initialize(int capacity, int transferRate, boolean isIndustrial) {
-		this.isIndustrial = isIndustrial;
+	public void initialize(int capacity, int transferRate, PipePressureProperties pressureProperties, FluidPipeType type) {
+		this.type = type;
 		this.transferRate = transferRate;
 		this.capacity = capacity;
+		this.pressureProperties = pressureProperties;
+	}
+
+	public PipePressureProperties getPressureProperties() {
+		return pressureProperties;
 	}
 
 	public FluidStack getFluidStorage() {
@@ -42,8 +49,8 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 		return transferRate;
 	}
 
-	public boolean isIndustrial() {
-		return isIndustrial;
+	public FluidPipeType getPipeType() {
+		return type;
 	}
 
 	@Override
@@ -65,8 +72,12 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 		return containedFluid.isEmpty() ? true : fluid.isFluidEqual(containedFluid);
 	}
 
-	public void setHeadPressure(float targetRate) {
+	public void setTargetHeadPressure(float targetRate) {
 		targetPressure = targetRate;
+	}
+
+	public float getTargetHeadPressure() {
+		return targetPressure;
 	}
 
 	public float getHeadPressure() {
@@ -131,7 +142,7 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 	}
 
 	public void updateHeadPressure() {
-		float newValue = (1.0f - INTERPOLATION_RATE) * headPressure + INTERPOLATION_RATE * targetPressure;
+		float newValue = (1.0f - 0.5f) * headPressure + 0.5f * targetPressure;
 		if (newValue < 0.1f) {
 			newValue = 0;
 		}
@@ -141,27 +152,25 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 	@Override
 	public void save(CompoundTag tag) {
 		containedFluid.writeToNBT(tag);
-		tag.putFloat("HeadPressure", headPressure);
-		tag.putFloat("TargetPressure", targetPressure);
 		tag.putInt("Capacity", capacity);
 		tag.putInt("TransferRate", transferRate);
-		tag.putBoolean("IsIndustrial", isIndustrial);
+		tag.putByte("Type", (byte) type.ordinal());
+		tag.put("PressureProperties", pressureProperties.serialize());
 	}
 
 	@Override
 	public void load(CompoundTag tag) {
 		containedFluid = FluidStack.loadFluidStackFromNBT(tag);
-		headPressure = tag.getFloat("HeadPressure");
-		targetPressure = tag.getFloat("TargetPressure");
 		capacity = tag.getInt("Capacity");
 		transferRate = tag.getInt("TransferRate");
-		isIndustrial = tag.getBoolean("IsIndustrial");
+		type = FluidPipeType.values()[tag.getByte("Type")];
+		pressureProperties.deserialize(tag.getCompound("PressureProperties"));
 	}
 
 	@Override
 	public String toString() {
 		return "FluidCableCapability [accumulatedFluid=" + containedFluid + ", headPressure=" + headPressure + ", targetPressure=" + targetPressure + ", capacity=" + capacity
-				+ ", transferRate=" + transferRate + ", isIndustrial=" + isIndustrial + "]";
+				+ ", transferRate=" + transferRate + ", type=" + type + "]";
 	}
 
 	public static class FluidCableCapabilityType extends ServerCableCapabilityType<FluidCableCapability> {

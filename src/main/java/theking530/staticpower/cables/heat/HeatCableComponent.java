@@ -75,7 +75,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public int getCurrentHeat() {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			AtomicInteger recieve = new AtomicInteger(0);
 			getHeatNetworkModule().ifPresent(module -> {
 				recieve.set(module.getHeatStorage().getCurrentHeat());
@@ -88,7 +88,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public int getMaximumHeat() {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
 			return module != null ? module.getHeatStorage().getMaximumHeat() : 0;
 		} else {
@@ -98,7 +98,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public int getOverheatThreshold() {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
 			return module != null ? module.getHeatStorage().getOverheatThreshold() : 0;
 		} else {
@@ -113,7 +113,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public int heat(int amountToHeat, HeatTransferAction action) {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
 			return module != null ? module.getHeatStorage().heat(amountToHeat, action) : 0;
 		} else {
@@ -123,7 +123,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public int cool(int amountToCool, HeatTransferAction action) {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
 			return module != null ? module.getHeatStorage().cool(amountToCool, action) : 0;
 		} else {

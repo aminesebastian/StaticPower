@@ -29,10 +29,9 @@ public class RedstonePulseReactorComponent extends AbstractBlockEntityComponent 
 		this.shouldControlBlockStateOnProperty = false;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void preProcessUpdate() {
 		// Only operate on the server.
-		if (getLevel().isClientSide) {
+		if (getLevel().isClientSide()) {
 			return;
 		}
 

@@ -159,7 +159,7 @@ public class DigistoreExporterAttachment extends AbstractDigistoreCableAttachmen
 							// If we actually extracted something, now we perform the real extract.
 							if (remainingAmount.getCount() < extractedItem.getCount()) {
 								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
-								cable.getTileEntity().setChanged();
+								cable.getBlockEntity().setChanged();
 								break;
 							}
 						} else if (hasUpgradeOfClass(attachment, CraftingUpgrade.class)) {

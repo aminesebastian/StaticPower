@@ -26,9 +26,6 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -76,22 +73,8 @@ public class OldBlockEntityPump extends BlockEntityMachine {
 		// Battery
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 
-		// Set the default side configuration.
-		ioSideConfiguration.setPreset(new SideConfigurationPreset().setSide(BlockSide.TOP, true, MachineSideMode.Input), true);
-
-		// Enable face interaction.
-		enableFaceInteraction();
-
 		// Initialize the positions to pump container.
 		positionsToPump = new LinkedList<BlockPos>();
-	}
-
-	@Override()
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (side != BlockSide.TOP && mode != MachineSideMode.Never) {
-			return false;
-		}
-		return mode == MachineSideMode.Output;
 	}
 
 	/**
@@ -229,10 +212,6 @@ public class OldBlockEntityPump extends BlockEntityMachine {
 			}
 		}
 		return null;
-	}
-
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return SideConfigurationPresets.TOP_SIDE_ONLY_OUTPUT;
 	}
 
 	public CompoundTag serializeSaveNbt(CompoundTag nbt) {

@@ -158,7 +158,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 			// Send a packet to the server with the updated values.
 			PacketUpdateRedstoneCableConfiguration msg = new PacketUpdateRedstoneCableConfiguration(getPos(), configuration);
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
-			getTileEntity().addRenderingUpdateRequest();
+			getBlockEntity().addRenderingUpdateRequest();
 		} else {
 			if (CableNetworkAccessor.get(getLevel()).isTrackingCable(getPos())) {
 				CableNetworkAccessor.get(getLevel()).getCable(getPos()).getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());

@@ -14,6 +14,11 @@ public class EnergizedCableConfiguration {
 		}
 
 		@Override
+		protected int getCableCapillaryFluidTransferRate() {
+			return 5;
+		}
+
+		@Override
 		protected int getCableFluidtransferRate() {
 			return 300;
 		}

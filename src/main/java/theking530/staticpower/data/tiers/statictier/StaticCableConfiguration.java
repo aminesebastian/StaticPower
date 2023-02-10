@@ -14,6 +14,11 @@ public class StaticCableConfiguration {
 		}
 
 		@Override
+		protected int getCableCapillaryFluidTransferRate() {
+			return 3;
+		}
+
+		@Override
 		protected int getCableFluidtransferRate() {
 			return 150;
 		}

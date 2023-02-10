@@ -1,9 +1,7 @@
 package theking530.staticpower.cables.fluid;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,6 +29,7 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.drain.DrainAttachment;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
+import theking530.staticpower.cables.fluid.BlockEntityFluidCable.FluidPipeType;
 import theking530.staticpower.init.cables.ModCableCapabilities;
 import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
@@ -46,31 +45,28 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	private final SidedFluidHandlerCapabilityWrapper capabilityWrapper;
 	private final int capacity;
 	private final int transferRate;
-	private final boolean isIndustrial;
+	private final PipePressureProperties pressureProperties;
+	private final FluidPipeType type;
 	private FluidStack lastUpdateFluidStack;
 	private float lastUpdateFilledPercentage;
 	private float visualFilledPercentage;
 	private float clientPressure;
 	private int subThresholdUpdateTime;
-	public Map<Direction, Float> flowMap;
 
-	public FluidCableComponent(String name, boolean isIndustrial, int capacity, int transferRate) {
+	public FluidCableComponent(String name, FluidPipeType type, int capacity, int transferRate, PipePressureProperties pressureProperties) {
 		super(name, ModCableModules.Fluid.get());
 		this.capacity = capacity;
 		this.transferRate = transferRate;
-		this.flowMap = new HashMap<>();
-		for (Direction dir : Direction.values()) {
-			flowMap.put(dir, 0.0f);
-		}
+		this.pressureProperties = pressureProperties;
 
 		capabilityWrapper = new SidedFluidHandlerCapabilityWrapper(this);
 		lastUpdateFluidStack = FluidStack.EMPTY;
 		lastUpdateFilledPercentage = 0.0f;
 		visualFilledPercentage = 0.0f;
-		this.isIndustrial = isIndustrial;
+		this.type = type;
 
 		// Only non-industrial pipes can have attachments.
-		if (!isIndustrial) {
+		if (type != FluidPipeType.INDUSTRIAL) {
 			addValidAttachmentClass(ExtractorAttachment.class);
 			addValidAttachmentClass(SprinklerAttachment.class);
 			addValidAttachmentClass(DrainAttachment.class);
@@ -101,7 +97,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public void updateBeforeRendering(float partialTicks) {
 		if (visualFilledPercentage != lastUpdateFilledPercentage) {
 			float difference = visualFilledPercentage - lastUpdateFilledPercentage;
-			visualFilledPercentage -= difference * (partialTicks / 10.0f);
+			visualFilledPercentage -= difference * (partialTicks / 5.0f);
 		}
 	}
 
@@ -131,7 +127,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			lastUpdateFluidStack = FluidStack.loadFluidStackFromNBT(data.getCompound("f"));
 			lastUpdateFilledPercentage = Math.min(1.0f, data.getFloat("%"));
 			clientPressure = data.getFloat("p");
-			getTileEntity().requestModelDataUpdate();
+			getBlockEntity().requestModelDataUpdate();
 		}
 	}
 
@@ -172,7 +168,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		FluidCableCapability fluidCapability = ModCableCapabilities.Fluid.get().create(cable);
-		fluidCapability.initialize(capacity, transferRate, isIndustrial);
+		fluidCapability.initialize(capacity, transferRate, pressureProperties, type);
 		cable.registerCapability(fluidCapability);
 	}
 
@@ -247,28 +243,16 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	public CompoundTag serializeSaveNbt(CompoundTag nbt) {
 		super.serializeSaveNbt(nbt);
-		// Save the filled percent.
-		nbt.putFloat("filled_percentage", lastUpdateFilledPercentage);
-
-		// Put the fluid stack.
-		CompoundTag fluidNbt = new CompoundTag();
-		lastUpdateFluidStack.writeToNBT(fluidNbt);
-		nbt.put("fluid", fluidNbt);
 		return nbt;
 	}
 
 	public void deserializeSaveNbt(CompoundTag nbt) {
 		super.deserializeSaveNbt(nbt);
-		// Load the filled percent.
-		lastUpdateFilledPercentage = nbt.getFloat("filled_percentage");
-
-		// Load the last update fluidstack.
-		lastUpdateFluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) nbt.get("fluid"));
 	}
 
 	@Override
 	public int fill(Direction direction, FluidStack resource, FluidAction action) {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			FluidNetworkModule module = getFluidModule().orElse(null);
 			if (module != null) {
 				return module.fill(getPos(), resource, action);
@@ -286,7 +270,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public FluidStack getFluidInTank(int tank) {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			Optional<FluidCableCapability> capability = getFluidCapability();
 			if (capability.isPresent()) {
 				return capability.get().getFluid();
@@ -299,7 +283,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int getTankCapacity(int tank) {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			Optional<FluidCableCapability> capability = getFluidCapability();
 			if (capability.isPresent()) {
 				return capability.get().getCapacity();
@@ -312,7 +296,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public boolean isFluidValid(int tank, FluidStack stack) {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			Optional<FluidCableCapability> capability = getFluidCapability();
 			if (capability.isPresent()) {
 				return capability.get().isFluidValid(stack);
@@ -330,7 +314,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int fill(FluidStack resource, float pressure, FluidAction action) {
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			FluidNetworkModule module = getFluidModule().orElse(null);
 			if (module != null) {
 				return module.fill(getPos(), resource, pressure, action);

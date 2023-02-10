@@ -38,7 +38,7 @@ public class BlockEntityRenderFluidPump extends StaticPowerBlockEntitySpecialRen
 			// Get the fluid attributes.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 			SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
-			fluidColor.setAlpha(0.5f); // Render color as opaque so only the texture controls opacity.
+			fluidColor.setAlpha(0.75f); // Render color as opaque so only the texture controls opacity.
 			boolean isGas = fluid.getFluid().getFluidType().isLighterThanAir();
 
 			// Calculate the height and position, then render.

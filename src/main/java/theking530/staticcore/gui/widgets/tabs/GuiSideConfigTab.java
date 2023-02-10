@@ -108,7 +108,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			highlightedSide = result.getDirection();
 			SideConfigurationComponent sideConfig = tileEntity.getComponent(SideConfigurationComponent.class);
 			if (sideConfig != null) {
-				boolean enabled = sideConfig.getWorldSpaceEnabledState(highlightedSide);
+				boolean enabled = sideConfig.getWorldSpaceDirectionConfiguration(highlightedSide) != MachineSideMode.Never;
 				if (enabled) {
 					MachineSideMode mode = sideConfig.getWorldSpaceDirectionConfiguration(highlightedSide);
 					SDColor color = mode.getColor().copy();

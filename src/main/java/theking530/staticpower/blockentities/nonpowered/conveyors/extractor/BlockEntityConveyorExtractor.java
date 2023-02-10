@@ -12,10 +12,11 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.control.ConveyorMotionComponent;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.FrontInputOnly;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlockEntity;
@@ -42,6 +43,7 @@ public class BlockEntityConveyorExtractor extends AbstractConveyorBlockEntity {
 			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorExtractorLumum);
 
 	public final InventoryComponent internalInventory;
+	public final SideConfigurationComponent ioSideConfiguration;
 	protected AABB importBox;
 
 	public BlockEntityConveyorExtractor(BlockEntityTypeAllocator<BlockEntityConveyorExtractor> type, BlockPos pos, BlockState state, ResourceLocation tier) {
@@ -52,7 +54,7 @@ public class BlockEntityConveyorExtractor extends AbstractConveyorBlockEntity {
 			}
 		}.setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(true));
 		registerComponent(new InputServoComponent("InputServo", 20, internalInventory));
-		enableFaceInteraction();
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", FrontInputOnly.INSTANCE));
 	}
 
 	@Override
@@ -90,35 +92,5 @@ public class BlockEntityConveyorExtractor extends AbstractConveyorBlockEntity {
 		// Make sure the front is input only.
 		Direction facing = getFacingDirection();
 		ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, facing), MachineSideMode.Input);
-	}
-
-	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (side == BlockSide.FRONT) {
-			return mode == MachineSideMode.Input;
-		} else {
-			return mode == MachineSideMode.Never;
-		}
-	}
-
-	@Override
-	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return new SideConfigurationPreset() {
-			@Override
-			public boolean getSideDefaultEnabled(BlockSide side) {
-				if (side == BlockSide.FRONT) {
-					return true;
-				}
-				return false;
-			}
-
-			@Override
-			public MachineSideMode getSideDefaultMode(BlockSide side) {
-				if (side == BlockSide.FRONT) {
-					return MachineSideMode.Input;
-				}
-				return MachineSideMode.Never;
-			}
-		};
 	}
 }

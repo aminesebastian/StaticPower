@@ -71,6 +71,11 @@ public class AdvancedCableConfiguration {
 		}
 
 		@Override
+		protected int getCableCapillaryFluidTransferRate() {
+			return 2;
+		}
+
+		@Override
 		protected int getCableFluidtransferRate() {
 			return 100;
 		}

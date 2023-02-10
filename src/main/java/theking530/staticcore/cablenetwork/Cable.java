@@ -70,6 +70,18 @@ public class Cable {
 		}
 	}
 
+	public void preWorldTick() {
+		for (ServerCableCapability cap : capabilities.values()) {
+			cap.preWorldTick();
+		}
+	}
+
+	public void tick() {
+		for (ServerCableCapability cap : capabilities.values()) {
+			cap.tick();
+		}
+	}
+
 	public SparseCableLink addSparseLink(BlockPos linkToPosition, CompoundTag data) {
 		if (!linkToPosition.equals(getPos()) && !isLinkedTo(linkToPosition)) {
 			long linkId = CableNetworkAccessor.get(getLevel()).getAndIncrementCurentSparseLinkId();

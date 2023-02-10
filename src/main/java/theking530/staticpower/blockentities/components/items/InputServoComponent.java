@@ -108,7 +108,7 @@ public class InputServoComponent extends AbstractBlockEntityComponent {
 		}
 
 		// If on the server, get the sides we can input from.
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!getBlockEntity().getLevel().isClientSide) {
 			// First, increment the input timer.
 			inputTimer++;
 
@@ -210,9 +210,9 @@ public class InputServoComponent extends AbstractBlockEntityComponent {
 	}
 
 	public boolean canInputFromSide(BlockSide blockSide) {
-		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
-			return getTileEntity().getComponent(SideConfigurationComponent.class)
-					.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection())) == inputMode;
+		if (getBlockEntity().hasComponentOfType(SideConfigurationComponent.class)) {
+			return getBlockEntity().getComponent(SideConfigurationComponent.class)
+					.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getBlockEntity().getFacingDirection())) == inputMode;
 		}
 		return true;
 	}

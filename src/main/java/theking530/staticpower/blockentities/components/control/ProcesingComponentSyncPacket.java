@@ -21,7 +21,7 @@ public class ProcesingComponentSyncPacket extends NetworkMessage {
 
 	}
 
-	public ProcesingComponentSyncPacket(BlockPos pos, AbstractProcesingComponent component) {
+	public ProcesingComponentSyncPacket(BlockPos pos, AbstractProcesingComponent<?> component) {
 		this.pos = pos;
 		this.componentName = component.getComponentName();
 		this.data = new CompoundTag();
@@ -49,7 +49,7 @@ public class ProcesingComponentSyncPacket extends NetworkMessage {
 			Level world = Minecraft.getInstance().player.getCommandSenderWorld();
 			if (world.getBlockEntity(pos) instanceof BlockEntityBase) {
 				BlockEntityBase te = (BlockEntityBase) world.getBlockEntity(pos);
-				AbstractProcesingComponent storageComponent = te.getComponent(AbstractProcesingComponent.class, componentName);
+				AbstractProcesingComponent<?> storageComponent = te.getComponent(AbstractProcesingComponent.class, componentName);
 				storageComponent.recieveClientSynchronizeData(data, true);
 			}
 		});

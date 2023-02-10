@@ -22,13 +22,13 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.RedstonePulseReactorComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityAutomaticPlacer extends BlockEntityConfigurable {
+public class BlockEntityAutomaticPlacer extends BlockEntityBase {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityAutomaticPlacer> TYPE = new BlockEntityTypeAllocator<BlockEntityAutomaticPlacer>("automatic_placer",
 			(type, pos, state) -> new BlockEntityAutomaticPlacer(pos, state), ModBlocks.AutomaticPlacer);
@@ -76,7 +76,7 @@ public class BlockEntityAutomaticPlacer extends BlockEntityConfigurable {
 	}
 
 	@Override
-	public boolean shouldSerializeWhenBroken() {
+	public boolean shouldSerializeWhenBroken(Player player) {
 		return false;
 	}
 

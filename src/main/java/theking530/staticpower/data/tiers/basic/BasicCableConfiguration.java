@@ -19,6 +19,11 @@ public class BasicCableConfiguration {
 		}
 
 		@Override
+		protected int getCableCapillaryFluidTransferRate() {
+			return 1;
+		}
+
+		@Override
 		protected int getCableIndustrialFluidTransferRate() {
 			return 125;
 		}

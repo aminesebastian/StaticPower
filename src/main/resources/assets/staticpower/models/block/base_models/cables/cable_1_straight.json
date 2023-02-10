@@ -1,53 +1,20 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
+	"textures": {
+		"cable_texture": "staticpower:blocks/cables/redstone/cable_basic_redstone_naked"
+	},
 	"elements": [
 		{
 			"name": "FirstSection",
 			"from": [7.25, 7.25, 0],
-			"to": [8.75, 8.75, 4],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 8]},
-			"faces": {
-				"east": {"uv": [0.75, 7, 4.75, 9], "texture": "#cable_texture"},
-				"west": {"uv": [11.25, 7, 15.25, 9], "texture": "#cable_texture"},
-				"up": {"uv": [7, 0.75, 9, 4.75], "rotation": 180, "texture": "#cable_texture"},
-				"down": {"uv": [7, 11.25, 9, 15.25], "rotation": 180, "texture": "#cable_texture"}
-			}
-		},
-		{
-			"name": "SecondSection",
-			"from": [7.25, 7.25, 4],
-			"to": [8.75, 8.75, 8],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 8]},
-			"faces": {
-				"east": {"uv": [0.75, 7, 4.75, 9], "texture": "#cable_texture"},
-				"west": {"uv": [11.25, 7, 15.25, 9], "texture": "#cable_texture"},
-				"up": {"uv": [7, 0.75, 9, 4.75], "rotation": 180, "texture": "#cable_texture"},
-				"down": {"uv": [7, 11.25, 9, 15.25], "rotation": 180, "texture": "#cable_texture"}
-			}
-		},
-		{
-			"name": "ThirdSection",
-			"from": [7.25, 7.25, 8],
-			"to": [8.75, 8.75, 12],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 8]},
-			"faces": {
-				"east": {"uv": [0.75, 7, 4.75, 9], "texture": "#cable_texture"},
-				"west": {"uv": [11.25, 7, 15.25, 9], "texture": "#cable_texture"},
-				"up": {"uv": [7, 0.75, 9, 4.75], "rotation": 180, "texture": "#cable_texture"},
-				"down": {"uv": [7, 11.25, 9, 15.25], "rotation": 180, "texture": "#cable_texture"}
-			}
-		},
-		{
-			"name": "FourthSection",
-			"from": [7.25, 7.25, 12],
 			"to": [8.75, 8.75, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 8]},
 			"faces": {
-				"east": {"uv": [0.75, 7, 4.75, 9], "texture": "#cable_texture"},
-				"west": {"uv": [11.25, 7, 15.25, 9], "texture": "#cable_texture"},
-				"up": {"uv": [7, 0.75, 9, 4.75], "rotation": 180, "texture": "#cable_texture"},
-				"down": {"uv": [7, 11.25, 9, 15.25], "rotation": 180, "texture": "#cable_texture"}
+				"east": {"uv": [0, 0, 1.5, 16], "rotation": 90, "texture": "#cable_texture"},
+				"west": {"uv": [0, 0, 1.5, 16], "rotation": 90, "texture": "#cable_texture"},
+				"up": {"uv": [0, 0, 1.5, 16], "rotation": 180, "texture": "#cable_texture"},
+				"down": {"uv": [0, 0, 1.5, 16], "rotation": 180, "texture": "#cable_texture"}
 			}
 		}
 	]

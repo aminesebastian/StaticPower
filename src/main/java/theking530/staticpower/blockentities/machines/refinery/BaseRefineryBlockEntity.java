@@ -5,10 +5,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
-import theking530.staticpower.blockentities.BlockEntityConfigurable;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockEntityRefineryController;
 
-public class BaseRefineryBlockEntity extends BlockEntityConfigurable implements IRefineryBlockEntity {
+public class BaseRefineryBlockEntity extends BlockEntityBase implements IRefineryBlockEntity {
 	private final ResourceLocation tier;
 	private BlockEntityRefineryController controller;
 

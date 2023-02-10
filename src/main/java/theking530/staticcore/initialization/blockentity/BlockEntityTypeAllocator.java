@@ -1,5 +1,6 @@
 package theking530.staticcore.initialization.blockentity;
 
+import java.util.Collection;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +40,14 @@ public class BlockEntityTypeAllocator<T extends BlockEntityBase> {
 		this.name = name;
 		this.factory = factory;
 		this.blocks = blocks;
+	}
+
+	@SuppressWarnings("unchecked")
+	public BlockEntityTypeAllocator(String name, TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory, Collection<?> blocks) {
+		this.name = name;
+		this.factory = factory;
+		this.blocks = new RegistryObject[blocks.size()];
+		blocks.toArray(this.blocks);
 	}
 
 	public String getName() {

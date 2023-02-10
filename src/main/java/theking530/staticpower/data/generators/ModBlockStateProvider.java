@@ -18,6 +18,8 @@ import theking530.staticpower.blockentities.machines.refinery.tower.BlockRefiner
 import theking530.staticpower.blockentities.power.circuit_breaker.BlockCircuitBreaker;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.cables.CableTiers;
+import theking530.staticpower.cables.CableTiers.CableTier;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
@@ -348,47 +350,19 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		cable3Thickness(ModBlocks.DigistoreWire.get(), "cable_digistore", "attachments/cable_digistore_attachment");
 		cable5Thickness(ModBlocks.ScaffoldCable.get(), "cable_scaffold", "attachments/cable_scaffold_attachment");
 
-		cable5Thickness(ModBlocks.PowerCableBasic.get(), "cable_power_basic", "attachments/cable_power_basic_attachment");
-		cable5Thickness(ModBlocks.PowerCableAdvanced.get(), "cable_power_advanced", "attachments/cable_power_advanced_attachment");
-		cable5Thickness(ModBlocks.PowerCableStatic.get(), "cable_power_static", "attachments/cable_power_static_attachment");
-		cable5Thickness(ModBlocks.PowerCableEnergized.get(), "cable_power_energized", "attachments/cable_power_energized_attachment");
-		cable5Thickness(ModBlocks.PowerCableLumum.get(), "cable_power_lumum", "attachments/cable_power_lumum_attachment");
-		cable5Thickness(ModBlocks.PowerCableCreative.get(), "cable_power_creative", "attachments/cable_power_creative_attachment");
+		for (CableTier tier : CableTiers.get()) {
+			cable5Thickness(ModBlocks.PowerCables.get(tier.location()).get(), "cable_power_" + tier.name(), "attachments/cable_" + tier.name() + "_power_attachment");
+			cable5Thickness(ModBlocks.InsulatedPowerCables.get(tier.location()).get(), "cable_power_" + tier.name() + "_insulated",
+					"attachments/cable_" + tier.name() + "_power_attachment");
+			cable7Thickness(ModBlocks.IndustrialPowerCables.get(tier.location()).get(), "cable_industrial_power_" + tier.name(), "cable_industrial_power_" + tier.name());
 
-		cable7Thickness(ModBlocks.IndustrialPowerCableBasic.get(), "cable_industrial_power_basic", "cable_industrial_power_basic");
-		cable7Thickness(ModBlocks.IndustrialPowerCableAdvanced.get(), "cable_industrial_power_advanced", "cable_industrial_power_advanced");
-		cable7Thickness(ModBlocks.IndustrialPowerCableStatic.get(), "cable_industrial_power_static", "cable_industrial_power_static");
-		cable7Thickness(ModBlocks.IndustrialPowerCableEnergized.get(), "cable_industrial_power_energized", "cable_industrial_power_energized");
-		cable7Thickness(ModBlocks.IndustrialPowerCableLumum.get(), "cable_industrial_power_lumum", "cable_industrial_power_lumum");
-		cable7Thickness(ModBlocks.IndustrialPowerCableCreative.get(), "cable_industrial_power_creative", "cable_industrial_power_creative");
+			cable5Thickness(ModBlocks.ItemCables.get(tier.location()).get(), "cable_item_" + tier.name(), "attachments/cable_" + tier.name() + "_item_attachment");
 
-		cable5Thickness(ModBlocks.InsulatedPowerCableBasic.get(), "cable_power_basic_insulated", "attachments/cable_power_basic_attachment");
-		cable5Thickness(ModBlocks.InsulatedPowerCableAdvanced.get(), "cable_power_advanced_insulated", "attachments/cable_power_advanced_attachment");
-		cable5Thickness(ModBlocks.InsulatedPowerCableStatic.get(), "cable_power_static_insulated", "attachments/cable_power_static_attachment");
-		cable5Thickness(ModBlocks.InsulatedPowerCableEnergized.get(), "cable_power_energized_insulated", "attachments/cable_power_energized_attachment");
-		cable5Thickness(ModBlocks.InsulatedPowerCableLumum.get(), "cable_power_lumum_insulated", "attachments/cable_power_lumum_attachment");
-		cable5Thickness(ModBlocks.InsulatedPowerCableCreative.get(), "cable_power_creative_insulated", "attachments/cable_power_creative_attachment");
-
-		cable5Thickness(ModBlocks.ItemCableBasic.get(), "cable_item_basic", "attachments/cable_item_attachment");
-		cable5Thickness(ModBlocks.ItemCableAdvanced.get(), "cable_item_advanced", "attachments/cable_item_attachment");
-		cable5Thickness(ModBlocks.ItemCableStatic.get(), "cable_item_static", "attachments/cable_item_attachment");
-		cable5Thickness(ModBlocks.ItemCableEnergized.get(), "cable_item_energized", "attachments/cable_item_attachment");
-		cable5Thickness(ModBlocks.ItemCableLumum.get(), "cable_item_lumum", "attachments/cable_item_attachment");
-		cable5Thickness(ModBlocks.ItemCableCreative.get(), "cable_item_creative", "attachments/cable_item_attachment");
-
-		cable5Thickness(ModBlocks.FluidCableBasic.get(), "cable_fluid_basic", "attachments/cable_fluid_attachment");
-		cable5Thickness(ModBlocks.FluidCableAdvanced.get(), "cable_fluid_advanced", "attachments/cable_fluid_attachment");
-		cable5Thickness(ModBlocks.FluidCableStatic.get(), "cable_fluid_static", "attachments/cable_fluid_attachment");
-		cable5Thickness(ModBlocks.FluidCableEnergized.get(), "cable_fluid_energized", "attachments/cable_fluid_attachment");
-		cable5Thickness(ModBlocks.FluidCableLumum.get(), "cable_fluid_lumum", "attachments/cable_fluid_attachment");
-		cable5Thickness(ModBlocks.FluidCableCreative.get(), "cable_fluid_creative", "attachments/cable_fluid_attachment");
-
-		cable7Thickness(ModBlocks.IndustrialFluidCableBasic.get(), "cable_industrial_fluid_basic", "cable_industrial_fluid_basic");
-		cable7Thickness(ModBlocks.IndustrialFluidCableAdvanced.get(), "cable_industrial_fluid_advanced", "cable_industrial_fluid_advanced");
-		cable7Thickness(ModBlocks.IndustrialFluidCableStatic.get(), "cable_industrial_fluid_static", "cable_industrial_fluid_static");
-		cable7Thickness(ModBlocks.IndustrialFluidCableEnergized.get(), "cable_industrial_fluid_energized", "cable_industrial_fluid_energized");
-		cable7Thickness(ModBlocks.IndustrialFluidCableLumum.get(), "cable_industrial_fluid_lumum", "cable_industrial_fluid_lumum");
-		cable7Thickness(ModBlocks.IndustrialFluidCableCreative.get(), "cable_industrial_fluid_creative", "cable_industrial_fluid_creative");
+			cable5Thickness(ModBlocks.FluidCables.get(tier.location()).get(), "cable_fluid_" + tier.name(), "attachments/cable_" + tier.name() + "_fluid_attachment");
+			cableBlock(ModBlocks.CapillaryFluidCables.get(tier.location()).get(), "cable_2_core", "cable_2_extension", "cable_2_straight", "cable_5_attachment",
+					"cable_capillary_fluid_" + tier.name(), "attachments/cable_" + tier.name() + "_fluid_attachment");
+			cable7Thickness(ModBlocks.IndustrialFluidCables.get(tier.location()).get(), "cable_industrial_fluid_" + tier.name(), "cable_industrial_fluid_" + tier.name());
+		}
 
 		cable5Thickness(ModBlocks.AluminumHeatCable.get(), "cable_aluminum_heat", "attachments/cable_aluminum_attachment");
 		cable5Thickness(ModBlocks.CopperHeatCable.get(), "cable_copper_heat", "attachments/cable_copper_attachment");

@@ -148,8 +148,8 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 
 		// We have to do this safety check here just in case #markDirty() is called
 		// through the constructor.
-		if (getTileEntity() != null) {
-			getTileEntity().setChanged();
+		if (getBlockEntity() != null) {
+			getBlockEntity().setChanged();
 		}
 	}
 

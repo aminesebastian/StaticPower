@@ -29,8 +29,7 @@ import theking530.staticpower.blockentities.components.control.processing.Recipe
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPresets;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.AllSidesNever;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent.HeatManipulationAction;
@@ -351,18 +350,13 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	@Override
-	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Never;
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerRefineryController(windowId, inventory, this);
 	}
 
 	@Override
 	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return SideConfigurationPresets.ALL_SIDES_NEVER;
+		return AllSidesNever.INSTANCE;
 	}
 
 	@Override

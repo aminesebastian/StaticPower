@@ -16,6 +16,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.cables.CableTiers;
+import theking530.staticpower.cables.CableTiers.CableTier;
 import theking530.staticpower.entities.AbstractEntityBuilder;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
 import theking530.staticpower.init.ModBlocks;
@@ -453,23 +455,23 @@ public class ModItemModelProvider extends ItemModelProvider {
 		simpleItem(ModItems.EnergizedFilter.get(), "filters/filter_item_energized");
 		simpleItem(ModItems.LumumFilter.get(), "filters/filter_item_lumum");
 
-		regularSizeAttachment(ModItems.BasicExtractorAttachment.get(), "cable_basic_attachment", "cable_attachment_extract_off");
-		regularSizeAttachment(ModItems.AdvancedExtractorAttachment.get(), "cable_advanced_attachment", "cable_attachment_extract_off");
-		regularSizeAttachment(ModItems.StaticExtractorAttachment.get(), "cable_static_attachment", "cable_attachment_extract_off");
-		regularSizeAttachment(ModItems.EnergizedExtractorAttachment.get(), "cable_energized_attachment", "cable_attachment_extract_off");
-		regularSizeAttachment(ModItems.LumumExtractorAttachment.get(), "cable_lumum_attachment", "cable_attachment_extract_off");
+		regularSizeAttachment(ModItems.BasicExtractorAttachment.get(), "cable_basic_item_attachment", "cable_attachment_extract_off");
+		regularSizeAttachment(ModItems.AdvancedExtractorAttachment.get(), "cable_advanced_item_attachment", "cable_attachment_extract_off");
+		regularSizeAttachment(ModItems.StaticExtractorAttachment.get(), "cable_static_item_attachment", "cable_attachment_extract_off");
+		regularSizeAttachment(ModItems.EnergizedExtractorAttachment.get(), "cable_energized_item_attachment", "cable_attachment_extract_off");
+		regularSizeAttachment(ModItems.LumumExtractorAttachment.get(), "cable_lumum_item_attachment", "cable_attachment_extract_off");
 
-		regularSizeAttachment(ModItems.BasicFilterAttachment.get(), "cable_basic_attachment", "cable_attachment_filter");
-		regularSizeAttachment(ModItems.AdvancedFilterAttachment.get(), "cable_advanced_attachment", "cable_attachment_filter");
-		regularSizeAttachment(ModItems.StaticFilterAttachment.get(), "cable_static_attachment", "cable_attachment_filter");
-		regularSizeAttachment(ModItems.EnergizedFilterAttachment.get(), "cable_energized_attachment", "cable_attachment_filter");
-		regularSizeAttachment(ModItems.LumumFilterAttachment.get(), "cable_lumum_attachment", "cable_attachment_filter");
+		regularSizeAttachment(ModItems.BasicFilterAttachment.get(), "cable_basic_item_attachment", "cable_attachment_filter");
+		regularSizeAttachment(ModItems.AdvancedFilterAttachment.get(), "cable_advanced_item_attachment", "cable_attachment_filter");
+		regularSizeAttachment(ModItems.StaticFilterAttachment.get(), "cable_static_item_attachment", "cable_attachment_filter");
+		regularSizeAttachment(ModItems.EnergizedFilterAttachment.get(), "cable_energized_item_attachment", "cable_attachment_filter");
+		regularSizeAttachment(ModItems.LumumFilterAttachment.get(), "cable_lumum_item_attachment", "cable_attachment_filter");
 
-		regularSizeAttachment(ModItems.BasicRetrieverAttachment.get(), "cable_basic_attachment", "cable_attachment_retriever");
-		regularSizeAttachment(ModItems.AdvancedRetrieverAttachment.get(), "cable_advanced_attachment", "cable_attachment_retriever");
-		regularSizeAttachment(ModItems.StaticRetrieverAttachment.get(), "cable_static_attachment", "cable_attachment_retriever");
-		regularSizeAttachment(ModItems.EnergizedRetrieverAttachment.get(), "cable_energized_attachment", "cable_attachment_retriever");
-		regularSizeAttachment(ModItems.LumumRetrieverAttachment.get(), "cable_lumum_attachment", "cable_attachment_retriever");
+		regularSizeAttachment(ModItems.BasicRetrieverAttachment.get(), "cable_basic_item_attachment", "cable_attachment_retriever");
+		regularSizeAttachment(ModItems.AdvancedRetrieverAttachment.get(), "cable_advanced_item_attachment", "cable_attachment_retriever");
+		regularSizeAttachment(ModItems.StaticRetrieverAttachment.get(), "cable_static_item_attachment", "cable_attachment_retriever");
+		regularSizeAttachment(ModItems.EnergizedRetrieverAttachment.get(), "cable_energized_item_attachment", "cable_attachment_retriever");
+		regularSizeAttachment(ModItems.LumumRetrieverAttachment.get(), "cable_lumum_item_attachment", "cable_attachment_retriever");
 
 		digistoreAttachment(ModItems.ExporterAttachment.get(), "cable_digistore_exporter_attachment");
 		digistoreAttachment(ModItems.ImporterAttachment.get(), "cable_digistore_importer_attachment");
@@ -489,7 +491,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 		simpleItem(ModItems.PatternCard.get(), "digistore/digistore_pattern_card_encoded");
 		namedGeneratedModel("digistore_pattern_card_encoded", "digistore/digistore_pattern_card_encoded");
-		
+
 		simpleItem(ModItems.PatternCard.get(), "digistore/digistore_pattern_card_empty");
 		simpleItem(ModItems.DigistoreWirelessTerminal.get(), "tools/digistore_wireless_terminal");
 
@@ -610,47 +612,17 @@ public class ModItemModelProvider extends ItemModelProvider {
 		cable5Inventory(ModBlocks.CopperHeatCable.get(), "cable_copper_heat");
 		cable5Inventory(ModBlocks.GoldHeatCable.get(), "cable_gold_heat");
 
-		cable5Inventory(ModBlocks.PowerCableBasic.get(), "cable_power_basic");
-		cable5Inventory(ModBlocks.PowerCableAdvanced.get(), "cable_power_advanced");
-		cable5Inventory(ModBlocks.PowerCableStatic.get(), "cable_power_static");
-		cable5Inventory(ModBlocks.PowerCableEnergized.get(), "cable_power_energized");
-		cable5Inventory(ModBlocks.PowerCableLumum.get(), "cable_power_lumum");
-		cable5Inventory(ModBlocks.PowerCableCreative.get(), "cable_power_creative");
+		for (CableTier tier : CableTiers.get()) {
+			cable5Inventory(ModBlocks.PowerCables.get(tier.location()).get(), "cable_power_" + tier.name());
+			cable5Inventory(ModBlocks.InsulatedPowerCables.get(tier.location()).get(), "cable_power_" + tier.name() + "_insulated");
+			cable7Inventory(ModBlocks.IndustrialPowerCables.get(tier.location()).get(), "cable_industrial_power_" + tier.name());
 
-		cable7Inventory(ModBlocks.IndustrialPowerCableBasic.get(), "cable_industrial_power_basic");
-		cable7Inventory(ModBlocks.IndustrialPowerCableAdvanced.get(), "cable_industrial_power_advanced");
-		cable7Inventory(ModBlocks.IndustrialPowerCableStatic.get(), "cable_industrial_power_static");
-		cable7Inventory(ModBlocks.IndustrialPowerCableEnergized.get(), "cable_industrial_power_energized");
-		cable7Inventory(ModBlocks.IndustrialPowerCableLumum.get(), "cable_industrial_power_lumum");
-		cable7Inventory(ModBlocks.IndustrialPowerCableCreative.get(), "cable_industrial_power_creative");
+			cable5Inventory(ModBlocks.ItemCables.get(tier.location()).get(), "cable_item_" + tier.name());
 
-		cable5Inventory(ModBlocks.InsulatedPowerCableBasic.get(), "cable_power_basic_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableAdvanced.get(), "cable_power_advanced_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableStatic.get(), "cable_power_static_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableEnergized.get(), "cable_power_energized_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableLumum.get(), "cable_power_lumum_insulated");
-		cable5Inventory(ModBlocks.InsulatedPowerCableCreative.get(), "cable_power_creative_insulated");
-
-		cable5Inventory(ModBlocks.ItemCableBasic.get(), "cable_item_basic");
-		cable5Inventory(ModBlocks.ItemCableAdvanced.get(), "cable_item_advanced");
-		cable5Inventory(ModBlocks.ItemCableStatic.get(), "cable_item_static");
-		cable5Inventory(ModBlocks.ItemCableEnergized.get(), "cable_item_energized");
-		cable5Inventory(ModBlocks.ItemCableLumum.get(), "cable_item_lumum");
-		cable5Inventory(ModBlocks.ItemCableCreative.get(), "cable_item_creative");
-
-		cable5Inventory(ModBlocks.FluidCableBasic.get(), "cable_fluid_basic");
-		cable5Inventory(ModBlocks.FluidCableAdvanced.get(), "cable_fluid_advanced");
-		cable5Inventory(ModBlocks.FluidCableStatic.get(), "cable_fluid_static");
-		cable5Inventory(ModBlocks.FluidCableEnergized.get(), "cable_fluid_energized");
-		cable5Inventory(ModBlocks.FluidCableLumum.get(), "cable_fluid_lumum");
-		cable5Inventory(ModBlocks.FluidCableCreative.get(), "cable_fluid_creative");
-
-		cable7Inventory(ModBlocks.IndustrialFluidCableBasic.get(), "cable_industrial_fluid_basic");
-		cable7Inventory(ModBlocks.IndustrialFluidCableAdvanced.get(), "cable_industrial_fluid_advanced");
-		cable7Inventory(ModBlocks.IndustrialFluidCableStatic.get(), "cable_industrial_fluid_static");
-		cable7Inventory(ModBlocks.IndustrialFluidCableEnergized.get(), "cable_industrial_fluid_energized");
-		cable7Inventory(ModBlocks.IndustrialFluidCableLumum.get(), "cable_industrial_fluid_lumum");
-		cable7Inventory(ModBlocks.IndustrialFluidCableCreative.get(), "cable_industrial_fluid_creative");
+			cable5Inventory(ModBlocks.FluidCables.get(tier.location()).get(), "cable_fluid_" + tier.name());
+			cable2InventoryVertical(ModBlocks.CapillaryFluidCables.get(tier.location()).get(), "cable_capillary_fluid_" + tier.name());
+			cable7Inventory(ModBlocks.IndustrialFluidCables.get(tier.location()).get(), "cable_industrial_fluid_" + tier.name());
+		}
 
 		for (RegistryObject<Block> block : ModBlocks.BLOCKS.getEntries()) {
 			if (customModelBlockItems.contains(block.get())) {
@@ -737,8 +709,17 @@ public class ModItemModelProvider extends ItemModelProvider {
 	}
 
 	@SuppressWarnings("unused")
+	private ItemModelBuilder cable3InventoryVertical(Block block, String texturePath) {
+		return cableInventory(block, "cable_3_inventory_vertical", texturePath);
+	}
+
+	@SuppressWarnings("unused")
 	private ItemModelBuilder cable2Inventory(Block block, String texturePath) {
 		return cableInventory(block, "cable_2_inventory", texturePath);
+	}
+
+	private ItemModelBuilder cable2InventoryVertical(Block block, String texturePath) {
+		return cableInventory(block, "cable_2_inventory_vertical", texturePath);
 	}
 
 	@SuppressWarnings("unused")
