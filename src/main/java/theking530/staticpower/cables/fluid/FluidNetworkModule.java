@@ -111,7 +111,10 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 
 		FluidStack maxInput = resource.copy();
-		maxInput.setAmount(Math.min(maxInput.getAmount(), cable.get().getCapacity()));
+		if (!maxInput.isEmpty()) {
+			maxInput.setAmount(Math.min(maxInput.getAmount(), cable.get().getCapacity()));
+		}
+
 		return simulateFlowFrom(maxInput, pressure, cable.get(), action);
 	}
 
@@ -238,7 +241,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return 0;
 		}
 
-		if (incomingPressure > cable.getTargetHeadPressure()) {
+		if (incomingPressure > cable.getTargetHeadPressure() && action == FluidAction.EXECUTE) {
 			cable.setTargetHeadPressure(incomingPressure);
 		}
 
@@ -250,7 +253,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 		Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
 
 		// Only fill ourselves first if we don't have a cable below us.
-		if (!adjacents.containsKey(Direction.DOWN)) {
+		if (!adjacents.containsKey(Direction.DOWN) && !fluid.isEmpty()) {
 			// The pressure is factored in during the simulation, so when we execute assume
 			// full pressure.
 			FluidStack maxFluid = getMaximumFlowFluidStack(fluid, cable, action == FluidAction.EXECUTE ? IStaticPowerFluidHandler.MAX_PRESSURE : incomingPressure);
@@ -263,11 +266,13 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 		// This fluid gets passed through all the recursive calls directly.
 		// It is shrunk whenever it is used.
-		fluid.shrink(filled);
+		if (!fluid.isEmpty()) {
+			fluid.shrink(filled);
+		}
 
-		if (adjacents.size() > 0 && !fluid.isEmpty()) {
+		if (adjacents.size() > 0) {
 			for (Direction flowDir : FLOW_DIRECTION_PRIORITY) {
-				if (fluid.isEmpty() || !adjacents.containsKey(flowDir)) {
+				if (!adjacents.containsKey(flowDir)) {
 					continue;
 				}
 
@@ -278,8 +283,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 				FluidCableCapability adjacent = adjacents.get(flowDir);
 				float pressureDelta = cable.getPressureProperties().getPressureDeltaForToDirection(flowDir);
 				float newPressure = SDMath.clamp(incomingPressure + pressureDelta, 0, IStaticPowerFluidHandler.MAX_PRESSURE);
-				int supplied = propagateFlow(fluid, adjacent, newPressure, action, visited);
-				filled += supplied;
+				filled += propagateFlow(fluid, adjacent, newPressure, action, visited);
 			}
 		}
 

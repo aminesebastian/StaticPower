@@ -127,10 +127,6 @@ public class BlockEntityPump extends BlockEntityMachine {
 	}
 
 	private FluidPumpResult pushFluid(Direction side) {
-		if (fluidTankComponent.isEmpty()) {
-			return FluidPumpResult.NONE;
-		}
-
 		BlockPos targetPos = getBlockPos().relative(side);
 
 		// Check for the tile entity on the provided side. If null, return early.

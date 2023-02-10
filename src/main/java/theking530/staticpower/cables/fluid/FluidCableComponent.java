@@ -37,21 +37,21 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements ISidedFluidHandler, IStaticPowerFluidHandler {
 	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
-	// This is intentionally high, we only want to force update if the difference is
-	// VAST, otherwise, let the MAX_TICKS driven update do the work.
-	public static final float FLUID_UPDATE_THRESHOLD = 10;
-	public static final float MAX_TICKS_BEFORE_UPDATE = 10;
+	public static final float FLUID_UPDATE_THRESHOLD = 100;
+	public static final float MAX_TICKS_BEFORE_UPDATE = 20;
 
 	private final SidedFluidHandlerCapabilityWrapper capabilityWrapper;
+
 	private final int capacity;
 	private final int transferRate;
 	private final PipePressureProperties pressureProperties;
 	private final FluidPipeType type;
+
 	private FluidStack lastUpdateFluidStack;
-	private float lastUpdateFilledPercentage;
-	private float visualFilledPercentage;
+	private float visualFluidAmount;
 	private float clientPressure;
-	private int subThresholdUpdateTime;
+
+	private int updateTimer;
 
 	public FluidCableComponent(String name, FluidPipeType type, int capacity, int transferRate, PipePressureProperties pressureProperties) {
 		super(name, ModCableModules.Fluid.get());
@@ -61,8 +61,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 		capabilityWrapper = new SidedFluidHandlerCapabilityWrapper(this);
 		lastUpdateFluidStack = FluidStack.EMPTY;
-		lastUpdateFilledPercentage = 0.0f;
-		visualFilledPercentage = 0.0f;
+		visualFluidAmount = 0.0f;
 		this.type = type;
 
 		// Only non-industrial pipes can have attachments.
@@ -81,23 +80,25 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			if (capability.isEmpty()) {
 				return;
 			}
+
 			boolean shouldUpdate = !capability.get().isFluidEqual(lastUpdateFluidStack);
-			int delta = Math.abs(lastUpdateFluidStack.getAmount() - getFluidInTank(0).getAmount());
-			shouldUpdate |= delta > FLUID_UPDATE_THRESHOLD;
-			shouldUpdate |= subThresholdUpdateTime >= MAX_TICKS_BEFORE_UPDATE;
-			subThresholdUpdateTime++;
+			float delta = Math.abs(lastUpdateFluidStack.getAmount() - visualFluidAmount);
+			shouldUpdate |= delta >= FLUID_UPDATE_THRESHOLD;
+			shouldUpdate |= (updateTimer >= MAX_TICKS_BEFORE_UPDATE && delta > 0);
+			updateTimer++;
+
 			if (shouldUpdate) {
 				synchronizeServerToClient();
-				subThresholdUpdateTime = 0;
+				updateTimer = 0;
 			}
 		}
 	}
 
 	@Override
 	public void updateBeforeRendering(float partialTicks) {
-		if (visualFilledPercentage != lastUpdateFilledPercentage) {
-			float difference = visualFilledPercentage - lastUpdateFilledPercentage;
-			visualFilledPercentage -= difference * (partialTicks / 5.0f);
+		if (lastUpdateFluidStack.getAmount() != visualFluidAmount) {
+			float difference = visualFluidAmount - lastUpdateFluidStack.getAmount();
+			visualFluidAmount -= difference * (partialTicks / MAX_TICKS_BEFORE_UPDATE);
 		}
 	}
 
@@ -109,31 +110,25 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			}
 
 			lastUpdateFluidStack = capability.get().getFluid();
-			lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
-
-			CompoundTag data = new CompoundTag();
-			CompoundTag fluid = new CompoundTag();
-			lastUpdateFluidStack.writeToNBT(fluid);
-			data.put("f", fluid);
-			data.putFloat("%", lastUpdateFilledPercentage);
-			data.putFloat("p", capability.get().getHeadPressure());
-			FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), data);
+			visualFluidAmount = lastUpdateFluidStack.getAmount();
+			FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, capability.get().getHeadPressure());
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, packet);
 		}
 	}
 
-	public void recieveUpdateRenderValues(CompoundTag data) {
+	public void recieveUpdateRenderValues(FluidStack fluid, float pressure) {
 		if (isClientSide()) {
-			lastUpdateFluidStack = FluidStack.loadFluidStackFromNBT(data.getCompound("f"));
-			lastUpdateFilledPercentage = Math.min(1.0f, data.getFloat("%"));
-			clientPressure = data.getFloat("p");
+			// Make sure we're synced up with the amount from the previous sync.
+			visualFluidAmount = lastUpdateFluidStack.getAmount();
+			lastUpdateFluidStack = fluid;
+			clientPressure = pressure;
 			getBlockEntity().requestModelDataUpdate();
 		}
 	}
 
 	public float getFilledPercentage() {
 		if (isClientSide()) {
-			return lastUpdateFilledPercentage;
+			return (float) lastUpdateFluidStack.getAmount() / capacity;
 		} else {
 			FluidNetworkModule module = getFluidModule().orElse(null);
 			if (module != null) {
@@ -148,7 +143,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	public float getVisualFilledPercentage() {
-		return visualFilledPercentage;
+		return visualFluidAmount / capacity;
 	}
 
 	public Optional<FluidNetworkModule> getFluidModule() {

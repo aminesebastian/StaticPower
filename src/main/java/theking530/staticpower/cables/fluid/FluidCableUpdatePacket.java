@@ -4,20 +4,22 @@ import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 
 public class FluidCableUpdatePacket extends NetworkMessage {
-	private CompoundTag data;
 	private BlockPos position;
+	private FluidStack fluid;
+	private float pressure;
 
-	public FluidCableUpdatePacket(BlockPos position, CompoundTag data) {
+	public FluidCableUpdatePacket(BlockPos position, FluidStack fluid, float pressure) {
 		this.position = position;
-		this.data = data;
+		this.fluid = fluid;
+		this.pressure = pressure;
 	}
 
 	public FluidCableUpdatePacket() {
@@ -26,14 +28,16 @@ public class FluidCableUpdatePacket extends NetworkMessage {
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeNbt(data);
 		buffer.writeLong(position.asLong());
+		fluid.writeToPacket(buffer);
+		buffer.writeFloat(pressure);
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
-		data = buffer.readNbt();
 		position = BlockPos.of(buffer.readLong());
+		fluid = FluidStack.readFromPacket(buffer);
+		pressure = buffer.readFloat();
 	}
 
 	@SuppressWarnings({ "resource", "deprecation" })
@@ -41,9 +45,9 @@ public class FluidCableUpdatePacket extends NetworkMessage {
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			if (Minecraft.getInstance().player.level.isAreaLoaded(position, 1)) {
-				BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(position);
+				BlockEntity rawTileEntity = Minecraft.getInstance().player.getLevel().getBlockEntity(position);
 				ComponentUtilities.getComponent(FluidCableComponent.class, rawTileEntity).ifPresent(comp -> {
-					comp.recieveUpdateRenderValues(data);
+					comp.recieveUpdateRenderValues(fluid, pressure);
 				});
 			}
 		});
