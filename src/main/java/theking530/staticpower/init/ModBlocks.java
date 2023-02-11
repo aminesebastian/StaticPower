@@ -44,7 +44,7 @@ import theking530.staticpower.blockentities.machines.packager.BlockPackager;
 import theking530.staticpower.blockentities.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.blockentities.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.blockentities.machines.pump.BlockPump;
-import theking530.staticpower.blockentities.machines.pump.PumpTube;
+import theking530.staticpower.blockentities.machines.pump.BlockPumpTube;
 import theking530.staticpower.blockentities.machines.refinery.boiler.BlockRefineryBoiler;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockRefineryController;
 import theking530.staticpower.blockentities.machines.refinery.fluidio.input.BlockRefineryFluidInput;
@@ -283,7 +283,7 @@ public class ModBlocks {
 	public static final RegistryObject<BlockTank> LumumTank = registerBlock("tank_lumum", () -> new BlockTank(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BlockTank> CreativeTank = registerBlock("tank_creative", () -> new BlockTank(StaticPowerTiers.CREATIVE));
 
-	public static final RegistryObject<PumpTube> PumpTube = registerBlock("pump_tube", () -> new PumpTube());
+	public static final RegistryObject<BlockPumpTube> PumpTube = registerBlock("pump_tube", () -> new BlockPumpTube());
 	public static final RegistryObject<BlockPump> BasicPump = registerBlock("pump_basic",
 			() -> new BlockPump(StaticPowerTiers.BASIC, StaticPowerAdditionalModels.PUMP_CONNECTOR_BASIC));
 	public static final RegistryObject<BlockPump> AdvancedPump = registerBlock("pump_advanced",

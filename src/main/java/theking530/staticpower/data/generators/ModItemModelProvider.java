@@ -397,57 +397,57 @@ public class ModItemModelProvider extends ItemModelProvider {
 		simpleItem(ModItems.LumumFruit.get(), "plants/fruit_lumum");
 		simpleItem(ModItems.DepletedFruit.get(), "plants/fruit_depleted");
 
-		simpleItem(ModItems.IronMetalHammer.get(), "tools/hammer_iron");
-		simpleItem(ModItems.CopperMetalHammer.get(), "tools/hammer_copper");
-		simpleItem(ModItems.TinMetalHammer.get(), "tools/hammer_tin");
-		simpleItem(ModItems.ZincMetalHammer.get(), "tools/hammer_zinc");
-		simpleItem(ModItems.BronzeMetalHammer.get(), "tools/hammer_bronze");
-		simpleItem(ModItems.TungstenMetalHammer.get(), "tools/hammer_tungsten");
-		simpleItem(ModItems.CreativeMetalHammer.get(), "tools/hammer_creative");
+		handheldItem(ModItems.IronMetalHammer.get(), "tools/hammer_iron");
+		handheldItem(ModItems.CopperMetalHammer.get(), "tools/hammer_copper");
+		handheldItem(ModItems.TinMetalHammer.get(), "tools/hammer_tin");
+		handheldItem(ModItems.ZincMetalHammer.get(), "tools/hammer_zinc");
+		handheldItem(ModItems.BronzeMetalHammer.get(), "tools/hammer_bronze");
+		handheldItem(ModItems.TungstenMetalHammer.get(), "tools/hammer_tungsten");
+		handheldItem(ModItems.CreativeMetalHammer.get(), "tools/hammer_creative");
 
-		simpleItem(ModItems.IronWireCutters.get(), "tools/wire_cutters_iron");
-		simpleItem(ModItems.ZincWireCutters.get(), "tools/wire_cutters_zinc");
-		simpleItem(ModItems.BronzeWireCutters.get(), "tools/wire_cutters_bronze");
-		simpleItem(ModItems.TungstenWireCutters.get(), "tools/wire_cutters_tungsten");
-		simpleItem(ModItems.CreativeWireCutters.get(), "tools/wire_cutters_creative");
+		handheldItem(ModItems.IronWireCutters.get(), "tools/wire_cutters_iron");
+		handheldItem(ModItems.ZincWireCutters.get(), "tools/wire_cutters_zinc");
+		handheldItem(ModItems.BronzeWireCutters.get(), "tools/wire_cutters_bronze");
+		handheldItem(ModItems.TungstenWireCutters.get(), "tools/wire_cutters_tungsten");
+		handheldItem(ModItems.CreativeWireCutters.get(), "tools/wire_cutters_creative");
 
-		simpleItem(ModItems.SolderingIron.get(), "tools/soldering_iron");
-		simpleItem(ModItems.ElectringSolderingIron.get(), "tools/soldering_iron_electric");
+		handheldItem(ModItems.SolderingIron.get(), "tools/soldering_iron");
+		handheldItem(ModItems.ElectringSolderingIron.get(), "tools/soldering_iron_electric");
 
-		simpleItem(ModItems.BasicMiningDrill.get(), "tools/mining_drill_basic");
-		simpleItem(ModItems.AdvancedMiningDrill.get(), "tools/mining_drill_advanced");
-		simpleItem(ModItems.StaticMiningDrill.get(), "tools/mining_drill_static");
-		simpleItem(ModItems.EnergizedMiningDrill.get(), "tools/mining_drill_energized");
-		simpleItem(ModItems.LumumMiningDrill.get(), "tools/mining_drill_lumum");
+		handheldItem(ModItems.BasicMiningDrill.get(), "tools/mining_drill_basic");
+		handheldItem(ModItems.AdvancedMiningDrill.get(), "tools/mining_drill_advanced");
+		handheldItem(ModItems.StaticMiningDrill.get(), "tools/mining_drill_static");
+		handheldItem(ModItems.EnergizedMiningDrill.get(), "tools/mining_drill_energized");
+		handheldItem(ModItems.LumumMiningDrill.get(), "tools/mining_drill_lumum");
 
-		simpleItem(ModItems.BasicChainsaw.get(), "tools/chainsaw_basic");
-		simpleItem(ModItems.AdvancedChainsaw.get(), "tools/chainsaw_advanced");
-		simpleItem(ModItems.StaticChainsaw.get(), "tools/chainsaw_static");
-		simpleItem(ModItems.EnergizedChainsaw.get(), "tools/chainsaw_energized");
-		simpleItem(ModItems.LumumChainsaw.get(), "tools/chainsaw_lumum");
+		handheldItem(ModItems.BasicChainsaw.get(), "tools/chainsaw_basic");
+		handheldItem(ModItems.AdvancedChainsaw.get(), "tools/chainsaw_advanced");
+		handheldItem(ModItems.StaticChainsaw.get(), "tools/chainsaw_static");
+		handheldItem(ModItems.EnergizedChainsaw.get(), "tools/chainsaw_energized");
+		handheldItem(ModItems.LumumChainsaw.get(), "tools/chainsaw_lumum");
 
 		handheldItem(ModItems.Wrench.get(), "tools/wrench");
 		handheldItem(ModItems.StaticWrench.get(), "tools/wrench_static");
 		handheldItem(ModItems.EnergizedWrench.get(), "tools/wrench_energized");
 		handheldItem(ModItems.LumumWrench.get(), "tools/wrench_lumum");
 
-		simpleItem(ModItems.Thermometer.get(), "tools/thermometer");
+		handheldItem(ModItems.Thermometer.get(), "tools/thermometer");
 
-		simpleItem(ModItems.WeakMagnet.get(), "tools/magnet_weak");
-		simpleItem(ModItems.BasicMagnet.get(), "tools/magnet_basic");
-		simpleItem(ModItems.AdvancedMagnet.get(), "tools/magnet_advanced");
-		simpleItem(ModItems.StaticMagnet.get(), "tools/magnet_static");
-		simpleItem(ModItems.EnergizedMagnet.get(), "tools/magnet_energized");
-		simpleItem(ModItems.LumumMagnet.get(), "tools/magnet_lumum");
+		handheldItem(ModItems.WeakMagnet.get(), "tools/magnet_weak");
+		handheldItem(ModItems.BasicMagnet.get(), "tools/magnet_basic");
+		handheldItem(ModItems.AdvancedMagnet.get(), "tools/magnet_advanced");
+		handheldItem(ModItems.StaticMagnet.get(), "tools/magnet_static");
+		handheldItem(ModItems.EnergizedMagnet.get(), "tools/magnet_energized");
+		handheldItem(ModItems.LumumMagnet.get(), "tools/magnet_lumum");
 
-		simpleItem(ModItems.CableNetworkAnalyzer.get(), "tools/cable_network_analyzer");
-		simpleItem(ModItems.Multimeter.get(), "tools/multimeter");
+		handheldItem(ModItems.CableNetworkAnalyzer.get(), "tools/cable_network_analyzer");
+		handheldItem(ModItems.Multimeter.get(), "tools/multimeter");
 
-		simpleItem(ModItems.IronCoverSaw.get(), "tools/saw_iron");
-		simpleItem(ModItems.TungstenCoverSaw.get(), "tools/saw_tungsten");
-		simpleItem(ModItems.DiamondCoverSaw.get(), "tools/saw_diamond");
-		simpleItem(ModItems.RubyCoverSaw.get(), "tools/saw_ruby");
-		simpleItem(ModItems.SapphireCoverSaw.get(), "tools/saw_sapphire");
+		handheldItem(ModItems.IronCoverSaw.get(), "tools/saw_iron");
+		handheldItem(ModItems.TungstenCoverSaw.get(), "tools/saw_tungsten");
+		handheldItem(ModItems.DiamondCoverSaw.get(), "tools/saw_diamond");
+		handheldItem(ModItems.RubyCoverSaw.get(), "tools/saw_ruby");
+		handheldItem(ModItems.SapphireCoverSaw.get(), "tools/saw_sapphire");
 
 		simpleItem(ModItems.BasicFilter.get(), "filters/filter_item_basic");
 		simpleItem(ModItems.AdvancedFilter.get(), "filters/filter_item_advanced");

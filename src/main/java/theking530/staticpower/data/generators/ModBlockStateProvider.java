@@ -258,7 +258,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		basicCustomModelOnOff(ModBlocks.AlloyFurnace.get(), "alloy_furnace");
 		basicCustomModelOnOff(ModBlocks.DirectDropper.get(), "direct_dropper");
 		basicCustomModelOnOff(ModBlocks.AutomaticPlacer.get(), "automatic_placer");
-		basicCustomModel(ModBlocks.PumpTube.get(), "pump_tube");
+		basicCustomModelWithSixSidedFacing(ModBlocks.PumpTube.get(), "pump_tube", Direction.UP);
 
 		simpleBlockWithCustomTexture(ModBlocks.RubberTreeLeaves.get(), "trees/rubber_tree_leaves");
 		rotatedPillarBlockWithCustomTexture(ModBlocks.RubberTreeLog.get(), "trees/rubber_tree_log");
@@ -608,6 +608,24 @@ public class ModBlockStateProvider extends BlockStateProvider {
 	public void basicCustomModel(Block block, String modelName) {
 		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/" + modelName));
 		simpleBlock(block, model);
+	}
+
+	public void basicCustomModelWithSixSidedFacing(Block block, String path, Direction bearing) {
+		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/" + path));
+
+		getVariantBuilder(block).forAllStates(state -> {
+			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(model);
+			Direction facing = state.getValue(BlockStateProperties.FACING);
+			if (bearing == Direction.UP) {
+				applySixSidedRotationFromUpBearing(builder, facing);
+			} else if (bearing == Direction.NORTH) {
+				this.applySixSidedRotationFromnNorthBearing(builder, facing);
+			} else {
+				throw new RuntimeException("Bearing: " + bearing + " not supported!");
+			}
+
+			return builder.build();
+		});
 	}
 
 	public void basicCustomModelOnOff(Block block, String modelName) {

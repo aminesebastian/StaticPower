@@ -37,7 +37,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements ISidedFluidHandler, IStaticPowerFluidHandler {
 	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
-	public static final float FLUID_UPDATE_THRESHOLD = 100;
+	public static final float FLUID_UPDATE_THRESHOLD = 10;
 	public static final float MAX_TICKS_BEFORE_UPDATE = 20;
 
 	private final SidedFluidHandlerCapabilityWrapper capabilityWrapper;
@@ -84,12 +84,12 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			boolean shouldUpdate = !capability.get().isFluidEqual(lastUpdateFluidStack);
 			float delta = Math.abs(lastUpdateFluidStack.getAmount() - visualFluidAmount);
 			shouldUpdate |= delta >= FLUID_UPDATE_THRESHOLD;
-			shouldUpdate |= (updateTimer >= MAX_TICKS_BEFORE_UPDATE && delta > 0);
-			updateTimer++;
+			shouldUpdate |= (updateTimer >= MAX_TICKS_BEFORE_UPDATE);
 
 			if (shouldUpdate) {
-				synchronizeServerToClient();
-				updateTimer = 0;
+				synchronizeServerToClient(capability.get().getFluid(), capability.get().getHeadPressure());
+			} else {
+				updateTimer++;
 			}
 		}
 	}
@@ -102,16 +102,12 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		}
 	}
 
-	protected void synchronizeServerToClient() {
+	protected void synchronizeServerToClient(FluidStack fluid, float pressure) {
 		if (!isClientSide()) {
-			Optional<FluidCableCapability> capability = getFluidCapability();
-			if (capability.isEmpty()) {
-				return;
-			}
-
-			lastUpdateFluidStack = capability.get().getFluid();
+			updateTimer = 0;
+			lastUpdateFluidStack = fluid;
 			visualFluidAmount = lastUpdateFluidStack.getAmount();
-			FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, capability.get().getHeadPressure());
+			FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, pressure);
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, packet);
 		}
 	}

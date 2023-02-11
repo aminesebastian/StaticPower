@@ -685,9 +685,9 @@ public class StaticPowerConfig {
 				{
 					builder.push("Pump");
 					pumpPowerUsage = builder.comment("Controls how much power is used per pump action in this machine (in SW).")
-							.translation(StaticPower.MOD_ID + ".config." + "pumpPowerUsage").define("PumpPowerUsage", 200.0);
+							.translation(StaticPower.MOD_ID + ".config." + "pumpPowerUsage").define("PumpPowerUsage", 100.0);
 					pumpTankCapacity = builder.comment("How many mB of fluid a pump can contain.")
-							.translation(StaticPower.MOD_ID + ".config." + "pumpTankCapacity").define("PumpTankCapacity", 1000);			
+							.translation(StaticPower.MOD_ID + ".config." + "pumpTankCapacity").define("PumpTankCapacity", 5000);			
 					builder.pop();
 				}
 				{

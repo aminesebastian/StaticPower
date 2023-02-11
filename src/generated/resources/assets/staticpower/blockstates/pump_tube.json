@@ -1,7 +1,104 @@
 {
   "variants": {
-    "": {
+    "automatically_placed=false,facing=down,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": 180
+    },
+    "automatically_placed=false,facing=down,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": 180
+    },
+    "automatically_placed=false,facing=east,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90,
+      "y": -90
+    },
+    "automatically_placed=false,facing=east,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90,
+      "y": -90
+    },
+    "automatically_placed=false,facing=north,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": 90
+    },
+    "automatically_placed=false,facing=north,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": 90
+    },
+    "automatically_placed=false,facing=south,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90
+    },
+    "automatically_placed=false,facing=south,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90
+    },
+    "automatically_placed=false,facing=up,waterlogged=false": {
       "model": "staticpower:block/pump_tube"
+    },
+    "automatically_placed=false,facing=up,waterlogged=true": {
+      "model": "staticpower:block/pump_tube"
+    },
+    "automatically_placed=false,facing=west,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90,
+      "y": 90
+    },
+    "automatically_placed=false,facing=west,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90,
+      "y": 90
+    },
+    "automatically_placed=true,facing=down,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": 180
+    },
+    "automatically_placed=true,facing=down,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": 180
+    },
+    "automatically_placed=true,facing=east,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90,
+      "y": -90
+    },
+    "automatically_placed=true,facing=east,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90,
+      "y": -90
+    },
+    "automatically_placed=true,facing=north,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": 90
+    },
+    "automatically_placed=true,facing=north,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": 90
+    },
+    "automatically_placed=true,facing=south,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90
+    },
+    "automatically_placed=true,facing=south,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90
+    },
+    "automatically_placed=true,facing=up,waterlogged=false": {
+      "model": "staticpower:block/pump_tube"
+    },
+    "automatically_placed=true,facing=up,waterlogged=true": {
+      "model": "staticpower:block/pump_tube"
+    },
+    "automatically_placed=true,facing=west,waterlogged=false": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90,
+      "y": 90
+    },
+    "automatically_placed=true,facing=west,waterlogged=true": {
+      "model": "staticpower:block/pump_tube",
+      "x": -90,
+      "y": 90
     }
   }
 }

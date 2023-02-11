@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -63,7 +65,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	@Override
 	public void preWorldTick(Level world) {
-		// We want to slowly move the target fluid pressure back to 0.
+		// We want to move the target fluid pressure back to 0.
 		for (FluidCableCapability cable : fluidCapabilities) {
 			cable.setTargetHeadPressure(0);
 		}
@@ -234,77 +236,70 @@ public class FluidNetworkModule extends CableNetworkModule {
 		return propagateFlow(fluid.copy(), cable, pressure, action, new HashSet<FluidCableCapability>());
 	}
 
-	private int propagateFlow(FluidStack fluid, FluidCableCapability cable, float incomingPressure, FluidAction action, Set<FluidCableCapability> visited) {
-		// Tries to add the cable to the set. If it fails, that means it was already
-		// there, return early.
-		if (!visited.add(cable)) {
-			return 0;
-		}
-
-		if (incomingPressure > cable.getTargetHeadPressure() && action == FluidAction.EXECUTE) {
-			cable.setTargetHeadPressure(incomingPressure);
-		}
-
-		if (incomingPressure <= 0) {
-			return 0;
-		}
-
+	private int propagateFlow(FluidStack fluid, FluidCableCapability initialCable, float initialPressure, FluidAction action, Set<FluidCableCapability> visited) {
+		Queue<Tuple<FluidCableCapability, Float>> bfsQueue = new LinkedList<>();
+		bfsQueue.add(new Tuple<>(initialCable, initialPressure));
 		int filled = 0;
-		Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
 
-		// Only fill ourselves first if we don't have a cable below us.
-		if (!adjacents.containsKey(Direction.DOWN) && !fluid.isEmpty()) {
-			// The pressure is factored in during the simulation, so when we execute assume
-			// full pressure.
-			FluidStack maxFluid = getMaximumFlowFluidStack(fluid, cable, action == FluidAction.EXECUTE ? IStaticPowerFluidHandler.MAX_PRESSURE : incomingPressure);
-			if (maxFluid.isEmpty()) {
-				return 0;
+		while (!bfsQueue.isEmpty()) {
+			Tuple<FluidCableCapability, Float> cablePair = bfsQueue.poll();
+			FluidCableCapability cable = cablePair.getA();
+			float pressure = cablePair.getB();
+
+			if (!visited.add(cable)) {
+				continue;
 			}
 
-			filled += cable.fill(maxFluid, action);
-		}
+			if (pressure > cable.getTargetHeadPressure() && action == FluidAction.EXECUTE) {
+				cable.setTargetHeadPressure(pressure);
+			}
 
-		// This fluid gets passed through all the recursive calls directly.
-		// It is shrunk whenever it is used.
-		if (!fluid.isEmpty()) {
-			fluid.shrink(filled);
-		}
+			if (pressure <= 0) {
+				continue;
+			}
 
-		if (adjacents.size() > 0) {
-			for (Direction flowDir : FLOW_DIRECTION_PRIORITY) {
-				if (!adjacents.containsKey(flowDir)) {
-					continue;
+			Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
+			if (adjacents.size() > 0) {
+				for (Direction flowDir : FLOW_DIRECTION_PRIORITY) {
+					if (!adjacents.containsKey(flowDir) || flowDir == Direction.UP) {
+						continue;
+					}
+
+					FluidCableCapability adjacent = adjacents.get(flowDir);
+					float pressureDelta = cable.getPressureProperties().getPressureDeltaForToDirection(flowDir);
+					float newPressure = SDMath.clamp(pressure + pressureDelta, 0, IStaticPowerFluidHandler.MAX_PRESSURE);
+					if (!visited.contains(adjacent)) {
+						bfsQueue.add(new Tuple<>(adjacent, newPressure));
+					}
+				}
+			}
+
+			// When there is a cable below us, only fill yourself if it is already full.
+			if (!fluid.isEmpty()) {
+				boolean fillSelf = true;
+				if (adjacents.containsKey(Direction.DOWN)) {
+					FluidCableCapability cableBelow = adjacents.get(Direction.DOWN);
+					if (cableBelow.getFluidAmount() != cableBelow.getCapacity()) {
+						fillSelf = false;
+					}
 				}
 
-				if (flowDir == Direction.UP) {
-					continue;
+				if (fillSelf) {
+					FluidStack maxFluid = getMaximumFlowFluidStack(fluid, cable, action == FluidAction.EXECUTE ? IStaticPowerFluidHandler.MAX_PRESSURE : pressure);
+					int selfFilled = cable.fill(maxFluid, action);
+					fluid.shrink(selfFilled);
+					filled += selfFilled;
 				}
-
-				FluidCableCapability adjacent = adjacents.get(flowDir);
-				float pressureDelta = cable.getPressureProperties().getPressureDeltaForToDirection(flowDir);
-				float newPressure = SDMath.clamp(incomingPressure + pressureDelta, 0, IStaticPowerFluidHandler.MAX_PRESSURE);
-				filled += propagateFlow(fluid, adjacent, newPressure, action, visited);
 			}
-		}
 
-		// When there is a cable below us, only fill if it is already full.
-		if (adjacents.containsKey(Direction.DOWN) && !fluid.isEmpty()) {
-			FluidCableCapability cableBelow = adjacents.get(Direction.DOWN);
-			if (cableBelow.getFluidAmount() == cableBelow.getCapacity()) {
-				FluidStack maxFluid = getMaximumFlowFluidStack(fluid, cable, action == FluidAction.EXECUTE ? IStaticPowerFluidHandler.MAX_PRESSURE : incomingPressure);
-				int selfFilled = cable.fill(maxFluid, action);
-				fluid.shrink(selfFilled);
-				filled += selfFilled;
+			// If there is a cable above us, only supply to it if we're already full.
+			if (adjacents.containsKey(Direction.UP) && cable.getFluidAmount() == cable.getCapacity() && !fluid.isEmpty()) {
+				FluidCableCapability aboveCable = adjacents.get(Direction.UP);
+				float pressureDelta = cable.getPressureProperties().getPressureDeltaForToDirection(Direction.UP);
+				float newPressure = SDMath.clamp(pressure + pressureDelta, 0, IStaticPowerFluidHandler.MAX_PRESSURE);
+				int supplied = propagateFlow(fluid, aboveCable, newPressure, action, visited);
+				filled += supplied;
 			}
-		}
-
-		// If there is a cable above us, only supply to it if we're already full.
-		if (adjacents.containsKey(Direction.UP) && cable.getFluidAmount() == cable.getCapacity() && !fluid.isEmpty()) {
-			FluidCableCapability aboveCable = adjacents.get(Direction.UP);
-			float pressureDelta = cable.getPressureProperties().getPressureDeltaForToDirection(Direction.UP);
-			float newPressure = SDMath.clamp(incomingPressure + pressureDelta, 0, IStaticPowerFluidHandler.MAX_PRESSURE);
-			int supplied = propagateFlow(fluid, aboveCable, newPressure, action, visited);
-			filled += supplied;
 		}
 
 		return filled;
@@ -395,8 +390,6 @@ public class FluidNetworkModule extends CableNetworkModule {
 	}
 
 	private void simulateBalancing() {
-		getNetwork().getWorld().getProfiler().push("FluidNetworkModule.Balancing");
-
 		for (FluidCableCapability cable : fluidCapabilities) {
 			if (cable.isEmpty()) {
 				continue;
@@ -404,11 +397,17 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 			Map<Direction, FluidCableCapability> adjacents = getAdjacentFluidCapabilities(cable.getPos());
 
-			// First try to push all the fluid downwards.
-			if (adjacents.containsKey(Direction.DOWN)) {
-				FluidStack simDrained = cable.drain(cable.getCapacity(), FluidAction.SIMULATE);
-				int filled = adjacents.get(Direction.DOWN).fill(simDrained, FluidAction.EXECUTE);
-				cable.drain(filled, FluidAction.EXECUTE);
+			// First try to push all the fluid in the directions that have positive
+			// pressure.
+			for (Direction flowDir : FLOW_DIRECTION_PRIORITY) {
+				if (adjacents.containsKey(flowDir) && cable.getPressureProperties().getPressureDeltaForToDirection(flowDir) > 0) {
+					FluidStack simDrained = cable.drain(cable.getCapacity(), FluidAction.SIMULATE);
+					int filled = adjacents.get(flowDir).fill(simDrained, FluidAction.EXECUTE);
+					cable.drain(filled, FluidAction.EXECUTE);
+				}
+				if (cable.isEmpty()) {
+					break;
+				}
 			}
 
 			if (cable.isEmpty()) {
@@ -421,7 +420,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 			float totalFluid = cable.getFluidAmount();
 			float totalCapacity = cable.getCapacity();
 			for (Entry<Direction, FluidCableCapability> adjacent : adjacents.entrySet()) {
-				if (adjacent.getKey() == Direction.UP) {
+				if (adjacent.getKey() == Direction.DOWN || adjacent.getKey() == Direction.UP) {
 					continue;
 				}
 				totalFluid += adjacent.getValue().getFluidAmount();
@@ -490,8 +489,5 @@ public class FluidNetworkModule extends CableNetworkModule {
 				}
 			}
 		}
-
-		getNetwork().getWorld().getProfiler().pop();
 	}
-
 }
