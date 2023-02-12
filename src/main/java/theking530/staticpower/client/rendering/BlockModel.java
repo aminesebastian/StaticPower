@@ -37,6 +37,26 @@ public class BlockModel {
 	private static final Vector3D ONE_VECTOR = new Vector3D(1.0f, 1.0f, 1.0f);
 	private static final Set<Direction> ALL_SIDES = new HashSet<>(Arrays.asList(Direction.values()));
 
+	public static void drawCube(PoseStack matrixStack, MultiBufferSource buffer, Vector3f position, Vector3f scale, SDColor tint) {
+		// Bind a blank texture.
+		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.BLANK_TEXTURE);
+		drawCube(matrixStack, buffer, position, scale, tint, sprite, ONE_VECTOR);
+	}
+
+	public static void drawCube(PoseStack matrixStack, MultiBufferSource buffer, Vector3f position, Vector3f scale, SDColor tint, TextureAtlasSprite sprite) {
+		drawCube(matrixStack, buffer, position, scale, tint, sprite, ONE_VECTOR);
+	}
+
+	public static void drawCube(PoseStack matrixStack, MultiBufferSource buffer, Vector3f position, Vector3f scale, SDColor tint, TextureAtlasSprite sprite, Vector3D uv) {
+		drawCube(matrixStack, buffer, position, scale, tint, sprite, uv, null);
+	}
+
+	public static void drawCube(PoseStack matrixStack, MultiBufferSource buffer, Vector3f position, Vector3f scale, SDColor tint, TextureAtlasSprite sprite, Vector3D uv,
+			BlockPos lightingPos) {
+		VertexConsumer builder = buffer.getBuffer(RenderType.translucentMovingBlock());
+		drawCube(matrixStack, builder, ALL_SIDES, lightingPos, position, scale, sprite, tint, uv);
+	}
+
 	public static void drawCubeInWorld(PoseStack matrixStack, Vector3f position, Vector3f scale, SDColor tint) {
 		// Bind a blank texture.
 		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.BLANK_TEXTURE);
@@ -48,10 +68,10 @@ public class BlockModel {
 	}
 
 	public static void drawCubeInWorld(PoseStack matrixStack, Vector3f position, Vector3f scale, SDColor tint, TextureAtlasSprite sprite, Vector3D uv) {
-		drawPreviewCube(matrixStack, position, scale, tint, sprite, uv, null);
+		drawCubeInWorld(matrixStack, position, scale, tint, sprite, uv, null);
 	}
 
-	public static void drawPreviewCube(PoseStack matrixStack, Vector3f position, Vector3f scale, SDColor tint, TextureAtlasSprite sprite, Vector3D uv, BlockPos lightingPos) {
+	public static void drawCubeInWorld(PoseStack matrixStack, Vector3f position, Vector3f scale, SDColor tint, TextureAtlasSprite sprite, Vector3D uv, BlockPos lightingPos) {
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		VertexConsumer builder = buffer.getBuffer(RenderType.translucentMovingBlock());
 		drawCube(matrixStack, builder, ALL_SIDES, lightingPos, position, scale, sprite, tint, uv);

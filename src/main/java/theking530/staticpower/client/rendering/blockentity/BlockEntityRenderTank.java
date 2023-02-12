@@ -45,7 +45,7 @@ public class BlockEntityRenderTank extends StaticPowerBlockEntitySpecialRenderer
 			float height = tileEntity.fluidTankComponent.getVisualFillLevel();
 
 			float yPosition = isGas ? 14.0f * TEXEL - (12.01f * TEXEL * height) : 1.99f * TEXEL;
-			BlockModel.drawPreviewCube(matrixStack, new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL),
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL),
 					fluidColor, sprite, new Vector3D(1.0f, height, 1.0f), pos);
 		}
 

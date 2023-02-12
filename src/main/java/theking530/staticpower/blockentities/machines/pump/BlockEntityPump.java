@@ -57,7 +57,7 @@ import theking530.staticpower.blockentities.components.fluids.IFluidTankComponen
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.loopingsound.LoopingSoundComponent;
-import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderFluidPump;
+import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderPump;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
 
@@ -74,7 +74,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 	public static final int MAX_SEARCH_DEPTH = 1000;
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			TYPE.setTileEntitySpecialRenderer(BlockEntityRenderFluidPump::new);
+			TYPE.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
 		}
 	}
 

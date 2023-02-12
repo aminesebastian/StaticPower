@@ -11,36 +11,49 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.blockentities.machines.oldpump.OldBlockEntityPump;
+import theking530.staticpower.blockentities.machines.pump.BlockEntityPump;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
-public class BlockEntityRenderPump extends StaticPowerBlockEntitySpecialRenderer<OldBlockEntityPump> {
+public class BlockEntityRenderPump extends StaticPowerBlockEntitySpecialRenderer<BlockEntityPump> {
+
 	public BlockEntityRenderPump(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderTileEntityBase(OldBlockEntityPump tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+	protected void renderTileEntityBase(BlockEntityPump tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
-		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Pump");
-		if (tileEntity.fluidTankComponent.getFluidAmount() > 0) {
-			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(tileEntity.fluidTankComponent.getFluid());
-			SDColor fluidColor = GuiDrawUtilities.getFluidColor(tileEntity.fluidTankComponent.getFluid());
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.FluidPump");
+		// Render the contained fluid if it exists.
+		if (tileEntity.fluidTankComponent.getVisualFillLevel() > 0) {
+			// Get the fluid.
+			FluidStack fluid = tileEntity.fluidTankComponent.getFluid();
+
+			// Get the fluid attributes.
+			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
+			SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+			fluidColor.setAlpha(0.75f); // Render color as opaque so only the texture controls opacity.
+			boolean isGas = fluid.getFluid().getFluidType().isLighterThanAir();
+
+			// Calculate the height and position, then render.
 			float height = tileEntity.fluidTankComponent.getVisualFillLevel();
-			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(2.01f * TEXEL, 1.99f * TEXEL, 2.01f * TEXEL),
-					new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor, sprite, new Vector3D(1.0f, height, 1.0f));
+			float yPosition = isGas ? 12.0f * TEXEL - (8.01f * TEXEL * height) : 4.55f * TEXEL;
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(4.05f * TEXEL, yPosition, 4.55f * TEXEL), new Vector3f(7.9f * TEXEL, 7.05f * TEXEL * height, 6.95f * TEXEL),
+					fluidColor, sprite, new Vector3D(1.0f, height, 1.0f), pos);
 		}
 
-		// Draw the glass. We have to do it like this because of how mineraft orders
+		// Draw the glass. We have to do it like this because of how minecraft orders
 		// transparency.
 		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.BLANK_TEXTURE);
-		BlockModel.drawCubeInWorld(matrixStack, new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL),
-				new SDColor(0.4f, 0.45f, 0.55f, 0.35f), sprite);
+		BlockModel.drawCubeInWorld(matrixStack,
+				new Vector3f(4f * TEXEL, 4f * TEXEL, 4f * TEXEL), new Vector3f(8f * TEXEL, 8f * TEXEL, 8f * TEXEL),
+				new SDColor(0.4f, 0.45f, 0.55f, 0.5f), sprite);
 		Minecraft.getInstance().getProfiler().pop();
 	}
 }

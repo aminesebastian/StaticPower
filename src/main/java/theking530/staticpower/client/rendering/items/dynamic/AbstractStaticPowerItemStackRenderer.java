@@ -2,8 +2,6 @@ package theking530.staticpower.client.rendering.items.dynamic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -44,11 +42,6 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 			ItemCustomRendererPassthroughModel passthroughModel = (ItemCustomRendererPassthroughModel) itemModel;
 			BakedModel baseModel = passthroughModel.getBaseModel();
 
-			// Get the transforms for the requested transform type.
-			Vector3f translation = baseModel.getTransforms().getTransform(transformType).translation;
-			Vector3f scale = baseModel.getTransforms().getTransform(transformType).scale;
-			Vector3f rotation = baseModel.getTransforms().getTransform(transformType).rotation;
-
 			// Push a new matrix and move to the center.
 			matrixStack.pushPose();
 			matrixStack.translate(0.5f, 0.5f, 0.5f);
@@ -57,14 +50,8 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 			renderItemModel(stack, transformType, true, matrixStack, buffer, Sheets.translucentCullBlockSheet(), combinedLight, combinedOverlay, baseModel);
 
 			// Transform the matrix using the transform type transforms.
-			matrixStack.scale(scale.x(), scale.y(), scale.z());
-			matrixStack.translate(translation.x(), translation.y(), translation.z());
-			matrixStack.mulPose(new Quaternion(rotation.x(), rotation.y(), rotation.z(), true));
-			if (transformType != ItemTransforms.TransformType.GUI) {
-				matrixStack.translate(-0.5f, -0.5f, -0.5f);
-			} else {
-				matrixStack.translate(-0.5f, -0.5f, -0.5f);
-			}
+			baseModel.getTransforms().getTransform(transformType).apply(false, matrixStack);
+			matrixStack.translate(-0.5f, -0.5f, -0.5f);
 
 			// Render anything custom.
 			render(stack, baseModel, transformType, matrixStack, buffer, combinedLight, combinedOverlay);
