@@ -13,9 +13,9 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.blockentities.machines.refinery.tower.BlockRefineryTower;
-import theking530.staticpower.blockentities.machines.refinery.tower.BlockRefineryTower.TowerPiece;
 import theking530.staticpower.blockentities.power.circuit_breaker.BlockCircuitBreaker;
+import theking530.staticpower.blocks.StaticPowerBlockProperties;
+import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.CableTiers;
@@ -258,7 +258,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		basicCustomModelOnOff(ModBlocks.AlloyFurnace.get(), "alloy_furnace");
 		basicCustomModelOnOff(ModBlocks.DirectDropper.get(), "direct_dropper");
 		basicCustomModelOnOff(ModBlocks.AutomaticPlacer.get(), "automatic_placer");
-		basicCustomModelWithSixSidedFacing(ModBlocks.PumpTube.get(), "pump_tube", Direction.UP);
+		pumpTube(ModBlocks.PumpTube.get());
 
 		simpleBlockWithCustomTexture(ModBlocks.RubberTreeLeaves.get(), "trees/rubber_tree_leaves");
 		rotatedPillarBlockWithCustomTexture(ModBlocks.RubberTreeLog.get(), "trees/rubber_tree_log");
@@ -628,6 +628,37 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		});
 	}
 
+	public void pumpTube(Block block) {
+		ModelFile bottom = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/pump_tube/bottom"));
+		ModelFile full = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/pump_tube/full"));
+		ModelFile middle = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/pump_tube/middle"));
+		ModelFile top = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/pump_tube/top"));
+
+		getVariantBuilder(block).forAllStates(state -> {
+			ModelFile file = null;
+			TowerPiece piece = state.getValue(StaticPowerBlockProperties.TOWER_POSITION);
+			switch (piece) {
+			case BOTTOM:
+				file = bottom;
+				break;
+			case FULL:
+				file = full;
+				break;
+			case MIDDLE:
+				file = middle;
+				break;
+			case TOP:
+				file = top;
+				break;
+			}
+
+			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(file);
+			Direction facing = state.getValue(BlockStateProperties.FACING);
+			applySixSidedRotationFromUpBearing(builder, facing);
+			return builder.build();
+		});
+	}
+
 	public void basicCustomModelOnOff(Block block, String modelName) {
 		ModelFile model = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/" + modelName));
 		ModelFile modelOn = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID, "block/" + modelName + "_on"));
@@ -747,7 +778,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 		getVariantBuilder(block).forAllStates(state -> {
 			ModelFile file = null;
-			TowerPiece piece = state.getValue(BlockRefineryTower.TOWER_POSITION);
+			TowerPiece piece = state.getValue(StaticPowerBlockProperties.TOWER_POSITION);
 			switch (piece) {
 			case BOTTOM:
 				file = bottom;

@@ -1322,6 +1322,7 @@
 	"gui.staticpower.alert.internal_buffer_not_empty": "Machine's internal buffer not empty.",
 	"gui.staticpower.alert.machine_ouput_cannot_fit_recipe": "Recipe output cannot be placed in machine output.",
 	"gui.staticpower.alert.digistore_manager_missing": "Digistore Manager not present or out of power!",
+	"gui.staticpower.alert.missing_pump_tubes": "Out of pump tubes!",
 	
 	"gui.staticpower.wire_coil_connecting": "Connecting to [%1$s]",
 	

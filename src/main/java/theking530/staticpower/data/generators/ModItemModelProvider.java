@@ -32,6 +32,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 		customModelBlockItems = new HashSet<Block>();
 
 		customModelBlockItems.add(ModBlocks.RefineryTower.get());
+		customModelBlockItems.add(ModBlocks.PumpTube.get());
 	}
 
 	@Override
@@ -488,6 +489,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 		fromExistingModel(ModItems.SprinklerAttachment.get(), "item/sprinkler");
 		fromExistingModel(ModItems.DrainAttachment.get(), "item/drain");
 		fromExistingModel(ModBlocks.RefineryTower.get().asItem(), "block/refinery_tower/full");
+		fromExistingModel(ModBlocks.PumpTube.get().asItem(), "block/pump_tube/full");
 
 		simpleItem(ModItems.PatternCard.get(), "digistore/digistore_pattern_card_encoded");
 		namedGeneratedModel("digistore_pattern_card_encoded", "digistore/digistore_pattern_card_encoded");

@@ -2,12 +2,15 @@ package theking530.staticpower.blockentities.machines.pump;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
+import theking530.staticpower.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.init.ModBlocks;
 
 public class ContainerPump extends StaticPowerTileEntityContainer<BlockEntityPump> {
 	@ContainerTypePopulator
@@ -28,6 +31,7 @@ public class ContainerPump extends StaticPowerTileEntityContainer<BlockEntityPum
 
 	@Override
 	public void initializeContainer() {
+		addSlot(new StaticPowerContainerSlot(new ItemStack(ModBlocks.PumpTube.get()), getTileEntity().tubeInventory, 0, 116, 40));
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 		addAllPlayerSlots();
 	}

@@ -40,9 +40,10 @@ import theking530.staticpower.blockentities.machines.refinery.IRefineryBlockEnti
 import theking530.staticpower.blockentities.machines.refinery.boiler.BlockRefineryBoiler;
 import theking530.staticpower.blockentities.machines.refinery.heatvent.BlockEntityRefineryHeatVent;
 import theking530.staticpower.blockentities.machines.refinery.tower.BlockRefineryTower;
-import theking530.staticpower.blockentities.machines.refinery.tower.BlockRefineryTower.TowerPiece;
 import theking530.staticpower.blockentities.utilities.MultiBlockCache;
 import theking530.staticpower.blockentities.utilities.MultiBlockWrapper;
+import theking530.staticpower.blocks.StaticPowerBlockProperties;
+import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTier;
@@ -189,8 +190,8 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		for (MultiBlockWrapper<IRefineryBlockEntity> wrapper : multiBlockCache) {
 			BlockState multiBlockState = wrapper.getBlockState(getLevel());
 
-			if (multiBlockState.getBlock() instanceof BlockRefineryTower && multiBlockState.hasProperty(BlockRefineryTower.TOWER_POSITION)) {
-				TowerPiece position = multiBlockState.getValue(BlockRefineryTower.TOWER_POSITION);
+			if (multiBlockState.getBlock() instanceof BlockRefineryTower && multiBlockState.hasProperty(StaticPowerBlockProperties.TOWER_POSITION)) {
+				TowerPiece position = multiBlockState.getValue(StaticPowerBlockProperties.TOWER_POSITION);
 				if (position == TowerPiece.TOP || position == TowerPiece.FULL) {
 					getLevel().addParticle(ParticleTypes.LARGE_SMOKE, wrapper.position.getX() + 0.5f + (randomVector.getX() * 0.15f), wrapper.position.getY() + 1f,
 							wrapper.position.getZ() + 0.5f + (randomVector.getZ() * 0.15f), 0.0f, 0.005f, 0.0f);

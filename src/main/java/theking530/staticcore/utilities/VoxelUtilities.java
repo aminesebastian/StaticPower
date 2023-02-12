@@ -31,7 +31,7 @@ public class VoxelUtilities {
 	public static VoxelShape rotateAlongXAxis(Direction from, Direction to, VoxelShape shape) {
 		if (from.getAxis() != Axis.Y && to.getAxis() == Axis.Y) {
 			VoxelShape[] buffer = new VoxelShape[] { shape, Shapes.empty() };
-			buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1 - maxZ, minX, minY, 1 - minZ, maxX, maxY)));
+			buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(minZ, 1 - maxX, minY, maxZ, 1 - minX, maxY)));
 			buffer[0] = buffer[1];
 			buffer[1] = Shapes.empty();
 			return buffer[0];

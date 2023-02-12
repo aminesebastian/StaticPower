@@ -36,6 +36,8 @@ public class ModTags {
 	public static final TagKey<Item> FARMER_BACKPACK = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "backpacks/farmer"));
 	public static final TagKey<Item> ENGINEER_BACKPACK = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "backpacks/engineer"));
 	public static final TagKey<Item> TOOL_BACKPACK = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "backpacks/tool"));
+	
+	public static final TagKey<Item> PUMP_TUBE_ITEM = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "pump_tube"));
 
 	public static final TagKey<Block> LOG = createBlockWrapper(new ResourceLocation("minecraft", "logs"));
 	public static final TagKey<Block> LEAVES = createBlockWrapper(new ResourceLocation("minecraft", "leaves"));

@@ -100,7 +100,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 
 	public void drawBeforeItem(PoseStack matrixStack, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 		if (!getPreviewItem().isEmpty()) {
-			GuiDrawUtilities.drawItem(matrixStack, getPreviewItem(), x, y, 0.0f, getPreviewAlpha());
+			GuiDrawUtilities.drawItem(matrixStack, getPreviewItem(), x, y, 100.0f, getPreviewAlpha());
 		}
 		if (drawFluidContainerAsFluid) {
 			IFluidHandlerItem fluidItem = getItem().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);

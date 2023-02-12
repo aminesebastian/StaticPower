@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -98,7 +99,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public void updateBeforeRendering(float partialTicks) {
 		if (lastUpdateFluidStack.getAmount() != visualFluidAmount) {
 			float difference = visualFluidAmount - lastUpdateFluidStack.getAmount();
-			visualFluidAmount -= difference * (partialTicks / MAX_TICKS_BEFORE_UPDATE);
+			visualFluidAmount -= difference * (Minecraft.getInstance().getDeltaFrameTime() / (MAX_TICKS_BEFORE_UPDATE / 20));
 		}
 	}
 

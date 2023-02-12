@@ -2,39 +2,22 @@ package theking530.staticpower.blockentities.machines.refinery.tower;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.staticpower.blocks.StaticPowerBlock;
+import theking530.staticpower.blocks.StaticPowerBlockProperties;
+import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
 
 public class BlockRefineryTower extends StaticPowerBlock {
-	public enum TowerPiece implements StringRepresentable {
-		FULL("full"), MIDDLE("middle"), TOP("top"), BOTTOM("bottom");
-
-		private final String name;
-
-		TowerPiece(String name) {
-			this.name = name;
-		}
-
-		@Override
-		public String getSerializedName() {
-			return name;
-		}
-	}
-
-	public static final EnumProperty<TowerPiece> TOWER_POSITION = EnumProperty.create("position", TowerPiece.class);
-
 	private static final VoxelShape MIDDLE_SHAPE = Block.box(3, 0, 3, 13, 16, 13);
 	private static final VoxelShape TOP_SHAPE = Shapes.join(MIDDLE_SHAPE, Block.box(2, 8, 2, 14, 16, 14), BooleanOp.OR);
 	private static final VoxelShape BOTTOM_SHAPE = Shapes.join(MIDDLE_SHAPE, Block.box(2, 0, 2, 14, 4, 14), BooleanOp.OR);
@@ -46,11 +29,11 @@ public class BlockRefineryTower extends StaticPowerBlock {
 
 	@Override
 	protected BlockState getDefaultStateForRegistration() {
-		return super.getDefaultStateForRegistration().setValue(TOWER_POSITION, TowerPiece.FULL);
+		return super.getDefaultStateForRegistration().setValue(StaticPowerBlockProperties.TOWER_POSITION, TowerPiece.FULL);
 	}
 
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).setValue(TOWER_POSITION, getTowerPiece(context.getClickedPos(), context.getLevel()));
+		return super.getStateForPlacement(context).setValue(StaticPowerBlockProperties.TOWER_POSITION, getTowerPiece(context.getClickedPos(), context.getLevel()));
 	}
 
 	public TowerPiece getTowerPiece(BlockPos position, BlockGetter blockgetter) {
@@ -71,7 +54,7 @@ public class BlockRefineryTower extends StaticPowerBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		TowerPiece position = state.getValue(TOWER_POSITION);
+		TowerPiece position = state.getValue(StaticPowerBlockProperties.TOWER_POSITION);
 		if (position == TowerPiece.TOP) {
 			return TOP_SHAPE;
 		} else if (position == TowerPiece.BOTTOM) {
@@ -87,13 +70,13 @@ public class BlockRefineryTower extends StaticPowerBlock {
 		return getShape(state, worldIn, pos, context);
 	}
 
-	public BlockState updateShape(BlockState p_53323_, Direction p_53324_, BlockState p_53325_, LevelAccessor p_53326_, BlockPos p_53327_, BlockPos blockPos) {
-		BlockState state = super.updateShape(p_53323_, p_53324_, p_53325_, p_53326_, blockPos, blockPos);
-		return state.setValue(TOWER_POSITION, getTowerPiece(p_53327_, p_53326_));
+	public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
+		BlockState superState = super.updateShape(state, direction, facingState, level, pos, facingPos);
+		return superState.setValue(StaticPowerBlockProperties.TOWER_POSITION, getTowerPiece(pos, level));
 	}
 
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_53334_) {
 		super.createBlockStateDefinition(p_53334_);
-		p_53334_.add(TOWER_POSITION);
+		p_53334_.add(StaticPowerBlockProperties.TOWER_POSITION);
 	}
 }

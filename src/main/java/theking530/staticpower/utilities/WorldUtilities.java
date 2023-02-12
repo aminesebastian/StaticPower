@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -70,6 +71,18 @@ public class WorldUtilities {
 		} else {
 			return Direction.SOUTH;
 		}
+	}
+
+	public static BlockPos projectPositionOntoLine(BlockPos position, BlockPos line, Axis plane) {
+		switch (plane) {
+		case X:
+			return new BlockPos(position.getX(), line.getY(), line.getZ());
+		case Y:
+			return new BlockPos(line.getX(), position.getY(), line.getZ());
+		case Z:
+			return new BlockPos(line.getX(), line.getY(), position.getZ());
+		}
+		return position;
 	}
 
 	/**

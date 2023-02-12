@@ -36,10 +36,9 @@ import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
-import theking530.staticpower.blocks.StaticPowerItemBlockCustomRenderer;
+import theking530.staticpower.blocks.StaticPowerItemBlockCustomModel;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
-import theking530.staticpower.client.rendering.items.dynamic.ItemTankSpecialRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -113,7 +112,7 @@ public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements 
 		if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
 			return new StaticPowerItemBlock(this);
 		} else {
-			return new StaticPowerItemBlockCustomRenderer(this, ItemTankSpecialRenderer::new);
+			return new StaticPowerItemBlockCustomModel(this, TankMachineBakedModel::new);
 		}
 	}
 

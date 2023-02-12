@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,10 +20,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.gui.text.TooltipUtilities;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blocks.StaticPowerItemBlock;
+import theking530.staticpower.blocks.StaticPowerItemBlockCustomModel;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
 import theking530.staticpower.data.StaticPowerTier;
@@ -94,6 +98,15 @@ public class BlockBattery extends StaticPowerMachineBlock {
 			return BlockEntityBattery.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;
+	}
+
+	@Override
+	public BlockItem getItemBlock() {
+		if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
+			return new StaticPowerItemBlock(this);
+		} else {
+			return new StaticPowerItemBlockCustomModel(this, BatteryBlockedBakedModel::new);
+		}
 	}
 
 	@Override
