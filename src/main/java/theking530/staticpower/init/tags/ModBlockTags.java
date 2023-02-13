@@ -29,7 +29,7 @@ public class ModBlockTags {
 	public static final TagKey<Block> CAULDRONS = create("cauldrons");
 	public static final TagKey<Block> CHESTS = create("chests");
 	public static final TagKey<Block> CONVEYORS = create("conveyors");
-
+	
 	public static boolean matches(TagKey<Block> tag, Block block) {
 		return ForgeRegistries.BLOCKS.tags().getTag(tag).contains(block);
 	}
