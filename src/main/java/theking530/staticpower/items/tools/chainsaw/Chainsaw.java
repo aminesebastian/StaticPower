@@ -67,7 +67,6 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.ChainsawItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -343,7 +342,6 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		return minableBlocks;
 	}
 
-	@SuppressWarnings("deprecation")
 	private void recursiveTreeAnalyzer(ItemStack itemstack, BlockPos pos, Player player, List<BlockPos> positions, Set<BlockPos> visited, int currentDepth) {
 		// If we maxed out on depth, stop.
 		if (currentDepth > MAX_RECURSION) {
@@ -363,7 +361,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		if (!state.isAir()) {
 			// If not air, check to see if it is wood. If it is, and its harvestable,
 			// harvest it.
-			if (state.is(ModTags.LOG)) {
+			if (state.is(BlockTags.LOGS)) {
 				if (isCorrectToolForDrops(itemstack, state)) {
 					positions.add(pos);
 

@@ -1,7 +1,0 @@
-{
-	"replace": false,
-	"values": [
-		"staticpower:coolant",
-		"staticpower:coolant_flowing"
-	]
-}

@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.cables.CableTiers;
-import theking530.staticpower.cables.CableTiers.CableTier;
+import theking530.staticpower.data.Tiers;
+import theking530.staticpower.data.Tiers.TierPair;
 
 public class StaticPowerAdditionalModels {
 	public static final HashSet<ResourceLocation> MODELS = new HashSet<ResourceLocation>();
@@ -28,7 +28,7 @@ public class StaticPowerAdditionalModels {
 	public static final Map<ResourceLocation, CableModelSet> ITEM_CABLES = new HashMap<>();
 
 	static {
-		for (CableTier tier : CableTiers.get()) {
+		for (TierPair tier : Tiers.getCableTiers()) {
 			POWER_CABLES.put(tier.location(), registerCable("block/cable_power_" + tier.name()));
 			INSULATED_POWER_CABLES.put(tier.location(), registerCable("block/cable_insulated_power_" + tier.name()));
 			INDUSTRIAL_POWER_CABLES.put(tier.location(), registerCable("block/cable_industrial_power_" + tier.name()));
@@ -151,14 +151,13 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation PUMP_CONNECTOR_LUMUM = registerModel("models/pump_connector_lumum");
 	public static final ResourceLocation PUMP_CONNECTOR_CREATIVE = registerModel("models/pump_connector_creative");
 
-	public static final Map<String, ResourceLocation[]> CABLE_REDSTONE_BASIC;
+	public static final Map<MinecraftColor, ResourceLocation[]> CABLE_REDSTONE_BASIC;
 
 	static {
 		CABLE_REDSTONE_BASIC = new HashMap<>();
-		for (int i = 0; i < 16; i++) {
-			ChatFormatting formatting = ChatFormatting.values()[i];
-			String name = formatting.name().toLowerCase();
-			CABLE_REDSTONE_BASIC.put(name, new ResourceLocation[] { registerModel("block/cable_redstone_basic_" + name + "_straight"),
+		for (MinecraftColor color : MinecraftColor.values()) {
+			String name = color.getName();
+			CABLE_REDSTONE_BASIC.put(color, new ResourceLocation[] { registerModel("block/cable_redstone_basic_" + name + "_straight"),
 					registerModel("block/cable_redstone_basic_" + name + "_extension") });
 		}
 	}

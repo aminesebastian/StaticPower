@@ -1,0 +1,11 @@
+{
+  "values": [
+    "staticpower:tank_iron",
+    "staticpower:tank_basic",
+    "staticpower:tank_advanced",
+    "staticpower:tank_static",
+    "staticpower:tank_energized",
+    "staticpower:tank_lumum",
+    "staticpower:tank_creative"
+  ]
+}

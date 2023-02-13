@@ -51,7 +51,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModBlockTags;
 
 public class BlockEntityRefineryController extends BlockEntityMachine implements IRecipeProcessor<RefineryRecipe> {
 	@BlockEntityTypePopulator()
@@ -95,7 +95,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setPowerComponent(powerStorage);
-		
+
 		// Setup the input fluid tanks.
 		fluidTanks = new FluidTankComponent[5];
 
@@ -212,7 +212,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	private boolean isValidForMultiBlock(BlockPos pos, BlockState state, BlockEntity be) {
-		return state.is(ModTags.REFINERY_BLOCK);
+		return state.is(ModBlockTags.REFINERY_BLOCK);
 	}
 
 	public void requestMultiBlockRefresh() {
@@ -376,24 +376,24 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		if (recipe.hasCatalyst()) {
 			outputContainer.addInputItem(catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), true), CaptureType.BOTH);
 		}
-		
-		if(recipe.hasPrimaryFluidInput()) {
+
+		if (recipe.hasPrimaryFluidInput()) {
 			outputContainer.addInputFluid(recipe.getPrimaryFluidInput(), recipe.getPrimaryFluidInput().getAmount(), CaptureType.BOTH);
 		}
-		if(recipe.hasSecondaryFluidInput()) {
+		if (recipe.hasSecondaryFluidInput()) {
 			outputContainer.addInputFluid(recipe.getSecondaryFluidInput(), recipe.getSecondaryFluidInput().getAmount(), CaptureType.BOTH);
 		}
-		
-		if(!recipe.getFluidOutput1().isEmpty()) {
+
+		if (!recipe.getFluidOutput1().isEmpty()) {
 			outputContainer.addOutputFluid(recipe.getFluidOutput1(), recipe.getFluidOutput1().getAmount(), CaptureType.BOTH);
 		}
-		if(!recipe.getFluidOutput2().isEmpty()) {
+		if (!recipe.getFluidOutput2().isEmpty()) {
 			outputContainer.addOutputFluid(recipe.getFluidOutput2(), recipe.getFluidOutput2().getAmount(), CaptureType.BOTH);
 		}
-		if(!recipe.getFluidOutput3().isEmpty()) {
+		if (!recipe.getFluidOutput3().isEmpty()) {
 			outputContainer.addOutputFluid(recipe.getFluidOutput3(), recipe.getFluidOutput3().getAmount(), CaptureType.BOTH);
 		}
-		
+
 		component.setMaxProcessingTime(recipe.getProcessingTime());
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		heatStorage.setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());

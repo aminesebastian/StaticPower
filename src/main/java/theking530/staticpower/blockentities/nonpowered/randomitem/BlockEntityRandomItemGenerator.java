@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -21,7 +22,6 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModTags;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityRandomItemGenerator extends BlockEntityBase implements MenuProvider {
@@ -30,7 +30,7 @@ public class BlockEntityRandomItemGenerator extends BlockEntityBase implements M
 			(type, pos, state) -> new BlockEntityRandomItemGenerator(type, pos, state, null), ModBlocks.RandomItemGenerator);
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> ORE = new BlockEntityTypeAllocator<>("random_ore_generator",
-			(type, pos, state) -> new BlockEntityRandomItemGenerator(type, pos, state, ModTags.ORE), ModBlocks.RandomOreGenerator);
+			(type, pos, state) -> new BlockEntityRandomItemGenerator(type, pos, state, Tags.Items.ORES), ModBlocks.RandomOreGenerator);
 
 	private static final float GENERATION_RATE = 4;
 

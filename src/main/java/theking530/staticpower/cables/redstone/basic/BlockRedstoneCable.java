@@ -30,6 +30,7 @@ import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHove
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
 import theking530.staticcore.network.NetworkGUI;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.BlockEntityBase;
@@ -41,11 +42,10 @@ import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 
 public class BlockRedstoneCable extends AbstractCableBlock {
 	private static boolean canProvidePower;
-	private final String color;
+	private final @Nullable MinecraftColor color;
 
-	public BlockRedstoneCable(String color) {
-		super(new BasicRedstoneCableBoundsCache(color.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)),
-				color.contains("naked") ? 1.0f : 1.5f);
+	public BlockRedstoneCable(@Nullable MinecraftColor color) {
+		super(new BasicRedstoneCableBoundsCache(color == null ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)), color == null ? 1.0f : 1.5f);
 
 		// String the color from the last section of the registry name.
 		this.color = color;
@@ -60,7 +60,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		if (color.equals("naked")) {
+		if (color == null) {
 			ResourceLocation straightModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT;
 			ResourceLocation extensionModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION;
 			ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT;
@@ -71,6 +71,10 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 			ResourceLocation attachmentModel = StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT;
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		}
+	}
+
+	public MinecraftColor getColor() {
+		return color;
 	}
 
 	@Override
@@ -125,42 +129,10 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		switch (color) {
-		case "black":
-			return BlockEntityRedstoneCable.TYPE_BASIC_BLACK.create(pos, state);
-		case "dark_blue":
-			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_BLUE.create(pos, state);
-		case "dark_green":
-			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_GREEN.create(pos, state);
-		case "dark_aqua":
-			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_AQUA.create(pos, state);
-		case "dark_red":
-			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_RED.create(pos, state);
-		case "dark_purple":
-			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_PURPLE.create(pos, state);
-		case "gold":
-			return BlockEntityRedstoneCable.TYPE_BASIC_GOLD.create(pos, state);
-		case "gray":
-			return BlockEntityRedstoneCable.TYPE_BASIC_GRAY.create(pos, state);
-		case "dark_gray":
-			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_GRAY.create(pos, state);
-		case "blue":
-			return BlockEntityRedstoneCable.TYPE_BASIC_BLUE.create(pos, state);
-		case "green":
-			return BlockEntityRedstoneCable.TYPE_BASIC_GREEN.create(pos, state);
-		case "aqua":
-			return BlockEntityRedstoneCable.TYPE_BASIC_AQUA.create(pos, state);
-		case "red":
-			return BlockEntityRedstoneCable.TYPE_BASIC_RED.create(pos, state);
-		case "light_purple":
-			return BlockEntityRedstoneCable.TYPE_BASIC_LIGHT_PURPLE.create(pos, state);
-		case "yellow":
-			return BlockEntityRedstoneCable.TYPE_BASIC_YELLOW.create(pos, state);
-		case "white":
-			return BlockEntityRedstoneCable.TYPE_BASIC_WHITE.create(pos, state);
-		default:
-			return BlockEntityRedstoneCable.TYPE_BASIC_NAKED.create(pos, state);
+		if (color == null) {
+			return BlockEntityRedstoneCable.TYPE_NAKED.create(pos, state);
 		}
+		return BlockEntityRedstoneCable.TYPE.create(pos, state);
 	}
 
 	public class RedstoneCableContainerProvider implements MenuProvider {

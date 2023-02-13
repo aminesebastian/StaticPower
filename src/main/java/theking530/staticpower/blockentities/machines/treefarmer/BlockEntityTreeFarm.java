@@ -15,6 +15,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -64,7 +66,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -102,11 +104,11 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	public BlockEntityTreeFarm(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
-		saplingIngredient = Ingredient.of(ModTags.SAPLING);
+		saplingIngredient = Ingredient.of(ItemTags.SAPLINGS);
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return slot == 0 ? ModTags.tagContainsItemStack(ModTags.FARMING_AXE, stack) : saplingIngredient.test(stack);
+				return slot == 0 ? ModItemTags.matches(ModItemTags.FARMING_AXE, stack.getItem()) : saplingIngredient.test(stack);
 			}
 		}).setSlotsLockable(true));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
@@ -144,7 +146,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	}
 
 	public boolean hasAxe() {
-		return ModTags.tagContainsItemStack(ModTags.FARMING_AXE, inputInventory.getStackInSlot(0));
+		return ModItemTags.matches(ModItemTags.FARMING_AXE, inputInventory.getStackInSlot(0).getItem());
 	}
 
 	public float getGrowthBonus() {
@@ -323,7 +325,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		// Perform these sanity checks as a quick optimization (the ingredient test is
 		// O(n)).
 		if (!state.isAir() && !state.hasBlockEntity() && state.getDestroySpeed(getLevel(), pos) != -1) {
-			return state.is(ModTags.LEAVES) || state.is(ModTags.LOG);
+			return state.is(BlockTags.LEAVES) || state.is(BlockTags.LOGS);
 		}
 		return false;
 	}

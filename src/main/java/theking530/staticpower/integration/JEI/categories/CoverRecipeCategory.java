@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.cover.CableCover;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModItemTags;
 
 /**
  * Huge thanks to Applied Energistics 2 and the JEI Wiki!
@@ -66,7 +66,7 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 			// If the focused item is a saw, get all the recipes a saw can be used in.
 			// Otherwise if the hovered item is a block ,check to see if we can make a cover
 			// out of it. If so, add that recipe.
-			if (ModTags.tagContainsItem(ModTags.COVER_SAW, coverSourceItem)) {
+			if (ModItemTags.matches(ModItemTags.COVER_SAW, coverSourceItem)) {
 				List<T> recipes = new ArrayList<T>();
 				// Get all the registered blocks.
 				for (Entry<ResourceKey<Block>, Block> block : ForgeRegistries.BLOCKS.getEntries()) {
@@ -108,7 +108,7 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 
 		// Popualte the ingredients.
 		NonNullList<Ingredient> ingredients = NonNullList.withSize(2, Ingredient.EMPTY);
-		ingredients.set(0, Ingredient.of(ModTags.COVER_SAW));
+		ingredients.set(0, Ingredient.of(ModItemTags.COVER_SAW));
 		ingredients.set(1, Ingredient.of(coverBlockItem));
 
 		// Wrap this in a shapeless recipe.

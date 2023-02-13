@@ -17,7 +17,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockConveyorSupplier extends AbstractConveyorBlock {
 
@@ -58,18 +57,7 @@ public class BlockConveyorSupplier extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
-			return BlockEntityConveyorSupplier.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return BlockEntityConveyorSupplier.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return BlockEntityConveyorSupplier.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return BlockEntityConveyorSupplier.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return BlockEntityConveyorSupplier.TYPE_LUMUM.create(pos, state);
-		}
-		return null;
+		return BlockEntityConveyorSupplier.TYPE.create(pos, state);
 	}
 
 	@Override

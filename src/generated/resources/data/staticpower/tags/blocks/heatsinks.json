@@ -1,0 +1,7 @@
+{
+  "values": [
+    "staticpower:heat_sink_aluminum",
+    "staticpower:heat_sink_copper",
+    "staticpower:heat_sink_gold"
+  ]
+}

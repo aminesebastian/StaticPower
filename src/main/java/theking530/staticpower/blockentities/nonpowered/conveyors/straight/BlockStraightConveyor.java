@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockStraightConveyor extends AbstractConveyorBlock {
 	public BlockStraightConveyor(ResourceLocation tier) {
@@ -31,20 +30,8 @@ public class BlockStraightConveyor extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
-			return BlockEntityStraightConveyor.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return BlockEntityStraightConveyor.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return BlockEntityStraightConveyor.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return BlockEntityStraightConveyor.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return BlockEntityStraightConveyor.TYPE_LUMUM.create(pos, state);
-		}
-		return null;
+		return BlockEntityStraightConveyor.TYPE.create(pos, state);
 	}
-
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {

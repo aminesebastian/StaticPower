@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockRampDownConveyor extends AbstractConveyorBlock {
 	public BlockRampDownConveyor(ResourceLocation tier) {
@@ -34,18 +33,7 @@ public class BlockRampDownConveyor extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
-			return BlockEntityRampDownConveyor.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return BlockEntityRampDownConveyor.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return BlockEntityRampDownConveyor.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return BlockEntityRampDownConveyor.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return BlockEntityRampDownConveyor.TYPE_LUMUM.create(pos, state);
-		}
-		return null;
+		return BlockEntityRampDownConveyor.TYPE.create(pos, state);
 	}
 
 	@Override

@@ -62,7 +62,7 @@ import theking530.staticpower.blockentities.components.loopingsound.LoopingSound
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderPump;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockEntityPump extends BlockEntityMachine {
@@ -105,7 +105,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 
 		registerComponent(tubeInventory = new InventoryComponent("TubeInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return ModTags.tagContainsItem(ModTags.PUMP_TUBE_ITEM, stack.getItem());
+				return ModItemTags.matches(ModItemTags.PUMP_TUBE, stack.getItem());
 			}
 		}));
 		registerComponent(soundComponent = new LoopingSoundComponent("SoundComponent", 20));
@@ -313,7 +313,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 	}
 
 	protected boolean hasTubesForPlacement() {
-		return ModTags.tagContainsItem(ModTags.PUMP_TUBE_ITEM, tubeInventory.getStackInSlot(0).getItem());
+		return ModItemTags.matches(ModItemTags.PUMP_TUBE, tubeInventory.getStackInSlot(0).getItem());
 	}
 
 	protected BlockPos getNextPumpablePosition() {
@@ -429,8 +429,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 	}
 
 	protected void placePumpTube(BlockPos tubePos, Direction facingDirection) {
-		getLevel().setBlock(tubePos,
-				ModBlocks.PumpTube.get().defaultBlockState().setValue(BlockPumpTube.FACING, facingDirection), 2);
+		getLevel().setBlock(tubePos, ModBlocks.PumpTube.get().defaultBlockState().setValue(BlockPumpTube.FACING, facingDirection), 2);
 		tubeInventory.getStackInSlot(0).shrink(1);
 		getLevel().playSound(null, tubePos, SoundEvents.COPPER_PLACE, SoundSource.BLOCKS, 1.0f, 1.0f);
 	}

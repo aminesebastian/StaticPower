@@ -14,14 +14,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityHeatCable extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatCable> TYPE_ALUMINUM = new BlockEntityTypeAllocator<BlockEntityHeatCable>("cable_heat_aluminium",
-			(allocator, pos, state) -> new BlockEntityHeatCable(allocator, pos, state), ModBlocks.AluminumHeatCable);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatCable> TYPE_COPPER = new BlockEntityTypeAllocator<BlockEntityHeatCable>("cable_heat_copper",
-			(allocator, pos, state) -> new BlockEntityHeatCable(allocator, pos, state), ModBlocks.CopperHeatCable);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatCable> TYPE_GOLD = new BlockEntityTypeAllocator<BlockEntityHeatCable>("cable_heat_gold",
-			(allocator, pos, state) -> new BlockEntityHeatCable(allocator, pos, state), ModBlocks.GoldHeatCable);
+	public static final BlockEntityTypeAllocator<BlockEntityHeatCable> TYPE = new BlockEntityTypeAllocator<BlockEntityHeatCable>("cable_hea",
+			(allocator, pos, state) -> new BlockEntityHeatCable(allocator, pos, state), ModBlocks.HeatCables.values());
 
 	private final HeatCableComponent cableComponent;
 

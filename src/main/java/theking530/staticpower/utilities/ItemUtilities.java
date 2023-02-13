@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModItemTags;
 
 public class ItemUtilities {
 	public static boolean filterItems(IItemHandler inventoryOfFilterItems, ItemStack itemToCheck, boolean whitelist, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
@@ -49,8 +49,8 @@ public class ItemUtilities {
 		// Check for ore dictionary (tags).
 		if (!match && matchOreDict) {
 			for (ItemStack filterItem : filterItems) {
-				for (TagKey<Item> filterItemTags : ModTags.getTags(filterItem)) {
-					if (ModTags.tagContainsItem(filterItemTags, itemToCheck.getItem())) {
+				for (TagKey<Item> filterItemTags : ModItemTags.getTags(filterItem)) {
+					if (ModItemTags.matches(filterItemTags, itemToCheck.getItem())) {
 						match = true;
 						break;
 					}
@@ -85,8 +85,8 @@ public class ItemUtilities {
 	 * @return True if stack2 is usable to replace stack1.
 	 */
 	public static boolean doStacksOverlapTags(ItemStack stack1, ItemStack stack2) {
-		for (TagKey<Item> filterItemTags : ModTags.getTags(stack1)) {
-			if (ModTags.tagContainsItem(filterItemTags, stack2.getItem())) {
+		for (TagKey<Item> filterItemTags : ModItemTags.getTags(stack1)) {
+			if (ModItemTags.matches(filterItemTags, stack2.getItem())) {
 				return true;
 			}
 		}

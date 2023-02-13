@@ -2,7 +2,6 @@ package theking530.staticpower.blockentities.nonpowered.conveyors.extractor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -10,7 +9,6 @@ import net.minecraft.world.phys.AABB;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.control.ConveyorMotionComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -21,33 +19,20 @@ import theking530.staticpower.blockentities.components.items.InputServoComponent
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlockEntity;
 import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityConveyorExtractor extends AbstractConveyorBlockEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_BASIC = new BlockEntityTypeAllocator<>("conveyor_extractor_basic",
-			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.ConveyorExtractorBasic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>("conveyor_extractor_advanced",
-			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ConveyorExtractorAdvanced);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_STATIC = new BlockEntityTypeAllocator<>("conveyor_extractor_static",
-			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.ConveyorExtractorStatic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>("conveyor_extractor_energized",
-			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ConveyorExtractorEnergized);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE_LUMUM = new BlockEntityTypeAllocator<>("conveyor_extractor_lumum",
-			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorExtractorLumum);
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorExtractor> TYPE = new BlockEntityTypeAllocator<>("conveyor_extractor",
+			(type, pos, state) -> new BlockEntityConveyorExtractor(type, pos, state), ModBlocks.ConveyorsExtractor.values());
 
 	public final InventoryComponent internalInventory;
 	public final SideConfigurationComponent ioSideConfiguration;
 	protected AABB importBox;
 
-	public BlockEntityConveyorExtractor(BlockEntityTypeAllocator<BlockEntityConveyorExtractor> type, BlockPos pos, BlockState state, ResourceLocation tier) {
-		super(type, pos, state, tier);
+	public BlockEntityConveyorExtractor(BlockEntityTypeAllocator<BlockEntityConveyorExtractor> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Input) {
 			public int getSlotLimit(int slot) {
 				return 1;
@@ -70,7 +55,7 @@ public class BlockEntityConveyorExtractor extends AbstractConveyorBlockEntity {
 		}
 
 		// Extract the stored item.
-		ItemStack extracted = internalInventory.extractItem(0, StaticPowerConfig.getTier(tier).conveyorExtractorStackSize.get(), false);
+		ItemStack extracted = internalInventory.extractItem(0, getTierObject().conveyorExtractorStackSize.get(), false);
 
 		// Get the facing direction.
 		Direction facing = getFacingDirection();

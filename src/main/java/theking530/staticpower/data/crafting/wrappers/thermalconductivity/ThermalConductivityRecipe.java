@@ -13,7 +13,7 @@ import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModBlockTags;
 
 public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	public static final String ID = "thermal_conducitity";
@@ -163,7 +163,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 			Block block = matchParams.getBlocks()[0].getBlock();
 			for (ResourceLocation blockTag : blocks) {
 				TagKey<Block> tag = ForgeRegistries.BLOCKS.tags().createTagKey(blockTag);
-				if (ForgeRegistries.BLOCKS.getKey(block).equals(blockTag) || ModTags.tagContainsBlock(tag, block)) {
+				if (ForgeRegistries.BLOCKS.getKey(block).equals(blockTag) || ModBlockTags.matches(tag, block)) {
 					return true;
 				}
 			}

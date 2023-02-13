@@ -5,11 +5,11 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import theking530.staticcore.utilities.SDColor;
-import theking530.staticpower.StaticPower;
+import theking530.staticpower.init.ModGroups;
 
 public class StaticPowerMobSpawnEgg extends ForgeSpawnEggItem {
 
 	public StaticPowerMobSpawnEgg(EntityType<? extends Mob> typeIn, SDColor primaryColorIn, SDColor secondaryColorIn) {
-		super(() -> typeIn, secondaryColorIn.encodeInInteger(), primaryColorIn.encodeInInteger(), new Item.Properties().tab(StaticPower.CREATIVE_TAB));
+		super(() -> typeIn, secondaryColorIn.encodeInInteger(), primaryColorIn.encodeInInteger(), new Item.Properties().tab(ModGroups.CREATIVE_TAB));
 	}
 }

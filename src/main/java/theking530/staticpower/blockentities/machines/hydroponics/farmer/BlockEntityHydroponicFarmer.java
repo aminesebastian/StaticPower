@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -25,7 +26,7 @@ import theking530.staticpower.blockentities.components.items.UpgradeInventoryCom
 import theking530.staticpower.blockentities.machines.hydroponics.pod.BlockEntityHydroponicPod;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModFluidTags;
 
 public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
@@ -61,7 +62,7 @@ public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 
 		// Setup the fluid tank.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get(),
-				(fluidStack) -> ModTags.tagContainsFluid(ModTags.WATER, fluidStack.getFluid())));
+				(fluidStack) -> ModFluidTags.matches(FluidTags.WATER, fluidStack.getFluid())));
 		fluidTankComponent.setAutoSyncPacketsEnabled(true).setUpgradeInventory(upgradesInventory).setCapabilityExposedModes(MachineSideMode.Input);
 
 		// Create the fluid container component.

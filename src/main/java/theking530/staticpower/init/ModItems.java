@@ -30,6 +30,7 @@ import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.cables.ModCableModules;
+import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.items.BatteryPack;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
@@ -325,7 +326,7 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> LightBulbOrange = ITEMS.register("light_bulb_orange", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> LightBulbYellow = ITEMS.register("light_bulb_yellow", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> LightBulbLime = ITEMS.register("light_bulb_lime", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> LightBulbGreem = ITEMS.register("light_bulb_green", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbGreen = ITEMS.register("light_bulb_green", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> LightBulbCyan = ITEMS.register("light_bulb_cyan", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> LightBulbLightBlue = ITEMS.register("light_bulb_light_blue", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> LightBulbBlue = ITEMS.register("light_bulb_blue", () -> new StaticPowerItem());
@@ -452,14 +453,14 @@ public class ModItems {
 
 	public static final RegistryObject<Backpack> Backpack = ITEMS.register("backpack", () -> new Backpack(12));
 
-	public static final RegistryObject<Backpack> BuildersBackPack = ITEMS.register("backpack_builder", () -> new Backpack(12, ModTags.BUILDER_BACKPACK));
-	public static final RegistryObject<Backpack> DiggersBackPack = ITEMS.register("backpack_digger", () -> new Backpack(12, ModTags.DIGGER_BACKPACK));
-	public static final RegistryObject<Backpack> HuntersPack = ITEMS.register("backpack_hunter", () -> new Backpack(12, ModTags.HUNTER_BACKPACK));
-	public static final RegistryObject<Backpack> LumberjacksBackPack = ITEMS.register("backpack_lumberjack", () -> new Backpack(12, ModTags.LUMBERJACK_BACKPACK));
-	public static final RegistryObject<Backpack> MinersBackpack = ITEMS.register("backpack_miner", () -> new Backpack(12, ModTags.MINER_BACKPACK));
-	public static final RegistryObject<Backpack> FarmersBackpack = ITEMS.register("backpack_farmer", () -> new Backpack(12, ModTags.FARMER_BACKPACK));
-	public static final RegistryObject<Backpack> EngineersBackpack = ITEMS.register("backpack_engineer", () -> new Backpack(12, ModTags.ENGINEER_BACKPACK));
-	public static final RegistryObject<Backpack> ToolsBackpack = ITEMS.register("backpack_tool", () -> new Backpack(12, ModTags.TOOL_BACKPACK));
+	public static final RegistryObject<Backpack> BuildersBackPack = ITEMS.register("backpack_builder", () -> new Backpack(12, ModItemTags.BUILDER_BACKPACK));
+	public static final RegistryObject<Backpack> DiggersBackPack = ITEMS.register("backpack_digger", () -> new Backpack(12, ModItemTags.DIGGER_BACKPACK));
+	public static final RegistryObject<Backpack> HuntersPack = ITEMS.register("backpack_hunter", () -> new Backpack(12, ModItemTags.HUNTER_BACKPACK));
+	public static final RegistryObject<Backpack> LumberjacksBackPack = ITEMS.register("backpack_lumberjack", () -> new Backpack(12, ModItemTags.LUMBERJACK_BACKPACK));
+	public static final RegistryObject<Backpack> MinersBackpack = ITEMS.register("backpack_miner", () -> new Backpack(12, ModItemTags.MINER_BACKPACK));
+	public static final RegistryObject<Backpack> FarmersBackpack = ITEMS.register("backpack_farmer", () -> new Backpack(12, ModItemTags.FARMER_BACKPACK));
+	public static final RegistryObject<Backpack> EngineersBackpack = ITEMS.register("backpack_engineer", () -> new Backpack(12, ModItemTags.ENGINEER_BACKPACK));
+	public static final RegistryObject<Backpack> ToolsBackpack = ITEMS.register("backpack_tool", () -> new Backpack(12, ModItemTags.TOOL_BACKPACK));
 
 	public static final RegistryObject<BatteryPack> BasicBatteryPack = ITEMS.register("battery_pack_basic", () -> new BatteryPack(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BatteryPack> AdvancedBatteryPack = ITEMS.register("battery_pack_advanced", () -> new BatteryPack(StaticPowerTiers.ADVANCED));

@@ -27,12 +27,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.machines.autocrafter.ContainerAutoCraftingTable;
 import theking530.staticpower.blockentities.machines.autosolderingtable.ContainerAutoSolderingTable;
 import theking530.staticpower.blockentities.nonpowered.solderingtable.ContainerSolderingTable;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.ContainerDigistorePatternEncoder;
+import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
@@ -280,11 +282,12 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Crucible.get()), CrucibleRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.RefineryController.get()), RefineryRecipeCategory.TYPE);
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
+		for (RegistryObject<BlockHeatCable> regObject : ModBlocks.HeatCables.values()) {
+			registration.addRecipeCatalyst(new ItemStack(regObject.get()), ThermalConductivityRecipeCategory.TYPE);
+		}
+
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
 
 		registration.addRecipeCatalyst(new ItemStack(ModItems.BronzeMetalHammer.get()), HammerRecipeCategory.TYPE);

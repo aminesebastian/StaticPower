@@ -16,8 +16,9 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.cables.CableTiers;
-import theking530.staticpower.cables.CableTiers.CableTier;
+import theking530.staticpower.data.Tiers;
+import theking530.staticpower.data.Tiers.RedstoneCableTier;
+import theking530.staticpower.data.Tiers.TierPair;
 import theking530.staticpower.entities.AbstractEntityBuilder;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
 import theking530.staticpower.init.ModBlocks;
@@ -271,7 +272,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 		lightbulb(ModItems.LightBulbOrange.get(), "orange");
 		lightbulb(ModItems.LightBulbYellow.get(), "yellow");
 		lightbulb(ModItems.LightBulbLime.get(), "lime");
-		lightbulb(ModItems.LightBulbGreem.get(), "green");
+		lightbulb(ModItems.LightBulbGreen.get(), "green");
 		lightbulb(ModItems.LightBulbCyan.get(), "cyan");
 		lightbulb(ModItems.LightBulbLightBlue.get(), "light_blue");
 		lightbulb(ModItems.LightBulbBlue.get(), "blue");
@@ -589,32 +590,11 @@ public class ModItemModelProvider extends ItemModelProvider {
 		upgrade(ModItems.LumumHeatUpgrade.get(), "upgrades/upgrade_heat", "overlay_upgrade_lumum");
 
 		cable1Inventory(ModBlocks.BasicRedstoneCableNaked.get(), "redstone/cable_basic_redstone_naked");
-		cable2Inventory(ModBlocks.BasicRedstoneCableBlack.get(), "redstone/cable_basic_redstone_black");
-		cable2Inventory(ModBlocks.BasicRedstoneCableDarkBlue.get(), "redstone/cable_basic_redstone_dark_blue");
-		cable2Inventory(ModBlocks.BasicRedstoneCableDarkGreen.get(), "redstone/cable_basic_redstone_dark_green");
-		cable2Inventory(ModBlocks.BasicRedstoneCableDarkAqua.get(), "redstone/cable_basic_redstone_dark_aqua");
-		cable2Inventory(ModBlocks.BasicRedstoneCableDarkRed.get(), "redstone/cable_basic_redstone_dark_red");
-		cable2Inventory(ModBlocks.BasicRedstoneCableDarkPurple.get(), "redstone/cable_basic_redstone_dark_purple");
-		cable2Inventory(ModBlocks.BasicRedstoneCableGold.get(), "redstone/cable_basic_redstone_gold");
-		cable2Inventory(ModBlocks.BasicRedstoneCableGray.get(), "redstone/cable_basic_redstone_gray");
-		cable2Inventory(ModBlocks.BasicRedstoneCableDarkGray.get(), "redstone/cable_basic_redstone_dark_gray");
-		cable2Inventory(ModBlocks.BasicRedstoneCableBlue.get(), "redstone/cable_basic_redstone_blue");
-		cable2Inventory(ModBlocks.BasicRedstoneCableGreen.get(), "redstone/cable_basic_redstone_green");
-		cable2Inventory(ModBlocks.BasicRedstoneCableAqua.get(), "redstone/cable_basic_redstone_aqua");
-		cable2Inventory(ModBlocks.BasicRedstoneCableRed.get(), "redstone/cable_basic_redstone_red");
-		cable2Inventory(ModBlocks.BasicRedstoneCableLightPurple.get(), "redstone/cable_basic_redstone_light_purple");
-		cable2Inventory(ModBlocks.BasicRedstoneCableYellow.get(), "redstone/cable_basic_redstone_yellow");
-		cable2Inventory(ModBlocks.BasicRedstoneCableWhite.get(), "redstone/cable_basic_redstone_white");
 		cable5Inventory(ModBlocks.BundledRedstoneCable.get(), "redstone/cable_bundled_redstone");
-
 		cable3Inventory(ModBlocks.DigistoreWire.get(), "cable_digistore");
 		cable5Inventory(ModBlocks.ScaffoldCable.get(), "cable_scaffold");
 
-		cable5Inventory(ModBlocks.AluminumHeatCable.get(), "cable_aluminum_heat");
-		cable5Inventory(ModBlocks.CopperHeatCable.get(), "cable_copper_heat");
-		cable5Inventory(ModBlocks.GoldHeatCable.get(), "cable_gold_heat");
-
-		for (CableTier tier : CableTiers.get()) {
+		for (TierPair tier : Tiers.getCableTiers()) {
 			cable5Inventory(ModBlocks.PowerCables.get(tier.location()).get(), "cable_power_" + tier.name());
 			cable5Inventory(ModBlocks.InsulatedPowerCables.get(tier.location()).get(), "cable_power_" + tier.name() + "_insulated");
 			cable7Inventory(ModBlocks.IndustrialPowerCables.get(tier.location()).get(), "cable_industrial_power_" + tier.name());
@@ -624,6 +604,14 @@ public class ModItemModelProvider extends ItemModelProvider {
 			cable5Inventory(ModBlocks.FluidCables.get(tier.location()).get(), "cable_fluid_" + tier.name());
 			cable2InventoryVertical(ModBlocks.CapillaryFluidCables.get(tier.location()).get(), "cable_capillary_fluid_" + tier.name());
 			cable7Inventory(ModBlocks.IndustrialFluidCables.get(tier.location()).get(), "cable_industrial_fluid_" + tier.name());
+		}
+
+		for (TierPair tier : Tiers.getHeat()) {
+			cable5Inventory(ModBlocks.HeatCables.get(tier.location()).get(), "cable_" + tier.name() + "_heat");
+		}
+
+		for (RedstoneCableTier tier : Tiers.getRedstone()) {
+			cable2Inventory(ModBlocks.RedstoneCables.get(tier.location()).get(), "redstone/cable_basic_redstone_" + tier.color().getName());
 		}
 
 		for (RegistryObject<Block> block : ModBlocks.BLOCKS.getEntries()) {

@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +13,6 @@ import net.minecraft.world.phys.AABB;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.control.ConveyorMotionComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -25,33 +23,20 @@ import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlockEntity;
 import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityConveyorSupplier extends AbstractConveyorBlockEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_BASIC = new BlockEntityTypeAllocator<>("conveyor_supplier_basic",
-			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.ConveyorSupplierBasic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_ADVANCED = new BlockEntityTypeAllocator<>("conveyor_supplier_advanced",
-			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ConveyorSupplierAdvanced);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_STATIC = new BlockEntityTypeAllocator<>("conveyor_supplier_static",
-			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.ConveyorSupplierStatic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>("conveyor_supplier_energized",
-			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ConveyorSupplierEnergized);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE_LUMUM = new BlockEntityTypeAllocator<>("conveyor_supplier_lumum",
-			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorSupplierLumum);
+	public static final BlockEntityTypeAllocator<BlockEntityConveyorSupplier> TYPE = new BlockEntityTypeAllocator<>("conveyor_supplier",
+			(type, pos, state) -> new BlockEntityConveyorSupplier(type, pos, state), ModBlocks.ConveyorsSupplier.values());
 
 	public final InventoryComponent internalInventory;
 	public final SideConfigurationComponent ioSideConfiguration;
 	protected AABB importBox;
 
-	public BlockEntityConveyorSupplier(BlockEntityTypeAllocator<BlockEntityConveyorSupplier> type, BlockPos pos, BlockState state, ResourceLocation tier) {
-		super(type, pos, state, tier);
+	public BlockEntityConveyorSupplier(BlockEntityTypeAllocator<BlockEntityConveyorSupplier> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output) {
 			public int getSlotLimit(int slot) {
 				return 64;
@@ -77,7 +62,7 @@ public class BlockEntityConveyorSupplier extends AbstractConveyorBlockEntity {
 
 				// Create a copy of the item and calculate the amount to supply.
 				ItemStack stackToSupply = conveyorEntity.getItem().copy();
-				int amountToSupply = Math.min(StaticPowerConfig.getTier(tier).conveyorSupplierStackSize.get(), stackToSupply.getCount());
+				int amountToSupply = Math.min(getTierObject().conveyorSupplierStackSize.get(), stackToSupply.getCount());
 				stackToSupply.setCount(amountToSupply);
 
 				// Calculate how many items would be left over IF the insert is 100% successful.

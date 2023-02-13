@@ -31,8 +31,7 @@ import theking530.staticpower.init.ModBlocks;
 public class BlockEntityCircuitBreaker extends BlockEntityBase {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityCircuitBreaker> TYPE = new BlockEntityTypeAllocator<BlockEntityCircuitBreaker>("circuit_braker",
-			(allocator, pos, state) -> new BlockEntityCircuitBreaker(allocator, pos, state), ModBlocks.CircuitBreaker2A, ModBlocks.CircuitBreaker5A, ModBlocks.CircuitBreaker10A,
-			ModBlocks.CircuitBreaker20A, ModBlocks.CircuitBreaker50A, ModBlocks.CircuitBreaker100A);
+			(allocator, pos, state) -> new BlockEntityCircuitBreaker(allocator, pos, state), ModBlocks.CircuitBreakers.values());
 
 	public static final int MAX_RESET_DELAY = 5;
 	public static final int POST_RESET_TRANSFER_DELAY = 20;

@@ -1,0 +1,14 @@
+{
+  "values": [
+    "staticpower:gear_brass",
+    "staticpower:gear_bronze",
+    "staticpower:gear_copper",
+    "staticpower:gear_energized",
+    "staticpower:gear_gold",
+    "staticpower:gear_inert_infusion",
+    "staticpower:gear_iron",
+    "staticpower:gear_lumum",
+    "staticpower:gear_static",
+    "staticpower:gear_tin"
+  ]
+}

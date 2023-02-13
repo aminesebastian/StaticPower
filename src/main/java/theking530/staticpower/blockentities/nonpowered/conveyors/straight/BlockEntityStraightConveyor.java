@@ -1,7 +1,6 @@
 package theking530.staticpower.blockentities.nonpowered.conveyors.straight;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,31 +14,18 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlockEntity;
 import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockEntityStraightConveyor extends AbstractConveyorBlockEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_BASIC = new BlockEntityTypeAllocator<>("conveyor_straight_basic",
-			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.StraightConveyorBasic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>("conveyor_straight_advanced",
-			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.StraightConveyorAdvanced);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_STATIC = new BlockEntityTypeAllocator<>("conveyor_straight_static",
-			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StraightConveyorStatic);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>("conveyor_straight_energized",
-			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.StraightConveyorEnergized);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE_LUMUM = new BlockEntityTypeAllocator<>("conveyor_straight_lumum",
-			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.StraightConveyorLumum);
+	public static final BlockEntityTypeAllocator<BlockEntityStraightConveyor> TYPE = new BlockEntityTypeAllocator<>("conveyor_straight",
+			(type, pos, state) -> new BlockEntityStraightConveyor(type, pos, state), ModBlocks.ConveyorsStraight.values());
 
 	public final InventoryComponent inventory;
 
-	public BlockEntityStraightConveyor(BlockEntityTypeAllocator<BlockEntityStraightConveyor> type, BlockPos pos, BlockState state, ResourceLocation tier) {
-		super(type, pos, state, tier);
+	public BlockEntityStraightConveyor(BlockEntityTypeAllocator<BlockEntityStraightConveyor> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		registerComponent(inventory = new InventoryComponent("Inventory", 1, MachineSideMode.Input));
 	}
 

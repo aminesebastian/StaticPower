@@ -1,5 +1,7 @@
 package theking530.staticpower.items;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -16,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -24,7 +27,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.ITooltipProvider;
-import theking530.staticpower.StaticPower;
+import theking530.staticpower.init.ModGroups;
+import theking530.staticpower.init.tags.ModItemTags;
 
 /**
  * Base class for most static power items.
@@ -42,7 +46,11 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param name The registry name for this item sans namespace.
 	 */
 	public StaticPowerItem() {
-		this(new Item.Properties().tab(StaticPower.CREATIVE_TAB));
+		this(new Item.Properties().tab(ModGroups.CREATIVE_TAB));
+	}
+
+	public StaticPowerItem(CreativeModeTab creativeTab) {
+		this(new Item.Properties().tab(creativeTab));
 	}
 
 	/**
@@ -53,7 +61,7 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 *                   this method, no need to set it externally).
 	 */
 	public StaticPowerItem(Item.Properties properties) {
-		super(properties.tab(StaticPower.CREATIVE_TAB));
+		super(properties);
 	}
 
 	@Override
@@ -88,6 +96,26 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 			CompoundTag syncTag = nbt.getCompound("sync_tag");
 			processStaticPowerSyncTag(stack, syncTag);
 		}
+	}
+
+	@Override
+	public Collection<CreativeModeTab> getCreativeTabs() {
+		List<CreativeModeTab> output = new LinkedList<>();
+		output.add(ModGroups.CREATIVE_TAB);
+
+		if (ModItemTags.matches(ModItemTags.MATERIALS, this)) {
+			output.add(ModGroups.MATERIAL_CREATIVE_TAB);
+		}
+
+		if (ModItemTags.matches(ModItemTags.TOOLS, this)) {
+			output.add(ModGroups.TOOL_CREATIVE_TAB);
+		}
+
+		if (ModItemTags.matches(ModItemTags.CABLES, this)) {
+			output.add(ModGroups.CABLE_CREATIVE_TAB);
+		}
+
+		return output;
 	}
 
 	protected CompoundTag getStaticPowerSyncTag(ItemStack stack) {

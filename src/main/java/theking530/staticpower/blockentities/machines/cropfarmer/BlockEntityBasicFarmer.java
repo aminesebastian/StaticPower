@@ -53,7 +53,8 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModBlockTags;
+import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -92,9 +93,9 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				if (slot == 0) {
-					return ModTags.tagContainsItemStack(ModTags.FARMING_HOE, stack);
+					return ModItemTags.matches(ModItemTags.FARMING_HOE, stack.getItem());
 				} else {
-					return ModTags.tagContainsItemStack(ModTags.FARMING_HOE, stack);
+					return ModItemTags.matches(ModItemTags.FARMING_HOE, stack.getItem());
 				}
 			}
 		}).setSlotsLockable(true));
@@ -139,11 +140,11 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	}
 
 	public boolean hasHoe() {
-		return ModTags.tagContainsItem(ModTags.FARMING_HOE, inputInventory.getStackInSlot(0).getItem());
+		return ModItemTags.matches(ModItemTags.FARMING_HOE, inputInventory.getStackInSlot(0).getItem());
 	}
 
 	public boolean hasAxe() {
-		return ModTags.tagContainsItem(ModTags.FARMING_HOE, inputInventory.getStackInSlot(1).getItem());
+		return ModItemTags.matches(ModItemTags.FARMING_HOE, inputInventory.getStackInSlot(1).getItem());
 	}
 
 	public int getRadius() {
@@ -325,7 +326,7 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 
 	protected boolean attemptHarvestPosition(BlockPos pos) {
 		// Till the spot if we can and return.
-		if (getLevel().getBlockState(pos.relative(Direction.DOWN)).is(ModTags.TILLABLE)) {
+		if (getLevel().getBlockState(pos.relative(Direction.DOWN)).is(ModBlockTags.TILLABLE)) {
 			getLevel().destroyBlock(pos.relative(Direction.DOWN), false);
 			getLevel().setBlockAndUpdate(pos.relative(Direction.DOWN), Blocks.FARMLAND.defaultBlockState());
 			getLevel().playSound(null, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);

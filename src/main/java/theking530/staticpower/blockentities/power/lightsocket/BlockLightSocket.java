@@ -45,7 +45,7 @@ import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.LightSocketModel;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.utilities.RaytracingUtilities;
 import theking530.staticpower.utilities.RaytracingUtilities.AdvancedRayTraceResult;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -104,7 +104,7 @@ public class BlockLightSocket extends StaticPowerRotateableBlockEntityBlock impl
 			return InteractionResult.SUCCESS;
 		} else {
 			ItemStack heldItem = player.getItemInHand(hand);
-			if (Ingredient.of(ModTags.LIGHTBULB).test(heldItem)) {
+			if (Ingredient.of(ModItemTags.LIGHTBULB).test(heldItem)) {
 				boolean lightAdded = socket.addLightBulb(heldItem);
 				if (lightAdded && !world.isClientSide() && !player.isCreative()) {
 					heldItem.shrink(1);

@@ -107,8 +107,6 @@ import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
 import theking530.staticpower.blocks.tree.StaticPowerSapling;
 import theking530.staticpower.blocks.tree.StaticPowerTreeLeaves;
 import theking530.staticpower.blocks.tree.StaticPowerTreeLog;
-import theking530.staticpower.cables.CableTiers;
-import theking530.staticpower.cables.CableTiers.CableTier;
 import theking530.staticpower.cables.digistore.BlockDigistoreNetworkWire;
 import theking530.staticpower.cables.fluid.BlockCapillaryFluidCable;
 import theking530.staticpower.cables.fluid.BlockFluidCable;
@@ -122,6 +120,10 @@ import theking530.staticpower.cables.redstone.bundled.BlockBundledRedstoneCable;
 import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.Tiers;
+import theking530.staticpower.data.Tiers.RedstoneCableTier;
+import theking530.staticpower.data.Tiers.ResistorTier;
+import theking530.staticpower.data.Tiers.TierPair;
 
 public class ModBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StaticPower.MOD_ID);
@@ -366,79 +368,25 @@ public class ModBlocks {
 	public static final RegistryObject<BlockLaboratory> Laboratory = registerBlock("laboratory", () -> new BlockLaboratory());
 	public static final RegistryObject<BlockResearchCheater> ResearchCheater = registerBlock("research_cheater", () -> new BlockResearchCheater());
 
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorBasic = registerBlock("conveyor_straight_basic",
-			() -> new BlockStraightConveyor(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorAdvanced = registerBlock("conveyor_straight_advanced",
-			() -> new BlockStraightConveyor(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorStatic = registerBlock("conveyor_straight_static",
-			() -> new BlockStraightConveyor(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorEnergized = registerBlock("conveyor_straight_energized",
-			() -> new BlockStraightConveyor(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorLumum = registerBlock("conveyor_straight_lumum",
-			() -> new BlockStraightConveyor(StaticPowerTiers.LUMUM));
+	public static final Map<ResourceLocation, RegistryObject<BlockStraightConveyor>> ConveyorsStraight = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockRampUpConveyor>> ConveyorsRampUp = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockRampDownConveyor>> ConveyorsRampDown = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockConveyorSupplier>> ConveyorsSupplier = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockConveyorExtractor>> ConveyorsExtractor = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockConveyorHopper>> ConveyorsHopper = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockConveyorHopper>> ConveyorsFilteredHopper = new HashMap<>();
 
-	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorBasic = registerBlock("conveyor_ramp_up_basic", () -> new BlockRampUpConveyor(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorAdvanced = registerBlock("conveyor_ramp_up_advanced",
-			() -> new BlockRampUpConveyor(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorStatic = registerBlock("conveyor_ramp_up_static", () -> new BlockRampUpConveyor(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorEnergized = registerBlock("conveyor_ramp_up_energized",
-			() -> new BlockRampUpConveyor(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorLumum = registerBlock("conveyor_ramp_up_lumum", () -> new BlockRampUpConveyor(StaticPowerTiers.LUMUM));
-
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorBasic = registerBlock("conveyor_ramp_down_basic",
-			() -> new BlockRampDownConveyor(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorAdvanced = registerBlock("conveyor_ramp_down_advanced",
-			() -> new BlockRampDownConveyor(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorStatic = registerBlock("conveyor_ramp_down_static",
-			() -> new BlockRampDownConveyor(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorEnergized = registerBlock("conveyor_ramp_down_energized",
-			() -> new BlockRampDownConveyor(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorLumum = registerBlock("conveyor_ramp_down_lumum",
-			() -> new BlockRampDownConveyor(StaticPowerTiers.LUMUM));
-
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierBasic = registerBlock("conveyor_supplier_basic",
-			() -> new BlockConveyorSupplier(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierAdvanced = registerBlock("conveyor_supplier_advanced",
-			() -> new BlockConveyorSupplier(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierStatic = registerBlock("conveyor_supplier_static",
-			() -> new BlockConveyorSupplier(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierEnergized = registerBlock("conveyor_supplier_energized",
-			() -> new BlockConveyorSupplier(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierLumum = registerBlock("conveyor_supplier_lumum",
-			() -> new BlockConveyorSupplier(StaticPowerTiers.LUMUM));
-
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorBasic = registerBlock("conveyor_extractor_basic",
-			() -> new BlockConveyorExtractor(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorAdvanced = registerBlock("conveyor_extractor_advanced",
-			() -> new BlockConveyorExtractor(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorStatic = registerBlock("conveyor_extractor_static",
-			() -> new BlockConveyorExtractor(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorEnergized = registerBlock("conveyor_extractor_energized",
-			() -> new BlockConveyorExtractor(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorLumum = registerBlock("conveyor_extractor_lumum",
-			() -> new BlockConveyorExtractor(StaticPowerTiers.LUMUM));
-
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperBasic = registerBlock("conveyor_hopper_basic",
-			() -> new BlockConveyorHopper(StaticPowerTiers.BASIC, false));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperAdvanced = registerBlock("conveyor_hopper_advanced",
-			() -> new BlockConveyorHopper(StaticPowerTiers.ADVANCED, false));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperStatic = registerBlock("conveyor_hopper_static",
-			() -> new BlockConveyorHopper(StaticPowerTiers.STATIC, false));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperEnergized = registerBlock("conveyor_hopper_energized",
-			() -> new BlockConveyorHopper(StaticPowerTiers.ENERGIZED, false));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperLumum = registerBlock("conveyor_hopper_lumum",
-			() -> new BlockConveyorHopper(StaticPowerTiers.LUMUM, false));
-
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperBasic = registerBlock("conveyor_hopper_filtered_basic",
-			() -> new BlockConveyorHopper(StaticPowerTiers.BASIC, true));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperAdvanced = registerBlock("conveyor_hopper_filtered_advanced",
-			() -> new BlockConveyorHopper(StaticPowerTiers.ADVANCED, true));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperStatic = registerBlock("conveyor_hopper_filtered_static",
-			() -> new BlockConveyorHopper(StaticPowerTiers.STATIC, true));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperEnergized = registerBlock("conveyor_hopper_filtered_energized",
-			() -> new BlockConveyorHopper(StaticPowerTiers.ENERGIZED, true));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperLumum = registerBlock("conveyor_hopper_filtered_lumum",
-			() -> new BlockConveyorHopper(StaticPowerTiers.LUMUM, true));
+	static {
+		for (TierPair pair : Tiers.getConveyorTiers()) {
+			ConveyorsStraight.put(pair.location(), registerBlock("conveyor_straight_" + pair.name(), () -> new BlockStraightConveyor(pair.location())));
+			ConveyorsRampUp.put(pair.location(), registerBlock("conveyor_ramp_up_" + pair.name(), () -> new BlockRampUpConveyor(pair.location())));
+			ConveyorsRampDown.put(pair.location(), registerBlock("conveyor_ramp_down_" + pair.name(), () -> new BlockRampDownConveyor(pair.location())));
+			ConveyorsSupplier.put(pair.location(), registerBlock("conveyor_supplier_" + pair.name(), () -> new BlockConveyorSupplier(pair.location())));
+			ConveyorsExtractor.put(pair.location(), registerBlock("conveyor_extractor_" + pair.name(), () -> new BlockConveyorExtractor(pair.location())));
+			ConveyorsHopper.put(pair.location(), registerBlock("conveyor_hopper_" + pair.name(), () -> new BlockConveyorHopper(pair.location(), false)));
+			ConveyorsFilteredHopper.put(pair.location(), registerBlock("conveyor_hopper_filtered_" + pair.name(), () -> new BlockConveyorHopper(pair.location(), true)));
+		}
+	}
 
 	public static final RegistryObject<BlockHeatSink> AluminumHeatSink = registerBlock("heat_sink_aluminum", () -> new BlockHeatSink(StaticPowerTiers.ALUMINUM));
 	public static final RegistryObject<BlockHeatSink> CopperHeatSink = registerBlock("heat_sink_copper", () -> new BlockHeatSink(StaticPowerTiers.COPPER));
@@ -467,9 +415,11 @@ public class ModBlocks {
 	public static final Map<ResourceLocation, RegistryObject<BlockFluidCable>> FluidCables = new HashMap<>();
 	public static final Map<ResourceLocation, RegistryObject<BlockCapillaryFluidCable>> CapillaryFluidCables = new HashMap<>();
 	public static final Map<ResourceLocation, RegistryObject<BlockIndustrialFluidCable>> IndustrialFluidCables = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockHeatCable>> HeatCables = new HashMap<>();
+	public static final Map<ResourceLocation, RegistryObject<BlockRedstoneCable>> RedstoneCables = new HashMap<>();
 
 	static {
-		for (CableTier tier : CableTiers.get()) {
+		for (TierPair tier : Tiers.getCableTiers()) {
 			ItemCables.put(tier.location(), registerBlock("cable_item_" + tier.name(), () -> new BlockItemCable(tier.location())));
 			PowerCables.put(tier.location(), registerBlock("cable_power_" + tier.name(), () -> new BlockPowerCable(tier.location(), false)));
 			InsulatedPowerCables.put(tier.location(), registerBlock("cable_insulated_power_" + tier.name(), () -> new BlockPowerCable(tier.location(), true)));
@@ -478,34 +428,18 @@ public class ModBlocks {
 			CapillaryFluidCables.put(tier.location(), registerBlock("cable_capillary_fluid_" + tier.name(), () -> new BlockCapillaryFluidCable(tier.location())));
 			IndustrialFluidCables.put(tier.location(), registerBlock("cable_industrial_fluid_" + tier.name(), () -> new BlockIndustrialFluidCable(tier.location())));
 		}
+
+		for (TierPair tier : Tiers.getHeat()) {
+			HeatCables.put(tier.location(), registerBlock("cable_heat_" + tier.name(), () -> new BlockHeatCable(tier.location())));
+		}
+
+		for (RedstoneCableTier tier : Tiers.getRedstone()) {
+			RedstoneCables.put(tier.location(), registerBlock("cable_redstone_basic_" + tier.color().getName(), () -> new BlockRedstoneCable(tier.color())));
+		}
 	}
 
-	public static final RegistryObject<BlockHeatCable> AluminumHeatCable = registerBlock("cable_heat_aluminum", () -> new BlockHeatCable(StaticPowerTiers.ALUMINUM));
-	public static final RegistryObject<BlockHeatCable> CopperHeatCable = registerBlock("cable_heat_copper", () -> new BlockHeatCable(StaticPowerTiers.COPPER));
-	public static final RegistryObject<BlockHeatCable> GoldHeatCable = registerBlock("cable_heat_gold", () -> new BlockHeatCable(StaticPowerTiers.GOLD));
-
 	public static final RegistryObject<BlockScaffoldCable> ScaffoldCable = registerBlock("cable_scaffold", () -> new BlockScaffoldCable());
-
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableNaked = registerBlock("cable_redstone_basic_naked", () -> new BlockRedstoneCable("naked"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableBlack = registerBlock("cable_redstone_basic_black", () -> new BlockRedstoneCable("black"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableDarkBlue = registerBlock("cable_redstone_basic_dark_blue", () -> new BlockRedstoneCable("blue"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableDarkGreen = registerBlock("cable_redstone_basic_dark_green",
-			() -> new BlockRedstoneCable("dark_green"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableDarkAqua = registerBlock("cable_redstone_basic_dark_aqua", () -> new BlockRedstoneCable("dark_aqua"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableDarkRed = registerBlock("cable_redstone_basic_dark_red", () -> new BlockRedstoneCable("dark_red"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableDarkPurple = registerBlock("cable_redstone_basic_dark_purple",
-			() -> new BlockRedstoneCable("dark_purple"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableGold = registerBlock("cable_redstone_basic_gold", () -> new BlockRedstoneCable("gold"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableGray = registerBlock("cable_redstone_basic_gray", () -> new BlockRedstoneCable("gray"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableDarkGray = registerBlock("cable_redstone_basic_dark_gray", () -> new BlockRedstoneCable("dark_gray"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableBlue = registerBlock("cable_redstone_basic_blue", () -> new BlockRedstoneCable("blue"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableGreen = registerBlock("cable_redstone_basic_green", () -> new BlockRedstoneCable("green"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableAqua = registerBlock("cable_redstone_basic_aqua", () -> new BlockRedstoneCable("aqua"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableRed = registerBlock("cable_redstone_basic_red", () -> new BlockRedstoneCable("red"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableLightPurple = registerBlock("cable_redstone_basic_light_purple",
-			() -> new BlockRedstoneCable("light_purple"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableYellow = registerBlock("cable_redstone_basic_yellow", () -> new BlockRedstoneCable("yellow"));
-	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableWhite = registerBlock("cable_redstone_basic_white", () -> new BlockRedstoneCable("white"));
+	public static final RegistryObject<BlockRedstoneCable> BasicRedstoneCableNaked = registerBlock("cable_redstone_basic_naked", () -> new BlockRedstoneCable(null));
 	public static final RegistryObject<BlockBundledRedstoneCable> BundledRedstoneCable = registerBlock("cable_bundled_redstone", () -> new BlockBundledRedstoneCable());
 
 	// Batteries
@@ -530,23 +464,20 @@ public class ModBlocks {
 	public static final RegistryObject<BlockRectifier> Rectifier = registerBlock("rectifier", () -> new BlockRectifier(StaticPowerTiers.BASIC));
 
 	// Circuit Breakers
-	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker2A = registerBlock("circuit_breaker_2", () -> new BlockCircuitBreaker(2));
-	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker5A = registerBlock("circuit_breaker_5", () -> new BlockCircuitBreaker(5));
-	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker10A = registerBlock("circuit_breaker_10", () -> new BlockCircuitBreaker(10));
-	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker20A = registerBlock("circuit_breaker_20", () -> new BlockCircuitBreaker(20));
-	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker50A = registerBlock("circuit_breaker_50", () -> new BlockCircuitBreaker(50));
-	public static final RegistryObject<BlockCircuitBreaker> CircuitBreaker100A = registerBlock("circuit_breaker_100", () -> new BlockCircuitBreaker(100));
+	public static final Map<Integer, RegistryObject<BlockCircuitBreaker>> CircuitBreakers = new HashMap<>();
+	static {
+		for (int value : Tiers.getCircuitBrakerTiers()) {
+			CircuitBreakers.put(value, registerBlock("circuit_breaker_" + value, () -> new BlockCircuitBreaker(value)));
+		}
+	}
 
 	// Resistors
-	public static final RegistryObject<BlockResistor> Resistor1W = registerBlock("resistor_1", () -> new BlockResistor(1));
-	public static final RegistryObject<BlockResistor> Resistor5W = registerBlock("resistor_5", () -> new BlockResistor(5));
-	public static final RegistryObject<BlockResistor> Resistor10W = registerBlock("resistor_10", () -> new BlockResistor(10));
-	public static final RegistryObject<BlockResistor> Resistor25W = registerBlock("resistor_25", () -> new BlockResistor(25));
-	public static final RegistryObject<BlockResistor> Resistor50W = registerBlock("resistor_50", () -> new BlockResistor(50));
-	public static final RegistryObject<BlockResistor> Resistor100W = registerBlock("resistor_100", () -> new BlockResistor(100));
-	public static final RegistryObject<BlockResistor> Resistor250W = registerBlock("resistor_250", () -> new BlockResistor(250));
-	public static final RegistryObject<BlockResistor> Resistor500W = registerBlock("resistor_500", () -> new BlockResistor(500));
-	public static final RegistryObject<BlockResistor> Resistor1KW = registerBlock("resistor_1000", () -> new BlockResistor(1000));
+	public static final Map<Integer, RegistryObject<BlockResistor>> Resistors = new HashMap<>();
+	static {
+		for (ResistorTier tier : Tiers.getResistorTiers()) {
+			Resistors.put(tier.value(), registerBlock("resistor_" + tier.value(), () -> new BlockResistor(tier.value())));
+		}
+	}
 
 	// Wire Terminals
 	public static final RegistryObject<BlockWireConnector> WireConnectorLV = registerBlock("wire_terminal_lv", () -> new BlockWireConnector(StaticPowerTiers.BASIC));

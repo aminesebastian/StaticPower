@@ -1,0 +1,11 @@
+{
+  "values": [
+    "staticpower:hammer_iron",
+    "staticpower:hammer_bronze",
+    "staticpower:hammer_zinc",
+    "staticpower:hammer_copper",
+    "staticpower:hammer_tin",
+    "staticpower:hammer_tungsten",
+    "staticpower:hammer_creative"
+  ]
+}

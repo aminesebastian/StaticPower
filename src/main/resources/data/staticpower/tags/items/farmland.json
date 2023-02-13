@@ -1,8 +1,0 @@
-{
-	"replace": false,
-	"values": [
-		"staticpower:farmland_static",
-		"staticpower:farmland_energized",
-		"staticpower:farmland_lumum"
-	]
-}

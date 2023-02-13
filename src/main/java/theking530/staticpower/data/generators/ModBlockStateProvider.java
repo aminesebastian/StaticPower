@@ -18,8 +18,10 @@ import theking530.staticpower.blocks.StaticPowerBlockProperties;
 import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.cables.CableTiers;
-import theking530.staticpower.cables.CableTiers.CableTier;
+import theking530.staticpower.data.Tiers;
+import theking530.staticpower.data.Tiers.RedstoneCableTier;
+import theking530.staticpower.data.Tiers.ResistorTier;
+import theking530.staticpower.data.Tiers.TierPair;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
@@ -225,22 +227,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		solarPanel(ModBlocks.SolarPanelLumum.get(), "lumum");
 		solarPanel(ModBlocks.SolarPanelCreative.get(), "creative");
 
-		resistor(ModBlocks.Resistor1W.get(), "0", "1", "0");
-		resistor(ModBlocks.Resistor5W.get(), "0", "5", "0");
-		resistor(ModBlocks.Resistor10W.get(), "1", "0", "0");
-		resistor(ModBlocks.Resistor25W.get(), "2", "5", "0");
-		resistor(ModBlocks.Resistor50W.get(), "5", "0", "0");
-		resistor(ModBlocks.Resistor100W.get(), "1", "0", "1");
-		resistor(ModBlocks.Resistor250W.get(), "2", "5", "1");
-		resistor(ModBlocks.Resistor500W.get(), "5", "0", "1");
-		resistor(ModBlocks.Resistor1KW.get(), "1", "0", "3");
-
-		circuitBreaker(ModBlocks.CircuitBreaker2A.get(), "2");
-		circuitBreaker(ModBlocks.CircuitBreaker5A.get(), "5");
-		circuitBreaker(ModBlocks.CircuitBreaker10A.get(), "10");
-		circuitBreaker(ModBlocks.CircuitBreaker20A.get(), "20");
-		circuitBreaker(ModBlocks.CircuitBreaker50A.get(), "50");
-		circuitBreaker(ModBlocks.CircuitBreaker100A.get(), "100");
+		for (ResistorTier tier : Tiers.getResistorTiers()) {
+			resistor(ModBlocks.Resistors.get(tier.value()).get(), tier.firstStripe(), tier.secondStripe(), tier.thirdStripe());
+		}
+		for (int value : Tiers.getCircuitBrakerTiers()) {
+			circuitBreaker(ModBlocks.CircuitBreakers.get(value).get(), String.valueOf(value));
+		}
 
 		transformer(ModBlocks.TransformerBasic.get(), "basic");
 		transformer(ModBlocks.TransformerAdvanced.get(), "advanced");
@@ -285,72 +277,23 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		refineryTower(ModBlocks.RefineryTower.get());
 		lightSocket(ModBlocks.LightSocket.get());
 
-		conveyorStraight(ModBlocks.StraightConveyorBasic.get(), "basic");
-		conveyorStraight(ModBlocks.StraightConveyorAdvanced.get(), "advanced");
-		conveyorStraight(ModBlocks.StraightConveyorStatic.get(), "static");
-		conveyorStraight(ModBlocks.StraightConveyorEnergized.get(), "energized");
-		conveyorStraight(ModBlocks.StraightConveyorLumum.get(), "lumum");
-
-		conveyorHopper(ModBlocks.ConveyorHopperBasic.get(), "basic", false);
-		conveyorHopper(ModBlocks.ConveyorHopperAdvanced.get(), "advanced", false);
-		conveyorHopper(ModBlocks.ConveyorHopperStatic.get(), "static", false);
-		conveyorHopper(ModBlocks.ConveyorHopperEnergized.get(), "energized", false);
-		conveyorHopper(ModBlocks.ConveyorHopperLumum.get(), "lumum", false);
-
-		conveyorHopper(ModBlocks.ConveyorFilteredHopperBasic.get(), "basic", true);
-		conveyorHopper(ModBlocks.ConveyorFilteredHopperAdvanced.get(), "advanced", true);
-		conveyorHopper(ModBlocks.ConveyorFilteredHopperStatic.get(), "static", true);
-		conveyorHopper(ModBlocks.ConveyorFilteredHopperEnergized.get(), "energized", true);
-		conveyorHopper(ModBlocks.ConveyorFilteredHopperLumum.get(), "lumum", true);
-
-		converyorSupplier(ModBlocks.ConveyorSupplierBasic.get(), "basic");
-		converyorSupplier(ModBlocks.ConveyorSupplierAdvanced.get(), "advanced");
-		converyorSupplier(ModBlocks.ConveyorSupplierStatic.get(), "static");
-		converyorSupplier(ModBlocks.ConveyorSupplierEnergized.get(), "energized");
-		converyorSupplier(ModBlocks.ConveyorSupplierLumum.get(), "lumum");
-
-		conveyorExtractor(ModBlocks.ConveyorExtractorBasic.get(), "basic");
-		conveyorExtractor(ModBlocks.ConveyorExtractorAdvanced.get(), "advanced");
-		conveyorExtractor(ModBlocks.ConveyorExtractorStatic.get(), "static");
-		conveyorExtractor(ModBlocks.ConveyorExtractorEnergized.get(), "energized");
-		conveyorExtractor(ModBlocks.ConveyorExtractorLumum.get(), "lumum");
-
-		conveyorRamp(ModBlocks.RampUpConveyorBasic.get(), "basic", true);
-		conveyorRamp(ModBlocks.RampUpConveyorAdvanced.get(), "advanced", true);
-		conveyorRamp(ModBlocks.RampUpConveyorStatic.get(), "static", true);
-		conveyorRamp(ModBlocks.RampUpConveyorEnergized.get(), "energized", true);
-		conveyorRamp(ModBlocks.RampUpConveyorLumum.get(), "lumum", true);
-
-		conveyorRamp(ModBlocks.RampDownConveyorBasic.get(), "basic", false);
-		conveyorRamp(ModBlocks.RampDownConveyorAdvanced.get(), "advanced", false);
-		conveyorRamp(ModBlocks.RampDownConveyorStatic.get(), "static", false);
-		conveyorRamp(ModBlocks.RampDownConveyorEnergized.get(), "energized", false);
-		conveyorRamp(ModBlocks.RampDownConveyorLumum.get(), "lumum", false);
+		for (TierPair tier : Tiers.getConveyorTiers()) {
+			conveyorStraight(ModBlocks.ConveyorsStraight.get(tier.location()).get(), tier.name());
+			conveyorRamp(ModBlocks.ConveyorsRampUp.get(tier.location()).get(), tier.name(), true);
+			conveyorRamp(ModBlocks.ConveyorsRampDown.get(tier.location()).get(), tier.name(), false);
+			converyorSupplier(ModBlocks.ConveyorsSupplier.get(tier.location()).get(), tier.name());
+			conveyorExtractor(ModBlocks.ConveyorsExtractor.get(tier.location()).get(), tier.name());
+			conveyorHopper(ModBlocks.ConveyorsHopper.get(tier.location()).get(), tier.name(), false);
+			conveyorHopper(ModBlocks.ConveyorsFilteredHopper.get(tier.location()).get(), tier.name(), true);
+		}
 
 		cable1Thickness(ModBlocks.BasicRedstoneCableNaked.get(), "redstone/cable_basic_redstone_naked", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableBlack.get(), "redstone/cable_basic_redstone_black", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableDarkBlue.get(), "redstone/cable_basic_redstone_dark_blue", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableDarkGreen.get(), "redstone/cable_basic_redstone_dark_green", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableDarkAqua.get(), "redstone/cable_basic_redstone_dark_aqua", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableDarkRed.get(), "redstone/cable_basic_redstone_dark_red", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableDarkPurple.get(), "redstone/cable_basic_redstone_dark_purple", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableGold.get(), "redstone/cable_basic_redstone_gold", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableGray.get(), "redstone/cable_basic_redstone_gray", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableDarkGray.get(), "redstone/cable_basic_redstone_dark_gray", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableBlue.get(), "redstone/cable_basic_redstone_blue", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableGreen.get(), "redstone/cable_basic_redstone_green", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableAqua.get(), "redstone/cable_basic_redstone_aqua", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableRed.get(), "redstone/cable_basic_redstone_red", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableLightPurple.get(), "redstone/cable_basic_redstone_light_purple", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableYellow.get(), "redstone/cable_basic_redstone_yellow", null);
-		cable2Thickness(ModBlocks.BasicRedstoneCableWhite.get(), "redstone/cable_basic_redstone_white", null);
-
 		cable5Thickness(ModBlocks.BundledRedstoneCable.get(), "redstone/cable_bundled_redstone", null);
 
 		cable3Thickness(ModBlocks.DigistoreWire.get(), "cable_digistore", "attachments/cable_digistore_attachment");
 		cable5Thickness(ModBlocks.ScaffoldCable.get(), "cable_scaffold", "attachments/cable_scaffold_attachment");
 
-		for (CableTier tier : CableTiers.get()) {
+		for (TierPair tier : Tiers.getCableTiers()) {
 			cable5Thickness(ModBlocks.PowerCables.get(tier.location()).get(), "cable_power_" + tier.name(), "attachments/cable_" + tier.name() + "_power_attachment");
 			cable5Thickness(ModBlocks.InsulatedPowerCables.get(tier.location()).get(), "cable_power_" + tier.name() + "_insulated",
 					"attachments/cable_" + tier.name() + "_power_attachment");
@@ -364,9 +307,13 @@ public class ModBlockStateProvider extends BlockStateProvider {
 			cable7Thickness(ModBlocks.IndustrialFluidCables.get(tier.location()).get(), "cable_industrial_fluid_" + tier.name(), "cable_industrial_fluid_" + tier.name());
 		}
 
-		cable5Thickness(ModBlocks.AluminumHeatCable.get(), "cable_aluminum_heat", "attachments/cable_aluminum_attachment");
-		cable5Thickness(ModBlocks.CopperHeatCable.get(), "cable_copper_heat", "attachments/cable_copper_attachment");
-		cable5Thickness(ModBlocks.GoldHeatCable.get(), "cable_gold_heat", "attachments/cable_gold_attachment");
+		for (TierPair tier : Tiers.getHeat()) {
+			cable5Thickness(ModBlocks.HeatCables.get(tier.location()).get(), "cable_" + tier.name() + "_heat", "attachments/cable_" + tier.name() + "_attachment");
+		}
+
+		for (RedstoneCableTier tier : Tiers.getRedstone()) {
+			cable2Thickness(ModBlocks.RedstoneCables.get(tier.location()).get(), "redstone/cable_basic_redstone_" + tier.color().getName(), null);
+		}
 
 		/**********
 		 * Fluids *

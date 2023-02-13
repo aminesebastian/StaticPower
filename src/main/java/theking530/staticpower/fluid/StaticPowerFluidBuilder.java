@@ -16,7 +16,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModFluidTags;
 import theking530.staticpower.items.StaticPowerFluidBucket;
 
 public class StaticPowerFluidBuilder implements IClientFluidTypeExtensions {
@@ -67,7 +67,7 @@ public class StaticPowerFluidBuilder implements IClientFluidTypeExtensions {
 	}
 
 	public StaticPowerFluidBundle build() {
-		TagKey<Fluid> tag = ModTags.createFluidWrapper(new ResourceLocation(StaticPower.MOD_ID, name));
+		TagKey<Fluid> tag = ModFluidTags.create(name);
 		clientExtension.setFlowingTexture(new ResourceLocation(StaticPower.MOD_ID, "blocks/fluids/" + textureName + "_flowing"));
 		clientExtension.setStillTexture(new ResourceLocation(StaticPower.MOD_ID, "blocks/fluids/" + textureName + "_still"));
 
@@ -89,7 +89,6 @@ public class StaticPowerFluidBuilder implements IClientFluidTypeExtensions {
 		bucket = ModItems.ITEMS.register("bucket_" + name, () -> new StaticPowerFluidBucket(source));
 
 		return new StaticPowerFluidBundle(tag, type, typeProperties, block, bucket, source, flowing);
-
 	}
 
 	public static class AdditionalProperties {

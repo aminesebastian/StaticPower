@@ -24,7 +24,7 @@ import theking530.staticpower.cables.attachments.digistore.patternencoder.Digist
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -230,7 +230,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 						boolean found = false;
 
 						// Loop through the tags and indicate if we find a match.
-						for (TagKey<Item> tag : ModTags.getTags(stack)) {
+						for (TagKey<Item> tag : ModItemTags.getTags(stack)) {
 							if (tag.toString().contains(filterString.substring(1))) {
 								found = true;
 								break;
@@ -339,8 +339,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 			if (ItemUtilities.areItemStacksStackable(cache.item, item)) {
 				return cache.recipes;
 			} else {
-				for (TagKey<Item> tag : ModTags.getTags(item)) {
-					if (ModTags.getTags(cache.item).contains(tag)) {
+				for (TagKey<Item> tag : ModItemTags.getTags(item)) {
+					if (ModItemTags.getTags(cache.item).contains(tag)) {
 						return cache.recipes;
 					}
 				}

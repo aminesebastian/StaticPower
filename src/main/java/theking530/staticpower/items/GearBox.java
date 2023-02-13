@@ -10,9 +10,9 @@ import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.GearBoxModel;
 
 public class GearBox extends StaticPowerItem implements ICustomModelProvider {
-	public final RegistryObject<StaticPowerItem> baseGearItem;
+	public final RegistryObject<? extends StaticPowerItem> baseGearItem;
 
-	public GearBox(RegistryObject<StaticPowerItem> baseGearItem) {
+	public GearBox(RegistryObject<? extends StaticPowerItem> baseGearItem) {
 		this.baseGearItem = baseGearItem;
 	}
 

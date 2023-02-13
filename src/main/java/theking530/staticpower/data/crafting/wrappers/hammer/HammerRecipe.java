@@ -12,7 +12,7 @@ import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
-import theking530.staticpower.init.ModTags;
+import theking530.staticpower.init.tags.ModBlockTags;
 
 public class HammerRecipe extends AbstractStaticPowerRecipe {
 	public static final String ID = "hammer";
@@ -25,8 +25,7 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 	private final ProbabilityItemStackOutput outputItem;
 	private final boolean isBlockType;
 
-	public HammerRecipe(ResourceLocation name, Ingredient hammer, ResourceLocation block,
-			ProbabilityItemStackOutput outputItem) {
+	public HammerRecipe(ResourceLocation name, Ingredient hammer, ResourceLocation block, ProbabilityItemStackOutput outputItem) {
 		super(name);
 		this.hammer = hammer;
 		this.block = block;
@@ -36,8 +35,7 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 		this.inputItem = null;
 	}
 
-	public HammerRecipe(ResourceLocation name, Ingredient hammer, StaticPowerIngredient inputItem,
-			ProbabilityItemStackOutput outputItem) {
+	public HammerRecipe(ResourceLocation name, Ingredient hammer, StaticPowerIngredient inputItem, ProbabilityItemStackOutput outputItem) {
 		super(name);
 		this.hammer = hammer;
 		this.inputItem = inputItem;
@@ -76,7 +74,7 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 		// Check blocks.
 		if (isBlockType()) {
 			if (matchParams.shouldVerifyBlocks() && matchParams.hasBlocks()) {
-				return ModTags.tagContainsBlock(blockTag, matchParams.getBlocks()[0].getBlock());
+				return ModBlockTags.matches(blockTag, matchParams.getBlocks()[0].getBlock());
 			}
 		} else {
 			if (matchParams.shouldVerifyItems() && matchParams.hasItems()) {

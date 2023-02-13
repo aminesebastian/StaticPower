@@ -1,0 +1,19 @@
+{
+  "values": [
+    "#staticpower:tools/hammer",
+    "#staticpower:tools/magnet",
+    "#staticpower:tools/wire_cutter",
+    "#staticpower:tools/mining_drill",
+    "#staticpower:tools/chainsaw",
+    "#staticpower:tools/batteries",
+    "#staticpower:tools/battery_packs",
+    "#staticpower:tools/soldering_iron",
+    "#staticpower:tools/wrench",
+    "#staticpower:tools/cover_saw",
+    "#staticpower:tools/fluid_capsules",
+    "staticpower:thermometer",
+    "staticpower:cable_network_analyzer",
+    "staticpower:multimeter",
+    "staticpower:digistore_wireless_terminal"
+  ]
+}

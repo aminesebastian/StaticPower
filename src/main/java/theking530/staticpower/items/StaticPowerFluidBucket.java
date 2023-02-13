@@ -9,12 +9,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.registries.RegistryObject;
-import theking530.staticpower.StaticPower;
+import theking530.staticpower.init.ModGroups;
 
 public class StaticPowerFluidBucket extends BucketItem {
 
 	public StaticPowerFluidBucket(RegistryObject<? extends Fluid> supplier) {
-		super(supplier, new Properties().stacksTo(1).tab(StaticPower.CREATIVE_TAB));
+		super(supplier, new Properties().stacksTo(1).tab(ModGroups.CREATIVE_TAB));
 	}
 
 	@Override

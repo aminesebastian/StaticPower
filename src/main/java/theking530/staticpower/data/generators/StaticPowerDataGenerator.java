@@ -19,5 +19,11 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));
 		generator.addProvider(true, new ModItemModelProvider(generator, existingFileHelper));
 		generator.addProvider(true, new ModAdditionalModelProvider(generator, existingFileHelper));
+
+		ModBlockTagProvider blockTags = new ModBlockTagProvider(generator, existingFileHelper);
+		generator.addProvider(true, blockTags);
+		generator.addProvider(true, new ModFluidTagProvider(generator, existingFileHelper));
+		generator.addProvider(true, new ModItemTagProvider(generator, blockTags, existingFileHelper));
+		generator.addProvider(true, new ModBiomeTagProvider(generator, existingFileHelper));
 	}
 }

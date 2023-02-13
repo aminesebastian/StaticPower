@@ -23,7 +23,6 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 
 public class BlockConveyorHopper extends AbstractConveyorBlock {
@@ -91,33 +90,11 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		if (filtered) {
-			if (tier == StaticPowerTiers.BASIC) {
-				return BlockEntityConveyorHopper.FILTERED_TYPE_BASIC.create(pos, state);
-			} else if (tier == StaticPowerTiers.ADVANCED) {
-				return BlockEntityConveyorHopper.FILTERED_TYPE_ADVANCED.create(pos, state);
-			} else if (tier == StaticPowerTiers.STATIC) {
-				return BlockEntityConveyorHopper.FILTERED_TYPE_STATIC.create(pos, state);
-			} else if (tier == StaticPowerTiers.ENERGIZED) {
-				return BlockEntityConveyorHopper.FILTERED_TYPE_ENERGIZED.create(pos, state);
-			} else if (tier == StaticPowerTiers.LUMUM) {
-				return BlockEntityConveyorHopper.FILTERED_TYPE_LUMUM.create(pos, state);
-			}
+			return BlockEntityConveyorHopper.FILTERED_TYPE.create(pos, state);
 		} else {
-			if (tier == StaticPowerTiers.BASIC) {
-				return BlockEntityConveyorHopper.TYPE_BASIC.create(pos, state);
-			} else if (tier == StaticPowerTiers.ADVANCED) {
-				return BlockEntityConveyorHopper.TYPE_ADVANCED.create(pos, state);
-			} else if (tier == StaticPowerTiers.STATIC) {
-				return BlockEntityConveyorHopper.TYPE_STATIC.create(pos, state);
-			} else if (tier == StaticPowerTiers.ENERGIZED) {
-				return BlockEntityConveyorHopper.TYPE_ENERGIZED.create(pos, state);
-			} else if (tier == StaticPowerTiers.LUMUM) {
-				return BlockEntityConveyorHopper.TYPE_LUMUM.create(pos, state);
-			}
+			return BlockEntityConveyorHopper.TYPE.create(pos, state);
 		}
-		return null;
 	}
-
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {

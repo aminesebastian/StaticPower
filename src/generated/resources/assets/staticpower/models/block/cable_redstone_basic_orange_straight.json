@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/base_models/cables/cable_2_straight",
+  "textures": {
+    "cable_texture": "staticpower:blocks/cables/redstone/cable_basic_redstone_orange",
+    "particle": "staticpower:blocks/cables/redstone/cable_basic_redstone_orange"
+  }
+}

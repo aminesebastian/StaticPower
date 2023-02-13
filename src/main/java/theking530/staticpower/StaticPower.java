@@ -3,7 +3,6 @@ package theking530.staticpower;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -51,7 +50,6 @@ import theking530.staticpower.integration.ModIntegrations;
 public class StaticPower {
 	public static final Logger LOGGER = LogManager.getLogger("Static Power");
 	public static final String MOD_ID = "staticpower";
-	public static final CreativeModeTab CREATIVE_TAB = new StaticPowerItemGroup();
 
 	public StaticPower() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();

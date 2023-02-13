@@ -17,7 +17,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockConveyorExtractor extends AbstractConveyorBlock {
 
@@ -58,19 +57,9 @@ public class BlockConveyorExtractor extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
-			return BlockEntityConveyorExtractor.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return BlockEntityConveyorExtractor.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return BlockEntityConveyorExtractor.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return BlockEntityConveyorExtractor.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return BlockEntityConveyorExtractor.TYPE_LUMUM.create(pos, state);
-		}
-		return null;
+		return BlockEntityConveyorExtractor.TYPE.create(pos, state);
 	}
+
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
