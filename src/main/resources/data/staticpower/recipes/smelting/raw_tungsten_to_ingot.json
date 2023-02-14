@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "staticpower:raw_tungsten"
-  },
-  "result": "staticpower:ingot_tungsten",
-  "experience": 0.5,
-  "cookingtime": 200
-}

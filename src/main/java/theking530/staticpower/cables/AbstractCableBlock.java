@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -41,13 +42,15 @@ import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.network.NetworkGUI;
+import theking530.staticcore.utilities.IBlockItemCreativeTabProvider;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock implements ICustomModelProvider {
+public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock implements ICustomModelProvider, IBlockItemCreativeTabProvider {
 	public static final ForgeSoundType METAL_CABLE = new ForgeSoundType(1.0F, 0.75F, () -> SoundEvents.COPPER_BREAK, () -> SoundEvents.COPPER_STEP, () -> SoundEvents.COPPER_PLACE,
 			() -> SoundEvents.COPPER_HIT, () -> SoundEvents.COPPER_FALL);
 	public static final ForgeSoundType CLOTH_CABLE = new ForgeSoundType(1.0F, 1.0F, () -> SoundEvents.WOOL_BREAK, () -> SoundEvents.WOOL_STEP, () -> SoundEvents.WOOL_PLACE,
@@ -307,5 +310,10 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 		for (Direction dir : Direction.values()) {
 			builder.add(CONNECTION_TYPES.get(dir));
 		}
+	}
+
+	@Override
+	public CreativeModeTab getCreativeModeTab() {
+		return ModCreativeTabs.CABLES;
 	}
 }

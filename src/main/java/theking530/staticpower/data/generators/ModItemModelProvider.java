@@ -16,6 +16,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.Tiers.TierPair;
@@ -24,6 +25,7 @@ import theking530.staticpower.entities.AbstractSpawnableMobType;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModItems;
+import theking530.staticpower.init.ModMaterials;
 
 public class ModItemModelProvider extends ItemModelProvider {
 	private final Set<Block> customModelBlockItems;
@@ -71,165 +73,74 @@ public class ModItemModelProvider extends ItemModelProvider {
 		simpleItem(ModItems.MoldRod.get(), "molds/mold_rod");
 		simpleItem(ModItems.MoldWire.get(), "molds/mold_wire");
 
-		simpleItem(ModItems.RawAluminum.get(), "materials/raw_ores/raw_aluminum");
-		simpleItem(ModItems.RawEnergized.get(), "materials/raw_ores/raw_energized");
-		simpleItem(ModItems.RawLead.get(), "materials/raw_ores/raw_lead");
-		simpleItem(ModItems.RawLumum.get(), "materials/raw_ores/raw_lumum");
-		simpleItem(ModItems.RawMagnesium.get(), "materials/raw_ores/raw_magnesium");
-		simpleItem(ModItems.RawPlatinum.get(), "materials/raw_ores/raw_platinum");
 		simpleItem(ModItems.RawRustyIron.get(), "materials/raw_ores/raw_rusty_iron");
-		simpleItem(ModItems.RawSilver.get(), "materials/raw_ores/raw_silver");
-		simpleItem(ModItems.RawStatic.get(), "materials/raw_ores/raw_static");
-		simpleItem(ModItems.RawTin.get(), "materials/raw_ores/raw_tin");
-		simpleItem(ModItems.RawTungsten.get(), "materials/raw_ores/raw_tungsten");
-		simpleItem(ModItems.RawZinc.get(), "materials/raw_ores/raw_zinc");
-		simpleItem(ModItems.RawUranium.get(), "materials/raw_ores/raw_uranium");
 
-		simpleItem(ModItems.IngotAluminum.get(), "materials/ingots/ingot_aluminum");
-		simpleItem(ModItems.IngotBrass.get(), "materials/ingots/ingot_brass");
-		simpleItem(ModItems.IngotBronze.get(), "materials/ingots/ingot_bronze");
-		simpleItem(ModItems.IngotEnergized.get(), "materials/ingots/ingot_energized");
-		simpleItem(ModItems.IngotInertInfusion.get(), "materials/ingots/ingot_inert_infusion");
-		simpleItem(ModItems.IngotLead.get(), "materials/ingots/ingot_lead");
-		simpleItem(ModItems.IngotLumum.get(), "materials/ingots/ingot_lumum");
-		simpleItem(ModItems.IngotMagnesium.get(), "materials/ingots/ingot_magnesium");
-		simpleItem(ModItems.IngotPlatinum.get(), "materials/ingots/ingot_platinum");
-		simpleItem(ModItems.IngotRedstoneAlloy.get(), "materials/ingots/ingot_redstone_alloy");
-		simpleItem(ModItems.IngotSilver.get(), "materials/ingots/ingot_silver");
-		simpleItem(ModItems.IngotStatic.get(), "materials/ingots/ingot_static");
-		simpleItem(ModItems.IngotTin.get(), "materials/ingots/ingot_tin");
-		simpleItem(ModItems.IngotTungsten.get(), "materials/ingots/ingot_tungsten");
-		simpleItem(ModItems.IngotZinc.get(), "materials/ingots/ingot_zinc");
-		simpleItem(ModItems.IngotUranium.get(), "materials/ingots/ingot_uranium");
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
+			if (bundle.shouldGenerateRawMaterial()) {
+				simpleItem(bundle.getRawMaterial().get(), "materials/raw_ores/" + bundle.getRawMaterialPrefix() + "_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateSmeltedMaterial()) {
+				simpleItem(bundle.getSmeltedMaterial().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateHeatedSmeltedMaterial()) {
+				if (bundle == ModMaterials.IRON) {
+					simpleItemVanillaTexture(ModMaterials.IRON.getHeatedSmeltedMaterial().get(), "iron_ingot");
+				} else if (bundle == ModMaterials.GOLD) {
+					simpleItemVanillaTexture(ModMaterials.GOLD.getHeatedSmeltedMaterial().get(), "gold_ingot");
+				} else if (bundle == ModMaterials.COPPER) {
+					simpleItemVanillaTexture(ModMaterials.COPPER.getHeatedSmeltedMaterial().get(), "copper_ingot");
+				} else {
+					simpleItem(bundle.getHeatedSmeltedMaterial().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
+				}
+			}
+			if (bundle.shouldGenerateNugget()) {
+				simpleItem(bundle.getNugget().get(), "materials/nuggets/nugget_" + bundle.getName());
+			}
+			if (bundle.shouldGeneratePlate()) {
+				simpleItem(bundle.getPlate().get(), "materials/plates/plate_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateGear()) {
+				simpleItem(bundle.getGear().get(), "materials/gears/gear_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateDust()) {
+				simpleItem(bundle.getDust().get(), "materials/dusts/dust_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateChunks()) {
+				simpleItem(bundle.getChunks().get(), "materials/chunks/chunks_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateRod()) {
+				simpleItem(bundle.getRod().get(), "materials/rods/rod_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateWire()) {
+				simpleItem(bundle.getWire().get(), "components/wire_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateInsulatedWire()) {
+				simpleItem(bundle.getInsulatedWire().get(), "components/wire_insulated_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateWireCoil()) {
+				simpleItem(bundle.getWireCoil().get(), "components/wire_coil_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateInsulatedWireCoil()) {
+				simpleItem(bundle.getInsulatedWireCoil().get(), "components/wire_coil_insulated_" + bundle.getName());
+			}
+		}
 
-		simpleItem(ModItems.IngotAluminumHeated.get(), "materials/ingots/ingot_aluminum");
-		simpleItem(ModItems.IngotBrassHeated.get(), "materials/ingots/ingot_brass");
-		simpleItem(ModItems.IngotBronzeHeated.get(), "materials/ingots/ingot_bronze");
-		simpleItem(ModItems.IngotEnergizedHeated.get(), "materials/ingots/ingot_energized");
-		simpleItem(ModItems.IngotInertInfusionHeated.get(), "materials/ingots/ingot_inert_infusion");
-		simpleItem(ModItems.IngotLeadHeated.get(), "materials/ingots/ingot_lead");
-		simpleItem(ModItems.IngotLumumHeated.get(), "materials/ingots/ingot_lumum");
-		simpleItem(ModItems.IngotMagnesiumHeated.get(), "materials/ingots/ingot_magnesium");
-		simpleItem(ModItems.IngotPlatinumHeated.get(), "materials/ingots/ingot_platinum");
-		simpleItem(ModItems.IngotRedstoneAlloyHeated.get(), "materials/ingots/ingot_redstone_alloy");
-		simpleItem(ModItems.IngotSilverHeated.get(), "materials/ingots/ingot_silver");
-		simpleItem(ModItems.IngotStaticHeated.get(), "materials/ingots/ingot_static");
-		simpleItem(ModItems.IngotTinHeated.get(), "materials/ingots/ingot_tin");
-		simpleItem(ModItems.IngotTungstenHeated.get(), "materials/ingots/ingot_tungsten");
-		simpleItem(ModItems.IngotZincHeated.get(), "materials/ingots/ingot_zinc");
-
-		simpleItemVanillaTexture(ModItems.IngotIronHeated.get(), "iron_ingot");
-		simpleItemVanillaTexture(ModItems.IngotCopperHeated.get(), "copper_ingot");
-		simpleItemVanillaTexture(ModItems.IngotGoldHeated.get(), "gold_ingot");
-
-		simpleItem(ModItems.NuggetAluminum.get(), "materials/nuggets/nugget_aluminum");
-		simpleItem(ModItems.NuggetBrass.get(), "materials/nuggets/nugget_brass");
-		simpleItem(ModItems.NuggetBronze.get(), "materials/nuggets/nugget_bronze");
-		simpleItem(ModItems.NuggetCopper.get(), "materials/nuggets/nugget_copper");
-		simpleItem(ModItems.NuggetEnergized.get(), "materials/nuggets/nugget_energized");
-		simpleItem(ModItems.NuggetInertInfusion.get(), "materials/nuggets/nugget_inert_infusion");
-		simpleItem(ModItems.NuggetLead.get(), "materials/nuggets/nugget_lead");
-		simpleItem(ModItems.NuggetLumum.get(), "materials/nuggets/nugget_lumum");
-		simpleItem(ModItems.NuggetMagnesium.get(), "materials/nuggets/nugget_magnesium");
-		simpleItem(ModItems.NuggetPlatinum.get(), "materials/nuggets/nugget_platinum");
-		simpleItem(ModItems.NuggetRedstoneAlloy.get(), "materials/nuggets/nugget_redstone_alloy");
-		simpleItem(ModItems.NuggetSilver.get(), "materials/nuggets/nugget_silver");
-		simpleItem(ModItems.NuggetStatic.get(), "materials/nuggets/nugget_static");
-		simpleItem(ModItems.NuggetTin.get(), "materials/nuggets/nugget_tin");
-		simpleItem(ModItems.NuggetTungsten.get(), "materials/nuggets/nugget_tungsten");
-		simpleItem(ModItems.NuggetZinc.get(), "materials/nuggets/nugget_zinc");
-
-		simpleItem(ModItems.PlateAluminum.get(), "materials/plates/plate_aluminum");
-		simpleItem(ModItems.PlateBrass.get(), "materials/plates/plate_brass");
-		simpleItem(ModItems.PlateBronze.get(), "materials/plates/plate_bronze");
-		simpleItem(ModItems.PlateCopper.get(), "materials/plates/plate_copper");
-		simpleItem(ModItems.PlateEnergized.get(), "materials/plates/plate_energized");
-		simpleItem(ModItems.PlateGold.get(), "materials/plates/plate_gold");
-		simpleItem(ModItems.PlateInertInfusion.get(), "materials/plates/plate_inert_infusion");
-		simpleItem(ModItems.PlateIron.get(), "materials/plates/plate_iron");
-		simpleItem(ModItems.PlateLead.get(), "materials/plates/plate_lead");
-		simpleItem(ModItems.PlateLumum.get(), "materials/plates/plate_lumum");
-		simpleItem(ModItems.PlateMagnesium.get(), "materials/plates/plate_magnesium");
-		simpleItem(ModItems.PlatePlatinum.get(), "materials/plates/plate_platinum");
-		simpleItem(ModItems.PlateRedstoneAlloy.get(), "materials/plates/plate_redstone_alloy");
-		simpleItem(ModItems.PlateSilver.get(), "materials/plates/plate_silver");
-		simpleItem(ModItems.PlateStatic.get(), "materials/plates/plate_static");
-		simpleItem(ModItems.PlateTin.get(), "materials/plates/plate_tin");
-		simpleItem(ModItems.PlateTungsten.get(), "materials/plates/plate_tungsten");
-		simpleItem(ModItems.PlateZinc.get(), "materials/plates/plate_zinc");
-
-		simpleItem(ModItems.GearBrass.get(), "materials/gears/gear_brass");
-		simpleItem(ModItems.GearBronze.get(), "materials/gears/gear_bronze");
-		simpleItem(ModItems.GearCopper.get(), "materials/gears/gear_copper");
-		simpleItem(ModItems.GearEnergized.get(), "materials/gears/gear_energized");
-		simpleItem(ModItems.GearGold.get(), "materials/gears/gear_gold");
-		simpleItem(ModItems.GearInertInfusion.get(), "materials/gears/gear_inert_infusion");
-		simpleItem(ModItems.GearIron.get(), "materials/gears/gear_iron");
-		simpleItem(ModItems.GearLumum.get(), "materials/gears/gear_lumum");
-		simpleItem(ModItems.GearStatic.get(), "materials/gears/gear_static");
-		simpleItem(ModItems.GearTin.get(), "materials/gears/gear_tin");
-
-		simpleItem(ModItems.DustAluminum.get(), "materials/dusts/dust_aluminum");
-		simpleItem(ModItems.DustBrass.get(), "materials/dusts/dust_brass");
-		simpleItem(ModItems.DustBronze.get(), "materials/dusts/dust_bronze");
 		simpleItem(ModItems.DustCharcoal.get(), "materials/dusts/dust_charcoal");
 		simpleItem(ModItems.DustCoal.get(), "materials/dusts/dust_coal");
-		simpleItem(ModItems.DustCopper.get(), "materials/dusts/dust_copper");
-		simpleItem(ModItems.DustDiamond.get(), "materials/dusts/dust_diamond");
-		simpleItem(ModItems.DustEmerald.get(), "materials/dusts/dust_emerald");
-		simpleItem(ModItems.DustEnergized.get(), "materials/dusts/dust_energized");
-		simpleItem(ModItems.DustGold.get(), "materials/dusts/dust_gold");
-		simpleItem(ModItems.DustInertInfusion.get(), "materials/dusts/dust_inert_infusion");
-		simpleItem(ModItems.DustIron.get(), "materials/dusts/dust_iron");
-		simpleItem(ModItems.DustLead.get(), "materials/dusts/dust_lead");
-		simpleItem(ModItems.DustLumum.get(), "materials/dusts/dust_lumum");
-		simpleItem(ModItems.DustMagnesium.get(), "materials/dusts/dust_magnesium");
 		simpleItem(ModItems.DustObsidian.get(), "materials/dusts/dust_obsidian");
-		simpleItem(ModItems.DustPlatinum.get(), "materials/dusts/dust_platinum");
-		simpleItem(ModItems.DustRedstoneAlloy.get(), "materials/dusts/dust_redstone_alloy");
-		simpleItem(ModItems.DustRuby.get(), "materials/dusts/dust_ruby");
 		simpleItem(ModItems.DustSaltpeter.get(), "materials/dusts/dust_saltpeter");
-		simpleItem(ModItems.DustSapphire.get(), "materials/dusts/dust_sapphire");
-		simpleItem(ModItems.DustSilver.get(), "materials/dusts/dust_silver");
-		simpleItem(ModItems.DustStatic.get(), "materials/dusts/dust_static");
 		simpleItem(ModItems.DustSulfur.get(), "materials/dusts/dust_sulfur");
-		simpleItem(ModItems.DustTin.get(), "materials/dusts/dust_tin");
-		simpleItem(ModItems.DustTungsten.get(), "materials/dusts/dust_tungsten");
-		simpleItem(ModItems.DustZinc.get(), "materials/dusts/dust_zinc");
-		simpleItem(ModItems.DustUrnaium.get(), "materials/dusts/dust_uranium");
+		simpleItem(ModItems.DustWood.get(), "materials/dusts/dust_wood");
 
 		simpleItem(ModItems.DustCoalSmall.get(), "materials/dusts/dust_coal_small");
 		simpleItem(ModItems.DustCharcoalSmall.get(), "materials/dusts/dust_charcoal_small");
 
-		simpleItem(ModItems.ChunksAluminum.get(), "materials/chunks/chunks_aluminum");
 		simpleItem(ModItems.ChunksCoal.get(), "materials/chunks/chunks_coal");
-		simpleItem(ModItems.ChunksCopper.get(), "materials/chunks/chunks_copper");
 		simpleItem(ModItems.ChunksDiamond.get(), "materials/chunks/chunks_diamond");
 		simpleItem(ModItems.ChunksEmerald.get(), "materials/chunks/chunks_emerald");
-		simpleItem(ModItems.ChunksGold.get(), "materials/chunks/chunks_gold");
-		simpleItem(ModItems.ChunksIron.get(), "materials/chunks/chunks_iron");
 		simpleItem(ModItems.ChunksLapis.get(), "materials/chunks/chunks_lapis");
-		simpleItem(ModItems.ChunksLead.get(), "materials/chunks/chunks_lead");
-		simpleItem(ModItems.ChunksMagnesium.get(), "materials/chunks/chunks_magnesium");
-		simpleItem(ModItems.ChunksPlatinum.get(), "materials/chunks/chunks_platinum");
 		simpleItem(ModItems.ChunksQuartz.get(), "materials/chunks/chunks_quartz");
 		simpleItem(ModItems.ChunksRedstone.get(), "materials/chunks/chunks_redstone");
-		simpleItem(ModItems.ChunksRuby.get(), "materials/chunks/chunks_ruby");
-		simpleItem(ModItems.ChunksSapphire.get(), "materials/chunks/chunks_sapphire");
-		simpleItem(ModItems.ChunksSilver.get(), "materials/chunks/chunks_silver");
-		simpleItem(ModItems.ChunksTin.get(), "materials/chunks/chunks_tin");
-		simpleItem(ModItems.ChunksTungsten.get(), "materials/chunks/chunks_tungsten");
-		simpleItem(ModItems.ChunksZinc.get(), "materials/chunks/chunks_zinc");
-
-		simpleItem(ModItems.RodBrass.get(), "materials/rods/rod_brass");
-		simpleItem(ModItems.RodEnergized.get(), "materials/rods/rod_energized");
-		simpleItem(ModItems.RodInertInfusion.get(), "materials/rods/rod_inert_infusion");
-		simpleItem(ModItems.RodLumum.get(), "materials/rods/rod_lumum");
-		simpleItem(ModItems.RodStatic.get(), "materials/rods/rod_static");
-		simpleItem(ModItems.RodTin.get(), "materials/rods/rod_tin");
-
-		simpleItem(ModItems.GemRuby.get(), "materials/gems/gem_ruby");
-		simpleItem(ModItems.GemSapphire.get(), "materials/gems/gem_sapphire");
 
 		simpleItem(ModItems.RawSilicon.get(), "materials/raw_silicon");
 		simpleItem(ModItems.Silicon.get(), "materials/silicon");
@@ -239,7 +150,6 @@ public class ModItemModelProvider extends ItemModelProvider {
 		simpleItem(ModItems.CrystalStatic.get(), "materials/crystal_static");
 		simpleItem(ModItems.CrystalEnergized.get(), "materials/crystal_energized");
 		simpleItem(ModItems.CrystalLumum.get(), "materials/crystal_lumum");
-		simpleItem(ModItems.DustWood.get(), "materials/dusts/dust_wood");
 		simpleItem(ModItems.LatexChunk.get(), "materials/latex_chunk");
 		simpleItem(ModItems.RubberWoodBark.get(), "materials/rubber_wood_bark");
 		simpleItem(ModItems.Slag.get(), "materials/slag");
@@ -296,32 +206,6 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 		simpleItem(ModItems.RubberBar.get(), "materials/rubber_bar");
 		simpleItem(ModItems.RubberSheet.get(), "materials/rubber_sheet");
-
-		simpleItem(ModItems.WireAluminum.get(), "components/wire_aluminum");
-		simpleItem(ModItems.WireCopper.get(), "components/wire_brass");
-		simpleItem(ModItems.WireBrass.get(), "components/wire_copper");
-		simpleItem(ModItems.WireStatic.get(), "components/wire_static");
-		simpleItem(ModItems.WireEnergized.get(), "components/wire_energized");
-		simpleItem(ModItems.WireLumum.get(), "components/wire_lumum");
-		simpleItem(ModItems.WireGold.get(), "components/wire_gold");
-
-		simpleItem(ModItems.WireInsulatedCopper.get(), "components/wire_insulated_copper");
-		simpleItem(ModItems.WireInsulatedBrass.get(), "components/wire_insulated_brass");
-		simpleItem(ModItems.WireInsulatedStatic.get(), "components/wire_insulated_static");
-		simpleItem(ModItems.WireInsulatedEnergized.get(), "components/wire_insulated_energized");
-		simpleItem(ModItems.WireInsulatedLumum.get(), "components/wire_insulated_lumum");
-
-		simpleItem(ModItems.WireCoilCopper.get(), "components/wire_coil_copper");
-		simpleItem(ModItems.WireCoilBrass.get(), "components/wire_coil_brass");
-		simpleItem(ModItems.WireCoilStatic.get(), "components/wire_coil_static");
-		simpleItem(ModItems.WireCoilEnergized.get(), "components/wire_coil_energized");
-		simpleItem(ModItems.WireCoilLumum.get(), "components/wire_coil_lumum");
-
-		simpleItem(ModItems.WireCoilInsulatedCopper.get(), "components/wire_coil_insulated_copper");
-		simpleItem(ModItems.WireCoilInsulatedBrass.get(), "components/wire_coil_insulated_brass");
-		simpleItem(ModItems.WireCoilInsulatedStatic.get(), "components/wire_coil_insulated_static");
-		simpleItem(ModItems.WireCoilInsulatedEnergized.get(), "components/wire_coil_insulated_energized");
-		simpleItem(ModItems.WireCoilInsulatedLumum.get(), "components/wire_coil_insulated_lumum");
 
 		simpleItem(ModItems.WireCoilDigistore.get(), "components/wire_coil_digistore");
 

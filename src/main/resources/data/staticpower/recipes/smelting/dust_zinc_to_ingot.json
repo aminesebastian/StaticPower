@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "staticpower:dust_zinc"
-  },
-  "result": "staticpower:ingot_zinc",
-  "experience": 0.5,
-  "cookingtime": 200
-}

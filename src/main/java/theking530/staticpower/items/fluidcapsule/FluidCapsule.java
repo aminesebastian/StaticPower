@@ -42,6 +42,7 @@ import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -49,7 +50,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelProvide
 	public final ResourceLocation tier;
 
 	public FluidCapsule(ResourceLocation tier) {
-		super(new Properties().stacksTo(1).setNoRepair());
+		super(new Properties().stacksTo(1).setNoRepair().tab(ModCreativeTabs.TOOLS));
 		this.tier = tier;
 	}
 

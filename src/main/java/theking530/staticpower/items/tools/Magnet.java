@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -26,6 +27,7 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 
@@ -34,6 +36,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	private final ResourceLocation tier;
 
 	public Magnet(ResourceLocation tier) {
+		super(new Item.Properties().tab(ModCreativeTabs.TOOLS));
 		this.tier = tier;
 	}
 

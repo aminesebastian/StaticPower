@@ -1,6 +1,0 @@
-{
-	"type": "staticpower:hydroponic_farming",
-	"input": {
-		"item": "minecraft:pumpkin_seeds"
-	}
-}

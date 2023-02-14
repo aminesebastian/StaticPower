@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "staticpower:ingot_energized_metal"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "staticpower:nugget_energized_metal"
+  }
+}

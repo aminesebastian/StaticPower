@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -90,11 +89,11 @@ public class ModItemTags {
 	}
 
 	public static TagKey<Item> create(String name) {
-		return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(StaticPower.MOD_ID, name));
+		return TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), new ResourceLocation(StaticPower.MOD_ID, name));
 	}
 
 	public static TagKey<Item> createForgeTag(String name) {
-		return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("forge", name));
+		return TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), new ResourceLocation("forge", name));
 	}
 
 	public static List<ResourceLocation> getTags(Item item) {

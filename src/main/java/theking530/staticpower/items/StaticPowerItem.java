@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.ITooltipProvider;
-import theking530.staticpower.init.ModGroups;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.init.tags.ModItemTags;
 
 /**
@@ -46,7 +46,7 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param name The registry name for this item sans namespace.
 	 */
 	public StaticPowerItem() {
-		this(new Item.Properties().tab(ModGroups.CREATIVE_TAB));
+		this(new Item.Properties().tab(ModCreativeTabs.GENERAL));
 	}
 
 	public StaticPowerItem(CreativeModeTab creativeTab) {
@@ -101,18 +101,18 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	@Override
 	public Collection<CreativeModeTab> getCreativeTabs() {
 		List<CreativeModeTab> output = new LinkedList<>();
-		output.add(ModGroups.CREATIVE_TAB);
+		output.add(ModCreativeTabs.GENERAL);
 
 		if (ModItemTags.matches(ModItemTags.MATERIALS, this)) {
-			output.add(ModGroups.MATERIAL_CREATIVE_TAB);
+			output.add(ModCreativeTabs.MATERIALS);
 		}
 
 		if (ModItemTags.matches(ModItemTags.TOOLS, this)) {
-			output.add(ModGroups.TOOL_CREATIVE_TAB);
+			output.add(ModCreativeTabs.TOOLS);
 		}
 
 		if (ModItemTags.matches(ModItemTags.CABLES, this)) {
-			output.add(ModGroups.CABLE_CREATIVE_TAB);
+			output.add(ModCreativeTabs.CABLES);
 		}
 
 		return output;

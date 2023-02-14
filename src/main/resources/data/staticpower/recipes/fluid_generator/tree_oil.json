@@ -1,8 +1,0 @@
-{
-	"type": "staticpower:fluid_generator",
-	"fluid": {
-		"fluid": "staticpower:oil_tree",
-		"volume": 1
-	},
-	"power": 4
-}

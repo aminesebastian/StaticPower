@@ -38,6 +38,7 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -46,7 +47,7 @@ public class Hammer extends StaticPowerItem {
 	private final Supplier<Item> repairItem;
 
 	public Hammer(ResourceLocation tier, Supplier<Item> repairItem) {
-		super(new Item.Properties().stacksTo(1));
+		super(new Item.Properties().stacksTo(1).tab(ModCreativeTabs.TOOLS));
 		this.tier = tier;
 		this.repairItem = repairItem;
 	}

@@ -119,6 +119,7 @@ import theking530.staticpower.cables.redstone.basic.BlockRedstoneCable;
 import theking530.staticpower.cables.redstone.bundled.BlockBundledRedstoneCable;
 import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
@@ -160,106 +161,11 @@ public class ModBlocks {
 	public static final RegistryObject<StaticPowerBlock> LumumPlanks = registerBlock("planks_lumum", () -> new StaticPowerBlock(Properties.copy(Blocks.OAK_PLANKS)));
 
 	// Ore
-	public static final RegistryObject<StaticPowerOre> OreTin = registerBlock("ore_tin", () -> new StaticPowerOre(Properties.copy(Blocks.COPPER_ORE), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreZinc = registerBlock("ore_zinc", () -> new StaticPowerOre(Properties.copy(Blocks.IRON_ORE), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreSilver = registerBlock("ore_silver", () -> new StaticPowerOre(Properties.copy(Blocks.GOLD_ORE), 2, 4));
-	public static final RegistryObject<StaticPowerOre> OreLead = registerBlock("ore_lead", () -> new StaticPowerOre(Properties.copy(Blocks.GOLD_ORE), 2, 4));
-	public static final RegistryObject<StaticPowerOre> OreTungsten = registerBlock("ore_tungsten", () -> new StaticPowerOre(Properties.copy(Blocks.ANCIENT_DEBRIS), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreMagnesium = registerBlock("ore_magnesium", () -> new StaticPowerOre(Properties.copy(Blocks.IRON_ORE), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OrePlatinum = registerBlock("ore_platinum", () -> new StaticPowerOre(Properties.copy(Blocks.GOLD_ORE), 2, 4));
-	public static final RegistryObject<StaticPowerOre> OreAluminum = registerBlock("ore_aluminum", () -> new StaticPowerOre(Properties.copy(Blocks.COPPER_ORE), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreRuby = registerBlock("ore_ruby", () -> new StaticPowerOre(Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
-	public static final RegistryObject<StaticPowerOre> OreSapphire = registerBlock("ore_sapphire", () -> new StaticPowerOre(Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
 	public static final RegistryObject<StaticPowerOre> OreRustyIron = registerBlock("ore_rusty_iron", () -> new StaticPowerOre(Properties.copy(Blocks.COAL_ORE), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreUranium = registerBlock("ore_uranium", () -> new StaticPowerOre(Properties.copy(Blocks.COAL_ORE), 1, 2));
-
-	// Deepslate Ore
-	public static final RegistryObject<StaticPowerOre> OreDeepslateTin = registerBlock("ore_deepslate_tin",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_COPPER_ORE), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreDeepslateZinc = registerBlock("ore_deepslate_zinc",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_IRON_ORE), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreDeepslateSilver = registerBlock("ore_deepslate_silver",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
-	public static final RegistryObject<StaticPowerOre> OreDeepslateLead = registerBlock("ore_deepslate_lead",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
-	public static final RegistryObject<StaticPowerOre> OreDeepslateTungsten = registerBlock("ore_deepslate_tungsten",
-			() -> new StaticPowerOre(Properties.copy(Blocks.ANCIENT_DEBRIS), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreDeepslateMagnesium = registerBlock("ore_deepslate_magnesium",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_IRON_ORE), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreDeepslatePlatinum = registerBlock("ore_deepslate_platinum",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
-	public static final RegistryObject<StaticPowerOre> OreDeepslateAluminum = registerBlock("ore_deepslate_aluminum",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_COPPER_ORE), 1, 2));
-	public static final RegistryObject<StaticPowerOre> OreDeepslateRuby = registerBlock("ore_deepslate_ruby",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_DIAMOND_ORE), 2, 5));
-	public static final RegistryObject<StaticPowerOre> OreDeepslateSapphire = registerBlock("ore_deepslate_sapphire",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_DIAMOND_ORE), 2, 5));
-	public static final RegistryObject<StaticPowerOre> OreDeepslateUranium = registerBlock("ore_deepslate_uranium",
-			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
-
-	// Nether Ore
-	public static final RegistryObject<StaticPowerOre> OreNetherSilver = registerBlock("ore_nether_silver",
-			() -> new StaticPowerOre(Properties.copy(Blocks.NETHER_GOLD_ORE), 2, 5));
-	public static final RegistryObject<StaticPowerOre> OreNetherPlatinum = registerBlock("ore_nether_platinum",
-			() -> new StaticPowerOre(Properties.copy(Blocks.NETHER_GOLD_ORE), 2, 5));
-	public static final RegistryObject<StaticPowerOre> OreNetherTungsten = registerBlock("ore_nether_tungsten",
-			() -> new StaticPowerOre(Properties.copy(Blocks.NETHER_GOLD_ORE), 2, 5));
 
 	// Storage Blocks
-	public static final RegistryObject<StaticPowerBlock> BlockTin = registerBlock("block_tin", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockCutTin = registerBlock("block_cut_tin", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-
-	public static final RegistryObject<StaticPowerBlock> BlockZinc = registerBlock("block_zinc", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockCutZinc = registerBlock("block_cut_zinc", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
-
-	public static final RegistryObject<StaticPowerBlock> BlockAluminum = registerBlock("block_aluminum", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockCutAluminum = registerBlock("block_cut_aluminum", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-
-	public static final RegistryObject<StaticPowerBlock> BlockMagnesium = registerBlock("block_magnesium", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockCutMagnesium = registerBlock("block_cut_magnesium", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
-
-	public static final RegistryObject<StaticPowerBlock> BlockSilver = registerBlock("block_silver", () -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockCutSilver = registerBlock("block_cut_silver", () -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
-
-	public static final RegistryObject<StaticPowerBlock> BlockBrass = registerBlock("block_brass", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockCutBrass = registerBlock("block_cut_brass", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-
-	public static final RegistryObject<StaticPowerBlock> BlockBronze = registerBlock("block_bronze", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockCutBronze = registerBlock("block_cut_bronze", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-
-	public static final RegistryObject<StaticPowerBlock> BlockLead = registerBlock("block_lead", () -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockPlatinum = registerBlock("block_platinum", () -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRuby = registerBlock("block_ruby", () -> new StaticPowerBlock(Properties.copy(Blocks.DIAMOND_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockSapphire = registerBlock("block_sapphire", () -> new StaticPowerBlock(Properties.copy(Blocks.DIAMOND_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockTungsten = registerBlock("block_tungsten", () -> new StaticPowerBlock(Properties.copy(Blocks.DIAMOND_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRedstoneAlloy = registerBlock("block_redstone_alloy", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockInertInfusion = registerBlock("block_inert_infusion", () -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockStaticMetal = registerBlock("block_static_metal", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockEnergizedMetal = registerBlock("block_energized_metal",
-			() -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockLumumMetal = registerBlock("block_lumum_metal", () -> new StaticPowerBlock(Properties.copy(Blocks.DIAMOND_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockUranium = registerBlock("block_uranium", () -> new StaticPowerBlock(Properties.copy(Blocks.DIAMOND_BLOCK)));
 	public static final RegistryObject<StaticPowerSlimeBlock> BlockLatex = registerBlock("block_latex", () -> new StaticPowerSlimeBlock(Properties.copy(Blocks.SLIME_BLOCK)));
 	public static final RegistryObject<StaticPowerSlimeBlock> BlockRubber = registerBlock("block_rubber", () -> new StaticPowerSlimeBlock(Properties.copy(Blocks.SLIME_BLOCK)));
-
-	// Raw Material Blocks
-	public static final RegistryObject<StaticPowerBlock> BlockRawTin = registerBlock("block_raw_tin", () -> new StaticPowerBlock(Properties.copy(Blocks.RAW_COPPER_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawZinc = registerBlock("block_raw_zinc", () -> new StaticPowerBlock(Properties.copy(Blocks.RAW_IRON_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawAluminum = registerBlock("block_raw_aluminum",
-			() -> new StaticPowerBlock(Properties.copy(Blocks.RAW_COPPER_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawMagnesium = registerBlock("block_raw_magnesium",
-			() -> new StaticPowerBlock(Properties.copy(Blocks.RAW_IRON_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawSilver = registerBlock("block_raw_silver", () -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawLead = registerBlock("block_raw_lead", () -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawPlatinum = registerBlock("block_raw_platinum", () -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawTungsten = registerBlock("block_raw_tungsten", () -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawStaticMetal = registerBlock("block_raw_static_metal",
-			() -> new StaticPowerBlock(Properties.copy(Blocks.RAW_IRON_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawEnergizedMetal = registerBlock("block_raw_energized_metal",
-			() -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawLumumMetal = registerBlock("block_raw_lumum_metal",
-			() -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
-	public static final RegistryObject<StaticPowerBlock> BlockRawUranium = registerBlock("block_raw_uranium", () -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
 
 	// Machine blocks.
 	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockAluminum = registerBlock("machine_block_aluminum",
@@ -514,10 +420,13 @@ public class ModBlocks {
 			() -> new StaticPowerSapling(() -> ModFeatures.RUBBER_TREE.getTreeGrower(), Block.Properties.copy(Blocks.OAK_SAPLING)));
 
 	public static void init(IEventBus eventBus) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
+			bundle.generateBlocks();
+		}
 		BLOCKS.register(eventBus);
 	}
 
-	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
+	public static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
 		RegistryObject<T> toReturn = BLOCKS.register(name, block);
 		registerBlockItem(name, toReturn);
 		return toReturn;

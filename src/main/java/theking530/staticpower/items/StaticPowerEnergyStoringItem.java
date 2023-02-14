@@ -32,14 +32,13 @@ import theking530.staticpower.StaticPowerConfig;
  *
  */
 public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
-	/**
-	 * Creates a default energy storing item.
-	 * 
-	 * @param name     The registry name of the item sans namespace.
-	 * @param capacity The amount of energy that can be stored by this item.
-	 */
+
 	public StaticPowerEnergyStoringItem() {
-		super(new Item.Properties().stacksTo(1).setNoRepair());
+		this(new Item.Properties());
+	}
+
+	public StaticPowerEnergyStoringItem(Item.Properties properties) {
+		super(properties.stacksTo(1).setNoRepair());
 	}
 
 	/**

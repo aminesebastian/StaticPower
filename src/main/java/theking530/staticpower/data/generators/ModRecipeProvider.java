@@ -17,8 +17,8 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModItems;
+import theking530.staticpower.data.MaterialBundle;
+import theking530.staticpower.init.ModMaterials;
 
 public class ModRecipeProvider extends RecipeProvider implements IConditionBuilder {
 	private Map<RecipeBuilder, String> builders;
@@ -30,15 +30,46 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
 	@Override
 	protected void buildCraftingRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
-		// @formatter:off
-		beginShapedRecipe(ModBlocks.BlockBrass.get())
-			.define('i', ModItems.IngotBrass.get())
-			.pattern("iii")
-			.pattern("iii")
-			.pattern("iii")
-			.unlockedBy("has_brass", inventoryTrigger(ItemPredicate.Builder.item().of(ModItems.IngotBrass.get()).build()));
-		// @formatter:on
+		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
+			// @formatter:off
+			if (material.shouldGenerateSmeltedMaterialStorageBlock() && material.shouldGenerateSmeltedMaterial()) {
+				beginShapedRecipe(material.getSmeltedMaterialStorageBlock().get())
+					.define('i', material.getSmeltedMaterial().get())
+					.pattern("iii")
+					.pattern("iii")
+					.pattern("iii")
+					.unlockedBy("has_" + material.getName() + "_smelted_material", inventoryTrigger(ItemPredicate.Builder.item().of(material.getSmeltedMaterial().get()).build()));
+				beginShapelessRecipe(material.getSmeltedMaterial().get(), 9)
+					.requires(material.getSmeltedMaterialStorageBlock().get())
+					.unlockedBy("has_" + material.getName() + "_block", inventoryTrigger(ItemPredicate.Builder.item().of(material.getSmeltedMaterialStorageBlock().get()).build()));
+			}
+			
+			if (material.shouldGenerateRawMaterialStorageBlock() && material.shouldGenerateRawMaterial()) {
+				beginShapedRecipe(material.getRawMaterialStorageBlock().get())
+					.define('i', material.getRawMaterial().get())
+					.pattern("iii")
+					.pattern("iii")
+					.pattern("iii")
+					.unlockedBy("has_" + material.getName() + "_raw_material", inventoryTrigger(ItemPredicate.Builder.item().of(material.getRawMaterial().get()).build()));
+				beginShapelessRecipe(material.getRawMaterial().get(), 9)
+					.requires(material.getRawMaterialStorageBlock().get())
+					.unlockedBy("has_" + material.getName() + "_raw_block", inventoryTrigger(ItemPredicate.Builder.item().of(material.getRawMaterialStorageBlock().get()).build()));
+			}
+			
+			if (material.shouldGenerateSmeltedMaterial() && material.shouldGenerateNugget()) {
+				beginShapedRecipe(material.getSmeltedMaterial().get())
+					.define('i', material.getNugget().get())
+					.pattern("iii")
+					.pattern("iii")
+					.pattern("iii")
+					.unlockedBy("has_" + material.getName() + "_nugget", inventoryTrigger(ItemPredicate.Builder.item().of(material.getNugget().get()).build()));
+				beginShapelessRecipe(material.getNugget().get(), 9)
+					.requires(material.getSmeltedMaterial().get())
+					.unlockedBy("has_" + material.getName() + "_smelted_material", inventoryTrigger(ItemPredicate.Builder.item().of(material.getSmeltedMaterialStorageBlock().get()).build()));
+			}
+		}
 
+		// @formatter:on
 		completeBuilding(finishedRecipeConsumer);
 	}
 

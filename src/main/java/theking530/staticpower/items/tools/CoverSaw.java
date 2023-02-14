@@ -12,12 +12,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class CoverSaw extends StaticPowerItem {
 
 	public CoverSaw(int maxUses) {
-		super(new Item.Properties().stacksTo(1).durability(maxUses).setNoRepair());
+		super(new Item.Properties().stacksTo(1).durability(maxUses).setNoRepair().tab(ModCreativeTabs.TOOLS));
 	}
 
 	@Override

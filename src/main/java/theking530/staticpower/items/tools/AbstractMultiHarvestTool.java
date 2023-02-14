@@ -36,6 +36,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import theking530.api.multipartitem.AbstractMultiPartItem;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.init.ModCreativeTabs;
 
 public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	protected float attackDamage;
@@ -43,7 +44,7 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	protected List<TagKey<Block>> mineableTags;
 
 	public AbstractMultiHarvestTool(Item.Properties properties, float attackDamageIn, float attackSpeedIn, List<TagKey<Block>> tags) {
-		super(properties.stacksTo(1));
+		super(properties.stacksTo(1).tab(ModCreativeTabs.TOOLS));
 		this.attackDamage = attackDamageIn + 2.0f;
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", (double) this.attackDamage, AttributeModifier.Operation.ADDITION));

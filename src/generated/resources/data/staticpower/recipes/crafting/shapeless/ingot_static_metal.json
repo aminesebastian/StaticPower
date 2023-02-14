@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "staticpower:block_static_metal"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "staticpower:ingot_static_metal"
+  }
+}

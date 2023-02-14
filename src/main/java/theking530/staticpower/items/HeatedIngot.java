@@ -26,6 +26,7 @@ import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.HeatedItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.entities.anvilentity.AnvilForgeEntity;
+import theking530.staticpower.init.ModCreativeTabs;
 
 public class HeatedIngot extends StaticPowerItem implements ICustomModelProvider {
 	public static final int HEAT_LASTING_TIME = 400;
@@ -33,7 +34,7 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelProvider
 	private final Supplier<Item> cooledVariantSupplier;
 
 	public HeatedIngot(Supplier<Item> cooledVariantSupplier) {
-		super();
+		super(ModCreativeTabs.MATERIALS);
 		this.cooledVariantSupplier = cooledVariantSupplier;
 	}
 

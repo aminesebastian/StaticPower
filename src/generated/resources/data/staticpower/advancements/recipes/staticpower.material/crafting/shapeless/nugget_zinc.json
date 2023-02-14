@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "staticpower:crafting/shapeless/nugget_zinc"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_zinc_smelted_material": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "staticpower:block_zinc"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_zinc_smelted_material",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "staticpower:crafting/shapeless/nugget_zinc"
+    ]
+  }
+}

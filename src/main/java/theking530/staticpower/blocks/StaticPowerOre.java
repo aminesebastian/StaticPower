@@ -5,11 +5,13 @@ import java.util.Random;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import theking530.staticpower.init.ModCreativeTabs;
 
 /**
  * Base class for any static power ores.
@@ -52,7 +54,7 @@ public class StaticPowerOre extends StaticPowerBlock {
 	}
 
 	public StaticPowerOre(Block.Properties properties, int minimumXP, int maximumXP) {
-		super(properties);
+		super(ModCreativeTabs.MATERIALS, properties);
 		this.minimumXP = minimumXP;
 		this.maximumXP = maximumXP;
 	}
@@ -81,5 +83,10 @@ public class StaticPowerOre extends StaticPowerBlock {
 	@Override
 	public BlockDropType getBlockDropType() {
 		return BlockDropType.CUSTOM;
+	}
+
+	@Override
+	public CreativeModeTab getCreativeModeTab() {
+		return ModCreativeTabs.MATERIALS;
 	}
 }

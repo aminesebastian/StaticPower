@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,12 +30,14 @@ import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.BatteryPackItemModel;
+import theking530.staticpower.init.ModCreativeTabs;
 
 public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustomModelProvider {
 	private static final String ACTIVATED_TAG = "activated";
 	public final ResourceLocation tier;
 
 	public BatteryPack(ResourceLocation tier) {
+		super(new Item.Properties().tab(ModCreativeTabs.TOOLS));
 		this.tier = tier;
 	}
 

@@ -1,6 +1,5 @@
 package theking530.staticpower.init.tags;
 
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -29,16 +28,16 @@ public class ModBlockTags {
 	public static final TagKey<Block> CAULDRONS = create("cauldrons");
 	public static final TagKey<Block> CHESTS = create("chests");
 	public static final TagKey<Block> CONVEYORS = create("conveyors");
-	
+
 	public static boolean matches(TagKey<Block> tag, Block block) {
 		return ForgeRegistries.BLOCKS.tags().getTag(tag).contains(block);
 	}
 
 	public static TagKey<Block> create(String name) {
-		return TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(StaticPower.MOD_ID, name));
+		return TagKey.create(ForgeRegistries.BLOCKS.getRegistryKey(), new ResourceLocation(StaticPower.MOD_ID, name));
 	}
 
 	public static TagKey<Block> createForgeTag(String name) {
-		return TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("forge", name));
+		return TagKey.create(ForgeRegistries.BLOCKS.getRegistryKey(), new ResourceLocation("forge", name));
 	}
 }

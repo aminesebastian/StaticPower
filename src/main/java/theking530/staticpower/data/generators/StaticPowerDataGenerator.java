@@ -6,6 +6,9 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.generators.tags.ModBiomeTagProvider;
+import theking530.staticpower.data.generators.tags.ModBlockTagProvider;
+import theking530.staticpower.data.generators.tags.ModItemTagProvider;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class StaticPowerDataGenerator {

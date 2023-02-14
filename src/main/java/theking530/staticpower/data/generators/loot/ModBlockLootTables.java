@@ -18,8 +18,10 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.block.IBlockLootTableProvider;
 import theking530.staticcore.block.IBlockLootTableProvider.BlockDropType;
+import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
+import theking530.staticpower.init.ModMaterials;
 
 public class ModBlockLootTables extends BlockLoot {
 
@@ -33,41 +35,19 @@ public class ModBlockLootTables extends BlockLoot {
 			}
 		}
 
-		addOre(ModBlocks.OreTin.get(), ModItems.RawTin.get());
-		addOre(ModBlocks.OreDeepslateTin.get(), ModItems.RawTin.get());
-
-		addOre(ModBlocks.OreZinc.get(), ModItems.RawZinc.get());
-		addOre(ModBlocks.OreDeepslateZinc.get(), ModItems.RawZinc.get());
-
-		addOre(ModBlocks.OreSilver.get(), ModItems.RawSilver.get());
-		addOre(ModBlocks.OreDeepslateSilver.get(), ModItems.RawSilver.get());
-		addOre(ModBlocks.OreNetherSilver.get(), ModItems.RawTungsten.get());
-
-		addOre(ModBlocks.OreLead.get(), ModItems.RawLead.get());
-		addOre(ModBlocks.OreDeepslateLead.get(), ModItems.RawLead.get());
-
-		addOre(ModBlocks.OreTungsten.get(), ModItems.RawTungsten.get());
-		addOre(ModBlocks.OreDeepslateTungsten.get(), ModItems.RawTungsten.get());
-		addOre(ModBlocks.OreNetherTungsten.get(), ModItems.RawTungsten.get());
-
-		addOre(ModBlocks.OreMagnesium.get(), ModItems.RawMagnesium.get());
-		addOre(ModBlocks.OreDeepslateMagnesium.get(), ModItems.RawMagnesium.get());
-
-		addOre(ModBlocks.OrePlatinum.get(), ModItems.RawPlatinum.get());
-		addOre(ModBlocks.OreDeepslatePlatinum.get(), ModItems.RawPlatinum.get());
-		addOre(ModBlocks.OreNetherPlatinum.get(), ModItems.RawTungsten.get());
-
-		addOre(ModBlocks.OreAluminum.get(), ModItems.RawAluminum.get());
-		addOre(ModBlocks.OreDeepslateAluminum.get(), ModItems.RawAluminum.get());
-
-		addOre(ModBlocks.OreUranium.get(), ModItems.RawUranium.get());
-		addOre(ModBlocks.OreDeepslateUranium.get(), ModItems.RawUranium.get());
-
-		addOre(ModBlocks.OreRuby.get(), ModItems.RawAluminum.get());
-		addOre(ModBlocks.OreDeepslateRuby.get(), ModItems.RawAluminum.get());
-
-		addOre(ModBlocks.OreSapphire.get(), ModItems.RawAluminum.get());
-		addOre(ModBlocks.OreDeepslateSapphire.get(), ModItems.RawAluminum.get());
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
+			if (bundle.hasOres()) {
+				if (bundle.shouldGenerateOverworldOre()) {
+					addOre(bundle.getOverworldOre().get(), bundle.getRawMaterial().get());
+				}
+				if (bundle.shouldGenerateNetherackOre()) {
+					addOre(bundle.getNetherackOre().get(), bundle.getRawMaterial().get());
+				}
+				if (bundle.shouldGenerateDeepslateOre()) {
+					addOre(bundle.getDeepslateOre().get(), bundle.getRawMaterial().get());
+				}
+			}
+		}
 
 		addOreDropWithCounts(ModBlocks.OreRustyIron.get(), ModItems.RustyIronScrap.get(), 4, 5);
 

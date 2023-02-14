@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -46,10 +47,12 @@ import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.block.IBlockLootTableProvider;
+import theking530.staticcore.utilities.IBlockItemCreativeTabProvider;
 import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.tools.StaticWrench;
 
 /**
@@ -58,7 +61,8 @@ import theking530.staticpower.items.tools.StaticWrench;
  * @author Amine Sebastian
  *
  */
-public class StaticPowerBlock extends Block implements IItemBlockProvider, IBlockLootTableProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider, SimpleWaterloggedBlock {
+public class StaticPowerBlock extends Block
+		implements IItemBlockProvider, IBlockLootTableProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider, SimpleWaterloggedBlock, IBlockItemCreativeTabProvider {
 	/**
 	 * Rotation property used by blocks who don't use {@link #HORIZONTAL_FACING} but
 	 * still need the option to rotate to either face X, Y, or Z. (Does not have to
@@ -80,14 +84,21 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 		NONE, AXIS, HORIZONTAL_FACING, FACING
 	}
 
+	private final CreativeModeTab tab;
+
 	/**
 	 * Constructor for a static power block.
 	 * 
 	 * @param properties The block properties to be used when defining this block.
 	 */
-	public StaticPowerBlock(Block.Properties properties) {
+	public StaticPowerBlock(CreativeModeTab tab, Block.Properties properties) {
 		super(properties);
 		registerDefaultState(getDefaultStateForRegistration());
+		this.tab = tab;
+	}
+
+	public StaticPowerBlock(Block.Properties properties) {
+		this(ModCreativeTabs.GENERAL, properties);
 	}
 
 	/**
@@ -95,8 +106,12 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	 * 
 	 * @param material The {@link Material} this block is made of.
 	 */
+	public StaticPowerBlock(CreativeModeTab tab, Material material) {
+		this(tab, material, 1.0f);
+	}
+
 	public StaticPowerBlock(Material material) {
-		this(material, 1.0f);
+		this(ModCreativeTabs.GENERAL, material, 1.0f);
 	}
 
 	/**
@@ -108,8 +123,13 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	 *                              harvested by.
 	 * @param hardnessAndResistance The hardness and resistance of this block.
 	 */
+	public StaticPowerBlock(CreativeModeTab tab, Material material, float hardnessAndResistance) {
+		this(tab, Block.Properties.of(material).strength(hardnessAndResistance));
+	}
+
 	public StaticPowerBlock(Material material, float hardnessAndResistance) {
-		this(Block.Properties.of(material).strength(hardnessAndResistance));
+		this(ModCreativeTabs.GENERAL, Block.Properties.of(material).strength(hardnessAndResistance));
+
 	}
 
 	@Override
@@ -434,5 +454,10 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	@Override
 	public Optional<SoundEvent> getPickupSound() {
 		return Fluids.WATER.getPickupSound();
+	}
+
+	@Override
+	public CreativeModeTab getCreativeModeTab() {
+		return tab;
 	}
 }

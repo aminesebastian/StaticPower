@@ -1,8 +1,0 @@
-{
-	"type": "staticpower:thermal_conducitity",
-	"fluids": [
-		"staticpower:coolant"
-	],
-	"temperature": 5000,
-	"conductivity": 10
-}

@@ -1,8 +1,0 @@
-{
-	"replace": false,
-	"values": [
-		"staticpower:ore_silver",
-		"staticpower:ore_deepslate_silver",
-		"staticpower:ore_nether_silver"
-	]
-}

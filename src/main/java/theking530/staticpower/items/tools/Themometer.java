@@ -38,13 +38,14 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.RaytracingUtilities;
 
 public class Themometer extends StaticPowerItem implements ICustomModelProvider {
 
 	public Themometer() {
-		super(new Item.Properties().stacksTo(1));
+		super(new Item.Properties().stacksTo(1).tab(ModCreativeTabs.TOOLS));
 	}
 
 	@Override

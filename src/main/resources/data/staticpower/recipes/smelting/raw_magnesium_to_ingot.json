@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "staticpower:raw_magnesium"
-  },
-  "result": "staticpower:ingot_magnesium",
-  "experience": 0.5,
-  "cookingtime": 200
-}

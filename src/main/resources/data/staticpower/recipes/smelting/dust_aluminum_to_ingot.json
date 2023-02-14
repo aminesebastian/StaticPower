@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "staticpower:dust_aluminum"
-  },
-  "result": "staticpower:ingot_aluminum",
-  "experience": 0.5,
-  "cookingtime": 200
-}

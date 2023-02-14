@@ -1,6 +1,7 @@
 package theking530.staticpower.items;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -10,9 +11,9 @@ import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.GearBoxModel;
 
 public class GearBox extends StaticPowerItem implements ICustomModelProvider {
-	public final RegistryObject<? extends StaticPowerItem> baseGearItem;
+	public final RegistryObject<? extends Item> baseGearItem;
 
-	public GearBox(RegistryObject<? extends StaticPowerItem> baseGearItem) {
+	public GearBox(RegistryObject<? extends Item> baseGearItem) {
 		this.baseGearItem = baseGearItem;
 	}
 

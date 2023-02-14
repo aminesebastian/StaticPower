@@ -1,20 +1,20 @@
 {
   "values": [
+    "staticpower:nugget_static_metal",
+    "staticpower:nugget_redstone_alloy",
+    "staticpower:nugget_lumum_metal",
+    "staticpower:nugget_magnesium",
     "staticpower:nugget_aluminum",
     "staticpower:nugget_brass",
-    "staticpower:nugget_bronze",
-    "staticpower:nugget_copper",
-    "staticpower:nugget_energized",
-    "staticpower:nugget_inert_infusion",
     "staticpower:nugget_lead",
-    "staticpower:nugget_lumum",
-    "staticpower:nugget_magnesium",
+    "staticpower:nugget_bronze",
     "staticpower:nugget_platinum",
-    "staticpower:nugget_redstone_alloy",
-    "staticpower:nugget_silver",
-    "staticpower:nugget_static",
-    "staticpower:nugget_tin",
     "staticpower:nugget_tungsten",
+    "staticpower:nugget_energized_metal",
+    "staticpower:nugget_tin",
+    "staticpower:nugget_silver",
+    "staticpower:nugget_inert_infusion",
+    "staticpower:nugget_uranium",
     "staticpower:nugget_zinc"
   ]
 }

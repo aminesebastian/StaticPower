@@ -22,6 +22,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.power.wireconnector.BlockEntityWireConnector;
 import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class WireCutters extends StaticPowerItem {
@@ -29,7 +30,7 @@ public class WireCutters extends StaticPowerItem {
 	private final Supplier<Item> repairItem;
 
 	public WireCutters(ResourceLocation tier, Supplier<Item> repairItem) {
-		super(new Item.Properties().stacksTo(1));
+		super(new Item.Properties().stacksTo(1).tab(ModCreativeTabs.TOOLS));
 		this.tier = tier;
 		this.repairItem = repairItem;
 	}

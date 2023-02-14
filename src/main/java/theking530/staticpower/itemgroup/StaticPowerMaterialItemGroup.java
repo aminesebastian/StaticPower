@@ -4,7 +4,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.init.ModItems;
+import theking530.staticpower.init.ModMaterials;
 
 public class StaticPowerMaterialItemGroup extends CreativeModeTab {
 	public StaticPowerMaterialItemGroup() {
@@ -13,6 +13,6 @@ public class StaticPowerMaterialItemGroup extends CreativeModeTab {
 
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack makeIcon() {
-		return new ItemStack(ModItems.IngotEnergized.get());
+		return new ItemStack(ModMaterials.ENERGIZED_METAL.getSmeltedMaterial().get());
 	}
 }

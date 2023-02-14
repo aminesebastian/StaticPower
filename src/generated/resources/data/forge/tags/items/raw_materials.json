@@ -1,17 +1,17 @@
 {
   "values": [
-    "staticpower:raw_aluminum",
-    "staticpower:raw_energized",
-    "staticpower:raw_lead",
-    "staticpower:raw_lumum",
-    "staticpower:raw_magnesium",
-    "staticpower:raw_platinum",
     "staticpower:raw_rusty_iron",
-    "staticpower:raw_silver",
-    "staticpower:raw_static",
-    "staticpower:raw_tin",
+    "staticpower:raw_static_metal",
+    "staticpower:raw_lumum_metal",
+    "staticpower:raw_magnesium",
+    "staticpower:raw_aluminum",
+    "staticpower:raw_lead",
+    "staticpower:raw_platinum",
     "staticpower:raw_tungsten",
-    "staticpower:raw_zinc",
-    "staticpower:raw_uranium"
+    "staticpower:raw_energized_metal",
+    "staticpower:raw_tin",
+    "staticpower:raw_silver",
+    "staticpower:raw_uranium",
+    "staticpower:raw_zinc"
   ]
 }

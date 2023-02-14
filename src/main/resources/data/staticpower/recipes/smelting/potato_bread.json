@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "staticpower:flour_potato"
-  },
-  "result": "staticpower:bread_potato",
-  "experience": 0.5,
-  "cookingtime": 200
-}

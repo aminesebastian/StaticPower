@@ -11,12 +11,13 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class CableNetworkAnalyzer extends StaticPowerItem {
 
 	public CableNetworkAnalyzer() {
-		super(new Item.Properties().stacksTo(1).setNoRepair());
+		super(new Item.Properties().stacksTo(1).setNoRepair().tab(ModCreativeTabs.TOOLS));
 	}
 
 	@Override

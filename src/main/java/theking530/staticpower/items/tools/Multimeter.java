@@ -20,6 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticpower.cables.power.PowerNetworkModule;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.items.StaticPowerItem;
 
@@ -27,7 +28,7 @@ public class Multimeter extends StaticPowerItem {
 	public static final String INITIAL_POSITION_TAG = "initial_sample_pos";
 
 	public Multimeter() {
-		super(new Item.Properties().stacksTo(1).setNoRepair());
+		super(new Item.Properties().stacksTo(1).setNoRepair().tab(ModCreativeTabs.TOOLS));
 	}
 
 	@Override

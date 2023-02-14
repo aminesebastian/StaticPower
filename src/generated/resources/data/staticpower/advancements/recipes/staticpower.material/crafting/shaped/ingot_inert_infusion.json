@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_inert_infusion_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "staticpower:nugget_inert_infusion"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "staticpower:crafting/shaped/ingot_inert_infusion"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_inert_infusion_nugget",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "staticpower:crafting/shaped/ingot_inert_infusion"
+    ]
+  }
+}

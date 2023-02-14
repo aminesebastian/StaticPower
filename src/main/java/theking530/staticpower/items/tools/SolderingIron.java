@@ -11,12 +11,13 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.ISolderingIron;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class SolderingIron extends StaticPowerItem implements ISolderingIron {
 
 	public SolderingIron(int maxUses) {
-		super(new Item.Properties().stacksTo(1).durability(maxUses).setNoRepair());
+		super(new Item.Properties().stacksTo(1).durability(maxUses).setNoRepair().tab(ModCreativeTabs.TOOLS));
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package theking530.staticpower.items;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -11,11 +12,13 @@ import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.PortableBatteryItemModel;
+import theking530.staticpower.init.ModCreativeTabs;
 
 public class PortableBattery extends StaticPowerEnergyStoringItem implements ICustomModelProvider {
 	public final ResourceLocation tier;
 
 	public PortableBattery(ResourceLocation tier) {
+		super(new Item.Properties().tab(ModCreativeTabs.TOOLS));
 		this.tier = tier;
 	}
 

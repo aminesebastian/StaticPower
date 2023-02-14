@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "staticpower:block_raw_energized_metal"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "staticpower:raw_energized_metal"
+  }
+}

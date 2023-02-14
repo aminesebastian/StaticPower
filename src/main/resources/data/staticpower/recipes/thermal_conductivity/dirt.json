@@ -1,7 +1,0 @@
-{
-	"type": "staticpower:thermal_conducitity",
-	"blocks": [
-		"minecraft:dirt",	
-		"minecraft:grass"
-	]
-}

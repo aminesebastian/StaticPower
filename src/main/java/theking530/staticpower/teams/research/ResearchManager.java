@@ -37,6 +37,10 @@ public class ResearchManager {
 	}
 
 	public void setSelectedResearch(ResourceLocation name) {
+		if (!validateResearchExists(name)) {
+			return;
+		}
+
 		if (completedResearch.contains(name)) {
 			return;
 		}
@@ -176,7 +180,7 @@ public class ResearchManager {
 		}
 
 		output.put("completedResearch", NBTUtilities.serialize(completedResearch, (research, tag) -> {
-			tag.putString("name", research.toString());
+			tag.putString("researchId", research.toString());
 		}));
 
 		output.put("activeResearch", NBTUtilities.serialize(activeResearch.values(), (research) -> {
@@ -189,25 +193,39 @@ public class ResearchManager {
 	public void deserialize(CompoundTag tag, Team team) {
 		ListTag completedResearchList = tag.getList("completedResearch", Tag.TAG_COMPOUND);
 		completedResearch.clear();
-		completedResearch.addAll(NBTUtilities.deserialize(completedResearchList, (research) -> {
-			return new ResourceLocation(((CompoundTag) research).getString("name"));
-		}));
+		completedResearchList.stream().filter((completedTag) -> {
+			CompoundTag compound = (CompoundTag) completedTag;
+			return validateResearchExists(new ResourceLocation(compound.getString("researchId")));
+		}).map((completedTag) -> {
+			CompoundTag compound = (CompoundTag) completedTag;
+			return new ResourceLocation(compound.getString("researchId"));
+		}).forEach((researchId) -> {
+			completedResearch.add(researchId);
+		});
 
-		activeResearch.clear();
 		ListTag activeResearchList = tag.getList("activeResearch", Tag.TAG_COMPOUND);
-		NBTUtilities.deserialize(activeResearchList, (research) -> {
-			return ResearchInstance.deserialize(((CompoundTag) research), this);
-		}).forEach((active) -> {
-			activeResearch.put(active.getId(), active);
+		activeResearch.clear();
+		activeResearchList.stream().filter((completedTag) -> {
+			CompoundTag compound = (CompoundTag) completedTag;
+			return validateResearchExists(new ResourceLocation(compound.getString("researchId")));
+		}).map((completedTag) -> {
+			CompoundTag compound = (CompoundTag) completedTag;
+			return ResearchInstance.deserialize(compound, this);
+		}).forEach((instance) -> {
+			activeResearch.put(instance.getId(), instance);
 		});
 
 		selectedResearch = null;
 		if (tag.contains("selectedResearch")) {
 			ResourceLocation current = new ResourceLocation(tag.getString("selectedResearch"));
-			if (activeResearch.containsKey(current)) {
+			if (validateResearchExists(current) && activeResearch.containsKey(current)) {
 				selectedResearch = activeResearch.get(new ResourceLocation(tag.getString("selectedResearch")));
 			}
 		}
+	}
+
+	public boolean validateResearchExists(ResourceLocation researchId) {
+		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.RESEARCH_RECIPE_TYPE.get(), researchId).isPresent();
 	}
 
 	public static class ResearchInstance {

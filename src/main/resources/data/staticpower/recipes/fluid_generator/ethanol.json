@@ -1,8 +1,0 @@
-{
-	"type": "staticpower:fluid_generator",
-	"fluid": {
-		"fluid": "staticpower:ethanol",
-		"volume": 1
-	},
-	"power": 12
-}

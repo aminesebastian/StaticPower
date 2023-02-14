@@ -8,11 +8,18 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.StaticPowerOre;
+import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.HeatedIngot;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class MaterialBundle {
 	private final String name;
+	/**
+	 * Indicates whether or not this material should create forge tags or static
+	 * power tags.
+	 */
+	private final boolean isStaticPowerMaterial;
 
 	private boolean generateOverworldOre;
 	private Properties overworldOreProperties;
@@ -42,9 +49,11 @@ public class MaterialBundle {
 	private RegistryObject<? extends Block> cutStorageBlock;
 
 	private boolean generateRawMaterial;
+	private String rawMaterialPrefix;
 	private RegistryObject<? extends Item> rawMaterial;
 
 	private boolean generateSmeltedMaterial;
+	private String smeltedMaterialPrefix;
 	private RegistryObject<? extends Item> smeltedMaterial;
 
 	private boolean generateHeatedSmeltedMaterial;
@@ -68,60 +77,91 @@ public class MaterialBundle {
 	private boolean generateChunks;
 	private RegistryObject<? extends Item> chunks;
 
-	public MaterialBundle(String name) {
+	private boolean generateWire;
+	private RegistryObject<? extends Item> wire;
+
+	private boolean generateInsulatedWire;
+	private RegistryObject<? extends Item> insulatedWire;
+
+	private boolean generateWireCoil;
+	private RegistryObject<? extends Item> wireCoil;
+
+	private boolean generateInsulatedWireCoil;
+	private RegistryObject<? extends Item> insulatedWireCoil;
+
+	public MaterialBundle(String name, boolean isStaticPowerMaterial) {
 		this.name = name;
+		this.isStaticPowerMaterial = isStaticPowerMaterial;
+		this.rawMaterialPrefix = "raw";
+		this.smeltedMaterialPrefix = "ingot";
 	}
 
-	public void generateBlocks(DeferredRegister<Block> registry) {
+	public boolean isStaticPowerMaterial() {
+		return isStaticPowerMaterial;
+	}
+
+	public void generateBlocks() {
 		if (shouldGenerateOverworldOre()) {
-			overworldOre = registry.register("ore_" + getName(), () -> new StaticPowerOre(overworldOreProperties, overworldOreExperience.getA(), overworldOreExperience.getB()));
+			overworldOre = ModBlocks.registerBlock("ore_" + getName(), () -> new StaticPowerOre(overworldOreProperties, overworldOreExperience.getA(), overworldOreExperience.getB()));
 		}
 		if (shouldGenerateDeepslateOre()) {
-			deepslateOre = registry.register("ore_deepslate" + getName(),
+			deepslateOre = ModBlocks.registerBlock("ore_deepslate_" + getName(),
 					() -> new StaticPowerOre(deepslateOreProperties, deepslateOreExperience.getA(), deepslateOreExperience.getB()));
 		}
 		if (shouldGenerateNetherackOre()) {
-			deepslateOre = registry.register("ore_nether" + getName(),
+			netherackOre = ModBlocks.registerBlock("ore_nether_" + getName(),
 					() -> new StaticPowerOre(netherackOreProperties, netherackOreExperience.getA(), netherackOreExperience.getB()));
 		}
 		if (shouldGenerateRawMaterialStorageBlock()) {
-			rawMaterialStorageBlock = registry.register("block_raw_" + getName(), () -> new StaticPowerBlock(rawMaterialStorageBlockProperties));
+			rawMaterialStorageBlock = ModBlocks.registerBlock("block_raw_" + getName(), () -> new StaticPowerBlock(ModCreativeTabs.MATERIALS, rawMaterialStorageBlockProperties));
 		}
 		if (shouldGenerateSmeltedMaterialStorageBlock()) {
-			smeltedMaterialStorageBlock = registry.register("block_" + getName(), () -> new StaticPowerBlock(smeltedMaterialStorageBlockProperties));
+			smeltedMaterialStorageBlock = ModBlocks.registerBlock("block_" + getName(), () -> new StaticPowerBlock(ModCreativeTabs.MATERIALS, smeltedMaterialStorageBlockProperties));
 		}
 		if (shouldGenerateCutStorageBlock()) {
-			cutStorageBlock = registry.register("block_cut_" + getName(), () -> new StaticPowerBlock(cutMaterialStorageBlockProperties));
+			cutStorageBlock = ModBlocks.registerBlock("block_cut_" + getName(), () -> new StaticPowerBlock(ModCreativeTabs.MATERIALS, cutMaterialStorageBlockProperties));
 		}
 	}
 
 	public void generateItems(DeferredRegister<Item> registry) {
 		if (shouldGenerateRawMaterial()) {
-			rawMaterial = registry.register("raw_" + getName(), () -> new StaticPowerItem());
+			rawMaterial = registry.register(rawMaterialPrefix + "_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
 		if (shouldGenerateSmeltedMaterial()) {
-			smeltedMaterial = registry.register("ingot_" + getName(), () -> new StaticPowerItem());
+			smeltedMaterial = registry.register(smeltedMaterialPrefix + "_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
 		if (shouldGenerateHeatedSmeltedMaterial()) {
 			heatedSmeltedMaterial = registry.register("ingot_" + getName() + "_heated", () -> new HeatedIngot(() -> smeltedMaterial.get()));
 		}
 		if (shouldGenerateNugget()) {
-			nugget = registry.register("nugget_" + getName(), () -> new StaticPowerItem());
+			nugget = registry.register("nugget_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
 		if (shouldGenerateDust()) {
-			dust = registry.register("dust_" + getName(), () -> new StaticPowerItem());
+			dust = registry.register("dust_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
 		if (shouldGenerateGear()) {
-			gear = registry.register("gear_" + getName(), () -> new StaticPowerItem());
+			gear = registry.register("gear_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
 		if (shouldGeneratePlate()) {
-			plate = registry.register("plate_" + getName(), () -> new StaticPowerItem());
+			plate = registry.register("plate_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
 		if (shouldGenerateRod()) {
-			rod = registry.register("rod_" + getName(), () -> new StaticPowerItem());
+			rod = registry.register("rod_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
 		if (shouldGenerateChunks()) {
-			chunks = registry.register("chunks_" + getName(), () -> new StaticPowerItem());
+			chunks = registry.register("chunks_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
+		}
+		if (shouldGenerateWire()) {
+			wire = registry.register("wire_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
+		}
+		if (shouldGenerateInsulatedWire()) {
+			insulatedWire = registry.register("wire_insulated_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
+		}
+		if (shouldGenerateWireCoil()) {
+			wireCoil = registry.register("wire_coil_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
+		}
+		if (shouldGenerateInsulatedWireCoil()) {
+			insulatedWireCoil = registry.register("wire_coil_insulated_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
 	}
 
@@ -160,6 +200,10 @@ public class MaterialBundle {
 		this.netherackOreProperties = properties;
 		this.netherackOreExperience = new Tuple<Integer, Integer>(minXP, maxXP);
 		return this;
+	}
+
+	public boolean hasOres() {
+		return generateOverworldOre || generateDeepslateOre || generateNetherackOre;
 	}
 
 	public boolean shouldGenerateRawMaterialStorageBlock() {
@@ -201,6 +245,12 @@ public class MaterialBundle {
 		return this;
 	}
 
+	public MaterialBundle generateRawMaterial(String prefix) {
+		this.generateRawMaterial = true;
+		this.rawMaterialPrefix = prefix;
+		return this;
+	}
+
 	public boolean shouldGenerateHeatedSmeltedMaterial() {
 		return generateHeatedSmeltedMaterial;
 	}
@@ -216,6 +266,12 @@ public class MaterialBundle {
 
 	public MaterialBundle generateSmeltedMaterial() {
 		this.generateSmeltedMaterial = true;
+		return this;
+	}
+
+	public MaterialBundle generateSmeltedMaterial(String prefix) {
+		this.generateSmeltedMaterial = true;
+		this.smeltedMaterialPrefix = prefix;
 		return this;
 	}
 
@@ -273,6 +329,42 @@ public class MaterialBundle {
 		return this;
 	}
 
+	public boolean shouldGenerateWire() {
+		return generateWire;
+	}
+
+	public MaterialBundle generateWire() {
+		this.generateWire = true;
+		return this;
+	}
+
+	public boolean shouldGenerateInsulatedWire() {
+		return generateInsulatedWire;
+	}
+
+	public MaterialBundle generateInsulatedWire() {
+		this.generateInsulatedWire = true;
+		return this;
+	}
+
+	public boolean shouldGenerateWireCoil() {
+		return generateWireCoil;
+	}
+
+	public MaterialBundle generateWireCoil() {
+		this.generateWireCoil = true;
+		return this;
+	}
+
+	public boolean shouldGenerateInsulatedWireCoil() {
+		return generateInsulatedWireCoil;
+	}
+
+	public MaterialBundle generateInsulatedWireCoil() {
+		this.generateInsulatedWireCoil = true;
+		return this;
+	}
+
 	public RegistryObject<? extends Block> getOverworldOre() {
 		return overworldOre;
 	}
@@ -297,12 +389,20 @@ public class MaterialBundle {
 		return cutStorageBlock;
 	}
 
+	public String getRawMaterialPrefix() {
+		return rawMaterialPrefix;
+	}
+
 	public RegistryObject<? extends Item> getRawMaterial() {
 		return rawMaterial;
 	}
 
 	public RegistryObject<? extends Item> getHeatedSmeltedMaterial() {
 		return heatedSmeltedMaterial;
+	}
+
+	public String getSmeltedMaterialPrefix() {
+		return smeltedMaterialPrefix;
 	}
 
 	public RegistryObject<? extends Item> getSmeltedMaterial() {
@@ -331,5 +431,31 @@ public class MaterialBundle {
 
 	public RegistryObject<? extends Item> getNugget() {
 		return nugget;
+	}
+
+	public RegistryObject<? extends Item> getWire() {
+		return wire;
+	}
+
+	public RegistryObject<? extends Item> getInsulatedWire() {
+		return insulatedWire;
+	}
+
+	public RegistryObject<? extends Item> getWireCoil() {
+		return wireCoil;
+	}
+
+	public RegistryObject<? extends Item> getInsulatedWireCoil() {
+		return insulatedWireCoil;
+	}
+
+	public void validate() {
+		if (hasOres() && !shouldGenerateRawMaterial()) {
+			throw new RuntimeException("All materials that generate an ore must also generate a raw material!");
+		}
+
+		if (getName() == null || getName().length() == 0) {
+			throw new RuntimeException("All materials must have a valid name (non-null & non-empty.");
+		}
 	}
 }

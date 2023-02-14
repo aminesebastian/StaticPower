@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "staticpower:dust_inert_infusion"
-  },
-  "result": "staticpower:ingot_inert_infusion",
-  "experience": 0.5,
-  "cookingtime": 200
-}

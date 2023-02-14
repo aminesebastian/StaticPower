@@ -22,8 +22,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.utilities.IBlockItemCreativeTabProvider;
 import theking530.staticcore.utilities.ITooltipProvider;
-import theking530.staticpower.init.ModGroups;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.init.tags.ModItemTags;
 
 public class StaticPowerItemBlock extends BlockItem implements ITooltipProvider {
@@ -37,29 +38,36 @@ public class StaticPowerItemBlock extends BlockItem implements ITooltipProvider 
 	 * @param name  The registry name to use when registering this block item.
 	 */
 	public StaticPowerItemBlock(Block block) {
-		this(block, new Item.Properties().tab(ModGroups.CREATIVE_TAB));
+		this(block, new Item.Properties().tab(ModCreativeTabs.GENERAL));
 	}
 
 	public StaticPowerItemBlock(Block block, Item.Properties properties) {
-		super(block, properties.stacksTo(64));
+		super(block, properties.stacksTo(64).tab(getCreativeTab(block)));
 		OWNING_BLOCK = block;
+	}
+
+	public static CreativeModeTab getCreativeTab(Block block) {
+		if (block instanceof IBlockItemCreativeTabProvider) {
+			return ((IBlockItemCreativeTabProvider) block).getCreativeModeTab();
+		}
+		return ModCreativeTabs.GENERAL;
 	}
 
 	@Override
 	public Collection<CreativeModeTab> getCreativeTabs() {
 		List<CreativeModeTab> output = new LinkedList<>();
-		output.add(ModGroups.CREATIVE_TAB);
+		output.add(ModCreativeTabs.GENERAL);
 
 		if (ModItemTags.matches(ModItemTags.MATERIALS, this)) {
-			output.add(ModGroups.MATERIAL_CREATIVE_TAB);
+			output.add(ModCreativeTabs.MATERIALS);
 		}
 
 		if (ModItemTags.matches(ModItemTags.TOOLS, this)) {
-			output.add(ModGroups.TOOL_CREATIVE_TAB);
+			output.add(ModCreativeTabs.TOOLS);
 		}
 
 		if (ModItemTags.matches(ModItemTags.CABLES, this)) {
-			output.add(ModGroups.CABLE_CREATIVE_TAB);
+			output.add(ModCreativeTabs.CABLES);
 		}
 
 		return output;

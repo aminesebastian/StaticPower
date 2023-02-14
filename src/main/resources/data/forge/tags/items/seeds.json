@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values": [
-	"staticpower:seed_static",
-	"staticpower:seed_energized",
-	"staticpower:seed_lumum"
-  ]
-}

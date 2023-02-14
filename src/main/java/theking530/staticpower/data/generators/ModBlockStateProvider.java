@@ -18,6 +18,7 @@ import theking530.staticpower.blocks.StaticPowerBlockProperties;
 import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.Tiers.ResistorTier;
@@ -25,6 +26,7 @@ import theking530.staticpower.data.Tiers.TierPair;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.init.ModMaterials;
 
 public class ModBlockStateProvider extends BlockStateProvider {
 	public ModBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
@@ -66,76 +68,30 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		simpleBlockWithCustomTexture(ModBlocks.EnergizedPlanks.get(), "decorative/planks_energized");
 		simpleBlockWithCustomTexture(ModBlocks.LumumPlanks.get(), "decorative/planks_lumum");
 
-		simpleBlockWithCustomTexture(ModBlocks.OreTin.get(), "ore/ore_tin");
-		simpleBlockWithCustomTexture(ModBlocks.OreZinc.get(), "ore/ore_zinc");
-		simpleBlockWithCustomTexture(ModBlocks.OreSilver.get(), "ore/ore_silver");
-		simpleBlockWithCustomTexture(ModBlocks.OreLead.get(), "ore/ore_lead");
-		simpleBlockWithCustomTexture(ModBlocks.OreTungsten.get(), "ore/ore_tungsten");
-		simpleBlockWithCustomTexture(ModBlocks.OreMagnesium.get(), "ore/ore_magnesium");
-		simpleBlockWithCustomTexture(ModBlocks.OrePlatinum.get(), "ore/ore_platinum");
-		simpleBlockWithCustomTexture(ModBlocks.OreAluminum.get(), "ore/ore_aluminum");
-		simpleBlockWithCustomTexture(ModBlocks.OreRuby.get(), "ore/ore_ruby");
-		simpleBlockWithCustomTexture(ModBlocks.OreSapphire.get(), "ore/ore_sapphire");
 		simpleBlockWithCustomTexture(ModBlocks.OreRustyIron.get(), "ore/ore_rusty_iron");
-		simpleBlockWithCustomTexture(ModBlocks.OreUranium.get(), "ore/ore_uranium");
-
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateTin.get(), "ore/ore_deepslate_tin");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateZinc.get(), "ore/ore_deepslate_zinc");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateSilver.get(), "ore/ore_deepslate_silver");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateLead.get(), "ore/ore_deepslate_lead");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateTungsten.get(), "ore/ore_deepslate_tungsten");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateMagnesium.get(), "ore/ore_deepslate_magnesium");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslatePlatinum.get(), "ore/ore_deepslate_platinum");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateAluminum.get(), "ore/ore_deepslate_aluminum");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateRuby.get(), "ore/ore_deepslate_ruby");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateSapphire.get(), "ore/ore_deepslate_sapphire");
-		simpleBlockWithCustomTexture(ModBlocks.OreDeepslateUranium.get(), "ore/ore_deepslate_uranium");
-
-		simpleBlockWithCustomTexture(ModBlocks.OreNetherSilver.get(), "ore/ore_nether_silver");
-		simpleBlockWithCustomTexture(ModBlocks.OreNetherPlatinum.get(), "ore/ore_nether_platinum");
-		simpleBlockWithCustomTexture(ModBlocks.OreNetherTungsten.get(), "ore/ore_nether_tungsten");
-
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawTin.get(), "storageblocks/block_raw_tin");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawZinc.get(), "storageblocks/block_raw_zinc");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawAluminum.get(), "storageblocks/block_raw_aluminum");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawMagnesium.get(), "storageblocks/block_raw_magnesium");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawSilver.get(), "storageblocks/block_raw_silver");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawLead.get(), "storageblocks/block_raw_lead");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawPlatinum.get(), "storageblocks/block_raw_platinum");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawTungsten.get(), "storageblocks/block_raw_tungsten");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawStaticMetal.get(), "storageblocks/block_raw_static_metal");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawEnergizedMetal.get(), "storageblocks/block_raw_energized_metal");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawLumumMetal.get(), "storageblocks/block_raw_lumum_metal");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRawUranium.get(), "storageblocks/block_raw_uranium");
-
-		simpleBlockWithCustomTexture(ModBlocks.BlockTin.get(), "storageblocks/block_tin");
-		simpleBlockWithCustomTexture(ModBlocks.BlockZinc.get(), "storageblocks/block_zinc");
-		simpleBlockWithCustomTexture(ModBlocks.BlockAluminum.get(), "storageblocks/block_aluminum");
-		simpleBlockWithCustomTexture(ModBlocks.BlockMagnesium.get(), "storageblocks/block_magnesium");
-		simpleBlockWithCustomTexture(ModBlocks.BlockSilver.get(), "storageblocks/block_silver");
-		simpleBlockWithCustomTexture(ModBlocks.BlockBrass.get(), "storageblocks/block_brass");
-		simpleBlockWithCustomTexture(ModBlocks.BlockBronze.get(), "storageblocks/block_bronze");
-		simpleBlockWithCustomTexture(ModBlocks.BlockLead.get(), "storageblocks/block_lead");
-		simpleBlockWithCustomTexture(ModBlocks.BlockPlatinum.get(), "storageblocks/block_platinum");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRuby.get(), "storageblocks/block_ruby");
-		simpleBlockWithCustomTexture(ModBlocks.BlockSapphire.get(), "storageblocks/block_sapphire");
-		simpleBlockWithCustomTexture(ModBlocks.BlockTungsten.get(), "storageblocks/block_tungsten");
-		simpleBlockWithCustomTexture(ModBlocks.BlockRedstoneAlloy.get(), "storageblocks/block_redstone_alloy");
-		simpleBlockWithCustomTexture(ModBlocks.BlockInertInfusion.get(), "storageblocks/block_inert_infusion");
-		simpleBlockWithCustomTexture(ModBlocks.BlockStaticMetal.get(), "storageblocks/block_static_metal");
-		simpleBlockWithCustomTexture(ModBlocks.BlockEnergizedMetal.get(), "storageblocks/block_energized_metal");
-		simpleBlockWithCustomTexture(ModBlocks.BlockLumumMetal.get(), "storageblocks/block_lumum_metal");
-		simpleBlockWithCustomTexture(ModBlocks.BlockUranium.get(), "storageblocks/block_uranium");
 		simpleBlockWithCustomTexture(ModBlocks.BlockLatex.get(), "storageblocks/block_latex");
 		simpleBlockWithCustomTexture(ModBlocks.BlockRubber.get(), "storageblocks/block_rubber");
 
-		simpleBlockWithCustomTexture(ModBlocks.BlockCutTin.get(), "storageblocks/block_cut_tin");
-		simpleBlockWithCustomTexture(ModBlocks.BlockCutZinc.get(), "storageblocks/block_cut_zinc");
-		simpleBlockWithCustomTexture(ModBlocks.BlockCutAluminum.get(), "storageblocks/block_cut_aluminum");
-		simpleBlockWithCustomTexture(ModBlocks.BlockCutMagnesium.get(), "storageblocks/block_cut_magnesium");
-		simpleBlockWithCustomTexture(ModBlocks.BlockCutSilver.get(), "storageblocks/block_cut_silver");
-		simpleBlockWithCustomTexture(ModBlocks.BlockCutBrass.get(), "storageblocks/block_cut_brass");
-		simpleBlockWithCustomTexture(ModBlocks.BlockCutBronze.get(), "storageblocks/block_cut_bronze");
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
+			if (bundle.shouldGenerateOverworldOre()) {
+				simpleBlockWithCustomTexture(bundle.getOverworldOre().get(), "ore/ore_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateNetherackOre()) {
+				simpleBlockWithCustomTexture(bundle.getNetherackOre().get(), "ore/ore_nether_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateDeepslateOre()) {
+				simpleBlockWithCustomTexture(bundle.getDeepslateOre().get(), "ore/ore_deepslate_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateRawMaterialStorageBlock()) {
+				simpleBlockWithCustomTexture(bundle.getRawMaterialStorageBlock().get(), "storageblocks/block_raw_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateSmeltedMaterialStorageBlock()) {
+				simpleBlockWithCustomTexture(bundle.getSmeltedMaterialStorageBlock().get(), "storageblocks/block_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateCutStorageBlock()) {
+				simpleBlockWithCustomTexture(bundle.getCutStorageBlock().get(), "storageblocks/block_cut_" + bundle.getName());
+			}
+		}
 
 		machineBlock(ModBlocks.MachineBlockAluminum.get(), "aluminum");
 		machineBlock(ModBlocks.MachineBlockIndustrial.get(), "industrial");

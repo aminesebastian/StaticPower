@@ -1,9 +1,0 @@
-{
-	"type": "staticpower:alloy_furnace",
-	"input1": { "tag": "forge:storage_blocks/silver" },
-	"input2": { "tag": "forge:storage_blocks/redstone" },
-	"output": {
-		"item": "staticpower:block_redstone_alloy",
-		"count": 2
-	}
-}

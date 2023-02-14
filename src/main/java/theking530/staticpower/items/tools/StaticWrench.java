@@ -20,12 +20,13 @@ import theking530.api.wrench.IWrenchTool;
 import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 
 	public StaticWrench() {
-		super(new Item.Properties().stacksTo(1).setNoRepair());
+		super(new Item.Properties().stacksTo(1).setNoRepair().tab(ModCreativeTabs.TOOLS));
 	}
 
 	@Override

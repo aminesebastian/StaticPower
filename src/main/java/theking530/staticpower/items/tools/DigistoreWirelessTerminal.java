@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -37,6 +38,7 @@ import theking530.staticpower.cables.attachments.digistore.craftingterminal.Cont
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.DigistoreCraftingTerminal;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 
@@ -45,7 +47,7 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	private static final String TERMINAL_SIDE_KEY = "terminal_side";
 
 	public DigistoreWirelessTerminal() {
-
+		super(new Item.Properties().tab(ModCreativeTabs.TOOLS));
 	}
 
 	public boolean isBound(Level world, ItemStack wirelessDevice) {
@@ -165,8 +167,8 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (worldIn != null && isBound(worldIn, stack)) {
-			tooltip.add(Component.translatable("gui.staticpower.digistore_wireless_terminal_advanced_tooltip",
-					BlockPos.of(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
+			tooltip.add(
+					Component.translatable("gui.staticpower.digistore_wireless_terminal_advanced_tooltip", BlockPos.of(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
 		}
 	}
 

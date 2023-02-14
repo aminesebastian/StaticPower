@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "staticpower:crafting/shaped/block_tin"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tin_smelted_material": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "staticpower:ingot_tin"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_tin_smelted_material",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "staticpower:crafting/shaped/block_tin"
+    ]
+  }
+}
