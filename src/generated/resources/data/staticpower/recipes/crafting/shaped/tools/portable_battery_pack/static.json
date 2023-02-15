@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_static"
+    },
+    "p": {
+      "item": "staticpower:processor_static"
+    },
+    "w": {
+      "tag": "forge:wires/brass"
+    }
+  },
+  "pattern": [
+    "wpw",
+    "bbb",
+    "www"
+  ],
+  "result": {
+    "item": "staticpower:battery_pack_static"
+  }
+}

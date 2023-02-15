@@ -26,6 +26,7 @@ import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -42,7 +43,7 @@ public class ItemFilter extends StaticPowerItem {
 	public ResourceLocation filterTier;
 
 	public ItemFilter(ResourceLocation tier) {
-		super(new Properties().stacksTo(1));
+		super(new Properties().stacksTo(1).tab(ModCreativeTabs.TOOLS));
 		filterTier = tier;
 	}
 

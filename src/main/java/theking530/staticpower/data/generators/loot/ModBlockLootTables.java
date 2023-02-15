@@ -58,21 +58,25 @@ public class ModBlockLootTables extends BlockLoot {
 		addLeavesDrops(ModBlocks.RubberTreeLeaves.get(), ModBlocks.RubberTreeSapling.get(), 0.05f, 0.0625f, 0.083333336f, 0.1f);
 	}
 
-	protected void addOre(Block block, Item rawOre) {
+	public void add(Block p_124166_, LootTable.Builder p_124167_) {
+		super.add(p_124166_, p_124167_);
+	}
+
+	public void addOre(Block block, Item rawOre) {
 		add(block, createOreDrop(block, rawOre));
 	}
 
-	protected void addLeavesDrops(Block block, Block sapling, float... chances) {
+	public void addLeavesDrops(Block block, Block sapling, float... chances) {
 		add(block, createLeavesDrops(block, sapling, chances));
 	}
 
-	protected void addCrop(Block cropBlock, Item crop, Item seeds) {
+	public void addCrop(Block cropBlock, Item crop, Item seeds) {
 		LootItemCondition.Builder condition = LootItemBlockStatePropertyCondition.hasBlockStateProperties(cropBlock)
 				.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CropBlock.AGE, 7));
 		add(cropBlock, createCropDrops(cropBlock, crop, seeds, condition));
 	}
 
-	protected void addOreDropWithCounts(Block block, Item item, float minimum, float maximum) {
+	public void addOreDropWithCounts(Block block, Item item, float minimum, float maximum) {
 		LootTable.Builder builder = createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item)
 				.apply(SetItemCountFunction.setCount(UniformGenerator.between(minimum, maximum))).apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE))));
 		add(block, builder);

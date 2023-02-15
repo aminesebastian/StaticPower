@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "tag": "forge:chests/wooden"
+    },
+    "i": {
+      "tag": "staticpower:plates/energized_metal"
+    }
+  },
+  "pattern": [
+    "iii",
+    "ici",
+    "iii"
+  ],
+  "result": {
+    "item": "staticpower:chest_energized"
+  }
+}

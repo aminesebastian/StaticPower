@@ -215,12 +215,10 @@ public class StaticPowerForgeEventsCommon {
 				}
 
 				// Add the advanced.
-				if (advancedToolTips.size() > 0) {
-					for (Component comp : advancedToolTips) {
-						List<String> lines = GuiDrawUtilities.wrapString(comp.getString(), 150);
-						for (String line : lines) {
-							event.getToolTip().add(Component.literal(line).setStyle(comp.getStyle()));
-						}
+				for (Component comp : advancedToolTips) {
+					List<String> lines = GuiDrawUtilities.wrapString(comp.getString(), 175);
+					for (String line : lines) {
+						event.getToolTip().add(Component.literal(line).setStyle(comp.getStyle()));
 					}
 				}
 
@@ -263,8 +261,11 @@ public class StaticPowerForgeEventsCommon {
 				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasShiftDown());
 			} else {
 				// Add the basic tooltips if any are presented.
-				if (basicTooltips.size() > 0) {
-					event.getToolTip().addAll(basicTooltips);
+				for (Component original : basicTooltips) {
+					List<String> lines = GuiDrawUtilities.wrapString(original.getString(), 175);
+					for (String line : lines) {
+						event.getToolTip().add(Component.literal(line).setStyle(original.getStyle()));
+					}
 				}
 
 				// Add attributable tooltips.

@@ -6,15 +6,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticpower.client.rendering.items.GearBoxModel;
+import theking530.staticpower.init.ModCreativeTabs;
 
 public class GearBox extends StaticPowerItem implements ICustomModelProvider {
-	public final RegistryObject<? extends Item> baseGearItem;
 
-	public GearBox(RegistryObject<? extends Item> baseGearItem) {
-		this.baseGearItem = baseGearItem;
+	public GearBox() {
+		super(new Item.Properties().tab(ModCreativeTabs.MATERIALS));
 	}
 
 	@Override
@@ -25,6 +24,6 @@ public class GearBox extends StaticPowerItem implements ICustomModelProvider {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		return new GearBoxModel(baseGearItem.get());
+		return new GearBoxModel(existingModel);
 	}
 }

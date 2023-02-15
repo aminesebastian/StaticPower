@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "forge:glass_panes"
+    },
+    "i": {
+      "tag": "forge:ingots/tin"
+    },
+    "r": {
+      "tag": "forge:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "iri",
+    "g g",
+    "iri"
+  ],
+  "result": {
+    "count": 6,
+    "item": "staticpower:cable_capillary_fluid_basic"
+  }
+}

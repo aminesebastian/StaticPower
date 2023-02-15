@@ -82,10 +82,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
 			if (bundle.shouldGenerateDeepslateOre()) {
 				simpleBlockWithCustomTexture(bundle.getDeepslateOre().get(), "ore/ore_deepslate_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateRawMaterialStorageBlock()) {
+			if (bundle.shouldGenerateRawStorageBlock()) {
 				simpleBlockWithCustomTexture(bundle.getRawMaterialStorageBlock().get(), "storageblocks/block_raw_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateSmeltedMaterialStorageBlock()) {
+			if (bundle.shouldGenerateStorageBlock()) {
 				simpleBlockWithCustomTexture(bundle.getSmeltedMaterialStorageBlock().get(), "storageblocks/block_" + bundle.getName());
 			}
 			if (bundle.shouldGenerateCutStorageBlock()) {
@@ -246,7 +246,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		cable1Thickness(ModBlocks.BasicRedstoneCableNaked.get(), "redstone/cable_basic_redstone_naked", null);
 		cable5Thickness(ModBlocks.BundledRedstoneCable.get(), "redstone/cable_bundled_redstone", null);
 
-		cable3Thickness(ModBlocks.DigistoreWire.get(), "cable_digistore", "attachments/cable_digistore_attachment");
+		cable3Thickness(ModBlocks.DigistoreCable.get(), "cable_digistore", "attachments/cable_digistore_attachment");
 		cable5Thickness(ModBlocks.ScaffoldCable.get(), "cable_scaffold", "attachments/cable_scaffold_attachment");
 
 		for (TierPair tier : Tiers.getCableTiers()) {

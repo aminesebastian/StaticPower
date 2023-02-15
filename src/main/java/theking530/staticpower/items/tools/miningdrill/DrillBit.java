@@ -35,13 +35,14 @@ import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.items.DrillBitItemModel;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DrillBit extends AbstractToolPart {
 	public final Tier miningTier;
 
 	public DrillBit(Tier miningTier, ResourceLocation tier) {
-		super(tier, new Item.Properties().stacksTo(1).durability(1));
+		super(tier, new Item.Properties().stacksTo(1).durability(1).tab(ModCreativeTabs.TOOLS));
 		this.miningTier = miningTier;
 
 	}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_basic"
+    },
+    "p": {
+      "item": "staticpower:processor_basic"
+    },
+    "w": {
+      "tag": "forge:wires/copper"
+    }
+  },
+  "pattern": [
+    "wpw",
+    "bbb",
+    "www"
+  ],
+  "result": {
+    "item": "staticpower:battery_pack_basic"
+  }
+}

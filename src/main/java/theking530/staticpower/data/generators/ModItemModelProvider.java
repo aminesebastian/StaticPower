@@ -15,6 +15,7 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.Tiers;
@@ -79,10 +80,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 			if (bundle.shouldGenerateRawMaterial()) {
 				simpleItem(bundle.getRawMaterial().get(), "materials/raw_ores/" + bundle.getRawMaterialPrefix() + "_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateSmeltedMaterial()) {
+			if (bundle.shouldGenerateIngot()) {
 				simpleItem(bundle.getSmeltedMaterial().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateHeatedSmeltedMaterial()) {
+			if (bundle.shouldGenerateHeatedIngotMaterial()) {
 				if (bundle == ModMaterials.IRON) {
 					simpleItemVanillaTexture(ModMaterials.IRON.getHeatedSmeltedMaterial().get(), "iron_ingot");
 				} else if (bundle == ModMaterials.GOLD) {
@@ -101,6 +102,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 			}
 			if (bundle.shouldGenerateGear()) {
 				simpleItem(bundle.getGear().get(), "materials/gears/gear_" + bundle.getName());
+			}
+			if (bundle.shouldGenerateGearBox()) {
+				// This is just a dummy model, the real one is generated at runtime.
+				simpleItem(bundle.getGearBox().get(), "materials/gears/gear_" + bundle.getName());
 			}
 			if (bundle.shouldGenerateDust()) {
 				simpleItem(bundle.getDust().get(), "materials/dusts/dust_" + bundle.getName());
@@ -173,22 +178,9 @@ public class ModItemModelProvider extends ItemModelProvider {
 		simpleItem(ModItems.EnergizedCard.get(), "components/card_energized");
 		simpleItem(ModItems.LumumCard.get(), "components/card_lumum");
 
-		lightbulb(ModItems.LightBulbWhite.get(), "white");
-		lightbulb(ModItems.LightBulbLightGray.get(), "light_gray");
-		lightbulb(ModItems.LightBulbGray.get(), "gray");
-		lightbulb(ModItems.LightBulbBlack.get(), "black");
-		lightbulb(ModItems.LightBulbBrown.get(), "brown");
-		lightbulb(ModItems.LightBulbRed.get(), "red");
-		lightbulb(ModItems.LightBulbOrange.get(), "orange");
-		lightbulb(ModItems.LightBulbYellow.get(), "yellow");
-		lightbulb(ModItems.LightBulbLime.get(), "lime");
-		lightbulb(ModItems.LightBulbGreen.get(), "green");
-		lightbulb(ModItems.LightBulbCyan.get(), "cyan");
-		lightbulb(ModItems.LightBulbLightBlue.get(), "light_blue");
-		lightbulb(ModItems.LightBulbBlue.get(), "blue");
-		lightbulb(ModItems.LightBulbPurple.get(), "purple");
-		lightbulb(ModItems.LightBulbMagenta.get(), "magenta");
-		lightbulb(ModItems.LightBulbPink.get(), "pink");
+		for (MinecraftColor color : MinecraftColor.values()) {
+			lightbulb(ModItems.Lightbulbs.get(color).get(), color.getName());
+		}
 
 		simpleItem(ModItems.WoodTurbineBlades.get(), "components/turbine_blades_wood");
 		simpleItem(ModItems.BasicTurbineBlades.get(), "components/turbine_blades_basic");
@@ -475,7 +467,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 		cable1Inventory(ModBlocks.BasicRedstoneCableNaked.get(), "redstone/cable_basic_redstone_naked");
 		cable5Inventory(ModBlocks.BundledRedstoneCable.get(), "redstone/cable_bundled_redstone");
-		cable3Inventory(ModBlocks.DigistoreWire.get(), "cable_digistore");
+		cable3Inventory(ModBlocks.DigistoreCable.get(), "cable_digistore");
 		cable5Inventory(ModBlocks.ScaffoldCable.get(), "cable_scaffold");
 
 		for (TierPair tier : Tiers.getCableTiers()) {

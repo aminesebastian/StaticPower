@@ -51,7 +51,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 		tag(ModBlockTags.CABLES).add(toArray(ModBlocks.ItemCables)).add(toArray(ModBlocks.PowerCables)).add(toArray(ModBlocks.InsulatedPowerCables))
 				.add(toArray(ModBlocks.IndustrialPowerCables)).add(toArray(ModBlocks.FluidCables)).add(toArray(ModBlocks.CapillaryFluidCables))
 				.add(toArray(ModBlocks.IndustrialFluidCables)).add(toArray(ModBlocks.HeatCables)).add(toArray(ModBlocks.RedstoneCables))
-				.add(ModBlocks.DigistoreWire.get(), ModBlocks.BasicRedstoneCableNaked.get(), ModBlocks.BundledRedstoneCable.get(), ModBlocks.ScaffoldCable.get());
+				.add(ModBlocks.DigistoreCable.get(), ModBlocks.BasicRedstoneCableNaked.get(), ModBlocks.BundledRedstoneCable.get(), ModBlocks.ScaffoldCable.get());
 
 		tag(ModBlockTags.PUMPS).add(ModBlocks.BasicPump.get(), ModBlocks.AdvancedPump.get(), ModBlocks.StaticPump.get(), ModBlocks.EnergizedPump.get(), ModBlocks.LumumPump.get(),
 				ModBlocks.CreativePump.get());
@@ -105,8 +105,8 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.add(toArray(ModBlocks.ConveyorsFilteredHopper));
 
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
-			if (bundle.hasOres() && !bundle.isStaticPowerMaterial()) {
-				TagsProvider.TagAppender<Block> tag = tag(ModBlockTags.createForgeTag("ores/" + bundle.getName()));
+			if (bundle.hasOres()) {
+				TagsProvider.TagAppender<Block> tag = tag(bundle.getOreTag());
 				if (bundle.shouldGenerateOverworldOre()) {
 					tag.add(bundle.getOverworldOre().get());
 				}
@@ -118,11 +118,11 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				}
 			}
 
-			if (bundle.shouldGenerateRawMaterialStorageBlock() && !bundle.isStaticPowerMaterial()) {
-				tag(ModBlockTags.createForgeTag("storage_blocks/raw_" + bundle.getName())).add(bundle.getRawMaterialStorageBlock().get());
+			if (bundle.shouldGenerateRawStorageBlock()) {
+				tag(bundle.getRawStorageBlockTag()).add(bundle.getRawMaterialStorageBlock().get());
 			}
-			if (bundle.shouldGenerateSmeltedMaterialStorageBlock() && !bundle.isStaticPowerMaterial()) {
-				tag(ModBlockTags.createForgeTag("storage_blocks/" + bundle.getName())).add(bundle.getSmeltedMaterialStorageBlock().get());
+			if (bundle.shouldGenerateStorageBlock()) {
+				tag(bundle.getStorageBlockTag()).add(bundle.getSmeltedMaterialStorageBlock().get());
 			}
 		}
 

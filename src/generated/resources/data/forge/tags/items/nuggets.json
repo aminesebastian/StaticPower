@@ -10,10 +10,11 @@
     "staticpower:nugget_bronze",
     "staticpower:nugget_platinum",
     "staticpower:nugget_tungsten",
+    "staticpower:nugget_inert_infusion_alloy",
     "staticpower:nugget_energized_metal",
     "staticpower:nugget_tin",
+    "staticpower:nugget_copper",
     "staticpower:nugget_silver",
-    "staticpower:nugget_inert_infusion",
     "staticpower:nugget_uranium",
     "staticpower:nugget_zinc"
   ]

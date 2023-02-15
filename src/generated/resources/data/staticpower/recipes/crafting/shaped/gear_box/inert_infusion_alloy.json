@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "staticpower:gears/inert_infusion_alloy"
+    },
+    "i": {
+      "tag": "staticpower:ingots/inert_infusion_alloy"
+    }
+  },
+  "pattern": [
+    "g  ",
+    " ig",
+    "g  "
+  ],
+  "result": {
+    "item": "staticpower:gear_box_inert_infusion_alloy"
+  }
+}

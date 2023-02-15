@@ -10,10 +10,10 @@
     "staticpower:ingot_bronze",
     "staticpower:ingot_platinum",
     "staticpower:ingot_tungsten",
+    "staticpower:ingot_inert_infusion_alloy",
     "staticpower:ingot_energized_metal",
     "staticpower:ingot_tin",
     "staticpower:ingot_silver",
-    "staticpower:ingot_inert_infusion",
     "staticpower:ingot_uranium",
     "staticpower:ingot_zinc",
     "staticpower:ingot_static_metal_heated",
@@ -27,12 +27,12 @@
     "staticpower:ingot_gold_heated",
     "staticpower:ingot_platinum_heated",
     "staticpower:ingot_tungsten_heated",
+    "staticpower:ingot_inert_infusion_alloy_heated",
     "staticpower:ingot_energized_metal_heated",
     "staticpower:ingot_tin_heated",
     "staticpower:ingot_iron_heated",
     "staticpower:ingot_copper_heated",
     "staticpower:ingot_silver_heated",
-    "staticpower:ingot_inert_infusion_heated",
     "staticpower:ingot_zinc_heated"
   ]
 }

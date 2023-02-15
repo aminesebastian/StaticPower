@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_advanced"
+    },
+    "g": {
+      "tag": "forge:gears/brass"
+    },
+    "i": {
+      "tag": "forge:ingots/brass"
+    },
+    "l": {
+      "item": "minecraft:lever"
+    },
+    "m": {
+      "item": "staticpower:motor"
+    },
+    "p": {
+      "item": "staticpower:processor_advanced"
+    }
+  },
+  "pattern": [
+    "ibi",
+    "bmg",
+    "lpi"
+  ],
+  "result": {
+    "item": "staticpower:chainsaw_advanced"
+  }
+}

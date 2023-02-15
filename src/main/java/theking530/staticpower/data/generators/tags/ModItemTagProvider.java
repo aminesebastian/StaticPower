@@ -8,7 +8,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
@@ -63,8 +62,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
 		tag(Tags.Items.INGOTS)
 				.add(toArray(
-						ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateSmeltedMaterial()).map((bundle) -> bundle.getSmeltedMaterial().get())))
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedSmeltedMaterial())
+						ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateIngot()).map((bundle) -> bundle.getSmeltedMaterial().get())))
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedIngotMaterial())
 						.map((bundle) -> bundle.getHeatedSmeltedMaterial().get())));
 
 		tag(Tags.Items.GEMS).add(ModMaterials.SAPPHIRE.getRawMaterial().get(), ModMaterials.RUBY.getRawMaterial().get());
@@ -131,10 +130,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModItemTags.RESEARCH).add(ModItems.ResearchTier1.get()).add(ModItems.ResearchTier2.get()).add(ModItems.ResearchTier3.get()).add(ModItems.ResearchTier4.get())
 				.add(ModItems.ResearchTier5.get()).add(ModItems.ResearchTier6.get()).add(ModItems.ResearchTier7.get());
 
-		tag(ModItemTags.LIGHTBULB).add(ModItems.LightBulbWhite.get()).add(ModItems.LightBulbLightGray.get()).add(ModItems.LightBulbGray.get()).add(ModItems.LightBulbBlack.get())
-				.add(ModItems.LightBulbBrown.get()).add(ModItems.LightBulbRed.get()).add(ModItems.LightBulbOrange.get()).add(ModItems.LightBulbYellow.get())
-				.add(ModItems.LightBulbLime.get()).add(ModItems.LightBulbGreen.get()).add(ModItems.LightBulbCyan.get()).add(ModItems.LightBulbLightBlue.get())
-				.add(ModItems.LightBulbBlue.get()).add(ModItems.LightBulbPurple.get()).add(ModItems.LightBulbMagenta.get()).add(ModItems.LightBulbPink.get());
+		tag(ModItemTags.LIGHTBULB).add(toArray(ModItems.Lightbulbs.values().stream().map((bulb) -> bulb.get())));
 
 		tag(ModItemTags.TOOLS).addTag(ModItemTags.HAMMER).addTag(ModItemTags.MAGNET).addTag(ModItemTags.WIRE_CUTTER).addTag(ModItemTags.MINING_DRILL).addTag(ModItemTags.CHAINSAW)
 				.addTag(ModItemTags.PORTABLE_BATTERY).addTag(ModItemTags.PORTABLE_BATTERY_PACK).addTag(ModItemTags.SOLDERING_IRON).addTag(ModItemTags.WRENCH)
@@ -166,7 +162,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModItemTags.TOOL_BACKPACK).addTag(Tags.Items.TOOLS_PICKAXES).addTag(Tags.Items.TOOLS_SHOVELS).addTag(Tags.Items.TOOLS_AXES).addTag(Tags.Items.TOOLS_HOES)
 				.addTag(ModItemTags.TOOLS);
 
-		tag(ModItemTags.HEATED_INGOTS).add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedSmeltedMaterial())
+		tag(ModItemTags.HEATED_INGOTS).add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedIngotMaterial())
 				.map((bundle) -> bundle.getHeatedSmeltedMaterial().get())));
 
 		tag(ModItemTags.WIRE_COILS).add(ModItems.WireCoilDigistore.get())
@@ -174,64 +170,64 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateInsulatedWireCoil())
 						.map((bundle) -> bundle.getInsulatedWireCoil().get())));
 
-		tag(ModItemTags.STATIC_PLATES).add(ModMaterials.STATIC_METAL.getPlate().get());
-		tag(ModItemTags.ENERGIZED_PLATES).add(ModMaterials.ENERGIZED_METAL.getPlate().get());
-		tag(ModItemTags.LUMUM_PLATES).add(ModMaterials.LUMUM_METAL.getPlate().get());
-		tag(ModItemTags.INERT_INFUSION_PLATES).add(ModMaterials.INERT_INFUSION.getPlate().get());
-		tag(ModItemTags.REDSTONE_ALLOY_PLATES).add(ModMaterials.REDSTONE_ALLOY.getPlate().get());
-
 		tag(ModItemTags.createForgeTag("gems/ruby")).add(ModMaterials.RUBY.getRawMaterial().get());
 		tag(ModItemTags.createForgeTag("gems/sapphire")).add(ModMaterials.SAPPHIRE.getRawMaterial().get());
 
-		tag(ModItemTags.createForgeTag("rubber")).add(ModItems.RubberBar.get());
+		tag(ModItemTags.RUBBER).add(ModItems.RubberBar.get());
+		tag(ModItemTags.RUBBER_SHEET).add(ModItems.RubberSheet.get());
+
 		tag(ModItemTags.createForgeTag("leather")).add(ModItems.Eather.get());
 		tag(ModItemTags.createForgeTag("seeds")).add(ModItems.StaticSeeds.get(), ModItems.EnergizedSeeds.get(), ModItems.LumumSeeds.get());
 		tag(ModItemTags.createForgeTag("silicon")).add(ModItems.Silicon.get());
 
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
-			TagKey<Item> ingotKey = null;
-			TagKey<Item> plateKey = null;
-
-			if (bundle.hasOres() && !bundle.isStaticPowerMaterial()) {
-				copy(ModBlockTags.createForgeTag("ores/" + bundle.getName()), ModItemTags.createForgeTag("ores/" + bundle.getName()));
+			if (bundle.hasOres()) {
+				copy(bundle.getOreTag(), bundle.getOreItemTag());
 			}
-			if (bundle.shouldGenerateRawMaterialStorageBlock() && !bundle.isStaticPowerMaterial()) {
-				copy(ModBlockTags.createForgeTag("storage_blocks/raw_" + bundle.getName()), ModItemTags.createForgeTag("storage_blocks/raw_" + bundle.getName()));
+			if (bundle.shouldGenerateRawStorageBlock()) {
+				copy(bundle.getRawStorageBlockTag(), bundle.getRawStorageBlockItemTag());
 			}
-			if (bundle.shouldGenerateSmeltedMaterialStorageBlock() && !bundle.isStaticPowerMaterial()) {
-				copy(ModBlockTags.createForgeTag("storage_blocks/" + bundle.getName()), ModItemTags.createForgeTag("storage_blocks/" + bundle.getName()));
+			if (bundle.shouldGenerateStorageBlock()) {
+				copy(bundle.getStorageBlockTag(), bundle.getStorageBlockItemTag());
 			}
-			if (bundle.shouldGenerateDust() && !bundle.isStaticPowerMaterial()) {
-				tag(ModItemTags.createForgeTag("dusts/" + bundle.getName())).add(bundle.getDust().get());
+			if (bundle.shouldGenerateDust()) {
+				tag(bundle.getDustTag()).add(bundle.getDust().get());
 			}
-			if (bundle.shouldGeneratePlate() && !bundle.isStaticPowerMaterial()) {
-				plateKey = ModItemTags.createForgeTag("plates/" + bundle.getName());
-				tag(plateKey).add(bundle.getPlate().get());
+			if (bundle.shouldGeneratePlate()) {
+				tag(bundle.getPlateTag()).add(bundle.getPlate().get());
 			}
-			if (bundle.shouldGenerateRod() && !bundle.isStaticPowerMaterial()) {
-				tag(ModItemTags.createForgeTag("rods/" + bundle.getName())).add(bundle.getRod().get());
+			if (bundle.shouldGenerateRod()) {
+				tag(bundle.getRodTag()).add(bundle.getRod().get());
 			}
-			if (bundle.shouldGenerateGear() && !bundle.isStaticPowerMaterial()) {
-				tag(ModItemTags.createForgeTag("gears/" + bundle.getName())).add(bundle.getGear().get());
+			if (bundle.shouldGenerateGear()) {
+				tag(bundle.getGearTag()).add(bundle.getGear().get());
 			}
-			if (bundle.shouldGenerateSmeltedMaterial() && bundle.getSmeltedMaterialPrefix().equals("ingot") && !bundle.isStaticPowerMaterial()) {
-				ingotKey = ModItemTags.createForgeTag("ingots/" + bundle.getName());
-				tag(ingotKey).add(bundle.getSmeltedMaterial().get());
+			if (bundle.shouldGenerateIngot() && bundle.getSmeltedMaterialPrefix().equals("ingot")) {
+				tag(bundle.getIngotTag()).add(bundle.getSmeltedMaterial().get());
 			}
-			if (bundle.shouldGenerateWire() && !bundle.isStaticPowerMaterial()) {
-				tag(ModItemTags.createForgeTag("wires/" + bundle.getName())).add(bundle.getWire().get());
+			if (bundle.shouldGenerateRawMaterial()) {
+				tag(bundle.getRawMaterialTag()).add(bundle.getRawMaterial().get());
 			}
-			if (bundle.shouldGenerateRawMaterial() && !bundle.isStaticPowerMaterial()) {
-				tag(ModItemTags.createForgeTag("raw_materials/" + bundle.getName())).add(bundle.getRawMaterial().get());
+			if (bundle.shouldGenerateChunks()) {
+				tag(bundle.getChunkTag()).add(bundle.getChunks().get());
 			}
-			if (bundle.shouldGenerateChunks() && !bundle.isStaticPowerMaterial()) {
-				tag(ModItemTags.createForgeTag("chunks/" + bundle.getName())).add(bundle.getChunks().get());
+			if (bundle.shouldGenerateNugget()) {
+				tag(bundle.getNuggetTag()).add(bundle.getNugget().get());
 			}
-			if (bundle.shouldGenerateNugget() && !bundle.isStaticPowerMaterial()) {
-				tag(ModItemTags.createForgeTag("nuggets/" + bundle.getName())).add(bundle.getNugget().get());
+			if (bundle.shouldGenerateWire()) {
+				tag(bundle.getWireTag()).add(bundle.getWire().get());
 			}
-			if (bundle.shouldGeneratePlate() && bundle.shouldGenerateSmeltedMaterial() && bundle.getSmeltedMaterialPrefix().equals("ingot") && !bundle.isStaticPowerMaterial()) {
-				tag(ModItemTags.create("ingot_or_plate/" + bundle.getName())).addTag(ingotKey).addTag(plateKey);
+			if (bundle.shouldGenerateInsulatedWire()) {
+				tag(bundle.getInsulatedWireTag()).add(bundle.getInsulatedWire().get());
+			}
+			if (bundle.shouldGenerateWireCoil()) {
+				tag(bundle.getWireCoilTag()).add(bundle.getWireCoil().get());
+			}
+			if (bundle.shouldGenerateInsulatedWireCoil()) {
+				tag(bundle.getInsulatedWireCoilTag()).add(bundle.getInsulatedWireCoil().get());
+			}
+			if (bundle.shouldGeneratePlate() && bundle.shouldGenerateIngot() && bundle.getSmeltedMaterialPrefix().equals("ingot")) {
+				tag(ModItemTags.create("ingot_or_plate/" + bundle.getName())).addTag(bundle.getIngotTag()).addTag(bundle.getPlateTag());
 			}
 		}
 

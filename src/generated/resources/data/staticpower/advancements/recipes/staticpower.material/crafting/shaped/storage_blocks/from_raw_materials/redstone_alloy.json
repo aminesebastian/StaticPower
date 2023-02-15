@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_redstone_alloy_raw_material": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "staticpower:raw_materials/redstone_alloy"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "staticpower:crafting/shaped/storage_blocks/from_raw_materials/redstone_alloy"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_redstone_alloy_raw_material",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "staticpower:crafting/shaped/storage_blocks/from_raw_materials/redstone_alloy"
+    ]
+  }
+}

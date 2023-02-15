@@ -312,7 +312,7 @@ public class ModBlocks {
 	public static final RegistryObject<BlockPatternStorage> DigistorePatternStorage = registerBlock("digistore_pattern_storage", () -> new BlockPatternStorage());
 
 	// Cables
-	public static final RegistryObject<BlockDigistoreNetworkWire> DigistoreWire = registerBlock("cable_digistore", () -> new BlockDigistoreNetworkWire());
+	public static final RegistryObject<BlockDigistoreNetworkWire> DigistoreCable = registerBlock("cable_digistore", () -> new BlockDigistoreNetworkWire());
 
 	public static final Map<ResourceLocation, RegistryObject<BlockItemCable>> ItemCables = new HashMap<>();
 	public static final Map<ResourceLocation, RegistryObject<BlockPowerCable>> PowerCables = new HashMap<>();

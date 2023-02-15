@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "d": {
+      "tag": "minecraft:dirt"
+    },
+    "p": {
+      "item": "staticpower:processor_static"
+    }
+  },
+  "pattern": [
+    "ddd",
+    "dpd",
+    "ddd"
+  ],
+  "result": {
+    "item": "staticpower:farmland_static"
+  }
+}

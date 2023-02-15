@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
@@ -15,6 +16,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
@@ -26,7 +28,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.utilities.Vector2D;
@@ -105,6 +106,7 @@ public class ChainsawItemModel implements BakedModel {
 			stack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent((handler) -> {
 				if (!handler.getStackInSlot(0).isEmpty()) {
 					bladeEquipped.set(true);
+					@SuppressWarnings("resource")
 					BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(handler.getStackInSlot(0), Minecraft.getInstance().level, null, 0);
 					List<BakedQuad> chainsawBladeQuads = itemModel.getQuads(state, side, rand, data, renderLayer);
 					output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(0.25f, 0.28f, 0f), new Vector3f(0.5f, 0.5f, 0.5f), new Quaternion(0, 0, 0, true)));
@@ -170,11 +172,18 @@ public class ChainsawItemModel implements BakedModel {
 		}
 
 		@Override
+		public BakedModel applyTransform(ItemTransforms.TransformType transformType, PoseStack poseStack, boolean applyLeftHandTransform) {
+			BaseModel.getTransforms().getTransform(transformType).apply(applyLeftHandTransform, poseStack);
+			return this;
+		}
+
+		@Override
 		public TextureAtlasSprite getParticleIcon() {
 			// If we have a chainsaw blade, return the particle texture for the blade.
 			// Otherwise, return the particle texture for the base model.
 			IItemHandler inv = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 			if (inv != null && !inv.getStackInSlot(0).isEmpty()) {
+				@SuppressWarnings("resource")
 				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inv.getStackInSlot(0), Minecraft.getInstance().level, null, 0);
 				return itemModel.getParticleIcon();
 			}

@@ -74,15 +74,11 @@ public class ModItemTags {
 
 	public static final TagKey<Item> HEATED_INGOTS = create("heated_ingots");
 	public static final TagKey<Item> WIRE_COILS = create("wire_coils");
-
-	public static final TagKey<Item> STATIC_PLATES = create("plates/static");
-	public static final TagKey<Item> ENERGIZED_PLATES = create("plates/energized");
-	public static final TagKey<Item> LUMUM_PLATES = create("plates/lumum");
-	public static final TagKey<Item> INERT_INFUSION_PLATES = create("plates/inert_infusion");
-	public static final TagKey<Item> REDSTONE_ALLOY_PLATES = create("plates/redstone_alloy");
-
 	public static final TagKey<Item> PLATES = createForgeTag("plates");
 	public static final TagKey<Item> GEARS = createForgeTag("gear");
+
+	public static final TagKey<Item> RUBBER = createForgeTag("rubber");
+	public static final TagKey<Item> RUBBER_SHEET = createForgeTag("rubber_sheet");
 
 	public static boolean matches(TagKey<Item> tag, Item item) {
 		return ForgeRegistries.ITEMS.tags().getTag(tag).contains(item);

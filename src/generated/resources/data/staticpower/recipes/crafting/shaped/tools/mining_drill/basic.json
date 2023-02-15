@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_basic"
+    },
+    "g": {
+      "tag": "forge:gears/tin"
+    },
+    "i": {
+      "tag": "forge:ingots/tin"
+    },
+    "l": {
+      "item": "minecraft:lever"
+    },
+    "m": {
+      "item": "staticpower:motor"
+    },
+    "p": {
+      "item": "staticpower:processor_basic"
+    }
+  },
+  "pattern": [
+    "ili",
+    "bmg",
+    "bpi"
+  ],
+  "result": {
+    "item": "staticpower:mining_drill_basic"
+  }
+}

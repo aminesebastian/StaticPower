@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:bed_frame"
+    },
+    "p": {
+      "item": "minecraft:white_wool"
+    },
+    "w": {
+      "item": "minecraft:yellow_wool"
+    }
+  },
+  "pattern": [
+    "   ",
+    "wwp",
+    " b "
+  ],
+  "result": {
+    "item": "minecraft:yellow_bed"
+  }
+}

@@ -52,6 +52,9 @@ public class BlockPowerCable extends AbstractCableBlock {
 
 		PowerTooltips.addMaximumCurrentTooltip(tooltip, tierObject.cablePowerConfiguration.cableMaxCurrent.get());
 		PowerTooltips.addResistanceTooltip(tooltip, tierObject.cablePowerConfiguration.cablePowerResistance.get());
+		if (insulated) {
+			PowerTooltips.addInsulatedTooltip(tooltip);
+		}
 	}
 
 	@Override

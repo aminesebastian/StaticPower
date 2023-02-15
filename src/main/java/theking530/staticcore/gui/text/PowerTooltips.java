@@ -53,4 +53,8 @@ public class PowerTooltips {
 	public static void addMaximumCurrentTooltip(List<Component> tooltip, double current) {
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_current", ChatFormatting.GOLD, PowerTextFormatting.formatCurrentToString(current));
 	}
+	
+	public static void addInsulatedTooltip(List<Component> tooltip) {
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.insulated", ChatFormatting.GREEN, Component.translatable("gui.staticpower.insulated_tooltip"));
+	}
 }

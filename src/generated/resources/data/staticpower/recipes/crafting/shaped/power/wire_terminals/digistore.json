@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "tag": "minecraft:wool"
+    },
+    "i": {
+      "tag": "forge:wires/copper"
+    },
+    "w": {
+      "tag": "forge:ingots/brass"
+    }
+  },
+  "pattern": [
+    "wiw",
+    "wiw",
+    "bbb"
+  ],
+  "result": {
+    "count": 2,
+    "item": "staticpower:wire_terminal_digistore"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/tin"
+    },
+    "p": {
+      "tag": "forge:ender_pearls"
+    },
+    "s": {
+      "item": "staticpower:servo"
+    }
+  },
+  "pattern": [
+    "ipi",
+    "isi",
+    " i "
+  ],
+  "result": {
+    "count": 2,
+    "item": "staticpower:cable_attachment_basic_retriever"
+  }
+}

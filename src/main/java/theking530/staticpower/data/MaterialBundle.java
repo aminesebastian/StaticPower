@@ -1,5 +1,6 @@
 package theking530.staticpower.data;
 
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -10,16 +11,31 @@ import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.StaticPowerOre;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModCreativeTabs;
+import theking530.staticpower.init.tags.ModBlockTags;
+import theking530.staticpower.init.tags.ModItemTags;
+import theking530.staticpower.items.GearBox;
 import theking530.staticpower.items.HeatedIngot;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class MaterialBundle {
+	public enum MaterialDomain {
+		VANILLA, FORGE, STATICPOWER
+	};
+
+	public enum MaterialType {
+		METAL, GEM
+	};
+
 	private final String name;
 	/**
-	 * Indicates whether or not this material should create forge tags or static
-	 * power tags.
+	 * Indicates whether or not this material should create minecraft, forge, or
+	 * static power tags.
 	 */
-	private final boolean isStaticPowerMaterial;
+	private final MaterialDomain materialDomain;
+	private final MaterialType materialType;
+
+	private TagKey<Block> oreTag;
+	private TagKey<Item> oreItemTag;
 
 	private boolean generateOverworldOre;
 	private Properties overworldOreProperties;
@@ -36,13 +52,17 @@ public class MaterialBundle {
 	private Tuple<Integer, Integer> netherackOreExperience;
 	private RegistryObject<? extends Block> netherackOre;
 
-	private boolean generateRawMaterialStorageBlock;
-	private Properties rawMaterialStorageBlockProperties;
-	private RegistryObject<? extends Block> rawMaterialStorageBlock;
+	private boolean generateRawStorageBlock;
+	private Properties rawStorageBlockProperties;
+	private RegistryObject<? extends Block> rawStorageBlock;
+	private TagKey<Block> rawStorageBlockTag;
+	private TagKey<Item> rawStorageBlockItemTag;
 
-	private boolean generateSmeltedMaterialStorageBlock;
-	private Properties smeltedMaterialStorageBlockProperties;
-	private RegistryObject<? extends Block> smeltedMaterialStorageBlock;
+	private boolean generateStorageBlock;
+	private Properties storageBlockProperties;
+	private RegistryObject<? extends Block> storageBlock;
+	private TagKey<Block> storageBlockTag;
+	private TagKey<Item> storageBlockItemTag;
 
 	private boolean generateCutStorageBlock;
 	private Properties cutMaterialStorageBlockProperties;
@@ -51,58 +71,86 @@ public class MaterialBundle {
 	private boolean generateRawMaterial;
 	private String rawMaterialPrefix;
 	private RegistryObject<? extends Item> rawMaterial;
+	private TagKey<Item> rawMaterialTag;
 
-	private boolean generateSmeltedMaterial;
-	private String smeltedMaterialPrefix;
-	private RegistryObject<? extends Item> smeltedMaterial;
+	private boolean generateIngot;
+	private String ingotPrefix;
+	private RegistryObject<? extends Item> ingot;
+	private TagKey<Item> ingotTag;
 
-	private boolean generateHeatedSmeltedMaterial;
-	private RegistryObject<? extends Item> heatedSmeltedMaterial;
+	private boolean generateHeatedIngot;
+	private RegistryObject<? extends Item> heatedIngot;
 
 	private boolean generateNugget;
 	private RegistryObject<? extends Item> nugget;
+	private TagKey<Item> nuggetTag;
 
 	private boolean generateDust;
 	private RegistryObject<? extends Item> dust;
+	private TagKey<Item> dustTag;
 
 	private boolean generateGear;
 	private RegistryObject<? extends Item> gear;
+	private TagKey<Item> gearTag;
+
+	private boolean generateGearBox;
+	private RegistryObject<? extends Item> gearBox;
 
 	private boolean generatePlate;
 	private RegistryObject<? extends Item> plate;
+	private TagKey<Item> plateTag;
 
 	private boolean generateRod;
 	private RegistryObject<? extends Item> rod;
+	private TagKey<Item> rodTag;
 
 	private boolean generateChunks;
 	private RegistryObject<? extends Item> chunks;
+	private TagKey<Item> chunkTag;
 
 	private boolean generateWire;
 	private RegistryObject<? extends Item> wire;
+	private TagKey<Item> wireTag;
 
 	private boolean generateInsulatedWire;
 	private RegistryObject<? extends Item> insulatedWire;
+	private TagKey<Item> insulatedWireTag;
 
 	private boolean generateWireCoil;
 	private RegistryObject<? extends Item> wireCoil;
+	private TagKey<Item> wireCoilTag;
 
 	private boolean generateInsulatedWireCoil;
 	private RegistryObject<? extends Item> insulatedWireCoil;
+	private TagKey<Item> insulatedWireCoilTag;
 
-	public MaterialBundle(String name, boolean isStaticPowerMaterial) {
+	public MaterialBundle(String name, MaterialDomain materialDomain, MaterialType materialType) {
 		this.name = name;
-		this.isStaticPowerMaterial = isStaticPowerMaterial;
+		this.materialDomain = materialDomain;
+		this.materialType = materialType;
 		this.rawMaterialPrefix = "raw";
-		this.smeltedMaterialPrefix = "ingot";
+		this.ingotPrefix = "ingot";
 	}
 
 	public boolean isStaticPowerMaterial() {
-		return isStaticPowerMaterial;
+		return materialDomain == MaterialDomain.STATICPOWER;
+	}
+
+	public MaterialType getMaterialType() {
+		return materialType;
 	}
 
 	public void generateBlocks() {
+		oreTag = createBlockTag("ore/" + getName());
+		oreItemTag = createItemTag("ore/" + getName());
+		rawStorageBlockTag = createBlockTag("storage_blocks/raw_" + getName());
+		rawStorageBlockItemTag = createItemTag("storage_blocks/raw_" + getName());
+		storageBlockTag = createBlockTag("storage_blocks/" + getName());
+		storageBlockItemTag = createItemTag("storage_blocks/" + getName());
+
 		if (shouldGenerateOverworldOre()) {
-			overworldOre = ModBlocks.registerBlock("ore_" + getName(), () -> new StaticPowerOre(overworldOreProperties, overworldOreExperience.getA(), overworldOreExperience.getB()));
+			overworldOre = ModBlocks.registerBlock("ore_" + getName(),
+					() -> new StaticPowerOre(overworldOreProperties, overworldOreExperience.getA(), overworldOreExperience.getB()));
 		}
 		if (shouldGenerateDeepslateOre()) {
 			deepslateOre = ModBlocks.registerBlock("ore_deepslate_" + getName(),
@@ -112,11 +160,11 @@ public class MaterialBundle {
 			netherackOre = ModBlocks.registerBlock("ore_nether_" + getName(),
 					() -> new StaticPowerOre(netherackOreProperties, netherackOreExperience.getA(), netherackOreExperience.getB()));
 		}
-		if (shouldGenerateRawMaterialStorageBlock()) {
-			rawMaterialStorageBlock = ModBlocks.registerBlock("block_raw_" + getName(), () -> new StaticPowerBlock(ModCreativeTabs.MATERIALS, rawMaterialStorageBlockProperties));
+		if (shouldGenerateRawStorageBlock()) {
+			rawStorageBlock = ModBlocks.registerBlock("block_raw_" + getName(), () -> new StaticPowerBlock(ModCreativeTabs.MATERIALS, rawStorageBlockProperties));
 		}
-		if (shouldGenerateSmeltedMaterialStorageBlock()) {
-			smeltedMaterialStorageBlock = ModBlocks.registerBlock("block_" + getName(), () -> new StaticPowerBlock(ModCreativeTabs.MATERIALS, smeltedMaterialStorageBlockProperties));
+		if (shouldGenerateStorageBlock()) {
+			storageBlock = ModBlocks.registerBlock("block_" + getName(), () -> new StaticPowerBlock(ModCreativeTabs.MATERIALS, storageBlockProperties));
 		}
 		if (shouldGenerateCutStorageBlock()) {
 			cutStorageBlock = ModBlocks.registerBlock("block_cut_" + getName(), () -> new StaticPowerBlock(ModCreativeTabs.MATERIALS, cutMaterialStorageBlockProperties));
@@ -124,14 +172,32 @@ public class MaterialBundle {
 	}
 
 	public void generateItems(DeferredRegister<Item> registry) {
+		if (materialType == MaterialType.METAL) {
+			rawMaterialTag = createItemTag("raw_materials/" + getName());
+			ingotTag = createItemTag("ingots/" + getName());
+		} else {
+			rawMaterialTag = createItemTag("gems/" + getName());
+		}
+
+		nuggetTag = createItemTag("nuggets/" + getName());
+		dustTag = createItemTag("dusts/" + getName());
+		gearTag = createItemTag("gears/" + getName());
+		plateTag = createItemTag("plates/" + getName());
+		rodTag = createItemTag("tags/" + getName());
+		chunkTag = createItemTag("chunks/" + getName());
+		wireTag = createItemTag("wires/" + getName());
+		insulatedWireTag = createItemTag("wires/insulated/" + getName());
+		wireCoilTag = createItemTag("wire_coil/" + getName());
+		insulatedWireCoilTag = createItemTag("wire_coil/insulated/" + getName());
+
 		if (shouldGenerateRawMaterial()) {
 			rawMaterial = registry.register(rawMaterialPrefix + "_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
-		if (shouldGenerateSmeltedMaterial()) {
-			smeltedMaterial = registry.register(smeltedMaterialPrefix + "_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
+		if (shouldGenerateIngot()) {
+			ingot = registry.register(ingotPrefix + "_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
-		if (shouldGenerateHeatedSmeltedMaterial()) {
-			heatedSmeltedMaterial = registry.register("ingot_" + getName() + "_heated", () -> new HeatedIngot(() -> smeltedMaterial.get()));
+		if (shouldGenerateHeatedIngotMaterial()) {
+			heatedIngot = registry.register("ingot_" + getName() + "_heated", () -> new HeatedIngot(() -> ingot.get()));
 		}
 		if (shouldGenerateNugget()) {
 			nugget = registry.register("nugget_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
@@ -162,6 +228,9 @@ public class MaterialBundle {
 		}
 		if (shouldGenerateInsulatedWireCoil()) {
 			insulatedWireCoil = registry.register("wire_coil_insulated_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
+		}
+		if (shouldGenerateGearBox()) {
+			gearBox = registry.register("gear_box_" + getName(), () -> new GearBox());
 		}
 	}
 
@@ -206,23 +275,23 @@ public class MaterialBundle {
 		return generateOverworldOre || generateDeepslateOre || generateNetherackOre;
 	}
 
-	public boolean shouldGenerateRawMaterialStorageBlock() {
-		return generateRawMaterialStorageBlock;
+	public boolean shouldGenerateRawStorageBlock() {
+		return generateRawStorageBlock;
 	}
 
-	public MaterialBundle generateRawMaterialStorageBlock(Properties properties) {
-		this.generateRawMaterialStorageBlock = true;
-		this.rawMaterialStorageBlockProperties = properties;
+	public MaterialBundle generateRawStorageBlock(Properties properties) {
+		this.generateRawStorageBlock = true;
+		this.rawStorageBlockProperties = properties;
 		return this;
 	}
 
-	public boolean shouldGenerateSmeltedMaterialStorageBlock() {
-		return generateSmeltedMaterialStorageBlock;
+	public boolean shouldGenerateStorageBlock() {
+		return generateStorageBlock;
 	}
 
-	public MaterialBundle generateSmeltedMaterialStorageBlock(Properties properties) {
-		this.generateSmeltedMaterialStorageBlock = true;
-		this.smeltedMaterialStorageBlockProperties = properties;
+	public MaterialBundle generateStorageBlock(Properties properties) {
+		this.generateStorageBlock = true;
+		this.storageBlockProperties = properties;
 		return this;
 	}
 
@@ -251,27 +320,27 @@ public class MaterialBundle {
 		return this;
 	}
 
-	public boolean shouldGenerateHeatedSmeltedMaterial() {
-		return generateHeatedSmeltedMaterial;
+	public boolean shouldGenerateHeatedIngotMaterial() {
+		return generateHeatedIngot;
 	}
 
-	public MaterialBundle generateHeatedSmeltedMaterial() {
-		this.generateHeatedSmeltedMaterial = true;
+	public MaterialBundle generateHeatedIngotMaterial() {
+		this.generateHeatedIngot = true;
 		return this;
 	}
 
-	public boolean shouldGenerateSmeltedMaterial() {
-		return generateSmeltedMaterial;
+	public boolean shouldGenerateIngot() {
+		return generateIngot;
 	}
 
-	public MaterialBundle generateSmeltedMaterial() {
-		this.generateSmeltedMaterial = true;
+	public MaterialBundle generateIngot() {
+		this.generateIngot = true;
 		return this;
 	}
 
-	public MaterialBundle generateSmeltedMaterial(String prefix) {
-		this.generateSmeltedMaterial = true;
-		this.smeltedMaterialPrefix = prefix;
+	public MaterialBundle generateIngot(String prefix) {
+		this.generateIngot = true;
+		this.ingotPrefix = prefix;
 		return this;
 	}
 
@@ -288,8 +357,18 @@ public class MaterialBundle {
 		return generateGear;
 	}
 
+	public boolean shouldGenerateGearBox() {
+		return generateGearBox;
+	}
+
 	public MaterialBundle generateGear() {
 		this.generateGear = true;
+		return this;
+	}
+
+	public MaterialBundle generateGear(boolean hasGearBox) {
+		generateGear();
+		this.generateGearBox = hasGearBox;
 		return this;
 	}
 
@@ -378,11 +457,11 @@ public class MaterialBundle {
 	}
 
 	public RegistryObject<? extends Block> getRawMaterialStorageBlock() {
-		return rawMaterialStorageBlock;
+		return rawStorageBlock;
 	}
 
 	public RegistryObject<? extends Block> getSmeltedMaterialStorageBlock() {
-		return smeltedMaterialStorageBlock;
+		return storageBlock;
 	}
 
 	public RegistryObject<? extends Block> getCutStorageBlock() {
@@ -398,15 +477,15 @@ public class MaterialBundle {
 	}
 
 	public RegistryObject<? extends Item> getHeatedSmeltedMaterial() {
-		return heatedSmeltedMaterial;
+		return heatedIngot;
 	}
 
 	public String getSmeltedMaterialPrefix() {
-		return smeltedMaterialPrefix;
+		return ingotPrefix;
 	}
 
 	public RegistryObject<? extends Item> getSmeltedMaterial() {
-		return smeltedMaterial;
+		return ingot;
 	}
 
 	public RegistryObject<? extends Item> getDust() {
@@ -415,6 +494,10 @@ public class MaterialBundle {
 
 	public RegistryObject<? extends Item> getGear() {
 		return gear;
+	}
+
+	public RegistryObject<? extends Item> getGearBox() {
+		return gearBox;
 	}
 
 	public RegistryObject<? extends Item> getPlate() {
@@ -447,6 +530,92 @@ public class MaterialBundle {
 
 	public RegistryObject<? extends Item> getInsulatedWireCoil() {
 		return insulatedWireCoil;
+	}
+
+	public TagKey<Block> getOreTag() {
+		return oreTag;
+	}
+
+	public TagKey<Item> getOreItemTag() {
+		return oreItemTag;
+	}
+
+	public TagKey<Block> getRawStorageBlockTag() {
+		return rawStorageBlockTag;
+	}
+
+	public TagKey<Item> getRawStorageBlockItemTag() {
+		return rawStorageBlockItemTag;
+	}
+
+	public TagKey<Block> getStorageBlockTag() {
+		return storageBlockTag;
+	}
+
+	public TagKey<Item> getStorageBlockItemTag() {
+		return storageBlockItemTag;
+	}
+
+	public TagKey<Item> getRawMaterialTag() {
+		return rawMaterialTag;
+	}
+
+	public TagKey<Item> getIngotTag() {
+		return ingotTag;
+	}
+
+	public TagKey<Item> getNuggetTag() {
+		return nuggetTag;
+	}
+
+	public TagKey<Item> getDustTag() {
+		return dustTag;
+	}
+
+	public TagKey<Item> getGearTag() {
+		return gearTag;
+	}
+
+	public TagKey<Item> getPlateTag() {
+		return plateTag;
+	}
+
+	public TagKey<Item> getChunkTag() {
+		return chunkTag;
+	}
+
+	public TagKey<Item> getRodTag() {
+		return rodTag;
+	}
+
+	public TagKey<Item> getWireTag() {
+		return wireTag;
+	}
+
+	public TagKey<Item> getInsulatedWireTag() {
+		return insulatedWireTag;
+	}
+
+	public TagKey<Item> getWireCoilTag() {
+		return wireCoilTag;
+	}
+
+	public TagKey<Item> getInsulatedWireCoilTag() {
+		return insulatedWireCoilTag;
+	}
+
+	private TagKey<Item> createItemTag(String name) {
+		if (this.isStaticPowerMaterial()) {
+			return ModItemTags.create(name);
+		}
+		return ModItemTags.createForgeTag(name);
+	}
+
+	private TagKey<Block> createBlockTag(String name) {
+		if (this.isStaticPowerMaterial()) {
+			return ModBlockTags.create(name);
+		}
+		return ModBlockTags.createForgeTag(name);
 	}
 
 	public void validate() {

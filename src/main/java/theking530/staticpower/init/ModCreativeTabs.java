@@ -11,4 +11,5 @@ public class ModCreativeTabs {
 	public static final CreativeModeTab CABLES = new StaticPowerCableItemGroup();
 	public static final CreativeModeTab TOOLS = new StaticPowerToolItemGroup();
 	public static final CreativeModeTab MATERIALS = new StaticPowerMaterialItemGroup();
+	public static final CreativeModeTab FOOD = new StaticPowerMaterialItemGroup();
 }

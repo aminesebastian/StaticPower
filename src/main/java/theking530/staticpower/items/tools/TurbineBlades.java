@@ -16,6 +16,7 @@ import theking530.staticcore.utilities.SDTime;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class TurbineBlades extends StaticPowerItem {
@@ -23,7 +24,7 @@ public class TurbineBlades extends StaticPowerItem {
 	protected final ResourceLocation inWorldModel;
 
 	public TurbineBlades(ResourceLocation tierId, ResourceLocation inWorldModel) {
-		super(new Item.Properties().stacksTo(1).durability(1).setNoRepair());
+		super(new Item.Properties().stacksTo(1).durability(1).setNoRepair().tab(ModCreativeTabs.GENERAL));
 		this.tier = tierId;
 		this.inWorldModel = inWorldModel;
 	}

@@ -1,4 +1,4 @@
- package theking530.staticpower.client.rendering.items;
+package theking530.staticpower.client.rendering.items;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
@@ -173,6 +175,12 @@ public class FluidCapsuleItemModel implements BakedModel {
 		@Override
 		public boolean useAmbientOcclusion() {
 			return false;
+		}
+
+		@Override
+		public BakedModel applyTransform(ItemTransforms.TransformType transformType, PoseStack poseStack, boolean applyLeftHandTransform) {
+			BaseModel.getTransforms().getTransform(transformType).apply(applyLeftHandTransform, poseStack);
+			return this;
 		}
 
 		@Override
