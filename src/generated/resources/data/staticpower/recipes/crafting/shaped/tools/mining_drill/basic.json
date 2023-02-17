@@ -8,7 +8,7 @@
       "tag": "forge:gears/tin"
     },
     "i": {
-      "tag": "forge:ingots/tin"
+      "tag": "forge:plates/tin"
     },
     "l": {
       "item": "minecraft:lever"
@@ -21,9 +21,9 @@
     }
   },
   "pattern": [
-    "ili",
-    "bmg",
-    "bpi"
+    "ilg",
+    "bmb",
+    "ipi"
   ],
   "result": {
     "item": "staticpower:mining_drill_basic"

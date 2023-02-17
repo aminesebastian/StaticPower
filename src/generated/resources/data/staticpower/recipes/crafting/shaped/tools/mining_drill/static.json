@@ -8,7 +8,7 @@
       "tag": "staticpower:gears/static_metal"
     },
     "i": {
-      "tag": "staticpower:ingots/static_metal"
+      "tag": "staticpower:plates/static_metal"
     },
     "l": {
       "item": "minecraft:lever"
@@ -21,9 +21,9 @@
     }
   },
   "pattern": [
-    "ili",
-    "bmg",
-    "bpi"
+    "ilg",
+    "bmb",
+    "ipi"
   ],
   "result": {
     "item": "staticpower:mining_drill_static"

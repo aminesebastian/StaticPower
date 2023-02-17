@@ -17,6 +17,7 @@ import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.DigistoreInventoryCapabilityProvider;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreCard extends StaticPowerItem {
@@ -29,7 +30,7 @@ public class DigistoreCard extends StaticPowerItem {
 	}
 
 	public DigistoreCard(ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
-		super(new Item.Properties().stacksTo(1));
+		super(new Item.Properties().stacksTo(1).tab(ModCreativeTabs.GENERAL));
 		this.tierType = tierType;
 		this.model = model;
 		this.shouldGlow = shouldGlow;

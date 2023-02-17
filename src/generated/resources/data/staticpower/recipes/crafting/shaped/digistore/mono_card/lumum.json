@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:digistore_card_singular_energized"
+    },
+    "d": {
+      "item": "staticpower:card_lumum"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "t": {
+      "tag": "staticpower:plates/lumum_metal"
+    }
+  },
+  "pattern": [
+    "trt",
+    "tct",
+    "tdt"
+  ],
+  "result": {
+    "item": "staticpower:digistore_card_singular_lumum"
+  }
+}

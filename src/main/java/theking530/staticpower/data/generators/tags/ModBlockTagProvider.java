@@ -42,6 +42,8 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 		tag(BlockTags.PLANKS).add(ModBlocks.StaticPlanks.get(), ModBlocks.EnergizedPlanks.get(), ModBlocks.LumumPlanks.get(), ModBlocks.RubberTreePlanks.get());
 		tag(BlockTags.LOGS).add(ModBlocks.StaticLog.get(), ModBlocks.EnergizedLog.get(), ModBlocks.LumumLog.get(), ModBlocks.RubberTreeWood.get(), ModBlocks.RubberTreeLog.get(),
 				ModBlocks.RubberTreeStrippedLog.get(), ModBlocks.RubberTreeStrippedWood.get());
+		tag(ModBlockTags.RUBBER_WOOD_LOGS).add(ModBlocks.RubberTreeWood.get(), ModBlocks.RubberTreeLog.get(), ModBlocks.RubberTreeStrippedLog.get(),
+				ModBlocks.RubberTreeStrippedWood.get());
 		tag(BlockTags.LOGS_THAT_BURN).add(ModBlocks.StaticLog.get(), ModBlocks.EnergizedLog.get(), ModBlocks.LumumLog.get(), ModBlocks.RubberTreeWood.get(),
 				ModBlocks.RubberTreeLog.get(), ModBlocks.RubberTreeStrippedLog.get(), ModBlocks.RubberTreeStrippedWood.get());
 		tag(BlockTags.LEAVES).add(ModBlocks.RubberTreeLeaves.get());

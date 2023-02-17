@@ -45,6 +45,23 @@ public class ModCraftingRecipeProvider extends RecipeProvider implements ICondit
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void buildCraftingRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
+
+		beginShapelessRecipe(ModBlocks.StaticPlanks.get(), 4, "wood/static_planks").requires(ModBlocks.StaticLog.get()).unlockedBy("has_log", hasItems(ModBlocks.StaticLog.get()));
+		beginShapelessRecipe(ModBlocks.EnergizedPlanks.get(), 4, "wood/energized_planks").requires(ModBlocks.EnergizedLog.get()).unlockedBy("has_log",
+				hasItems(ModBlocks.EnergizedLog.get()));
+		beginShapelessRecipe(ModBlocks.LumumPlanks.get(), 4, "wood/lumum_planks").requires(ModBlocks.LumumLog.get()).unlockedBy("has_log", hasItems(ModBlocks.LumumLog.get()));
+		beginShapelessRecipe(ModBlocks.RubberTreePlanks.get(), 4, "wood/lumum_planks").requires(ModItemTags.RUBBER_WOOD_LOGS).unlockedBy("has_log",
+				hasItems(ModItemTags.RUBBER_WOOD_LOGS));
+
+		// @formatter:off
+		beginShapedRecipe(ModBlocks.RubberTreeStrippedWood.get(), "wood/rubber_wood_stripped/")
+			.define('w',ModBlocks.RubberTreeStrippedLog.get())
+			.pattern("ww ")
+			.pattern("ww ")
+			.pattern("   ")
+			.unlockedBy("has_items", hasItems(ModBlocks.RubberTreeStrippedLog.get()));
+		// @formatter:on
+
 		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
 			if (material.shouldGenerateStorageBlock() && material.shouldGenerateIngot()) {
 				// @formatter:off
@@ -181,13 +198,13 @@ public class ModCraftingRecipeProvider extends RecipeProvider implements ICondit
 
 		batteryPack("basic", ModItems.BasicBatteryPack.get(), new RecipeItem(ModMaterials.COPPER.getWireTag()), new RecipeItem(ModItems.BasicPortableBattery.get()),
 				new RecipeItem(ModItems.BasicProcessor.get()));
-		batteryPack("advanced", ModItems.AdvancedBatteryPack.get(), new RecipeItem(ModMaterials.COPPER.getWireTag()), new RecipeItem(ModItems.AdvancedPortableBattery.get()),
+		batteryPack("advanced", ModItems.AdvancedBatteryPack.get(), new RecipeItem(ModMaterials.BRASS.getWireTag()), new RecipeItem(ModItems.AdvancedPortableBattery.get()),
 				new RecipeItem(ModItems.AdvancedProcessor.get()));
-		batteryPack("static", ModItems.StaticBatteryPack.get(), new RecipeItem(ModMaterials.BRASS.getWireTag()), new RecipeItem(ModItems.StaticPortableBattery.get()),
+		batteryPack("static", ModItems.StaticBatteryPack.get(), new RecipeItem(ModMaterials.STATIC_METAL.getWireTag()), new RecipeItem(ModItems.StaticPortableBattery.get()),
 				new RecipeItem(ModItems.StaticProcessor.get()));
-		batteryPack("energized", ModItems.EnergizedBatteryPack.get(), new RecipeItem(ModMaterials.GOLD.getWireTag()), new RecipeItem(ModItems.EnergizedPortableBattery.get()),
-				new RecipeItem(ModItems.EnergizedProcessor.get()));
-		batteryPack("lumum", ModItems.LumumBatteryPack.get(), new RecipeItem(ModMaterials.GOLD.getWireTag()), new RecipeItem(ModItems.LumumPortableBattery.get()),
+		batteryPack("energized", ModItems.EnergizedBatteryPack.get(), new RecipeItem(ModMaterials.ENERGIZED_METAL.getWireTag()),
+				new RecipeItem(ModItems.EnergizedPortableBattery.get()), new RecipeItem(ModItems.EnergizedProcessor.get()));
+		batteryPack("lumum", ModItems.LumumBatteryPack.get(), new RecipeItem(ModMaterials.LUMUM_METAL.getWireTag()), new RecipeItem(ModItems.LumumPortableBattery.get()),
 				new RecipeItem(ModItems.LumumProcessor.get()));
 
 		heatCable("aluminum", ModBlocks.HeatCables.get(StaticPowerTiers.ALUMINUM).get(), new RecipeItem(ModMaterials.ALUMINUM.getIngotTag()));
@@ -406,28 +423,28 @@ public class ModCraftingRecipeProvider extends RecipeProvider implements ICondit
 		wireTerminal("digistore", ModBlocks.WireConnectorDigistore.get(), new RecipeItem(ItemTags.WOOL), new RecipeItem(ModMaterials.BRASS.getIngotTag()),
 				new RecipeItem(ModMaterials.COPPER.getWireTag()));
 
-		chainsaw("basic", ModItems.BasicChainsaw.get(), new RecipeItem(ModMaterials.TIN.getIngotTag()), new RecipeItem(ModMaterials.TIN.getGearTag()),
+		chainsaw("basic", ModItems.BasicChainsaw.get(), new RecipeItem(ModMaterials.TIN.getPlateTag()), new RecipeItem(ModMaterials.TIN.getGearTag()),
 				new RecipeItem(ModItems.BasicPortableBattery.get()), new RecipeItem(ModItems.BasicProcessor.get()));
-		chainsaw("advanced", ModItems.AdvancedChainsaw.get(), new RecipeItem(ModMaterials.BRASS.getIngotTag()), new RecipeItem(ModMaterials.BRASS.getGearTag()),
+		chainsaw("advanced", ModItems.AdvancedChainsaw.get(), new RecipeItem(ModMaterials.BRASS.getPlateTag()), new RecipeItem(ModMaterials.BRASS.getGearTag()),
 				new RecipeItem(ModItems.AdvancedPortableBattery.get()), new RecipeItem(ModItems.AdvancedProcessor.get()));
-		chainsaw("static", ModItems.StaticChainsaw.get(), new RecipeItem(ModMaterials.STATIC_METAL.getIngotTag()), new RecipeItem(ModMaterials.STATIC_METAL.getGearTag()),
+		chainsaw("static", ModItems.StaticChainsaw.get(), new RecipeItem(ModMaterials.STATIC_METAL.getPlateTag()), new RecipeItem(ModMaterials.STATIC_METAL.getGearTag()),
 				new RecipeItem(ModItems.StaticPortableBattery.get()), new RecipeItem(ModItems.StaticProcessor.get()));
-		chainsaw("energized", ModItems.EnergizedChainsaw.get(), new RecipeItem(ModMaterials.ENERGIZED_METAL.getIngotTag()),
+		chainsaw("energized", ModItems.EnergizedChainsaw.get(), new RecipeItem(ModMaterials.ENERGIZED_METAL.getPlateTag()),
 				new RecipeItem(ModMaterials.ENERGIZED_METAL.getGearTag()), new RecipeItem(ModItems.EnergizedPortableBattery.get()),
 				new RecipeItem(ModItems.EnergizedProcessor.get()));
-		chainsaw("lumum", ModItems.LumumChainsaw.get(), new RecipeItem(ModMaterials.LUMUM_METAL.getIngotTag()), new RecipeItem(ModMaterials.LUMUM_METAL.getGearTag()),
+		chainsaw("lumum", ModItems.LumumChainsaw.get(), new RecipeItem(ModMaterials.LUMUM_METAL.getPlateTag()), new RecipeItem(ModMaterials.LUMUM_METAL.getGearTag()),
 				new RecipeItem(ModItems.LumumPortableBattery.get()), new RecipeItem(ModItems.LumumProcessor.get()));
 
-		miningDrill("basic", ModItems.BasicMiningDrill.get(), new RecipeItem(ModMaterials.TIN.getIngotTag()), new RecipeItem(ModMaterials.TIN.getGearTag()),
+		miningDrill("basic", ModItems.BasicMiningDrill.get(), new RecipeItem(ModMaterials.TIN.getPlateTag()), new RecipeItem(ModMaterials.TIN.getGearTag()),
 				new RecipeItem(ModItems.BasicPortableBattery.get()), new RecipeItem(ModItems.BasicProcessor.get()));
-		miningDrill("advanced", ModItems.AdvancedMiningDrill.get(), new RecipeItem(ModMaterials.BRASS.getIngotTag()), new RecipeItem(ModMaterials.BRASS.getGearTag()),
+		miningDrill("advanced", ModItems.AdvancedMiningDrill.get(), new RecipeItem(ModMaterials.BRASS.getPlateTag()), new RecipeItem(ModMaterials.BRASS.getGearTag()),
 				new RecipeItem(ModItems.AdvancedPortableBattery.get()), new RecipeItem(ModItems.AdvancedProcessor.get()));
-		miningDrill("static", ModItems.StaticMiningDrill.get(), new RecipeItem(ModMaterials.STATIC_METAL.getIngotTag()), new RecipeItem(ModMaterials.STATIC_METAL.getGearTag()),
+		miningDrill("static", ModItems.StaticMiningDrill.get(), new RecipeItem(ModMaterials.STATIC_METAL.getPlateTag()), new RecipeItem(ModMaterials.STATIC_METAL.getGearTag()),
 				new RecipeItem(ModItems.StaticPortableBattery.get()), new RecipeItem(ModItems.StaticProcessor.get()));
-		miningDrill("energized", ModItems.EnergizedMiningDrill.get(), new RecipeItem(ModMaterials.ENERGIZED_METAL.getIngotTag()),
+		miningDrill("energized", ModItems.EnergizedMiningDrill.get(), new RecipeItem(ModMaterials.ENERGIZED_METAL.getPlateTag()),
 				new RecipeItem(ModMaterials.ENERGIZED_METAL.getGearTag()), new RecipeItem(ModItems.EnergizedPortableBattery.get()),
 				new RecipeItem(ModItems.EnergizedProcessor.get()));
-		miningDrill("lumum", ModItems.LumumMiningDrill.get(), new RecipeItem(ModMaterials.LUMUM_METAL.getIngotTag()), new RecipeItem(ModMaterials.LUMUM_METAL.getGearTag()),
+		miningDrill("lumum", ModItems.LumumMiningDrill.get(), new RecipeItem(ModMaterials.LUMUM_METAL.getPlateTag()), new RecipeItem(ModMaterials.LUMUM_METAL.getGearTag()),
 				new RecipeItem(ModItems.LumumPortableBattery.get()), new RecipeItem(ModItems.LumumProcessor.get()));
 
 		hammer("iron", ModItems.IronMetalHammer.get(), new RecipeItem(ModMaterials.IRON.getIngotTag()));
@@ -466,6 +483,53 @@ public class ModCraftingRecipeProvider extends RecipeProvider implements ICondit
 		farmland("static", ModBlocks.StaticFarmland.get(), new RecipeItem(ModItems.StaticProcessor.get()));
 		farmland("energized", ModBlocks.EnergizedFarmland.get(), new RecipeItem(ModItems.EnergizedProcessor.get()));
 		farmland("lumum", ModBlocks.LumumFarmland.get(), new RecipeItem(ModItems.LumumProcessor.get()));
+
+		digistoreCard("basic", ModItems.BasicDigistoreCard.get(), new RecipeItem(ModMaterials.TIN.getPlateTag()), new RecipeItem(ModItems.BasicCard.get()),
+				new RecipeItem(ModItems.DigistoreCore.get()));
+		digistoreStackedCard("basic", ModItems.BasicStackedDigistoreCard.get(), new RecipeItem(ModMaterials.TIN.getPlateTag()), new RecipeItem(ModItems.BasicCard.get()),
+				new RecipeItem(ModItems.DigistoreCore.get()));
+		digistoreMonoCard("basic", ModItems.BasicSingularDigistoreCard.get(), new RecipeItem(ModMaterials.TIN.getPlateTag()), new RecipeItem(ModItems.BasicCard.get()),
+				new RecipeItem(ModItems.DigistoreCore.get()));
+
+		digistoreCard("advanced", ModItems.AdvancedDigistoreCard.get(), new RecipeItem(ModMaterials.BRASS.getPlateTag()), new RecipeItem(ModItems.AdvancedCard.get()),
+				new RecipeItem(ModItems.BasicDigistoreCard.get()));
+		digistoreStackedCard("advanced", ModItems.AdvancedStackedDigistoreCard.get(), new RecipeItem(ModMaterials.BRASS.getPlateTag()), new RecipeItem(ModItems.AdvancedCard.get()),
+				new RecipeItem(ModItems.BasicStackedDigistoreCard.get()));
+		digistoreMonoCard("advanced", ModItems.AdvancedSingularDigistoreCard.get(), new RecipeItem(ModMaterials.BRASS.getPlateTag()), new RecipeItem(ModItems.AdvancedCard.get()),
+				new RecipeItem(ModItems.BasicSingularDigistoreCard.get()));
+
+		digistoreCard("static", ModItems.StaticDigistoreCard.get(), new RecipeItem(ModMaterials.STATIC_METAL.getPlateTag()), new RecipeItem(ModItems.StaticCard.get()),
+				new RecipeItem(ModItems.AdvancedDigistoreCard.get()));
+		digistoreStackedCard("static", ModItems.StaticStackedDigistoreCard.get(), new RecipeItem(ModMaterials.STATIC_METAL.getPlateTag()),
+				new RecipeItem(ModItems.StaticCard.get()), new RecipeItem(ModItems.AdvancedStackedDigistoreCard.get()));
+		digistoreMonoCard("static", ModItems.StaticSingularDigistoreCard.get(), new RecipeItem(ModMaterials.STATIC_METAL.getPlateTag()), new RecipeItem(ModItems.StaticCard.get()),
+				new RecipeItem(ModItems.AdvancedSingularDigistoreCard.get()));
+
+		digistoreCard("energized", ModItems.EnergizedDigistoreCard.get(), new RecipeItem(ModMaterials.ENERGIZED_METAL.getPlateTag()), new RecipeItem(ModItems.EnergizedCard.get()),
+				new RecipeItem(ModItems.StaticDigistoreCard.get()));
+		digistoreStackedCard("energized", ModItems.EnergizedStackedDigistoreCard.get(), new RecipeItem(ModMaterials.ENERGIZED_METAL.getPlateTag()),
+				new RecipeItem(ModItems.StaticStackedDigistoreCard.get()), new RecipeItem(ModItems.EnergizedDigistoreCard.get()));
+		digistoreMonoCard("energized", ModItems.EnergizedSingularDigistoreCard.get(), new RecipeItem(ModMaterials.ENERGIZED_METAL.getPlateTag()),
+				new RecipeItem(ModItems.StaticSingularDigistoreCard.get()), new RecipeItem(ModItems.EnergizedDigistoreCard.get()));
+
+		digistoreCard("lumum", ModItems.LumumDigistoreCard.get(), new RecipeItem(ModMaterials.LUMUM_METAL.getPlateTag()), new RecipeItem(ModItems.LumumCard.get()),
+				new RecipeItem(ModItems.EnergizedDigistoreCard.get()));
+		digistoreStackedCard("lumum", ModItems.LumumStackedDigistoreCard.get(), new RecipeItem(ModMaterials.LUMUM_METAL.getPlateTag()), new RecipeItem(ModItems.LumumCard.get()),
+				new RecipeItem(ModItems.EnergizedStackedDigistoreCard.get()));
+		digistoreMonoCard("lumum", ModItems.LumumSingularDigistoreCard.get(), new RecipeItem(ModMaterials.LUMUM_METAL.getPlateTag()), new RecipeItem(ModItems.LumumCard.get()),
+				new RecipeItem(ModItems.EnergizedSingularDigistoreCard.get()));
+
+		// @formatter:off
+		beginShapedRecipe(ModItems.PatternCard.get(), "digistore/pattern_card")
+			.define('g', Tags.Items.GLASS_PANES)
+			.define('r', Tags.Items.DUSTS_REDSTONE)
+			.define('c', ModItems.DigistoreCore.get())
+			.define('p', ModMaterials.MAGNESIUM.getIngotTag())
+			.pattern("ggg")
+			.pattern("rcr")
+			.pattern("ppp")
+			.unlockedBy("has_digistore_core", hasItems(ModItems.DigistoreCore.get()));
+		// @formatter:on
 
 		completeBuilding(finishedRecipeConsumer);
 	}
@@ -811,34 +875,34 @@ public class ModCraftingRecipeProvider extends RecipeProvider implements ICondit
 		// @formatter:on
 	}
 
-	protected void chainsaw(String name, ItemLike output, RecipeItem ingot, RecipeItem gear, RecipeItem battery, RecipeItem processor) {
+	protected void chainsaw(String name, ItemLike output, RecipeItem plate, RecipeItem gear, RecipeItem battery, RecipeItem processor) {
 		// @formatter:off
 		beginShapedRecipe(output, "tools/chainsaw/" + name)
-			.define('i', ingot)
+			.define('i', plate)
 			.define('g', gear)
 			.define('b', battery)
 			.define('p', processor)
 			.define('m', ModItems.Motor.get())
 			.define('l', Items.LEVER)
-			.pattern("ibi")
-			.pattern("bmg")
-			.pattern("lpi")
+			.pattern("ipg")
+			.pattern("bmb")
+			.pattern("il ")
 			.unlockedBy("has_items", hasItems(ModItems.Motor.get()));
 		// @formatter:on
 	}
 
-	protected void miningDrill(String name, ItemLike output, RecipeItem ingot, RecipeItem gear, RecipeItem battery, RecipeItem processor) {
+	protected void miningDrill(String name, ItemLike output, RecipeItem plate, RecipeItem gear, RecipeItem battery, RecipeItem processor) {
 		// @formatter:off
 		beginShapedRecipe(output, "tools/mining_drill/" + name)
-			.define('i', ingot)
+			.define('i', plate)
 			.define('g', gear)
 			.define('b', battery)
 			.define('p', processor)
 			.define('m', ModItems.Motor.get())
 			.define('l', Items.LEVER)
-			.pattern("ili")
-			.pattern("bmg")
-			.pattern("bpi")
+			.pattern("ilg")
+			.pattern("bmb")
+			.pattern("ipi")
 			.unlockedBy("has_items", hasItems(ModItems.Motor.get()));
 		// @formatter:on
 	}
@@ -914,6 +978,52 @@ public class ModCraftingRecipeProvider extends RecipeProvider implements ICondit
 			.pattern("wwp")
 			.pattern(" b ")
 			.unlockedBy("has_items", hasItems(ModItems.BedFrame.get()));
+		// @formatter:on
+	}
+
+	protected void digistoreCard(String name, ItemLike output, RecipeItem material, RecipeItem card, RecipeItem previousDigistoreCard) {
+		// @formatter:off
+		beginShapedRecipe(output, "digistore/card/" + name)
+			.define('t', material)
+			.define('c', previousDigistoreCard)
+			.define('d', card)
+			.define('r', Tags.Items.DUSTS_REDSTONE)
+			.pattern("trt")
+			.pattern("tct")
+			.pattern("dtd")
+			.unlockedBy("has_card", hasItems(card))
+			.unlockedBy("has_previous_card", hasItems(previousDigistoreCard));
+		// @formatter:on
+	}
+
+	protected void digistoreStackedCard(String name, ItemLike output, RecipeItem material, RecipeItem card, RecipeItem previousDigistoreCard) {
+		// @formatter:off
+		beginShapedRecipe(output, "digistore/stacked_card/" + name)
+			.define('t', material)
+			.define('c', previousDigistoreCard)
+			.define('d', card)
+			.define('r', Tags.Items.DUSTS_REDSTONE)
+			.define('e', Tags.Items.CHESTS_WOODEN)
+			.pattern("trt")
+			.pattern("ece")
+			.pattern("dtd")
+			.unlockedBy("has_card", hasItems(card))
+			.unlockedBy("has_previous_card", hasItems(previousDigistoreCard));
+		// @formatter:on
+	}
+
+	protected void digistoreMonoCard(String name, ItemLike output, RecipeItem material, RecipeItem card, RecipeItem previousDigistoreCard) {
+		// @formatter:off
+		beginShapedRecipe(output, "digistore/mono_card/" + name)
+			.define('t', material)
+			.define('c', previousDigistoreCard)
+			.define('d', card)
+			.define('r', Tags.Items.DUSTS_REDSTONE)
+			.pattern("trt")
+			.pattern("tct")
+			.pattern("tdt")
+			.unlockedBy("has_card", hasItems(card))
+			.unlockedBy("has_previous_card", hasItems(previousDigistoreCard));
 		// @formatter:on
 	}
 

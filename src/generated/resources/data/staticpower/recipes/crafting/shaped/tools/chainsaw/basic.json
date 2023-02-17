@@ -8,7 +8,7 @@
       "tag": "forge:gears/tin"
     },
     "i": {
-      "tag": "forge:ingots/tin"
+      "tag": "forge:plates/tin"
     },
     "l": {
       "item": "minecraft:lever"
@@ -21,9 +21,9 @@
     }
   },
   "pattern": [
-    "ibi",
-    "bmg",
-    "lpi"
+    "ipg",
+    "bmb",
+    "il "
   ],
   "result": {
     "item": "staticpower:chainsaw_basic"

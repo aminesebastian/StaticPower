@@ -8,7 +8,7 @@
       "tag": "staticpower:gears/energized_metal"
     },
     "i": {
-      "tag": "staticpower:ingots/energized_metal"
+      "tag": "staticpower:plates/energized_metal"
     },
     "l": {
       "item": "minecraft:lever"
@@ -21,9 +21,9 @@
     }
   },
   "pattern": [
-    "ibi",
-    "bmg",
-    "lpi"
+    "ipg",
+    "bmb",
+    "il "
   ],
   "result": {
     "item": "staticpower:chainsaw_energized"

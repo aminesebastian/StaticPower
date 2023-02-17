@@ -12,9 +12,9 @@
     }
   },
   "pattern": [
-    "iri",
-    "g g",
-    "iri"
+    " r ",
+    "igi",
+    " r "
   ],
   "result": {
     "count": 6,

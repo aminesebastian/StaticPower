@@ -8,7 +8,7 @@
       "item": "staticpower:processor_static"
     },
     "w": {
-      "tag": "forge:wires/brass"
+      "tag": "staticpower:wires/static_metal"
     }
   },
   "pattern": [

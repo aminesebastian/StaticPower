@@ -8,7 +8,7 @@
       "tag": "staticpower:gears/lumum_metal"
     },
     "i": {
-      "tag": "staticpower:ingots/lumum_metal"
+      "tag": "staticpower:plates/lumum_metal"
     },
     "l": {
       "item": "minecraft:lever"
@@ -21,9 +21,9 @@
     }
   },
   "pattern": [
-    "ibi",
-    "bmg",
-    "lpi"
+    "ipg",
+    "bmb",
+    "il "
   ],
   "result": {
     "item": "staticpower:chainsaw_lumum"

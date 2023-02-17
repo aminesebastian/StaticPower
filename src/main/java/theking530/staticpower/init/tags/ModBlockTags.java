@@ -29,6 +29,8 @@ public class ModBlockTags {
 	public static final TagKey<Block> CHESTS = create("chests");
 	public static final TagKey<Block> CONVEYORS = create("conveyors");
 
+	public static final TagKey<Block> RUBBER_WOOD_LOGS = createForgeTag("rubber_wood_logs");
+
 	public static boolean matches(TagKey<Block> tag, Block block) {
 		return ForgeRegistries.BLOCKS.tags().getTag(tag).contains(block);
 	}

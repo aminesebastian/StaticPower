@@ -8,7 +8,7 @@
       "item": "staticpower:processor_lumum"
     },
     "w": {
-      "tag": "forge:wires/gold"
+      "tag": "staticpower:wires/lumum_metal"
     }
   },
   "pattern": [

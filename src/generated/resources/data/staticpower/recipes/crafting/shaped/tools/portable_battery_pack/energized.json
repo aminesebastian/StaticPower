@@ -8,7 +8,7 @@
       "item": "staticpower:processor_energized"
     },
     "w": {
-      "tag": "forge:wires/gold"
+      "tag": "staticpower:wires/energized_metal"
     }
   },
   "pattern": [

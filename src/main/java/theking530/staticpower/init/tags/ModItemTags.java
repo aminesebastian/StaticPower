@@ -79,6 +79,7 @@ public class ModItemTags {
 
 	public static final TagKey<Item> RUBBER = createForgeTag("rubber");
 	public static final TagKey<Item> RUBBER_SHEET = createForgeTag("rubber_sheet");
+	public static final TagKey<Item> RUBBER_WOOD_LOGS = createForgeTag("rubber_wood_logs");
 
 	public static boolean matches(TagKey<Item> tag, Item item) {
 		return ForgeRegistries.ITEMS.tags().getTag(tag).contains(item);

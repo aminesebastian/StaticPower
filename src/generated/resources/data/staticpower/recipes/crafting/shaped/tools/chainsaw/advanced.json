@@ -8,7 +8,7 @@
       "tag": "forge:gears/brass"
     },
     "i": {
-      "tag": "forge:ingots/brass"
+      "tag": "forge:plates/brass"
     },
     "l": {
       "item": "minecraft:lever"
@@ -21,9 +21,9 @@
     }
   },
   "pattern": [
-    "ibi",
-    "bmg",
-    "lpi"
+    "ipg",
+    "bmb",
+    "il "
   ],
   "result": {
     "item": "staticpower:chainsaw_advanced"
