@@ -82,7 +82,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 			// remaining
 			// fuel, use some.
 			Optional<AlloyFurnaceRecipe> recipe = processingComponent.getPendingRecipe();
-			if (recipe.isPresent() && InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.get().getOutput().getItem())) {
+			if (recipe.isPresent() && InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.get().getOutput().getItemStack())) {
 				int burnTime = ForgeHooks.getBurnTime(fuelInventory.getStackInSlot(0), null);
 				if (burnTimeRemaining <= 0 && burnTime > 0) {
 					lastFuelBurnTime = burnTimeRemaining = burnTime;

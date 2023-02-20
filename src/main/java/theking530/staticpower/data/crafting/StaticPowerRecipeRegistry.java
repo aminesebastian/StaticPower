@@ -206,8 +206,10 @@ public class StaticPowerRecipeRegistry {
 		handleCraftingResearchRecipeReplacement(manager, newRecipes.getOrDefault(RecipeType.CRAFTING, new HashMap<ResourceLocation, Recipe<?>>()));
 
 		// Cache additional recipes.
-		//cacheDynamicBottlerRecipes(manager, getOrPutDefault(newRecipes, BottleRecipe.RECIPE_TYPE));
-		//cacheDynamicSolidGeneratorRecipes(manager, getOrPutDefault(newRecipes, SolidFuelRecipe.RECIPE_TYPE));
+		// cacheDynamicBottlerRecipes(manager, getOrPutDefault(newRecipes,
+		// BottleRecipe.RECIPE_TYPE));
+		// cacheDynamicSolidGeneratorRecipes(manager, getOrPutDefault(newRecipes,
+		// SolidFuelRecipe.RECIPE_TYPE));
 
 		// Replace the recipes.
 		// TODO: This feels so dirty, wish I could just add recipes.
@@ -263,7 +265,7 @@ public class StaticPowerRecipeRegistry {
 			if (twoRecipe.isPresent()) {
 				CraftingRecipe recipe = twoRecipe.get();
 				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
-				return Optional.of(new PackagerRecipe(id, 2, new StaticPowerIngredient(stack.copy(), 4), new ProbabilityItemStackOutput(recipe.getResultItem()),
+				return Optional.of(new PackagerRecipe(id, 2, new StaticPowerIngredient(stack.copy(), 4), StaticPowerOutputItem.of(recipe.getResultItem()),
 						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime, StaticPowerConfig.SERVER.packagerPowerUsage, () -> 0, () -> 0)));
 			}
 		} else if (size == 3) {
@@ -276,7 +278,7 @@ public class StaticPowerRecipeRegistry {
 			if (threeRecipe.isPresent()) {
 				CraftingRecipe recipe = threeRecipe.get();
 				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
-				return Optional.of(new PackagerRecipe(id, 3, new StaticPowerIngredient(stack.copy(), 9), new ProbabilityItemStackOutput(recipe.getResultItem()),
+				return Optional.of(new PackagerRecipe(id, 3, new StaticPowerIngredient(stack.copy(), 9), StaticPowerOutputItem.of(recipe.getResultItem()),
 						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime, StaticPowerConfig.SERVER.packagerPowerUsage, () -> 0, () -> 0)));
 			}
 		}
@@ -296,6 +298,7 @@ public class StaticPowerRecipeRegistry {
 		RECIPES.get(recipe.getType()).add(recipe);
 	}
 
+	// TODO: Review this
 	private static void cacheDynamicSolidGeneratorRecipes(RecipeManager manager, Map<ResourceLocation, Recipe<?>> newRecipes) {
 		for (Item item : ForgeRegistries.ITEMS) {
 			// Create an instance to use.
@@ -312,8 +315,8 @@ public class StaticPowerRecipeRegistry {
 		LOGGER.info("Succesfully cached dynamic solid generator recipes!");
 	}
 
+	// TODO: Review this
 	private static void cacheDynamicBottlerRecipes(RecipeManager manager, Map<ResourceLocation, Recipe<?>> newRecipes) {
-
 		// Capture bottler recipes.
 		for (Fluid fluid : ForgeRegistries.FLUIDS) {
 			// If it has no bucket, skip it.

@@ -27,10 +27,11 @@ import theking530.staticpower.blockentities.components.items.OutputServoComponen
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRecipeProcessor<GrinderRecipe> {
@@ -66,7 +67,7 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<GrinderRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(),
-				GrinderRecipe.RECIPE_TYPE, this));
+				ModRecipeTypes.GRINDER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -92,7 +93,7 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 	public void captureInputsAndProducts(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
 
-		for (ProbabilityItemStackOutput outputItem : recipe.getOutputItems()) {
+		for (StaticPowerOutputItem outputItem : recipe.getOutputItems()) {
 			outputContainer.addOutputItem(outputItem.calculateOutput(bonusOutputChance - 1.0f), CaptureType.BOTH);
 		}
 		component.setProcessingPowerUsage(recipe.getPowerCost());

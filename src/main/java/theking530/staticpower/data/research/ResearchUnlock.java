@@ -18,8 +18,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
 public class ResearchUnlock {
@@ -36,7 +36,8 @@ public class ResearchUnlock {
 	private ResearchIcon icon;
 	private boolean hidden;
 
-	public ResearchUnlock(String displayKey, ResearchUnlockType type, ResourceLocation target, ResearchIcon icon, String textDescription, ItemStack itemDescription, boolean hidden) {
+	public ResearchUnlock(String displayKey, ResearchUnlockType type, ResourceLocation target, ResearchIcon icon, String textDescription, ItemStack itemDescription,
+			boolean hidden) {
 		this.displayKey = displayKey;
 		this.type = type;
 		this.target = target;
@@ -193,7 +194,7 @@ public class ResearchUnlock {
 		ItemStack itemDescription = ItemStack.EMPTY;
 		if (input.has("tooltip")) {
 			if (input.get("tooltip").isJsonObject()) {
-				itemDescription = ShapedRecipe.itemStackFromJson(input.get("tooltip").getAsJsonObject());
+				itemDescription = JsonUtilities.itemStackFromJson(input.get("tooltip").getAsJsonObject());
 			} else {
 				description = input.get("tooltip").getAsString();
 			}

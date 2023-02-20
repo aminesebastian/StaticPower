@@ -1,0 +1,20 @@
+{
+  "type": "staticpower:grinder",
+  "input": {
+    "ingredient": {
+      "tag": "forge:dusts/charcoal"
+    }
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 9,
+        "id": "staticpower:dust_charcoal_small"
+      }
+    }
+  ],
+  "processing": {
+    "power_cost": 5.0,
+    "processing_time": 200
+  }
+}

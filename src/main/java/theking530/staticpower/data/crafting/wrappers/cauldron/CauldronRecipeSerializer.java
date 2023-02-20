@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
@@ -21,7 +21,7 @@ public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<Cauldr
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "cauldron_recipe");
 
 	@Override
-	public CauldronRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public CauldronRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
@@ -33,7 +33,7 @@ public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<Cauldr
 		}
 
 		// Get the item output.
-		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(GsonHelper.getAsJsonObject(json, "output"));
+		StaticPowerOutputItem itemOutput = StaticPowerOutputItem.parseFromJSON(GsonHelper.getAsJsonObject(json, "output"));
 
 		// Get how long the item needs to be in the cauldron.
 		int cauldronTime = json.get("time").getAsInt();
@@ -63,7 +63,7 @@ public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<Cauldr
 		int time = buffer.readInt();
 		boolean shouldDrainCauldron = buffer.readBoolean();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 		FluidStack fluidInput = buffer.readFluidStack();
 		FluidStack fluidOutput = buffer.readFluidStack();
 
@@ -79,6 +79,6 @@ public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<Cauldr
 		recipe.getOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getRequiredFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());
-	
+
 	}
 }

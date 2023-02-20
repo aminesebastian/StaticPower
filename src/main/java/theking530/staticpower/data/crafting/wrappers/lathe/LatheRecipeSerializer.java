@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
@@ -22,7 +22,7 @@ public class LatheRecipeSerializer extends StaticPowerRecipeSerializer<LatheReci
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "lathe_recipe");
 
 	@Override
-	public LatheRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public LatheRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredients.
 		Map<String, StaticPowerIngredient> map = LatheRecipe.deserializeKey(GsonHelper.getAsJsonObject(json, "key"));
 		String[] astring = LatheRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern"));
@@ -36,13 +36,13 @@ public class LatheRecipeSerializer extends StaticPowerRecipeSerializer<LatheReci
 
 		// Get the outputs.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
-		ProbabilityItemStackOutput primaryOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.getAsJsonObject("primary"));
-		ProbabilityItemStackOutput secondaryOutput = ProbabilityItemStackOutput.EMPTY;
+		StaticPowerOutputItem primaryOutput = StaticPowerOutputItem.parseFromJSON(outputs.getAsJsonObject("primary"));
+		StaticPowerOutputItem secondaryOutput = StaticPowerOutputItem.EMPTY;
 		FluidStack fluidOutput = FluidStack.EMPTY;
 
 		// Deserialize the secondary output if it exists.
 		if (outputs.has("secondary")) {
-			secondaryOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.getAsJsonObject("secondary"));
+			secondaryOutput = StaticPowerOutputItem.parseFromJSON(outputs.getAsJsonObject("secondary"));
 		}
 
 		// Deserialize the fluid output if it exists.
@@ -64,8 +64,8 @@ public class LatheRecipeSerializer extends StaticPowerRecipeSerializer<LatheReci
 			nonnulllist.set(k, StaticPowerIngredient.read(buffer));
 		}
 
-		ProbabilityItemStackOutput primary = ProbabilityItemStackOutput.readFromBuffer(buffer);
-		ProbabilityItemStackOutput secondary = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem primary = StaticPowerOutputItem.readFromBuffer(buffer);
+		StaticPowerOutputItem secondary = StaticPowerOutputItem.readFromBuffer(buffer);
 		FluidStack outFluid = buffer.readFluidStack();
 
 		return new LatheRecipe(recipeId, width, height, nonnulllist, primary, secondary, outFluid, MachineRecipeProcessingSection.fromBuffer(buffer));

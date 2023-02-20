@@ -67,10 +67,11 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.MiningDrillItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -243,14 +244,14 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 				// Get the droppable stack and get the grinding recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
 				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
-				Optional<GrinderRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, matchParameters);
+				Optional<GrinderRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.GRINDER_RECIPE_TYPE.get(), matchParameters);
 
 				// If the recipe is present, create the ground droppables.
 				if (recipe.isPresent()) {
 					boolean didGrindingSucceed = false;
-					for (ProbabilityItemStackOutput output : recipe.get().getOutputItems()) {
+					for (StaticPowerOutputItem output : recipe.get().getOutputItems()) {
 						if (SDMath.diceRoll(output.getOutputChance())) {
-							groundItems.add(output.getItem());
+							groundItems.add(output.getItemStack());
 							didGrindingSucceed = true;
 						}
 					}

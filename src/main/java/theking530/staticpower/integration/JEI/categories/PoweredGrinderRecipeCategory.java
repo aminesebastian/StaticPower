@@ -112,12 +112,12 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	public void setRecipe(IRecipeLayoutBuilder builder, GrinderRecipe recipe, IFocusGroup ingredients) {
 		builder.addSlot(RecipeIngredientRole.INPUT, 80, 6).addIngredients(recipe.getInputIngredient().getIngredient());
 
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 80, 48).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutputItems()[0]);
-		if (recipe.getOutputItems().length > 1) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 106, 34).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutputItems()[1]);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 80, 48).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutputItems().get(0));
+		if (recipe.getOutputItems().size() > 1) {
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 106, 34).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutputItems().get(1));
 		}
-		if (recipe.getOutputItems().length > 2) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 54, 34).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutputItems()[2]);
+		if (recipe.getOutputItems().size() > 2) {
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 54, 34).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutputItems().get(2));
 		}
 		// Add the fluid.
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);

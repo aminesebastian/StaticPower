@@ -31,7 +31,7 @@ import theking530.staticpower.blockentities.components.items.OutputServoComponen
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.init.ModBlocks;
@@ -172,7 +172,7 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
-		for (ProbabilityItemStackOutput output : recipe.getOutputs()) {
+		for (StaticPowerOutputItem output : recipe.getOutputs()) {
 			outputContainer.addOutputItem(output.calculateOutput(), CaptureType.BOTH);
 		}
 		component.setProcessingPowerUsage(recipe.getPowerCost());

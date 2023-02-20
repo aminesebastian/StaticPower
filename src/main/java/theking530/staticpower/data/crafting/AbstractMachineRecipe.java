@@ -16,7 +16,7 @@ public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	 * @return
 	 */
 	public int getProcessingTime() {
-		return processingSection.getProcessingTime();
+		return getProcessingSection().getProcessingTime();
 	}
 
 	/**
@@ -25,10 +25,18 @@ public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	 * @return
 	 */
 	public double getPowerCost() {
-		return processingSection.getPowerCost();
+		return getProcessingSection().getPowerCost();
 	}
 
 	public MachineRecipeProcessingSection getProcessingSection() {
+		if (processingSection == null) {
+			return getDefaultProcessingSection();
+		}
 		return processingSection;
+	}
+
+	// TODO: Make abstract
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return null;
 	}
 }

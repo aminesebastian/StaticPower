@@ -8,7 +8,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
@@ -18,9 +18,9 @@ public class CastingRecipe extends AbstractMachineRecipe {
 
 	private FluidStack inputFluid;
 	private Ingredient requiredMold;
-	private ProbabilityItemStackOutput outputItemStack;
+	private StaticPowerOutputItem outputItemStack;
 
-	public CastingRecipe(ResourceLocation name, ProbabilityItemStackOutput output, FluidStack inputFluid, Ingredient mold, MachineRecipeProcessingSection processing) {
+	public CastingRecipe(ResourceLocation name, StaticPowerOutputItem output, FluidStack inputFluid, Ingredient mold, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.inputFluid = inputFluid;
 		requiredMold = mold;
@@ -53,10 +53,10 @@ public class CastingRecipe extends AbstractMachineRecipe {
 	}
 
 	public ItemStack getRawRecipeOutput() {
-		return outputItemStack.getItem();
+		return outputItemStack.getItemStack();
 	}
 
-	public ProbabilityItemStackOutput getOutput() {
+	public StaticPowerOutputItem getOutput() {
 		return outputItemStack;
 	}
 

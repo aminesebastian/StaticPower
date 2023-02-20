@@ -1,41 +1,25 @@
 package theking530.staticpower.data.crafting.wrappers.alloyfurnace;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class AlloyFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<AlloyFurnaceRecipe> {
 	@Override
-	public AlloyFurnaceRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-		StaticPowerIngredient input1 = StaticPowerIngredient.deserialize(json.get("input1"));
-		StaticPowerIngredient input2 = StaticPowerIngredient.deserialize(json.get("input2"));
-
-		int experience = 0;
-		if (json.has("experience")) {
-			experience = json.get("experience").getAsInt();
-		}
-
-		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.alloyFurnaceProcessingTime, json);
-
-		// Get the output.
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(json.getAsJsonObject("output"));
-
-		// Craete the recipe.
-		return new AlloyFurnaceRecipe(recipeId, input1, input2, output, experience, processing);
+	public Codec<AlloyFurnaceRecipe> getCodec() {
+		return AlloyFurnaceRecipe.CODEC;
 	}
 
 	@Override
 	public AlloyFurnaceRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		StaticPowerIngredient input1 = StaticPowerIngredient.read(buffer);
 		StaticPowerIngredient input2 = StaticPowerIngredient.read(buffer);
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromBuffer(buffer);
 		int experience = buffer.readInt();
 		return new AlloyFurnaceRecipe(recipeId, input1, input2, output, experience, processing);

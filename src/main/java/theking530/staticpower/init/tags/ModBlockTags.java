@@ -42,4 +42,9 @@ public class ModBlockTags {
 	public static TagKey<Block> createForgeTag(String name) {
 		return TagKey.create(ForgeRegistries.BLOCKS.getRegistryKey(), new ResourceLocation("forge", name));
 	}
+
+	public static TagKey<Block> createTagOnDomain(String domain, String name) {
+		return TagKey.create(ForgeRegistries.BLOCKS.getRegistryKey(), new ResourceLocation(domain, name));
+	}
+
 }

@@ -6,8 +6,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticpower.data.JsonUtilities;
 
 public class ResearchIcon {
 	private final ItemStack itemIcon;
@@ -69,7 +69,7 @@ public class ResearchIcon {
 		ItemStack itemIcon = null;
 		ResourceLocation textureIcon = null;
 		if (element.isJsonObject()) {
-			itemIcon = ShapedRecipe.itemStackFromJson(element.getAsJsonObject());
+			itemIcon = JsonUtilities.itemStackFromJson(element.getAsJsonObject());
 		} else {
 			textureIcon = new ResourceLocation(element.getAsString());
 		}

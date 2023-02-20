@@ -6,6 +6,10 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.generators.recipes.AlloyFurnaceRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.CraftingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.GrindingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.HammerRecipeGenerator;
 import theking530.staticpower.data.generators.tags.ModBiomeTagProvider;
 import theking530.staticpower.data.generators.tags.ModBlockTagProvider;
 import theking530.staticpower.data.generators.tags.ModItemTagProvider;
@@ -17,7 +21,11 @@ public class StaticPowerDataGenerator {
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
 		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-		generator.addProvider(true, new ModCraftingRecipeProvider(generator));
+		generator.addProvider(true, new CraftingRecipeGenerator(generator));
+		generator.addProvider(true, new GrindingRecipeGenerator(generator));
+		generator.addProvider(true, new AlloyFurnaceRecipeGenerator(generator));
+		generator.addProvider(true, new HammerRecipeGenerator(generator));
+
 		generator.addProvider(true, new ModLootTableProvider(generator));
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));
 		generator.addProvider(true, new ModItemModelProvider(generator, existingFileHelper));

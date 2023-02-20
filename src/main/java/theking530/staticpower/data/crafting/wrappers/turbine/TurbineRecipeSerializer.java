@@ -15,7 +15,7 @@ public class TurbineRecipeSerializer extends StaticPowerRecipeSerializer<Turbine
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "turbine_recipe");
 
 	@Override
-	public TurbineRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public TurbineRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Deserialize the fluid input..
 		FluidStack fluidInput = FluidStack.EMPTY;
 		if (GsonHelper.isValidNode(json, "input")) {

@@ -73,7 +73,7 @@ public class PackagerRecipeProvider implements IRecipeManagerPlugin {
 
 	private static boolean isValidPackagerOutput(ItemStack stack) {
 		for (PackagerRecipe recipe : RECIPES) {
-			if (ItemUtilities.areItemStacksStackable(recipe.getOutput().getItem(), stack)) {
+			if (ItemUtilities.areItemStacksStackable(recipe.getOutput().getItemStack(), stack)) {
 				return true;
 			}
 		}

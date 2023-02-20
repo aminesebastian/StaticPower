@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.init.tags.ModBlockTags;
@@ -24,11 +24,11 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 
 	private final int overheatTemperature;
 	private final BlockState overheatedBlock;
-	private final ProbabilityItemStackOutput overheatedItemStack;
+	private final StaticPowerOutputItem overheatedItemStack;
 
 	private final int freezingTemperature;
 	private final BlockState freezingBlock;
-	private final ProbabilityItemStackOutput freezingItemStack;
+	private final StaticPowerOutputItem freezingItemStack;
 
 	private final int temperature;
 	private final boolean hasActiveTemperature;
@@ -37,7 +37,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	private final boolean isAirRecipe;
 
 	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, ResourceLocation[] fluids, int overheatTemperature, BlockState overheatedBlock,
-			ProbabilityItemStackOutput overheatedItemStack, int freezingTemperature, BlockState freezingBlock, ProbabilityItemStackOutput freezingItemStack, int temperature,
+			StaticPowerOutputItem overheatedItemStack, int freezingTemperature, BlockState freezingBlock, StaticPowerOutputItem freezingItemStack, int temperature,
 			boolean hasActiveTemperature, float conductivity) {
 		super(name);
 		this.blocks = blocks;
@@ -94,7 +94,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		return overheatedBlock != Blocks.VOID_AIR.defaultBlockState();
 	}
 
-	public ProbabilityItemStackOutput getOverheatedItem() {
+	public StaticPowerOutputItem getOverheatedItem() {
 		return overheatedItemStack;
 	}
 
@@ -118,7 +118,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		return freezingBlock != Blocks.VOID_AIR.defaultBlockState();
 	}
 
-	public ProbabilityItemStackOutput getFreezingItem() {
+	public StaticPowerOutputItem getFreezingItem() {
 		return freezingItemStack;
 	}
 

@@ -7,10 +7,10 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 
 public abstract class AbstractStaticPowerRecipe implements Recipe<Container> {
-	private ResourceLocation name;
+	private final ResourceLocation id;
 
 	public AbstractStaticPowerRecipe(ResourceLocation name) {
-		this.name = name;
+		this.id = name;
 	}
 
 	/**
@@ -30,7 +30,7 @@ public abstract class AbstractStaticPowerRecipe implements Recipe<Container> {
 
 	@Override
 	public ResourceLocation getId() {
-		return name;
+		return id;
 	}
 
 	@Override
@@ -52,5 +52,4 @@ public abstract class AbstractStaticPowerRecipe implements Recipe<Container> {
 	public String toString() {
 		return getId().toString();
 	}
-
 }

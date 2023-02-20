@@ -20,7 +20,7 @@ public class HydroponicFarmingRecipeSerializer extends StaticPowerRecipeSerializ
 	private static final Logger LOGGER = LogManager.getLogger(HydroponicFarmingRecipeSerializer.class);
 
 	@Override
-	public HydroponicFarmingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public HydroponicFarmingRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);

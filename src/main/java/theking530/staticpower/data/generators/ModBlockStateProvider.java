@@ -86,7 +86,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 				simpleBlockWithCustomTexture(bundle.getRawMaterialStorageBlock().get(), "storageblocks/block_raw_" + bundle.getName());
 			}
 			if (bundle.shouldGenerateStorageBlock()) {
-				simpleBlockWithCustomTexture(bundle.getSmeltedMaterialStorageBlock().get(), "storageblocks/block_" + bundle.getName());
+				simpleBlockWithCustomTexture(bundle.getStorageBlock().get(), "storageblocks/block_" + bundle.getName());
 			}
 			if (bundle.shouldGenerateCutStorageBlock()) {
 				simpleBlockWithCustomTexture(bundle.getCutStorageBlock().get(), "storageblocks/block_cut_" + bundle.getName());

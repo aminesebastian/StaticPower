@@ -17,7 +17,7 @@ public class CondensationRecipeSerializer extends StaticPowerRecipeSerializer<Co
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "condensation_recipe");
 
 	@Override
-	public CondensationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public CondensationRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input fluid.
 		JsonObject inputFluidObject = GsonHelper.getAsJsonObject(json, "input_fluid");
 		FluidStack inputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(inputFluidObject);

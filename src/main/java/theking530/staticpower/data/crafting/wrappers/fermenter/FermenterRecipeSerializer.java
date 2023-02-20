@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
@@ -17,7 +17,7 @@ public class FermenterRecipeSerializer extends StaticPowerRecipeSerializer<Ferme
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "fermenter_recipe");
 
 	@Override
-	public FermenterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public FermenterRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
@@ -27,10 +27,10 @@ public class FermenterRecipeSerializer extends StaticPowerRecipeSerializer<Ferme
 		FluidStack fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(outputElement);
 
 		// Get the residual output.
-		ProbabilityItemStackOutput residualOutput = ProbabilityItemStackOutput.EMPTY;
+		StaticPowerOutputItem residualOutput = StaticPowerOutputItem.EMPTY;
 		if (json.has("residual")) {
 			JsonObject residualElement = GsonHelper.getAsJsonObject(json, "residual");
-			residualOutput = ProbabilityItemStackOutput.parseFromJSON(residualElement);
+			residualOutput = StaticPowerOutputItem.parseFromJSON(residualElement);
 		}
 
 		// Create the recipe.
@@ -41,7 +41,7 @@ public class FermenterRecipeSerializer extends StaticPowerRecipeSerializer<Ferme
 	public FermenterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		FluidStack output = buffer.readFluidStack();
-		ProbabilityItemStackOutput residualOutput = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem residualOutput = StaticPowerOutputItem.readFromBuffer(buffer);
 		// Create the recipe.
 		return new FermenterRecipe(recipeId, input, residualOutput, output);
 	}

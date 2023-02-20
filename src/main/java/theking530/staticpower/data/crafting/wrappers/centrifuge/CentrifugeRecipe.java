@@ -8,7 +8,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
@@ -19,13 +19,13 @@ public class CentrifugeRecipe extends AbstractMachineRecipe {
 	public static final RecipeType<CentrifugeRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CentrifugeRecipe>();
 
 	private final StaticPowerIngredient input;
-	private final ProbabilityItemStackOutput output1;
-	private final ProbabilityItemStackOutput output2;
-	private final ProbabilityItemStackOutput output3;
+	private final StaticPowerOutputItem output1;
+	private final StaticPowerOutputItem output2;
+	private final StaticPowerOutputItem output3;
 	private final int minimumSpeed;
 
-	public CentrifugeRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output1, ProbabilityItemStackOutput output2,
-			ProbabilityItemStackOutput output3, int minimumSpeed, MachineRecipeProcessingSection processing) {
+	public CentrifugeRecipe(ResourceLocation name, StaticPowerIngredient input, StaticPowerOutputItem output1, StaticPowerOutputItem output2,
+			StaticPowerOutputItem output3, int minimumSpeed, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.input = input;
 		this.output1 = output1;
@@ -38,15 +38,15 @@ public class CentrifugeRecipe extends AbstractMachineRecipe {
 		return input;
 	}
 
-	public ProbabilityItemStackOutput getOutput1() {
+	public StaticPowerOutputItem getOutput1() {
 		return output1;
 	}
 
-	public ProbabilityItemStackOutput getOutput2() {
+	public StaticPowerOutputItem getOutput2() {
 		return output2;
 	}
 
-	public ProbabilityItemStackOutput getOutput3() {
+	public StaticPowerOutputItem getOutput3() {
 		return output3;
 	}
 
@@ -54,8 +54,8 @@ public class CentrifugeRecipe extends AbstractMachineRecipe {
 		return minimumSpeed;
 	}
 
-	public List<ProbabilityItemStackOutput> getOutputs() {
-		List<ProbabilityItemStackOutput> output = new ArrayList<ProbabilityItemStackOutput>();
+	public List<StaticPowerOutputItem> getOutputs() {
+		List<StaticPowerOutputItem> output = new ArrayList<StaticPowerOutputItem>();
 		output.add(output1);
 
 		if (!output2.isEmpty()) {

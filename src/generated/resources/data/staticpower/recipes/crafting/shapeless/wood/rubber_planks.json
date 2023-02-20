@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:rubber_wood_logs"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "staticpower:rubber_tree_planks"
+  }
+}

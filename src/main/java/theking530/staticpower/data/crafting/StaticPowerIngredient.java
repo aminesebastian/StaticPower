@@ -2,10 +2,17 @@ package theking530.staticpower.data.crafting;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
+import theking530.staticpower.data.JsonUtilities;
+import theking530.staticpower.data.generators.RecipeItem;
 
 /**
  * TODO: Better way to handle the "counts". Perhaps a custom JEI renderer.
@@ -15,20 +22,74 @@ import net.minecraft.world.item.crafting.Ingredient;
  */
 public class StaticPowerIngredient {
 	public static final StaticPowerIngredient EMPTY = new StaticPowerIngredient(Ingredient.EMPTY, 0);
+
+	public static final Codec<StaticPowerIngredient> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(JsonUtilities.INGREDIENT_CODEC.fieldOf("ingredient").forGetter(ingredient -> ingredient.getIngredient()),
+					Codec.INT.optionalFieldOf("count", 1).forGetter(ingredient -> ingredient.getCount())).apply(instance, StaticPowerIngredient::new));
+
 	private final Ingredient ingredient;
 	private final int count;
 
-	public StaticPowerIngredient(Ingredient ingredient, int count) {
+	protected StaticPowerIngredient(RecipeItem item, int count) {
+		if (item.hasItemTag()) {
+			ingredient = Ingredient.of(item.getItemTag());
+		} else {
+			ingredient = Ingredient.of(item.getItem());
+		}
+		this.count = count;
+	}
+
+	protected StaticPowerIngredient(Ingredient ingredient, int count) {
 		this.ingredient = ingredient;
 		this.count = count;
 	}
 
-	public StaticPowerIngredient(ItemStack stack, int count) {
+	protected StaticPowerIngredient(ItemStack stack, int count) {
 		this(Ingredient.of(stack), count);
 	}
 
-	public StaticPowerIngredient(ItemStack stack) {
-		this(Ingredient.of(stack), stack.getCount());
+	protected StaticPowerIngredient(ItemLike item, int count) {
+		this(Ingredient.of(item), count);
+	}
+
+	public static StaticPowerIngredient of(TagKey<Item> item) {
+		return new StaticPowerIngredient(RecipeItem.of(item), 1);
+	}
+
+	public static StaticPowerIngredient of(TagKey<Item> item, int count) {
+		return new StaticPowerIngredient(RecipeItem.of(item), count);
+	}
+
+	public static StaticPowerIngredient of(RecipeItem item) {
+		return new StaticPowerIngredient(item, 1);
+	}
+
+	public static StaticPowerIngredient of(RecipeItem item, int count) {
+		return new StaticPowerIngredient(item, count);
+	}
+
+	public static StaticPowerIngredient of(Ingredient ingredient) {
+		return new StaticPowerIngredient(ingredient, 1);
+	}
+
+	public static StaticPowerIngredient of(Ingredient ingredient, int count) {
+		return new StaticPowerIngredient(ingredient, count);
+	}
+
+	public static StaticPowerIngredient of(ItemStack stack) {
+		return new StaticPowerIngredient(stack, stack.getCount());
+	}
+
+	public static StaticPowerIngredient of(ItemStack stack, int count) {
+		return new StaticPowerIngredient(stack, count);
+	}
+
+	public static StaticPowerIngredient of(ItemLike item) {
+		return new StaticPowerIngredient(item, 1);
+	}
+
+	public static StaticPowerIngredient of(ItemLike item, int count) {
+		return new StaticPowerIngredient(item, count);
 	}
 
 	public boolean isEmpty() {
@@ -62,6 +123,14 @@ public class StaticPowerIngredient {
 		return ingredient.test(stackToTest) && stackToTest.getCount() >= count;
 	}
 
+	public JsonElement toJson() {
+		JsonElement output = ingredient.toJson();
+		if (output instanceof JsonObject) {
+			((JsonObject) output).addProperty("count", count);
+		}
+		return output;
+	}
+
 	public static StaticPowerIngredient deserialize(JsonElement json) {
 		// Handle empty ingredients.
 		if (json.isJsonObject()) {
@@ -82,7 +151,7 @@ public class StaticPowerIngredient {
 				inputCount = jsonObject.get("count").getAsInt();
 			}
 		}
-		
+
 		// Set the counts when we create the recipe. This is only for JEI.
 //		ItemStack[] stacks = input.getItems();
 //		for (ItemStack stack : stacks) {

@@ -18,7 +18,7 @@ public class FertalizerRecipeSerializer extends StaticPowerRecipeSerializer<Fert
 	private static final Logger LOGGER = LogManager.getLogger(FertalizerRecipeSerializer.class);
 
 	@Override
-	public FertalizerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public FertalizerRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Deserialize the fluid input.
 		FluidStack fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("fertilizer"));
 

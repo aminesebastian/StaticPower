@@ -9,7 +9,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
@@ -19,9 +19,9 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 	public static final RecipeType<FusionFurnaceRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FusionFurnaceRecipe>();
 
 	private final List<StaticPowerIngredient> inputs;
-	private final ProbabilityItemStackOutput output;
+	private final StaticPowerOutputItem output;
 
-	public FusionFurnaceRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, ProbabilityItemStackOutput output, MachineRecipeProcessingSection processing) {
+	public FusionFurnaceRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, StaticPowerOutputItem output, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.inputs = inputs;
 		this.output = output;
@@ -31,7 +31,7 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 		return inputs;
 	}
 
-	public ProbabilityItemStackOutput getOutput() {
+	public StaticPowerOutputItem getOutput() {
 		return output;
 	}
 

@@ -20,20 +20,20 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
 
-public class ProbabilityItemStackRenderer implements IIngredientRenderer<ProbabilityItemStackOutput> {
+public class ProbabilityItemStackRenderer implements IIngredientRenderer<StaticPowerOutputItem> {
 
 	@Override
-	public void render(PoseStack matrixStack, @Nullable ProbabilityItemStackOutput ingredient) {
+	public void render(PoseStack matrixStack, @Nullable StaticPowerOutputItem ingredient) {
 		if (ingredient != null) {
 			RenderSystem.enableDepthTest();
 			Lighting.setupForFlatItems();
 			Minecraft minecraft = Minecraft.getInstance();
 			Font font = getFontRenderer(minecraft, ingredient);
 
-			GuiDrawUtilities.drawItem(matrixStack, ingredient.getItem(), 0, 0, 10.0f);
+			GuiDrawUtilities.drawItem(matrixStack, ingredient.getItemStack(), 0, 0, 10.0f);
 
 			// Draw the percentage string manually.
 			if (ingredient.getOutputChance() != 1.0f) {
@@ -44,8 +44,8 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 				GuiDrawUtilities.drawString(matrixStack, "*", 3, 6, 0.0f, 1.0f, SDColor.EIGHT_BIT_YELLOW, true);
 			}
 
-			if (ingredient.getItem().getCount() > 1) {
-				GuiDrawUtilities.drawString(matrixStack, String.valueOf(ingredient.getItem().getCount()), 17, 16, 100.0f, 1.0f, SDColor.EIGHT_BIT_WHITE, true);
+			if (ingredient.getItemStack().getCount() > 1) {
+				GuiDrawUtilities.drawString(matrixStack, String.valueOf(ingredient.getItemStack().getCount()), 17, 16, 100.0f, 1.0f, SDColor.EIGHT_BIT_WHITE, true);
 			}
 
 			RenderSystem.disableBlend();
@@ -53,12 +53,15 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 	}
 
 	@Override
-	public List<Component> getTooltip(ProbabilityItemStackOutput ingredient, TooltipFlag tooltipFlag) {
+	public List<Component> getTooltip(StaticPowerOutputItem ingredient, TooltipFlag tooltipFlag) {
 		try {
 			// Get the original item tooltip but remove the last line (that should be the
 			// mod name).
 			@SuppressWarnings("resource")
-			List<Component> tooltip = ingredient.getItem().getTooltipLines(Minecraft.getInstance().player, tooltipFlag);
+			List<Component> tooltip = ingredient.getItemStack().getTooltipLines(Minecraft.getInstance().player, tooltipFlag);
+			if (tooltip.size() > 0) {
+				tooltip.remove(tooltip.size() - 1);
+			}
 
 			// Formulate the output percentage tooltip and then add it.
 			if (ingredient.getOutputChance() != 1.0f) {
@@ -77,7 +80,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 
 			return tooltip;
 		} catch (RuntimeException | LinkageError e) {
-			String itemStackInfo = JEIErrorUtilSnippet.getItemStackInfo(ingredient.getItem());
+			String itemStackInfo = JEIErrorUtilSnippet.getItemStackInfo(ingredient.getItemStack());
 			StaticPower.LOGGER.error("Failed to get tooltip: {}", itemStackInfo, e);
 			List<Component> list = new ArrayList<>();
 			MutableComponent crash = Component.translatable("jei.tooltip.error.crash");
@@ -87,7 +90,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 	}
 
 	@Override
-	public Font getFontRenderer(Minecraft minecraft, ProbabilityItemStackOutput ingredient) {
+	public Font getFontRenderer(Minecraft minecraft, StaticPowerOutputItem ingredient) {
 		Font fontRenderer = null; // To-DO: =
 		// ingredient.getItem().getItem().getFontRenderer(ingredient.getItem());
 		if (fontRenderer == null) {

@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
@@ -18,7 +18,7 @@ public class VulcanizerRecipeSerializer extends StaticPowerRecipeSerializer<Vulc
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "vulcanizer_recipe");
 
 	@Override
-	public VulcanizerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public VulcanizerRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the processing and power costs.
 		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.vulcanizerProcessingTime,
 				StaticPowerConfig.SERVER.vulcanizerPowerUsage, json);
@@ -30,14 +30,14 @@ public class VulcanizerRecipeSerializer extends StaticPowerRecipeSerializer<Vulc
 		// Check the output and make a new recipe.
 		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
 
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement.getAsJsonObject());
+		StaticPowerOutputItem output = StaticPowerOutputItem.parseFromJSON(outputElement.getAsJsonObject());
 		return new VulcanizerRecipe(recipeId, input, output, processing);
 	}
 
 	@Override
 	public VulcanizerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		FluidStack input = buffer.readFluidStack();
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 		return new VulcanizerRecipe(recipeId, input, output, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 

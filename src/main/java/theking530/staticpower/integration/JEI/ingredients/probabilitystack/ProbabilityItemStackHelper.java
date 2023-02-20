@@ -17,12 +17,12 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
-public class ProbabilityItemStackHelper implements IIngredientHelper<ProbabilityItemStackOutput> {
+public class ProbabilityItemStackHelper implements IIngredientHelper<StaticPowerOutputItem> {
 	private final ISubtypeManager subtypeManager;
 
 	public ProbabilityItemStackHelper(IModIngredientRegistration registration) {
@@ -30,19 +30,19 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 	}
 
 	@Override
-	public String getDisplayName(ProbabilityItemStackOutput ingredient) {
-		Component displayNameTextComponent = ingredient.getItem().getHoverName();
+	public String getDisplayName(StaticPowerOutputItem ingredient) {
+		Component displayNameTextComponent = ingredient.getItemStack().getHoverName();
 		String displayName = displayNameTextComponent.getString();
 		JEIErrorUtilSnippet.checkNotNull(displayName, "itemStack.getDisplayName()");
 		return displayName;
 	}
 
 	@Override
-	public String getDisplayModId(ProbabilityItemStackOutput ingredient) {
-		JEIErrorUtilSnippet.checkNotEmpty(ingredient.getItem());
+	public String getDisplayModId(StaticPowerOutputItem ingredient) {
+		JEIErrorUtilSnippet.checkNotEmpty(ingredient.getItemStack());
 
-		Item item = ingredient.getItem().getItem();
-		String modId = item.getCreatorModId(ingredient.getItem());
+		Item item = ingredient.getItemStack().getItem();
+		String modId = item.getCreatorModId(ingredient.getItemStack());
 		if (modId == null) {
 			String stackInfo = getErrorInfo(ingredient);
 			throw new IllegalStateException("item.getCreatorModId() returned null for: " + stackInfo);
@@ -51,15 +51,15 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 	}
 
 	@Override
-	public Iterable<Integer> getColors(ProbabilityItemStackOutput ingredient) {
+	public Iterable<Integer> getColors(StaticPowerOutputItem ingredient) {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public ResourceLocation getResourceLocation(ProbabilityItemStackOutput ingredient) {
-		JEIErrorUtilSnippet.checkNotEmpty(ingredient.getItem());
+	public ResourceLocation getResourceLocation(StaticPowerOutputItem ingredient) {
+		JEIErrorUtilSnippet.checkNotEmpty(ingredient.getItemStack());
 
-		Item item = ingredient.getItem().getItem();
+		Item item = ingredient.getItemStack().getItem();
 		ResourceLocation itemName = ForgeRegistries.ITEMS.getKey(item);
 		if (itemName == null) {
 			String stackInfo = getErrorInfo(ingredient);
@@ -70,42 +70,42 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 	}
 
 	@Override
-	public ItemStack getCheatItemStack(ProbabilityItemStackOutput ingredient) {
-		return ingredient.getItem();
+	public ItemStack getCheatItemStack(StaticPowerOutputItem ingredient) {
+		return ingredient.getItemStack();
 	}
 
 	@Override
-	public ProbabilityItemStackOutput copyIngredient(ProbabilityItemStackOutput ingredient) {
+	public StaticPowerOutputItem copyIngredient(StaticPowerOutputItem ingredient) {
 		return ingredient.copy();
 	}
 
 	@Override
-	public ProbabilityItemStackOutput normalizeIngredient(ProbabilityItemStackOutput ingredient) {
-		ProbabilityItemStackOutput copy = ingredient.copy();
+	public StaticPowerOutputItem normalizeIngredient(StaticPowerOutputItem ingredient) {
+		StaticPowerOutputItem copy = ingredient.copy();
 		copy.setCount(1);
 		return copy;
 	}
 
 	@Override
-	public boolean isValidIngredient(ProbabilityItemStackOutput ingredient) {
+	public boolean isValidIngredient(StaticPowerOutputItem ingredient) {
 		return !ingredient.isEmpty();
 	}
 
 	@Override
-	public boolean isIngredientOnServer(ProbabilityItemStackOutput ingredient) {
-		Item item = ingredient.getItem().getItem();
+	public boolean isIngredientOnServer(StaticPowerOutputItem ingredient) {
+		Item item = ingredient.getItemStack().getItem();
 		return ForgeRegistries.ITEMS.containsValue(item);
 	}
 
 	@Override
-	public Collection<ResourceLocation> getTags(ProbabilityItemStackOutput ingredient) {
-		return ModItemTags.getTags(ingredient.getItem()).stream().map((key) -> key.location()).toList();
+	public Collection<ResourceLocation> getTags(StaticPowerOutputItem ingredient) {
+		return ModItemTags.getTags(ingredient.getItemStack()).stream().map((key) -> key.location()).toList();
 	}
 
 	@Override
-	public Collection<String> getCreativeTabNames(ProbabilityItemStackOutput ingredient) {
+	public Collection<String> getCreativeTabNames(StaticPowerOutputItem ingredient) {
 		Collection<String> creativeTabsStrings = new ArrayList<>();
-		Item item = ingredient.getItem().getItem();
+		Item item = ingredient.getItemStack().getItem();
 		for (CreativeModeTab itemGroup : item.getCreativeTabs()) {
 			if (itemGroup != null) {
 				String creativeTabName = itemGroup.getDisplayName().getString();
@@ -116,19 +116,19 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 	}
 
 	@Override
-	public String getErrorInfo(@Nullable ProbabilityItemStackOutput ingredient) {
-		return JEIErrorUtilSnippet.getItemStackInfo(ingredient.getItem());
+	public String getErrorInfo(@Nullable StaticPowerOutputItem ingredient) {
+		return JEIErrorUtilSnippet.getItemStackInfo(ingredient.getItemStack());
 	}
 
 	@Override
-	public IIngredientType<ProbabilityItemStackOutput> getIngredientType() {
+	public IIngredientType<StaticPowerOutputItem> getIngredientType() {
 		return PluginJEI.PROBABILITY_ITEM_STACK;
 	}
 
 	@Override
-	public String getUniqueId(ProbabilityItemStackOutput ingredient, UidContext context) {
+	public String getUniqueId(StaticPowerOutputItem ingredient, UidContext context) {
 		String result = getResourceLocation(ingredient).toString();
-		String subtypeInfo = subtypeManager.getSubtypeInfo(ingredient.getItem(), context);
+		String subtypeInfo = subtypeManager.getSubtypeInfo(ingredient.getItemStack(), context);
 		if (subtypeInfo != null && !subtypeInfo.isEmpty()) {
 			result = result + ':' + subtypeInfo;
 		}

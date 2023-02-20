@@ -1,0 +1,14 @@
+{
+  "type": "staticpower:hammer",
+  "item": {
+    "ingredient": {
+      "item": "staticpower:ingot_inert_infusion_alloy_heated"
+    }
+  },
+  "output": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:plate_inert_infusion_alloy"
+    }
+  }
+}

@@ -5,7 +5,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
@@ -15,17 +15,17 @@ public class PackagerRecipe extends AbstractMachineRecipe {
 	public static final RecipeType<PackagerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<PackagerRecipe>();
 
 	private final StaticPowerIngredient inputItem;
-	private final ProbabilityItemStackOutput outputItem;
+	private final StaticPowerOutputItem outputItem;
 	private final int size;
 
-	public PackagerRecipe(ResourceLocation name, int size, StaticPowerIngredient input, ProbabilityItemStackOutput outputItem, MachineRecipeProcessingSection processing) {
+	public PackagerRecipe(ResourceLocation name, int size, StaticPowerIngredient input, StaticPowerOutputItem outputItem, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.size = size;
 		this.inputItem = input;
 		this.outputItem = outputItem;
 	}
 
-	public ProbabilityItemStackOutput getOutput() {
+	public StaticPowerOutputItem getOutput() {
 		return outputItem;
 	}
 

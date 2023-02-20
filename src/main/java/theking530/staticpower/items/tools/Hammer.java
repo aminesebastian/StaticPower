@@ -39,6 +39,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.init.ModCreativeTabs;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -118,7 +119,7 @@ public class Hammer extends StaticPowerItem {
 
 				// Create the params and attempt to get the recipe.
 				RecipeMatchParameters params = new RecipeMatchParameters(entity.getItem().copy());
-				Optional<HammerRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(HammerRecipe.RECIPE_TYPE, params);
+				Optional<HammerRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.HAMMER_RECIPE_TYPE.get(), params);
 
 				// If we have a recipe, craft using the recipe.
 				if (recipe.isPresent() && !recipe.get().isBlockType()) {
@@ -173,7 +174,7 @@ public class Hammer extends StaticPowerItem {
 		if (!blockToBreak.isAir()) {
 			// Create the params and attempt to get the recipe.
 			RecipeMatchParameters params = new RecipeMatchParameters(blockToBreak);
-			Optional<HammerRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(HammerRecipe.RECIPE_TYPE, params);
+			Optional<HammerRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.HAMMER_RECIPE_TYPE.get(), params);
 
 			// If the recipe is present, caluclate the output. If it exists, drop the output
 			// and damage the hammer.

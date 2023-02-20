@@ -10,16 +10,16 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class ResearchSerializer extends StaticPowerRecipeSerializer<Research> {
 	@Override
-	public Research fromJson(ResourceLocation recipeId, JsonObject json) {
+	public Research parse(ResourceLocation recipeId, JsonObject json) {
 		// Get the title and description.
 		String title = json.get("title").getAsString();
 		String description = json.get("description").getAsString();
@@ -79,7 +79,7 @@ public class ResearchSerializer extends StaticPowerRecipeSerializer<Research> {
 
 			JsonArray rews = json.get("rewards").getAsJsonArray();
 			for (JsonElement element : rews) {
-				rewards.add(ShapedRecipe.itemStackFromJson(element.getAsJsonObject()));
+				rewards.add(JsonUtilities.itemStackFromJson(element.getAsJsonObject()));
 			}
 		}
 

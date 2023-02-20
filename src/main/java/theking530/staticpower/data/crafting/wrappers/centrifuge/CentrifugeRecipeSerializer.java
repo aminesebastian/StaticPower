@@ -9,7 +9,7 @@ import net.minecraft.util.GsonHelper;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
@@ -18,7 +18,7 @@ public class CentrifugeRecipeSerializer extends StaticPowerRecipeSerializer<Cent
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "centrifuge_recipe");
 
 	@Override
-	public CentrifugeRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public CentrifugeRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
@@ -34,18 +34,18 @@ public class CentrifugeRecipeSerializer extends StaticPowerRecipeSerializer<Cent
 		JsonArray outputs = json.getAsJsonArray("outputs");
 
 		// Deserialize the first output and allocate the second and third.
-		ProbabilityItemStackOutput firstOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.get(0).getAsJsonObject());
-		ProbabilityItemStackOutput secondOutput = ProbabilityItemStackOutput.EMPTY;
-		ProbabilityItemStackOutput thirdOutput = ProbabilityItemStackOutput.EMPTY;
+		StaticPowerOutputItem firstOutput = StaticPowerOutputItem.parseFromJSON(outputs.get(0).getAsJsonObject());
+		StaticPowerOutputItem secondOutput = StaticPowerOutputItem.EMPTY;
+		StaticPowerOutputItem thirdOutput = StaticPowerOutputItem.EMPTY;
 
 		// If there is a second output, deserialize it.
 		if (outputs.size() > 1) {
-			secondOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.get(1).getAsJsonObject());
+			secondOutput = StaticPowerOutputItem.parseFromJSON(outputs.get(1).getAsJsonObject());
 		}
 
 		// If there is a third output, deserialize it.
 		if (outputs.size() > 2) {
-			thirdOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.get(2).getAsJsonObject());
+			thirdOutput = StaticPowerOutputItem.parseFromJSON(outputs.get(2).getAsJsonObject());
 		}
 
 		// Create the recipe.
@@ -56,9 +56,9 @@ public class CentrifugeRecipeSerializer extends StaticPowerRecipeSerializer<Cent
 	public CentrifugeRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int speed = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
-		ProbabilityItemStackOutput output1 = ProbabilityItemStackOutput.readFromBuffer(buffer);
-		ProbabilityItemStackOutput output2 = ProbabilityItemStackOutput.readFromBuffer(buffer);
-		ProbabilityItemStackOutput output3 = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem output1 = StaticPowerOutputItem.readFromBuffer(buffer);
+		StaticPowerOutputItem output2 = StaticPowerOutputItem.readFromBuffer(buffer);
+		StaticPowerOutputItem output3 = StaticPowerOutputItem.readFromBuffer(buffer);
 
 		// Create the recipe.
 		return new CentrifugeRecipe(recipeId, input, output1, output2, output3, speed, MachineRecipeProcessingSection.fromBuffer(buffer));

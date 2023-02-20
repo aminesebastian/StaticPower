@@ -78,8 +78,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
-		// Get the buffer and render the large hammer.
-		GuiDrawUtilities.drawSprite(matrixStack, new ResourceLocation("staticpower", "items/tools/hammer_iron"), 32, 32, 23, 5, 0, 0, 0, 1, 1, SDColor.WHITE);
+		GuiDrawUtilities.drawItem(matrixStack, recipe.getHammer().getItems()[0], 31, 13, 0, 32, 32, 1.0f);
 		if (!recipe.isBlockType()) {
 			GuiDrawUtilities.drawString(matrixStack, "Requires Anvil", 89, 47, 0.0f, 1.0f, SDColor.EIGHT_BIT_GREY, false);
 		}
@@ -92,7 +91,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 		if (recipe.isBlockType()) {
 			// Allocate the inputs block array.
-			List<Block> blocks = ForgeRegistries.BLOCKS.tags().getTag(recipe.getInputTag()).stream().toList();
+			List<Block> blocks = ForgeRegistries.BLOCKS.tags().getTag(recipe.getBlock()).stream().toList();
 			ItemStack[] inputBlocks = new ItemStack[blocks.size()];
 			int index = 0;
 			for (Block block : blocks) {
@@ -108,7 +107,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 			}
 		}
 
-		builder.addSlot(RecipeIngredientRole.INPUT, 3, 15).addIngredients(VanillaTypes.ITEM_STACK, input);
+		builder.addSlot(RecipeIngredientRole.INPUT, 4, 16).addIngredients(VanillaTypes.ITEM_STACK, input);
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 16).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 	}
 }

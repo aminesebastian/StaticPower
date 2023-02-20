@@ -91,7 +91,7 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 			if (recipe != null) {
 				FluidStack fermentingResult = recipe.getOutputFluidStack();
 				if (fluidTankComponent.fill(fermentingResult, FluidAction.SIMULATE) == fermentingResult.getAmount()) {
-					if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItem())) {
+					if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItemStack())) {
 						return i;
 					}
 				}

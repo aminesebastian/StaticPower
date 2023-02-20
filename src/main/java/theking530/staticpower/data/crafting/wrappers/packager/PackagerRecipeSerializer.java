@@ -8,7 +8,7 @@ import net.minecraft.util.GsonHelper;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
@@ -17,7 +17,7 @@ public class PackagerRecipeSerializer extends StaticPowerRecipeSerializer<Packag
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "packager_recipe");
 
 	@Override
-	public PackagerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public PackagerRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
@@ -30,7 +30,7 @@ public class PackagerRecipeSerializer extends StaticPowerRecipeSerializer<Packag
 		int size = json.get("size").getAsInt();
 
 		// Get the item output if one is defined.
-		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(json.get("output").getAsJsonObject());
+		StaticPowerOutputItem itemOutput = StaticPowerOutputItem.parseFromJSON(json.get("output").getAsJsonObject());
 
 		// Create the recipe.
 		return new PackagerRecipe(recipeId, size, input, itemOutput, processing);
@@ -40,7 +40,7 @@ public class PackagerRecipeSerializer extends StaticPowerRecipeSerializer<Packag
 	public PackagerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int size = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
-		ProbabilityItemStackOutput outputs = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem outputs = StaticPowerOutputItem.readFromBuffer(buffer);
 
 		// Create the recipe.
 		return new PackagerRecipe(recipeId, size, input, outputs, MachineRecipeProcessingSection.fromBuffer(buffer));

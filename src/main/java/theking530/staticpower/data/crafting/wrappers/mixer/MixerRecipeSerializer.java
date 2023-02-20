@@ -17,7 +17,7 @@ public class MixerRecipeSerializer extends StaticPowerRecipeSerializer<MixerReci
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "mixer_recipe");
 
 	@Override
-	public MixerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public MixerRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		StaticPowerIngredient input1 = StaticPowerIngredient.EMPTY;
 		StaticPowerIngredient input2 = StaticPowerIngredient.EMPTY;
 		FluidStack fluidInput1 = FluidStack.EMPTY;

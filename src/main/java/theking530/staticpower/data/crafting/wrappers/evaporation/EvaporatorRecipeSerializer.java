@@ -17,7 +17,7 @@ public class EvaporatorRecipeSerializer extends StaticPowerRecipeSerializer<Evap
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "evaporation_recipe");
 
 	@Override
-	public EvaporatorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public EvaporatorRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input fluid.
 		JsonObject inputFluidObject = json.getAsJsonObject("input_fluid");
 		FluidStack inputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(inputFluidObject);

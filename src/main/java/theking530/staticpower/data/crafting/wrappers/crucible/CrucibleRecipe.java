@@ -6,7 +6,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
@@ -16,11 +16,11 @@ public class CrucibleRecipe extends AbstractMachineRecipe {
 	public static final RecipeType<CrucibleRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CrucibleRecipe>();
 
 	private final StaticPowerIngredient input;
-	private final ProbabilityItemStackOutput output;
+	private final StaticPowerOutputItem output;
 	private final FluidStack outputFluid;
 	private final int minimumTemperature;
 
-	public CrucibleRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack outputFluid, int minimumTemperature,
+	public CrucibleRecipe(ResourceLocation name, StaticPowerIngredient input, StaticPowerOutputItem output, FluidStack outputFluid, int minimumTemperature,
 			MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.input = input;
@@ -33,7 +33,7 @@ public class CrucibleRecipe extends AbstractMachineRecipe {
 		return input;
 	}
 
-	public ProbabilityItemStackOutput getOutput() {
+	public StaticPowerOutputItem getOutput() {
 		return output;
 	}
 

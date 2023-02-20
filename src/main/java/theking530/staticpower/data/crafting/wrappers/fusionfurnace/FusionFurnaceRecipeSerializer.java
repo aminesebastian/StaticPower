@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
@@ -21,7 +21,7 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "fusion_furnace_recipe");
 
 	@Override
-	public FusionFurnaceRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public FusionFurnaceRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonArray inputElement = json.getAsJsonArray("inputs");
 		List<StaticPowerIngredient> inputs = new ArrayList<StaticPowerIngredient>();
@@ -37,7 +37,7 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 				StaticPowerConfig.SERVER.fusionFurnacePowerUsage, json);
 
 		// Get the output.
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(json.getAsJsonObject("output"));
+		StaticPowerOutputItem output = StaticPowerOutputItem.parseFromJSON(json.getAsJsonObject("output"));
 
 		// Craete the recipe.
 		return new FusionFurnaceRecipe(recipeId, inputs, output, processing);
@@ -51,7 +51,7 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 			inputs.add(StaticPowerIngredient.read(buffer));
 		}
 
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 
 		// Craete the recipe.
 		return new FusionFurnaceRecipe(recipeId, inputs, output, MachineRecipeProcessingSection.fromBuffer(buffer));

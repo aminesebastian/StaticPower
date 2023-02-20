@@ -81,7 +81,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 				simpleItem(bundle.getRawMaterial().get(), "materials/raw_ores/" + bundle.getRawMaterialPrefix() + "_" + bundle.getName());
 			}
 			if (bundle.shouldGenerateIngot()) {
-				simpleItem(bundle.getSmeltedMaterial().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
+				simpleItem(bundle.getIngot().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
 			}
 			if (bundle.shouldGenerateHeatedIngotMaterial()) {
 				if (bundle == ModMaterials.IRON) {

@@ -61,8 +61,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		copy(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE, Tags.Items.ORES_IN_GROUND_DEEPSLATE);
 
 		tag(Tags.Items.INGOTS)
-				.add(toArray(
-						ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateIngot()).map((bundle) -> bundle.getSmeltedMaterial().get())))
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateIngot()).map((bundle) -> bundle.getIngot().get())))
 				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedIngotMaterial())
 						.map((bundle) -> bundle.getHeatedSmeltedMaterial().get())));
 
@@ -162,8 +161,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModItemTags.TOOL_BACKPACK).addTag(Tags.Items.TOOLS_PICKAXES).addTag(Tags.Items.TOOLS_SHOVELS).addTag(Tags.Items.TOOLS_AXES).addTag(Tags.Items.TOOLS_HOES)
 				.addTag(ModItemTags.TOOLS);
 
-		tag(ModItemTags.HEATED_INGOTS).add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedIngotMaterial())
-				.map((bundle) -> bundle.getHeatedSmeltedMaterial().get())));
+		tag(ModItemTags.HEATED_INGOTS).add(toArray(
+				ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedIngotMaterial()).map((bundle) -> bundle.getHeatedSmeltedMaterial().get())));
 
 		tag(ModItemTags.WIRE_COILS).add(ModItems.WireCoilDigistore.get())
 				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateWireCoil()).map((bundle) -> bundle.getWireCoil().get())))
@@ -203,7 +202,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				tag(bundle.getGearTag()).add(bundle.getGear().get());
 			}
 			if (bundle.shouldGenerateIngot() && bundle.getSmeltedMaterialPrefix().equals("ingot")) {
-				tag(bundle.getIngotTag()).add(bundle.getSmeltedMaterial().get());
+				tag(bundle.getIngotTag()).add(bundle.getIngot().get());
 			}
 			if (bundle.shouldGenerateRawMaterial()) {
 				tag(bundle.getRawMaterialTag()).add(bundle.getRawMaterial().get());
@@ -234,6 +233,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModItemTags.create("ingot_or_plate/iron")).addTag(ModItemTags.createForgeTag("ingots/iron")).addTag(ModItemTags.createForgeTag("plates/iron"));
 		tag(ModItemTags.create("ingot_or_plate/copper")).addTag(ModItemTags.createForgeTag("ingots/copper")).addTag(ModItemTags.createForgeTag("plates/copper"));
 		tag(ModItemTags.create("ingot_or_plate/gold")).addTag(ModItemTags.createForgeTag("ingots/gold")).addTag(ModItemTags.createForgeTag("plates/gold"));
+
+		tag(ModItemTags.COAL_DUST).add(ModItems.DustCoal.get());
+		tag(ModItemTags.CHARCOAL_DUST).add(ModItems.DustCharcoal.get());
 	}
 
 	public static Item[] toArray(Stream<? extends Item> stream) {

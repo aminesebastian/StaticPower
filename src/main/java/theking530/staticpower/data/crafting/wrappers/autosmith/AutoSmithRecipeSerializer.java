@@ -20,7 +20,7 @@ public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoS
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "auto_smith_recipe");
 
 	@Override
-	public AutoSmithRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public AutoSmithRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the smith target.
 		StaticPowerIngredient smithingTarget = StaticPowerIngredient.EMPTY;
 		if (GsonHelper.isValidNode(json, "smith_target")) {
@@ -55,8 +55,8 @@ public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoS
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.autoSmithProcessingTime, StaticPowerConfig.SERVER.autoSmithPowerUsage,
-				json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.autoSmithProcessingTime,
+				StaticPowerConfig.SERVER.autoSmithPowerUsage, json);
 
 		// Capture the repair amount if provided.
 		int repairAmount = 0;

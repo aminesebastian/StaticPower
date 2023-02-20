@@ -24,7 +24,7 @@ public class EnchanterRecipeSerializer extends StaticPowerRecipeSerializer<Encha
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "enchanter_recipe");
 
 	@Override
-	public EnchanterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public EnchanterRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Get the fluid input.
 		FluidStack fluidInput = FluidStack.EMPTY;
 		if (json.has("input_fluid")) {

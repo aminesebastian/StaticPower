@@ -5,7 +5,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
@@ -16,9 +16,9 @@ public class FermenterRecipe extends AbstractStaticPowerRecipe {
 
 	private final FluidStack outputFluidStack;
 	private final StaticPowerIngredient input;
-	private final ProbabilityItemStackOutput output;
+	private final StaticPowerOutputItem output;
 
-	public FermenterRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack fluid) {
+	public FermenterRecipe(ResourceLocation name, StaticPowerIngredient input, StaticPowerOutputItem output, FluidStack fluid) {
 		super(name);
 		outputFluidStack = fluid;
 		this.input = input;
@@ -29,7 +29,7 @@ public class FermenterRecipe extends AbstractStaticPowerRecipe {
 		return outputFluidStack;
 	}
 
-	public ProbabilityItemStackOutput getResidualOutput() {
+	public StaticPowerOutputItem getResidualOutput() {
 		return output;
 	}
 

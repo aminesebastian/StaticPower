@@ -3,8 +3,11 @@ package theking530.staticpower.init;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraftforge.common.Tags;
 import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.MaterialBundle.MaterialDomain;
 import theking530.staticpower.data.MaterialBundle.MaterialType;
@@ -72,21 +75,21 @@ public class ModMaterials {
 			.generateNugget();
 
 	public static final MaterialBundle BRASS = createNewForgeBundle("brass", MaterialType.METAL).generateCutStorageBlock(Properties.copy(Blocks.CUT_COPPER))
-			.generateStorageBlock(Properties.copy(Blocks.COPPER_BLOCK)).generateIngot().generateHeatedIngotMaterial().generateDust().generatePlate().generateGear(true).generateRod()
-			.generateNugget().generateWire().generateWireCoil().generateInsulatedWire().generateInsulatedWireCoil();
+			.generateStorageBlock(Properties.copy(Blocks.COPPER_BLOCK)).generateIngot().generateHeatedIngotMaterial().generateDust().generatePlate().generateGear(true)
+			.generateRod().generateNugget().generateWire().generateWireCoil().generateInsulatedWire().generateInsulatedWireCoil();
 
 	public static final MaterialBundle STATIC_METAL = createNewStaticPowerMaterial("static_metal", MaterialType.METAL).generateCutStorageBlock(Properties.copy(Blocks.CUT_COPPER))
 			.generateStorageBlock(Properties.copy(Blocks.COPPER_BLOCK)).generateRawStorageBlock(Properties.copy(Blocks.RAW_COPPER_BLOCK)).generateRawMaterial().generateIngot()
-			.generateHeatedIngotMaterial().generateDust().generatePlate().generateGear(true).generateRod().generateNugget().generateWire().generateWireCoil().generateInsulatedWire()
-			.generateInsulatedWireCoil();
+			.generateHeatedIngotMaterial().generateDust().generatePlate().generateGear(true).generateRod().generateNugget().generateWire().generateWireCoil()
+			.generateInsulatedWire().generateInsulatedWireCoil();
 	public static final MaterialBundle ENERGIZED_METAL = createNewStaticPowerMaterial("energized_metal", MaterialType.METAL)
 			.generateCutStorageBlock(Properties.copy(Blocks.CUT_COPPER)).generateStorageBlock(Properties.copy(Blocks.IRON_BLOCK))
 			.generateRawStorageBlock(Properties.copy(Blocks.RAW_IRON_BLOCK)).generateRawMaterial().generateIngot().generateHeatedIngotMaterial().generateDust().generatePlate()
 			.generateGear(true).generateRod().generateNugget().generateWire().generateWireCoil().generateInsulatedWire().generateInsulatedWireCoil();
 	public static final MaterialBundle LUMUM_METAL = createNewStaticPowerMaterial("lumum_metal", MaterialType.METAL).generateCutStorageBlock(Properties.copy(Blocks.CUT_COPPER))
 			.generateStorageBlock(Properties.copy(Blocks.GOLD_BLOCK)).generateRawStorageBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)).generateRawMaterial().generateIngot()
-			.generateHeatedIngotMaterial().generateDust().generatePlate().generateGear(true).generateRod().generateNugget().generateWire().generateWireCoil().generateInsulatedWire()
-			.generateInsulatedWireCoil();
+			.generateHeatedIngotMaterial().generateDust().generatePlate().generateGear(true).generateRod().generateNugget().generateWire().generateWireCoil()
+			.generateInsulatedWire().generateInsulatedWireCoil();
 
 	public static final MaterialBundle REDSTONE_ALLOY = createNewStaticPowerMaterial("redstone_alloy", MaterialType.METAL)
 			.generateCutStorageBlock(Properties.copy(Blocks.CUT_COPPER)).generateStorageBlock(Properties.copy(Blocks.IRON_BLOCK))
@@ -97,14 +100,26 @@ public class ModMaterials {
 			.generateRawStorageBlock(Properties.copy(Blocks.RAW_IRON_BLOCK)).generateRawMaterial().generateIngot().generateHeatedIngotMaterial().generateDust().generatePlate()
 			.generateGear(true).generateRod().generateNugget();
 
-	public static final MaterialBundle IRON = createNewVanillaBundle("iron", MaterialType.METAL).generateHeatedIngotMaterial().generateDust().generatePlate().generateGear();
+	public static final MaterialBundle IRON = createNewVanillaBundle("iron", MaterialType.METAL).generateHeatedIngotMaterial().generateDust().generatePlate().generateGear()
+			.setOreTag(ItemTags.IRON_ORES, BlockTags.IRON_ORES).setStorageBlockItemTag(Tags.Items.STORAGE_BLOCKS_IRON, Tags.Blocks.STORAGE_BLOCKS_IRON)
+			.setRawStorageBlockItemTag(Tags.Items.STORAGE_BLOCKS_RAW_IRON, Tags.Blocks.STORAGE_BLOCKS_RAW_IRON).setIngotTag(Tags.Items.INGOTS_IRON)
+			.setRawMaterialTag(Tags.Items.RAW_MATERIALS_IRON).setNuggetTag(Tags.Items.NUGGETS_IRON);
 	public static final MaterialBundle GOLD = createNewVanillaBundle("gold", MaterialType.METAL).generateHeatedIngotMaterial().generateDust().generatePlate().generateGear()
-			.generateWire();
+			.generateWire().setOreTag(ItemTags.GOLD_ORES, BlockTags.GOLD_ORES).setStorageBlockItemTag(Tags.Items.STORAGE_BLOCKS_GOLD, Tags.Blocks.STORAGE_BLOCKS_GOLD)
+			.setRawStorageBlockItemTag(Tags.Items.STORAGE_BLOCKS_RAW_GOLD, Tags.Blocks.STORAGE_BLOCKS_RAW_GOLD).setIngotTag(Tags.Items.INGOTS_GOLD)
+			.setRawMaterialTag(Tags.Items.RAW_MATERIALS_GOLD).setNuggetTag(Tags.Items.NUGGETS_GOLD);
 	public static final MaterialBundle COPPER = createNewVanillaBundle("copper", MaterialType.METAL).generateHeatedIngotMaterial().generateDust().generatePlate().generateGear()
-			.generateWire().generateNugget().generateWireCoil().generateInsulatedWire().generateInsulatedWireCoil();
-
-	public static final MaterialBundle DIAMOND = createNewVanillaBundle("diamond", MaterialType.GEM).generateCutStorageBlock(Properties.copy(Blocks.DIAMOND_BLOCK)).generateDust();
-	public static final MaterialBundle EMERALD = createNewVanillaBundle("emerald", MaterialType.GEM).generateCutStorageBlock(Properties.copy(Blocks.EMERALD_BLOCK)).generateDust();
+			.generateWire().generateNugget().generateWireCoil().generateInsulatedWire().generateInsulatedWireCoil().setOreTag(ItemTags.COPPER_ORES, BlockTags.COPPER_ORES)
+			.setStorageBlockItemTag(Tags.Items.STORAGE_BLOCKS_COPPER, Tags.Blocks.STORAGE_BLOCKS_COPPER)
+			.setRawStorageBlockItemTag(Tags.Items.STORAGE_BLOCKS_RAW_COPPER, Tags.Blocks.STORAGE_BLOCKS_RAW_COPPER).setIngotTag(Tags.Items.INGOTS_COPPER)
+			.setRawMaterialTag(Tags.Items.RAW_MATERIALS_COPPER);
+	
+	public static final MaterialBundle DIAMOND = createNewVanillaBundle("diamond", MaterialType.GEM).generateCutStorageBlock(Properties.copy(Blocks.DIAMOND_BLOCK)).generateDust()
+			.setOreTag(ItemTags.DIAMOND_ORES, BlockTags.DIAMOND_ORES).setStorageBlockItemTag(Tags.Items.STORAGE_BLOCKS_DIAMOND, Tags.Blocks.STORAGE_BLOCKS_DIAMOND)
+			.setRawMaterialTag(Tags.Items.GEMS_DIAMOND);
+	public static final MaterialBundle EMERALD = createNewVanillaBundle("emerald", MaterialType.GEM).generateCutStorageBlock(Properties.copy(Blocks.EMERALD_BLOCK)).generateDust()
+			.setOreTag(ItemTags.EMERALD_ORES, BlockTags.EMERALD_ORES).setStorageBlockItemTag(Tags.Items.STORAGE_BLOCKS_EMERALD, Tags.Blocks.STORAGE_BLOCKS_EMERALD)
+			.setRawMaterialTag(Tags.Items.GEMS_EMERALD);
 
 	private static MaterialBundle createNewForgeBundle(String name, MaterialType materialType) {
 		MaterialBundle bundle = new MaterialBundle(name, MaterialDomain.FORGE, materialType);

@@ -8,14 +8,22 @@ public class RecipeItem {
 	private final ItemLike item;
 	private final TagKey<Item> itemTag;
 
-	public RecipeItem(ItemLike item) {
+	protected RecipeItem(ItemLike item) {
 		this.item = item;
 		this.itemTag = null;
 	}
 
-	public RecipeItem(TagKey<Item> itemTag) {
+	protected RecipeItem(TagKey<Item> itemTag) {
 		this.item = null;
 		this.itemTag = itemTag;
+	}
+
+	public static RecipeItem of(ItemLike item) {
+		return new RecipeItem(item);
+	}
+
+	public static RecipeItem of(TagKey<Item> itemTag) {
+		return new RecipeItem(itemTag);
 	}
 
 	public boolean hasItem() {

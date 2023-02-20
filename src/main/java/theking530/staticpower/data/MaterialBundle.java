@@ -141,12 +141,24 @@ public class MaterialBundle {
 	}
 
 	public void generateBlocks() {
-		oreTag = createBlockTag("ore/" + getName());
-		oreItemTag = createItemTag("ore/" + getName());
-		rawStorageBlockTag = createBlockTag("storage_blocks/raw_" + getName());
-		rawStorageBlockItemTag = createItemTag("storage_blocks/raw_" + getName());
-		storageBlockTag = createBlockTag("storage_blocks/" + getName());
-		storageBlockItemTag = createItemTag("storage_blocks/" + getName());
+		if (oreTag == null) {
+			oreTag = createBlockTag("ore/" + getName());
+		}
+		if (oreItemTag == null) {
+			oreItemTag = createItemTag("ore/" + getName());
+		}
+		if (rawStorageBlockTag == null) {
+			rawStorageBlockTag = createBlockTag("storage_blocks/raw_" + getName());
+		}
+		if (rawStorageBlockItemTag == null) {
+			rawStorageBlockItemTag = createItemTag("storage_blocks/raw_" + getName());
+		}
+		if (storageBlockTag == null) {
+			storageBlockTag = createBlockTag("storage_blocks/" + getName());
+		}
+		if (storageBlockItemTag == null) {
+			storageBlockItemTag = createItemTag("storage_blocks/" + getName());
+		}
 
 		if (shouldGenerateOverworldOre()) {
 			overworldOre = ModBlocks.registerBlock("ore_" + getName(),
@@ -172,23 +184,48 @@ public class MaterialBundle {
 	}
 
 	public void generateItems(DeferredRegister<Item> registry) {
-		if (materialType == MaterialType.METAL) {
-			rawMaterialTag = createItemTag("raw_materials/" + getName());
-			ingotTag = createItemTag("ingots/" + getName());
-		} else {
-			rawMaterialTag = createItemTag("gems/" + getName());
+		if (rawMaterialTag == null) {
+			if (materialType == MaterialType.METAL) {
+				rawMaterialTag = createItemTag("raw_materials/" + getName());
+			} else {
+				rawMaterialTag = createItemTag("gems/" + getName());
+			}
 		}
-
-		nuggetTag = createItemTag("nuggets/" + getName());
-		dustTag = createItemTag("dusts/" + getName());
-		gearTag = createItemTag("gears/" + getName());
-		plateTag = createItemTag("plates/" + getName());
-		rodTag = createItemTag("tags/" + getName());
-		chunkTag = createItemTag("chunks/" + getName());
-		wireTag = createItemTag("wires/" + getName());
-		insulatedWireTag = createItemTag("wires/insulated/" + getName());
-		wireCoilTag = createItemTag("wire_coil/" + getName());
-		insulatedWireCoilTag = createItemTag("wire_coil/insulated/" + getName());
+		if (ingotTag == null) {
+			if (materialType == MaterialType.METAL) {
+				ingotTag = createItemTag("ingots/" + getName());
+			}
+		}
+		if (nuggetTag == null) {
+			nuggetTag = createItemTag("nuggets/" + getName());
+		}
+		if (dustTag == null) {
+			dustTag = createItemTag("dusts/" + getName());
+		}
+		if (gearTag == null) {
+			gearTag = createItemTag("gears/" + getName());
+		}
+		if (plateTag == null) {
+			plateTag = createItemTag("plates/" + getName());
+		}
+		if (rodTag == null) {
+			rodTag = createItemTag("tags/" + getName());
+		}
+		if (chunkTag == null) {
+			chunkTag = createItemTag("chunks/" + getName());
+		}
+		if (wireTag == null) {
+			wireTag = createItemTag("wires/" + getName());
+		}
+		if (insulatedWireTag == null) {
+			insulatedWireTag = createItemTag("wires/insulated/" + getName());
+		}
+		if (wireCoilTag == null) {
+			wireCoilTag = createItemTag("wire_coil/" + getName());
+		}
+		if (insulatedWireCoilTag == null) {
+			insulatedWireCoilTag = createItemTag("wire_coil/insulated/" + getName());
+		}
 
 		if (shouldGenerateRawMaterial()) {
 			rawMaterial = registry.register(rawMaterialPrefix + "_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
@@ -460,7 +497,7 @@ public class MaterialBundle {
 		return rawStorageBlock;
 	}
 
-	public RegistryObject<? extends Block> getSmeltedMaterialStorageBlock() {
+	public RegistryObject<? extends Block> getStorageBlock() {
 		return storageBlock;
 	}
 
@@ -484,7 +521,7 @@ public class MaterialBundle {
 		return ingotPrefix;
 	}
 
-	public RegistryObject<? extends Item> getSmeltedMaterial() {
+	public RegistryObject<? extends Item> getIngot() {
 		return ingot;
 	}
 
@@ -604,15 +641,48 @@ public class MaterialBundle {
 		return insulatedWireCoilTag;
 	}
 
+	public MaterialBundle setOreTag(TagKey<Item> itemTag, TagKey<Block> blockTag) {
+		oreTag = blockTag;
+		oreItemTag = itemTag;
+		return this;
+	}
+
+	public MaterialBundle setRawStorageBlockItemTag(TagKey<Item> itemTag, TagKey<Block> blockTag) {
+		rawStorageBlockTag = blockTag;
+		rawStorageBlockItemTag = itemTag;
+		return this;
+	}
+
+	public MaterialBundle setStorageBlockItemTag(TagKey<Item> itemTag, TagKey<Block> blockTag) {
+		storageBlockTag = blockTag;
+		storageBlockItemTag = itemTag;
+		return this;
+	}
+
+	public MaterialBundle setRawMaterialTag(TagKey<Item> tag) {
+		rawMaterialTag = tag;
+		return this;
+	}
+
+	public MaterialBundle setIngotTag(TagKey<Item> tag) {
+		ingotTag = tag;
+		return this;
+	}
+
+	public MaterialBundle setNuggetTag(TagKey<Item> tag) {
+		nuggetTag = tag;
+		return this;
+	}
+
 	private TagKey<Item> createItemTag(String name) {
-		if (this.isStaticPowerMaterial()) {
+		if (isStaticPowerMaterial()) {
 			return ModItemTags.create(name);
 		}
 		return ModItemTags.createForgeTag(name);
 	}
 
 	private TagKey<Block> createBlockTag(String name) {
-		if (this.isStaticPowerMaterial()) {
+		if (isStaticPowerMaterial()) {
 			return ModBlockTags.create(name);
 		}
 		return ModBlockTags.createForgeTag(name);

@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-16T18:15:09.8937672	Tags for minecraft:item
+// 1.19.2	2023-02-20T06:44:47.8067214	Tags for minecraft:item
 51b00e5b14b17e9df81bc1b25cec37a2fe8031dc data/forge/tags/items/chunks/aluminum.json
 4de111a656b1087f12c8b141ed43b4b8331a9edb data/forge/tags/items/chunks/lead.json
 acb4e62cf3f26e33cc03ba5bbcd5a9cba436682b data/forge/tags/items/chunks/magnesium.json
@@ -14,6 +14,8 @@ c602ea9ca27548ee712c33f950ee7a7095b0816f data/forge/tags/items/chunks/sapphire.j
 53ad8b76c9103eaff63127539188647fd8bdcbc3 data/forge/tags/items/dusts/aluminum.json
 0f87bad593abfa8fcd0ad501607584387b7ea353 data/forge/tags/items/dusts/brass.json
 736f17b2d6c7f68d8dd405190ee6de7fff5aafc1 data/forge/tags/items/dusts/bronze.json
+64e23bcdad0a228866080514ada7da80ee5428be data/forge/tags/items/dusts/charcoal.json
+b7c510b329180cf79431094157b4baee3b2d58fe data/forge/tags/items/dusts/coal.json
 09ecf21c5e051145b7201cf9c236cf29130cdfdb data/forge/tags/items/dusts/copper.json
 15d3afaa78b4931bc8134a4c0287e1202dc132e8 data/forge/tags/items/dusts/diamond.json
 26d0a4fe690611922d2b4f1c0121334b5f12be34 data/forge/tags/items/dusts/emerald.json
@@ -106,7 +108,7 @@ f439583f6295f389c23d95e8fdbaf53902ab441d data/forge/tags/items/raw_materials/tun
 1c46e0c1c38d627d8467cfe86c2c9a8bdabe9de0 data/forge/tags/items/raw_materials/zinc.json
 452d3104b3908741fb172422f37fa4a14e522ead data/forge/tags/items/rubber.json
 62825bba6f7bc405fe766363cff0df34ace3c202 data/forge/tags/items/rubber_sheet.json
-01068eb47b510b8a14fd543e8d2e1af1707106d1 data/forge/tags/items/rubber_wood_logs.json
+4b4657fe925db0ed31f82d95aabc53d11894e1a4 data/forge/tags/items/rubber_wood_logs.json
 f8c5ffdfabe244c3950910be77feb2367ec3a6bf data/forge/tags/items/seeds.json
 36d36b2390fbb1e0f0a9cc7e97c3f3464a558703 data/forge/tags/items/silicon.json
 54dd33048c5d5bb8f0b1933667fbcd41a4173a9e data/forge/tags/items/storage_blocks/aluminum.json
@@ -202,7 +204,7 @@ adc88cd2eeff3d61d615a2c3ed29a4d0befae0b2 data/staticpower/tags/items/ingot_or_pl
 40dc4b422784ce6df561ddecb83c9e2f023a5a19 data/staticpower/tags/items/ingot_or_plate/tin.json
 4a93fece363331dc12ad9f24dc62be23d0cfe338 data/staticpower/tags/items/ingot_or_plate/tungsten.json
 2bcc23b1c7c4bbf9249d508e126a6545b0a647d5 data/staticpower/tags/items/ingot_or_plate/zinc.json
-79499e592da6b71e2f9fec1b8b8fff10a95044f5 data/staticpower/tags/items/lightbulbs.json
+16304092a1a0984813cc5f6a2f7cba32649bf952 data/staticpower/tags/items/lightbulbs.json
 4c78890f8ac79bcc95b16dcae9c786673881a181 data/staticpower/tags/items/machines.json
 2528913fac539e196dfc1dd3beaf5a78d22819ff data/staticpower/tags/items/machine_blocks.json
 e8f309955d537f37f48055743def9728df64488b data/staticpower/tags/items/materials.json

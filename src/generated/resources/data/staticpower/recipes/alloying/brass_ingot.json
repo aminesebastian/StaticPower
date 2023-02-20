@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:alloy_furnace",
+  "input1": {
+    "ingredient": {
+      "tag": "forge:ingots/copper"
+    }
+  },
+  "input2": {
+    "ingredient": {
+      "tag": "forge:ingots/zinc"
+    }
+  },
+  "output": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:ingot_brass"
+    }
+  },
+  "processing": {
+    "processing_time": 400
+  }
+}

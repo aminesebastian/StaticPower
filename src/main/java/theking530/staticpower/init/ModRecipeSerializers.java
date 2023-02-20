@@ -94,8 +94,8 @@ public class ModRecipeSerializers {
 	public static final RegistryObject<FormerRecipeSerializer> FORMER_SERIALIZER = SERIALIZERS.register(FormerRecipe.ID, () -> FormerRecipeSerializer.INSTANCE);
 	public static final RegistryObject<FusionFurnaceRecipeSerializer> FUSION_FURANCE_SERIALIZER = SERIALIZERS.register(FusionFurnaceRecipe.ID,
 			() -> FusionFurnaceRecipeSerializer.INSTANCE);
-	public static final RegistryObject<GrinderRecipeSerializer> GRINDER_SERIALIZER = SERIALIZERS.register(GrinderRecipe.ID, () -> GrinderRecipeSerializer.INSTANCE);
-	public static final RegistryObject<HammerRecipeSerializer> HAMMER_SERIALIZER = SERIALIZERS.register(HammerRecipe.ID, () -> HammerRecipeSerializer.INSTANCE);
+	public static final RegistryObject<GrinderRecipeSerializer> GRINDER_SERIALIZER = SERIALIZERS.register(GrinderRecipe.ID, () -> new GrinderRecipeSerializer());
+	public static final RegistryObject<HammerRecipeSerializer> HAMMER_SERIALIZER = SERIALIZERS.register(HammerRecipe.ID, () -> new HammerRecipeSerializer());
 	public static final RegistryObject<LatheRecipeSerializer> LATHE_SERIALIZER = SERIALIZERS.register(LatheRecipe.ID, () -> LatheRecipeSerializer.INSTANCE);
 	public static final RegistryObject<LumberMillRecipeSerializer> LUMBER_MILL_SERIALIZER = SERIALIZERS.register(LumberMillRecipe.ID, () -> LumberMillRecipeSerializer.INSTANCE);
 	public static final RegistryObject<MixerRecipeSerializer> MIXER_SERIALIZER = SERIALIZERS.register(MixerRecipe.ID, () -> MixerRecipeSerializer.INSTANCE);

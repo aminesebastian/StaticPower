@@ -124,7 +124,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				tag(bundle.getRawStorageBlockTag()).add(bundle.getRawMaterialStorageBlock().get());
 			}
 			if (bundle.shouldGenerateStorageBlock()) {
-				tag(bundle.getStorageBlockTag()).add(bundle.getSmeltedMaterialStorageBlock().get());
+				tag(bundle.getStorageBlockTag()).add(bundle.getStorageBlock().get());
 			}
 		}
 

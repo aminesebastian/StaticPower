@@ -1,0 +1,14 @@
+{
+  "type": "staticpower:hammer",
+  "item": {
+    "ingredient": {
+      "item": "staticpower:ingot_brass_heated"
+    }
+  },
+  "output": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:plate_brass"
+    }
+  }
+}

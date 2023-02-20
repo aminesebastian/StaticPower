@@ -3,11 +3,24 @@ package theking530.staticpower.data.crafting;
 import java.util.function.Supplier;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.GsonHelper;
 
 public class MachineRecipeProcessingSection {
+	public static final MachineRecipeProcessingSection EMPTY = new MachineRecipeProcessingSection(() -> 0, () -> 0.0, () -> 0, () -> 0);
+
+	public static final Codec<MachineRecipeProcessingSection> CODEC = RecordCodecBuilder.create(instance -> instance
+			.group(Codec.INT.optionalFieldOf("processing_time", 0).forGetter(processingSection -> processingSection.getProcessingTime()),
+					Codec.DOUBLE.optionalFieldOf("power_cost", 0.0).forGetter(processingSection -> processingSection.getPowerCost()),
+					Codec.INT.optionalFieldOf("minimum_heat", 0).forGetter(processingSection -> processingSection.getMinimumHeat()),
+					Codec.INT.optionalFieldOf("heat_use", 0).forGetter(processingSection -> processingSection.getHeatUse()))
+			.apply(instance, (time, powerCode, minHeat, heatUse) -> {
+				return new MachineRecipeProcessingSection(() -> time, () -> powerCode, () -> minHeat, () -> heatUse);
+			}));
+
 	protected final Supplier<Integer> processingTime;
 	protected final Supplier<Double> powerCost;
 	protected final Supplier<Integer> minimumHeat;
@@ -61,14 +74,32 @@ public class MachineRecipeProcessingSection {
 		return fromJson(defaultTime, defaultPowerCost, () -> 0, () -> 0, json);
 	}
 
+	public JsonObject toJson() {
+		JsonObject output = new JsonObject();
+
+		if (getPowerCost() >= 0) {
+			output.addProperty("time", getProcessingTime());
+		}
+		if (getPowerCost() >= 0) {
+			output.addProperty("power", getPowerCost());
+		}
+		if (getPowerCost() >= 0) {
+			output.addProperty("minimum_heat", getMinimumHeat());
+		}
+		if (getPowerCost() >= 0) {
+			output.addProperty("heat_use", getHeatUse());
+		}
+
+		return output;
+	}
+
 	public static MachineRecipeProcessingSection fromJson(Supplier<Integer> defaultTime, Supplier<Double> defaultPowerCost, Supplier<Integer> defaultMinimumHeat,
 			Supplier<Integer> defaultHeatUse, JsonObject json) {
 		if (GsonHelper.isValidNode(json, "processing")) {
 			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
 			Supplier<Integer> time = defaultTime;
-			if (processingElement.has("power")) {
+			if (processingElement.has("time")) {
 				time = () -> processingElement.get("time").getAsInt();
-
 			}
 
 			Supplier<Double> power = defaultPowerCost;

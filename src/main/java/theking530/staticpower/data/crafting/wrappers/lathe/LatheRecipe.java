@@ -25,7 +25,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
@@ -41,12 +41,12 @@ public class LatheRecipe extends AbstractMachineRecipe {
 	public final int recipeWidth;
 	public final int recipeHeight;
 
-	private final ProbabilityItemStackOutput primaryOutput;
-	private final ProbabilityItemStackOutput secondaryOutput;
+	private final StaticPowerOutputItem primaryOutput;
+	private final StaticPowerOutputItem secondaryOutput;
 	private final FluidStack outputFluid;
 
-	public LatheRecipe(ResourceLocation name, int recipeWidthIn, int recipeHeightIn, NonNullList<StaticPowerIngredient> inputs, ProbabilityItemStackOutput primaryOutput,
-			ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
+	public LatheRecipe(ResourceLocation name, int recipeWidthIn, int recipeHeightIn, NonNullList<StaticPowerIngredient> inputs, StaticPowerOutputItem primaryOutput,
+			StaticPowerOutputItem secondaryOutput, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 
 		this.inputs = inputs;
@@ -61,19 +61,19 @@ public class LatheRecipe extends AbstractMachineRecipe {
 		return inputs;
 	}
 
-	public ProbabilityItemStackOutput getPrimaryOutput() {
+	public StaticPowerOutputItem getPrimaryOutput() {
 		return primaryOutput;
 	}
 
-	public ProbabilityItemStackOutput getSecondaryOutput() {
+	public StaticPowerOutputItem getSecondaryOutput() {
 		return secondaryOutput;
 	}
 
 	public List<ItemStack> getRawOutputItems() {
 		List<ItemStack> output = new LinkedList<ItemStack>();
-		output.add(getPrimaryOutput().getItem());
+		output.add(getPrimaryOutput().getItemStack());
 		if (hasSecondaryOutput()) {
-			output.add(getSecondaryOutput().getItem());
+			output.add(getSecondaryOutput().getItemStack());
 		}
 		return output;
 	}

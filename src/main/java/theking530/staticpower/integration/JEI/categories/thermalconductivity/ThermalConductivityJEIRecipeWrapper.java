@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 
@@ -108,7 +108,7 @@ public class ThermalConductivityJEIRecipeWrapper implements Recipe<Container> {
 		return blockOutput;
 	}
 
-	public ProbabilityItemStackOutput getOutputItem() {
+	public StaticPowerOutputItem getOutputItem() {
 		return recipe.getOverheatedItem();
 	}
 

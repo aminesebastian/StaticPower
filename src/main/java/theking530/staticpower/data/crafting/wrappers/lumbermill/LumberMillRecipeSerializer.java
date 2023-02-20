@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
@@ -19,7 +19,7 @@ public class LumberMillRecipeSerializer extends StaticPowerRecipeSerializer<Lumb
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "lumber_mill_recipe");
 
 	@Override
-	public LumberMillRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public LumberMillRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
@@ -30,13 +30,13 @@ public class LumberMillRecipeSerializer extends StaticPowerRecipeSerializer<Lumb
 
 		// Get the outputs.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
-		ProbabilityItemStackOutput primaryOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.getAsJsonObject("primary"));
-		ProbabilityItemStackOutput secondaryOutput = ProbabilityItemStackOutput.EMPTY;
+		StaticPowerOutputItem primaryOutput = StaticPowerOutputItem.parseFromJSON(outputs.getAsJsonObject("primary"));
+		StaticPowerOutputItem secondaryOutput = StaticPowerOutputItem.EMPTY;
 		FluidStack fluidOutput = FluidStack.EMPTY;
 
 		// Deserialize the secondary output if it exists.
 		if (outputs.has("secondary")) {
-			secondaryOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.getAsJsonObject("secondary"));
+			secondaryOutput = StaticPowerOutputItem.parseFromJSON(outputs.getAsJsonObject("secondary"));
 		}
 
 		// Deserialize the fluid output if it exsists.
@@ -51,8 +51,8 @@ public class LumberMillRecipeSerializer extends StaticPowerRecipeSerializer<Lumb
 	@Override
 	public LumberMillRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
-		ProbabilityItemStackOutput primary = ProbabilityItemStackOutput.readFromBuffer(buffer);
-		ProbabilityItemStackOutput secondary = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem primary = StaticPowerOutputItem.readFromBuffer(buffer);
+		StaticPowerOutputItem secondary = StaticPowerOutputItem.readFromBuffer(buffer);
 		FluidStack outFluid = buffer.readFluidStack();
 
 		return new LumberMillRecipe(recipeId, input, primary, secondary, outFluid, MachineRecipeProcessingSection.fromBuffer(buffer));

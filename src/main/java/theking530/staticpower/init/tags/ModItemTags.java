@@ -81,6 +81,9 @@ public class ModItemTags {
 	public static final TagKey<Item> RUBBER_SHEET = createForgeTag("rubber_sheet");
 	public static final TagKey<Item> RUBBER_WOOD_LOGS = createForgeTag("rubber_wood_logs");
 
+	public static final TagKey<Item> COAL_DUST = createForgeTag("dusts/coal");
+	public static final TagKey<Item> CHARCOAL_DUST = createForgeTag("dusts/charcoal");
+
 	public static boolean matches(TagKey<Item> tag, Item item) {
 		return ForgeRegistries.ITEMS.tags().getTag(tag).contains(item);
 	}
@@ -91,6 +94,10 @@ public class ModItemTags {
 
 	public static TagKey<Item> createForgeTag(String name) {
 		return TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), new ResourceLocation("forge", name));
+	}
+
+	public static TagKey<Item> createTagOnDomain(String domain, String name) {
+		return TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), new ResourceLocation(domain, name));
 	}
 
 	public static List<ResourceLocation> getTags(Item item) {

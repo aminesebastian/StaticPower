@@ -11,8 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class SolderingRecipeSerializer extends StaticPowerRecipeSerializer<SolderingRecipe> {
@@ -24,14 +24,14 @@ public class SolderingRecipeSerializer extends StaticPowerRecipeSerializer<Solde
 		solderingIronTag = GsonHelper.parse("{ \"tag\":\"staticpower:soldering_iron\" }");
 	}
 
-	public SolderingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public SolderingRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		String s = GsonHelper.getAsString(json, "group", "");
 		Map<String, Ingredient> map = SolderingRecipe.deserializeKey(GsonHelper.getAsJsonObject(json, "key"));
 		String[] astring = SolderingRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern"));
 		int i = astring[0].length();
 		int j = astring.length;
 		NonNullList<Ingredient> nonnulllist = SolderingRecipe.deserializeIngredients(astring, map, i, j);
-		ItemStack itemstack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+		ItemStack itemstack = JsonUtilities.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 		Ingredient solderingIron = Ingredient.fromJson(solderingIronTag);
 		return new SolderingRecipe(recipeId, s, i, j, solderingIron, nonnulllist, itemstack);
 	}

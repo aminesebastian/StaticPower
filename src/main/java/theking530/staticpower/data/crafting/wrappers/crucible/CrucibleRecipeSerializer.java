@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
@@ -23,7 +23,7 @@ public class CrucibleRecipeSerializer extends StaticPowerRecipeSerializer<Crucib
 	private static final Logger LOGGER = LogManager.getLogger(CrucibleRecipeSerializer.class);
 
 	@Override
-	public CrucibleRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public CrucibleRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
@@ -42,9 +42,9 @@ public class CrucibleRecipeSerializer extends StaticPowerRecipeSerializer<Crucib
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
 
 		// Get the item output if one is defined.
-		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.EMPTY;
+		StaticPowerOutputItem itemOutput = StaticPowerOutputItem.EMPTY;
 		if (GsonHelper.isValidNode(outputs, "item")) {
-			itemOutput = ProbabilityItemStackOutput.parseFromJSON(GsonHelper.getAsJsonObject(outputs, "item"));
+			itemOutput = StaticPowerOutputItem.parseFromJSON(GsonHelper.getAsJsonObject(outputs, "item"));
 		}
 
 		// Deserialize the fluid output if it exists.
@@ -75,7 +75,7 @@ public class CrucibleRecipeSerializer extends StaticPowerRecipeSerializer<Crucib
 	public CrucibleRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int minimumTemperature = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 		FluidStack fluid = buffer.readFluidStack();
 
 		return new CrucibleRecipe(recipeId, input, output, fluid, minimumTemperature, MachineRecipeProcessingSection.fromBuffer(buffer));

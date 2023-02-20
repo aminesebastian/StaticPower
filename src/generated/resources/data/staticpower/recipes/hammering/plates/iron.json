@@ -1,0 +1,14 @@
+{
+  "type": "staticpower:hammer",
+  "item": {
+    "ingredient": {
+      "item": "staticpower:ingot_iron_heated"
+    }
+  },
+  "output": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:plate_iron"
+    }
+  }
+}

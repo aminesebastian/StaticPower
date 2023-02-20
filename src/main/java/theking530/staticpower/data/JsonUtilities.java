@@ -2,8 +2,16 @@ package theking530.staticpower.data;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.nbt.ByteArrayTag;
 import net.minecraft.nbt.CompoundTag;
@@ -14,8 +22,42 @@ import net.minecraft.nbt.LongArrayTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.StringTagVisitor;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class JsonUtilities {
+	public static final Codec<Ingredient> INGREDIENT_CODEC = Codec.PASSTHROUGH.comapFlatMap(dynamic -> {
+		try {
+			Ingredient ingredient = Ingredient.fromJson(dynamic.convert(JsonOps.INSTANCE).getValue());
+			return DataResult.success(ingredient);
+		} catch (Exception e) {
+			return DataResult.error(e.getMessage());
+		}
+	}, ingredient -> new Dynamic<JsonElement>(JsonOps.INSTANCE, ingredient.toJson()));
+
+	public static final Codec<ItemStack> ITEMSTACK_CODEC = RecordCodecBuilder.create((instance) -> {
+		return instance.group(ForgeRegistries.ITEMS.getCodec().fieldOf("id").forGetter((stack) -> {
+			return stack.getItem();
+		}), Codec.INT.optionalFieldOf("count", 1).forGetter((stack) -> {
+			return stack.getCount();
+		}), CompoundTag.CODEC.optionalFieldOf("tag").forGetter((stack) -> {
+			return Optional.ofNullable(stack.getTag());
+		})).apply(instance, (item, count, tag) -> {
+			return new ItemStack(item, count, tag.orElse(null));
+		});
+	});
+
+	public static JsonElement itemStackToJson(ItemStack stack) {
+		DataResult<JsonElement> encodedResult = ITEMSTACK_CODEC.encodeStart(JsonOps.INSTANCE, stack);
+		return encodedResult.result().get();
+	}
+
+	public static ItemStack itemStackFromJson(JsonElement json) {
+		DataResult<Pair<ItemStack, JsonElement>> encodedResult = ITEMSTACK_CODEC.decode(JsonOps.INSTANCE, json);
+		return encodedResult.result().get().getFirst();
+	}
+
 	public static String nbtToPrettyJson(CompoundTag tag) {
 		return new StringTagVisitor().visit(tag);
 	}

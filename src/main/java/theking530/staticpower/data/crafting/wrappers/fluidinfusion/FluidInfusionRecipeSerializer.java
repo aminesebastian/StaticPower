@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
@@ -23,7 +23,7 @@ public class FluidInfusionRecipeSerializer extends StaticPowerRecipeSerializer<F
 	private static final Logger LOGGER = LogManager.getLogger(FluidInfusionRecipeSerializer.class);
 
 	@Override
-	public FluidInfusionRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public FluidInfusionRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
@@ -39,7 +39,7 @@ public class FluidInfusionRecipeSerializer extends StaticPowerRecipeSerializer<F
 				StaticPowerConfig.SERVER.fluidInfuserPowerUsage, json);
 
 		// Get the item output.
-		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(GsonHelper.getAsJsonObject(json, "result"));
+		StaticPowerOutputItem itemOutput = StaticPowerOutputItem.parseFromJSON(GsonHelper.getAsJsonObject(json, "result"));
 
 		// Deserialize the fluid input.
 		FluidStack fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(GsonHelper.getAsJsonObject(json, "fluid"));
@@ -57,7 +57,7 @@ public class FluidInfusionRecipeSerializer extends StaticPowerRecipeSerializer<F
 	public FluidInfusionRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		FluidStack fluidInput = buffer.readFluidStack();
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 
 		// Create the recipe.
 		return new FluidInfusionRecipe(recipeId, input, output, fluidInput, MachineRecipeProcessingSection.fromBuffer(buffer));

@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerializer<ThermalConductivityRecipe> {
@@ -20,7 +20,7 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "thermal_conducitity");
 
 	@Override
-	public ThermalConductivityRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public ThermalConductivityRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Allocate the blocks.
 		ResourceLocation[] blocks = new ResourceLocation[0];
 
@@ -62,7 +62,7 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 
 		// Allocate the overheating values.
 		BlockState overheatedBlock = Blocks.VOID_AIR.defaultBlockState();
-		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.EMPTY;
+		StaticPowerOutputItem overheatedItemStack = StaticPowerOutputItem.EMPTY;
 		int overheatTemperature = Integer.MAX_VALUE;
 
 		// Read the overheating values if they are defined.
@@ -79,14 +79,14 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 				}
 			}
 			if (overheatingElement.has("item")) {
-				overheatedItemStack = ProbabilityItemStackOutput.parseFromJSON(overheatingElement.get("item").getAsJsonObject());
+				overheatedItemStack = StaticPowerOutputItem.parseFromJSON(overheatingElement.get("item").getAsJsonObject());
 			}
 			overheatTemperature = overheatingElement.get("temperature").getAsInt();
 		}
 
 		// Allocate the freezing values.
 		BlockState freezingBlock = Blocks.VOID_AIR.defaultBlockState();
-		ProbabilityItemStackOutput freezingItemStack = ProbabilityItemStackOutput.EMPTY;
+		StaticPowerOutputItem freezingItemStack = StaticPowerOutputItem.EMPTY;
 		int freezingTemperature = Integer.MAX_VALUE;
 
 		// Read the freezing values if they are defined.
@@ -103,7 +103,7 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 				}
 			}
 			if (freezingElement.has("item")) {
-				freezingItemStack = ProbabilityItemStackOutput.parseFromJSON(freezingElement.get("item").getAsJsonObject());
+				freezingItemStack = StaticPowerOutputItem.parseFromJSON(freezingElement.get("item").getAsJsonObject());
 			}
 			freezingTemperature = freezingElement.get("temperature").getAsInt();
 		}
@@ -130,12 +130,12 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 		// Read the over heat values.
 		int overheatTemperature = buffer.readInt();
 		BlockState overheatedBlock = NbtUtils.readBlockState(buffer.readNbt());
-		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem overheatedItemStack = StaticPowerOutputItem.readFromBuffer(buffer);
 
 		// Read the freeze values.
 		int freezingTemperature = buffer.readInt();
 		BlockState freezingBlock = NbtUtils.readBlockState(buffer.readNbt());
-		ProbabilityItemStackOutput freezingItemStack = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem freezingItemStack = StaticPowerOutputItem.readFromBuffer(buffer);
 
 		// Read Blocks
 		byte blockTagCount = buffer.readByte();

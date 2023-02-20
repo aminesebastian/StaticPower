@@ -58,8 +58,8 @@ public class ModRecipeTypes {
 	public static final RegistryObject<RecipeType<FluidInfusionRecipe>> FLUID_INFUSION_RECIPE_TYPE = TYPES.register(FluidInfusionRecipe.ID, () -> FluidInfusionRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<FormerRecipe>> FORMER_RECIPE_TYPE = TYPES.register(FormerRecipe.ID, () -> FormerRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<FusionFurnaceRecipe>> FUSION_FURNACE_RECIPE_TYPE = TYPES.register(FusionFurnaceRecipe.ID, () -> FusionFurnaceRecipe.RECIPE_TYPE);
-	public static final RegistryObject<RecipeType<GrinderRecipe>> GRINDER_RECIPE_TYPE = TYPES.register(GrinderRecipe.ID, () -> GrinderRecipe.RECIPE_TYPE);
-	public static final RegistryObject<RecipeType<HammerRecipe>> HAMMER_RECIPE_TYPE = TYPES.register(HammerRecipe.ID, () -> HammerRecipe.RECIPE_TYPE);
+	public static final RegistryObject<RecipeType<GrinderRecipe>> GRINDER_RECIPE_TYPE = TYPES.register(GrinderRecipe.ID, () -> new StaticPowerRecipeType<GrinderRecipe>());
+	public static final RegistryObject<RecipeType<HammerRecipe>> HAMMER_RECIPE_TYPE = TYPES.register(HammerRecipe.ID, () -> new StaticPowerRecipeType<HammerRecipe>());
 	public static final RegistryObject<RecipeType<LatheRecipe>> LATHE_RECIPE_TYPE = TYPES.register(LatheRecipe.ID, () -> LatheRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<LumberMillRecipe>> LUMBER_MILL_RECIPE_TYPE = TYPES.register(LumberMillRecipe.ID, () -> LumberMillRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<MixerRecipe>> MIXER_RECIPE_TYPE = TYPES.register(MixerRecipe.ID, () -> MixerRecipe.RECIPE_TYPE);

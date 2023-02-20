@@ -1,19 +1,12 @@
 package theking530.staticpower.data.crafting;
 
-import java.util.Map.Entry;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -51,53 +44,6 @@ public class StaticPowerJsonParsingUtilities {
 			return output;
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("An error occured when attempting to deserialize json object: %1$s to a FluidStack.", object), e);
-		}
-	}
-
-	public static ItemStack parseItemWithNbt(JsonObject itemJson) {
-		ItemStack item = ShapedRecipe.itemStackFromJson(itemJson);
-		if (itemJson.has("nbt")) {
-			if (!item.hasTag()) {
-				item.setTag(new CompoundTag());
-			}
-			parseNbtFromJson(itemJson.getAsJsonObject("nbt"), item.getTag());
-		}
-		return item;
-	}
-
-	public static void parseNbtFromJson(JsonObject object, CompoundTag outputTag) {
-		// Iterate through all the members and attempt to parse them.
-		for (Entry<String, JsonElement> member : object.entrySet()) {
-			// Only consider primitives for now.
-			if (member.getValue().isJsonPrimitive()) {
-				// Get the primitive.
-				JsonPrimitive primitive = member.getValue().getAsJsonPrimitive();
-
-				// Add it to the nbt.
-				if (primitive.isNumber()) {
-					Number number = primitive.getAsNumber();
-					if (number instanceof Integer) {
-						outputTag.putInt(member.getKey(), primitive.getAsInt());
-					} else if (number instanceof Long) {
-						outputTag.putLong(member.getKey(), primitive.getAsLong());
-					} else if (number instanceof Double) {
-						outputTag.putDouble(member.getKey(), primitive.getAsDouble());
-					} else if (number instanceof Float) {
-						outputTag.putFloat(member.getKey(), primitive.getAsFloat());
-					} else if (number instanceof Short) {
-						outputTag.putShort(member.getKey(), primitive.getAsShort());
-					} else if (number instanceof Byte) {
-						outputTag.putByte(member.getKey(), primitive.getAsByte());
-					}
-
-				} else if (primitive.isBoolean()) {
-					outputTag.putBoolean(member.getKey(), primitive.getAsBoolean());
-				} else if (primitive.isString()) {
-					outputTag.putString(member.getKey(), primitive.getAsString());
-				} else {
-					LOGGER.warn(String.format("Encountered unsupported data type in JSON nbt: %1$s.", member.getKey()));
-				}
-			}
 		}
 	}
 }

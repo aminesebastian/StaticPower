@@ -36,7 +36,7 @@ import theking530.staticpower.cables.attachments.digistore.craftingterminal.Cont
 import theking530.staticpower.cables.attachments.digistore.patternencoder.ContainerDigistorePatternEncoder;
 import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
@@ -50,8 +50,6 @@ import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGenerat
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipe;
-import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
-import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
@@ -104,7 +102,7 @@ import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 
 @JeiPlugin
 public class PluginJEI implements IModPlugin {
-	public static final IIngredientType<ProbabilityItemStackOutput> PROBABILITY_ITEM_STACK = () -> ProbabilityItemStackOutput.class;
+	public static final IIngredientType<StaticPowerOutputItem> PROBABILITY_ITEM_STACK = () -> StaticPowerOutputItem.class;
 	public static IJeiRuntime RUNTIME;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -115,7 +113,7 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public void registerIngredients(IModIngredientRegistration registration) {
-		List<ProbabilityItemStackOutput> probabilityStacks = new ArrayList<ProbabilityItemStackOutput>();
+		List<StaticPowerOutputItem> probabilityStacks = new ArrayList<StaticPowerOutputItem>();
 
 		ProbabilityItemStackHelper itemStackHelper = new ProbabilityItemStackHelper(registration);
 		ProbabilityItemStackRenderer itemStackRenderer = new ProbabilityItemStackRenderer();
@@ -224,11 +222,11 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(FormerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FormerRecipe.RECIPE_TYPE));
 		registration.addRecipes(SolderingTableRecipeCategory.TYPE, recipeManager.getAllRecipesFor(SolderingRecipe.RECIPE_TYPE));
 		registration.addRecipes(ThermalConductivityRecipeCategory.TYPE, ThermalConductivityRecipeProvider.getRecipes());
-		registration.addRecipes(HammerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(HammerRecipe.RECIPE_TYPE));
+		registration.addRecipes(HammerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.HAMMER_RECIPE_TYPE.get()));
 		registration.addRecipes(CauldronRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CauldronRecipe.RECIPE_TYPE));
 		registration.addRecipes(FertilizerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FertalizerRecipe.RECIPE_TYPE));
 		registration.addRecipes(AlloyFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get()));
-		registration.addRecipes(PoweredGrinderRecipeCategory.TYPE, recipeManager.getAllRecipesFor(GrinderRecipe.RECIPE_TYPE));
+		registration.addRecipes(PoweredGrinderRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.GRINDER_RECIPE_TYPE.get()));
 		registration.addRecipes(CentrifugeRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CentrifugeRecipe.RECIPE_TYPE));
 		registration.addRecipes(SolidGeneratorRecipeCategory.TYPE, recipeManager.getAllRecipesFor(SolidFuelRecipe.RECIPE_TYPE));
 		registration.addRecipes(LatheRecipeCategory.TYPE, recipeManager.getAllRecipesFor(LatheRecipe.RECIPE_TYPE));

@@ -17,7 +17,7 @@ public class RefineryRecipeSerializer extends StaticPowerRecipeSerializer<Refine
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "refinery_recipe");
 
 	@Override
-	public RefineryRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public RefineryRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		StaticPowerIngredient catalyst = StaticPowerIngredient.EMPTY;
 		FluidStack fluidInput1 = FluidStack.EMPTY;
 		FluidStack fluidInput2 = FluidStack.EMPTY;

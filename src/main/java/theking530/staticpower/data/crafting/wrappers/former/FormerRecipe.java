@@ -7,7 +7,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
@@ -18,9 +18,9 @@ public class FormerRecipe extends AbstractMachineRecipe {
 
 	private StaticPowerIngredient inputIngredient;
 	private Ingredient requiredMold;
-	private ProbabilityItemStackOutput outputItemStack;
+	private StaticPowerOutputItem outputItemStack;
 
-	public FormerRecipe(ResourceLocation name, ProbabilityItemStackOutput output, StaticPowerIngredient input, Ingredient mold, MachineRecipeProcessingSection processing) {
+	public FormerRecipe(ResourceLocation name, StaticPowerOutputItem output, StaticPowerIngredient input, Ingredient mold, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		inputIngredient = input;
 		requiredMold = mold;
@@ -50,10 +50,10 @@ public class FormerRecipe extends AbstractMachineRecipe {
 	}
 
 	public ItemStack getRawRecipeOutput() {
-		return outputItemStack.getItem();
+		return outputItemStack.getItemStack();
 	}
 
-	public ProbabilityItemStackOutput getOutput() {
+	public StaticPowerOutputItem getOutput() {
 		return outputItemStack;
 	}
 

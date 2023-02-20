@@ -1,0 +1,13 @@
+{
+  "type": "staticpower:hammer",
+  "item": {
+    "ingredient": {
+      "tag": "forge:rubber"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:rubber_sheet"
+    }
+  }
+}

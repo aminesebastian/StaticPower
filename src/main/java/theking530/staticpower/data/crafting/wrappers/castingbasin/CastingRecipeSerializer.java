@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
@@ -19,7 +19,7 @@ public class CastingRecipeSerializer extends StaticPowerRecipeSerializer<Casting
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "casting_recipe");
 
 	@Override
-	public CastingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+	public CastingRecipe parse(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input fluid.
 		FluidStack fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("input"));
 
@@ -29,7 +29,7 @@ public class CastingRecipeSerializer extends StaticPowerRecipeSerializer<Casting
 
 		// Get the output item.
 		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
+		StaticPowerOutputItem output = StaticPowerOutputItem.parseFromJSON(outputElement);
 
 		// Capture the processing and power costs.
 		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.casterProcessingTime,
@@ -43,7 +43,7 @@ public class CastingRecipeSerializer extends StaticPowerRecipeSerializer<Casting
 	public CastingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		FluidStack fluidInput = buffer.readFluidStack();
 		Ingredient mold = Ingredient.fromNetwork(buffer);
-		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 
 		// Create the recipe.
 		return new CastingRecipe(recipeId, output, fluidInput, mold, MachineRecipeProcessingSection.fromBuffer(buffer));

@@ -1,45 +1,41 @@
 package theking530.staticpower.data.crafting.wrappers.grinder;
 
+import java.util.List;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class GrinderRecipe extends AbstractMachineRecipe {
 	public static final String ID = "grinder";
-	public static final RecipeType<GrinderRecipe> RECIPE_TYPE = new StaticPowerRecipeType<GrinderRecipe>();
 
-	private final ProbabilityItemStackOutput[] outputs;
-	/**
-	 * This is a helper datatype to use whenever you need access just to the items
-	 * (for example, to see if an inventory can take the items).
-	 */
-	private final ItemStack[] outputItems;
+	public static final Codec<GrinderRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					StaticPowerIngredient.CODEC.fieldOf("input").forGetter(recipe -> recipe.getInputIngredient()),
+					MachineRecipeProcessingSection.CODEC.optionalFieldOf("processing", null).forGetter(recipe -> recipe.getProcessingSection()),
+					StaticPowerOutputItem.CODEC.listOf().fieldOf("outputs").forGetter(recipe -> recipe.getOutputItems())).apply(instance, GrinderRecipe::new));
+
 	private final StaticPowerIngredient inputItem;
+	private final List<StaticPowerOutputItem> outputs;
 
-	public GrinderRecipe(ResourceLocation name, StaticPowerIngredient input, MachineRecipeProcessingSection processing, ProbabilityItemStackOutput... outputs) {
-		super(name, processing);
+	public GrinderRecipe(ResourceLocation id, StaticPowerIngredient input, MachineRecipeProcessingSection processing, List<StaticPowerOutputItem> outputs) {
+		super(id, processing);
 		this.inputItem = input;
 		this.outputs = outputs;
-		// Cache the output items.
-		this.outputItems = new ItemStack[outputs.length];
-		for (int i = 0; i < outputs.length; i++) {
-			outputItems[i] = outputs[i].getItem();
-		}
 	}
 
-	public ProbabilityItemStackOutput[] getOutputItems() {
+	public List<StaticPowerOutputItem> getOutputItems() {
 		return outputs;
-	}
-
-	public ItemStack[] getRawOutputItems() {
-		return outputItems;
 	}
 
 	public StaticPowerIngredient getInputIngredient() {
@@ -64,11 +60,16 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public RecipeSerializer<GrinderRecipe> getSerializer() {
-		return GrinderRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.GRINDER_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<GrinderRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.GRINDER_RECIPE_TYPE.get();
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(() -> 200, () -> 5.0, () -> 0, () -> 0);
 	}
 }

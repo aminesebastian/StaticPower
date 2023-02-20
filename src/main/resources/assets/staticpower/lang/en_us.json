@@ -1,7 +1,9 @@
 {
-	"itemGroup.staticpower": "Static Power",
+	"itemGroup.staticpower": "Static Power: General",
 	"itemGroup.staticpower.cables": "Static Power: Cables",
 	"itemGroup.staticpower.tools": "Static Power: Tools",
+	"itemGroup.staticpower.materials": "Static Power: Materials",
+	"itemGroup.staticpower.food": "Static Power: Food",
 	
 	"item.staticpower.thermometer": "Thermometer",
 	

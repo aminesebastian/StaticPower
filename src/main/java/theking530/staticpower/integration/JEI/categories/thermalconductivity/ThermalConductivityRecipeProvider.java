@@ -166,7 +166,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 	private static boolean isValidOverheatingOutput(ItemStack stack) {
 		// Iterate through all the recipes and add the applicable ones.
 		for (ThermalConductivityJEIRecipeWrapper recipe : RECIPES) {
-			if (ItemUtilities.areItemStacksStackable(recipe.getOutputBlock(), stack) || ItemUtilities.areItemStacksStackable(recipe.getOutputItem().getItem(), stack)) {
+			if (ItemUtilities.areItemStacksStackable(recipe.getOutputBlock(), stack) || ItemUtilities.areItemStacksStackable(recipe.getOutputItem().getItemStack(), stack)) {
 				return true;
 			}
 		}

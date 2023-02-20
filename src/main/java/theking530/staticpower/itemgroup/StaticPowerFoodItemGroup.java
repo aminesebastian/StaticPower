@@ -14,6 +14,6 @@ public class StaticPowerFoodItemGroup extends CreativeModeTab {
 
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack makeIcon() {
-		return new ItemStack(ModItems.EnergizedPie.get());
+		return new ItemStack(ModItems.ApplePie.get());
 	}
 }

@@ -1,0 +1,10 @@
+{
+  "type": "staticpower:hammer",
+  "block": "minecraft:sand",
+  "output": {
+    "chance": 0.15,
+    "item": {
+      "id": "staticpower:silicon"
+    }
+  }
+}
