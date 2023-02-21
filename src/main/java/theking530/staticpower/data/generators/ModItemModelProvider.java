@@ -83,15 +83,15 @@ public class ModItemModelProvider extends ItemModelProvider {
 			if (bundle.shouldGenerateIngot()) {
 				simpleItem(bundle.getIngot().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateHeatedIngotMaterial()) {
+			if (bundle.shouldGenerateHeatedIngot()) {
 				if (bundle == ModMaterials.IRON) {
-					simpleItemVanillaTexture(ModMaterials.IRON.getHeatedSmeltedMaterial().get(), "iron_ingot");
+					simpleItemVanillaTexture(ModMaterials.IRON.getHeatedIngot().get(), "iron_ingot");
 				} else if (bundle == ModMaterials.GOLD) {
-					simpleItemVanillaTexture(ModMaterials.GOLD.getHeatedSmeltedMaterial().get(), "gold_ingot");
+					simpleItemVanillaTexture(ModMaterials.GOLD.getHeatedIngot().get(), "gold_ingot");
 				} else if (bundle == ModMaterials.COPPER) {
-					simpleItemVanillaTexture(ModMaterials.COPPER.getHeatedSmeltedMaterial().get(), "copper_ingot");
+					simpleItemVanillaTexture(ModMaterials.COPPER.getHeatedIngot().get(), "copper_ingot");
 				} else {
-					simpleItem(bundle.getHeatedSmeltedMaterial().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
+					simpleItem(bundle.getHeatedIngot().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
 				}
 			}
 			if (bundle.shouldGenerateNugget()) {

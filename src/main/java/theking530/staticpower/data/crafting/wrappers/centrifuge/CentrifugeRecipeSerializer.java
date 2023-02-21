@@ -55,7 +55,7 @@ public class CentrifugeRecipeSerializer extends StaticPowerRecipeSerializer<Cent
 	@Override
 	public CentrifugeRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int speed = buffer.readInt();
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem output1 = StaticPowerOutputItem.readFromBuffer(buffer);
 		StaticPowerOutputItem output2 = StaticPowerOutputItem.readFromBuffer(buffer);
 		StaticPowerOutputItem output3 = StaticPowerOutputItem.readFromBuffer(buffer);
@@ -67,7 +67,7 @@ public class CentrifugeRecipeSerializer extends StaticPowerRecipeSerializer<Cent
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, CentrifugeRecipe recipe) {
 		buffer.writeInt(recipe.getMinimumSpeed());
-		recipe.getInput().write(buffer);
+		recipe.getInput().writeToBuffer(buffer);
 		recipe.getOutput1().writeToBuffer(buffer);
 		recipe.getOutput2().writeToBuffer(buffer);
 		recipe.getOutput3().writeToBuffer(buffer);

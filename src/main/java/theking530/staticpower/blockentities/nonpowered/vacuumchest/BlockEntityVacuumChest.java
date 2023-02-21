@@ -159,7 +159,7 @@ public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvi
 			double z = (worldPosition.getZ() + 0.5D - orb.getZ());
 
 			// Check if we can take the orb's xp. If not, stop.
-			int tempFilled = fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.source.get(), orb.value), FluidAction.SIMULATE);
+			int tempFilled = fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.getSource().get(), orb.value), FluidAction.SIMULATE);
 			if (tempFilled != orb.value) {
 				break;
 			}
@@ -168,7 +168,7 @@ public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvi
 			if (distance < 0.6f || (shouldTeleport && distance < getRadius() - 0.1f)) {
 				if (true) {// experienceTank.canFill() && experienceTank.fill(new
 							// FluidStack(ModFluids.LiquidExperience, orb.getXpValue()), false) > 0) {
-					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.source.get(), orb.value), FluidAction.EXECUTE);
+					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.getSource().get(), orb.value), FluidAction.EXECUTE);
 					orb.remove(RemovalReason.DISCARDED);
 					getLevel().playSound(null, (double) worldPosition.getX(), (double) worldPosition.getY(), (double) worldPosition.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP,
 							SoundSource.BLOCKS, 0.5F, (getLevel().random.nextFloat() + 1) / 2);

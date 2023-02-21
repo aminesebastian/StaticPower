@@ -639,7 +639,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * This method can be overridden to serialize any data that needs to be
 	 * serialized each block update. This method, alongside
 	 * {@link #serializeSaveNbt(CompoundNBT)}, is called in the parent
-	 * {@link TileEntity}'s {@link #write(CompoundNBT)} method. So values should
+	 * {@link TileEntity}'s {@link #writeToBuffer(CompoundNBT)} method. So values should
 	 * either appear in this method, or in the 'save' variant.
 	 * 
 	 * @param nbt The {@link CompoundNBT} to serialize to.
@@ -681,7 +681,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * information that is already synchronized with a packet (eg. Redstone Control
 	 * State/Side Configuration) and should only be used when storing to disk/saving
 	 * a chunk.This method, alongside {@link #serializeUpdateNbt(CompoundNBT)}, is
-	 * called in the parent {@link TileEntity}'s {@link #write(CompoundNBT)} method.
+	 * called in the parent {@link TileEntity}'s {@link #writeToBuffer(CompoundNBT)} method.
 	 * So values should either appear in this method, or in the 'update' variant.
 	 * 
 	 * @param nbt The {@link CompoundNBT} to serialize to.
@@ -758,7 +758,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * to transmit from server to client. This calls both
 	 * {@link #serializeUpdateNbt(CompoundNBT)} and
 	 * {@link #serializeSaveNbt(CompoundNBT)} by calling
-	 * {@link #write(CompoundNBT)}.
+	 * {@link #writeToBuffer(CompoundNBT)}.
 	 */
 	@Override
 	public CompoundTag getUpdateTag() {
@@ -772,7 +772,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * transmit from server to client. This calls both
 	 * {@link #deserializeUpdateNbt(CompoundNBT)} and
 	 * {@link #deserializeSaveNbt(CompoundNBT)} by calling
-	 * {@link #read(CompoundNBT)}.
+	 * {@link #readFromBuffer(CompoundNBT)}.
 	 */
 	@Override
 	public void handleUpdateTag(CompoundTag tag) {

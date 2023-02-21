@@ -147,7 +147,7 @@ public class ResearchSerializer extends StaticPowerRecipeSerializer<Research> {
 		List<StaticPowerIngredient> requirements = new ArrayList<StaticPowerIngredient>();
 		byte reqCount = buffer.readByte();
 		for (int i = 0; i < reqCount; i++) {
-			requirements.add(StaticPowerIngredient.read(buffer));
+			requirements.add(StaticPowerIngredient.readFromBuffer(buffer));
 		}
 
 		// Unlocks.
@@ -195,7 +195,7 @@ public class ResearchSerializer extends StaticPowerRecipeSerializer<Research> {
 		// Requirements.
 		buffer.writeByte(recipe.getRequirements().size());
 		for (StaticPowerIngredient req : recipe.getRequirements()) {
-			req.write(buffer);
+			req.writeToBuffer(buffer);
 		}
 
 		// Unlocks.

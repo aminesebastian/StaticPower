@@ -53,7 +53,6 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 
 	public BlockEntityAlloyFurnace(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-
 		registerComponent(furnaceSoundComponent = new LoopingSoundComponent("FurnaceSoundComponent", 20));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input2).setShiftClickEnabled(true));

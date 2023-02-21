@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-20T06:44:47.8067214	Tags for minecraft:item
+// 1.19.2	2023-02-21T01:46:20.7840928	Tags for minecraft:item
 51b00e5b14b17e9df81bc1b25cec37a2fe8031dc data/forge/tags/items/chunks/aluminum.json
 4de111a656b1087f12c8b141ed43b4b8331a9edb data/forge/tags/items/chunks/lead.json
 acb4e62cf3f26e33cc03ba5bbcd5a9cba436682b data/forge/tags/items/chunks/magnesium.json
@@ -204,7 +204,7 @@ adc88cd2eeff3d61d615a2c3ed29a4d0befae0b2 data/staticpower/tags/items/ingot_or_pl
 40dc4b422784ce6df561ddecb83c9e2f023a5a19 data/staticpower/tags/items/ingot_or_plate/tin.json
 4a93fece363331dc12ad9f24dc62be23d0cfe338 data/staticpower/tags/items/ingot_or_plate/tungsten.json
 2bcc23b1c7c4bbf9249d508e126a6545b0a647d5 data/staticpower/tags/items/ingot_or_plate/zinc.json
-16304092a1a0984813cc5f6a2f7cba32649bf952 data/staticpower/tags/items/lightbulbs.json
+ba4f4874fd007d06546ca720cd98f42010c32256 data/staticpower/tags/items/lightbulbs.json
 4c78890f8ac79bcc95b16dcae9c786673881a181 data/staticpower/tags/items/machines.json
 2528913fac539e196dfc1dd3beaf5a78d22819ff data/staticpower/tags/items/machine_blocks.json
 e8f309955d537f37f48055743def9728df64488b data/staticpower/tags/items/materials.json

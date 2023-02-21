@@ -75,7 +75,7 @@ public class ModRecipeSerializers {
 	public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StaticPower.MOD_ID);
 
 	public static final RegistryObject<AutoSmithRecipeSerializer> AUTO_SMITH_SERIALIZER = SERIALIZERS.register(AutoSmithRecipe.ID, () -> AutoSmithRecipeSerializer.INSTANCE);
-	public static final RegistryObject<BottlerRecipeSerializer> BOTTLER_SERIALIZER = SERIALIZERS.register(BottleRecipe.ID, () -> BottlerRecipeSerializer.INSTANCE);
+	public static final RegistryObject<BottlerRecipeSerializer> BOTTLER_SERIALIZER = SERIALIZERS.register(BottleRecipe.ID, () -> new BottlerRecipeSerializer());
 	public static final RegistryObject<CastingRecipeSerializer> CASTING_SERIALIZER = SERIALIZERS.register(CastingRecipe.ID, () -> CastingRecipeSerializer.INSTANCE);
 	public static final RegistryObject<CauldronRecipeSerializer> CAULDRON_SERIALIZER = SERIALIZERS.register(CauldronRecipe.ID, () -> CauldronRecipeSerializer.INSTANCE);
 	public static final RegistryObject<CentrifugeRecipeSerializer> CENTRIFUGE_SERIALIZER = SERIALIZERS.register(CentrifugeRecipe.ID, () -> CentrifugeRecipeSerializer.INSTANCE);

@@ -276,14 +276,14 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		 **********/
 		for (StaticPowerFluidBundle fluid : ModFluids.FLUID_BUNDLES) {
 			if (!ModFluids.CONCRETE.containsValue(fluid) && !ModFluids.DYES.containsValue(fluid)) {
-				simpleBlockWithCustomTexture(fluid.block.get(), "fluids/" + fluid.source.getKey().location().getPath() + "_still");
+				simpleBlockWithCustomTexture(fluid.getBlock().get(), "fluids/" + fluid.getSource().getKey().location().getPath() + "_still");
 			}
 		}
 		for (StaticPowerFluidBundle fluid : ModFluids.CONCRETE.values()) {
-			simpleBlockWithCustomTexture(fluid.block.get(), "fluids/concrete_still");
+			simpleBlockWithCustomTexture(fluid.getBlock().get(), "fluids/concrete_still");
 		}
 		for (StaticPowerFluidBundle fluid : ModFluids.DYES.values()) {
-			simpleBlockWithCustomTexture(fluid.block.get(), "fluids/dye_still");
+			simpleBlockWithCustomTexture(fluid.getBlock().get(), "fluids/dye_still");
 		}
 	}
 

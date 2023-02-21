@@ -18,7 +18,7 @@ public class ModFluidTagProvider extends FluidTagsProvider {
 	@Override
 	protected void addTags() {
 		for (StaticPowerFluidBundle bundle : ModFluids.FLUID_BUNDLES) {
-			tag(bundle.tag).add(bundle.source.get(), bundle.flowing.get());
+			tag(bundle.getTag()).add(bundle.getSource().get(), bundle.getFlowing().get());
 		}
 	}
 }

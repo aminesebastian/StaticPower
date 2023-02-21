@@ -86,7 +86,7 @@ public class BlockEntityExperienceHopper extends BlockEntityBase {
 				int playerDrainAmount = SDMath.clamp(amountToTake, 0, player.totalExperience);
 
 				// Fill with the XP
-				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.source.get(), playerDrainAmount), FluidAction.EXECUTE);
+				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.getSource().get(), playerDrainAmount), FluidAction.EXECUTE);
 				filled = playerDrainAmount;
 
 				// Drain the XP.
@@ -101,12 +101,12 @@ public class BlockEntityExperienceHopper extends BlockEntityBase {
 		int filled = 0;
 		List<ExperienceOrb> xpOrbs = getLevel().getEntitiesOfClass(ExperienceOrb.class, bounds);
 		for (ExperienceOrb orb : xpOrbs) {
-			int tempFilled = internalTank.fill(new FluidStack(ModFluids.LiquidExperience.source.get(), orb.value), FluidAction.SIMULATE);
+			int tempFilled = internalTank.fill(new FluidStack(ModFluids.LiquidExperience.getSource().get(), orb.value), FluidAction.SIMULATE);
 			if (tempFilled != orb.value) {
 				break;
 			} else {
 				filled += tempFilled;
-				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.source.get(), orb.value), FluidAction.EXECUTE);
+				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.getSource().get(), orb.value), FluidAction.EXECUTE);
 				orb.remove(RemovalReason.DISCARDED);
 			}
 		}

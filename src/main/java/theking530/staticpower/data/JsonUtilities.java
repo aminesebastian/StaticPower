@@ -24,6 +24,7 @@ import net.minecraft.nbt.StringTagVisitor;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class JsonUtilities {
@@ -47,6 +48,25 @@ public class JsonUtilities {
 			return new ItemStack(item, count, tag.orElse(null));
 		});
 	});
+
+	public static final Codec<FluidStack> FLUIDSTACK_CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ForgeRegistries.FLUIDS.getCodec().fieldOf("fluid_name").forGetter(FluidStack::getFluid),
+					Codec.INT.fieldOf("amount").forGetter(FluidStack::getAmount), CompoundTag.CODEC.optionalFieldOf("tag").forGetter(stack -> Optional.ofNullable(stack.getTag())))
+					.apply(instance, (fluid, amount, tag) -> {
+						FluidStack stack = new FluidStack(fluid, amount);
+						tag.ifPresent(stack::setTag);
+						return stack;
+					}));
+
+	public static JsonElement fluidStackToJson(FluidStack fluid) {
+		DataResult<JsonElement> encodedResult = FLUIDSTACK_CODEC.encodeStart(JsonOps.INSTANCE, fluid);
+		return encodedResult.result().get();
+	}
+
+	public static FluidStack fluidStackFromJson(JsonElement json) {
+		DataResult<Pair<FluidStack, JsonElement>> encodedResult = FLUIDSTACK_CODEC.decode(JsonOps.INSTANCE, json);
+		return encodedResult.result().get().getFirst();
+	}
 
 	public static JsonElement itemStackToJson(ItemStack stack) {
 		DataResult<JsonElement> encodedResult = ITEMSTACK_CODEC.encodeStart(JsonOps.INSTANCE, stack);

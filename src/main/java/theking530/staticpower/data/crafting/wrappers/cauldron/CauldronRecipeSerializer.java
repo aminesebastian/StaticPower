@@ -62,7 +62,7 @@ public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<Cauldr
 	public CauldronRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int time = buffer.readInt();
 		boolean shouldDrainCauldron = buffer.readBoolean();
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 		FluidStack fluidInput = buffer.readFluidStack();
 		FluidStack fluidOutput = buffer.readFluidStack();
@@ -75,7 +75,7 @@ public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<Cauldr
 	public void toNetwork(FriendlyByteBuf buffer, CauldronRecipe recipe) {
 		buffer.writeInt(recipe.getRequiredTimeInCauldron());
 		buffer.writeBoolean(recipe.shouldDrainCauldron());
-		recipe.getInput().write(buffer);
+		recipe.getInput().writeToBuffer(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getRequiredFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());

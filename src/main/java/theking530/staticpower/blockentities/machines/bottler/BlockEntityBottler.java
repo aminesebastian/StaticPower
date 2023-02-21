@@ -32,6 +32,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityBottler extends BlockEntityMachine {
@@ -218,7 +219,7 @@ public class BlockEntityBottler extends BlockEntityMachine {
 
 		BottleRecipe recipe = getRecipe(inputInventory.getStackInSlot(0));
 		if (recipe != null) {
-			if (fluidTankComponent.getFluid().isFluidEqual(recipe.getFluid()) && fluidTankComponent.getFluidAmount() >= recipe.getFluid().getAmount()) {
+			if (recipe.getFluid().test(fluidTankComponent.getFluid(), true)) {
 				return true;
 			}
 		} else {
@@ -241,14 +242,14 @@ public class BlockEntityBottler extends BlockEntityMachine {
 		} else {
 			BottleRecipe recipe = getRecipe(stack);
 			if (recipe != null) {
-				return recipe.getFilledBottle();
+				return recipe.getFilledBottle().calculateOutput();
 			}
 		}
 		return ItemStack.EMPTY;
 	}
 
 	protected BottleRecipe getRecipe(ItemStack stack) {
-		return StaticPowerRecipeRegistry.getRecipe(BottleRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(stack)).orElse(null);
+		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.BOTTLER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(stack)).orElse(null);
 	}
 
 	@Override

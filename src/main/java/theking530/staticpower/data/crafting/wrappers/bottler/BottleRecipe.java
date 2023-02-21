@@ -1,86 +1,72 @@
 package theking530.staticpower.data.crafting.wrappers.bottler;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
-import theking530.staticpower.utilities.ItemUtilities;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class BottleRecipe extends AbstractStaticPowerRecipe {
 	public static final String ID = "bottler";
-	public static final RecipeType<BottleRecipe> RECIPE_TYPE = new StaticPowerRecipeType<BottleRecipe>();
+	public static final Codec<BottleRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					StaticPowerIngredient.CODEC.fieldOf("empty_bottle").forGetter(recipe -> recipe.getEmptyBottle()),
+					StaticPowerOutputItem.CODEC.fieldOf("filled_bottle").forGetter(recipe -> recipe.getFilledBottle()),
+					FluidIngredient.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.getFluid())).apply(instance, BottleRecipe::new));
 
-	private final ItemStack filledBottle;
-	private final ItemStack emptyBottle;
-	private final FluidStack fluid;
+	private final StaticPowerIngredient emptyBottle;
+	private final StaticPowerOutputItem filledBottle;
+	private final FluidIngredient fluid;
 
-	public BottleRecipe(ResourceLocation name, ItemStack filledBottle, ItemStack emptyBottle, FluidStack fluid) {
-		super(name);
+	public BottleRecipe(ResourceLocation id, StaticPowerIngredient emptyBottle, StaticPowerOutputItem filledBottle, FluidIngredient fluid) {
+		super(id);
 		this.emptyBottle = emptyBottle;
 		this.filledBottle = filledBottle;
 		this.fluid = fluid;
 	}
 
-	public ItemStack getEmptyBottle() {
+	public StaticPowerIngredient getEmptyBottle() {
 		return emptyBottle;
 	}
 
-	public ItemStack getFilledBottle() {
+	public StaticPowerOutputItem getFilledBottle() {
 		return filledBottle;
 	}
 
-	public FluidStack getFluid() {
+	public FluidIngredient getFluid() {
 		return fluid;
 	}
 
 	@Override
 	public RecipeSerializer<BottleRecipe> getSerializer() {
-		return BottlerRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.BOTTLER_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<BottleRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.BOTTLER_RECIPE_TYPE.get();
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
 		// Check if the item and fluid match.
-		boolean itemMatched = ItemUtilities.areItemStacksStackable(matchParams.getItems()[0], emptyBottle) && fluid.isFluidEqual(matchParams.getFluids()[0]);
-
-		// If the items matched, check to see if we should match counts too.
-		if (itemMatched && matchParams.shouldVerifyItemCounts() && matchParams.getItems()[0].getCount() < emptyBottle.getCount()) {
-			return false;
-		} else {
-			return itemMatched;
+		if (matchParams.shouldVerifyItems()) {
+			if (!emptyBottle.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
+				return false;
+			}
 		}
-	}
-
-	@Override
-	public boolean equals(Object otherRecipe) {
-		if (otherRecipe instanceof BottleRecipe) {
-			// Get the other bottle recipe.
-			BottleRecipe otherBottleRecipe = (BottleRecipe) otherRecipe;
-			// Check the filled bottles.
-			if (!ItemStack.isSame(filledBottle, otherBottleRecipe.filledBottle)) {
+		if (matchParams.shouldVerifyFluids()) {
+			if (!fluid.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts())) {
 				return false;
 			}
-			// Check the empty bottles.
-			if (!ItemStack.isSame(emptyBottle, otherBottleRecipe.emptyBottle)) {
-				return false;
-			}
-			// Check the fluids.
-			if (fluid.getAmount() != otherBottleRecipe.getFluid().getAmount()
-					|| !fluid.equals(otherBottleRecipe.getFluid()) && !FluidStack.areFluidStackTagsEqual(fluid, otherBottleRecipe.getFluid())) {
-				return false;
-			}
-
-			// If all the above criteria are valid, return true.
-			return true;
 		}
-		return false;
+		return true;
 	}
 }

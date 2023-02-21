@@ -22,7 +22,7 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 	public static final Codec<GrinderRecipe> CODEC = RecordCodecBuilder
 			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
 					StaticPowerIngredient.CODEC.fieldOf("input").forGetter(recipe -> recipe.getInputIngredient()),
-					MachineRecipeProcessingSection.CODEC.optionalFieldOf("processing", null).forGetter(recipe -> recipe.getProcessingSection()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection()),
 					StaticPowerOutputItem.CODEC.listOf().fieldOf("outputs").forGetter(recipe -> recipe.getOutputItems())).apply(instance, GrinderRecipe::new));
 
 	private final StaticPowerIngredient inputItem;

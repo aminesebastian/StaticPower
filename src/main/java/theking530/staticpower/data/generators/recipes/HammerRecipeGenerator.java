@@ -4,7 +4,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
@@ -15,7 +14,7 @@ import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> implements IConditionBuilder {
+public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> {
 
 	public HammerRecipeGenerator(DataGenerator dataGenerator) {
 		super("hammering", dataGenerator);
@@ -27,9 +26,8 @@ public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> implem
 		addItemRecipe("rubber_sheet", StaticPowerIngredient.of(ModItemTags.RUBBER), StaticPowerOutputItem.of(ModItems.RubberSheet.get()));
 
 		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
-			if (material.shouldGenerateHeatedIngotMaterial() && material.shouldGeneratePlate()) {
-				addItemRecipe("plates/" + material.getName(), StaticPowerIngredient.of(material.getHeatedSmeltedMaterial().get()),
-						StaticPowerOutputItem.of(material.getPlate().get(), 2));
+			if (material.shouldGenerateHeatedIngot() && material.shouldGeneratePlate()) {
+				addItemRecipe("plates/" + material.getName(), StaticPowerIngredient.of(material.getHeatedIngot().get()), StaticPowerOutputItem.of(material.getPlate().get(), 2));
 			}
 		}
 	}
@@ -43,7 +41,7 @@ public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> implem
 	}
 
 	protected void addRecipe(String nameOverride, TagKey<Block> block, StaticPowerIngredient inputItem, StaticPowerOutputItem output) {
-		HammerRecipe recipe = new HammerRecipe(null, inputItem, block, output);
+		HammerRecipe recipe = new HammerRecipe(null, 1, inputItem, block, output);
 		addRecipe(nameOverride, SPRecipeBuilder.create(recipe));
 	}
 }

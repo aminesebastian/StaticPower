@@ -37,7 +37,6 @@ import theking530.staticpower.cables.attachments.digistore.patternencoder.Contai
 import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
-import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
@@ -103,6 +102,7 @@ import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 @JeiPlugin
 public class PluginJEI implements IModPlugin {
 	public static final IIngredientType<StaticPowerOutputItem> PROBABILITY_ITEM_STACK = () -> StaticPowerOutputItem.class;
+
 	public static IJeiRuntime RUNTIME;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -114,11 +114,9 @@ public class PluginJEI implements IModPlugin {
 	@Override
 	public void registerIngredients(IModIngredientRegistration registration) {
 		List<StaticPowerOutputItem> probabilityStacks = new ArrayList<StaticPowerOutputItem>();
-
 		ProbabilityItemStackHelper itemStackHelper = new ProbabilityItemStackHelper(registration);
 		ProbabilityItemStackRenderer itemStackRenderer = new ProbabilityItemStackRenderer();
 		registration.register(PROBABILITY_ITEM_STACK, probabilityStacks, itemStackHelper, itemStackRenderer);
-
 	}
 
 	@Override
@@ -235,7 +233,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(PackagerRecipeCategory.TYPE, PackagerRecipeProvider.getRecipes());
 		registration.addRecipes(FermenterRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FermenterRecipe.RECIPE_TYPE));
 		registration.addRecipes(SqueezerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(SqueezerRecipe.RECIPE_TYPE));
-		registration.addRecipes(BottleRecipeCategory.TYPE, recipeManager.getAllRecipesFor(BottleRecipe.RECIPE_TYPE));
+		registration.addRecipes(BottleRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.BOTTLER_RECIPE_TYPE.get()));
 		registration.addRecipes(FluidInfuserRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FluidInfusionRecipe.RECIPE_TYPE));
 		registration.addRecipes(FluidGeneratorRecipeCateogry.TYPE, recipeManager.getAllRecipesFor(FluidGeneratorRecipe.RECIPE_TYPE));
 		registration.addRecipes(CasterRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CastingRecipe.RECIPE_TYPE));

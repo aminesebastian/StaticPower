@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.5,
+  "ingredient": {
+    "tag": "staticpower:ingots/energized_metal"
+  },
+  "result": "staticpower:ingot_energized_metal_heated"
+}

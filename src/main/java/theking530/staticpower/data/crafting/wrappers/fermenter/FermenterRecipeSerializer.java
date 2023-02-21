@@ -39,7 +39,7 @@ public class FermenterRecipeSerializer extends StaticPowerRecipeSerializer<Ferme
 
 	@Override
 	public FermenterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		FluidStack output = buffer.readFluidStack();
 		StaticPowerOutputItem residualOutput = StaticPowerOutputItem.readFromBuffer(buffer);
 		// Create the recipe.
@@ -48,7 +48,7 @@ public class FermenterRecipeSerializer extends StaticPowerRecipeSerializer<Ferme
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, FermenterRecipe recipe) {
-		recipe.getInputIngredient().write(buffer);
+		recipe.getInputIngredient().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluidStack());
 		recipe.getResidualOutput().writeToBuffer(buffer);
 	}

@@ -71,7 +71,7 @@ public class SqueezerRecipeSerializer extends StaticPowerRecipeSerializer<Squeez
 
 	@Override
 	public SqueezerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 		FluidStack fluid = buffer.readFluidStack();
 
@@ -80,7 +80,7 @@ public class SqueezerRecipeSerializer extends StaticPowerRecipeSerializer<Squeez
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, SqueezerRecipe recipe) {
-		recipe.getInput().write(buffer);
+		recipe.getInput().writeToBuffer(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluid());
 		recipe.getProcessingSection().writeToBuffer(buffer);

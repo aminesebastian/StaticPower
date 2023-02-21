@@ -11,7 +11,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
@@ -24,7 +23,7 @@ import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> implements IConditionBuilder {
+public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 
 	public GrindingRecipeGenerator(DataGenerator dataGenerator) {
 		super("grinding", dataGenerator);
@@ -58,7 +57,7 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> imp
 		addRecipe("ores/quartz", StaticPowerIngredient.of(RecipeItem.of(Tags.Items.ORES_QUARTZ)), StaticPowerOutputItem.of(Items.QUARTZ, 3, 1, 1, 0.4f));
 		addRecipe("ores/rusty_iron", StaticPowerIngredient.of(RecipeItem.of(ModBlocks.OreRustyIron.get())),
 				StaticPowerOutputItem.of(ModItems.RustyIronScrap.get(), 4, 1, 1, 0.25f));
-		
+
 		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
 			if (material.shouldGenerateIngot() && material.shouldGenerateDust()) {
 				singleItemTodust("ingots/" + material.getName(), RecipeItem.of(material.getIngotTag()), material.getDust().get());

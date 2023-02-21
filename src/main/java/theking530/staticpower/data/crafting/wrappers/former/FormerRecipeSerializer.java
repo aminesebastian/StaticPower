@@ -41,7 +41,7 @@ public class FormerRecipeSerializer extends StaticPowerRecipeSerializer<FormerRe
 
 	@Override
 	public FormerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		Ingredient mold = Ingredient.fromNetwork(buffer);
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 
@@ -51,7 +51,7 @@ public class FormerRecipeSerializer extends StaticPowerRecipeSerializer<FormerRe
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, FormerRecipe recipe) {
-		recipe.getInputIngredient().write(buffer);
+		recipe.getInputIngredient().writeToBuffer(buffer);
 		recipe.getRequiredMold().toNetwork(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);

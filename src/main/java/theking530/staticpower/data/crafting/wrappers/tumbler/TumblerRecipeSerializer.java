@@ -35,14 +35,14 @@ public class TumblerRecipeSerializer extends StaticPowerRecipeSerializer<Tumbler
 
 	@Override
 	public TumblerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 		return new TumblerRecipe(recipeId, input, output, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, TumblerRecipe recipe) {
-		recipe.getInputIngredient().write(buffer);
+		recipe.getInputIngredient().writeToBuffer(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);
 	}

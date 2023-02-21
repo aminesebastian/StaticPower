@@ -7,6 +7,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.generators.recipes.AlloyFurnaceRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.BlastingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.BottlerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CraftingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.GrindingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.HammerRecipeGenerator;
@@ -25,6 +27,8 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new GrindingRecipeGenerator(generator));
 		generator.addProvider(true, new AlloyFurnaceRecipeGenerator(generator));
 		generator.addProvider(true, new HammerRecipeGenerator(generator));
+		generator.addProvider(true, new BlastingRecipeGenerator(generator));
+		generator.addProvider(true, new BottlerRecipeGenerator(generator));
 
 		generator.addProvider(true, new ModLootTableProvider(generator));
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));

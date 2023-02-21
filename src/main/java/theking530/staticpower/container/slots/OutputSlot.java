@@ -2,11 +2,15 @@ package theking530.staticpower.container.slots;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 
 public class OutputSlot extends StaticPowerContainerSlot {
+	private RecipeProcessingComponent<?> processingComponent;
+	private boolean shouldApplyExperience;
 
 	public OutputSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		super(itemHandler, index, xPosition, yPosition);
@@ -25,4 +29,17 @@ public class OutputSlot extends StaticPowerContainerSlot {
 		return false;
 	}
 
+	public OutputSlot shouldApplyExperience(RecipeProcessingComponent<?> processingComponent) {
+		this.processingComponent = processingComponent;
+		this.shouldApplyExperience = true;
+		return this;
+	}
+
+	@Override
+	public void onTake(Player player, ItemStack stack) {
+		super.onTake(player, stack);
+		if (shouldApplyExperience) {
+			processingComponent.applyExperience(player);
+		}
+	}
 }

@@ -74,8 +74,8 @@ public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoS
 		int repairAmount = buffer.readInt();
 
 		// Read the input item, modifier, and fluid.
-		StaticPowerIngredient smithingTarget = StaticPowerIngredient.read(buffer);
-		StaticPowerIngredient modifierMaterial = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient smithingTarget = StaticPowerIngredient.readFromBuffer(buffer);
+		StaticPowerIngredient modifierMaterial = StaticPowerIngredient.readFromBuffer(buffer);
 		FluidStack fluidInput = buffer.readFluidStack();
 
 		// Read the modifiers length.
@@ -97,8 +97,8 @@ public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoS
 		buffer.writeInt(recipe.getRepairAmount());
 
 		// Write the input item, modifier, and fluid.
-		recipe.getSmithTarget().write(buffer);
-		recipe.getModifierMaterial().write(buffer);
+		recipe.getSmithTarget().writeToBuffer(buffer);
+		recipe.getModifierMaterial().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getModifierFluid());
 
 		// Write the modifiers length.

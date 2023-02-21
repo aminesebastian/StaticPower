@@ -40,10 +40,12 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.IdMappingEvent;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.data.StaticPowerGameDataManager;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.StaticPower;
@@ -83,6 +85,11 @@ public class StaticPowerForgeEventsCommon {
 				StaticPowerGameDataManager.tickGameData(event.level);
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void mappingChanged(IdMappingEvent evt) {
+		FluidIngredient.invalidateAll();
 	}
 
 	@SubscribeEvent

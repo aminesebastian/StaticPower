@@ -50,7 +50,7 @@ public class LumberMillRecipeSerializer extends StaticPowerRecipeSerializer<Lumb
 
 	@Override
 	public LumberMillRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem primary = StaticPowerOutputItem.readFromBuffer(buffer);
 		StaticPowerOutputItem secondary = StaticPowerOutputItem.readFromBuffer(buffer);
 		FluidStack outFluid = buffer.readFluidStack();
@@ -60,7 +60,7 @@ public class LumberMillRecipeSerializer extends StaticPowerRecipeSerializer<Lumb
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, LumberMillRecipe recipe) {
-		recipe.getInput().write(buffer);
+		recipe.getInput().writeToBuffer(buffer);
 		recipe.getPrimaryOutput().writeToBuffer(buffer);
 		recipe.getSecondaryOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluid());

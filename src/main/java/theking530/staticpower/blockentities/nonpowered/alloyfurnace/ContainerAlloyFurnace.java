@@ -36,7 +36,7 @@ public class ContainerAlloyFurnace extends StaticPowerTileEntityContainer<BlockE
 		addSlot(new StaticPowerContainerSlot(getTileEntity().fuelInventory, 0, 47, 64));
 
 		// Output
-		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 110, 40));
+		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 110, 40).shouldApplyExperience(getTileEntity().processingComponent));
 		addAllPlayerSlots();
 	}
 }

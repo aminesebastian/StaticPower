@@ -162,7 +162,7 @@ public class StaticPowerIngredient {
 		return new StaticPowerIngredient(input, inputCount);
 	}
 
-	public void write(FriendlyByteBuf buffer) {
+	public void writeToBuffer(FriendlyByteBuf buffer) {
 		ingredient.toNetwork(buffer);
 		buffer.writeInt(count);
 	}
@@ -175,7 +175,7 @@ public class StaticPowerIngredient {
 		return new StaticPowerIngredient(ingredient, count);
 	}
 
-	public static StaticPowerIngredient read(FriendlyByteBuf buffer) {
+	public static StaticPowerIngredient readFromBuffer(FriendlyByteBuf buffer) {
 		Ingredient ingredient = Ingredient.fromNetwork(buffer);
 		int count = buffer.readInt();
 		return new StaticPowerIngredient(ingredient, count);

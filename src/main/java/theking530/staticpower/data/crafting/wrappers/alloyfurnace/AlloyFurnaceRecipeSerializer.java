@@ -17,20 +17,20 @@ public class AlloyFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<Al
 
 	@Override
 	public AlloyFurnaceRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input1 = StaticPowerIngredient.read(buffer);
-		StaticPowerIngredient input2 = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input1 = StaticPowerIngredient.readFromBuffer(buffer);
+		StaticPowerIngredient input2 = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromBuffer(buffer);
-		int experience = buffer.readInt();
+		float experience = buffer.readFloat();
 		return new AlloyFurnaceRecipe(recipeId, input1, input2, output, experience, processing);
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, AlloyFurnaceRecipe recipe) {
-		recipe.getInput1().write(buffer);
-		recipe.getInput2().write(buffer);
+		recipe.getInput1().writeToBuffer(buffer);
+		recipe.getInput2().writeToBuffer(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);
-		buffer.writeInt(recipe.getExperience());
+		buffer.writeFloat(recipe.getExperience());
 	}
 }

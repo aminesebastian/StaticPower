@@ -55,7 +55,7 @@ public class FluidInfusionRecipeSerializer extends StaticPowerRecipeSerializer<F
 
 	@Override
 	public FluidInfusionRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		FluidStack fluidInput = buffer.readFluidStack();
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 
@@ -65,7 +65,7 @@ public class FluidInfusionRecipeSerializer extends StaticPowerRecipeSerializer<F
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, FluidInfusionRecipe recipe) {
-		recipe.getInput().write(buffer);
+		recipe.getInput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getRequiredFluid());
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);

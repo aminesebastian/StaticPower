@@ -1,33 +1,22 @@
 package theking530.staticpower.data.generators.recipes;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
-
 import net.minecraft.advancements.critereon.InventoryChangeTrigger.TriggerInstance;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.utilities.MinecraftColor;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.generators.RecipeItem;
+import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.generators.helpers.SPShapedRecipeBuilder;
 import theking530.staticpower.data.generators.helpers.SPShapelessRecipeBuilder;
 import theking530.staticpower.init.ModBlocks;
@@ -35,17 +24,15 @@ import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class CraftingRecipeGenerator extends RecipeProvider implements IConditionBuilder {
-	private Map<String, RecipeBuilder> builders;
+public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 
-	public CraftingRecipeGenerator(DataGenerator p_125973_) {
-		super(p_125973_);
-		builders = new HashMap<>();
+	public CraftingRecipeGenerator(DataGenerator generator) {
+		super("crafting", generator);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void buildCraftingRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
+	protected void buildRecipes() {
 
 		beginShapelessRecipe(ModBlocks.StaticPlanks.get(), 4, "wood/static_planks").requires(ModBlocks.StaticLog.get()).unlockedBy("has_log", hasItems(ModBlocks.StaticLog.get()));
 		beginShapelessRecipe(ModBlocks.EnergizedPlanks.get(), 4, "wood/energized_planks").requires(ModBlocks.EnergizedLog.get()).unlockedBy("has_log",
@@ -526,8 +513,6 @@ public class CraftingRecipeGenerator extends RecipeProvider implements IConditio
 			.pattern("ppp")
 			.unlockedBy("has_digistore_core", hasItems(ModItems.DigistoreCore.get()));
 		// @formatter:on
-
-		completeBuilding(finishedRecipeConsumer);
 	}
 
 	protected SPShapedRecipeBuilder beginShapedRecipe(ItemLike result) {
@@ -1034,10 +1019,7 @@ public class CraftingRecipeGenerator extends RecipeProvider implements IConditio
 	protected SPShapedRecipeBuilder beginShapedRecipe(ItemLike result, int count, String nameOverride) {
 		SPShapedRecipeBuilder builder = SPShapedRecipeBuilder.shaped(result, count);
 		String name = "shaped/" + nameOverride;
-		if (builders.containsKey(name)) {
-			throw new RuntimeException("Encountered duplicate recipe name: " + name);
-		}
-		builders.put(name, builder);
+		addRecipe(name, builder);
 		return builder;
 	}
 
@@ -1056,49 +1038,11 @@ public class CraftingRecipeGenerator extends RecipeProvider implements IConditio
 	protected SPShapelessRecipeBuilder beginShapelessRecipe(ItemLike result, int count, String nameOverride) {
 		SPShapelessRecipeBuilder builder = SPShapelessRecipeBuilder.shapeless(result, count);
 		String name = "shapeless/" + nameOverride;
-		if (builders.containsKey(name)) {
-			throw new RuntimeException("Encountered duplicate recipe name: " + name);
-		}
-		builders.put(name, builder);
+		addRecipe(name, builder);
 		return builder;
 	}
 
 	protected TriggerInstance hasWireCutter() {
 		return inventoryTrigger(ItemPredicate.Builder.item().of(ModItemTags.WIRE_CUTTER).build());
-	}
-
-	protected TriggerInstance hasItems(ItemLike... items) {
-		return inventoryTrigger(ItemPredicate.Builder.item().of(items).build());
-	}
-
-	protected TriggerInstance hasItems(RecipeItem... items) {
-		ItemPredicate.Builder builder = ItemPredicate.Builder.item();
-		for (RecipeItem item : items) {
-			if (item.hasItemTag()) {
-				builder.of(item.getItemTag());
-			} else {
-				builder.of(item.getItem());
-			}
-		}
-		return inventoryTrigger(builder.build());
-	}
-
-	@SuppressWarnings("unchecked")
-	protected TriggerInstance hasItems(TagKey<Item>... items) {
-		ItemPredicate.Builder builder = ItemPredicate.Builder.item();
-		for (TagKey<Item> tag : items) {
-			builder.of(tag);
-		}
-		return inventoryTrigger(builder.build());
-	}
-
-	private void completeBuilding(Consumer<FinishedRecipe> finishedRecipeConsumer) {
-		for (Entry<String, RecipeBuilder> pair : builders.entrySet()) {
-			try {
-				pair.getValue().save(finishedRecipeConsumer, new ResourceLocation(StaticPower.MOD_ID, "crafting/" + pair.getKey()));
-			} catch (Exception e) {
-				throw new RuntimeException(String.format("An error occured when attempting to save recipe: %1$s.", pair.getKey()), e);
-			}
-		}
 	}
 }

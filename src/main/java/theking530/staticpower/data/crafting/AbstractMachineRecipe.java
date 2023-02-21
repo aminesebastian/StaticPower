@@ -5,8 +5,12 @@ import net.minecraft.resources.ResourceLocation;
 public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	protected final MachineRecipeProcessingSection processingSection;
 
-	public AbstractMachineRecipe(ResourceLocation name, MachineRecipeProcessingSection processingSection) {
-		super(name);
+	public AbstractMachineRecipe(ResourceLocation id, MachineRecipeProcessingSection processingSection) {
+		this(id, 0.0f, processingSection);
+	}
+
+	public AbstractMachineRecipe(ResourceLocation id, float experience, MachineRecipeProcessingSection processingSection) {
+		super(id, experience);
 		this.processingSection = processingSection;
 	}
 

@@ -31,6 +31,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.registries.ForgeRegistries;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.container.FakeCraftingInventory;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
@@ -357,7 +358,8 @@ public class StaticPowerRecipeRegistry {
 				FluidStack fluidStack = new FluidStack(fluid, bucketVolume);
 				ResourceLocation recipe = new ResourceLocation(itemRegistryName.getNamespace(),
 						itemRegistryName.getPath() + "_" + fluidRegistryName.getPath() + "_bottler_dynamic");
-				BottleRecipe bucketRecipe = new BottleRecipe(recipe, result.result, new ItemStack(item), fluidStack);
+				BottleRecipe bucketRecipe = new BottleRecipe(recipe, StaticPowerIngredient.of(new ItemStack(item)), StaticPowerOutputItem.of(result.result),
+						FluidIngredient.of(1000, fluidStack));
 				newRecipes.put(bucketRecipe.getId(), bucketRecipe);
 			}
 		}

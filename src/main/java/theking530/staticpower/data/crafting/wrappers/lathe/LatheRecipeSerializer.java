@@ -61,7 +61,7 @@ public class LatheRecipeSerializer extends StaticPowerRecipeSerializer<LatheReci
 
 		NonNullList<StaticPowerIngredient> nonnulllist = NonNullList.withSize(width * height, StaticPowerIngredient.EMPTY);
 		for (int k = 0; k < nonnulllist.size(); ++k) {
-			nonnulllist.set(k, StaticPowerIngredient.read(buffer));
+			nonnulllist.set(k, StaticPowerIngredient.readFromBuffer(buffer));
 		}
 
 		StaticPowerOutputItem primary = StaticPowerOutputItem.readFromBuffer(buffer);
@@ -77,7 +77,7 @@ public class LatheRecipeSerializer extends StaticPowerRecipeSerializer<LatheReci
 		buffer.writeVarInt(recipe.recipeHeight);
 
 		for (StaticPowerIngredient ing : recipe.getInputs()) {
-			ing.write(buffer);
+			ing.writeToBuffer(buffer);
 		}
 
 		recipe.getPrimaryOutput().writeToBuffer(buffer);

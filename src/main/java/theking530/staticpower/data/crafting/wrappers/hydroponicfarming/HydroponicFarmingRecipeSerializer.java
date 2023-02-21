@@ -41,13 +41,13 @@ public class HydroponicFarmingRecipeSerializer extends StaticPowerRecipeSerializ
 
 	@Override
 	public HydroponicFarmingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		return new HydroponicFarmingRecipe(recipeId, input, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, HydroponicFarmingRecipe recipe) {
-		recipe.getInput().write(buffer);
+		recipe.getInput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

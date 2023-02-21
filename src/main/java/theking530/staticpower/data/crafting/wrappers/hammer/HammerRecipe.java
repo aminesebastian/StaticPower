@@ -28,12 +28,15 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 	public static final Ingredient DEFAULT_HAMMERS = Ingredient.of(ModItemTags.HAMMER);
 
 	public static final Codec<HammerRecipe> CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-					JsonUtilities.INGREDIENT_CODEC.optionalFieldOf("hammer", DEFAULT_HAMMERS).forGetter(recipe -> recipe.getHammer()),
-					StaticPowerIngredient.CODEC.optionalFieldOf("item").forGetter(recipe -> Optional.of(recipe.getInputItem())),
-					TagKey.codec(ForgeRegistries.BLOCKS.getRegistryKey()).optionalFieldOf("block").forGetter(recipe -> Optional.of(recipe.getBlock())),
-					StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput())).apply(instance, (id, hammer, item, block, output) -> {
-						return new HammerRecipe(id, hammer, item.orElse(null), block.orElse(null), output);
+			.create(instance -> instance
+					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+							Codec.FLOAT.fieldOf("experience").forGetter(recipe -> recipe.getExperience()),
+							JsonUtilities.INGREDIENT_CODEC.optionalFieldOf("hammer", DEFAULT_HAMMERS).forGetter(recipe -> recipe.getHammer()),
+							StaticPowerIngredient.CODEC.optionalFieldOf("item").forGetter(recipe -> Optional.ofNullable(recipe.getInputItem())),
+							TagKey.codec(ForgeRegistries.BLOCKS.getRegistryKey()).optionalFieldOf("block").forGetter(recipe -> Optional.ofNullable(recipe.getBlock())),
+							StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()))
+					.apply(instance, (id, experience, hammer, item, block, output) -> {
+						return new HammerRecipe(id, experience, hammer, item.orElse(null), block.orElse(null), output);
 					}));
 
 	private final Ingredient hammer;
@@ -42,20 +45,20 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 	private final StaticPowerOutputItem outputItem;
 	private final boolean isBlockType;
 
-	public HammerRecipe(ResourceLocation id, Ingredient hammer, TagKey<Block> block, StaticPowerOutputItem outputItem) {
-		this(id, hammer, null, block, outputItem);
+	public HammerRecipe(ResourceLocation id, float experience, Ingredient hammer, TagKey<Block> block, StaticPowerOutputItem outputItem) {
+		this(id, experience, hammer, null, block, outputItem);
 	}
 
-	public HammerRecipe(ResourceLocation id, Ingredient hammer, StaticPowerIngredient inputItem, StaticPowerOutputItem outputItem) {
-		this(id, hammer, inputItem, null, outputItem);
+	public HammerRecipe(ResourceLocation id, float experience, Ingredient hammer, StaticPowerIngredient inputItem, StaticPowerOutputItem outputItem) {
+		this(id, experience, hammer, inputItem, null, outputItem);
 	}
 
-	public HammerRecipe(ResourceLocation id, StaticPowerIngredient inputItem, TagKey<Block> block, StaticPowerOutputItem outputItem) {
-		this(id, DEFAULT_HAMMERS, inputItem, block, outputItem);
+	public HammerRecipe(ResourceLocation id, float experience, StaticPowerIngredient inputItem, TagKey<Block> block, StaticPowerOutputItem outputItem) {
+		this(id, experience, DEFAULT_HAMMERS, inputItem, block, outputItem);
 	}
 
-	public HammerRecipe(ResourceLocation id, Ingredient hammer, StaticPowerIngredient inputItem, TagKey<Block> block, StaticPowerOutputItem outputItem) {
-		super(id);
+	public HammerRecipe(ResourceLocation id, float experience, Ingredient hammer, StaticPowerIngredient inputItem, TagKey<Block> block, StaticPowerOutputItem outputItem) {
+		super(id, experience);
 		this.hammer = hammer;
 		this.inputItem = inputItem;
 		this.blockTag = block;

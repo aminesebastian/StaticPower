@@ -15,13 +15,13 @@ import theking530.staticpower.fluid.AbstractStaticPowerFluid.Source;
 public class StaticPowerFluidBundle {
 	public static final ResourceLocation OVERLAY_TEXTURE = new ResourceLocation(StaticPower.MOD_ID, "textures/misc/underfluid.png");
 
-	public final TagKey<Fluid> tag;
-	public final RegistryObject<FluidType> type;
-	public final FluidType.Properties typeProperties;
-	public final RegistryObject<StaticPowerFluidBlock> block;
-	public final RegistryObject<BucketItem> bucket;
-	public final RegistryObject<AbstractStaticPowerFluid.Source> source;
-	public final RegistryObject<AbstractStaticPowerFluid.Flowing> flowing;
+	protected final TagKey<Fluid> tag;
+	protected final RegistryObject<FluidType> type;
+	protected final FluidType.Properties typeProperties;
+	protected final RegistryObject<StaticPowerFluidBlock> block;
+	protected final RegistryObject<BucketItem> bucket;
+	protected final RegistryObject<AbstractStaticPowerFluid.Source> source;
+	protected final RegistryObject<AbstractStaticPowerFluid.Flowing> flowing;
 
 	public StaticPowerFluidBundle(TagKey<Fluid> tag, RegistryObject<FluidType> type, Properties typeProperties, RegistryObject<StaticPowerFluidBlock> block,
 			RegistryObject<BucketItem> bucket, RegistryObject<Source> source, RegistryObject<Flowing> flowing) {
@@ -36,5 +36,29 @@ public class StaticPowerFluidBundle {
 
 	public Item getBucket() {
 		return bucket.get();
+	}
+
+	public TagKey<Fluid> getTag() {
+		return tag;
+	}
+
+	public RegistryObject<FluidType> getType() {
+		return type;
+	}
+
+	public FluidType.Properties getTypeProperties() {
+		return typeProperties;
+	}
+
+	public RegistryObject<StaticPowerFluidBlock> getBlock() {
+		return block;
+	}
+
+	public RegistryObject<AbstractStaticPowerFluid.Source> getSource() {
+		return source;
+	}
+
+	public RegistryObject<AbstractStaticPowerFluid.Flowing> getFlowing() {
+		return flowing;
 	}
 }

@@ -20,7 +20,7 @@ public class GrinderRecipeSerializer extends StaticPowerRecipeSerializer<Grinder
 
 	@Override
 	public GrinderRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		int outputCount = buffer.readByte();
 		List<StaticPowerOutputItem> outputs = new LinkedList<StaticPowerOutputItem>();
 		for (int i = 0; i < outputCount; i++) {
@@ -31,7 +31,7 @@ public class GrinderRecipeSerializer extends StaticPowerRecipeSerializer<Grinder
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, GrinderRecipe recipe) {
-		recipe.getInputIngredient().write(buffer);
+		recipe.getInputIngredient().writeToBuffer(buffer);
 		buffer.writeByte(recipe.getOutputItems().size());
 		for (int i = 0; i < recipe.getOutputItems().size(); i++) {
 			recipe.getOutputItems().get(i).writeToBuffer(buffer);

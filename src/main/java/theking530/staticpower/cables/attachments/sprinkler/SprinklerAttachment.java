@@ -11,7 +11,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -34,6 +33,8 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.cables.ModCableModules;
+import theking530.staticpower.init.tags.ModFluidTags;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class SprinklerAttachment extends AbstractCableAttachment {
 	private static final Vector3D SPRINKLER_BOUNDS = new Vector3D(2.5f, 2.5f, 2.5f);
@@ -86,31 +87,15 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 	protected boolean handleExperience(ItemStack attachment, Direction side, FluidStack fluidContained, FluidCableComponent fluidCable) {
 		// Check to make sure the fluid is experience.
-		if (fluidContained.getFluid() != ModFluids.LiquidExperience.source.get()) {
+		if (ModFluidTags.matches(ModFluids.LiquidExperience.getTag(), fluidContained.getFluid())) {
 			return false;
 		}
 
 		// Use fluid and spawn the experience orb.
-		if (!fluidCable.getLevel().isClientSide) {
+		if (!fluidCable.getLevel().isClientSide()) {
 			fluidCable.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).ifPresent(network -> {
 				int drained = network.supply(fluidCable.getPos(), 5, FluidAction.EXECUTE).getAmount();
-				Vector3D direction = new Vector3D(side);
-
-				// Create the XP Orb Entity.
-				ExperienceOrb orb = new ExperienceOrb(fluidCable.getLevel(), fluidCable.getPos().getX() + 0.5f + direction.getX(),
-						fluidCable.getPos().getY() + 0.5f + direction.getY(), fluidCable.getPos().getZ() + 0.5f + direction.getZ(), drained);
-
-				// Set a random X and Z velocity.
-				float random = fluidCable.getLevel().getRandom().nextFloat();
-				random *= 2;
-				random -= 1;
-				random *= 0.02;
-
-				// Set the motion.
-				orb.setDeltaMovement(random, 0.25, random);
-
-				// Add the entity orb to the world.
-				fluidCable.getLevel().addFreshEntity(orb);
+				WorldUtilities.dropExperience(fluidCable.getLevel(), side, fluidCable.getPos(), drained);
 			});
 
 		}
@@ -133,7 +118,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 		}
 
 		// Spawn the particles on the client, fertilize and use the fluid on the server.
-		if (fluidCable.getLevel().isClientSide) {
+		if (fluidCable.getLevel().isClientSide()) {
 			// Only render particles half of the time.
 			if (SDMath.diceRoll(0.5f)) {
 				// Get a random offset.
@@ -206,7 +191,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 					// If we can grow this, grow it.
 					if (tempCrop.isValidBonemealTarget(fluidCable.getLevel(), target, cropState, false)) {
-						tempCrop.performBonemeal((ServerLevel) fluidCable.getLevel(), fluidCable.getLevel().random, target, cropState);
+						tempCrop.performBonemeal((ServerLevel) fluidCable.getLevel(), fluidCable.getLevel().getRandom(), target, cropState);
 						// Spawn some fertilziation particles.
 						((ServerLevel) fluidCable.getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, target.getX() + 0.5D, target.getY() + 1.0D, target.getZ() + 0.5D, 1, 0.0D,
 								0.0D, 0.0D, 0.0D);

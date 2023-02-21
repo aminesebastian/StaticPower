@@ -4,12 +4,15 @@ import java.util.Optional;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingFluidWrapper;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
+import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blockentities.components.team.TeamComponent;
 import theking530.staticpower.container.FakeCraftingInventory;
@@ -18,6 +21,7 @@ import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.packager.PackagerRecipe;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProcesingComponent<RecipeProcessingComponent<T>> {
 	public static final int MOVE_TIME = 8;
@@ -31,6 +35,8 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 	private int moveTimer;
 	@UpdateSerialize
 	private int moveTime;
+	@SaveSerialize
+	private float accumulatedExperience;
 
 	public RecipeProcessingComponent(String name, RecipeType<T> recipeType, IRecipeProcessor<T> processor) {
 		this(name, 0, recipeType, processor);
@@ -213,6 +219,14 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 				}
 			}
 		}
+
+		if (getCurrentRecipe().get() instanceof AbstractStaticPowerRecipe) {
+			AbstractStaticPowerRecipe castRecipe = (AbstractStaticPowerRecipe) getCurrentRecipe().get();
+			if (castRecipe.hasExperience()) {
+				accumulatedExperience += castRecipe.getExperience();
+			}
+		}
+
 		outputContainer.clear();
 	}
 
@@ -281,4 +295,26 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		this.moveTime = moveTime;
 	}
 
+	public float getAccumulatedExperience() {
+		return accumulatedExperience;
+	}
+
+	public void clearAccumulatedExperience() {
+		accumulatedExperience = 0.0f;
+	}
+
+	public void applyExperience(Player player) {
+		if (getAccumulatedExperience() > 0) {
+			int points = (int) getAccumulatedExperience();
+			float chanceOfAnotherPoint = getAccumulatedExperience() - points;
+			if (chanceOfAnotherPoint > 0) {
+				if (SDMath.diceRoll(chanceOfAnotherPoint)) {
+					points += 1;
+				}
+			}
+
+			WorldUtilities.dropExperience(getLevel(), getPos(), points);
+			clearAccumulatedExperience();
+		}
+	}
 }

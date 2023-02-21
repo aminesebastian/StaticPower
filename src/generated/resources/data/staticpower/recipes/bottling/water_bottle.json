@@ -1,0 +1,19 @@
+{
+  "type": "staticpower:bottler",
+  "empty_bottle": {
+    "ingredient": {
+      "tag": "staticpower:glass_bottles"
+    }
+  },
+  "filled_bottle": {
+    "item": {
+      "id": "minecraft:glass_bottle"
+    }
+  },
+  "fluid": {
+    "amount": 1000,
+    "fluids": {
+      "tag": "minecraft:water"
+    }
+  }
+}

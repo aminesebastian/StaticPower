@@ -14,6 +14,8 @@ import theking530.staticpower.StaticPower;
 public class ModItemTags {
 	public static final TagKey<Item> MATERIALS = create("materials");
 
+	public static final TagKey<Item> GLASS_BOTTLES = create("glass_bottles");
+
 	public static final TagKey<Item> CABLES = create("cables");
 	public static final TagKey<Item> PUMPS = create("pumps");
 	public static final TagKey<Item> MACHINES = create("machines");

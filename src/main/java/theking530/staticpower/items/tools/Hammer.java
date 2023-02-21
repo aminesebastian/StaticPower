@@ -210,10 +210,13 @@ public class Hammer extends StaticPowerItem {
 				player.getCommandSenderWorld().setBlockAndUpdate(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
 			}
 
-			// Damage the item.
 			if (hammer.hurt(1, RandomSource.create(), null)) {
 				hammer.shrink(1);
 				hammer.setDamageValue(0);
+			}
+
+			if (recipe.hasExperience()) {
+				WorldUtilities.dropExperience(player.getLevel(), pos, (int) recipe.getExperience());
 			}
 
 			// Return early.

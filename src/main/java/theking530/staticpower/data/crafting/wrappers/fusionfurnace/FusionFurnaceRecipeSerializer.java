@@ -48,7 +48,7 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 		int inputCount = buffer.readByte();
 		List<StaticPowerIngredient> inputs = new ArrayList<StaticPowerIngredient>();
 		for (int i = 0; i < inputCount; i++) {
-			inputs.add(StaticPowerIngredient.read(buffer));
+			inputs.add(StaticPowerIngredient.readFromBuffer(buffer));
 		}
 
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
@@ -62,7 +62,7 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 		buffer.writeByte(recipe.getInputs().size());
 
 		for (StaticPowerIngredient ing : recipe.getInputs()) {
-			ing.write(buffer);
+			ing.writeToBuffer(buffer);
 		}
 
 		recipe.getOutput().writeToBuffer(buffer);

@@ -42,7 +42,7 @@ import theking530.staticpower.data.research.Research;
 public class ModRecipeTypes {
 	public static final DeferredRegister<RecipeType<?>> TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StaticPower.MOD_ID);
 	public static final RegistryObject<RecipeType<AutoSmithRecipe>> AUTO_SMITH_RECIPE_TYPE = TYPES.register(AutoSmithRecipe.ID, () -> AutoSmithRecipe.RECIPE_TYPE);
-	public static final RegistryObject<RecipeType<BottleRecipe>> BOTTLER_RECIPE_TYPE = TYPES.register(BottleRecipe.ID, () -> BottleRecipe.RECIPE_TYPE);
+	public static final RegistryObject<RecipeType<BottleRecipe>> BOTTLER_RECIPE_TYPE = TYPES.register(BottleRecipe.ID, () -> new StaticPowerRecipeType<BottleRecipe>());
 	public static final RegistryObject<RecipeType<CastingRecipe>> CASTING_RECIPE_TYPE = TYPES.register(CastingRecipe.ID, () -> CastingRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<CauldronRecipe>> CAULDRON_RECIPE_TYPE = TYPES.register(CauldronRecipe.ID, () -> CauldronRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<CentrifugeRecipe>> CENTRIFUGE_RECIPE_TYPE = TYPES.register(CentrifugeRecipe.ID, () -> CentrifugeRecipe.RECIPE_TYPE);

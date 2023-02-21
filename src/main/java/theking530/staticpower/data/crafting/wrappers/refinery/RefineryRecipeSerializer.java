@@ -61,7 +61,7 @@ public class RefineryRecipeSerializer extends StaticPowerRecipeSerializer<Refine
 
 	@Override
 	public RefineryRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient catalyst = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient catalyst = StaticPowerIngredient.readFromBuffer(buffer);
 		FluidStack fluidInput1 = buffer.readFluidStack();
 		FluidStack fluidInput2 = buffer.readFluidStack();
 		FluidStack output1 = buffer.readFluidStack();
@@ -74,7 +74,7 @@ public class RefineryRecipeSerializer extends StaticPowerRecipeSerializer<Refine
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, RefineryRecipe recipe) {
-		recipe.getCatalyst().write(buffer);
+		recipe.getCatalyst().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getPrimaryFluidInput());
 		buffer.writeFluidStack(recipe.getSecondaryFluidInput());
 		buffer.writeFluidStack(recipe.getFluidOutput1());

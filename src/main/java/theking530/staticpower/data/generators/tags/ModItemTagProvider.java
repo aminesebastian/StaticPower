@@ -60,10 +60,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		copy(Tags.Blocks.ORES_IN_GROUND_NETHERRACK, Tags.Items.ORES_IN_GROUND_NETHERRACK);
 		copy(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE, Tags.Items.ORES_IN_GROUND_DEEPSLATE);
 
-		tag(Tags.Items.INGOTS)
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateIngot()).map((bundle) -> bundle.getIngot().get())))
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedIngotMaterial())
-						.map((bundle) -> bundle.getHeatedSmeltedMaterial().get())));
+		tag(Tags.Items.INGOTS).add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateIngot()).map((bundle) -> bundle.getIngot().get())))
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedIngot()).map((bundle) -> bundle.getHeatedIngot().get())));
 
 		tag(Tags.Items.GEMS).add(ModMaterials.SAPPHIRE.getRawMaterial().get(), ModMaterials.RUBY.getRawMaterial().get());
 
@@ -161,8 +159,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModItemTags.TOOL_BACKPACK).addTag(Tags.Items.TOOLS_PICKAXES).addTag(Tags.Items.TOOLS_SHOVELS).addTag(Tags.Items.TOOLS_AXES).addTag(Tags.Items.TOOLS_HOES)
 				.addTag(ModItemTags.TOOLS);
 
-		tag(ModItemTags.HEATED_INGOTS).add(toArray(
-				ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedIngotMaterial()).map((bundle) -> bundle.getHeatedSmeltedMaterial().get())));
+		tag(ModItemTags.HEATED_INGOTS)
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateHeatedIngot()).map((bundle) -> bundle.getHeatedIngot().get())));
 
 		tag(ModItemTags.WIRE_COILS).add(ModItems.WireCoilDigistore.get())
 				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateWireCoil()).map((bundle) -> bundle.getWireCoil().get())))
@@ -236,6 +234,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
 		tag(ModItemTags.COAL_DUST).add(ModItems.DustCoal.get());
 		tag(ModItemTags.CHARCOAL_DUST).add(ModItems.DustCharcoal.get());
+		tag(ModItemTags.GLASS_BOTTLES).add(Items.GLASS_BOTTLE);
 	}
 
 	public static Item[] toArray(Stream<? extends Item> stream) {

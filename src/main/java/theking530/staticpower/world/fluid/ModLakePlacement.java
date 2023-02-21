@@ -45,7 +45,7 @@ public abstract class ModLakePlacement<T extends ModLakePlacement<T>> {
 
 	protected ConfiguredFeature<?, ?> getConfiguredFeature() {
 		return new ConfiguredFeature<>(ModFeatures.STATIC_LAKE.get(),
-				new StaticPowerLakeFeatureConfiguration(BlockStateProvider.simple(getFluidBundle().block.get().defaultBlockState()), getBarrier(), getRadius(), getDepth()));
+				new StaticPowerLakeFeatureConfiguration(BlockStateProvider.simple(getFluidBundle().getBlock().get().defaultBlockState()), getBarrier(), getRadius(), getDepth()));
 	}
 
 	protected PlacedFeature getCheckedFeature() {

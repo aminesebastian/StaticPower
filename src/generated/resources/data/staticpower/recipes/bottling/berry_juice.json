@@ -1,0 +1,19 @@
+{
+  "type": "staticpower:bottler",
+  "empty_bottle": {
+    "ingredient": {
+      "tag": "staticpower:glass_bottles"
+    }
+  },
+  "filled_bottle": {
+    "item": {
+      "id": "staticpower:bottle_juice_berry"
+    }
+  },
+  "fluid": {
+    "amount": 1000,
+    "fluids": {
+      "tag": "staticpower:juice_berry"
+    }
+  }
+}

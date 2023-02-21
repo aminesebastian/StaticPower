@@ -233,7 +233,7 @@ public class MaterialBundle {
 		if (shouldGenerateIngot()) {
 			ingot = registry.register(ingotPrefix + "_" + getName(), () -> new StaticPowerItem(ModCreativeTabs.MATERIALS));
 		}
-		if (shouldGenerateHeatedIngotMaterial()) {
+		if (shouldGenerateHeatedIngot()) {
 			heatedIngot = registry.register("ingot_" + getName() + "_heated", () -> new HeatedIngot(() -> ingot.get()));
 		}
 		if (shouldGenerateNugget()) {
@@ -357,7 +357,7 @@ public class MaterialBundle {
 		return this;
 	}
 
-	public boolean shouldGenerateHeatedIngotMaterial() {
+	public boolean shouldGenerateHeatedIngot() {
 		return generateHeatedIngot;
 	}
 
@@ -513,7 +513,7 @@ public class MaterialBundle {
 		return rawMaterial;
 	}
 
-	public RegistryObject<? extends Item> getHeatedSmeltedMaterial() {
+	public RegistryObject<? extends Item> getHeatedIngot() {
 		return heatedIngot;
 	}
 

@@ -52,8 +52,8 @@ public class MixerRecipeSerializer extends StaticPowerRecipeSerializer<MixerReci
 
 	@Override
 	public MixerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		StaticPowerIngredient input1 = StaticPowerIngredient.read(buffer);
-		StaticPowerIngredient input2 = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input1 = StaticPowerIngredient.readFromBuffer(buffer);
+		StaticPowerIngredient input2 = StaticPowerIngredient.readFromBuffer(buffer);
 		FluidStack fluidInput1 = buffer.readFluidStack();
 		FluidStack fluidInput2 = buffer.readFluidStack();
 		FluidStack output = buffer.readFluidStack();
@@ -64,8 +64,8 @@ public class MixerRecipeSerializer extends StaticPowerRecipeSerializer<MixerReci
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, MixerRecipe recipe) {
-		recipe.getPrimaryItemInput().write(buffer);
-		recipe.getSecondaryItemInput().write(buffer);
+		recipe.getPrimaryItemInput().writeToBuffer(buffer);
+		recipe.getSecondaryItemInput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getPrimaryFluidInput());
 		buffer.writeFluidStack(recipe.getSecondaryFluidInput());
 		buffer.writeFluidStack(recipe.getOutput());

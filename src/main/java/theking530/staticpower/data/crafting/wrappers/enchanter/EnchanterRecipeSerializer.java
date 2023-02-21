@@ -63,7 +63,7 @@ public class EnchanterRecipeSerializer extends StaticPowerRecipeSerializer<Encha
 		// Read all the inputs.
 		List<StaticPowerIngredient> inputs = new ArrayList<StaticPowerIngredient>();
 		for (int i = 0; i < buffer.readByte(); i++) {
-			inputs.add(StaticPowerIngredient.read(buffer));
+			inputs.add(StaticPowerIngredient.readFromBuffer(buffer));
 		}
 
 		// Read all the enchantments.
@@ -82,7 +82,7 @@ public class EnchanterRecipeSerializer extends StaticPowerRecipeSerializer<Encha
 		// Write the items.
 		buffer.writeByte(recipe.getInputIngredients().size());
 		for (StaticPowerIngredient ing : recipe.getInputIngredients()) {
-			ing.write(buffer);
+			ing.writeToBuffer(buffer);
 		}
 
 		// Write the enchantments.

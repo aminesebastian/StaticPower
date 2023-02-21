@@ -17,24 +17,23 @@ import theking530.staticpower.init.ModRecipeTypes;
 public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 	public static final String ID = "alloy_furnace";
 
-	public static final Codec<AlloyFurnaceRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
-			.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-					StaticPowerIngredient.CODEC.fieldOf("input1").forGetter(recipe -> recipe.getInput1()),
-					StaticPowerIngredient.CODEC.fieldOf("input2").forGetter(recipe -> recipe.getInput2()),
-					StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
-					Codec.INT.optionalFieldOf("experience", 0).forGetter(recipe -> recipe.getExperience()),
-					MachineRecipeProcessingSection.CODEC.optionalFieldOf("processing", null).forGetter(recipe -> recipe.getProcessingSection()))
-			.apply(instance, AlloyFurnaceRecipe::new));
+	public static final Codec<AlloyFurnaceRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance
+					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+							StaticPowerIngredient.CODEC.fieldOf("input1").forGetter(recipe -> recipe.getInput1()),
+							StaticPowerIngredient.CODEC.fieldOf("input2").forGetter(recipe -> recipe.getInput2()),
+							StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
+							Codec.FLOAT.fieldOf("experience").forGetter(recipe -> recipe.getExperience()),
+							MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection()))
+					.apply(instance, AlloyFurnaceRecipe::new));
 
 	private final StaticPowerIngredient input1;
 	private final StaticPowerIngredient input2;
 	private final StaticPowerOutputItem output;
-	private final int experience;
 
-	public AlloyFurnaceRecipe(ResourceLocation id, StaticPowerIngredient input1, StaticPowerIngredient input2, StaticPowerOutputItem output, int experience,
+	public AlloyFurnaceRecipe(ResourceLocation id, StaticPowerIngredient input1, StaticPowerIngredient input2, StaticPowerOutputItem output, float experience,
 			MachineRecipeProcessingSection processing) {
-		super(id, processing);
-		this.experience = experience;
+		super(id, experience, processing);
 		this.input1 = input1;
 		this.input2 = input2;
 		this.output = output;
@@ -50,10 +49,6 @@ public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 
 	public StaticPowerOutputItem getOutput() {
 		return output;
-	}
-
-	public int getExperience() {
-		return experience;
 	}
 
 	@Override

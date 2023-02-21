@@ -74,7 +74,7 @@ public class CrucibleRecipeSerializer extends StaticPowerRecipeSerializer<Crucib
 	@Override
 	public CrucibleRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int minimumTemperature = buffer.readInt();
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 		FluidStack fluid = buffer.readFluidStack();
 
@@ -84,7 +84,7 @@ public class CrucibleRecipeSerializer extends StaticPowerRecipeSerializer<Crucib
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, CrucibleRecipe recipe) {
 		buffer.writeInt(recipe.getMinimumTemperature());
-		recipe.getInput().write(buffer);
+		recipe.getInput().writeToBuffer(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluid());
 		recipe.getProcessingSection().writeToBuffer(buffer);

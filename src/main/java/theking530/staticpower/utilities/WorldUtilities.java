@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +35,7 @@ import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.init.tags.ModFluidTags;
 
 public class WorldUtilities {
 
@@ -192,6 +194,25 @@ public class WorldUtilities {
 		return dropItem(worldIn, facing, pos.getX(), pos.getY(), pos.getZ(), stack, count);
 	}
 
+	public static void dropExperience(Level worldIn, Direction facing, BlockPos pos, int amount) {
+		Vector3D direction = new Vector3D(facing);
+		dropExperience(worldIn, new BlockPos(pos.getX() + 0.5f + direction.getX(), pos.getY() + 0.5f + direction.getY(), pos.getZ() + 0.5f + direction.getZ()), amount);
+	}
+
+	public static void dropExperience(Level worldIn, BlockPos pos, int amount) {
+		ExperienceOrb orb = new ExperienceOrb(worldIn, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, amount);
+
+		// Set a random X and Z velocity.
+		float random = worldIn.getRandom().nextFloat();
+		random *= 2;
+		random -= 1;
+		random *= 0.02;
+		orb.setDeltaMovement(random, 0.25, random);
+
+		// Add the entity orb to the world.
+		worldIn.addFreshEntity(orb);
+	}
+
 	/**
 	 * Gets all the drops for the provided block. Returns an empty list if called on
 	 * the client.
@@ -234,7 +255,7 @@ public class WorldUtilities {
 		boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(world, pos, blockstate, content);
 		if (!flag1) {
 			return hitResult != null && tryPlaceFluid(fluid, player, world, hitResult.getBlockPos().relative(hitResult.getDirection()), (BlockHitResult) null);
-		} else if (world.dimensionType().ultraWarm() && content.is(FluidTags.WATER)) {
+		} else if (world.dimensionType().ultraWarm() && ModFluidTags.matches(FluidTags.WATER, content)) {
 			int i = pos.getX();
 			int j = pos.getY();
 			int k = pos.getZ();
@@ -267,7 +288,7 @@ public class WorldUtilities {
 		Fluid content = incomingFluid.getFluid();
 		SoundEvent soundevent = content.getFluidType().getSound(SoundActions.BUCKET_FILL);
 		if (soundevent == null)
-			soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA;
+			soundevent = ModFluidTags.matches(FluidTags.LAVA, content) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA;
 		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
 		pLevel.gameEvent(pPlayer, GameEvent.FLUID_PLACE, pPos);
 	}
@@ -276,7 +297,7 @@ public class WorldUtilities {
 		Fluid content = outgoingFluid.getFluid();
 		SoundEvent soundevent = content.getFluidType().getSound(SoundActions.BUCKET_EMPTY);
 		if (soundevent == null)
-			soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
+			soundevent = ModFluidTags.matches(FluidTags.LAVA, content) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
 		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
 		pLevel.gameEvent(pPlayer, GameEvent.FLUID_PLACE, pPos);
 	}

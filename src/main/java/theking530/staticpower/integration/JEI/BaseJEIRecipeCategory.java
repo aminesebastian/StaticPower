@@ -24,7 +24,11 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 	}
 
 	public int getFluidTankDisplaySize(FluidStack stack) {
-		return getNetHighestMultipleOf10(stack.getAmount());
+		return getFluidTankDisplaySize(stack.getAmount());
+	}
+
+	public int getFluidTankDisplaySize(int amount) {
+		return getNetHighestMultipleOf10(amount);
 	}
 
 	public int getNetHighestMultipleOf10(int value) {

@@ -5,14 +5,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger.TriggerInstance;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.generators.RecipeItem;
 
 public abstract class SPRecipeProvider<T extends Recipe<?>> extends RecipeProvider implements IConditionBuilder {
 	private Map<String, RecipeBuilder> builders;
@@ -30,11 +36,9 @@ public abstract class SPRecipeProvider<T extends Recipe<?>> extends RecipeProvid
 		completeBuilding(finishedRecipeConsumer);
 	}
 
-	protected void buildRecipes() {
+	protected abstract void buildRecipes();
 
-	}
-
-	protected void addRecipe(String name, SPRecipeBuilder<T> builder) {
+	protected void addRecipe(String name, RecipeBuilder builder) {
 		if (builders.containsKey(name)) {
 			throw new RuntimeException("Encountered duplicate recipe name: " + name);
 		}
@@ -49,5 +53,30 @@ public abstract class SPRecipeProvider<T extends Recipe<?>> extends RecipeProvid
 				throw new RuntimeException(String.format("An error occured when attempting to save recipe: %1$s.", pair.getKey()), e);
 			}
 		}
+	}
+
+	protected TriggerInstance hasItems(ItemLike... items) {
+		return inventoryTrigger(ItemPredicate.Builder.item().of(items).build());
+	}
+
+	protected TriggerInstance hasItems(RecipeItem... items) {
+		ItemPredicate.Builder builder = ItemPredicate.Builder.item();
+		for (RecipeItem item : items) {
+			if (item.hasItemTag()) {
+				builder.of(item.getItemTag());
+			} else {
+				builder.of(item.getItem());
+			}
+		}
+		return inventoryTrigger(builder.build());
+	}
+
+	@SuppressWarnings("unchecked")
+	protected TriggerInstance hasItems(TagKey<Item>... items) {
+		ItemPredicate.Builder builder = ItemPredicate.Builder.item();
+		for (TagKey<Item> tag : items) {
+			builder.of(tag);
+		}
+		return inventoryTrigger(builder.build());
 	}
 }

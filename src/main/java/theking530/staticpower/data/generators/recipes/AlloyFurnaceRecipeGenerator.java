@@ -2,7 +2,6 @@ package theking530.staticpower.data.generators.recipes;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
@@ -10,7 +9,7 @@ import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
 import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.init.ModMaterials;
 
-public class AlloyFurnaceRecipeGenerator extends SPRecipeProvider<AlloyFurnaceRecipe> implements IConditionBuilder {
+public class AlloyFurnaceRecipeGenerator extends SPRecipeProvider<AlloyFurnaceRecipe> {
 
 	public AlloyFurnaceRecipeGenerator(DataGenerator dataGenerator) {
 		super("alloying", dataGenerator);
@@ -35,10 +34,10 @@ public class AlloyFurnaceRecipeGenerator extends SPRecipeProvider<AlloyFurnaceRe
 	}
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input1, StaticPowerIngredient input2, StaticPowerOutputItem output) {
-		addRecipe(nameOverride, input1, input2, output, 0);
+		addRecipe(nameOverride, input1, input2, output, 0.25f);
 	}
 
-	protected void addRecipe(String nameOverride, StaticPowerIngredient input1, StaticPowerIngredient input2, StaticPowerOutputItem output, int experience) {
+	protected void addRecipe(String nameOverride, StaticPowerIngredient input1, StaticPowerIngredient input2, StaticPowerOutputItem output, float experience) {
 		AlloyFurnaceRecipe recipe = new AlloyFurnaceRecipe(null, input1, input2, output, experience, null);
 		addRecipe(nameOverride, SPRecipeBuilder.create(recipe));
 	}

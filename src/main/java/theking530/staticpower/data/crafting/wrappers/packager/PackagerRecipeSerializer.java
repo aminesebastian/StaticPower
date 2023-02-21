@@ -39,7 +39,7 @@ public class PackagerRecipeSerializer extends StaticPowerRecipeSerializer<Packag
 	@Override
 	public PackagerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int size = buffer.readInt();
-		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem outputs = StaticPowerOutputItem.readFromBuffer(buffer);
 
 		// Create the recipe.
@@ -49,7 +49,7 @@ public class PackagerRecipeSerializer extends StaticPowerRecipeSerializer<Packag
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, PackagerRecipe recipe) {
 		buffer.writeInt(recipe.getSize());
-		recipe.getInputIngredient().write(buffer);
+		recipe.getInputIngredient().writeToBuffer(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);
 	}

@@ -8,9 +8,9 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -32,6 +32,7 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
+import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	public static final RecipeType<BottleRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "bottler"), BottleRecipe.class);
@@ -40,7 +41,6 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	private final IDrawable background;
 	private final IDrawable icon;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public BottleRecipeCategory(IGuiHelper guiHelper) {
@@ -78,14 +78,15 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 107, 36, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid().getFluids()[0], 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, processingTimer.getValue(), processingTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 28, 5, 72, 18, 0);
-		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 28;
-		FluidStack fluid = recipe.getFluid();
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 72, 23, 1, progress, 5, false);
+
+		float progress = (1.0f - (float) processingTimer.getValue() / processingTimer.getMaxValue()) * 28;
+		FluidStack fluid = recipe.getFluid().getFluids()[0];
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 10, 10, 72, 23, 1, progress, 5, false);
 	}
 
 	@Override
@@ -101,14 +102,16 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, BottleRecipe recipe, IFocusGroup ingredients) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 109, 12).addItemStack(recipe.getEmptyBottle());
-		builder.addSlot(RecipeIngredientRole.INPUT, 50, 4).addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluid()).setFluidRenderer(getFluidTankDisplaySize(recipe.getFluid()),
-				false, 16, 52);
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 109, 38).addItemStack(recipe.getFilledBottle());
+		builder.addSlot(RecipeIngredientRole.INPUT, 109, 12).addIngredients(recipe.getEmptyBottle().getIngredient());
 
-		powerTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
-				(int) (StaticPowerConfig.SERVER.bottlerPowerUsage.get() * StaticPowerConfig.SERVER.bottlerProcessingTime.get()), true);
-		processingTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
-				(int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(), false);
+		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, 50, 4).setFluidRenderer(getFluidTankDisplaySize(recipe.getFluid().getAmount()), false, 16, 52);
+		for (FluidStack fluid : recipe.getFluid().getFluids()) {
+			fluidSlot.addFluidStack(fluid.getFluid(), recipe.getFluid().getAmount());
+		}
+
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 109, 38).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getFilledBottle());
+
+		processingTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerProcessingTime.get().longValue(),
+				(int) StaticPowerConfig.SERVER.bottlerProcessingTime.get().longValue(), true);
 	}
 }

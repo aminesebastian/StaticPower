@@ -1,5 +1,6 @@
 {
   "type": "staticpower:hammer",
+  "experience": 1.0,
   "item": {
     "ingredient": {
       "item": "staticpower:ingot_platinum_heated"
