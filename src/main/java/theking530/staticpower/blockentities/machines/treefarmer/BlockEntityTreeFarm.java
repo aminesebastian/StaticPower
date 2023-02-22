@@ -66,6 +66,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -124,7 +125,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.treeFarmerPowerUsage.get());
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
-			return StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
+			return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluid)).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory).setAutoSyncPacketsEnabled(true));
 
 		currentBlockIndex = 0;
@@ -150,7 +151,8 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	}
 
 	public float getGrowthBonus() {
-		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(this.fluidTankComponent.getFluid())).orElse(null);
+		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(this.fluidTankComponent.getFluid()))
+				.orElse(null);
 		if (recipe != null) {
 			return recipe.getFertalizationAmount();
 		}

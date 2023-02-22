@@ -3,11 +3,15 @@ package theking530.staticpower.integration.JEI;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector4f;
 
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.utilities.Vector2D;
 
 public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> implements IRecipeCategory<T> {
@@ -32,6 +36,12 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 	}
 
 	public int getNetHighestMultipleOf10(int value) {
+		// If the amount == 1, it's usually just for display so we want to render a 100%
+		// full bar.
+		if (value == 1) {
+			return 1;
+		}
+
 		if (value < 50) {
 			return 50;
 		} else if (value < 100) {
@@ -62,5 +72,14 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 			return 1000000;
 		}
 		return 0;
+	}
+
+	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, RecipeIngredientRole recipeIngredientRole, int x, int y, int width, int height,
+			FluidIngredient ingredient) {
+		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, x, y).setFluidRenderer(getFluidTankDisplaySize(ingredient.getAmount()), false, width, height);
+		for (FluidStack fluid : ingredient.getFluids()) {
+			fluidSlot.addFluidStack(fluid.getFluid(), ingredient.getAmount());
+		}
+		return fluidSlot;
 	}
 }

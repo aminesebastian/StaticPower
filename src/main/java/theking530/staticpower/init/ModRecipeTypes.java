@@ -52,7 +52,8 @@ public class ModRecipeTypes {
 	public static final RegistryObject<RecipeType<EnchanterRecipe>> ENCHANTER_RECIPE_TYPE = TYPES.register(EnchanterRecipe.ID, () -> EnchanterRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<EvaporatorRecipe>> EVAPORATOR_RECIPE_TYPE = TYPES.register(EvaporatorRecipe.ID, () -> EvaporatorRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<FermenterRecipe>> FERMENTER_RECIPE_TYPE = TYPES.register(FermenterRecipe.ID, () -> FermenterRecipe.RECIPE_TYPE);
-	public static final RegistryObject<RecipeType<FertalizerRecipe>> FERTALIZER_RECIPE_TYPE = TYPES.register(FertalizerRecipe.ID, () -> FertalizerRecipe.RECIPE_TYPE);
+	public static final RegistryObject<RecipeType<FertalizerRecipe>> FERTALIZER_RECIPE_TYPE = TYPES.register(FertalizerRecipe.ID,
+			() -> new StaticPowerRecipeType<FertalizerRecipe>());
 	public static final RegistryObject<RecipeType<FluidGeneratorRecipe>> FLUID_GENERATOR_RECIPE_TYPE = TYPES.register(FluidGeneratorRecipe.ID,
 			() -> FluidGeneratorRecipe.RECIPE_TYPE);
 	public static final RegistryObject<RecipeType<FluidInfusionRecipe>> FLUID_INFUSION_RECIPE_TYPE = TYPES.register(FluidInfusionRecipe.ID, () -> FluidInfusionRecipe.RECIPE_TYPE);

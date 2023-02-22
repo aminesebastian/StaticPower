@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-21T01:46:20.7840928	Tags for minecraft:item
+// 1.19.2	2023-02-22T11:22:09.7447121	Tags for minecraft:item
 51b00e5b14b17e9df81bc1b25cec37a2fe8031dc data/forge/tags/items/chunks/aluminum.json
 4de111a656b1087f12c8b141ed43b4b8331a9edb data/forge/tags/items/chunks/lead.json
 acb4e62cf3f26e33cc03ba5bbcd5a9cba436682b data/forge/tags/items/chunks/magnesium.json
@@ -179,6 +179,7 @@ e34e35e2a96500e7b235aa6526f455d2fa5ab910 data/staticpower/tags/items/farming_hoe
 f0d782c9a4a88e647c91da1370fb3d28e96b6fe3 data/staticpower/tags/items/gears/inert_infusion_alloy.json
 3a7f53f2c245dd1159053b4c7d18cc02863c1827 data/staticpower/tags/items/gears/lumum_metal.json
 0c63f6f537c6a8f5302ae7c7ceca2cf3efbae1d4 data/staticpower/tags/items/gears/static_metal.json
+7f7d5f6cc9b5cfb39d240fc901c4ae2d2037ec14 data/staticpower/tags/items/glass_bottles.json
 9f778c762460ff1a1b7118ea61f159ba264a10a5 data/staticpower/tags/items/heated_ingots.json
 cf4f3fd377f7504c8d19ecfeeab4477187e0e095 data/staticpower/tags/items/heatsinks.json
 06e17694b609d9cd9ec28fbd7bc75a2d73c0fb7b data/staticpower/tags/items/ingots/energized_metal.json
@@ -204,7 +205,7 @@ adc88cd2eeff3d61d615a2c3ed29a4d0befae0b2 data/staticpower/tags/items/ingot_or_pl
 40dc4b422784ce6df561ddecb83c9e2f023a5a19 data/staticpower/tags/items/ingot_or_plate/tin.json
 4a93fece363331dc12ad9f24dc62be23d0cfe338 data/staticpower/tags/items/ingot_or_plate/tungsten.json
 2bcc23b1c7c4bbf9249d508e126a6545b0a647d5 data/staticpower/tags/items/ingot_or_plate/zinc.json
-ba4f4874fd007d06546ca720cd98f42010c32256 data/staticpower/tags/items/lightbulbs.json
+fa0eb4989a90adc3971e9e69c2e5357b7e66bc83 data/staticpower/tags/items/lightbulbs.json
 4c78890f8ac79bcc95b16dcae9c786673881a181 data/staticpower/tags/items/machines.json
 2528913fac539e196dfc1dd3beaf5a78d22819ff data/staticpower/tags/items/machine_blocks.json
 e8f309955d537f37f48055743def9728df64488b data/staticpower/tags/items/materials.json

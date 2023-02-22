@@ -6,6 +6,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.StaticPowerOre;
@@ -138,6 +139,10 @@ public class MaterialBundle {
 
 	public MaterialType getMaterialType() {
 		return materialType;
+	}
+
+	public MaterialDomain getMaterialDomain() {
+		return this.materialDomain;
 	}
 
 	public void generateBlocks() {
@@ -641,9 +646,29 @@ public class MaterialBundle {
 		return insulatedWireCoilTag;
 	}
 
+	public MaterialBundle setOverworldOre(Block ore) {
+		this.overworldOre = RegistryObject.create(ForgeRegistries.BLOCKS.getKey(ore), ForgeRegistries.BLOCKS);
+		return this;
+	}
+
+	public MaterialBundle setNetherOre(Block ore) {
+		this.netherackOre = RegistryObject.create(ForgeRegistries.BLOCKS.getKey(ore), ForgeRegistries.BLOCKS);
+		return this;
+	}
+
+	public MaterialBundle setDeepslateOre(Block ore) {
+		this.deepslateOre = RegistryObject.create(ForgeRegistries.BLOCKS.getKey(ore), ForgeRegistries.BLOCKS);
+		return this;
+	}
+
 	public MaterialBundle setOreTag(TagKey<Item> itemTag, TagKey<Block> blockTag) {
 		oreTag = blockTag;
 		oreItemTag = itemTag;
+		return this;
+	}
+
+	public MaterialBundle setRawStorageBlock(Block storageBlock) {
+		this.rawStorageBlock = RegistryObject.create(ForgeRegistries.BLOCKS.getKey(storageBlock), ForgeRegistries.BLOCKS);
 		return this;
 	}
 
@@ -653,9 +678,19 @@ public class MaterialBundle {
 		return this;
 	}
 
+	public MaterialBundle setStorageBlock(Block storageBlock) {
+		this.storageBlock = RegistryObject.create(ForgeRegistries.BLOCKS.getKey(storageBlock), ForgeRegistries.BLOCKS);
+		return this;
+	}
+
 	public MaterialBundle setStorageBlockItemTag(TagKey<Item> itemTag, TagKey<Block> blockTag) {
 		storageBlockTag = blockTag;
 		storageBlockItemTag = itemTag;
+		return this;
+	}
+
+	public MaterialBundle setRawMaterial(Item rawMaterial) {
+		this.rawMaterial = RegistryObject.create(ForgeRegistries.ITEMS.getKey(rawMaterial), ForgeRegistries.ITEMS);
 		return this;
 	}
 
@@ -664,8 +699,18 @@ public class MaterialBundle {
 		return this;
 	}
 
+	public MaterialBundle setIngot(Item ingot) {
+		this.ingot = RegistryObject.create(ForgeRegistries.ITEMS.getKey(ingot), ForgeRegistries.ITEMS);
+		return this;
+	}
+
 	public MaterialBundle setIngotTag(TagKey<Item> tag) {
 		ingotTag = tag;
+		return this;
+	}
+
+	public MaterialBundle setNugget(Item nugget) {
+		this.nugget = RegistryObject.create(ForgeRegistries.ITEMS.getKey(nugget), ForgeRegistries.ITEMS);
 		return this;
 	}
 

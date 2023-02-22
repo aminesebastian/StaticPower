@@ -86,7 +86,7 @@ public class ModRecipeSerializers {
 	public static final RegistryObject<EnchanterRecipeSerializer> ENCHANTER_SERIALIZER = SERIALIZERS.register(EnchanterRecipe.ID, () -> EnchanterRecipeSerializer.INSTANCE);
 	public static final RegistryObject<EvaporatorRecipeSerializer> EVAPORATOR_SERIALIZER = SERIALIZERS.register(EvaporatorRecipe.ID, () -> EvaporatorRecipeSerializer.INSTANCE);
 	public static final RegistryObject<FermenterRecipeSerializer> FERMENTER_SERIALIZER = SERIALIZERS.register(FermenterRecipe.ID, () -> FermenterRecipeSerializer.INSTANCE);
-	public static final RegistryObject<FertalizerRecipeSerializer> FERTILIZER_SERIALIZER = SERIALIZERS.register(FertalizerRecipe.ID, () -> FertalizerRecipeSerializer.INSTANCE);
+	public static final RegistryObject<FertalizerRecipeSerializer> FERTILIZER_SERIALIZER = SERIALIZERS.register(FertalizerRecipe.ID, () -> new FertalizerRecipeSerializer());
 	public static final RegistryObject<FluidGeneratorRecipeSerializer> FLUID_GENERATOR_SERIALIZER = SERIALIZERS.register(FluidGeneratorRecipe.ID,
 			() -> FluidGeneratorRecipeSerializer.INSTANCE);
 	public static final RegistryObject<FluidInfusionRecipeSerializer> FLUID_INFUSER_SERIALIZER = SERIALIZERS.register(FluidInfusionRecipe.ID,

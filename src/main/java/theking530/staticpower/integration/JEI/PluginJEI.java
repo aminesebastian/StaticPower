@@ -44,7 +44,6 @@ import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRe
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
-import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
@@ -222,7 +221,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(ThermalConductivityRecipeCategory.TYPE, ThermalConductivityRecipeProvider.getRecipes());
 		registration.addRecipes(HammerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.HAMMER_RECIPE_TYPE.get()));
 		registration.addRecipes(CauldronRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CauldronRecipe.RECIPE_TYPE));
-		registration.addRecipes(FertilizerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FertalizerRecipe.RECIPE_TYPE));
+		registration.addRecipes(FertilizerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get()));
 		registration.addRecipes(AlloyFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get()));
 		registration.addRecipes(PoweredGrinderRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.GRINDER_RECIPE_TYPE.get()));
 		registration.addRecipes(CentrifugeRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CentrifugeRecipe.RECIPE_TYPE));

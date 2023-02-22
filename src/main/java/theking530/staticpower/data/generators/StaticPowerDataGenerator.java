@@ -10,8 +10,10 @@ import theking530.staticpower.data.generators.recipes.AlloyFurnaceRecipeGenerato
 import theking530.staticpower.data.generators.recipes.BlastingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.BottlerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CraftingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.FertilizerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.GrindingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.HammerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.SmeltingRecipeGenerator;
 import theking530.staticpower.data.generators.tags.ModBiomeTagProvider;
 import theking530.staticpower.data.generators.tags.ModBlockTagProvider;
 import theking530.staticpower.data.generators.tags.ModItemTagProvider;
@@ -29,7 +31,9 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new HammerRecipeGenerator(generator));
 		generator.addProvider(true, new BlastingRecipeGenerator(generator));
 		generator.addProvider(true, new BottlerRecipeGenerator(generator));
-
+		generator.addProvider(true, new FertilizerRecipeGenerator(generator));
+		generator.addProvider(true, new SmeltingRecipeGenerator(generator));
+		
 		generator.addProvider(true, new ModLootTableProvider(generator));
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));
 		generator.addProvider(true, new ModItemModelProvider(generator, existingFileHelper));

@@ -1,13 +1,13 @@
 {
   "type": "staticpower:alloy_furnace",
   "experience": 0.25,
-  "input1": {
+  "input_1": {
     "count": 3,
     "ingredient": {
       "tag": "forge:ingots/copper"
     }
   },
-  "input2": {
+  "input_2": {
     "ingredient": {
       "tag": "forge:ingots/tin"
     }

@@ -1,10 +1,7 @@
-// 1.19.2	2023-02-21T01:46:20.800607	Recipes
-00715adff2998949832d6ab943576f3d2f69ec18 data/staticpower/recipes/bottling/apple_juice.json
-17a74785ca9bd3006f246b5a144cc3ef22cbb7ef data/staticpower/recipes/bottling/beetroot_juice.json
-626a9f6c21b97382ae8654c91a29086c892bd478 data/staticpower/recipes/bottling/berry_juice.json
-bfe40b05b4b26b58fa1770dae2abcbb8ea1ec69b data/staticpower/recipes/bottling/carrot_juice.json
-fb8db2bc705230630fd9c62ea97505f84e7f3f48 data/staticpower/recipes/bottling/honey_bottle.json
-2f246429bae0eda83cdea0edaa559e5b4ce36c43 data/staticpower/recipes/bottling/melon_juice.json
-62dcaaf9369923a0f1e464a1e1e76fc97ffa5da7 data/staticpower/recipes/bottling/milk.json
-a22cc84ee6e2b4a3d4415c6df5f5c00edb5ae65d data/staticpower/recipes/bottling/pumpkin_juice.json
-83f256638d2ae561dd339a1dfa6c369ec0e2f719 data/staticpower/recipes/bottling/water_bottle.json
+// 1.19.2	2023-02-22T11:22:09.7432113	Recipes
+92fa0bf398a111ee1934ed292f1b44c20f523e5b data/staticpower/recipes/alloying/brass_block.json
+81aaec3a2736216e60bc94533088f20ed8a14b65 data/staticpower/recipes/alloying/brass_ingot.json
+767ce6f6c7eb1122f41a1ad76b18c7172ba96566 data/staticpower/recipes/alloying/bronze_block.json
+5b8d63b5c1af789761c60e0341e7ca526ceb135e data/staticpower/recipes/alloying/bronze_ingot.json
+55fffbf2098b7194bfac204e126fc6b6fc75a514 data/staticpower/recipes/alloying/redstone_alloy_block.json
+79fe267fa3e6162d472ed46a3eb47dee32281bbe data/staticpower/recipes/alloying/redstone_alloy_ingot.json

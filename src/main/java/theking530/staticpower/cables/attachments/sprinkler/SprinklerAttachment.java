@@ -32,6 +32,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.init.tags.ModFluidTags;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -112,7 +113,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 	 */
 	protected boolean handleFertilization(ItemStack attachment, Direction side, FluidStack fluidContained, FluidCableComponent fluidCable) {
 		// Get the fertilization recipe. If one does not exist, return early.
-		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluidContained)).orElse(null);
+		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluidContained)).orElse(null);
 		if (recipe == null) {
 			return false;
 		}

@@ -5,7 +5,6 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -66,24 +65,23 @@ public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRe
 
 	@Override
 	public void draw(FertalizerRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getRequiredFluid(), 0, 0, 53, 56, 1.0f, 24, 40, MachineSideMode.Never, true);
-		MutableComponent bonus = Component.translatable("gui.staticpower.fertlization_bonus",
-				GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 53, 56, 1.0f, 24, 40, MachineSideMode.Never, true);
+		MutableComponent bonus = Component.translatable("gui.staticpower.fertlization_chance").append(": ")
+				.append(GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
 		bonus.append(Component.literal("%"));
 		GuiDrawUtilities.drawStringCentered(matrixStack, bonus.getString(), 65, 9, 0.0f, 1f, SDColor.EIGHT_BIT_DARK_GREY, false);
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, FertalizerRecipe recipe, IFocusGroup ingredients) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 53, 16).addIngredient(ForgeTypes.FLUID_STACK, recipe.getRequiredFluid())
-				.setFluidRenderer(getFluidTankDisplaySize(recipe.getRequiredFluid()), false, 24, 40).addTooltipCallback((recipeSlotView, tooltip) -> {
-					tooltip.add(tooltip.get(tooltip.size() - 1));
+		addFluidIngredientSlot(builder, RecipeIngredientRole.INPUT, 53, 16, 24, 40, recipe.getRequiredFluid()).addTooltipCallback((recipeSlotView, tooltip) -> {
+			tooltip.add(tooltip.get(tooltip.size() - 1));
 
-					MutableComponent bonus = Component.translatable("gui.staticpower.fertlization_bonus",
-							GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
-					bonus.append(Component.literal("%"));
-					bonus.withStyle(ChatFormatting.GOLD);
-					tooltip.set(tooltip.size() - 2, bonus);
-				});
+			MutableComponent bonus = Component.translatable("gui.staticpower.fertlization_bonus",
+					GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
+			bonus.append(Component.literal("%"));
+			bonus.withStyle(ChatFormatting.GOLD);
+			tooltip.set(tooltip.size() - 2, bonus);
+		});
 	}
 }

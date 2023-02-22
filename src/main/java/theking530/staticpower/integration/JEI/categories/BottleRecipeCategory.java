@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -78,7 +77,7 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 107, 36, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid().getFluids()[0], 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, processingTimer.getValue(), processingTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
@@ -104,10 +103,7 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	public void setRecipe(IRecipeLayoutBuilder builder, BottleRecipe recipe, IFocusGroup ingredients) {
 		builder.addSlot(RecipeIngredientRole.INPUT, 109, 12).addIngredients(recipe.getEmptyBottle().getIngredient());
 
-		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, 50, 4).setFluidRenderer(getFluidTankDisplaySize(recipe.getFluid().getAmount()), false, 16, 52);
-		for (FluidStack fluid : recipe.getFluid().getFluids()) {
-			fluidSlot.addFluidStack(fluid.getFluid(), recipe.getFluid().getAmount());
-		}
+		addFluidIngredientSlot(builder, RecipeIngredientRole.INPUT, 50, 4, 16, 52, recipe.getFluid());
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 109, 38).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getFilledBottle());
 

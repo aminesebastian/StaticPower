@@ -34,19 +34,23 @@ public class GuiFluidBarUtilities {
 		drawFluidBar(pose, fluid, capacity, amount, x, y, zLevel, width, height, null, drawOverlay);
 	}
 
-	public static void drawFluidBarOutline(PoseStack pose, float x, float y, float zLevel, float width, float height, MachineSideMode mode) {
+	public static void drawFluidBarOutline(PoseStack pose, float x, float y, float zLevel, float width, float height, MachineSideMode mode, boolean drawLines) {
 		// Draw the outline around the fluid slot.
 		if (mode != null && mode != MachineSideMode.Never) {
 			GuiDrawUtilities.drawSlotWithBorder(pose, (int) width, (int) height, (int) x, (int) (y - height), 0, mode.getColor());
 		} else {
 			GuiDrawUtilities.drawSlot(pose, (int) width, (int) height, (int) x, (int) (y - height), 0);
 		}
+
+		if (drawLines) {
+			drawFluidOverlay(pose, x, y, zLevel, width, height);
+		}
 	}
 
 	public static void drawFluidBar(PoseStack pose, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, MachineSideMode mode,
 			boolean drawOverlay) {
 
-		drawFluidBarOutline(pose, x, y, zLevel, width, height, mode);
+		drawFluidBarOutline(pose, x, y, zLevel, width, height, mode, false);
 
 		// Only draw the fluid if a valid fluid was provided.
 		if (fluid != null && !fluid.isEmpty()) {

@@ -20,8 +20,8 @@ public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 	public static final Codec<AlloyFurnaceRecipe> CODEC = RecordCodecBuilder
 			.create(instance -> instance
 					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-							StaticPowerIngredient.CODEC.fieldOf("input1").forGetter(recipe -> recipe.getInput1()),
-							StaticPowerIngredient.CODEC.fieldOf("input2").forGetter(recipe -> recipe.getInput2()),
+							StaticPowerIngredient.CODEC.fieldOf("input_1").forGetter(recipe -> recipe.getInput1()),
+							StaticPowerIngredient.CODEC.fieldOf("input_2").forGetter(recipe -> recipe.getInput2()),
 							StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
 							Codec.FLOAT.fieldOf("experience").forGetter(recipe -> recipe.getExperience()),
 							MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection()))
