@@ -124,7 +124,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		}
 	}
 
-	public ProcessingOutputContainer getCurrentProcessingContainer() {
+	public ProcessingOutputContainer getProcessingMaterials() {
 		return this.outputContainer;
 	}
 

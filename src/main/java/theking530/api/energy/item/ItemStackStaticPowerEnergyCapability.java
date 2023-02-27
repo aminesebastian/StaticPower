@@ -26,7 +26,7 @@ public class ItemStackStaticPowerEnergyCapability extends StaticPowerStorage imp
 			CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage, double maximumOutputPower, CurrentType outputCurrentType, boolean canAcceptExternalPower,
 			boolean canOutputExternalPower) {
 		super(capacity, inputVoltageRange, maximumInputPower, acceptableCurrentTypes, outputVoltage, maximumOutputPower, outputCurrentType, canAcceptExternalPower,
-				canOutputExternalPower);
+				canOutputExternalPower, false);
 		this.name = name;
 		this.container = container;
 

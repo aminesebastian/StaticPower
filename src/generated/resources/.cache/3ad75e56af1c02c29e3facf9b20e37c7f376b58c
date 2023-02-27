@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-15T01:51:20.7903088	Item Models: staticpower
+// 1.19.2	2023-02-22T14:59:39.3243286	Item Models: staticpower
 6027aa6d17b10a748c750596a1e41617fddb06da assets/staticpower/models/item/alloy_furnace.json
 a719b3e89ea4ecd25522280007f7e8b66eacafc0 assets/staticpower/models/item/automatic_placer.json
 32a59e36d1d4e959c6c1f1436a7c1d1efed2bf87 assets/staticpower/models/item/backpack.json
@@ -216,8 +216,11 @@ ab9efbbbe424a8d71fe4dfdbb6a951dc318ddc6b assets/staticpower/models/item/chest_en
 853b16f29b25ec21573b3ccd00972baf9be9ecd5 assets/staticpower/models/item/chest_vacuum.json
 c7ab0b8ff453e0b59d6d9c02542f904eba8f054a assets/staticpower/models/item/chunks_aluminum.json
 e717b1e5d14e8b5eb45094f3382fb1e3c943eda8 assets/staticpower/models/item/chunks_coal.json
+0785e048f0edf721c96b3ea4150e7b953810cd29 assets/staticpower/models/item/chunks_copper.json
 72b2af3ea28803ee784e213a14407bedbf1533ab assets/staticpower/models/item/chunks_diamond.json
 dc1cc4e09535d201c4d9e992a02fb5d68247e0ff assets/staticpower/models/item/chunks_emerald.json
+f9b3a475fe0211dcc0c78bb52104c45332a4e99c assets/staticpower/models/item/chunks_gold.json
+1b1e9191a17b5c91769275f4d30ee0f317fa4d72 assets/staticpower/models/item/chunks_iron.json
 c535a01dca4a7e28340e1ab18c22c8996cae3e1e assets/staticpower/models/item/chunks_lapis.json
 eb5fad6673808c5c259480dae9389292f4a9eace assets/staticpower/models/item/chunks_lead.json
 2f1a711277871b4346e4f481369424264f19a0fe assets/staticpower/models/item/chunks_magnesium.json

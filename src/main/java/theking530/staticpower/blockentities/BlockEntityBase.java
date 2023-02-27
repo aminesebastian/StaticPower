@@ -340,7 +340,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 		// Drop all the INPUTS from any recipe processing components.
 		for (RecipeProcessingComponent<?> comp : getComponents(RecipeProcessingComponent.class)) {
-			ProcessingOutputContainer outputContainer = comp.getCurrentProcessingContainer();
+			ProcessingOutputContainer outputContainer = comp.getProcessingMaterials();
 			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
 				if (!input.isTemplateItem()) {
 					WorldUtilities.dropItem(level, worldPosition, input.item());

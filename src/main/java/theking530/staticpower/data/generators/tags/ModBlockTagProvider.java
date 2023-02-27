@@ -14,7 +14,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.MaterialBundle;
+import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModBlockTags;
@@ -28,16 +28,16 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 	@Override
 	protected void addTags() {
 		tag(Tags.Blocks.ORES).add(ModBlocks.OreRustyIron.get())
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateOverworldOre()).map((bundle) -> bundle.getOverworldOre().get())))
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateDeepslateOre()).map((bundle) -> bundle.getDeepslateOre().get())))
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateNetherackOre()).map((bundle) -> bundle.getNetherackOre().get())));
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasOverworldOre()).map((bundle) -> bundle.getOverworldOre().get())))
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasDeepslateOre()).map((bundle) -> bundle.getDeepslateOre().get())))
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasNetherOre()).map((bundle) -> bundle.getNetherackOre().get())));
 
 		tag(Tags.Blocks.ORES_IN_GROUND_STONE).add(ModBlocks.OreRustyIron.get())
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateOverworldOre()).map((bundle) -> bundle.getOverworldOre().get())));
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasOverworldOre()).map((bundle) -> bundle.getOverworldOre().get())));
 		tag(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE)
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateDeepslateOre()).map((bundle) -> bundle.getDeepslateOre().get())));
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasDeepslateOre()).map((bundle) -> bundle.getDeepslateOre().get())));
 		tag(Tags.Blocks.ORES_IN_GROUND_NETHERRACK)
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.shouldGenerateNetherackOre()).map((bundle) -> bundle.getNetherackOre().get())));
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasNetherOre()).map((bundle) -> bundle.getNetherackOre().get())));
 
 		tag(BlockTags.PLANKS).add(ModBlocks.StaticPlanks.get(), ModBlocks.EnergizedPlanks.get(), ModBlocks.LumumPlanks.get(), ModBlocks.RubberTreePlanks.get());
 		tag(BlockTags.LOGS).add(ModBlocks.StaticLog.get(), ModBlocks.EnergizedLog.get(), ModBlocks.LumumLog.get(), ModBlocks.RubberTreeWood.get(), ModBlocks.RubberTreeLog.get(),
@@ -109,21 +109,21 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasOres()) {
 				TagsProvider.TagAppender<Block> tag = tag(bundle.getOreTag());
-				if (bundle.shouldGenerateOverworldOre()) {
+				if (bundle.hasOverworldOre()) {
 					tag.add(bundle.getOverworldOre().get());
 				}
-				if (bundle.shouldGenerateDeepslateOre()) {
+				if (bundle.hasDeepslateOre()) {
 					tag.add(bundle.getDeepslateOre().get());
 				}
-				if (bundle.shouldGenerateNetherackOre()) {
+				if (bundle.hasNetherOre()) {
 					tag.add(bundle.getNetherackOre().get());
 				}
 			}
 
-			if (bundle.shouldGenerateRawStorageBlock()) {
+			if (bundle.hasRawStorageBlock()) {
 				tag(bundle.getRawStorageBlockTag()).add(bundle.getRawMaterialStorageBlock().get());
 			}
-			if (bundle.shouldGenerateStorageBlock()) {
+			if (bundle.hasStorageBlock()) {
 				tag(bundle.getStorageBlockTag()).add(bundle.getStorageBlock().get());
 			}
 		}

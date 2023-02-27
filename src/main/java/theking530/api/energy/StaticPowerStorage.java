@@ -23,9 +23,23 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	protected boolean canOutputExternalPower;
 
 	protected StaticPowerEnergyTracker ticker;
+	/**
+	 * If true, the input/output limits for this storage are cummulative per tick.
+	 * Meaning if the power output limit is 100 W/t, then trying to drain 20W 6
+	 * times in a single tick will result in 5 x 20W drains and then a 0W drain.
+	 * 
+	 * If false, the limit will be per drain. Meaning if the power output limit is
+	 * 100 W/t, then trying to drain 200W will result in a 100W drain. Doing so
+	 * multiple times in a single tick will still result in 100W drains.
+	 * 
+	 * Note: If this is true, then
+	 * {@link #StaticPowerEnergyTracker.tick(net.minecraft.world.level.Level)} must
+	 * be called per tick.
+	 */
+	protected boolean arePowerLimitsCumulative;
 
 	public StaticPowerStorage(double capacity, StaticVoltageRange inputVoltageRange, double maxInputPower, CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage,
-			double maxOutputPower, CurrentType outputCurrentType, boolean canAcceptExternalPower, boolean canOutputExternalPower) {
+			double maxOutputPower, CurrentType outputCurrentType, boolean canAcceptExternalPower, boolean canOutputExternalPower, boolean arePowerLimitsCumulative) {
 		this();
 		this.capacity = capacity;
 		this.inputVoltageRange = inputVoltageRange;
@@ -36,6 +50,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		this.acceptableCurrentTypes.addAll(Arrays.asList(acceptableCurrentTypes));
 		this.canAcceptExternalPower = canAcceptExternalPower;
 		this.canOutputExternalPower = canOutputExternalPower;
+		this.arePowerLimitsCumulative = arePowerLimitsCumulative;
 	}
 
 	protected StaticPowerStorage() {
@@ -181,16 +196,17 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 			return 0;
 		}
 
-		double actualPowerDelta = 0;
-		double absPower = Math.abs(stack.getPower());
+		double maxInputRate = getMaximumPowerInput();
+		if (arePowerLimitsCumulative) {
+			maxInputRate -= getEnergyTracker().getCurrentFrameAdded();
+		}
 
-		double maxInputRate = this.getMaximumPowerInput() - this.getEnergyTracker().getCurrentFrameAdded();
 		if (maxInputRate <= 0) {
 			return 0;
 		}
 
 		double maxPowerDelta = Math.min(getMaximumPowerInput(), capacity - storedPower);
-		actualPowerDelta = Math.min(absPower, maxPowerDelta);
+		double actualPowerDelta = Math.min(stack.getPower(), maxPowerDelta);
 		actualPowerDelta = Math.min(actualPowerDelta, maxInputRate);
 
 		if (!simulate) {
@@ -204,7 +220,11 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	@Override
 	public PowerStack drainPower(double power, boolean simulate) {
 		if (power > 0) {
-			double maxPowerDrain = getMaximumPowerOutput() - this.getEnergyTracker().getCurrentFrameDrained();
+			double maxPowerDrain = getMaximumPowerOutput();
+			if (arePowerLimitsCumulative) {
+				maxPowerDrain -= getEnergyTracker().getCurrentFrameDrained();
+			}
+
 			double maxUsedPower = Math.min(power, maxPowerDrain);
 			maxUsedPower = Math.min(maxUsedPower, getStoredPower());
 			if (maxUsedPower <= 0) {
@@ -265,6 +285,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 
 		output.putBoolean("canAcceptExternalPower", canAcceptExternalPower);
 		output.putBoolean("canOutputExternalPower", canOutputExternalPower);
+		output.putBoolean("arePowerLimitsCumulative", arePowerLimitsCumulative);
 
 		return output;
 	}
@@ -297,6 +318,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 
 		canAcceptExternalPower = nbt.getBoolean("canAcceptExternalPower");
 		canOutputExternalPower = nbt.getBoolean("canOutputExternalPower");
+		arePowerLimitsCumulative = nbt.getBoolean("arePowerLimitsCumulative");
 	}
 
 	public static StaticPowerStorage fromTag(CompoundTag nbt) {

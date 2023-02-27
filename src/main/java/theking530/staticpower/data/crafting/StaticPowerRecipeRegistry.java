@@ -170,7 +170,7 @@ public class StaticPowerRecipeRegistry {
 	 * @return
 	 */
 	public static boolean isValidCastingMold(ItemStack stack) {
-		for (AbstractStaticPowerRecipe recipe : RECIPES.get(CastingRecipe.RECIPE_TYPE)) {
+		for (AbstractStaticPowerRecipe recipe : RECIPES.get(ModRecipeTypes.CASTING_RECIPE_TYPE.get())) {
 			CastingRecipe castingRecipe = (CastingRecipe) recipe;
 			if (castingRecipe.getRequiredMold().test(stack)) {
 				return true;

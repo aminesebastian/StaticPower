@@ -102,7 +102,7 @@ public class StaticPowerForgeBusClient {
 	 * @param event the highlight event
 	 */
 	@SubscribeEvent
-	public static void renderBlockHighlights(RenderHighlightEvent event) {
+	public static void renderBlockHighlights(RenderHighlightEvent.Block event) {
 		// If the player is null, do nothing.
 		if (Minecraft.getInstance().player == null) {
 			return;
@@ -120,8 +120,8 @@ public class StaticPowerForgeBusClient {
 			// Get the tool's item and get the blocks that are currently being targeted for
 			// harvesting.
 			AbstractMultiHarvestTool toolItem = (AbstractMultiHarvestTool) tool.getItem();
-			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, new BlockPos(event.getTarget().getLocation()), Minecraft.getInstance().player);
-
+			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getBlockPos(), Minecraft.getInstance().player);
+			
 			// Get the world renderer state.
 			LevelRenderer worldRender = event.getLevelRenderer();
 			PoseStack matrix = event.getPoseStack();

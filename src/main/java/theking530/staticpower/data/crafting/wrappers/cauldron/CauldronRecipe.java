@@ -1,35 +1,47 @@
 package theking530.staticpower.data.crafting.wrappers.cauldron;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class CauldronRecipe extends AbstractStaticPowerRecipe {
 	public static final String ID = "cauldron";
-	public static final RecipeType<CauldronRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CauldronRecipe>();
+	public static final Codec<CauldronRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					StaticPowerIngredient.CODEC.optionalFieldOf("input_item", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getInput()),
+					StaticPowerOutputItem.CODEC.optionalFieldOf("output_item", StaticPowerOutputItem.EMPTY).forGetter(recipe -> recipe.getOutput()),
+					FluidIngredient.CODEC.optionalFieldOf("input_fluid", FluidIngredient.EMPTY).forGetter(recipe -> recipe.getRequiredFluid()),
+					FluidStack.CODEC.optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(recipe -> recipe.getOutputFluid()),
+					Codec.BOOL.fieldOf("drain_after_craft").forGetter(recipe -> recipe.shouldDrainAfterCraft()),
+					Codec.INT.fieldOf("time").forGetter(recipe -> recipe.getRequiredTimeInCauldron())).apply(instance, CauldronRecipe::new));
 
 	private final StaticPowerIngredient input;
 	private final StaticPowerOutputItem output;
-	private final FluidStack inputFluid;
+	private final FluidIngredient inputFluid;
 	private final FluidStack outputFluid;
 	private final int timeInCauldron;
-	private final boolean shouldDrainCauldron;
+	private final boolean drainAfterCraft;
 
-	public CauldronRecipe(ResourceLocation name, StaticPowerIngredient input, StaticPowerOutputItem output, FluidStack inputFluid, FluidStack outputFluid, boolean shouldDrainCauldron,
-			int timeInCauldron) {
+	public CauldronRecipe(ResourceLocation name, StaticPowerIngredient input, StaticPowerOutputItem output, FluidIngredient inputFluid, FluidStack outputFluid,
+			boolean drainAfterCraft, int timeInCauldron) {
 		super(name);
 		this.input = input;
 		this.output = output;
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
 		this.timeInCauldron = timeInCauldron;
-		this.shouldDrainCauldron = shouldDrainCauldron;
+		this.drainAfterCraft = drainAfterCraft;
 	}
 
 	public StaticPowerIngredient getInput() {
@@ -44,7 +56,7 @@ public class CauldronRecipe extends AbstractStaticPowerRecipe {
 		return !output.isEmpty();
 	}
 
-	public FluidStack getRequiredFluid() {
+	public FluidIngredient getRequiredFluid() {
 		return inputFluid;
 	}
 
@@ -56,8 +68,8 @@ public class CauldronRecipe extends AbstractStaticPowerRecipe {
 		return timeInCauldron;
 	}
 
-	public boolean shouldDrainCauldron() {
-		return shouldDrainCauldron;
+	public boolean shouldDrainAfterCraft() {
+		return drainAfterCraft;
 	}
 
 	@Override
@@ -65,10 +77,9 @@ public class CauldronRecipe extends AbstractStaticPowerRecipe {
 		boolean matched = true;
 
 		// Check fluids.
-		if (!inputFluid.isEmpty() && matchParams.shouldVerifyFluids()) {
-			matched &= matchParams.hasFluids() && matchParams.getFluids()[0].equals(inputFluid);
-			if (matched && matchParams.shouldVerifyFluidAmounts()) {
-				matched &= matchParams.hasFluids() && matchParams.getFluids()[0].getAmount() >= 1000; // ALWAYS we check for a full bucket.
+		if (matchParams.shouldVerifyFluids() && !inputFluid.isEmpty()) {
+			if (!inputFluid.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts())) {
+				return false;
 			}
 		}
 
@@ -86,11 +97,11 @@ public class CauldronRecipe extends AbstractStaticPowerRecipe {
 
 	@Override
 	public RecipeSerializer<CauldronRecipe> getSerializer() {
-		return CauldronRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.CAULDRON_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<CauldronRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.CAULDRON_RECIPE_TYPE.get();
 	}
 }

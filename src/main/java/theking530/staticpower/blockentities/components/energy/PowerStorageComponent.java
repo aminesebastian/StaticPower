@@ -98,7 +98,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		baseMaximumOutputPower = maxPowerOutput;
 
 		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputPower, acceptableInputCurrents, voltageOutput, maxPowerOutput,
-				outputCurrentType, canAcceptExternalPower, canOutputExternalPower);
+				outputCurrentType, canAcceptExternalPower, canOutputExternalPower, true);
 
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 	}

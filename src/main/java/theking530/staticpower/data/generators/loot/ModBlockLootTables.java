@@ -18,7 +18,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.block.IBlockLootTableProvider;
 import theking530.staticcore.block.IBlockLootTableProvider.BlockDropType;
-import theking530.staticpower.data.MaterialBundle;
+import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
@@ -37,13 +37,13 @@ public class ModBlockLootTables extends BlockLoot {
 
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasOres()) {
-				if (bundle.shouldGenerateOverworldOre()) {
+				if (bundle.hasOverworldOre()) {
 					addOre(bundle.getOverworldOre().get(), bundle.getRawMaterial().get());
 				}
-				if (bundle.shouldGenerateNetherackOre()) {
+				if (bundle.hasNetherOre()) {
 					addOre(bundle.getNetherackOre().get(), bundle.getRawMaterial().get());
 				}
-				if (bundle.shouldGenerateDeepslateOre()) {
+				if (bundle.hasDeepslateOre()) {
 					addOre(bundle.getDeepslateOre().get(), bundle.getRawMaterial().get());
 				}
 			}

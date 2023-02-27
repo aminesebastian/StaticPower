@@ -1,6 +1,8 @@
 {
   "values": [
     "#forge:ingots/gold",
+    "#forge:plates/gold",
+    "#forge:ingots/gold",
     "#forge:plates/gold"
   ]
 }

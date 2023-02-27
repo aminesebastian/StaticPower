@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -85,12 +84,12 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 
 		// Draw the bars.
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getInputFluid(), 0, 0, 30, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 30, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 41, 5, 97, 20, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 41;
-		FluidStack fluid = recipe.getInputFluid();
+		FluidStack fluid = getNthFluidInput(recipeSlotsView, 0);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 97, 25, 1, progress, 5, false);
 
 		// Draw the progress bar.
@@ -120,9 +119,9 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, CastingRecipe recipe, IFocusGroup ingredients) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 76, 14).addIngredients(recipe.getRequiredMold());
-		builder.addSlot(RecipeIngredientRole.INPUT, 30, 6).addIngredient(ForgeTypes.FLUID_STACK, recipe.getInputFluid())
-				.setFluidRenderer(getFluidTankDisplaySize(recipe.getInputFluid()), false, 16, 48);
+		builder.addSlot(RecipeIngredientRole.INPUT, 76, 14).addIngredients(recipe.getRequiredMold().getIngredient());
+
+		addFluidIngredientSlot(builder, RecipeIngredientRole.INPUT, 30, 6, 16, 48, recipe.getInputFluid());
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 120, 32).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 

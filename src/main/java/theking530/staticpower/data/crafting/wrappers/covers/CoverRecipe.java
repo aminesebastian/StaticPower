@@ -10,22 +10,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.attachments.cover.CableCover;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.init.ModItems;
+import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.items.tools.CoverSaw;
 
 public class CoverRecipe extends CustomRecipe {
-	public static final SimpleRecipeSerializer<CoverRecipe> SERIALIZER_INSTANCE;
 	public static final String ID = "cover";
-	public static final RecipeType<CoverRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CoverRecipe>();
-
-	static {
-		SERIALIZER_INSTANCE = new SimpleRecipeSerializer<>(name -> new CoverRecipe(name));
-	}
 
 	public CoverRecipe(ResourceLocation name) {
 		super(name);
@@ -96,6 +88,6 @@ public class CoverRecipe extends CustomRecipe {
 	@Nonnull
 	@Override
 	public RecipeSerializer<CoverRecipe> getSerializer() {
-		return SERIALIZER_INSTANCE;
+		return ModRecipeSerializers.COVER_SERIALIZER.get();
 	}
 }

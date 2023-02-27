@@ -39,7 +39,11 @@ public abstract class SPRecipeProvider<T extends Recipe<?>> extends RecipeProvid
 	protected abstract void buildRecipes();
 
 	protected void addRecipe(String name, RecipeBuilder builder) {
-		if (builders.containsKey(name)) {
+		addRecipe(name, builder, false);
+	}
+
+	protected void addRecipe(String name, RecipeBuilder builder, boolean replace) {
+		if (!replace && builders.containsKey(name)) {
 			throw new RuntimeException("Encountered duplicate recipe name: " + name);
 		}
 		builders.put(name, builder);

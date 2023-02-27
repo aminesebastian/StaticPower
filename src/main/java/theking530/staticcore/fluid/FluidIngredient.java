@@ -90,6 +90,11 @@ public class FluidIngredient implements Predicate<FluidStack> {
 		return this.fluidStacks;
 	}
 
+	public boolean isEmpty() {
+		this.dissolve();
+		return fluidAmount == 0 || values.length == 0;
+	}
+
 	public int getAmount() {
 		return fluidAmount;
 	}

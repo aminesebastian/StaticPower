@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.5,
+  "ingredient": {
+    "tag": "staticpower:dusts/inert_infusion_alloy"
+  },
+  "result": "staticpower:ingot_inert_infusion_alloy"
+}

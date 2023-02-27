@@ -17,6 +17,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.fluid.StaticPowerFluidBuilder;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 
@@ -174,13 +175,16 @@ public class ModFluids {
 		}
 	}
 
-	private static StaticPowerFluidBundle registerFluid(StaticPowerFluidBuilder builder) {
+	public static StaticPowerFluidBundle registerFluid(StaticPowerFluidBuilder builder) {
 		StaticPowerFluidBundle bundle = builder.build();
 		FLUID_BUNDLES.add(bundle);
 		return bundle;
 	}
 
 	public static void init(IEventBus eventBus) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
+			bundle.generateFluids();
+		}
 		FLUID_TYPES.register(eventBus);
 		FLUIDS.register(eventBus);
 	}

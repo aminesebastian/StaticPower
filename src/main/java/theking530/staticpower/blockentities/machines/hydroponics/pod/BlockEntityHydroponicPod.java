@@ -163,7 +163,7 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipe
 	}
 
 	public Optional<BlockState> getPlantBlockStateForHarvest(ProcessingOutputContainer outputContainer) {
-		Optional<Block> block = getPlantBlockFromSeed(processingComponent.getCurrentProcessingContainer().getInputItem(0).item());
+		Optional<Block> block = getPlantBlockFromSeed(processingComponent.getProcessingMaterials().getInputItem(0).item());
 		if (block.isEmpty()) {
 			return Optional.empty();
 		}
@@ -205,8 +205,8 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipe
 
 	public Optional<Block> getPlantBlockForDisplay() {
 		Optional<Block> block = Optional.empty();
-		if (processingComponent.getCurrentProcessingContainer().hasInputItems()) {
-			block = getPlantBlockFromSeed(processingComponent.getCurrentProcessingContainer().getInputItem(0).item());
+		if (processingComponent.getProcessingMaterials().hasInputItems()) {
+			block = getPlantBlockFromSeed(processingComponent.getProcessingMaterials().getInputItem(0).item());
 		}
 		if (block.isEmpty()) {
 			block = getPlantBlockFromSeed(inputInventory.getStackInSlot(0));

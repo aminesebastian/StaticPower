@@ -2,6 +2,7 @@ package theking530.staticpower.init;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.Item;
@@ -31,8 +32,8 @@ import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
 import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.items.BatteryPack;
@@ -120,20 +121,11 @@ public class ModItems {
 
 	public static final RegistryObject<StaticPowerItem> RawRustyIron = ITEMS.register("raw_rusty_iron", () -> new StaticPowerItem());
 
-	public static final RegistryObject<StaticPowerItem> DustCharcoal = ITEMS.register("dust_charcoal", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> DustCoal = ITEMS.register("dust_coal", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DustObsidian = ITEMS.register("dust_obsidian", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DustSaltpeter = ITEMS.register("dust_saltpeter", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DustSulfur = ITEMS.register("dust_sulfur", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DustCoalSmall = ITEMS.register("dust_coal_small", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DustCharcoalSmall = ITEMS.register("dust_charcoal_small", () -> new StaticPowerItem());
-
-	public static final RegistryObject<StaticPowerItem> ChunksCoal = ITEMS.register("chunks_coal", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> ChunksDiamond = ITEMS.register("chunks_diamond", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> ChunksEmerald = ITEMS.register("chunks_emerald", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> ChunksLapis = ITEMS.register("chunks_lapis", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> ChunksQuartz = ITEMS.register("chunks_quartz", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> ChunksRedstone = ITEMS.register("chunks_redstone", () -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> RawSilicon = ITEMS.register("raw_silicon", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> Silicon = ITEMS.register("silicon", () -> new StaticPowerItem());
@@ -282,11 +274,9 @@ public class ModItems {
 	public static final RegistryObject<DepletedFruit> DepletedFruit = ITEMS.register("fruit_depleted", () -> new DepletedFruit());
 
 	public static final RegistryObject<Hammer> IronMetalHammer = ITEMS.register("hammer_iron", () -> new Hammer(StaticPowerTiers.IRON, () -> Items.IRON_INGOT));
-	public static final RegistryObject<Hammer> ZincMetalHammer = ITEMS.register("hammer_zinc",
-			() -> new Hammer(StaticPowerTiers.ZINC, () -> ModMaterials.ZINC.getIngot().get()));
+	public static final RegistryObject<Hammer> ZincMetalHammer = ITEMS.register("hammer_zinc", () -> new Hammer(StaticPowerTiers.ZINC, () -> ModMaterials.ZINC.getIngot().get()));
 	public static final RegistryObject<Hammer> CopperMetalHammer = ITEMS.register("hammer_copper", () -> new Hammer(StaticPowerTiers.COPPER, () -> Items.COPPER_INGOT));
-	public static final RegistryObject<Hammer> TinMetalHammer = ITEMS.register("hammer_tin",
-			() -> new Hammer(StaticPowerTiers.TIN, () -> ModMaterials.TIN.getIngot().get()));
+	public static final RegistryObject<Hammer> TinMetalHammer = ITEMS.register("hammer_tin", () -> new Hammer(StaticPowerTiers.TIN, () -> ModMaterials.TIN.getIngot().get()));
 	public static final RegistryObject<Hammer> BronzeMetalHammer = ITEMS.register("hammer_bronze",
 			() -> new Hammer(StaticPowerTiers.BRONZE, () -> ModMaterials.BRONZE.getIngot().get()));
 	public static final RegistryObject<Hammer> TungstenMetalHammer = ITEMS.register("hammer_tungsten",
@@ -537,5 +527,9 @@ public class ModItems {
 			bundle.generateItems(ITEMS);
 		}
 		ITEMS.register(eventBus);
+	}
+
+	public static <T extends Item> RegistryObject<T> registerItem(String name, Supplier<T> block) {
+		return ITEMS.register(name, block);
 	}
 }

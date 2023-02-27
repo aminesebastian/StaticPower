@@ -34,6 +34,7 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntity;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.FluidUtilities;
 
 public class BlockEntityCauldron extends BlockEntityBase {
@@ -59,8 +60,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 		super(allocator, pos, state);
 		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.BASIC);
 
-		registerComponent(
-				internalTank = new FluidTankComponent("InputFluidTank", 1000).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
+		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 1000).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
 
 		// Only allow this to be heated by other sources.
 		registerComponent(
@@ -124,7 +124,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 		}
 
 		// Capture the max craftable.
-		int maxCraftable = recipe.shouldDrainCauldron() ? 1 : item.getCount();
+		int maxCraftable = recipe.shouldDrainAfterCraft() ? 1 : item.getCount();
 		if (!recipe.getOutputFluid().isEmpty()) {
 			int remainingTankSpace = internalTank.getCapacity() - internalTank.getFluidAmount();
 			maxCraftable = Math.min(item.getCount(), remainingTankSpace / recipe.getOutputFluid().getAmount());
@@ -149,7 +149,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 		}
 
 		// Drain the cauldron if we should.
-		if (recipe.shouldDrainCauldron()) {
+		if (recipe.shouldDrainAfterCraft()) {
 			internalTank.drain(Integer.MAX_VALUE, FluidAction.EXECUTE);
 		}
 
@@ -203,6 +203,6 @@ public class BlockEntityCauldron extends BlockEntityBase {
 	}
 
 	public Optional<CauldronRecipe> getRecipe(ItemStack input) {
-		return StaticPowerRecipeRegistry.getRecipe(CauldronRecipe.RECIPE_TYPE, new RecipeMatchParameters(input).setFluids(internalTank.getFluid()));
+		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.CAULDRON_RECIPE_TYPE.get(), new RecipeMatchParameters(input).setFluids(internalTank.getFluid()));
 	}
 }

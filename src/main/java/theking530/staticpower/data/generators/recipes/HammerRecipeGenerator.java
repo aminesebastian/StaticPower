@@ -4,12 +4,12 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
 import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
+import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
@@ -26,7 +26,7 @@ public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> {
 		addItemRecipe("rubber_sheet", StaticPowerIngredient.of(ModItemTags.RUBBER), StaticPowerOutputItem.of(ModItems.RubberSheet.get()));
 
 		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
-			if (material.shouldGenerateHeatedIngot() && material.shouldGeneratePlate()) {
+			if (material.hasHeatedIngot() && material.hasPlate()) {
 				addItemRecipe("plates/" + material.getName(), StaticPowerIngredient.of(material.getHeatedIngot().get()), StaticPowerOutputItem.of(material.getPlate().get(), 2));
 			}
 		}

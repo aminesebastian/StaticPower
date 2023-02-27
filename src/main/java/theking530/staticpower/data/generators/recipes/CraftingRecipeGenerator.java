@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.utilities.MinecraftColor;
-import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
@@ -19,6 +18,7 @@ import theking530.staticpower.data.generators.RecipeItem;
 import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.generators.helpers.SPShapedRecipeBuilder;
 import theking530.staticpower.data.generators.helpers.SPShapelessRecipeBuilder;
+import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
@@ -51,7 +51,7 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 
 		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
-			if (material.shouldGenerateStorageBlock() && material.shouldGenerateIngot()) {
+			if (material.hasStorageBlock() && material.hasIngot()) {
 				// @formatter:off
 				beginShapedRecipe(material.getStorageBlock().get(), "storage_blocks/from_ingots/" + material.getName())
 					.define('i', material.getIngotTag())
@@ -65,7 +65,7 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 						.unlockedBy("has_" + material.getName() + "_block", hasItems(material.getStorageBlockItemTag()));
 			}
 
-			if (material.shouldGenerateRawStorageBlock() && material.shouldGenerateRawMaterial()) {
+			if (material.hasRawStorageBlock() && material.hasRawMaterial()) {
 				// @formatter:off
 				beginShapedRecipe(material.getRawMaterialStorageBlock().get(),  "storage_blocks/from_raw_materials/" + material.getName())
 					.define('i', material.getRawMaterialTag())
@@ -79,7 +79,7 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 						.unlockedBy("has_" + material.getName() + "_raw_block", hasItems(material.getRawStorageBlockItemTag()));
 			}
 
-			if (material.shouldGenerateIngot() && material.shouldGenerateNugget()) {
+			if (material.hasIngot() && material.hasNugget()) {
 				// @formatter:off
 				beginShapedRecipe(material.getIngot().get(), "ingots/from_nuggets/" + material.getName())
 					.define('i', material.getNuggetTag())
@@ -93,7 +93,7 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 						.unlockedBy("has_" + material.getName() + "_ingot", hasItems(material.getIngotTag()));
 			}
 
-			if (material.shouldGenerateGear()) {
+			if (material.hasGear()) {
 				// @formatter:off
 				beginShapedRecipe(material.getGear().get(), "gear/from_ingots/" + material.getName())
 					.define('i', material.getIngotTag())
@@ -103,7 +103,7 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 					.unlockedBy("has_" + material.getName() + "_ingot", hasItems(material.getIngotTag()));
 				// @formatter:on
 
-				if (material.shouldGenerateGearBox()) {
+				if (material.hasGearBox()) {
 					// @formatter:off
 					beginShapedRecipe(material.getGearBox().get(), "gear_box/" + material.getName())
 						.define('i', material.getIngotTag())
@@ -116,17 +116,17 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 				}
 			}
 
-			if (material.shouldGenerateWire()) {
+			if (material.hasWire()) {
 				beginShapelessRecipe(material.getWire().get(), 3, "wire/from_ingot/" + material.getName()).requires(material.getIngotTag()).requires(ModItemTags.WIRE_CUTTER)
 						.unlockedBy("has_" + material.getName() + "_ingot", hasItems(material.getIngotTag())).unlockedBy("has_wire_cutter", hasWireCutter());
 
-				if (material.shouldGeneratePlate()) {
+				if (material.hasPlate()) {
 					beginShapelessRecipe(material.getWire().get(), 3, "wire/from_plate/" + material.getName()).requires(material.getPlateTag()).requires(ModItemTags.WIRE_CUTTER)
 							.unlockedBy("has_" + material.getName() + "_plate", hasItems(material.getPlateTag())).unlockedBy("has_wire_cutter", hasWireCutter());
 				}
 			}
 
-			if (material.shouldGenerateInsulatedWire()) {
+			if (material.hasInsulatedWire()) {
 				// @formatter:off
 				beginShapedRecipe(material.getInsulatedWire().get(), 3, "wire/insulated/" + material.getName())
 					.define('r', ModItemTags.RUBBER)
@@ -139,11 +139,11 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 				// @formatter:on
 			}
 
-			if (material.shouldGenerateWireCoil()) {
+			if (material.hasWireCoil()) {
 				wireCoil(material.getName(), material.getWireCoil().get(), RecipeItem.of(material.getWireTag()));
 			}
 
-			if (material.shouldGenerateInsulatedWireCoil()) {
+			if (material.hasInsulatedWireCoil()) {
 				wireCoil("insulted_" + material.getName(), material.getInsulatedWireCoil().get(), RecipeItem.of(material.getInsulatedWireTag()));
 			}
 		}

@@ -1,7 +1,9 @@
 {
   "values": [
+    "minecraft:nether_gold_ore",
     "staticpower:ore_nether_platinum",
     "staticpower:ore_nether_tungsten",
+    "minecraft:nether_quartz_ore",
     "staticpower:ore_nether_silver"
   ]
 }

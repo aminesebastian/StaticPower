@@ -101,14 +101,14 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		GuiDrawUtilities.drawBlockState(matrixStack, ModBlocks.RustyCauldron.get().defaultBlockState(), BlockPos.ZERO, ModelData.EMPTY, new Vector3D(0, 0, 0),
 				new Vector3D(0, 90, 0), new Vector3D(26, -26, 26));
 
-		float smoothedTime = (float) Math.pow(((float)timer.getValue() / timer.getMaxValue()), 2);		
+		float smoothedTime = (float) Math.pow(((float) timer.getValue() / timer.getMaxValue()), 2);
 		if (!recipe.getRequiredFluid().isEmpty()) {
+			FluidStack fluid = getNthFluidInput(recipeSlotsView, 0);
 			// Get the fluid attributes.
-			FluidStack fluid = recipe.getRequiredFluid();
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 			SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 			float height = 1.0f;
-			if (recipe.shouldDrainCauldron() || !recipe.getOutputFluid().isEmpty()) {
+			if (recipe.shouldDrainAfterCraft() || !recipe.getOutputFluid().isEmpty()) {
 				height = 1.0f - smoothedTime;
 			}
 
@@ -148,12 +148,11 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		// Revisit this later with a custom renderer.
 		// Add the fluids.
 		if (!recipe.getRequiredFluid().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.INPUT, 51, 18).addFluidStack(recipe.getRequiredFluid().getFluid(), recipe.getRequiredFluid().getAmount())
-					.setFluidRenderer(100, false, 16, 16);
+			addFluidIngredientSlot(builder, RecipeIngredientRole.INPUT, 51, 18, 16, 16, recipe.getRequiredFluid()).setFluidRenderer(100, false, 16, 16);
 		}
 		if (!recipe.getOutputFluid().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 51, 29).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount())
-					.setFluidRenderer(100, false, 16, 16);
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 51, 29).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount()).setFluidRenderer(100, false,
+					16, 16);
 		}
 
 		// Set the timer.

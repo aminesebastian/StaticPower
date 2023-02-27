@@ -84,8 +84,8 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		GuiDrawUtilities.drawSlot(matrixStack, 28, 5, 72, 18, 0);
 
 		float progress = (1.0f - (float) processingTimer.getValue() / processingTimer.getMaxValue()) * 28;
-		FluidStack fluid = recipe.getFluid().getFluids()[0];
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 10, 10, 72, 23, 1, progress, 5, false);
+		FluidStack fluid = getNthFluidInput(recipeSlotsView, 0);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 10, 10, 72, 23, 1, progress, 5, true);
 	}
 
 	@Override

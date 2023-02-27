@@ -1,5 +1,7 @@
 package theking530.staticpower.data.crafting;
 
+import java.util.Objects;
+
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -10,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.data.JsonUtilities;
+import theking530.staticpower.utilities.ItemUtilities;
 
 public class StaticPowerOutputItem {
 	public static final StaticPowerOutputItem EMPTY = StaticPowerOutputItem.of(ItemStack.EMPTY, 0.0f, 0, 0.0f);
@@ -194,4 +197,23 @@ public class StaticPowerOutputItem {
 		buffer.writeInt(additionalBonus);
 		buffer.writeFloat(bonusChance);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(additionalBonus, bonusChance, item, percentChance);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StaticPowerOutputItem other = (StaticPowerOutputItem) obj;
+		return additionalBonus == other.additionalBonus && Float.floatToIntBits(bonusChance) == Float.floatToIntBits(other.bonusChance)
+				&& ItemUtilities.areItemStacksExactlyEqual(item, other.item) && Float.floatToIntBits(percentChance) == Float.floatToIntBits(other.percentChance);
+	}
+
 }

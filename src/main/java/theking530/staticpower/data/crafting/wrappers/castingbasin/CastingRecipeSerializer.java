@@ -1,58 +1,38 @@
 package theking530.staticpower.data.crafting.wrappers.castingbasin;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
-import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class CastingRecipeSerializer extends StaticPowerRecipeSerializer<CastingRecipe> {
-	public static final CastingRecipeSerializer INSTANCE = new CastingRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "casting_recipe");
 
 	@Override
-	public CastingRecipe parse(ResourceLocation recipeId, JsonObject json) {
-		// Capture the input fluid.
-		FluidStack fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("input"));
-
-		// Capture the input mold.
-		JsonObject moldElement = GsonHelper.getAsJsonObject(json, "mold");
-		Ingredient mold = Ingredient.fromJson(moldElement);
-
-		// Get the output item.
-		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
-		StaticPowerOutputItem output = StaticPowerOutputItem.parseFromJSON(outputElement);
-
-		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.casterProcessingTime,
-				StaticPowerConfig.SERVER.casterPowerUsage, json);
-
-		// Create the recipe.
-		return new CastingRecipe(recipeId, output, fluidInput, mold, processing);
+	public Codec<CastingRecipe> getCodec() {
+		return CastingRecipe.CODEC;
 	}
 
 	@Override
 	public CastingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		FluidStack fluidInput = buffer.readFluidStack();
-		Ingredient mold = Ingredient.fromNetwork(buffer);
+		FluidIngredient fluidInput = FluidIngredient.readFromBuffer(buffer);
+		StaticPowerIngredient mold = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
 
 		// Create the recipe.
-		return new CastingRecipe(recipeId, output, fluidInput, mold, MachineRecipeProcessingSection.fromBuffer(buffer));
+		return new CastingRecipe(recipeId, mold, output, fluidInput, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, CastingRecipe recipe) {
-		buffer.writeFluidStack(recipe.getInputFluid());
-		recipe.getRequiredMold().toNetwork(buffer);
+		recipe.getInputFluid().writeToBuffer(buffer);
+		recipe.getRequiredMold().writeToBuffer(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);
 	}

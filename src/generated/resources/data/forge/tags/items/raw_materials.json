@@ -4,16 +4,25 @@
     "staticpower:raw_static_metal",
     "staticpower:raw_redstone_alloy",
     "staticpower:raw_lumum_metal",
-    "staticpower:raw_magnesium",
     "staticpower:raw_aluminum",
-    "staticpower:raw_lead",
+    "minecraft:raw_gold",
     "staticpower:raw_platinum",
     "staticpower:raw_tungsten",
     "staticpower:raw_inert_infusion_alloy",
     "staticpower:raw_energized_metal",
     "staticpower:raw_tin",
+    "minecraft:raw_copper",
+    "minecraft:lapis_lazuli",
+    "staticpower:raw_zinc",
+    "staticpower:raw_magnesium",
+    "minecraft:quartz",
+    "staticpower:raw_lead",
+    "minecraft:diamond",
+    "minecraft:raw_iron",
+    "minecraft:coal",
     "staticpower:raw_silver",
+    "minecraft:charcoal",
     "staticpower:raw_uranium",
-    "staticpower:raw_zinc"
+    "minecraft:emerald"
   ]
 }

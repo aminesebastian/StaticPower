@@ -3,19 +3,21 @@
     "staticpower:nugget_static_metal",
     "staticpower:nugget_redstone_alloy",
     "staticpower:nugget_lumum_metal",
-    "staticpower:nugget_magnesium",
     "staticpower:nugget_aluminum",
-    "staticpower:nugget_brass",
-    "staticpower:nugget_lead",
-    "staticpower:nugget_bronze",
+    "minecraft:gold_nugget",
     "staticpower:nugget_platinum",
     "staticpower:nugget_tungsten",
     "staticpower:nugget_inert_infusion_alloy",
     "staticpower:nugget_energized_metal",
     "staticpower:nugget_tin",
     "staticpower:nugget_copper",
+    "staticpower:nugget_zinc",
+    "staticpower:nugget_magnesium",
+    "staticpower:nugget_brass",
+    "staticpower:nugget_lead",
+    "staticpower:nugget_bronze",
+    "minecraft:iron_nugget",
     "staticpower:nugget_silver",
-    "staticpower:nugget_uranium",
-    "staticpower:nugget_zinc"
+    "staticpower:nugget_uranium"
   ]
 }

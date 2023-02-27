@@ -54,7 +54,7 @@ public class BlockEntityRenderFluidInfuser extends StaticPowerBlockEntitySpecial
 					WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
 			// Render the item inside the infuser.
-			ProcessingOutputContainer processingContainer = tileEntity.processingComponent.getCurrentProcessingContainer();
+			ProcessingOutputContainer processingContainer = tileEntity.processingComponent.getProcessingMaterials();
 			if (processingContainer.hasInputItems()) {
 				ItemStack inputItem = processingContainer.getInputItem(0).item();
 				// Get the baked model and check if it wants to render the item in 3d or 2d.

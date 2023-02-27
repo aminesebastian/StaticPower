@@ -1,8 +1,8 @@
-// 1.19.2	2023-02-19T06:57:23.5589	Tags for minecraft:block
-9be3749fd336fc4b100848253184c5ab50f20e1e data/forge/tags/blocks/ores.json
-bd3492e47073562739e10ae968d788259f1e119d data/forge/tags/blocks/ores_in_ground/deepslate.json
-55581421ac0c9e2c9ca3715136ea029d8a0e9b20 data/forge/tags/blocks/ores_in_ground/netherrack.json
-a3e10d515903c3f2e4b81a7690e3c33261af753f data/forge/tags/blocks/ores_in_ground/stone.json
+// 1.19.2	2023-02-22T14:59:39.323328	Tags for minecraft:block
+1ed8c6375235d71cbedaa412167804ea4fb8fc97 data/forge/tags/blocks/ores.json
+2e777d9c74ad1067c3fdad19db0dbfa068543364 data/forge/tags/blocks/ores_in_ground/deepslate.json
+e2bcf9476ab9859445c8efb3294d6e2d81ccff4a data/forge/tags/blocks/ores_in_ground/netherrack.json
+451e339e3ba4914c1dac85a2e5532747fe2a2109 data/forge/tags/blocks/ores_in_ground/stone.json
 a2bda67c5d909a46c468ef0fe160e60f0bf49f1e data/forge/tags/blocks/ore/aluminum.json
 1ea484565567160e9431ce43a1d4348cc22b2426 data/forge/tags/blocks/ore/lead.json
 8b05808d79ab659bd72e616c0ed1a8d117985786 data/forge/tags/blocks/ore/magnesium.json
@@ -18,13 +18,24 @@ cfa4f6a0b7157142a2755048a676618a29426620 data/forge/tags/blocks/ore/zinc.json
 54dd33048c5d5bb8f0b1933667fbcd41a4173a9e data/forge/tags/blocks/storage_blocks/aluminum.json
 292400c5fa7176de2aab06c9e450f96acf66c1cb data/forge/tags/blocks/storage_blocks/brass.json
 ae07c598d6fa282792ad6f8afebcb963e049f6eb data/forge/tags/blocks/storage_blocks/bronze.json
+43a45a1abbda26eb85071635bb20e4db6d13fdab data/forge/tags/blocks/storage_blocks/copper.json
+6f65945173b470070cc3ffbceeb8614d256b81f3 data/forge/tags/blocks/storage_blocks/gold.json
+b5a289b8b3995051da520bf7ce877ab6e03753d8 data/forge/tags/blocks/storage_blocks/iron.json
 7d1ebd3e3e98111343a1cfd35d71608b9b6232b2 data/forge/tags/blocks/storage_blocks/lead.json
 7da351d69149bf057825220a8376418e8ca248f1 data/forge/tags/blocks/storage_blocks/magnesium.json
 0c6755a2530579376574dcf93e3e9380ff13fe45 data/forge/tags/blocks/storage_blocks/platinum.json
 d7ce7eec94a7267109bfc05c228f1736caadef2e data/forge/tags/blocks/storage_blocks/raw_aluminum.json
+150da1135a6d5d7b9cb1ec65250c0aceaa835dff data/forge/tags/blocks/storage_blocks/raw_coal.json
+ee46d8b3aa460deef043d1835ab8a409f268c69d data/forge/tags/blocks/storage_blocks/raw_copper.json
+54217ed75f4503bd3e4461cef72f1d817a2758fa data/forge/tags/blocks/storage_blocks/raw_diamond.json
+0e0c0feb4a8835a0c65177a9d393fce230258d8d data/forge/tags/blocks/storage_blocks/raw_emerald.json
+b90553e7ce90c736ac15a4069ab292006f5a61e0 data/forge/tags/blocks/storage_blocks/raw_gold.json
+d9407070336dd697869d3f67fcda470c0a7279e7 data/forge/tags/blocks/storage_blocks/raw_iron.json
+afc25b30437e0d212759f663ee5fd8af07be1c81 data/forge/tags/blocks/storage_blocks/raw_lapis.json
 d585a21d68281d6666c44054be85c2bb83f6b067 data/forge/tags/blocks/storage_blocks/raw_lead.json
 f4787f59fa80c0de3855305e15ee3a6ca3c4e317 data/forge/tags/blocks/storage_blocks/raw_magnesium.json
 79937d60f37a006b2d6b52f31badaf619657ee94 data/forge/tags/blocks/storage_blocks/raw_platinum.json
+fbb0fe25e25b7fd86df64c2f168425efedf11710 data/forge/tags/blocks/storage_blocks/raw_quartz.json
 c9984f6b65b0ac67fc9d137f8a7576148ea88fad data/forge/tags/blocks/storage_blocks/raw_ruby.json
 8786cf4d5432c34229e3dd1f527c8b99ca2a324f data/forge/tags/blocks/storage_blocks/raw_sapphire.json
 d9dd15d3decb8029957a629e8dfd583a89929722 data/forge/tags/blocks/storage_blocks/raw_silver.json

@@ -17,10 +17,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.Tiers.TierPair;
+import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.entities.AbstractEntityBuilder;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
 import theking530.staticpower.init.ModBlocks;
@@ -77,13 +77,13 @@ public class ModItemModelProvider extends ItemModelProvider {
 		simpleItem(ModItems.RawRustyIron.get(), "materials/raw_ores/raw_rusty_iron");
 
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
-			if (bundle.shouldGenerateRawMaterial()) {
+			if (bundle.isGenerateRawMaterial()) {
 				simpleItem(bundle.getRawMaterial().get(), "materials/raw_ores/" + bundle.getRawMaterialPrefix() + "_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateIngot()) {
+			if (bundle.isGenerateIngot()) {
 				simpleItem(bundle.getIngot().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateHeatedIngot()) {
+			if (bundle.isGenerateHeatedIngot()) {
 				if (bundle == ModMaterials.IRON) {
 					simpleItemVanillaTexture(ModMaterials.IRON.getHeatedIngot().get(), "iron_ingot");
 				} else if (bundle == ModMaterials.GOLD) {
@@ -94,44 +94,42 @@ public class ModItemModelProvider extends ItemModelProvider {
 					simpleItem(bundle.getHeatedIngot().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
 				}
 			}
-			if (bundle.shouldGenerateNugget()) {
+			if (bundle.isGenerateNugget()) {
 				simpleItem(bundle.getNugget().get(), "materials/nuggets/nugget_" + bundle.getName());
 			}
-			if (bundle.shouldGeneratePlate()) {
+			if (bundle.isGeneratePlate()) {
 				simpleItem(bundle.getPlate().get(), "materials/plates/plate_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateGear()) {
+			if (bundle.isGenerateGear()) {
 				simpleItem(bundle.getGear().get(), "materials/gears/gear_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateGearBox()) {
+			if (bundle.isGenerateGearBox()) {
 				// This is just a dummy model, the real one is generated at runtime.
 				simpleItem(bundle.getGearBox().get(), "materials/gears/gear_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateDust()) {
+			if (bundle.isGenerateDust()) {
 				simpleItem(bundle.getDust().get(), "materials/dusts/dust_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateChunks()) {
+			if (bundle.isGenerateChunks()) {
 				simpleItem(bundle.getChunks().get(), "materials/chunks/chunks_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateRod()) {
+			if (bundle.isGenerateRod()) {
 				simpleItem(bundle.getRod().get(), "materials/rods/rod_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateWire()) {
+			if (bundle.isGenerateWire()) {
 				simpleItem(bundle.getWire().get(), "components/wire_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateInsulatedWire()) {
+			if (bundle.isGenerateInsulatedWire()) {
 				simpleItem(bundle.getInsulatedWire().get(), "components/wire_insulated_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateWireCoil()) {
+			if (bundle.isGenerateWireCoil()) {
 				simpleItem(bundle.getWireCoil().get(), "components/wire_coil_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateInsulatedWireCoil()) {
+			if (bundle.isGenerateInsulatedWireCoil()) {
 				simpleItem(bundle.getInsulatedWireCoil().get(), "components/wire_coil_insulated_" + bundle.getName());
 			}
 		}
 
-		simpleItem(ModItems.DustCharcoal.get(), "materials/dusts/dust_charcoal");
-		simpleItem(ModItems.DustCoal.get(), "materials/dusts/dust_coal");
 		simpleItem(ModItems.DustObsidian.get(), "materials/dusts/dust_obsidian");
 		simpleItem(ModItems.DustSaltpeter.get(), "materials/dusts/dust_saltpeter");
 		simpleItem(ModItems.DustSulfur.get(), "materials/dusts/dust_sulfur");
@@ -139,13 +137,6 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 		simpleItem(ModItems.DustCoalSmall.get(), "materials/dusts/dust_coal_small");
 		simpleItem(ModItems.DustCharcoalSmall.get(), "materials/dusts/dust_charcoal_small");
-
-		simpleItem(ModItems.ChunksCoal.get(), "materials/chunks/chunks_coal");
-		simpleItem(ModItems.ChunksDiamond.get(), "materials/chunks/chunks_diamond");
-		simpleItem(ModItems.ChunksEmerald.get(), "materials/chunks/chunks_emerald");
-		simpleItem(ModItems.ChunksLapis.get(), "materials/chunks/chunks_lapis");
-		simpleItem(ModItems.ChunksQuartz.get(), "materials/chunks/chunks_quartz");
-		simpleItem(ModItems.ChunksRedstone.get(), "materials/chunks/chunks_redstone");
 
 		simpleItem(ModItems.RawSilicon.get(), "materials/raw_silicon");
 		simpleItem(ModItems.Silicon.get(), "materials/silicon");

@@ -18,11 +18,11 @@ import theking530.staticpower.blocks.StaticPowerBlockProperties;
 import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.data.MaterialBundle;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.Tiers.ResistorTier;
 import theking530.staticpower.data.Tiers.TierPair;
+import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
@@ -73,22 +73,22 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		simpleBlockWithCustomTexture(ModBlocks.BlockRubber.get(), "storageblocks/block_rubber");
 
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
-			if (bundle.shouldGenerateOverworldOre()) {
+			if (bundle.hasGeneratedOverworldOre()) {
 				simpleBlockWithCustomTexture(bundle.getOverworldOre().get(), "ore/ore_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateNetherackOre()) {
+			if (bundle.hasGeneratedNetherackOre()) {
 				simpleBlockWithCustomTexture(bundle.getNetherackOre().get(), "ore/ore_nether_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateDeepslateOre()) {
+			if (bundle.hasGeneratedDeepslateOre()) {
 				simpleBlockWithCustomTexture(bundle.getDeepslateOre().get(), "ore/ore_deepslate_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateRawStorageBlock()) {
+			if (bundle.isGenerateRawStorageBlock()) {
 				simpleBlockWithCustomTexture(bundle.getRawMaterialStorageBlock().get(), "storageblocks/block_raw_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateStorageBlock()) {
+			if (bundle.isGenerateStorageBlock()) {
 				simpleBlockWithCustomTexture(bundle.getStorageBlock().get(), "storageblocks/block_" + bundle.getName());
 			}
-			if (bundle.shouldGenerateCutStorageBlock()) {
+			if (bundle.isGenerateCutStorageBlock()) {
 				simpleBlockWithCustomTexture(bundle.getCutStorageBlock().get(), "storageblocks/block_cut_" + bundle.getName());
 			}
 		}

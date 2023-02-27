@@ -74,44 +74,45 @@ public class ModRecipeSerializers {
 	public static final DeferredRegister<RecipeType<?>> TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StaticPower.MOD_ID);
 	public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StaticPower.MOD_ID);
 
-	public static final RegistryObject<AutoSmithRecipeSerializer> AUTO_SMITH_SERIALIZER = SERIALIZERS.register(AutoSmithRecipe.ID, () -> AutoSmithRecipeSerializer.INSTANCE);
+	public static final RegistryObject<AutoSmithRecipeSerializer> AUTO_SMITH_SERIALIZER = SERIALIZERS.register(AutoSmithRecipe.ID, () -> new AutoSmithRecipeSerializer());
 	public static final RegistryObject<BottlerRecipeSerializer> BOTTLER_SERIALIZER = SERIALIZERS.register(BottleRecipe.ID, () -> new BottlerRecipeSerializer());
-	public static final RegistryObject<CastingRecipeSerializer> CASTING_SERIALIZER = SERIALIZERS.register(CastingRecipe.ID, () -> CastingRecipeSerializer.INSTANCE);
-	public static final RegistryObject<CauldronRecipeSerializer> CAULDRON_SERIALIZER = SERIALIZERS.register(CauldronRecipe.ID, () -> CauldronRecipeSerializer.INSTANCE);
-	public static final RegistryObject<CentrifugeRecipeSerializer> CENTRIFUGE_SERIALIZER = SERIALIZERS.register(CentrifugeRecipe.ID, () -> CentrifugeRecipeSerializer.INSTANCE);
+	public static final RegistryObject<CastingRecipeSerializer> CASTING_SERIALIZER = SERIALIZERS.register(CastingRecipe.ID, () -> new CastingRecipeSerializer());
+	public static final RegistryObject<CauldronRecipeSerializer> CAULDRON_SERIALIZER = SERIALIZERS.register(CauldronRecipe.ID, () -> new CauldronRecipeSerializer());
+	public static final RegistryObject<CentrifugeRecipeSerializer> CENTRIFUGE_SERIALIZER = SERIALIZERS.register(CentrifugeRecipe.ID, () -> new CentrifugeRecipeSerializer());
 	public static final RegistryObject<CondensationRecipeSerializer> CONEDNSATION_SERIALIZER = SERIALIZERS.register(CondensationRecipe.ID,
-			() -> CondensationRecipeSerializer.INSTANCE);
-	public static final RegistryObject<SimpleRecipeSerializer<CoverRecipe>> COVER_SERIALIZER = SERIALIZERS.register(CoverRecipe.ID, () -> CoverRecipe.SERIALIZER_INSTANCE);
-	public static final RegistryObject<CrucibleRecipeSerializer> CRUCIBLE_SERIALIZER = SERIALIZERS.register(CrucibleRecipe.ID, () -> CrucibleRecipeSerializer.INSTANCE);
-	public static final RegistryObject<EnchanterRecipeSerializer> ENCHANTER_SERIALIZER = SERIALIZERS.register(EnchanterRecipe.ID, () -> EnchanterRecipeSerializer.INSTANCE);
-	public static final RegistryObject<EvaporatorRecipeSerializer> EVAPORATOR_SERIALIZER = SERIALIZERS.register(EvaporatorRecipe.ID, () -> EvaporatorRecipeSerializer.INSTANCE);
-	public static final RegistryObject<FermenterRecipeSerializer> FERMENTER_SERIALIZER = SERIALIZERS.register(FermenterRecipe.ID, () -> FermenterRecipeSerializer.INSTANCE);
+			() -> new CondensationRecipeSerializer());
+	public static final RegistryObject<SimpleRecipeSerializer<CoverRecipe>> COVER_SERIALIZER = SERIALIZERS.register(CoverRecipe.ID,
+			() -> new SimpleRecipeSerializer<>(name -> new CoverRecipe(name)));
+	public static final RegistryObject<CrucibleRecipeSerializer> CRUCIBLE_SERIALIZER = SERIALIZERS.register(CrucibleRecipe.ID, () -> new CrucibleRecipeSerializer());
+	public static final RegistryObject<EnchanterRecipeSerializer> ENCHANTER_SERIALIZER = SERIALIZERS.register(EnchanterRecipe.ID, () -> new EnchanterRecipeSerializer());
+	public static final RegistryObject<EvaporatorRecipeSerializer> EVAPORATOR_SERIALIZER = SERIALIZERS.register(EvaporatorRecipe.ID, () -> new EvaporatorRecipeSerializer());
+	public static final RegistryObject<FermenterRecipeSerializer> FERMENTER_SERIALIZER = SERIALIZERS.register(FermenterRecipe.ID, () -> new FermenterRecipeSerializer());
 	public static final RegistryObject<FertalizerRecipeSerializer> FERTILIZER_SERIALIZER = SERIALIZERS.register(FertalizerRecipe.ID, () -> new FertalizerRecipeSerializer());
 	public static final RegistryObject<FluidGeneratorRecipeSerializer> FLUID_GENERATOR_SERIALIZER = SERIALIZERS.register(FluidGeneratorRecipe.ID,
-			() -> FluidGeneratorRecipeSerializer.INSTANCE);
+			() -> new FluidGeneratorRecipeSerializer());
 	public static final RegistryObject<FluidInfusionRecipeSerializer> FLUID_INFUSER_SERIALIZER = SERIALIZERS.register(FluidInfusionRecipe.ID,
-			() -> FluidInfusionRecipeSerializer.INSTANCE);
-	public static final RegistryObject<FormerRecipeSerializer> FORMER_SERIALIZER = SERIALIZERS.register(FormerRecipe.ID, () -> FormerRecipeSerializer.INSTANCE);
+			() -> new FluidInfusionRecipeSerializer());
+	public static final RegistryObject<FormerRecipeSerializer> FORMER_SERIALIZER = SERIALIZERS.register(FormerRecipe.ID, () -> new FormerRecipeSerializer());
 	public static final RegistryObject<FusionFurnaceRecipeSerializer> FUSION_FURANCE_SERIALIZER = SERIALIZERS.register(FusionFurnaceRecipe.ID,
-			() -> FusionFurnaceRecipeSerializer.INSTANCE);
+			() -> new FusionFurnaceRecipeSerializer());
 	public static final RegistryObject<GrinderRecipeSerializer> GRINDER_SERIALIZER = SERIALIZERS.register(GrinderRecipe.ID, () -> new GrinderRecipeSerializer());
 	public static final RegistryObject<HammerRecipeSerializer> HAMMER_SERIALIZER = SERIALIZERS.register(HammerRecipe.ID, () -> new HammerRecipeSerializer());
-	public static final RegistryObject<LatheRecipeSerializer> LATHE_SERIALIZER = SERIALIZERS.register(LatheRecipe.ID, () -> LatheRecipeSerializer.INSTANCE);
-	public static final RegistryObject<LumberMillRecipeSerializer> LUMBER_MILL_SERIALIZER = SERIALIZERS.register(LumberMillRecipe.ID, () -> LumberMillRecipeSerializer.INSTANCE);
-	public static final RegistryObject<MixerRecipeSerializer> MIXER_SERIALIZER = SERIALIZERS.register(MixerRecipe.ID, () -> MixerRecipeSerializer.INSTANCE);
-	public static final RegistryObject<RefineryRecipeSerializer> REFINERY_SERIALIZER = SERIALIZERS.register(RefineryRecipe.ID, () -> RefineryRecipeSerializer.INSTANCE);
+	public static final RegistryObject<LatheRecipeSerializer> LATHE_SERIALIZER = SERIALIZERS.register(LatheRecipe.ID, () -> new LatheRecipeSerializer());
+	public static final RegistryObject<LumberMillRecipeSerializer> LUMBER_MILL_SERIALIZER = SERIALIZERS.register(LumberMillRecipe.ID, () -> new LumberMillRecipeSerializer());
+	public static final RegistryObject<MixerRecipeSerializer> MIXER_SERIALIZER = SERIALIZERS.register(MixerRecipe.ID, () -> new MixerRecipeSerializer());
+	public static final RegistryObject<RefineryRecipeSerializer> REFINERY_SERIALIZER = SERIALIZERS.register(RefineryRecipe.ID, () -> new RefineryRecipeSerializer());
 	public static final RegistryObject<ResearchSerializer> RESEARCH_SERIALIZER = SERIALIZERS.register(Research.ID, () -> new ResearchSerializer());
-	public static final RegistryObject<SolderingRecipeSerializer> SOLDERING_SERIALIZER = SERIALIZERS.register(SolderingRecipe.ID, () -> SolderingRecipeSerializer.INSTANCE);
-	public static final RegistryObject<SqueezerRecipeSerializer> SQUEEZER_SERIALIZER = SERIALIZERS.register(SqueezerRecipe.ID, () -> SqueezerRecipeSerializer.INSTANCE);
+	public static final RegistryObject<SolderingRecipeSerializer> SOLDERING_SERIALIZER = SERIALIZERS.register(SolderingRecipe.ID, () -> new SolderingRecipeSerializer());
+	public static final RegistryObject<SqueezerRecipeSerializer> SQUEEZER_SERIALIZER = SERIALIZERS.register(SqueezerRecipe.ID, () -> new SqueezerRecipeSerializer());
 	public static final RegistryObject<ThermalConductivityRecipeSerializer> THERMAL_CONDUCTIVITY_SERIALIZER = SERIALIZERS.register(ThermalConductivityRecipe.ID,
-			() -> ThermalConductivityRecipeSerializer.INSTANCE);
-	public static final RegistryObject<TumblerRecipeSerializer> TUMBLER_SERIALIZER = SERIALIZERS.register(TumblerRecipe.ID, () -> TumblerRecipeSerializer.INSTANCE);
-	public static final RegistryObject<TurbineRecipeSerializer> TURBINE_SERIALIZER = SERIALIZERS.register(TurbineRecipe.ID, () -> TurbineRecipeSerializer.INSTANCE);
-	public static final RegistryObject<VulcanizerRecipeSerializer> VULCANIZER_SERIALIZER = SERIALIZERS.register(VulcanizerRecipe.ID, () -> VulcanizerRecipeSerializer.INSTANCE);
+			() -> new ThermalConductivityRecipeSerializer());
+	public static final RegistryObject<TumblerRecipeSerializer> TUMBLER_SERIALIZER = SERIALIZERS.register(TumblerRecipe.ID, () -> new TumblerRecipeSerializer());
+	public static final RegistryObject<TurbineRecipeSerializer> TURBINE_SERIALIZER = SERIALIZERS.register(TurbineRecipe.ID, () -> new TurbineRecipeSerializer());
+	public static final RegistryObject<VulcanizerRecipeSerializer> VULCANIZER_SERIALIZER = SERIALIZERS.register(VulcanizerRecipe.ID, () -> new VulcanizerRecipeSerializer());
 	public static final RegistryObject<AlloyFurnaceRecipeSerializer> ALLOY_FURNACE_SERIALIZER = SERIALIZERS.register(AlloyFurnaceRecipe.ID,
 			() -> new AlloyFurnaceRecipeSerializer());
 	public static final RegistryObject<HydroponicFarmingRecipeSerializer> HYDROPONIC_FARMER_SERIALIZER = SERIALIZERS.register(HydroponicFarmingRecipe.ID,
-			() -> HydroponicFarmingRecipeSerializer.INSTANCE);
+			() -> new HydroponicFarmingRecipeSerializer());
 
 	public static void init(IEventBus eventBus) {
 		SERIALIZERS.register(eventBus);

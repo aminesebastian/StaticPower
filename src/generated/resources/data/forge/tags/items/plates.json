@@ -4,20 +4,20 @@
     "staticpower:plate_static_metal",
     "staticpower:plate_redstone_alloy",
     "staticpower:plate_lumum_metal",
-    "staticpower:plate_magnesium",
     "staticpower:plate_aluminum",
-    "staticpower:plate_brass",
-    "staticpower:plate_lead",
-    "staticpower:plate_bronze",
     "staticpower:plate_gold",
     "staticpower:plate_platinum",
     "staticpower:plate_tungsten",
     "staticpower:plate_inert_infusion_alloy",
     "staticpower:plate_energized_metal",
     "staticpower:plate_tin",
-    "staticpower:plate_iron",
     "staticpower:plate_copper",
-    "staticpower:plate_silver",
-    "staticpower:plate_zinc"
+    "staticpower:plate_zinc",
+    "staticpower:plate_magnesium",
+    "staticpower:plate_brass",
+    "staticpower:plate_lead",
+    "staticpower:plate_bronze",
+    "staticpower:plate_iron",
+    "staticpower:plate_silver"
   ]
 }

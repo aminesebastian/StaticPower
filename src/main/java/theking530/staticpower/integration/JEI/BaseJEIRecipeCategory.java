@@ -5,6 +5,8 @@ import com.mojang.math.Vector4f;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotView;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -33,6 +35,29 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 
 	public int getFluidTankDisplaySize(int amount) {
 		return getNetHighestMultipleOf10(amount);
+	}
+
+	/**
+	 * Gets the fluid input from the recipe slots view. The offset values determines
+	 * which fluid input. Example: when offset == 1, we return the first fluid input
+	 * we encounter. If offset == 4, we return the fourth fluid input, or an empty
+	 * stack if there are not 4 fluid inputs.
+	 * 
+	 * @param recipeSlotsView
+	 * @param offset
+	 * @return
+	 */
+	public FluidStack getNthFluidInput(IRecipeSlotsView recipeSlotsView, int offset) {
+		int hits = 0;
+		for (IRecipeSlotView view : recipeSlotsView.getSlotViews(RecipeIngredientRole.INPUT)) {
+			if (view.getDisplayedIngredient().get().getIngredient() instanceof FluidStack) {
+				if (hits == offset) {
+					return (FluidStack) view.getDisplayedIngredient().get().getIngredient();
+				}
+				hits++;
+			}
+		}
+		return FluidStack.EMPTY;
 	}
 
 	public int getNetHighestMultipleOf10(int value) {

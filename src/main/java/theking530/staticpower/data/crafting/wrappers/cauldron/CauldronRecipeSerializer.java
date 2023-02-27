@@ -1,61 +1,22 @@
 package theking530.staticpower.data.crafting.wrappers.cauldron;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<CauldronRecipe> {
-	public static final CauldronRecipeSerializer INSTANCE = new CauldronRecipeSerializer();
-	private static final Logger LOGGER = LogManager.getLogger(CauldronRecipeSerializer.class);
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "cauldron_recipe");
 
 	@Override
-	public CauldronRecipe parse(ResourceLocation recipeId, JsonObject json) {
-		// Capture the input ingredient.
-		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
-		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
-
-		// Return null if the input is empty.
-		if (input.isEmpty()) {
-			LOGGER.error(String.format("Encounetered a cauldron recipe with no input defined...skipping. %1$s", recipeId));
-			return null;
-		}
-
-		// Get the item output.
-		StaticPowerOutputItem itemOutput = StaticPowerOutputItem.parseFromJSON(GsonHelper.getAsJsonObject(json, "output"));
-
-		// Get how long the item needs to be in the cauldron.
-		int cauldronTime = json.get("time").getAsInt();
-
-		// Indicates if the cauldron should empty after.
-		boolean shouldDrainCauldron = false;
-		if (json.has("empty_after_craft")) {
-			shouldDrainCauldron = json.get("empty_after_craft").getAsBoolean();
-		}
-
-		// Deserialize the fluid input and output.
-		FluidStack fluidInput = FluidStack.EMPTY;
-		FluidStack fluidOutput = FluidStack.EMPTY;
-		if (json.has("fluid")) {
-			fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(GsonHelper.getAsJsonObject(json, "fluid"));
-		}
-		if (json.has("output_fluid")) {
-			fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(GsonHelper.getAsJsonObject(json, "output_fluid"));
-		}
-
-		// Create the recipe.
-		return new CauldronRecipe(recipeId, input, itemOutput, fluidInput, fluidOutput, shouldDrainCauldron, cauldronTime);
+	public Codec<CauldronRecipe> getCodec() {
+		return CauldronRecipe.CODEC;
 	}
 
 	@Override
@@ -64,7 +25,7 @@ public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<Cauldr
 		boolean shouldDrainCauldron = buffer.readBoolean();
 		StaticPowerIngredient input = StaticPowerIngredient.readFromBuffer(buffer);
 		StaticPowerOutputItem output = StaticPowerOutputItem.readFromBuffer(buffer);
-		FluidStack fluidInput = buffer.readFluidStack();
+		FluidIngredient fluidInput = FluidIngredient.readFromBuffer(buffer);
 		FluidStack fluidOutput = buffer.readFluidStack();
 
 		// Create the recipe.
@@ -74,10 +35,10 @@ public class CauldronRecipeSerializer extends StaticPowerRecipeSerializer<Cauldr
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, CauldronRecipe recipe) {
 		buffer.writeInt(recipe.getRequiredTimeInCauldron());
-		buffer.writeBoolean(recipe.shouldDrainCauldron());
+		buffer.writeBoolean(recipe.shouldDrainAfterCraft());
 		recipe.getInput().writeToBuffer(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
-		buffer.writeFluidStack(recipe.getRequiredFluid());
+		recipe.getRequiredFluid().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluid());
 
 	}
