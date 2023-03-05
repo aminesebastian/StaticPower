@@ -3,6 +3,9 @@ package theking530.staticpower.data.research;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,6 +14,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -22,6 +26,20 @@ import theking530.staticpower.items.ResearchItem;
 
 public class Research extends AbstractStaticPowerRecipe {
 	public static final String ID = "research";
+
+	public static final Codec<Research> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(research -> research.getId()),
+					Codec.STRING.fieldOf("title").forGetter(research -> research.getTitle()), Codec.STRING.fieldOf("description").forGetter(research -> research.getDescription()),
+					Vector2D.CODEC.optionalFieldOf("visual_offset", Vector2D.ZERO).forGetter(research -> research.getVisualOffset()),
+					Codec.INT.fieldOf("sort_order").forGetter(research -> research.getSortOrder()),
+					ResearchUnlock.CODEC.listOf().fieldOf("unlocks").forGetter(research -> research.getUnlocks()),
+					ResearchIcon.CODEC.fieldOf("icon").forGetter(research -> research.getIcon()),
+					ResourceLocation.CODEC.listOf().fieldOf("prerequisites").forGetter(research -> research.getPrerequisites()),
+					StaticPowerIngredient.CODEC.listOf().fieldOf("research_requirements").forGetter(research -> research.getRequirements()),
+					JsonUtilities.ITEMSTACK_CODEC.listOf().fieldOf("rewards").forGetter(research -> research.getRewards()),
+					ResourceLocation.CODEC.listOf().fieldOf("advancements").forGetter(research -> research.getAdvancements()),
+					Codec.BOOL.fieldOf("hidden_until_available").forGetter(research -> research.isHiddenUntilAvailable()),
+					SDColor.CODEC.fieldOf("color").forGetter(research -> research.getColor())).apply(instance, Research::new));
 
 	private final String title;
 	private final String description;
@@ -36,10 +54,10 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final boolean hiddenUntilAvailable;
 	private SDColor color;
 
-	public Research(ResourceLocation name, String title, String description, Vector2D visualOffset, int sortOrder, List<ResourceLocation> prerequisites,
-			List<StaticPowerIngredient> requirements, List<ItemStack> rewards, List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon,
+	public Research(ResourceLocation id, String title, String description, Vector2D visualOffset, int sortOrder, List<ResearchUnlock> unlocks, ResearchIcon icon,
+			List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements, List<ItemStack> rewards, List<ResourceLocation> advancements,
 			boolean hiddenUntilAvailable, SDColor color) {
-		super(name);
+		super(id);
 		this.title = title;
 		this.description = description;
 		this.visualOffset = visualOffset;
@@ -322,7 +340,7 @@ public class Research extends AbstractStaticPowerRecipe {
 		}
 
 		public Research build() {
-			return new Research(name, title, description, visualOffset, sortOrder, advancements, requirements, rewards, unlocks, advancements, icon, hiddenUntilAvailable, color);
+			return new Research(name, title, description, visualOffset, sortOrder, unlocks, icon, advancements, requirements, rewards, advancements, hiddenUntilAvailable, color);
 		}
 	}
 }

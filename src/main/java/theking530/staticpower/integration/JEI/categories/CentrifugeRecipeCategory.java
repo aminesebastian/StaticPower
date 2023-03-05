@@ -24,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.CentrifugeProgressBar;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
@@ -42,7 +41,6 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	private final IDrawable icon;
 	private final CentrifugeProgressBar pBar;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public CentrifugeRecipeCategory(IGuiHelper guiHelper) {
@@ -83,8 +81,6 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 78, 46, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 104, 32, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 52, 32, 0);
-
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		String rpmText = String.valueOf(recipe.getMinimumSpeed()) + " RPM";
 		GuiDrawUtilities.drawSlot(matrixStack, Minecraft.getInstance().font.width(rpmText) + 4, 11, 103, 12.5f, 0);
@@ -128,8 +124,9 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 106, 34).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput3());
 		}
 
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
+
 		// Add the fluid.
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

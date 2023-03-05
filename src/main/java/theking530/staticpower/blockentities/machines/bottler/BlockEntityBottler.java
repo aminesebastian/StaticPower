@@ -83,7 +83,6 @@ public class BlockEntityBottler extends BlockEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setPowerComponent(powerStorage);
-		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.bottlerPowerUsage.get());
 
 		// Setup the I/O servos.
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
@@ -135,6 +134,8 @@ public class BlockEntityBottler extends BlockEntityMachine {
 			} else {
 				transferItemInternally(inputInventory, 0, internalInventory, 0);
 			}
+
+			processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 
 			// Trigger a block update.
 			return ProcessingCheckState.ok();

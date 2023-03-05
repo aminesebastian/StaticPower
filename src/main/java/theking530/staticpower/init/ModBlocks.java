@@ -125,6 +125,7 @@ import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.Tiers.ResistorTier;
 import theking530.staticpower.data.Tiers.TierPair;
 import theking530.staticpower.data.materials.MaterialBundle;
+import theking530.staticpower.data.materials.OldMaterialBundle;
 
 public class ModBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StaticPower.MOD_ID);
@@ -420,7 +421,7 @@ public class ModBlocks {
 			() -> new StaticPowerSapling(() -> ModFeatures.RUBBER_TREE.getTreeGrower(), Block.Properties.copy(Blocks.OAK_SAPLING)));
 
 	public static void init(IEventBus eventBus) {
-		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
 			bundle.generateBlocks();
 		}
 		BLOCKS.register(eventBus);

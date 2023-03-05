@@ -5,7 +5,7 @@
       "tag": "forge:rods/wooden"
     },
     "w": {
-      "tag": "forge:wires/insulated/brass"
+      "tag": "staticpower:wires/insulated/brass"
     }
   },
   "pattern": [

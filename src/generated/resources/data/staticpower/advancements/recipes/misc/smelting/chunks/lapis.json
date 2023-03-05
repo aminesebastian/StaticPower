@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_chunk": {
+    "has_chunks": {
       "conditions": {
         "items": [
           {
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_chunk",
+      "has_chunks",
       "has_the_recipe"
     ]
   ],

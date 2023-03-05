@@ -13,6 +13,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -23,19 +25,31 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class LatheRecipe extends AbstractMachineRecipe {
 	public static final String ID = "lathe";
-	public static final RecipeType<LatheRecipe> RECIPE_TYPE = new StaticPowerRecipeType<LatheRecipe>();
 
 	protected static final int MAX_WIDTH = 3;
 	protected static final int MAX_HEIGHT = 3;
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
+
+	public static final Codec<LatheRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					Codec.INT.fieldOf("width").forGetter(recipe -> recipe.getRecipeWidth()), Codec.INT.fieldOf("height").forGetter(recipe -> recipe.getRecipeHeight()),
+					StaticPowerIngredient.CODEC.listOf().fieldOf("pattern").forGetter(recipe -> recipe.getInputs()),
+					StaticPowerOutputItem.CODEC.fieldOf("primary_output_item").forGetter(recipe -> recipe.getPrimaryOutput()),
+					StaticPowerOutputItem.CODEC.optionalFieldOf("secondary_output_item", StaticPowerOutputItem.EMPTY).forGetter(recipe -> recipe.getSecondaryOutput()),
+					JsonUtilities.FLUIDSTACK_CODEC.optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(recipe -> recipe.getOutputFluid()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, LatheRecipe::new));
 
 	private final NonNullList<StaticPowerIngredient> inputs;
 	public final int recipeWidth;
@@ -45,16 +59,28 @@ public class LatheRecipe extends AbstractMachineRecipe {
 	private final StaticPowerOutputItem secondaryOutput;
 	private final FluidStack outputFluid;
 
-	public LatheRecipe(ResourceLocation name, int recipeWidthIn, int recipeHeightIn, NonNullList<StaticPowerIngredient> inputs, StaticPowerOutputItem primaryOutput,
+	public LatheRecipe(ResourceLocation name, int recipeWidthIn, int recipeHeightIn, List<StaticPowerIngredient> inputs, StaticPowerOutputItem primaryOutput,
 			StaticPowerOutputItem secondaryOutput, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 
-		this.inputs = inputs;
+		this.inputs = NonNullList.withSize(recipeWidthIn * recipeHeightIn, StaticPowerIngredient.EMPTY);
+		for (StaticPowerIngredient input : inputs) {
+			inputs.add(input);
+		}
+
 		this.recipeWidth = recipeWidthIn;
 		this.recipeHeight = recipeHeightIn;
 		this.primaryOutput = primaryOutput;
 		this.secondaryOutput = secondaryOutput;
 		this.outputFluid = outputFluid;
+	}
+
+	public int getRecipeWidth() {
+		return recipeWidth;
+	}
+
+	public int getRecipeHeight() {
+		return recipeHeight;
 	}
 
 	public NonNullList<StaticPowerIngredient> getInputs() {
@@ -109,12 +135,12 @@ public class LatheRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public RecipeSerializer<LatheRecipe> getSerializer() {
-		return LatheRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.LATHE_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<LatheRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.LATHE_RECIPE_TYPE.get();
 	}
 
 	/**
@@ -285,6 +311,11 @@ public class LatheRecipe extends AbstractMachineRecipe {
 
 		map.put(" ", StaticPowerIngredient.EMPTY);
 		return map;
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
 	}
 
 }

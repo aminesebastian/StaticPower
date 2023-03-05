@@ -22,6 +22,7 @@ import theking530.staticpower.blockentities.components.items.UpgradeInventoryCom
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRecipeProcessor<FusionFurnaceRecipe> {
@@ -48,7 +49,7 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRec
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", FusionFurnaceRecipe.RECIPE_TYPE, this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", ModRecipeTypes.FUSION_FURNACE_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.

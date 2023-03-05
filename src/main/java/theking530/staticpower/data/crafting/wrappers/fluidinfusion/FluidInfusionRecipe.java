@@ -1,26 +1,41 @@
 package theking530.staticpower.data.crafting.wrappers.fluidinfusion;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class FluidInfusionRecipe extends AbstractMachineRecipe {
 	public static final String ID = "fluid_infusion";
-	public static final RecipeType<FluidInfusionRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FluidInfusionRecipe>();
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
+
+	public static final Codec<FluidInfusionRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance
+					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+							StaticPowerIngredient.CODEC.fieldOf("input_item").forGetter(recipe -> recipe.getInput()),
+							FluidIngredient.CODEC.fieldOf("input_fluid").forGetter(recipe -> recipe.getRequiredFluid()),
+							StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
+							MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection()))
+					.apply(instance, FluidInfusionRecipe::new));
 
 	private final StaticPowerIngredient input;
 	private final StaticPowerOutputItem output;
-	private final FluidStack inputFluid;
+	private final FluidIngredient inputFluid;
 
-	public FluidInfusionRecipe(ResourceLocation name, StaticPowerIngredient input, StaticPowerOutputItem output, FluidStack inputFluid, MachineRecipeProcessingSection processing) {
-		super(name, processing);
+	public FluidInfusionRecipe(ResourceLocation id, StaticPowerIngredient input, FluidIngredient inputFluid, StaticPowerOutputItem output,
+			MachineRecipeProcessingSection processing) {
+		super(id, processing);
 		this.input = input;
 		this.output = output;
 		this.inputFluid = inputFluid;
@@ -38,7 +53,7 @@ public class FluidInfusionRecipe extends AbstractMachineRecipe {
 		return !output.isEmpty();
 	}
 
-	public FluidStack getRequiredFluid() {
+	public FluidIngredient getRequiredFluid() {
 		return inputFluid;
 	}
 
@@ -48,10 +63,7 @@ public class FluidInfusionRecipe extends AbstractMachineRecipe {
 
 		// Check fluids.
 		if (matchParams.shouldVerifyFluids()) {
-			matched &= matchParams.hasFluids() && matchParams.getFluids()[0].equals(inputFluid);
-			if (matched && matchParams.shouldVerifyFluidAmounts()) {
-				matched &= matchParams.hasFluids() && matchParams.getFluids()[0].getAmount() >= inputFluid.getAmount();
-			}
+			matched &= matchParams.hasFluids() && inputFluid.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts());
 		}
 
 		// Check items.
@@ -68,11 +80,16 @@ public class FluidInfusionRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public RecipeSerializer<FluidInfusionRecipe> getSerializer() {
-		return FluidInfusionRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.FLUID_INFUSER_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<FluidInfusionRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.FLUID_INFUSION_RECIPE_TYPE.get();
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
 	}
 }

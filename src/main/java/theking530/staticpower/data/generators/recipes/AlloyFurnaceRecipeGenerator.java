@@ -7,7 +7,8 @@ import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
 import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
 import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
-import theking530.staticpower.init.ModMaterials;
+import theking530.staticpower.data.materials.MaterialTypes;
+import theking530.staticpower.init.NewModMaterials;
 
 public class AlloyFurnaceRecipeGenerator extends SPRecipeProvider<AlloyFurnaceRecipe> {
 
@@ -17,20 +18,23 @@ public class AlloyFurnaceRecipeGenerator extends SPRecipeProvider<AlloyFurnaceRe
 
 	@Override
 	protected void buildRecipes() {
-		addRecipe("brass_ingot", StaticPowerIngredient.of(ModMaterials.COPPER.getIngotTag()), StaticPowerIngredient.of(ModMaterials.ZINC.getIngotTag()),
-				StaticPowerOutputItem.of(ModMaterials.BRASS.getIngot().get(), 2));
-		addRecipe("brass_block", StaticPowerIngredient.of(ModMaterials.COPPER.getStorageBlockItemTag()), StaticPowerIngredient.of(ModMaterials.ZINC.getStorageBlockItemTag()),
-				StaticPowerOutputItem.of(ModMaterials.BRASS.getStorageBlock().get(), 2));
+		addRecipe("brass_ingot", StaticPowerIngredient.of(NewModMaterials.COPPER.get(MaterialTypes.INGOT).get()),
+				StaticPowerIngredient.of(NewModMaterials.ZINC.get(MaterialTypes.INGOT).getItemTag()),
+				StaticPowerOutputItem.of(NewModMaterials.BRASS.get(MaterialTypes.INGOT).get(), 2));
+		addRecipe("brass_block", StaticPowerIngredient.of(NewModMaterials.COPPER.get(MaterialTypes.STORAGE_BLOCK).get()),
+				StaticPowerIngredient.of(NewModMaterials.ZINC.get(MaterialTypes.STORAGE_BLOCK).getItemTag()),
+				StaticPowerOutputItem.of(NewModMaterials.BRASS.get(MaterialTypes.STORAGE_BLOCK).get(), 2));
 
-		addRecipe("bronze_ingot", StaticPowerIngredient.of(ModMaterials.COPPER.getIngotTag(), 3), StaticPowerIngredient.of(ModMaterials.TIN.getIngotTag()),
-				StaticPowerOutputItem.of(ModMaterials.BRONZE.getIngot().get(), 4));
-		addRecipe("bronze_block", StaticPowerIngredient.of(ModMaterials.COPPER.getStorageBlockItemTag(), 3), StaticPowerIngredient.of(ModMaterials.TIN.getStorageBlockItemTag()),
-				StaticPowerOutputItem.of(ModMaterials.BRONZE.getStorageBlock().get(), 4));
+		addRecipe("bronze_ingot", StaticPowerIngredient.of(NewModMaterials.COPPER.get(MaterialTypes.INGOT).get(), 3),
+				StaticPowerIngredient.of(NewModMaterials.TIN.get(MaterialTypes.INGOT).get()), StaticPowerOutputItem.of(NewModMaterials.BRONZE.get(MaterialTypes.INGOT).get(), 4));
+		addRecipe("bronze_block", StaticPowerIngredient.of(NewModMaterials.COPPER.get(MaterialTypes.STORAGE_BLOCK).get(), 3),
+				StaticPowerIngredient.of(NewModMaterials.TIN.get(MaterialTypes.STORAGE_BLOCK).get()),
+				StaticPowerOutputItem.of(NewModMaterials.BRONZE.get(MaterialTypes.STORAGE_BLOCK).get(), 4));
 
-		addRecipe("redstone_alloy_ingot", StaticPowerIngredient.of(ModMaterials.SILVER.getIngotTag()), StaticPowerIngredient.of(Tags.Items.DUSTS_REDSTONE),
-				StaticPowerOutputItem.of(ModMaterials.REDSTONE_ALLOY.getIngot().get(), 2));
-		addRecipe("redstone_alloy_block", StaticPowerIngredient.of(ModMaterials.SILVER.getStorageBlockItemTag()), StaticPowerIngredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE),
-				StaticPowerOutputItem.of(ModMaterials.REDSTONE_ALLOY.getStorageBlock().get(), 2));
+		addRecipe("redstone_alloy_ingot", StaticPowerIngredient.of(NewModMaterials.SILVER.get(MaterialTypes.INGOT).getItemTag()),
+				StaticPowerIngredient.of(Tags.Items.DUSTS_REDSTONE), StaticPowerOutputItem.of(NewModMaterials.REDSTONE_ALLOY.get(MaterialTypes.INGOT).get(), 2));
+		addRecipe("redstone_alloy_block", StaticPowerIngredient.of(NewModMaterials.SILVER.get(MaterialTypes.STORAGE_BLOCK).getItemTag()),
+				StaticPowerIngredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE), StaticPowerOutputItem.of(NewModMaterials.REDSTONE_ALLOY.get(MaterialTypes.STORAGE_BLOCK).get(), 2));
 	}
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input1, StaticPowerIngredient input2, StaticPowerOutputItem output) {

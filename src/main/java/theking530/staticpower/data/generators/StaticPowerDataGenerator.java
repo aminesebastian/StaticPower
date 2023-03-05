@@ -9,14 +9,24 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.generators.recipes.AlloyFurnaceRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.BlastingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.BottlerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.CasterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CauldronRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.CondensationRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CraftingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.CrucibleRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.EvaporationRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.FermenterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.FertilizerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.FluidGeneratorRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.GrindingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.HammerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.RefineryRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmeltingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.SmokingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.TumblerRecipeGenerator;
 import theking530.staticpower.data.generators.tags.ModBiomeTagProvider;
 import theking530.staticpower.data.generators.tags.ModBlockTagProvider;
+import theking530.staticpower.data.generators.tags.ModFluidTagProvider;
 import theking530.staticpower.data.generators.tags.ModItemTagProvider;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -35,6 +45,15 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new FertilizerRecipeGenerator(generator));
 		generator.addProvider(true, new SmeltingRecipeGenerator(generator));
 		generator.addProvider(true, new CauldronRecipeGenerator(generator));
+		generator.addProvider(true, new CasterRecipeGenerator(generator));
+		generator.addProvider(true, new CondensationRecipeGenerator(generator));
+		generator.addProvider(true, new EvaporationRecipeGenerator(generator));
+		generator.addProvider(true, new FermenterRecipeGenerator(generator));
+		generator.addProvider(true, new FluidGeneratorRecipeGenerator(generator));
+		generator.addProvider(true, new RefineryRecipeGenerator(generator));
+		generator.addProvider(true, new SmokingRecipeGenerator(generator));
+		generator.addProvider(true, new TumblerRecipeGenerator(generator));
+		generator.addProvider(true, new CrucibleRecipeGenerator(generator));
 		
 		generator.addProvider(true, new ModLootTableProvider(generator));
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));

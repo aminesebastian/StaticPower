@@ -42,6 +42,6 @@ public class BottlerRecipeGenerator extends SPRecipeProvider<BottleRecipe> {
 	}
 
 	protected SPRecipeBuilder<BottleRecipe> create(StaticPowerIngredient emptyBottle, StaticPowerOutputItem filledBottle, FluidIngredient fluid) {
-		return SPRecipeBuilder.create(new BottleRecipe(null, emptyBottle, filledBottle, fluid));
+		return SPRecipeBuilder.create(new BottleRecipe(null, emptyBottle, filledBottle, fluid, null));
 	}
 }

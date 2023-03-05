@@ -148,7 +148,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		// Revisit this later with a custom renderer.
 		// Add the fluids.
 		if (!recipe.getRequiredFluid().isEmpty()) {
-			addFluidIngredientSlot(builder, RecipeIngredientRole.INPUT, 51, 18, 16, 16, recipe.getRequiredFluid()).setFluidRenderer(100, false, 16, 16);
+			addFluidIngredientSlot(builder, 51, 18, 16, 16, recipe.getRequiredFluid()).setFluidRenderer(100, false, 16, 16);
 		}
 		if (!recipe.getOutputFluid().isEmpty()) {
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 51, 29).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount()).setFluidRenderer(100, false,

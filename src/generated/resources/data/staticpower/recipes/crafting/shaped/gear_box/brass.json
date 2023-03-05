@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "g": {
-      "tag": "forge:gears/brass"
+      "tag": "staticpower:gears/brass"
     },
     "i": {
       "tag": "forge:ingots/brass"

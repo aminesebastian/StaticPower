@@ -1,36 +1,18 @@
 package theking530.staticpower.data.crafting.wrappers.tumbler;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import theking530.staticpower.StaticPower;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class TumblerRecipeSerializer extends StaticPowerRecipeSerializer<TumblerRecipe> {
-	public static final TumblerRecipeSerializer INSTANCE = new TumblerRecipeSerializer();
-	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "tumbler_recipe");
-
 	@Override
-	public TumblerRecipe parse(ResourceLocation recipeId, JsonObject json) {
-		// Capture the input ingredient.
-		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
-		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
-
-		// Capture the output.
-		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
-		StaticPowerOutputItem output = StaticPowerOutputItem.parseFromJSON(outputElement);
-
-		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.tumblerProcessingTime,
-				StaticPowerConfig.SERVER.tumblerPowerUsage, json);
-
-		return new TumblerRecipe(recipeId, input, output, processing);
+	public Codec<TumblerRecipe> getCodec() {
+		return TumblerRecipe.CODEC;
 	}
 
 	@Override

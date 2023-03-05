@@ -36,6 +36,7 @@ import theking530.staticpower.cables.attachments.digistore.craftingterminal.Cont
 import theking530.staticpower.cables.attachments.digistore.patternencoder.ContainerDigistorePatternEncoder;
 import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
@@ -75,6 +76,8 @@ import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipe
 import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeProvider;
 import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityRecipeProvider;
+import theking530.staticpower.integration.JEI.ingredients.power.PowerIngredientHelper;
+import theking530.staticpower.integration.JEI.ingredients.power.PowerIngredientRenderer;
 import theking530.staticpower.integration.JEI.ingredients.probabilitystack.ProbabilityItemStackHelper;
 import theking530.staticpower.integration.JEI.ingredients.probabilitystack.ProbabilityItemStackRenderer;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
@@ -83,6 +86,7 @@ import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 @JeiPlugin
 public class PluginJEI implements IModPlugin {
 	public static final IIngredientType<StaticPowerOutputItem> PROBABILITY_ITEM_STACK = () -> StaticPowerOutputItem.class;
+	public static final IIngredientType<MachineRecipeProcessingSection> POWER_INGREDIENT = () -> MachineRecipeProcessingSection.class;
 
 	public static IJeiRuntime RUNTIME;
 
@@ -98,6 +102,11 @@ public class PluginJEI implements IModPlugin {
 		ProbabilityItemStackHelper itemStackHelper = new ProbabilityItemStackHelper(registration);
 		ProbabilityItemStackRenderer itemStackRenderer = new ProbabilityItemStackRenderer();
 		registration.register(PROBABILITY_ITEM_STACK, probabilityStacks, itemStackHelper, itemStackRenderer);
+
+		List<MachineRecipeProcessingSection> powerStack = new ArrayList<MachineRecipeProcessingSection>();
+		PowerIngredientHelper powerIngredientHelper = new PowerIngredientHelper(registration);
+		PowerIngredientRenderer powerIngredientRenderer = new PowerIngredientRenderer();
+		registration.register(POWER_INGREDIENT, powerStack, powerIngredientHelper, powerIngredientRenderer);
 	}
 
 	@Override

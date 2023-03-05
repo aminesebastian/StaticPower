@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:wires/insulated/brass"
+            "tag": "staticpower:wires/insulated/brass"
           }
         ]
       },

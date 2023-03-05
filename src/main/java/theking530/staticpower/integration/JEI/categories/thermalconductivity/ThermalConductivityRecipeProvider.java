@@ -21,6 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
@@ -34,7 +35,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 		RECIPES = new ArrayList<ThermalConductivityJEIRecipeWrapper>();
 
 		// Get all thermal conductivity recipes.
-		List<ThermalConductivityRecipe> originalRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ThermalConductivityRecipe.RECIPE_TYPE);
+		List<ThermalConductivityRecipe> originalRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get());
 
 		// Iterate through all the recipes.
 		for (ThermalConductivityRecipe recipe : originalRecipes) {
@@ -48,7 +49,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 				ThermalConductivityJEIRecipeWrapper jeiRecipe;
 
 				// If this is a fire input recipe, mark it.
-				if (recipe.getBlockTags().length > 0 && recipe.getBlockTags()[0].toString().equals("minecraft:fire")) {
+				if (recipe.getBlockTags().size() > 0 && recipe.getBlockTags().get(0).toString().equals("minecraft:fire")) {
 					jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe, true);
 				} else {
 					try {
@@ -61,7 +62,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 				}
 
 				// Add blocks.
-				if (recipe.getBlockTags().length > 0) {
+				if (recipe.getBlockTags().size() > 0) {
 					RECIPES.add(jeiRecipe);
 
 					// Add all the potential inputs.
@@ -73,7 +74,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 					}
 					// Finalize the recipe.
 					jeiRecipe.finalize();
-				} else if (recipe.getFluidTags().length > 0) {
+				} else if (recipe.getFluidTags().size() > 0) {
 					RECIPES.add(jeiRecipe);
 					// Add all the potential inputs.
 					for (Entry<ResourceKey<Fluid>, Fluid> fluid : ForgeRegistries.FLUIDS.getEntries()) {

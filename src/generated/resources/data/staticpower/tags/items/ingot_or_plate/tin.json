@@ -1,6 +1,6 @@
 {
   "values": [
-    "#forge:ingots/tin",
-    "#forge:plates/tin"
+    "#forge:plates/tin",
+    "#forge:ingots/tin"
   ]
 }

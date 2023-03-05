@@ -52,13 +52,13 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerCapabilityProvider;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerData;
 import theking530.staticpower.init.ModCommands.ResearchCommands;
 import theking530.staticpower.init.ModKeyBindings;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.items.backpack.Backpack;
 import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -244,7 +244,7 @@ public class StaticPowerForgeEventsCommon {
 				}
 
 				// Add the tooltip if the shift key is down.
-				StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
+				StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(), matchParameters).ifPresent(recipe -> {
 					// Add heat conductivity tooltip.
 					event.getToolTip().add(HeatTooltipUtilities.getHeatConductivityTooltip(recipe.getConductivity()));
 

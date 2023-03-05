@@ -1,66 +1,44 @@
 package theking530.staticpower.data.crafting.wrappers.soldering;
 
-import java.util.Map;
+import java.util.Optional;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.JsonUtilities;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class SolderingRecipeSerializer extends StaticPowerRecipeSerializer<SolderingRecipe> {
-	public static final SolderingRecipeSerializer INSTANCE = new SolderingRecipeSerializer();
-	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "soldering_recipe");
-	private final JsonElement solderingIronTag;
 
-	public SolderingRecipeSerializer() {
-		solderingIronTag = GsonHelper.parse("{ \"tag\":\"staticpower:soldering_iron\" }");
-	}
-
-	public SolderingRecipe parse(ResourceLocation recipeId, JsonObject json) {
-		String s = GsonHelper.getAsString(json, "group", "");
-		Map<String, Ingredient> map = SolderingRecipe.deserializeKey(GsonHelper.getAsJsonObject(json, "key"));
-		String[] astring = SolderingRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern"));
-		int i = astring[0].length();
-		int j = astring.length;
-		NonNullList<Ingredient> nonnulllist = SolderingRecipe.deserializeIngredients(astring, map, i, j);
-		ItemStack itemstack = JsonUtilities.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-		Ingredient solderingIron = Ingredient.fromJson(solderingIronTag);
-		return new SolderingRecipe(recipeId, s, i, j, solderingIron, nonnulllist, itemstack);
+	@Override
+	public Codec<SolderingRecipe> getCodec() {
+		return SolderingRecipe.CODEC;
 	}
 
 	public SolderingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		int i = buffer.readVarInt();
-		int j = buffer.readVarInt();
-		String s = buffer.readUtf(32767);
-		NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
+		int width = buffer.readVarInt();
+		int height = buffer.readVarInt();
+		StaticPowerIngredient solderingIron = StaticPowerIngredient.readFromBuffer(buffer);
 
-		for (int k = 0; k < nonnulllist.size(); ++k) {
-			nonnulllist.set(k, Ingredient.fromNetwork(buffer));
+		NonNullList<StaticPowerIngredient> nonnulllist = NonNullList.withSize(width * height, StaticPowerIngredient.EMPTY);
+		for (int i = 0; i < nonnulllist.size(); i++) {
+			nonnulllist.set(i, StaticPowerIngredient.readFromBuffer(buffer));
 		}
 
-		ItemStack itemstack = buffer.readItem();
-		Ingredient solderingIron = Ingredient.fromNetwork(buffer);
-		return new SolderingRecipe(recipeId, s, i, j, solderingIron, nonnulllist, itemstack);
+		StaticPowerOutputItem itemstack = StaticPowerOutputItem.readFromBuffer(buffer);
+		return new SolderingRecipe(recipeId, width, height, Optional.of(solderingIron), nonnulllist, itemstack);
 	}
 
 	public void toNetwork(FriendlyByteBuf buffer, SolderingRecipe recipe) {
-		buffer.writeVarInt(recipe.recipeWidth);
-		buffer.writeVarInt(recipe.recipeHeight);
-		buffer.writeUtf(recipe.group);
-
-		for (Ingredient ingredient : recipe.recipeItems) {
-			ingredient.toNetwork(buffer);
+		buffer.writeVarInt(recipe.getRecipeWidth());
+		buffer.writeVarInt(recipe.getRecipeHeight());
+		recipe.getSolderingIron().writeToBuffer(buffer);
+		for (StaticPowerIngredient ingredient : recipe.getInputs()) {
+			ingredient.writeToBuffer(buffer);
 		}
-
-		buffer.writeItem(recipe.recipeOutput);
-		recipe.getSolderingIron().toNetwork(buffer);
+		recipe.getOutput().writeToBuffer(buffer);
 	}
 }

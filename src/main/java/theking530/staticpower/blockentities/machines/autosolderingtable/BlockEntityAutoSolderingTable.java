@@ -31,6 +31,7 @@ import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderAuto
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implements IRecipeProcessor<SolderingRecipe> {
@@ -66,7 +67,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<SolderingRecipe>("ProcessingComponent",
-				StaticPowerConfig.SERVER.autoSolderingTableProcessingTime.get(), SolderingRecipe.RECIPE_TYPE, this));
+				StaticPowerConfig.SERVER.autoSolderingTableProcessingTime.get(), ModRecipeTypes.SOLDERING_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);

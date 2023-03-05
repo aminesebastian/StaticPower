@@ -4,12 +4,12 @@
   "input_1": {
     "count": 3,
     "ingredient": {
-      "tag": "forge:ingots/copper"
+      "item": "minecraft:copper_ingot"
     }
   },
   "input_2": {
     "ingredient": {
-      "tag": "forge:ingots/tin"
+      "item": "staticpower:ingot_tin"
     }
   },
   "output": {

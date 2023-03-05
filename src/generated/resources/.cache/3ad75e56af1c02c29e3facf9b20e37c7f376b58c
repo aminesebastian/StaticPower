@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-22T14:59:39.3243286	Item Models: staticpower
+// 1.19.2	2023-03-05T05:49:01.7900269	Item Models: staticpower
 6027aa6d17b10a748c750596a1e41617fddb06da assets/staticpower/models/item/alloy_furnace.json
 a719b3e89ea4ecd25522280007f7e8b66eacafc0 assets/staticpower/models/item/automatic_placer.json
 32a59e36d1d4e959c6c1f1436a7c1d1efed2bf87 assets/staticpower/models/item/backpack.json
@@ -394,6 +394,8 @@ bf8bb4b6a645fb2e0c7c9b0e1b7d223191f9d859 assets/staticpower/models/item/gear_iro
 3c450369631d1d5bbd5ab11f0a0bcdeff6270bc5 assets/staticpower/models/item/gear_lumum_metal.json
 7d153e7d4824c9a100aafc4fd38afaa0de30368a assets/staticpower/models/item/gear_static_metal.json
 14ce591378dbdf3fbf10517215fce3d79eab3e45 assets/staticpower/models/item/gear_tin.json
+3d008bc04780b52339aeee84ba2201343879c8f4 assets/staticpower/models/item/gear_tungsten.json
+fa7844a914a074b90de772c1250fbff94865a1d7 assets/staticpower/models/item/gear_zinc.json
 5028063ce9119da84ff65f379ea2388282041bc2 assets/staticpower/models/item/gem_ruby.json
 cdb47897d07a2f4e79b16875f56d7ae30bdc73c2 assets/staticpower/models/item/gem_sapphire.json
 33165987bab814efb3374379272ff4a8ff28b085 assets/staticpower/models/item/glass_obsidian.json
@@ -441,6 +443,7 @@ a146d63e78658961509f2349065b32e8eb6107ee assets/staticpower/models/item/ingot_ti
 e1f12fe9116a1d1896429d20cf5e448a90a6bb9c assets/staticpower/models/item/ingot_tungsten.json
 e1f12fe9116a1d1896429d20cf5e448a90a6bb9c assets/staticpower/models/item/ingot_tungsten_heated.json
 0895a74f2b65d8d489776b029e103d83d7f73bd4 assets/staticpower/models/item/ingot_uranium.json
+0895a74f2b65d8d489776b029e103d83d7f73bd4 assets/staticpower/models/item/ingot_uranium_heated.json
 771ff7e5e5e98cf18fc82af86dc8034aa38242a5 assets/staticpower/models/item/ingot_zinc.json
 771ff7e5e5e98cf18fc82af86dc8034aa38242a5 assets/staticpower/models/item/ingot_zinc_heated.json
 3a5dd2747cea5770662d88719c90e82e6a464355 assets/staticpower/models/item/internal_clock.json

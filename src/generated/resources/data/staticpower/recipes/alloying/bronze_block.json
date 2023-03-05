@@ -4,12 +4,12 @@
   "input_1": {
     "count": 3,
     "ingredient": {
-      "tag": "forge:storage_blocks/copper"
+      "item": "minecraft:copper_block"
     }
   },
   "input_2": {
     "ingredient": {
-      "tag": "forge:storage_blocks/tin"
+      "item": "staticpower:block_tin"
     }
   },
   "output": {

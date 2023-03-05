@@ -15,6 +15,8 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
+import theking530.staticpower.integration.JEI.ingredients.power.PowerIngredientRenderer;
 
 public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> implements IRecipeCategory<T> {
 	protected IGuiHelper guiHelper;
@@ -99,8 +101,17 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 		return 0;
 	}
 
-	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, RecipeIngredientRole recipeIngredientRole, int x, int y, int width, int height,
-			FluidIngredient ingredient) {
+	protected IRecipeSlotBuilder addPowerInputSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, MachineRecipeProcessingSection ingredient) {
+		return builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredient(PluginJEI.POWER_INGREDIENT, ingredient).setCustomRenderer(PluginJEI.POWER_INGREDIENT,
+				new PowerIngredientRenderer(RecipeIngredientRole.INPUT, width, height));
+	}
+
+	protected IRecipeSlotBuilder addPowerOutputSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, MachineRecipeProcessingSection ingredient) {
+		return builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).addIngredient(PluginJEI.POWER_INGREDIENT, ingredient).setCustomRenderer(PluginJEI.POWER_INGREDIENT,
+				new PowerIngredientRenderer(RecipeIngredientRole.OUTPUT, width, height));
+	}
+
+	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, FluidIngredient ingredient) {
 		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, x, y).setFluidRenderer(getFluidTankDisplaySize(ingredient.getAmount()), false, width, height);
 		for (FluidStack fluid : ingredient.getFluids()) {
 			fluidSlot.addFluidStack(fluid.getFluid(), ingredient.getAmount());

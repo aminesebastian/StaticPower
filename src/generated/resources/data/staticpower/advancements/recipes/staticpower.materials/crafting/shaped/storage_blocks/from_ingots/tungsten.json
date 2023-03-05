@@ -1,13 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_the_recipe": {
-      "conditions": {
-        "recipe": "staticpower:crafting/shaped/storage_blocks/from_ingots/tungsten"
-      },
-      "trigger": "minecraft:recipe_unlocked"
-    },
-    "has_tungsten_smelted_material": {
+    "has_ingot": {
       "conditions": {
         "items": [
           {
@@ -16,11 +10,17 @@
         ]
       },
       "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "staticpower:crafting/shaped/storage_blocks/from_ingots/tungsten"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_tungsten_smelted_material",
+      "has_ingot",
       "has_the_recipe"
     ]
   ],

@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_magnesium_smelted_material": {
+    "has_ingot": {
       "conditions": {
         "items": [
           {
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_magnesium_smelted_material",
+      "has_ingot",
       "has_the_recipe"
     ]
   ],

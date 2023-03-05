@@ -45,6 +45,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.turbine.TurbineRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.items.tools.TurbineBlades;
 
 public class BlockEntityTurbine extends BlockEntityMachine {
@@ -132,7 +133,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 						}
 
 						// Draw the input and fill the output.
-						inputFluidTankComponent.drain(recipe.getInput(), FluidAction.EXECUTE);
+						inputFluidTankComponent.drain(recipe.getInput().getAmount(), FluidAction.EXECUTE);
 						if (recipe.hasOutput()) {
 							outputFluidTankComponent.fill(recipe.getOutput(), FluidAction.EXECUTE);
 						}
@@ -222,7 +223,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 
 	public Optional<TurbineRecipe> getRecipe() {
 		RecipeMatchParameters matchParams = new RecipeMatchParameters(inputFluidTankComponent.getFluid());
-		return StaticPowerRecipeRegistry.getRecipe(TurbineRecipe.RECIPE_TYPE, matchParams);
+		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams);
 	}
 
 	public boolean hasTurbineBlades() {
@@ -263,7 +264,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 				RecipeMatchParameters matchParams = new RecipeMatchParameters(fluid);
 
 				// If there is a recipe for that fluid, attempt to suck it up.
-				if (StaticPowerRecipeRegistry.getRecipe(TurbineRecipe.RECIPE_TYPE, matchParams).isPresent()) {
+				if (StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams).isPresent()) {
 					// Simulate a fill using the fluid.
 					int filled = inputFluidTankComponent.fill(new FluidStack(fluid, 1000), FluidAction.SIMULATE);
 

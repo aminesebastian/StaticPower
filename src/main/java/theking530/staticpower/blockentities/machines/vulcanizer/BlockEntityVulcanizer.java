@@ -30,6 +30,7 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipeProcessor<VulcanizerRecipe> {
@@ -60,7 +61,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(),
-				VulcanizerRecipe.RECIPE_TYPE, this));
+				ModRecipeTypes.VULCANIZER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);

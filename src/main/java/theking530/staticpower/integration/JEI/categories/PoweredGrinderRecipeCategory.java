@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.GrinderProgressBar;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -40,7 +39,6 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	private final IDrawable icon;
 	private final GrinderProgressBar pBar;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public PoweredGrinderRecipeCategory(IGuiHelper guiHelper) {
@@ -81,8 +79,6 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 104, 32, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 52, 32, 0);
 
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
-
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
@@ -119,8 +115,8 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 		if (recipe.getOutputItems().size() > 2) {
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 54, 34).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutputItems().get(2));
 		}
-		// Add the fluid.
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
+
+		addPowerInputSlot(builder, 5, 6, 16, 56, recipe.getProcessingSection());
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

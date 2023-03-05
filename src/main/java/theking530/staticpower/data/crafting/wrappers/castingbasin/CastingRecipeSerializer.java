@@ -5,14 +5,12 @@ import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import theking530.staticcore.fluid.FluidIngredient;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class CastingRecipeSerializer extends StaticPowerRecipeSerializer<CastingRecipe> {
-	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "casting_recipe");
 
 	@Override
 	public Codec<CastingRecipe> getCodec() {

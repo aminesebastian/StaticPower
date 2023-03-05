@@ -1100,7 +1100,9 @@
 	"gui.staticpower.capacity": "Capacity",
 	"gui.staticpower.stored_power": "Stored Power",
 	"gui.staticpower.usage": "Usage",
-	
+	"gui.staticpower.per_tick": "Per Tick",
+	"gui.staticpower.generation": "Generation",
+		
 	"gui.staticpower.invalid_multimeter_second_location": "Invalid second location for multimeter!",
 	"gui.staticpower.multimeter_cleared": "Multimeter cleared!",
 	

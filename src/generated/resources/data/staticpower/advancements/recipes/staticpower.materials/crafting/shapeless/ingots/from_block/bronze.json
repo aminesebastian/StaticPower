@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_bronze_block": {
+    "has__block": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:storage_blocks/bronze"
+            "tag": "forge:storage_blocks/raw_bronze"
           }
         ]
       },
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_bronze_block",
+      "has__block",
       "has_the_recipe"
     ]
   ],

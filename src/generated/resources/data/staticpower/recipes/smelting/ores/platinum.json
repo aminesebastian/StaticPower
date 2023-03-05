@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.5,
   "ingredient": {
-    "tag": "forge:ore/platinum"
+    "tag": "forge:ores/platinum"
   },
   "result": "staticpower:ingot_platinum"
 }

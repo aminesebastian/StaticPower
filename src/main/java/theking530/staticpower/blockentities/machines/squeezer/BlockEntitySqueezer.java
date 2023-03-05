@@ -34,6 +34,7 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipeProcessor<SqueezerRecipe> {
@@ -77,7 +78,7 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<SqueezerRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.squeezerProcessingTime.get(),
-				SqueezerRecipe.RECIPE_TYPE, this));
+				ModRecipeTypes.SQUEEZER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);

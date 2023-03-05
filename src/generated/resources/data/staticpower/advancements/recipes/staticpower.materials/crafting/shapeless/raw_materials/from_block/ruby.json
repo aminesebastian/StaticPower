@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ruby_raw_block": {
+    "has_raw_block": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:storage_blocks/raw_ruby"
+            "tag": "forge:storage_blocks/ruby"
           }
         ]
       },
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_ruby_raw_block",
+      "has_raw_block",
       "has_the_recipe"
     ]
   ],

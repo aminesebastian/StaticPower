@@ -19,9 +19,10 @@ import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.block.IBlockLootTableProvider;
 import theking530.staticcore.block.IBlockLootTableProvider.BlockDropType;
 import theking530.staticpower.data.materials.MaterialBundle;
+import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.ModMaterials;
+import theking530.staticpower.init.NewModMaterials;
 
 public class ModBlockLootTables extends BlockLoot {
 
@@ -35,17 +36,15 @@ public class ModBlockLootTables extends BlockLoot {
 			}
 		}
 
-		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
-			if (bundle.hasOres()) {
-				if (bundle.hasOverworldOre()) {
-					addOre(bundle.getOverworldOre().get(), bundle.getRawMaterial().get());
-				}
-				if (bundle.hasNetherOre()) {
-					addOre(bundle.getNetherackOre().get(), bundle.getRawMaterial().get());
-				}
-				if (bundle.hasDeepslateOre()) {
-					addOre(bundle.getDeepslateOre().get(), bundle.getRawMaterial().get());
-				}
+		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+			if (bundle.hasGeneratedMaterial(MaterialTypes.OVERWORLD_ORE)) {
+				addOre(bundle.get(MaterialTypes.OVERWORLD_ORE).get(), bundle.get(MaterialTypes.RAW_MATERIAL).get());
+			}
+			if (bundle.hasGeneratedMaterial(MaterialTypes.NETHER_ORE)) {
+				addOre(bundle.get(MaterialTypes.NETHER_ORE).get(), bundle.get(MaterialTypes.RAW_MATERIAL).get());
+			}
+			if (bundle.hasGeneratedMaterial(MaterialTypes.DEEPSLATE_ORE)) {
+				addOre(bundle.get(MaterialTypes.DEEPSLATE_ORE).get(), bundle.get(MaterialTypes.RAW_MATERIAL).get());
 			}
 		}
 

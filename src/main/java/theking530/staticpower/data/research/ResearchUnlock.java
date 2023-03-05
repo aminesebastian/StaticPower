@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sun.jna.platform.win32.Guid.GUID;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -24,13 +26,33 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
 public class ResearchUnlock {
 	public enum ResearchUnlockType {
-		DISPLAY_ONLY, CRAFTING, MACHINE_RECIPE
+		DISPLAY_ONLY, CRAFTING, MACHINE_RECIPE;
+
+		public static final Codec<ResearchUnlockType> CODEC = RecordCodecBuilder
+				.create(instance -> instance.group(Codec.STRING.fieldOf("type").forGetter(type -> type.toString())).apply(instance, (typeString) -> {
+					for (ResearchUnlockType type : values()) {
+						if (type.toString() == typeString) {
+							return type;
+						}
+					}
+					return DISPLAY_ONLY;
+				}));
 	}
+
+	public static final Codec<ResearchUnlock> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.STRING.fieldOf("display_key").forGetter(research -> research.getDisplayKey()), ResearchUnlockType.CODEC.fieldOf("type").forGetter(research -> research.getType()),
+			ResourceLocation.CODEC.fieldOf("target").forGetter(research -> research.getTarget()), ResearchIcon.CODEC.fieldOf("icon").forGetter(research -> research.getIcon()),
+			Codec.STRING.fieldOf("text_description").forGetter(research -> research.textDescription),
+			JsonUtilities.ITEMSTACK_CODEC.fieldOf("item_description").forGetter(research -> research.itemTooltip),
+			Codec.BOOL.fieldOf("hidden_until_unlockable").forGetter(reserach -> reserach.isHidden())).apply(instance, ResearchUnlock::new));
 
 	private final String displayKey;
 	private final ResourceLocation target;
+
 	private final List<Component> tooltip;
+	private final String textDescription;
 	private final String textTooltip;
+
 	private final ItemStack itemTooltip;
 	private final ResearchUnlockType type;
 	private ResearchIcon icon;
@@ -46,6 +68,7 @@ public class ResearchUnlock {
 		} else {
 			this.icon = icon;
 		}
+		this.textDescription = textDescription;
 		this.textTooltip = textDescription;
 		this.itemTooltip = itemDescription;
 		this.tooltip = new ArrayList<Component>();

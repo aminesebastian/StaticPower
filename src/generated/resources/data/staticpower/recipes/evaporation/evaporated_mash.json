@@ -1,0 +1,18 @@
+{
+  "type": "staticpower:evaporation",
+  "input": {
+    "amount": 1,
+    "fluids": {
+      "tag": "staticpower:mash"
+    }
+  },
+  "output": {
+    "amount": 1,
+    "fluid_name": "staticpower:evaporated_mash"
+  },
+  "processing": {
+    "heat": 5,
+    "minimum_heat": 100,
+    "processing_time": 10
+  }
+}

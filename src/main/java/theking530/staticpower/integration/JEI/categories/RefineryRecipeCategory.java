@@ -83,8 +83,8 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 79, 2, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getPrimaryFluidInput(), 0, 0, 32, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getSecondaryFluidInput(), 0, 0, 54, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 32, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 54, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
 
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput1(), 0, 0, 104, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput2(), 0, 0, 126, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
@@ -140,12 +140,10 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 
 		// Add the input fluid(s).
 		if (!recipe.getPrimaryFluidInput().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.INPUT, 32, 2).addIngredient(ForgeTypes.FLUID_STACK, recipe.getPrimaryFluidInput())
-					.setFluidRenderer(getFluidTankDisplaySize(recipe.getPrimaryFluidInput()), false, 16, 52);
+			addFluidIngredientSlot(builder, 32, 2, 16, 52, recipe.getPrimaryFluidInput());
 		}
 		if (!recipe.getSecondaryFluidInput().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.INPUT, 54, 2).addIngredient(ForgeTypes.FLUID_STACK, recipe.getSecondaryFluidInput())
-					.setFluidRenderer(getFluidTankDisplaySize(recipe.getSecondaryFluidInput()), false, 16, 52);
+			addFluidIngredientSlot(builder, 54, 2, 16, 52, recipe.getSecondaryFluidInput());
 		}
 
 		// Add the fluid output(s).

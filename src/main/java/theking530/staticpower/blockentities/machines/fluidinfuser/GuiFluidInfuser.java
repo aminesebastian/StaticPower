@@ -50,7 +50,7 @@ public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfu
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent()) {
-			progressBar.setFluidStack(currentRecipe.get().getRequiredFluid());
+			progressBar.setFluidStack(getTileEntity().processingComponent.getProcessingMaterials().getInputFluid(0).fluid());
 		} else {
 			progressBar.setFluidStack(FluidStack.EMPTY);
 		}

@@ -14,9 +14,12 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.materials.Material;
+import theking530.staticpower.data.materials.Material.MaterialClass;
 import theking530.staticpower.data.materials.MaterialBundle;
+import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModMaterials;
+import theking530.staticpower.init.NewModMaterials;
 import theking530.staticpower.init.tags.ModBlockTags;
 
 public class ModBlockTagProvider extends BlockTagsProvider {
@@ -28,16 +31,19 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 	@Override
 	protected void addTags() {
 		tag(Tags.Blocks.ORES).add(ModBlocks.OreRustyIron.get())
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasOverworldOre()).map((bundle) -> bundle.getOverworldOre().get())))
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasDeepslateOre()).map((bundle) -> bundle.getDeepslateOre().get())))
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasNetherOre()).map((bundle) -> bundle.getNetherackOre().get())));
+				.add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.OVERWORLD_ORE))
+						.map((bundle) -> bundle.get(MaterialTypes.OVERWORLD_ORE).get())))
+				.add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.DEEPSLATE_ORE))
+						.map((bundle) -> bundle.get(MaterialTypes.DEEPSLATE_ORE).get())))
+				.add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.NETHER_ORE))
+						.map((bundle) -> bundle.get(MaterialTypes.NETHER_ORE).get())));
 
-		tag(Tags.Blocks.ORES_IN_GROUND_STONE).add(ModBlocks.OreRustyIron.get())
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasOverworldOre()).map((bundle) -> bundle.getOverworldOre().get())));
-		tag(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE)
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasDeepslateOre()).map((bundle) -> bundle.getDeepslateOre().get())));
-		tag(Tags.Blocks.ORES_IN_GROUND_NETHERRACK)
-				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.hasNetherOre()).map((bundle) -> bundle.getNetherackOre().get())));
+		tag(Tags.Blocks.ORES_IN_GROUND_STONE).add(ModBlocks.OreRustyIron.get()).add(toArray(NewModMaterials.MATERIALS.values().stream()
+				.filter((bundle) -> bundle.has(MaterialTypes.OVERWORLD_ORE)).map((bundle) -> bundle.get(MaterialTypes.OVERWORLD_ORE).get())));
+		tag(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE).add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.DEEPSLATE_ORE))
+				.map((bundle) -> bundle.get(MaterialTypes.DEEPSLATE_ORE).get())));
+		tag(Tags.Blocks.ORES_IN_GROUND_NETHERRACK).add(toArray(
+				NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.NETHER_ORE)).map((bundle) -> bundle.get(MaterialTypes.NETHER_ORE).get())));
 
 		tag(BlockTags.PLANKS).add(ModBlocks.StaticPlanks.get(), ModBlocks.EnergizedPlanks.get(), ModBlocks.LumumPlanks.get(), ModBlocks.RubberTreePlanks.get());
 		tag(BlockTags.LOGS).add(ModBlocks.StaticLog.get(), ModBlocks.EnergizedLog.get(), ModBlocks.LumumLog.get(), ModBlocks.RubberTreeWood.get(), ModBlocks.RubberTreeLog.get(),
@@ -106,25 +112,24 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				.add(toArray(ModBlocks.ConveyorsSupplier)).add(toArray(ModBlocks.ConveyorsExtractor)).add(toArray(ModBlocks.ConveyorsHopper))
 				.add(toArray(ModBlocks.ConveyorsFilteredHopper));
 
-		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
-			if (bundle.hasOres()) {
-				TagsProvider.TagAppender<Block> tag = tag(bundle.getOreTag());
-				if (bundle.hasOverworldOre()) {
-					tag.add(bundle.getOverworldOre().get());
+		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+			if (bundle.hasGeneratedOre()) {
+				TagsProvider.TagAppender<Block> tag = tag(bundle.getOreBlockTag());
+				if (bundle.has(MaterialTypes.OVERWORLD_ORE)) {
+					tag.add(bundle.get(MaterialTypes.OVERWORLD_ORE).get());
 				}
-				if (bundle.hasDeepslateOre()) {
-					tag.add(bundle.getDeepslateOre().get());
+				if (bundle.has(MaterialTypes.DEEPSLATE_ORE)) {
+					tag.add(bundle.get(MaterialTypes.DEEPSLATE_ORE).get());
 				}
-				if (bundle.hasNetherOre()) {
-					tag.add(bundle.getNetherackOre().get());
+				if (bundle.has(MaterialTypes.NETHER_ORE)) {
+					tag.add(bundle.get(MaterialTypes.NETHER_ORE).get());
 				}
 			}
 
-			if (bundle.hasRawStorageBlock()) {
-				tag(bundle.getRawStorageBlockTag()).add(bundle.getRawMaterialStorageBlock().get());
-			}
-			if (bundle.hasStorageBlock()) {
-				tag(bundle.getStorageBlockTag()).add(bundle.getStorageBlock().get());
+			for (Material<?> material : bundle.getMaterials()) {
+				if (material.getMaterialClass() == MaterialClass.BLOCK && material.hasBlockTag()) {
+					tag(material.getBlockTag()).add((Block) material.get());
+				}
 			}
 		}
 

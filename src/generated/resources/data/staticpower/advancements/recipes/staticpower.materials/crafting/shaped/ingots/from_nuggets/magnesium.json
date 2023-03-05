@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_magnesium_nugget": {
+    "has_nugget": {
       "conditions": {
         "items": [
           {
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_magnesium_nugget",
+      "has_nugget",
       "has_the_recipe"
     ]
   ],

@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_energized_metal_block": {
+    "has__block": {
       "conditions": {
         "items": [
           {
-            "tag": "staticpower:storage_blocks/energized_metal"
+            "tag": "staticpower:storage_blocks/raw_energized_metal"
           }
         ]
       },
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_energized_metal_block",
+      "has__block",
       "has_the_recipe"
     ]
   ],

@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_static_metal_plate": {
+    "has_plate": {
       "conditions": {
         "items": [
           {
-            "tag": "staticpower:plates/static_metal"
+            "tag": "staticpower:ingots/static_metal"
           }
         ]
       },
@@ -30,7 +30,7 @@
   },
   "requirements": [
     [
-      "has_static_metal_plate",
+      "has_plate",
       "has_wire_cutter",
       "has_the_recipe"
     ]

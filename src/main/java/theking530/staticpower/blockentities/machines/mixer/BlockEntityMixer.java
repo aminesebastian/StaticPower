@@ -29,6 +29,7 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProcessor<MixerRecipe> {
 	@BlockEntityTypePopulator()
@@ -60,7 +61,7 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<MixerRecipe>("ProcessingComponent", MixerRecipe.RECIPE_TYPE, this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<MixerRecipe>("ProcessingComponent", ModRecipeTypes.MIXER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);

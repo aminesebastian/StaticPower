@@ -1,0 +1,21 @@
+{
+  "type": "staticpower:crucible",
+  "input_item": {
+    "ingredient": {
+      "tag": "forge:chunks/magnesium"
+    }
+  },
+  "output_fluid": {
+    "amount": 72,
+    "fluid_name": "staticpower:molten_magnesium"
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 200
+  },
+  "slag_item": {
+    "item": {
+      "id": "staticpower:slag"
+    }
+  }
+}

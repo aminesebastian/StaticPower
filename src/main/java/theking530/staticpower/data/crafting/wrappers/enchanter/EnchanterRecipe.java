@@ -5,29 +5,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.EnchantmentRecipeWrapper;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class EnchanterRecipe extends AbstractMachineRecipe {
 	public static final String ID = "esoteric_enchanter";
-	public static final RecipeType<EnchanterRecipe> RECIPE_TYPE = new StaticPowerRecipeType<EnchanterRecipe>();
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
+
+	public static final Codec<EnchanterRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					StaticPowerIngredient.CODEC.listOf().fieldOf("input_items").forGetter(recipe -> recipe.getInputIngredients()),
+					FluidIngredient.CODEC.fieldOf("input_fluid").forGetter(recipe -> recipe.getInputFluidStack()),
+					EnchantmentRecipeWrapper.CODEC.listOf().fieldOf("enchantments").forGetter(recipe -> recipe.getEnchantments()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, EnchanterRecipe::new));
 
 	private final List<StaticPowerIngredient> inputIngredients;
-	private final FluidStack inputFluidStack;
+	private final FluidIngredient inputFluidStack;
 	private final List<EnchantmentRecipeWrapper> enchantments;
 
-	public EnchanterRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, FluidStack inputFluid, List<EnchantmentRecipeWrapper> enchantments, MachineRecipeProcessingSection processing) {
+	public EnchanterRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, FluidIngredient inputFluid, List<EnchantmentRecipeWrapper> enchantments,
+			MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		inputIngredients = inputs;
 		inputFluidStack = inputFluid;
@@ -38,7 +51,7 @@ public class EnchanterRecipe extends AbstractMachineRecipe {
 		return inputIngredients;
 	}
 
-	public FluidStack getInputFluidStack() {
+	public FluidIngredient getInputFluidStack() {
 		return inputFluidStack;
 	}
 
@@ -125,13 +138,8 @@ public class EnchanterRecipe extends AbstractMachineRecipe {
 
 		// Now check fluids.
 		if (matchParams.shouldVerifyFluids()) {
-			if (!inputFluidStack.isEmpty() && !matchParams.getFluids()[0].isFluidEqual(inputFluidStack)) {
+			if (!inputFluidStack.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts())) {
 				return false;
-			}
-			if (matchParams.shouldVerifyFluidAmounts()) {
-				if (!inputFluidStack.isEmpty() && matchParams.getFluids()[0].getAmount() < inputFluidStack.getAmount()) {
-					return false;
-				}
 			}
 		}
 
@@ -140,11 +148,16 @@ public class EnchanterRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public RecipeSerializer<EnchanterRecipe> getSerializer() {
-		return EnchanterRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.ENCHANTER_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<EnchanterRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.ENCHANTER_RECIPE_TYPE.get();
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
 	}
 }

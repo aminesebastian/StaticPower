@@ -35,7 +35,6 @@ import theking530.staticpower.blockentities.components.control.processing.interf
 import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.BackOutputOnly;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
@@ -47,6 +46,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.hydroponicfarming.HydroponicFarmingRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -78,14 +78,14 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipe
 		// Setup the inventories.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return StaticPowerRecipeRegistry.getRecipe(HydroponicFarmingRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack)).isPresent();
+				return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(), new RecipeMatchParameters(stack)).isPresent();
 			}
 		}).setSlotLimit(2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 10, MachineSideMode.Output));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 
 		registerComponent(processingComponent = new RecipeProcessingComponent<HydroponicFarmingRecipe>("ProcessingComponent",
-				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), HydroponicFarmingRecipe.RECIPE_TYPE, this));
+				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 
 		owningFarmer = null;
@@ -285,7 +285,7 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipe
 		// If so, transfer. Then, whatever is left goes into the buffer.
 		for (ProcessingItemWrapper wrapper : outputContainer.getOutputItems()) {
 			ItemStack stack = wrapper.item().copy();
-			if (StaticPowerRecipeRegistry.getRecipe(HydroponicFarmingRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack)).isPresent()) {
+			if (StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(), new RecipeMatchParameters(stack)).isPresent()) {
 				if (inputInventory.getStackInSlot(0).isEmpty() || ItemUtilities.areItemStacksStackable(inputInventory.getStackInSlot(0), stack)) {
 					ItemStack remaining = inputInventory.insertItem(0, stack.copy(), false);
 					stack.setCount(remaining.getCount());

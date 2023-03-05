@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_gold_plate": {
+    "has_plate": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:plates/gold"
+            "tag": "forge:ingots/gold"
           }
         ]
       },
@@ -30,7 +30,7 @@
   },
   "requirements": [
     [
-      "has_gold_plate",
+      "has_plate",
       "has_wire_cutter",
       "has_the_recipe"
     ]

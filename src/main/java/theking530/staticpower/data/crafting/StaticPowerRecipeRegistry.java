@@ -153,7 +153,7 @@ public class StaticPowerRecipeRegistry {
 	 * @return
 	 */
 	public static boolean isValidFormerMold(ItemStack stack) {
-		for (AbstractStaticPowerRecipe recipe : RECIPES.get(FormerRecipe.RECIPE_TYPE)) {
+		for (AbstractStaticPowerRecipe recipe : RECIPES.get(ModRecipeTypes.FORMER_RECIPE_TYPE.getClass())) {
 			FormerRecipe formerRecipe = (FormerRecipe) recipe;
 			if (formerRecipe.getRequiredMold().test(stack)) {
 				return true;
@@ -359,7 +359,8 @@ public class StaticPowerRecipeRegistry {
 				ResourceLocation recipe = new ResourceLocation(itemRegistryName.getNamespace(),
 						itemRegistryName.getPath() + "_" + fluidRegistryName.getPath() + "_bottler_dynamic");
 				BottleRecipe bucketRecipe = new BottleRecipe(recipe, StaticPowerIngredient.of(new ItemStack(item)), StaticPowerOutputItem.of(result.result),
-						FluidIngredient.of(1000, fluidStack));
+						FluidIngredient.of(1000, fluidStack),
+						MachineRecipeProcessingSection.hardcoded(BottleRecipe.DEFAULT_PROCESSING_TIME, BottleRecipe.DEFAULT_POWER_COST, 0, 0));
 				newRecipes.put(bucketRecipe.getId(), bucketRecipe);
 			}
 		}

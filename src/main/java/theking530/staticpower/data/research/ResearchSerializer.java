@@ -3,129 +3,20 @@ package theking530.staticpower.data.research;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class ResearchSerializer extends StaticPowerRecipeSerializer<Research> {
 	@Override
-	public Research parse(ResourceLocation recipeId, JsonObject json) {
-		// Get the title and description.
-		String title = json.get("title").getAsString();
-		String description = json.get("description").getAsString();
-
-		// Capture all the prerequisites, and make sure there is an array provided.
-		List<ResourceLocation> prerequisites = new ArrayList<ResourceLocation>();
-		if (json.has("prerequisites")) {
-			if (!json.get("prerequisites").isJsonArray()) {
-				StaticPower.LOGGER.error(String.format("Research: %1$s's prerequisites must be an array!", recipeId.toString()));
-				return null;
-			}
-
-			JsonArray prereqs = json.get("prerequisites").getAsJsonArray();
-			for (JsonElement element : prereqs) {
-				prerequisites.add(new ResourceLocation(element.getAsString()));
-			}
-		}
-
-		// Capture all the requirements, and make sure there is an array provided.
-		List<StaticPowerIngredient> requirements = new ArrayList<StaticPowerIngredient>();
-		if (json.has("requirements")) {
-			if (!json.get("requirements").isJsonArray()) {
-				StaticPower.LOGGER.error(String.format("Research: %1$s's requirements must be an array!", recipeId.toString()));
-				return null;
-			}
-
-			JsonArray reqs = json.get("requirements").getAsJsonArray();
-			for (JsonElement element : reqs) {
-				requirements.add(StaticPowerIngredient.deserialize(element));
-			}
-		} else {
-			StaticPower.LOGGER.error(String.format("Research: %1$s is missing requirements!", recipeId.toString()));
-			return null;
-		}
-
-		// Capture all the unlocks.
-		List<ResearchUnlock> unlocks = new ArrayList<ResearchUnlock>();
-		if (json.has("unlocks")) {
-			if (!json.get("unlocks").isJsonArray()) {
-				StaticPower.LOGGER.error(String.format("Research: %1$s's unlocks must be an array!", recipeId.toString()));
-				return null;
-			}
-
-			JsonArray ulcks = json.get("unlocks").getAsJsonArray();
-			for (JsonElement element : ulcks) {
-				unlocks.add(ResearchUnlock.fromJson(element));
-			}
-		}
-
-		// Capture all the rewards, and make sure there is an array provided.
-		List<ItemStack> rewards = new ArrayList<ItemStack>();
-		if (json.has("rewards")) {
-			if (!json.get("rewards").isJsonArray()) {
-				StaticPower.LOGGER.error(String.format("Research: %1$s's rewards must be an array!", recipeId.toString()));
-				return null;
-			}
-
-			JsonArray rews = json.get("rewards").getAsJsonArray();
-			for (JsonElement element : rews) {
-				rewards.add(JsonUtilities.itemStackFromJson(element.getAsJsonObject()));
-			}
-		}
-
-		// Capture all the advancements, and make sure there is an array provided.
-		List<ResourceLocation> advancements = new ArrayList<ResourceLocation>();
-		if (json.has("advancements")) {
-			if (!json.get("advancements").isJsonArray()) {
-				StaticPower.LOGGER.error(String.format("Advancements: %1$s's rewards must be an array!", recipeId.toString()));
-				return null;
-			}
-
-			JsonArray rews = json.get("advancements").getAsJsonArray();
-			for (JsonElement element : rews) {
-				advancements.add(new ResourceLocation(element.getAsString()));
-			}
-		}
-
-		// Capture the appropriate icon.
-		ResearchIcon icon = null;
-		if (json.has("icon")) {
-			icon = ResearchIcon.fromJson(json.get("icon"));
-		} else {
-			StaticPower.LOGGER.error(String.format("Research: %1$s is missing an icon!", recipeId.toString()));
-			return null;
-		}
-
-		// Capture the hidden driver and color.
-		boolean hidden = json.has("hiddenUntilAvailable") ? json.get("hiddenUntilAvailable").getAsBoolean() : false;
-		SDColor color = null;
-		if (json.has("color")) {
-			color = SDColor.fromJson(json.get("color").getAsJsonObject());
-		}
-
-		// Capture visual offset.
-		Vector2D offset = new Vector2D(0, 0);
-		if (json.has("visualOffset")) {
-			offset = Vector2D.fromJson(json.get("visualOffset"));
-		}
-
-		int sortOrder = 0;
-		if (json.has("sortOrder")) {
-			sortOrder = json.get("sortOrder").getAsInt();
-		}
-
-		// Create the recipe.
-		return new Research(recipeId, title, description, offset, sortOrder, prerequisites, requirements, rewards, unlocks, advancements, icon, hidden, color);
+	public Codec<Research> getCodec() {
+		return Research.CODEC;
 	}
 
 	@Override
@@ -175,7 +66,7 @@ public class ResearchSerializer extends StaticPowerRecipeSerializer<Research> {
 		SDColor color = SDColor.fromBuffer(buffer);
 
 		// Create the recipe.
-		return new Research(recipeId, title, description, visualOffset, sortOrder, prerequisites, requirements, rewards, unlocks, advacements, icon, hidden, color);
+		return new Research(recipeId, title, description, visualOffset, sortOrder, unlocks, icon, prerequisites, requirements, rewards, advacements, hidden, color);
 	}
 
 	@Override

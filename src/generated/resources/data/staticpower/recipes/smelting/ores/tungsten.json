@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.5,
   "ingredient": {
-    "tag": "forge:ore/tungsten"
+    "tag": "forge:ores/tungsten"
   },
   "result": "staticpower:ingot_tungsten"
 }

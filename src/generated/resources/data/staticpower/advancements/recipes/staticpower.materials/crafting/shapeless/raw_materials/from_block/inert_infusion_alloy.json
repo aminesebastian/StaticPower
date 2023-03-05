@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_inert_infusion_alloy_raw_block": {
+    "has_raw_block": {
       "conditions": {
         "items": [
           {
-            "tag": "staticpower:storage_blocks/raw_inert_infusion_alloy"
+            "tag": "staticpower:storage_blocks/inert_infusion_alloy"
           }
         ]
       },
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_inert_infusion_alloy_raw_block",
+      "has_raw_block",
       "has_the_recipe"
     ]
   ],

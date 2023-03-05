@@ -1,63 +1,62 @@
 package theking530.staticpower.data.crafting.wrappers.fluidgenerator;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
+import theking530.staticcore.fluid.FluidIngredient;
+import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
-public class FluidGeneratorRecipe extends AbstractStaticPowerRecipe {
+public class FluidGeneratorRecipe extends AbstractMachineRecipe {
 	public static final String ID = "fluid_generator";
-	public static final RecipeType<FluidGeneratorRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FluidGeneratorRecipe>();
 
-	private final FluidStack fluid;
-	private final int powerGeneration;
+	public static final Codec<FluidGeneratorRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance
+					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+							FluidIngredient.CODEC.fieldOf("input_fluid").forGetter(recipe -> recipe.getFluid()),
+							MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection()))
+					.apply(instance, FluidGeneratorRecipe::new));
 
-	public FluidGeneratorRecipe(ResourceLocation name, FluidStack fluid, int powerGeneration) {
-		super(name);
+	private final FluidIngredient fluid;
+
+	public FluidGeneratorRecipe(ResourceLocation id, FluidIngredient fluid, MachineRecipeProcessingSection processing) {
+		super(id, processing);
 		this.fluid = fluid;
-		this.powerGeneration = powerGeneration;
 	}
 
-	public FluidStack getFluid() {
+	public FluidIngredient getFluid() {
 		return fluid;
 	}
 
-	public int getPowerGeneration() {
-		return powerGeneration;
+	public double getPowerGeneration() {
+		return getProcessingSection().getPower();
 	}
 
 	@Override
 	public RecipeSerializer<FluidGeneratorRecipe> getSerializer() {
-		return FluidGeneratorRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.FLUID_GENERATOR_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<FluidGeneratorRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.FLUID_GENERATOR_RECIPE_TYPE.get();
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return fluid.isFluidEqual(matchParams.getFluids()[0]) && matchParams.getFluids()[0].getAmount() >= fluid.getAmount();
+		if (!matchParams.shouldVerifyFluids()) {
+			return true;
+		}
+		return fluid.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts());
 	}
 
 	@Override
-	public boolean equals(Object otherRecipe) {
-		if (otherRecipe instanceof FluidGeneratorRecipe) {
-			// Get the other bottle recipe.
-			FluidGeneratorRecipe otherBottleRecipe = (FluidGeneratorRecipe) otherRecipe;
-
-			// Check the fluids.
-			if (fluid.getAmount() != otherBottleRecipe.getFluid().getAmount()
-					|| !fluid.equals(otherBottleRecipe.getFluid()) && !FluidStack.areFluidStackTagsEqual(fluid, otherBottleRecipe.getFluid())) {
-				return false;
-			}
-
-			// If all the above criteria are valid, return true.
-			return true;
-		}
-		return false;
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(1, 0, 0, 0);
 	}
 }

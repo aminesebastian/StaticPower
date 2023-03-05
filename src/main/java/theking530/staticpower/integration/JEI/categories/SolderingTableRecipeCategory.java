@@ -81,7 +81,7 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 			}
 		}
 
-		builder.addSlot(RecipeIngredientRole.INPUT, 8, 5).addIngredients(recipe.getSolderingIron());
+		builder.addSlot(RecipeIngredientRole.INPUT, 8, 5).addIngredients(recipe.getSolderingIron().getIngredient());
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 23).addItemStack(recipe.getResultItem());
 	}
 }

@@ -27,7 +27,6 @@ import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.MixerProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -43,7 +42,6 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 	private final IDrawable background;
 	private final IDrawable icon;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 	private final MixerProgressBar mixerPBar;
 	private final FluidProgressBar pBar;
@@ -85,11 +83,9 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 56, 38, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getPrimaryFluidInput(), 0, 0, 32, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getSecondaryFluidInput(), 0, 0, 80, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutput(), 0, 0, 128, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
-
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 32, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 80, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 128, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
 
 		// Draw the progress bar as a fluid (can't use the widget here because this is a
 		// singleton class).
@@ -130,17 +126,16 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		// Add the input fluids.
 		if (!recipe.getPrimaryFluidInput().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.INPUT, 32, 2).addIngredient(ForgeTypes.FLUID_STACK, recipe.getPrimaryFluidInput())
-					.setFluidRenderer(getFluidTankDisplaySize(recipe.getPrimaryFluidInput()), false, 16, 52);
+			addFluidIngredientSlot(builder, 32, 2, 16, 52, recipe.getPrimaryFluidInput());
 		}
 		if (!recipe.getSecondaryFluidInput().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.INPUT, 80, 2).addIngredient(ForgeTypes.FLUID_STACK, recipe.getSecondaryFluidInput())
-					.setFluidRenderer(getFluidTankDisplaySize(recipe.getSecondaryFluidInput()), false, 16, 52);
+			addFluidIngredientSlot(builder, 80, 2, 16, 52, recipe.getSecondaryFluidInput());
 		}
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 2).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutput()).setFluidRenderer(getFluidTankDisplaySize(recipe.getOutput()),
 				false, 16, 52);
+		
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

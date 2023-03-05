@@ -25,7 +25,6 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -41,7 +40,6 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	private final IDrawable background;
 	private final IDrawable icon;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public FermenterRecipeCategory(IGuiHelper guiHelper) {
@@ -84,9 +82,6 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 112, 34, 0);
 
-		// Draw the power bar.
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
-
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluidStack(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
 
@@ -117,8 +112,8 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 153, 6).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluidStack())
 				.setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluidStack()), false, 16, 48);
 
-		powerTimer = guiHelper.createTickTimer(StaticPowerConfig.SERVER.fermenterProcessingTime.get(),
-				(int) (StaticPowerConfig.SERVER.fermenterPowerUsage.get() * StaticPowerConfig.SERVER.fermenterProcessingTime.get()), true);
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
+
 		processingTimer = guiHelper.createTickTimer(StaticPowerConfig.SERVER.fermenterProcessingTime.get(), (int) StaticPowerConfig.SERVER.fermenterPowerUsage.get().longValue(),
 				false);
 	}

@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.5,
   "ingredient": {
-    "tag": "forge:ore/magnesium"
+    "tag": "forge:ores/magnesium"
   },
   "result": "staticpower:ingot_magnesium"
 }

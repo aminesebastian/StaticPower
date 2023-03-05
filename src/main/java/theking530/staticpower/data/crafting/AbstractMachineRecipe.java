@@ -29,7 +29,7 @@ public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	 * @return
 	 */
 	public double getPowerCost() {
-		return getProcessingSection().getPowerCost();
+		return getProcessingSection().getPower();
 	}
 
 	public MachineRecipeProcessingSection getProcessingSection() {
@@ -39,8 +39,5 @@ public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 		return processingSection;
 	}
 
-	// TODO: Make abstract
-	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
-		return null;
-	}
+	protected abstract MachineRecipeProcessingSection getDefaultProcessingSection();
 }

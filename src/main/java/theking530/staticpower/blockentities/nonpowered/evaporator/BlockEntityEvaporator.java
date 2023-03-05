@@ -33,6 +33,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class BlockEntityEvaporator extends BlockEntityBase {
 	@BlockEntityTypePopulator()
@@ -45,9 +46,7 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 		}
 	}
 
-	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final int DEFAULT_TANK_SIZE = 5000;
-	public static final int DEFAULT_EVAPORATION_HEAT = 10;
 
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
@@ -66,7 +65,7 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachineNoFacePreset.INSTANCE));
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess,
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", EvaporatorRecipe.DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess,
 				this::processingCompleted, true).setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory)
 				.setRedstoneControlComponent(redstoneControlComponent));
 
@@ -99,7 +98,7 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 				return ProcessingCheckState.fluidOutputFull();
 			}
 			// Check the heat level.
-			if (heatStorage.getCurrentHeat() < recipe.getRequiredHeat()) {
+			if (heatStorage.getCurrentHeat() < recipe.getProcessingSection().getMinimumHeat()) {
 				return ProcessingCheckState.error("Heat level is not high enough!");
 			}
 
@@ -125,7 +124,6 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 	 * @return
 	 */
 	protected ProcessingCheckState processingCompleted() {
-
 		// If we have an item in the internal inventory, but not a valid output, just
 		// return true. It is possible that a recipe was modified and no longer is
 		// valid.
@@ -136,17 +134,6 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 		// Get recipe.
 		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
-		// If we don;t have enough heat, return early.
-		if (heatStorage.getCurrentHeat() < recipe.getRequiredHeat()) {
-			return ProcessingCheckState.error("Not enough Heat!");
-		}
-
-		// If we can't store the filled output in the output slot, return false.
-		if (!(outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
-				|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
-			return ProcessingCheckState.error("Output tank full!");
-		}
-
 		// Drain the input fluid.
 		inputTankComponent.drain(recipe.getInputFluid().getAmount(), FluidAction.EXECUTE);
 
@@ -154,7 +141,7 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 		outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		// Use the heat.
-		heatStorage.cool(DEFAULT_EVAPORATION_HEAT, HeatTransferAction.EXECUTE);
+		heatStorage.cool(recipe.getProcessingSection().getHeat(), HeatTransferAction.EXECUTE);
 		return ProcessingCheckState.ok();
 	}
 
@@ -167,7 +154,7 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 		if (ignoreAmount) {
 			matchParams.ignoreFluidAmounts();
 		}
-		return StaticPowerRecipeRegistry.getRecipe(EvaporatorRecipe.RECIPE_TYPE, matchParams);
+		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.EVAPORATOR_RECIPE_TYPE.get(), matchParams);
 	}
 
 	@Override

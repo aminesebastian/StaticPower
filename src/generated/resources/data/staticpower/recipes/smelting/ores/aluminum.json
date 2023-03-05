@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.5,
   "ingredient": {
-    "tag": "forge:ore/aluminum"
+    "tag": "forge:ores/aluminum"
   },
   "result": "staticpower:ingot_aluminum"
 }

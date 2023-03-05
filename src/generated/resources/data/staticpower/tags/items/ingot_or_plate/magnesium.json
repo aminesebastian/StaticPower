@@ -1,6 +1,6 @@
 {
   "values": [
-    "#forge:ingots/magnesium",
-    "#forge:plates/magnesium"
+    "#forge:plates/magnesium",
+    "#forge:ingots/magnesium"
   ]
 }

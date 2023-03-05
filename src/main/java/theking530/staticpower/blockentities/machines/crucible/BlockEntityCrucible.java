@@ -35,6 +35,7 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityCrucible extends BlockEntityMachine implements IRecipeProcessor<CrucibleRecipe> {
@@ -76,7 +77,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1.0f));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", CrucibleRecipe.RECIPE_TYPE, this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", ModRecipeTypes.CRUCIBLE_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -141,9 +142,9 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 		}
 
 		// Check the heat.
-		if (heatStorage.getCurrentHeat() < recipe.getMinimumTemperature()) {
-			return ProcessingCheckState
-					.error("Minimum heat temperature of " + GuiTextUtilities.formatHeatToString(recipe.getMinimumTemperature()).getString() + " has not been reached!");
+		if (heatStorage.getCurrentHeat() < recipe.getProcessingSection().getMinimumHeat()) {
+			return ProcessingCheckState.error(
+					"Minimum heat temperature of " + GuiTextUtilities.formatHeatToString(recipe.getProcessingSection().getMinimumHeat()).getString() + " has not been reached!");
 		}
 
 		// If this recipe has a fluid output that we cannot put into the output tank,

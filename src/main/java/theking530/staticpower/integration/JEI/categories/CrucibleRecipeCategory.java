@@ -26,7 +26,6 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarUtilities;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -42,7 +41,6 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 	private final IDrawable background;
 	private final IDrawable icon;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public CrucibleRecipeCategory(IGuiHelper guiHelper) {
@@ -80,9 +78,9 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 75, 32, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 106, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
-		GuiHeatBarUtilities.drawHeatBar(matrixStack, 24, 6, 4, 48, 1.0f, recipe.getMinimumTemperature(), 0, getNetHighestMultipleOf10(recipe.getMinimumTemperature()));
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 106, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiHeatBarUtilities.drawHeatBar(matrixStack, 24, 6, 4, 48, 1.0f, recipe.getProcessingSection().getMinimumHeat(), 0,
+				getNetHighestMultipleOf10(recipe.getProcessingSection().getMinimumHeat()));
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 28, 5, 72, 18, 0);
@@ -100,7 +98,7 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 
 		// Render the heat bar tooltip.
 		if (mouseX >= 28 && mouseX < 32 && mouseY < 54 && mouseY >= 4) {
-			output.add(GuiTextUtilities.formatHeatToString(recipe.getMinimumTemperature()));
+			output.add(GuiTextUtilities.formatHeatToString(recipe.getProcessingSection().getMinimumHeat()));
 		}
 
 		return output;
@@ -116,8 +114,9 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 		if (recipe.hasItemOutput()) {
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 77, 34).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 		}
+		
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

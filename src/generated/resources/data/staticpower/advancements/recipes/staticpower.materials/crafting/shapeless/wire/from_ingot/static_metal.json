@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_static_metal_ingot": {
+    "has_ingot": {
       "conditions": {
         "items": [
           {
@@ -30,7 +30,7 @@
   },
   "requirements": [
     [
-      "has_static_metal_ingot",
+      "has_ingot",
       "has_wire_cutter",
       "has_the_recipe"
     ]

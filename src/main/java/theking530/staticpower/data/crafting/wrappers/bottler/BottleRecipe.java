@@ -7,27 +7,33 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticcore.fluid.FluidIngredient;
-import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
+import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BottleRecipe extends AbstractStaticPowerRecipe {
+public class BottleRecipe extends AbstractMachineRecipe {
 	public static final String ID = "bottler";
+	public static final int DEFAULT_PROCESSING_TIME = 100;
+	public static final double DEFAULT_POWER_COST = 5.0;
+
 	public static final Codec<BottleRecipe> CODEC = RecordCodecBuilder
 			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
 					StaticPowerIngredient.CODEC.fieldOf("empty_bottle").forGetter(recipe -> recipe.getEmptyBottle()),
 					StaticPowerOutputItem.CODEC.fieldOf("filled_bottle").forGetter(recipe -> recipe.getFilledBottle()),
-					FluidIngredient.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.getFluid())).apply(instance, BottleRecipe::new));
+					FluidIngredient.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.getFluid()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, BottleRecipe::new));
 
 	private final StaticPowerIngredient emptyBottle;
 	private final StaticPowerOutputItem filledBottle;
 	private final FluidIngredient fluid;
 
-	public BottleRecipe(ResourceLocation id, StaticPowerIngredient emptyBottle, StaticPowerOutputItem filledBottle, FluidIngredient fluid) {
-		super(id);
+	public BottleRecipe(ResourceLocation id, StaticPowerIngredient emptyBottle, StaticPowerOutputItem filledBottle, FluidIngredient fluid,
+			MachineRecipeProcessingSection processing) {
+		super(id, processing);
 		this.emptyBottle = emptyBottle;
 		this.filledBottle = filledBottle;
 		this.fluid = fluid;
@@ -68,5 +74,10 @@ public class BottleRecipe extends AbstractStaticPowerRecipe {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
 	}
 }

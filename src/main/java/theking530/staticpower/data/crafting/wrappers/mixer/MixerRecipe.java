@@ -1,26 +1,43 @@
 package theking530.staticpower.data.crafting.wrappers.mixer;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.fluid.FluidIngredient;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class MixerRecipe extends AbstractMachineRecipe {
 	public static final String ID = "mixer";
-	public static final RecipeType<MixerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<MixerRecipe>();
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
+
+	public static final Codec<MixerRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					StaticPowerIngredient.CODEC.optionalFieldOf("input_item_1", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getPrimaryItemInput()),
+					StaticPowerIngredient.CODEC.optionalFieldOf("input_item_2", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getSecondaryItemInput()),
+					FluidIngredient.CODEC.fieldOf("input_fluid_1").forGetter(recipe -> recipe.getPrimaryFluidInput()),
+					FluidIngredient.CODEC.optionalFieldOf("input_fluid_2", FluidIngredient.EMPTY).forGetter(recipe -> recipe.getSecondaryFluidInput()),
+					JsonUtilities.FLUIDSTACK_CODEC.fieldOf("output_fluid").forGetter(recipe -> recipe.getOutput()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, MixerRecipe::new));
 
 	private final StaticPowerIngredient input1;
 	private final StaticPowerIngredient input2;
-	private final FluidStack inputFluid1;
-	private final FluidStack inputFluid2;
+	private final FluidIngredient inputFluid1;
+	private final FluidIngredient inputFluid2;
 	private final FluidStack output;
 
-	public MixerRecipe(ResourceLocation name, StaticPowerIngredient input1, StaticPowerIngredient input2, FluidStack inputFluid1, FluidStack inputFluid2, FluidStack output, MachineRecipeProcessingSection processing) {
+	public MixerRecipe(ResourceLocation name, StaticPowerIngredient input1, StaticPowerIngredient input2, FluidIngredient inputFluid1, FluidIngredient inputFluid2,
+			FluidStack output, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.input1 = input1;
 		this.input2 = input2;
@@ -50,7 +67,7 @@ public class MixerRecipe extends AbstractMachineRecipe {
 		return initial + (input2.isEmpty() ? 0 : 1);
 	}
 
-	public FluidStack getPrimaryFluidInput() {
+	public FluidIngredient getPrimaryFluidInput() {
 		return inputFluid1;
 	}
 
@@ -58,7 +75,7 @@ public class MixerRecipe extends AbstractMachineRecipe {
 		return !inputFluid1.isEmpty();
 	}
 
-	public FluidStack getSecondaryFluidInput() {
+	public FluidIngredient getSecondaryFluidInput() {
 		return inputFluid2;
 	}
 
@@ -67,8 +84,7 @@ public class MixerRecipe extends AbstractMachineRecipe {
 	}
 
 	public int getRequiredFluidCount() {
-		int initial = inputFluid1.isEmpty() ? 0 : 1;
-		return initial + (inputFluid2.isEmpty() ? 0 : 1);
+		return (inputFluid1.isEmpty() ? 0 : 1) + (inputFluid2.isEmpty() ? 0 : 1);
 	}
 
 	public FluidStack getOutput() {
@@ -88,21 +104,15 @@ public class MixerRecipe extends AbstractMachineRecipe {
 
 			// Check fluids either way.
 			boolean straightMatch = true;
-			straightMatch &= matchParams.getFluids()[0].equals(inputFluid1);
-			straightMatch &= matchParams.getFluids()[1].equals(inputFluid2);
-			if (!straightMatch) {
-				matched &= matchParams.getFluids()[1].equals(inputFluid1);
-				matched &= matchParams.getFluids()[0].equals(inputFluid2);
+			straightMatch &= inputFluid1.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts());
+			if (getRequiredFluidCount() == 2) {
+				straightMatch &= inputFluid2.test(matchParams.getFluids()[1], matchParams.shouldVerifyFluidAmounts());
 			}
 
-			// Verify the amounts.
-			if (matched && matchParams.shouldVerifyFluidAmounts()) {
-				if (straightMatch) {
-					matched &= matchParams.getFluids()[0].getAmount() >= inputFluid1.getAmount();
-					matched &= matchParams.getFluids()[1].getAmount() >= inputFluid2.getAmount();
-				} else {
-					matched &= matchParams.getFluids()[1].getAmount() >= inputFluid1.getAmount();
-					matched &= matchParams.getFluids()[0].getAmount() >= inputFluid2.getAmount();
+			if (!straightMatch) {
+				straightMatch &= inputFluid1.test(matchParams.getFluids()[1], matchParams.shouldVerifyFluidAmounts());
+				if (getRequiredFluidCount() == 2) {
+					straightMatch &= inputFluid2.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts());
 				}
 			}
 		}
@@ -131,11 +141,16 @@ public class MixerRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public RecipeSerializer<MixerRecipe> getSerializer() {
-		return MixerRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.MIXER_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<MixerRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.MIXER_RECIPE_TYPE.get();
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
 	}
 }

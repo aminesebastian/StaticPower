@@ -18,11 +18,14 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class CastingRecipe extends AbstractMachineRecipe {
 	public static final String ID = "casting";
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 2.0;
+
 	public static final Codec<CastingRecipe> CODEC = RecordCodecBuilder
 			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-					StaticPowerIngredient.CODEC.optionalFieldOf("mold", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getRequiredMold()),
-					StaticPowerOutputItem.CODEC.optionalFieldOf("output", StaticPowerOutputItem.EMPTY).forGetter(recipe -> recipe.getOutput()),
-					FluidIngredient.CODEC.optionalFieldOf("fluid", FluidIngredient.EMPTY).forGetter(recipe -> recipe.getInputFluid()),
+					StaticPowerIngredient.CODEC.fieldOf("mold").forGetter(recipe -> recipe.getRequiredMold()),
+					StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
+					FluidIngredient.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.getInputFluid()),
 					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, CastingRecipe::new));
 
 	private FluidIngredient inputFluid;
@@ -68,6 +71,11 @@ public class CastingRecipe extends AbstractMachineRecipe {
 
 	public StaticPowerIngredient getRequiredMold() {
 		return requiredMold;
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(() -> DEFAULT_PROCESSING_TIME, () -> DEFAULT_POWER_COST, () -> 0, () -> 0);
 	}
 
 	@Override

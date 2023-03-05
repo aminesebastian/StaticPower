@@ -16,6 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	private static List<SmithingRecipeJEIWrapper> RECIPES;
@@ -86,7 +87,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 		// Get all smithing reciepes.
 		@SuppressWarnings("resource")
-		List<AutoSmithRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(AutoSmithRecipe.RECIPE_TYPE);
+		List<AutoSmithRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.AUTO_SMITH_RECIPE_TYPE.get());
 
 		// Iterate through all the recipes.
 		for (AutoSmithRecipe recipe : recipes) {
@@ -115,7 +116,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 		// Test for smith targets that dont have attributable marks.
 		@SuppressWarnings("resource")
-		List<AutoSmithRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(AutoSmithRecipe.RECIPE_TYPE);
+		List<AutoSmithRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.AUTO_SMITH_RECIPE_TYPE.get());
 		for (AutoSmithRecipe recipe : recipes) {
 			if (!recipe.isWildcardRecipe() && recipe.getSmithTarget().test(stack)) {
 				return true;
@@ -133,7 +134,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 		// Test for modifier materials or input materials.
 		@SuppressWarnings("resource")
-		List<AutoSmithRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(AutoSmithRecipe.RECIPE_TYPE);
+		List<AutoSmithRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.AUTO_SMITH_RECIPE_TYPE.get());
 		for (AutoSmithRecipe recipe : recipes) {
 			if (recipe.getModifierMaterial().test(stack)) {
 				return true;

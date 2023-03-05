@@ -19,6 +19,7 @@ import theking530.staticpower.blockentities.components.items.ItemStackHandlerFil
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public abstract class AbstractSolderingTable extends BlockEntityBase implements MenuProvider {
 	public final InventoryComponent patternInventory;
@@ -174,7 +175,7 @@ public abstract class AbstractSolderingTable extends BlockEntityBase implements 
 	}
 
 	public Optional<SolderingRecipe> getRecipeForItems(ItemStack... items) {
-		return StaticPowerRecipeRegistry.getRecipe(SolderingRecipe.RECIPE_TYPE, new RecipeMatchParameters(items));
+		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.SOLDERING_RECIPE_TYPE.get(), new RecipeMatchParameters(items));
 	}
 
 	protected boolean requiresSolderingIron() {

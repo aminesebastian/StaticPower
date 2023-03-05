@@ -3,62 +3,25 @@ package theking530.staticpower.data.crafting.wrappers.enchanter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.StaticPower;
-import theking530.staticpower.StaticPowerConfig;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.EnchantmentRecipeWrapper;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
 public class EnchanterRecipeSerializer extends StaticPowerRecipeSerializer<EnchanterRecipe> {
-	public static final EnchanterRecipeSerializer INSTANCE = new EnchanterRecipeSerializer();
-	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "enchanter_recipe");
-
 	@Override
-	public EnchanterRecipe parse(ResourceLocation recipeId, JsonObject json) {
-		// Get the fluid input.
-		FluidStack fluidInput = FluidStack.EMPTY;
-		if (json.has("input_fluid")) {
-			JsonObject inputFluid = GsonHelper.getAsJsonObject(json, "input_fluid");
-			fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(inputFluid);
-		}
-
-		// Get the inputs.
-		List<StaticPowerIngredient> inputs = new ArrayList<StaticPowerIngredient>();
-		if (json.has("input_items")) {
-			JsonArray inputElements = GsonHelper.getAsJsonArray(json, "input_items");
-			for (JsonElement element : inputElements) {
-				inputs.add(StaticPowerIngredient.deserialize(element.getAsJsonObject()));
-			}
-		}
-
-		// Get the enchantments.
-		List<EnchantmentRecipeWrapper> enchantments = new ArrayList<EnchantmentRecipeWrapper>();
-		JsonArray enchantmentsElement = GsonHelper.getAsJsonArray(json, "enchantments");
-		for (JsonElement element : enchantmentsElement) {
-			enchantments.add(EnchantmentRecipeWrapper.fromJson(element.getAsJsonObject()));
-		}
-
-		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.enchanterProcessingTime,
-				StaticPowerConfig.SERVER.enchanterPowerUsage, json);
-
-		// Create the recipe.
-		return new EnchanterRecipe(recipeId, inputs, fluidInput, enchantments, processing);
+	public Codec<EnchanterRecipe> getCodec() {
+		return EnchanterRecipe.CODEC;
 	}
 
 	@Override
 	public EnchanterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		FluidStack inputFluid = buffer.readFluidStack();
+		FluidIngredient inputFluid = FluidIngredient.readFromBuffer(buffer);
 
 		// Read all the inputs.
 		List<StaticPowerIngredient> inputs = new ArrayList<StaticPowerIngredient>();
@@ -77,7 +40,7 @@ public class EnchanterRecipeSerializer extends StaticPowerRecipeSerializer<Encha
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, EnchanterRecipe recipe) {
-		buffer.writeFluidStack(recipe.getInputFluidStack());
+		recipe.getInputFluidStack().writeToBuffer(buffer);
 
 		// Write the items.
 		buffer.writeByte(recipe.getInputIngredients().size());

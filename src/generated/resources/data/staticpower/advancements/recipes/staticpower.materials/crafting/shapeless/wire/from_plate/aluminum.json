@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_aluminum_plate": {
+    "has_plate": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:plates/aluminum"
+            "tag": "forge:ingots/aluminum"
           }
         ]
       },
@@ -30,7 +30,7 @@
   },
   "requirements": [
     [
-      "has_aluminum_plate",
+      "has_plate",
       "has_wire_cutter",
       "has_the_recipe"
     ]

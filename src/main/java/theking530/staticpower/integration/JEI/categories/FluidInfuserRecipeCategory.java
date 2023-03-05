@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -26,7 +25,6 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -43,7 +41,6 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 	private final IDrawable background;
 	private final IDrawable icon;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 	private final ArrowProgressBar pBar;
 
@@ -83,13 +80,12 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 122, 15, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getRequiredFluid(), 0, 0, 77, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 77, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 17, 5, 99, 23, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 17;
-		FluidStack fluid = recipe.getRequiredFluid();
+		FluidStack fluid = getNthFluidInput(recipeSlotsView, 0);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 99, 28, 1, progress, 5, false);
 
 		// Draw the arrow progress bar.
@@ -121,12 +117,12 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, FluidInfusionRecipe recipe, IFocusGroup ingredients) {
 		builder.addSlot(RecipeIngredientRole.INPUT, 31, 17).addIngredients(recipe.getInput().getIngredient());
-		builder.addSlot(RecipeIngredientRole.INPUT, 77, 4).addIngredient(ForgeTypes.FLUID_STACK, recipe.getRequiredFluid())
-				.setFluidRenderer(getFluidTankDisplaySize(recipe.getRequiredFluid()), false, 16, 52);
+
+		addFluidIngredientSlot(builder, 77, 4, 16, 52, recipe.getRequiredFluid());
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 124, 17).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

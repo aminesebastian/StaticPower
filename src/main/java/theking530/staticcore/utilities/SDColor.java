@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 import com.mojang.math.Vector3f;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -15,6 +17,10 @@ import net.minecraft.network.FriendlyByteBuf;
  *
  */
 public class SDColor extends AbstractVector<SDColor> {
+	public static final Codec<SDColor> CODEC = RecordCodecBuilder.create(instance -> instance
+			.group(Codec.FLOAT.fieldOf("r").forGetter(vector -> vector.getRed()), Codec.FLOAT.fieldOf("g").forGetter(vector -> vector.getBlue()),
+					Codec.FLOAT.fieldOf("b").forGetter(vector -> vector.getGreen()), Codec.FLOAT.fieldOf("a").forGetter(vector -> vector.getAlpha()))
+			.apply(instance, SDColor::new));
 
 	public static final List<String> DYE_COLORS = Arrays.asList("white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple",
 			"blue", "brown", "green", "red", "black");
@@ -82,6 +88,7 @@ public class SDColor extends AbstractVector<SDColor> {
 		add(new SDColor(r, g, b, a));
 		return this;
 	}
+
 	public SDColor clampToSDRRange() {
 		values[0] = SDMath.clamp(values[0], 0, 1);
 		values[1] = SDMath.clamp(values[1], 0, 1);

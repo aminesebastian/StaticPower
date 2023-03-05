@@ -1,25 +1,36 @@
 package theking530.staticpower.data.crafting.wrappers.vulcanizer;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class VulcanizerRecipe extends AbstractMachineRecipe {
 	public static final String ID = "vulcanizer";
-	public static final RecipeType<VulcanizerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<VulcanizerRecipe>();
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
 
-	private final FluidStack inputFluid;
+	public static final Codec<VulcanizerRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					FluidIngredient.CODEC.fieldOf("input_fluid").forGetter(recipe -> recipe.getInputFluid()),
+					StaticPowerOutputItem.CODEC.fieldOf("output_item").forGetter(recipe -> recipe.getOutput()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, VulcanizerRecipe::new));
+
+	private final FluidIngredient inputFluid;
 	private final StaticPowerOutputItem output;
 
-	public VulcanizerRecipe(ResourceLocation name, FluidStack inputFluid, StaticPowerOutputItem output, MachineRecipeProcessingSection processing) {
-		super(name, processing);
+	public VulcanizerRecipe(ResourceLocation id, FluidIngredient inputFluid, StaticPowerOutputItem output, MachineRecipeProcessingSection processing) {
+		super(id, processing);
 		this.output = output;
 		this.inputFluid = inputFluid;
 	}
@@ -28,7 +39,7 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 		return output;
 	}
 
-	public FluidStack getInputFluid() {
+	public FluidIngredient getInputFluid() {
 		return inputFluid;
 	}
 
@@ -43,10 +54,7 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 		// Check fluid.
 		if (matchParams.shouldVerifyFluids()) {
 			matched &= matchParams.hasFluids();
-			matched &= inputFluid.isFluidEqual(matchParams.getFluids()[0]);
-			if (matchParams.shouldVerifyFluidAmounts()) {
-				matched &= matchParams.getFluids()[0].getAmount() >= inputFluid.getAmount();
-			}
+			matched &= inputFluid.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts());
 		}
 
 		return matched;
@@ -54,11 +62,16 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public RecipeSerializer<VulcanizerRecipe> getSerializer() {
-		return VulcanizerRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.VULCANIZER_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<VulcanizerRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.VULCANIZER_RECIPE_TYPE.get();
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
 	}
 }

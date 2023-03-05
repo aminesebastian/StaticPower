@@ -15,5 +15,9 @@
     "fluids": {
       "tag": "staticpower:juice_apple"
     }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 100
   }
 }

@@ -1,7 +1,9 @@
 package theking530.staticpower.data.crafting.wrappers.soldering;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -11,6 +13,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -24,57 +28,80 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
+import theking530.staticpower.init.tags.ModItemTags;
 
 public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	public static final String ID = "soldering";
-	public static final RecipeType<SolderingRecipe> RECIPE_TYPE = new StaticPowerRecipeType<SolderingRecipe>();
+	public static final StaticPowerIngredient DEFAULT_SOLDERING_IRON = StaticPowerIngredient.of(ModItemTags.SOLDERING_IRON);
 
 	protected static final int MAX_WIDTH = 3;
 	protected static final int MAX_HEIGHT = 3;
 
-	public final int recipeWidth;
-	public final int recipeHeight;
-	public final NonNullList<Ingredient> recipeItems;
-	public final Ingredient solderingIron;
-	public final ItemStack recipeOutput;
-	public final String group;
+	public static final Codec<SolderingRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					Codec.INT.fieldOf("width").forGetter(recipe -> recipe.getRecipeWidth()), Codec.INT.fieldOf("height").forGetter(recipe -> recipe.getRecipeHeight()),
+					StaticPowerIngredient.CODEC.optionalFieldOf("soldering_iron").forGetter(recipe -> Optional.of(recipe.getSolderingIron())),
+					StaticPowerIngredient.CODEC.listOf().fieldOf("pattern").forGetter(recipe -> recipe.getInputs()),
+					StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput())).apply(instance, SolderingRecipe::new));
 
-	public SolderingRecipe(ResourceLocation name, String groupIn, int recipeWidthIn, int recipeHeightIn, Ingredient solderingIron, NonNullList<Ingredient> recipeItemsIn,
-			ItemStack recipeOutputIn) {
-		super(name);
-		this.group = groupIn;
-		this.solderingIron = solderingIron;
+	private final int recipeWidth;
+	private final int recipeHeight;
+	private final NonNullList<StaticPowerIngredient> recipeItems;
+	private final StaticPowerIngredient solderingIron;
+	private final StaticPowerOutputItem recipeOutput;
+
+	public SolderingRecipe(ResourceLocation id, int recipeWidthIn, int recipeHeightIn, Optional<StaticPowerIngredient> solderingIron, List<StaticPowerIngredient> recipeItemsIn,
+			StaticPowerOutputItem recipeOutputIn) {
+		super(id);
+
+		if (solderingIron.isPresent()) {
+			this.solderingIron = solderingIron.get();
+		} else {
+			this.solderingIron = DEFAULT_SOLDERING_IRON;
+		}
+
 		this.recipeWidth = recipeWidthIn;
 		this.recipeHeight = recipeHeightIn;
-		this.recipeItems = recipeItemsIn;
+
+		this.recipeItems = NonNullList.withSize(recipeWidthIn * recipeHeightIn, StaticPowerIngredient.EMPTY);
+		for (StaticPowerIngredient input : recipeItemsIn) {
+			recipeItems.add(input);
+		}
+
 		this.recipeOutput = recipeOutputIn;
 	}
 
 	public RecipeSerializer<SolderingRecipe> getSerializer() {
-		return SolderingRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.SOLDERING_SERIALIZER.get();
 	}
 
-	/**
-	 * Get the result of this recipe, usually for display purposes (e.g. recipe
-	 * book). If your recipe has more than one possible result (e.g. it's dynamic
-	 * and depends on its inputs), then return an empty stack.
-	 */
-	public ItemStack getResultItem() {
+	public StaticPowerOutputItem getOutput() {
 		return recipeOutput;
 	}
 
-	public Ingredient getSolderingIron() {
+	public StaticPowerIngredient getSolderingIron() {
 		return this.solderingIron;
 	}
 
-	public NonNullList<Ingredient> getIngredients() {
+	public NonNullList<StaticPowerIngredient> getInputs() {
 		return this.recipeItems;
 	}
 
 	@Override
 	public RecipeType<SolderingRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.SOLDERING_RECIPE_TYPE.get();
+	}
+
+	public int getRecipeWidth() {
+		return recipeWidth;
+	}
+
+	public int getRecipeHeight() {
+		return recipeHeight;
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
@@ -120,7 +147,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 			for (int j = 0; j < recipeHeight; ++j) {
 				int k = i - p_77573_2_;
 				int l = j - p_77573_3_;
-				Ingredient ingredient = Ingredient.EMPTY;
+				StaticPowerIngredient ingredient = StaticPowerIngredient.EMPTY;
 				if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight) {
 					if (p_77573_4_) {
 						ingredient = this.recipeItems.get(this.recipeWidth - k - 1 + l * this.recipeWidth);

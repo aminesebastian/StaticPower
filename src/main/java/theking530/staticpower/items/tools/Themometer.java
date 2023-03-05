@@ -39,6 +39,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.init.ModCreativeTabs;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.RaytracingUtilities;
 
@@ -87,7 +88,7 @@ public class Themometer extends StaticPowerItem implements ICustomModelProvider 
 			BlockState blockstate = world.getBlockState(pos);
 
 			// If there is a recipe for thermal conductivity for this block
-			Optional<ThermalConductivityRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE,
+			Optional<ThermalConductivityRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
 					new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)));
 			if (recipe.isPresent()) {
 				if (recipe.get().hasActiveTemperature()) {

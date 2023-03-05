@@ -76,6 +76,14 @@ public class ProcessingCheckState {
 		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticpower.alert.not_enough_power", requiredPower));
 	}
 
+	public static ProcessingCheckState notEnoughHeatCapacity(double requiredHeatCapacity) {
+		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticpower.alert.not_enough_heat_capacity", requiredHeatCapacity));
+	}
+
+	public static ProcessingCheckState heatStorageTooHot(double mininumHeat) {
+		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticpower.alert.heat_storage_too_hot", mininumHeat));
+	}
+
 	public static ProcessingCheckState powerOutputFull() {
 		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.power_output_full");
 	}

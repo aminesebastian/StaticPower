@@ -1,0 +1,21 @@
+{
+  "type": "staticpower:fermenter",
+  "input": {
+    "ingredient": {
+      "item": "minecraft:apple"
+    }
+  },
+  "output_fluid": {
+    "amount": 150,
+    "fluid_name": "staticpower:mash"
+  },
+  "output_item": {
+    "item": {
+      "id": "staticpower:distillery_grain"
+    }
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 400
+  }
+}

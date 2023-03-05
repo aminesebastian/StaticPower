@@ -2,7 +2,7 @@
   "type": "staticpower:grinder",
   "input": {
     "ingredient": {
-      "tag": "forge:ore/sapphire"
+      "tag": "forge:ores/sapphire"
     }
   },
   "outputs": [
@@ -22,7 +22,7 @@
     }
   ],
   "processing": {
-    "power_cost": 5.0,
+    "power": 5.0,
     "processing_time": 200
   }
 }

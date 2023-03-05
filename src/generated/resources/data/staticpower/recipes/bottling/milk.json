@@ -15,5 +15,9 @@
     "fluids": {
       "tag": "forge:milk"
     }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 100
   }
 }

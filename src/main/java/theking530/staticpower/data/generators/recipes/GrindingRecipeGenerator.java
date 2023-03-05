@@ -17,10 +17,11 @@ import theking530.staticpower.data.generators.RecipeItem;
 import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
 import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
-import theking530.staticpower.data.materials.MaterialBundle.MaterialType;
+import theking530.staticpower.data.materials.MaterialBundle.MaterialBundleType;
+import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.ModMaterials;
+import theking530.staticpower.init.NewModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
 public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
@@ -31,46 +32,48 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 
 	@Override
 	protected void buildRecipes() {
-		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
-			if (bundle.getMaterialType() == MaterialType.METAL && bundle.hasDust()) {
-				if (bundle.hasIngot()) {
-					singleItemTodust("ingots/" + bundle.getName(), RecipeItem.of(bundle.getIngotTag()), bundle.getDust().get());
+		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+			if (bundle.getMaterialType() == MaterialBundleType.METAL && bundle.has(MaterialTypes.DUST)) {
+				if (bundle.has(MaterialTypes.INGOT)) {
+					singleItemTodust("ingots/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.INGOT).getItemTag()), bundle.get(MaterialTypes.DUST).get());
 				}
-				if (bundle.hasOres()) {
-					singleItemTodust("ores/" + bundle.getName(), RecipeItem.of(bundle.getOreItemTag()), bundle.getDust().get(), 2);
+				if (bundle.hasOre()) {
+					singleItemTodust("ores/" + bundle.getName(), RecipeItem.of(bundle.getOreItemTag()), bundle.get(MaterialTypes.DUST).get(), 2);
 				}
-				if (bundle.hasRawMaterial()) {
-					singleItemTodust("raw_material/" + bundle.getName(), RecipeItem.of(bundle.getRawMaterialTag()), bundle.getDust().get(), 2);
-				}
-			}
-
-			if (bundle.getMaterialType() == MaterialType.GEM && bundle.hasRawMaterial() && bundle.hasDust()) {
-				if (bundle.hasOres()) {
-					addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.getOreItemTag()), StaticPowerOutputItem.of(bundle.getRawMaterial().get(), 3, 1, 1, 0.25f),
-							StaticPowerOutputItem.of(bundle.getDust().get(), 1, 0.1f));
-				}
-				if (bundle.hasRawMaterial()) {
-					singleItemTodust("raw_material/" + bundle.getName(), RecipeItem.of(bundle.getRawMaterialTag()), bundle.getDust().get());
+				if (bundle.has(MaterialTypes.RAW_MATERIAL)) {
+					singleItemTodust("raw_material/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), bundle.get(MaterialTypes.DUST).get(),
+							2);
 				}
 			}
 
-			if (bundle.getMaterialType() == MaterialType.DUST && bundle.hasDust()) {
-				if (bundle.hasOres()) {
-					singleItemTodust("ores/" + bundle.getName(), RecipeItem.of(bundle.getOreItemTag()), bundle.getDust().get(), 2);
+			if (bundle.getMaterialType() == MaterialBundleType.GEM && bundle.has(MaterialTypes.DUST)) {
+				if (bundle.hasOre()) {
+					addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.getOreItemTag()),
+							StaticPowerOutputItem.of(bundle.get(MaterialTypes.RAW_MATERIAL).get(), 3, 1, 1, 0.25f),
+							StaticPowerOutputItem.of(bundle.get(MaterialTypes.DUST).get(), 1, 0.1f));
+				}
+				if (bundle.has(MaterialTypes.RAW_MATERIAL)) {
+					singleItemTodust("raw_material/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), bundle.get(MaterialTypes.DUST).get());
 				}
 			}
 
-			if (bundle.hasStorageBlock() && bundle.hasDust()) {
-				singleItemTodust("blocks/" + bundle.getName(), RecipeItem.of(bundle.getStorageBlockItemTag()), bundle.getDust().get(), 9);
+			if (bundle.getMaterialType() == MaterialBundleType.DUST && bundle.has(MaterialTypes.DUST)) {
+				if (bundle.hasOre()) {
+					singleItemTodust("ores/" + bundle.getName(), RecipeItem.of(bundle.getOreItemTag()), bundle.get(MaterialTypes.DUST).get(), 2);
+				}
+			}
+
+			if (bundle.has(MaterialTypes.STORAGE_BLOCK) && bundle.has(MaterialTypes.DUST)) {
+				singleItemTodust("blocks/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.STORAGE_BLOCK).getItemTag()), bundle.get(MaterialTypes.DUST).get(), 9);
 			}
 		}
 
-		metalOre(ModMaterials.IRON, StaticPowerOutputItem.of(ModMaterials.ZINC.getDust().get(), 1, 0.05f));
-		metalOre(ModMaterials.GOLD, StaticPowerOutputItem.of(ModMaterials.COPPER.getDust().get(), 1, 0.05f));
-		metalOre(ModMaterials.COPPER, StaticPowerOutputItem.of(ModMaterials.GOLD.getDust().get(), 1, 0.05f));
+		metalOre(NewModMaterials.IRON, StaticPowerOutputItem.of(NewModMaterials.ZINC.get(MaterialTypes.DUST).get(), 1, 0.05f));
+		metalOre(NewModMaterials.GOLD, StaticPowerOutputItem.of(NewModMaterials.COPPER.get(MaterialTypes.DUST).get(), 1, 0.05f));
+		metalOre(NewModMaterials.COPPER, StaticPowerOutputItem.of(NewModMaterials.GOLD.get(MaterialTypes.DUST).get(), 1, 0.05f));
 
-		metalOre(ModMaterials.LEAD, StaticPowerOutputItem.of(ModMaterials.TUNGSTEN.getDust().get(), 1, 0.05f));
-		metalOre(ModMaterials.TIN, StaticPowerOutputItem.of(ModMaterials.SILVER.getDust().get(), 1, 0.05f));
+		metalOre(NewModMaterials.LEAD, StaticPowerOutputItem.of(NewModMaterials.TUNGSTEN.get(MaterialTypes.DUST).get(), 1, 0.05f));
+		metalOre(NewModMaterials.TIN, StaticPowerOutputItem.of(NewModMaterials.SILVER.get(MaterialTypes.DUST).get(), 1, 0.05f));
 
 		addRecipe("ores/lapis_lazuli", StaticPowerIngredient.of(RecipeItem.of(Tags.Items.ORES_LAPIS)), true, StaticPowerOutputItem.of(Items.LAPIS_LAZULI, 5, 1, 1, 0.4f));
 		addRecipe("ores/redstone", StaticPowerIngredient.of(RecipeItem.of(Tags.Items.ORES_REDSTONE)), true, StaticPowerOutputItem.of(Items.REDSTONE, 4, 1, 2, 0.4f));
@@ -107,16 +110,16 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 	}
 
 	protected void singleItemTodust(String nameOverride, RecipeItem input, ItemLike result, int count) {
-		addRecipe("dusts/" + nameOverride, StaticPowerIngredient.of(input), StaticPowerOutputItem.of(result, count));
+		addRecipe(nameOverride, StaticPowerIngredient.of(input), StaticPowerOutputItem.of(result, count));
 	}
 
 	protected void metalOre(MaterialBundle bundle, StaticPowerOutputItem... extraOutputs) {
-		StaticPowerOutputItem[] dustResult = new StaticPowerOutputItem[] { StaticPowerOutputItem.of(bundle.getDust().get(), 2) };
+		StaticPowerOutputItem[] dustResult = new StaticPowerOutputItem[] { StaticPowerOutputItem.of(bundle.get(MaterialTypes.DUST).get(), 2) };
 		StaticPowerOutputItem[] result = Arrays.copyOf(dustResult, dustResult.length + extraOutputs.length);
 		System.arraycopy(extraOutputs, 0, result, dustResult.length, extraOutputs.length);
 
 		addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.getOreItemTag()), true, result);
-		addRecipe("raw_materials/" + bundle.getName(), StaticPowerIngredient.of(bundle.getRawMaterialTag()), true, result);
+		addRecipe("raw_materials/" + bundle.getName(), StaticPowerIngredient.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), true, result);
 	}
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input, StaticPowerOutputItem... outputs) {

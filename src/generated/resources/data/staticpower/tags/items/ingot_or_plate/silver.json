@@ -1,6 +1,6 @@
 {
   "values": [
-    "#forge:ingots/silver",
-    "#forge:plates/silver"
+    "#forge:plates/silver",
+    "#forge:ingots/silver"
   ]
 }

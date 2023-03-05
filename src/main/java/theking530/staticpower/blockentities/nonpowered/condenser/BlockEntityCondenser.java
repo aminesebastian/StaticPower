@@ -30,14 +30,12 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class BlockEntityCondenser extends BlockEntityBase {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityCondenser> TYPE = new BlockEntityTypeAllocator<>("condenser",
 			(type, pos, state) -> new BlockEntityCondenser(pos, state), ModBlocks.Condenser);
-
-	public static final int DEFAULT_PROCESSING_TIME = 5;
-	public static final int DEFAULT_HEAT_GENERATION = 50;
 
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
@@ -56,9 +54,9 @@ public class BlockEntityCondenser extends BlockEntityBase {
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachineNoFacePreset.INSTANCE));
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess,
-				this::processingCompleted, true).setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory)
-				.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", CondensationRecipe.DEFAULT_PROCESSING_TIME, this::canProcess,
+				this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted)
+				.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent));
 
 		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", tierObject.defaultTankCapacity.get(), (fluidStack) -> {
 			return isValidInput(fluidStack, true);
@@ -90,8 +88,11 @@ public class BlockEntityCondenser extends BlockEntityBase {
 			}
 
 			// Check the heat level.
-			if (heatStorage.getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getOverheatThreshold()) {
-				return ProcessingCheckState.error("Machine is too hot!");
+			if (heatStorage.getCurrentHeat() + recipe.getProcessingSection().getHeat() > heatStorage.getOverheatThreshold()) {
+				return ProcessingCheckState.notEnoughHeatCapacity(recipe.getProcessingSection().getHeat());
+			}
+			if (heatStorage.getCurrentHeat() > recipe.getProcessingSection().getMinimumHeat()) {
+				return ProcessingCheckState.heatStorageTooHot(recipe.getProcessingSection().getMinimumHeat());
 			}
 
 			// If all the checks pass, return ok.
@@ -128,7 +129,7 @@ public class BlockEntityCondenser extends BlockEntityBase {
 		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
 		// Check the heat level.
-		if (heatStorage.getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getOverheatThreshold()) {
+		if (heatStorage.getCurrentHeat() + recipe.getProcessingSection().getHeat() > heatStorage.getOverheatThreshold()) {
 			return ProcessingCheckState.error("Machine is too hot!");
 		}
 
@@ -148,7 +149,7 @@ public class BlockEntityCondenser extends BlockEntityBase {
 		outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		// Use the heat.
-		heatStorage.heat(recipe.getHeatGeneration(), HeatTransferAction.EXECUTE);
+		heatStorage.heat(recipe.getProcessingSection().getHeat(), HeatTransferAction.EXECUTE);
 		return ProcessingCheckState.ok();
 	}
 
@@ -161,7 +162,7 @@ public class BlockEntityCondenser extends BlockEntityBase {
 		if (ignoreAmount) {
 			matchParams.ignoreFluidAmounts();
 		}
-		return StaticPowerRecipeRegistry.getRecipe(CondensationRecipe.RECIPE_TYPE, matchParams);
+		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.CONDENSATION_RECIPE_TYPE.get(), matchParams);
 	}
 
 	@Override

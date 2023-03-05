@@ -3,10 +3,12 @@
     "staticpower:gear_static_metal",
     "staticpower:gear_lumum_metal",
     "staticpower:gear_gold",
+    "staticpower:gear_tungsten",
     "staticpower:gear_inert_infusion_alloy",
     "staticpower:gear_energized_metal",
     "staticpower:gear_tin",
     "staticpower:gear_copper",
+    "staticpower:gear_zinc",
     "staticpower:gear_brass",
     "staticpower:gear_bronze",
     "staticpower:gear_iron"

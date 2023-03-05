@@ -1,6 +1,6 @@
 {
   "values": [
-    "#forge:ingots/tungsten",
-    "#forge:plates/tungsten"
+    "#forge:plates/tungsten",
+    "#forge:ingots/tungsten"
   ]
 }

@@ -1,5 +1,8 @@
 package theking530.staticpower.data.generators.helpers;
 
+import java.util.Map.Entry;
+
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -22,8 +25,8 @@ public class SPFinalizedRecipe<T extends Recipe<?>> implements FinishedRecipe {
 		StaticPowerRecipeSerializer<T> serializer = (StaticPowerRecipeSerializer<T>) getType();
 		if (serializer != null) {
 			JsonObject serializedRecipe = serializer.toJson(recipe);
-			for (String key : serializedRecipe.keySet()) {
-				json.add(key, serializedRecipe.get(key));
+			for (Entry<String, JsonElement> entry : serializedRecipe.entrySet()) {
+				json.add(entry.getKey(), entry.getValue());
 			}
 		} else {
 			throw new RuntimeException(String.format(

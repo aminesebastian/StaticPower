@@ -23,10 +23,11 @@ import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.Tiers.ResistorTier;
 import theking530.staticpower.data.Tiers.TierPair;
 import theking530.staticpower.data.materials.MaterialBundle;
+import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.init.ModMaterials;
+import theking530.staticpower.init.NewModMaterials;
 
 public class ModBlockStateProvider extends BlockStateProvider {
 	public ModBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
@@ -72,24 +73,24 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		simpleBlockWithCustomTexture(ModBlocks.BlockLatex.get(), "storageblocks/block_latex");
 		simpleBlockWithCustomTexture(ModBlocks.BlockRubber.get(), "storageblocks/block_rubber");
 
-		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
-			if (bundle.hasGeneratedOverworldOre()) {
-				simpleBlockWithCustomTexture(bundle.getOverworldOre().get(), "ore/ore_" + bundle.getName());
+		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+			if (bundle.hasGeneratedMaterial(MaterialTypes.OVERWORLD_ORE)) {
+				simpleBlockWithCustomTexture(bundle.get(MaterialTypes.OVERWORLD_ORE).get(), "ore/ore_" + bundle.getName());
 			}
-			if (bundle.hasGeneratedNetherackOre()) {
-				simpleBlockWithCustomTexture(bundle.getNetherackOre().get(), "ore/ore_nether_" + bundle.getName());
+			if (bundle.hasGeneratedMaterial(MaterialTypes.NETHER_ORE)) {
+				simpleBlockWithCustomTexture(bundle.get(MaterialTypes.NETHER_ORE).get(), "ore/ore_nether_" + bundle.getName());
 			}
-			if (bundle.hasGeneratedDeepslateOre()) {
-				simpleBlockWithCustomTexture(bundle.getDeepslateOre().get(), "ore/ore_deepslate_" + bundle.getName());
+			if (bundle.hasGeneratedMaterial(MaterialTypes.DEEPSLATE_ORE)) {
+				simpleBlockWithCustomTexture(bundle.get(MaterialTypes.DEEPSLATE_ORE).get(), "ore/ore_deepslate_" + bundle.getName());
 			}
-			if (bundle.isGenerateRawStorageBlock()) {
-				simpleBlockWithCustomTexture(bundle.getRawMaterialStorageBlock().get(), "storageblocks/block_raw_" + bundle.getName());
+			if (bundle.hasGeneratedMaterial(MaterialTypes.RAW_STOARGE_BLOCK)) {
+				simpleBlockWithCustomTexture(bundle.get(MaterialTypes.RAW_STOARGE_BLOCK).get(), "storageblocks/block_raw_" + bundle.getName());
 			}
-			if (bundle.isGenerateStorageBlock()) {
-				simpleBlockWithCustomTexture(bundle.getStorageBlock().get(), "storageblocks/block_" + bundle.getName());
+			if (bundle.hasGeneratedMaterial(MaterialTypes.STORAGE_BLOCK)) {
+				simpleBlockWithCustomTexture(bundle.get(MaterialTypes.STORAGE_BLOCK).get(), "storageblocks/block_" + bundle.getName());
 			}
-			if (bundle.isGenerateCutStorageBlock()) {
-				simpleBlockWithCustomTexture(bundle.getCutStorageBlock().get(), "storageblocks/block_cut_" + bundle.getName());
+			if (bundle.hasGeneratedMaterial(MaterialTypes.CUT_STORAGE_BLOCK)) {
+				simpleBlockWithCustomTexture(bundle.get(MaterialTypes.CUT_STORAGE_BLOCK).get(), "storageblocks/block_cut_" + bundle.getName());
 			}
 		}
 

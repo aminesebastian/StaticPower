@@ -21,12 +21,13 @@ import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.Tiers.TierPair;
 import theking530.staticpower.data.materials.MaterialBundle;
+import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.entities.AbstractEntityBuilder;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.ModMaterials;
+import theking530.staticpower.init.NewModMaterials;
 
 public class ModItemModelProvider extends ItemModelProvider {
 	private final Set<Block> customModelBlockItems;
@@ -76,57 +77,70 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 		simpleItem(ModItems.RawRustyIron.get(), "materials/raw_ores/raw_rusty_iron");
 
-		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
-			if (bundle.isGenerateRawMaterial()) {
-				simpleItem(bundle.getRawMaterial().get(), "materials/raw_ores/" + bundle.getRawMaterialPrefix() + "_" + bundle.getName());
+		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+			if (bundle.hasGeneratedMaterial(MaterialTypes.RAW_MATERIAL)) {
+				simpleItem(bundle.get(MaterialTypes.RAW_MATERIAL).get(), "materials/raw_ores/" + bundle.get(MaterialTypes.RAW_MATERIAL).getFormattedName(bundle.getName()));
 			}
-			if (bundle.isGenerateIngot()) {
-				simpleItem(bundle.getIngot().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.INGOT)) {
+				simpleItem(bundle.get(MaterialTypes.INGOT).get(), "materials/ingots/" + bundle.get(MaterialTypes.INGOT).getFormattedName(bundle.getName()));
 			}
-			if (bundle.isGenerateHeatedIngot()) {
-				if (bundle == ModMaterials.IRON) {
-					simpleItemVanillaTexture(ModMaterials.IRON.getHeatedIngot().get(), "iron_ingot");
-				} else if (bundle == ModMaterials.GOLD) {
-					simpleItemVanillaTexture(ModMaterials.GOLD.getHeatedIngot().get(), "gold_ingot");
-				} else if (bundle == ModMaterials.COPPER) {
-					simpleItemVanillaTexture(ModMaterials.COPPER.getHeatedIngot().get(), "copper_ingot");
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.HEATED_INGOT)) {
+				if (bundle == NewModMaterials.IRON) {
+					simpleItemVanillaTexture(NewModMaterials.IRON.get(MaterialTypes.HEATED_INGOT).get(), "iron_ingot");
+				} else if (bundle == NewModMaterials.GOLD) {
+					simpleItemVanillaTexture(NewModMaterials.GOLD.get(MaterialTypes.HEATED_INGOT).get(), "gold_ingot");
+				} else if (bundle == NewModMaterials.COPPER) {
+					simpleItemVanillaTexture(NewModMaterials.COPPER.get(MaterialTypes.HEATED_INGOT).get(), "copper_ingot");
 				} else {
-					simpleItem(bundle.getHeatedIngot().get(), "materials/ingots/" + bundle.getSmeltedMaterialPrefix() + "_" + bundle.getName());
+					simpleItem(bundle.get(MaterialTypes.HEATED_INGOT).get(), "materials/ingots/" + bundle.get(MaterialTypes.INGOT).getFormattedName(bundle.getName()));
 				}
 			}
-			if (bundle.isGenerateNugget()) {
-				simpleItem(bundle.getNugget().get(), "materials/nuggets/nugget_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.NUGGET)) {
+				simpleItem(bundle.get(MaterialTypes.NUGGET).get(), "materials/nuggets/nugget_" + bundle.getName());
 			}
-			if (bundle.isGeneratePlate()) {
-				simpleItem(bundle.getPlate().get(), "materials/plates/plate_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.PLATE)) {
+				simpleItem(bundle.get(MaterialTypes.PLATE).get(), "materials/plates/plate_" + bundle.getName());
 			}
-			if (bundle.isGenerateGear()) {
-				simpleItem(bundle.getGear().get(), "materials/gears/gear_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.GEAR)) {
+				simpleItem(bundle.get(MaterialTypes.GEAR).get(), "materials/gears/gear_" + bundle.getName());
 			}
-			if (bundle.isGenerateGearBox()) {
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.GEAR_BOX)) {
 				// This is just a dummy model, the real one is generated at runtime.
-				simpleItem(bundle.getGearBox().get(), "materials/gears/gear_" + bundle.getName());
+				simpleItem(bundle.get(MaterialTypes.GEAR_BOX).get(), "materials/gears/gear_" + bundle.getName());
 			}
-			if (bundle.isGenerateDust()) {
-				simpleItem(bundle.getDust().get(), "materials/dusts/dust_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.DUST)) {
+				simpleItem(bundle.get(MaterialTypes.DUST).get(), "materials/dusts/dust_" + bundle.getName());
 			}
-			if (bundle.isGenerateChunks()) {
-				simpleItem(bundle.getChunks().get(), "materials/chunks/chunks_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.CHUNKS)) {
+				simpleItem(bundle.get(MaterialTypes.CHUNKS).get(), "materials/chunks/chunks_" + bundle.getName());
 			}
-			if (bundle.isGenerateRod()) {
-				simpleItem(bundle.getRod().get(), "materials/rods/rod_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.ROD)) {
+				simpleItem(bundle.get(MaterialTypes.ROD).get(), "materials/rods/rod_" + bundle.getName());
 			}
-			if (bundle.isGenerateWire()) {
-				simpleItem(bundle.getWire().get(), "components/wire_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.WIRE)) {
+				simpleItem(bundle.get(MaterialTypes.WIRE).get(), "components/wire_" + bundle.getName());
 			}
-			if (bundle.isGenerateInsulatedWire()) {
-				simpleItem(bundle.getInsulatedWire().get(), "components/wire_insulated_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.INSULATED_WIRE)) {
+				simpleItem(bundle.get(MaterialTypes.INSULATED_WIRE).get(), "components/wire_insulated_" + bundle.getName());
 			}
-			if (bundle.isGenerateWireCoil()) {
-				simpleItem(bundle.getWireCoil().get(), "components/wire_coil_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.WIRE_COIL)) {
+				simpleItem(bundle.get(MaterialTypes.WIRE_COIL).get(), "components/wire_coil_" + bundle.getName());
 			}
-			if (bundle.isGenerateInsulatedWireCoil()) {
-				simpleItem(bundle.getInsulatedWireCoil().get(), "components/wire_coil_insulated_" + bundle.getName());
+
+			if (bundle.hasGeneratedMaterial(MaterialTypes.INSULATED_WIRE_COIL)) {
+				simpleItem(bundle.get(MaterialTypes.INSULATED_WIRE_COIL).get(), "components/wire_coil_insulated_" + bundle.getName());
 			}
 		}
 

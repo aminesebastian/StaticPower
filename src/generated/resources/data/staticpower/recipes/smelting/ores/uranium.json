@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.5,
   "ingredient": {
-    "tag": "forge:ore/uranium"
+    "tag": "forge:ores/uranium"
   },
   "result": "staticpower:ingot_uranium"
 }

@@ -73,15 +73,15 @@ public class EvaporatorRecipeCategory extends BaseJEIRecipeCategory<EvaporatorRe
 	@Override
 	public void draw(EvaporatorRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getInputFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 104, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 
-		GuiHeatBarUtilities.drawHeatBar(matrixStack, 8, 4, 16, 52, 1.0f, recipe.getRequiredHeat(), 0, recipe.getRequiredHeat());
+		GuiHeatBarUtilities.drawHeatBar(matrixStack, 8, 4, 16, 52, 1.0f, recipe.getProcessingSection().getHeat(), 0, recipe.getProcessingSection().getHeat());
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 28, 5, 70, 23, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 28;
-		FluidStack fluid = recipe.getInputFluid();
+		FluidStack fluid = getNthFluidInput(recipeSlotsView, 0);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 70, 28, 1, progress, 5, false);
 	}
 
@@ -91,7 +91,7 @@ public class EvaporatorRecipeCategory extends BaseJEIRecipeCategory<EvaporatorRe
 
 		// Render the heat bar tooltip.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(GuiTextUtilities.formatHeatToString(recipe.getRequiredHeat()));
+			output.add(GuiTextUtilities.formatHeatToString(recipe.getProcessingSection().getHeat()));
 		}
 
 		// Render the progress bar tooltip.
@@ -104,8 +104,7 @@ public class EvaporatorRecipeCategory extends BaseJEIRecipeCategory<EvaporatorRe
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, EvaporatorRecipe recipe, IFocusGroup ingredients) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 50, 4).addIngredient(ForgeTypes.FLUID_STACK, recipe.getInputFluid())
-				.setFluidRenderer(getFluidTankDisplaySize(recipe.getInputFluid()), false, 16, 52);
+		addFluidIngredientSlot(builder, 50, 4, 16, 52, recipe.getInputFluid());
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 4).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid())
 				.setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false, 16, 52);

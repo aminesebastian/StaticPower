@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_brass_plate": {
+    "has_plate": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:plates/brass"
+            "tag": "forge:ingots/brass"
           }
         ]
       },
@@ -30,7 +30,7 @@
   },
   "requirements": [
     [
-      "has_brass_plate",
+      "has_plate",
       "has_wire_cutter",
       "has_the_recipe"
     ]

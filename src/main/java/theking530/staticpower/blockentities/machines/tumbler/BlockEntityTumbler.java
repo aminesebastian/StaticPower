@@ -30,6 +30,7 @@ import theking530.staticpower.blockentities.components.serialization.UpdateSeria
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.tumbler.TumblerRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityTumbler extends BlockEntityMachine implements IRecipeProcessor<TumblerRecipe> {
@@ -67,7 +68,7 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IRecipePro
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<TumblerRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.tumblerProcessingTime.get(),
-				TumblerRecipe.RECIPE_TYPE, this));
+				ModRecipeTypes.TUMBLER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);

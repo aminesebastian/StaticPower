@@ -8,14 +8,12 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -26,11 +24,11 @@ import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
@@ -80,8 +78,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 	@Override
 	public void draw(FluidGeneratorRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid(), 0, 0, 77, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, recipe.getPowerGeneration(), recipe.getPowerGeneration());
+		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 77, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
 
 		// Draw the progress bars.
 		pBar.setCurrentProgress(processingTimer.getValue());
@@ -99,7 +96,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 		double generationPerBucket = ticksPerBucket * recipe.getPowerGeneration();
 		String powerPerTick = PowerTextFormatting.formatPowerToString(generationPerBucket).getString();
 		GuiDrawUtilities.drawStringLeftAligned(matrixStack, powerPerTick, 43, 12, 1, 1, SDColor.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawItem(matrixStack, new ItemStack(recipe.getFluid().getFluid().getBucket()), 25, 1, 1);
+		GuiDrawUtilities.drawItem(matrixStack, new ItemStack(this.getNthFluidInput(recipeSlotsView, 0).getFluid().getBucket()), 25, 1, 1);
 
 	}
 
@@ -115,7 +112,8 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, FluidGeneratorRecipe recipe, IFocusGroup ingredients) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 77, 6).addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluid()).setFluidRenderer(recipe.getFluid().getAmount(), false, 16, 48);
+		addFluidIngredientSlot(builder, 77, 6, 16, 48, recipe.getFluid());
+		addPowerOutputSlot(builder, 5, 6, 16, 48, MachineRecipeProcessingSection.hardcoded(100, recipe.getPowerGeneration(), 0, 0));
 
 		int burnTime = 100;
 		processingTimer = guiHelper.createTickTimer(burnTime, burnTime, false);

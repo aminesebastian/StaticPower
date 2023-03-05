@@ -1,0 +1,21 @@
+{
+  "type": "staticpower:fermenter",
+  "input": {
+    "ingredient": {
+      "tag": "minecraft:saplings"
+    }
+  },
+  "output_fluid": {
+    "amount": 100,
+    "fluid_name": "staticpower:mash"
+  },
+  "output_item": {
+    "item": {
+      "id": "staticpower:distillery_grain"
+    }
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 400
+  }
+}

@@ -1,19 +1,32 @@
 package theking530.staticpower.data.crafting.wrappers.squeezer;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class SqueezerRecipe extends AbstractMachineRecipe {
 	public static final String ID = "squeezer";
-	public static final RecipeType<SqueezerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<SqueezerRecipe>();
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
+
+	public static final Codec<SqueezerRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					StaticPowerIngredient.CODEC.fieldOf("input").forGetter(recipe -> recipe.getInput()),
+					StaticPowerOutputItem.CODEC.optionalFieldOf("output_item", StaticPowerOutputItem.EMPTY).forGetter(recipe -> recipe.getOutput()),
+					JsonUtilities.FLUIDSTACK_CODEC.fieldOf("output_fluid").forGetter(recipe -> recipe.getOutputFluid()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, SqueezerRecipe::new));
 
 	private final StaticPowerIngredient input;
 	private final StaticPowerOutputItem output;
@@ -64,11 +77,16 @@ public class SqueezerRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public RecipeSerializer<SqueezerRecipe> getSerializer() {
-		return SqueezerRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.SQUEEZER_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<SqueezerRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.SQUEEZER_RECIPE_TYPE.get();
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
 	}
 }

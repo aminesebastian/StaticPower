@@ -8,7 +8,7 @@
             "items": [
               "staticpower:processor_advanced"
             ],
-            "tag": "forge:wires/brass"
+            "tag": "staticpower:wires/brass"
           }
         ]
       },

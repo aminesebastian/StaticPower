@@ -32,6 +32,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeProcessor<FermenterRecipe> {
@@ -65,7 +66,7 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<FermenterRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fermenterProcessingTime.get(),
-				FermenterRecipe.RECIPE_TYPE, this));
+				ModRecipeTypes.FERMENTER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -87,7 +88,8 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 
 	protected int getSlotToProccess() {
 		for (int i = 0; i < 9; i++) {
-			FermenterRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FermenterRecipe.RECIPE_TYPE, new RecipeMatchParameters(inputInventory.getStackInSlot(i))).orElse(null);
+			FermenterRecipe recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.FERMENTER_RECIPE_TYPE.get(), new RecipeMatchParameters(inputInventory.getStackInSlot(i)))
+					.orElse(null);
 			if (recipe != null) {
 				FluidStack fermentingResult = recipe.getOutputFluidStack();
 				if (fluidTankComponent.fill(fermentingResult, FluidAction.SIMULATE) == fermentingResult.getAmount()) {

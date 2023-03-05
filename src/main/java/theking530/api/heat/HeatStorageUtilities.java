@@ -19,6 +19,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class HeatStorageUtilities {
@@ -165,7 +166,7 @@ public class HeatStorageUtilities {
 		if (biome.containsTag(Tags.Biomes.IS_SANDY)) {
 			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(5);
 		}
-		
+
 		if (biome.containsTag(Tags.Biomes.IS_WATER)) {
 			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(1);
 		}
@@ -198,7 +199,8 @@ public class HeatStorageUtilities {
 
 		// If there is a recipe for thermal conductivity for this block
 		ThermalConductivityRecipe recipe = StaticPowerRecipeRegistry
-				.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000))).orElse(null);
+				.getRecipe(ModRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(), new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)))
+				.orElse(null);
 
 		// Get the temperature on that side.
 		if (recipe != null && recipe.hasActiveTemperature()) {
@@ -225,7 +227,8 @@ public class HeatStorageUtilities {
 
 		// If there is a recipe for thermal conductivity for this block
 		ThermalConductivityRecipe recipe = StaticPowerRecipeRegistry
-				.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000))).orElse(null);
+				.getRecipe(ModRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(), new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)))
+				.orElse(null);
 
 		// By default, everything has a conductivity of 1.
 		float conductivity = 1;
@@ -245,7 +248,8 @@ public class HeatStorageUtilities {
 
 		// If there is a recipe for thermal conductivity for this block
 		ThermalConductivityRecipe recipe = StaticPowerRecipeRegistry
-				.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000))).orElse(null);
+				.getRecipe(ModRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(), new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)))
+				.orElse(null);
 
 		// Perform the transfer.
 		if (recipe != null) {

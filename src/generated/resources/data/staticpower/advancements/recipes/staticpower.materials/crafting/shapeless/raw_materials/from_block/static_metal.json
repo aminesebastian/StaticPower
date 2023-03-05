@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_static_metal_raw_block": {
+    "has_raw_block": {
       "conditions": {
         "items": [
           {
-            "tag": "staticpower:storage_blocks/raw_static_metal"
+            "tag": "staticpower:storage_blocks/static_metal"
           }
         ]
       },
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_static_metal_raw_block",
+      "has_raw_block",
       "has_the_recipe"
     ]
   ],

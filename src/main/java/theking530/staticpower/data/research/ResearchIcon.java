@@ -2,6 +2,8 @@ package theking530.staticpower.data.research;
 
 import com.google.gson.JsonElement;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +14,10 @@ import theking530.staticpower.data.JsonUtilities;
 public class ResearchIcon {
 	private final ItemStack itemIcon;
 	private final ResourceLocation textureIcon;
+
+	public static final Codec<ResearchIcon> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(JsonUtilities.ITEMSTACK_CODEC.optionalFieldOf("item", null).forGetter(icon -> icon.getItemIcon()),
+					ResourceLocation.CODEC.optionalFieldOf("texture", null).forGetter(icon -> icon.getTextureIcon())).apply(instance, ResearchIcon::new));
 
 	public ResearchIcon(ItemStack itemIcon, ResourceLocation textureIcon) {
 		this.itemIcon = itemIcon;
@@ -37,6 +43,7 @@ public class ResearchIcon {
 	public static ResearchIcon fromTexture(ResourceLocation textureIcon) {
 		return new ResearchIcon(null, textureIcon);
 	}
+
 	public static void draw(ResearchIcon icon, PoseStack pose, float x, float y, float z, float width, float height) {
 		if (icon.isItemIcon()) {
 			GuiDrawUtilities.drawItem(pose, icon.getItemIcon(), x, y, z, width, height);

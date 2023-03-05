@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_lumum_metal_plate": {
+    "has_plate": {
       "conditions": {
         "items": [
           {
-            "tag": "staticpower:plates/lumum_metal"
+            "tag": "staticpower:ingots/lumum_metal"
           }
         ]
       },
@@ -30,7 +30,7 @@
   },
   "requirements": [
     [
-      "has_lumum_metal_plate",
+      "has_plate",
       "has_wire_cutter",
       "has_the_recipe"
     ]

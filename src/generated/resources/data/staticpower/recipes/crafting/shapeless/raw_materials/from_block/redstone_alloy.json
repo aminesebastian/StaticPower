@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "staticpower:storage_blocks/raw_redstone_alloy"
+      "tag": "staticpower:storage_blocks/redstone_alloy"
     }
   ],
   "result": {

@@ -18,6 +18,8 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class GrinderRecipe extends AbstractMachineRecipe {
 	public static final String ID = "grinder";
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
 
 	public static final Codec<GrinderRecipe> CODEC = RecordCodecBuilder
 			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
@@ -70,6 +72,6 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 
 	@Override
 	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
-		return MachineRecipeProcessingSection.hardcoded(() -> 200, () -> 5.0, () -> 0, () -> 0);
+		return MachineRecipeProcessingSection.hardcoded(() -> DEFAULT_PROCESSING_TIME, () -> DEFAULT_POWER_COST, () -> 0, () -> 0);
 	}
 }

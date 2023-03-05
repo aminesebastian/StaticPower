@@ -17,6 +17,7 @@
     "staticpower:ingot_lead_heated",
     "staticpower:ingot_bronze_heated",
     "staticpower:ingot_iron_heated",
-    "staticpower:ingot_silver_heated"
+    "staticpower:ingot_silver_heated",
+    "staticpower:ingot_uranium_heated"
   ]
 }

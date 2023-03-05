@@ -51,6 +51,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.tags.ModBlockTags;
 
 public class BlockEntityRefineryController extends BlockEntityMachine implements IRecipeProcessor<RefineryRecipe> {
@@ -87,7 +88,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", 1, RefineryRecipe.RECIPE_TYPE, this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", 1, ModRecipeTypes.REFINERY_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -223,7 +224,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		int heatUse = StaticPowerConfig.SERVER.refineryHeatUse.get();
 		Optional<RefineryRecipe> recipe = processingComponent.getCurrentOrPendingRecipe();
 		if (recipe.isPresent()) {
-			heatUse = recipe.get().getProcessingSection().getHeatUse();
+			heatUse = recipe.get().getProcessingSection().getHeat();
 		}
 		return (int) (heatUse * processingComponent.getCalculatedHeatGenerationMultiplier());
 	}
@@ -231,7 +232,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public int getMinimumHeat() {
 		Optional<RefineryRecipe> recipe = processingComponent.getCurrentOrPendingRecipe();
 		if (recipe.isPresent()) {
-			return recipe.get().getProcessingSection().getHeatUse();
+			return recipe.get().getProcessingSection().getHeat();
 		}
 		return StaticPowerConfig.SERVER.refineryMinimumHeat.get();
 	}
@@ -378,10 +379,12 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		}
 
 		if (recipe.hasPrimaryFluidInput()) {
-			outputContainer.addInputFluid(recipe.getPrimaryFluidInput(), recipe.getPrimaryFluidInput().getAmount(), CaptureType.BOTH);
+			outputContainer.addInputFluid(getInputTank(0).drain(recipe.getPrimaryFluidInput().getAmount(), FluidAction.SIMULATE), recipe.getPrimaryFluidInput().getAmount(),
+					CaptureType.BOTH);
 		}
 		if (recipe.hasSecondaryFluidInput()) {
-			outputContainer.addInputFluid(recipe.getSecondaryFluidInput(), recipe.getSecondaryFluidInput().getAmount(), CaptureType.BOTH);
+			outputContainer.addInputFluid(getInputTank(1).drain(recipe.getSecondaryFluidInput().getAmount(), FluidAction.SIMULATE), recipe.getSecondaryFluidInput().getAmount(),
+					CaptureType.BOTH);
 		}
 
 		if (!recipe.getFluidOutput1().isEmpty()) {
@@ -404,6 +407,12 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public void processingStarted(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (recipe.hasCatalyst()) {
 			catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), false);
+		}
+		if (recipe.hasPrimaryFluidInput()) {
+			getInputTank(0).drain((int) (recipe.getPrimaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
+		}
+		if (recipe.hasSecondaryFluidInput()) {
+			getInputTank(1).drain((int) (recipe.getSecondaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
 		}
 	}
 
@@ -431,11 +440,6 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public void processingCompleted(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Output the refined fluids.
 		fillOutputTanksWithOutput(recipe, FluidAction.EXECUTE);
-
-		// Drain the fluid.
-		getInputTank(0).drain((int) (recipe.getPrimaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
-		getInputTank(1).drain((int) (recipe.getSecondaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
-
 		heatStorage.cool(getHeatUsage(), HeatTransferAction.EXECUTE);
 	}
 }

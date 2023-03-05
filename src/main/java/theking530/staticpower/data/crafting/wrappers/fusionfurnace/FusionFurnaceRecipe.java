@@ -3,20 +3,33 @@ package theking530.staticpower.data.crafting.wrappers.fusionfurnace;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 	public static final String ID = "fusion_furnace";
-	public static final RecipeType<FusionFurnaceRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FusionFurnaceRecipe>();
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
+
+	public static final Codec<FusionFurnaceRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance
+					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+							StaticPowerIngredient.CODEC.listOf().fieldOf("inputs").forGetter(recipe -> recipe.getInputs()),
+							StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
+							MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection()))
+					.apply(instance, FusionFurnaceRecipe::new));
 
 	private final List<StaticPowerIngredient> inputs;
 	private final StaticPowerOutputItem output;
@@ -83,11 +96,16 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public RecipeSerializer<FusionFurnaceRecipe> getSerializer() {
-		return FusionFurnaceRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.FUSION_FURANCE_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<FusionFurnaceRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.FUSION_FURNACE_RECIPE_TYPE.get();
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
 	}
 }

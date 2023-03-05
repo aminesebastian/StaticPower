@@ -2,10 +2,16 @@ package theking530.staticcore.utilities;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.network.FriendlyByteBuf;
 
 public class Vector2D extends AbstractVector<Vector2D> {
+	public static final Vector2D ZERO = new Vector2D(0, 0);
+
+	public static final Codec<Vector2D> CODEC = RecordCodecBuilder.create(instance -> instance
+			.group(Codec.FLOAT.fieldOf("x").forGetter(vector -> vector.getX()), Codec.FLOAT.fieldOf("y").forGetter(vector -> vector.getY())).apply(instance, Vector2D::new));
 
 	public Vector2D(double x, double y) {
 		super((float) x, (float) y);
@@ -83,5 +89,23 @@ public class Vector2D extends AbstractVector<Vector2D> {
 	@Override
 	public Vector2D copy() {
 		return new Vector2D(values[0], values[1]);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof Vector2D))
+			return false;
+
+		Vector2D other = (Vector2D) obj;
+		return getX() == other.getX() && getY() == other.getY();
 	}
 }

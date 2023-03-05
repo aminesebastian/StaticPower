@@ -1,0 +1,18 @@
+{
+  "type": "staticpower:evaporation",
+  "input": {
+    "amount": 1,
+    "fluids": {
+      "tag": "minecraft:water"
+    }
+  },
+  "output": {
+    "amount": 10,
+    "fluid_name": "staticpower:steam"
+  },
+  "processing": {
+    "heat": 10,
+    "minimum_heat": 100,
+    "processing_time": 10
+  }
+}

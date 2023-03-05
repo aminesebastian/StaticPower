@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.FusionProgressBar;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -40,7 +39,6 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 	private final IDrawable icon;
 	private final FusionProgressBar pBar;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public FusionFurnaceRecipeCategory(IGuiHelper guiHelper) {
@@ -81,9 +79,6 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 102, 13, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 124, 25, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 78, 38, 0);
-
-		// This doesn't actually draw the fluid, just the bars.
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
@@ -127,8 +122,8 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 		}
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 80, 40).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

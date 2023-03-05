@@ -10,7 +10,6 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -74,7 +73,7 @@ public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRe
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, FertalizerRecipe recipe, IFocusGroup ingredients) {
-		addFluidIngredientSlot(builder, RecipeIngredientRole.INPUT, 53, 16, 24, 40, recipe.getRequiredFluid()).addTooltipCallback((recipeSlotView, tooltip) -> {
+		addFluidIngredientSlot(builder, 53, 16, 24, 40, recipe.getRequiredFluid()).addTooltipCallback((recipeSlotView, tooltip) -> {
 			tooltip.add(tooltip.get(tooltip.size() - 1));
 
 			MutableComponent bonus = Component.translatable("gui.staticpower.fertlization_bonus",

@@ -8,6 +8,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.fluid.FluidIngredient;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -22,7 +23,7 @@ public class CauldronRecipe extends AbstractStaticPowerRecipe {
 					StaticPowerIngredient.CODEC.optionalFieldOf("input_item", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getInput()),
 					StaticPowerOutputItem.CODEC.optionalFieldOf("output_item", StaticPowerOutputItem.EMPTY).forGetter(recipe -> recipe.getOutput()),
 					FluidIngredient.CODEC.optionalFieldOf("input_fluid", FluidIngredient.EMPTY).forGetter(recipe -> recipe.getRequiredFluid()),
-					FluidStack.CODEC.optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(recipe -> recipe.getOutputFluid()),
+					JsonUtilities.FLUIDSTACK_CODEC.optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(recipe -> recipe.getOutputFluid()),
 					Codec.BOOL.fieldOf("drain_after_craft").forGetter(recipe -> recipe.shouldDrainAfterCraft()),
 					Codec.INT.fieldOf("time").forGetter(recipe -> recipe.getRequiredTimeInCauldron())).apply(instance, CauldronRecipe::new));
 

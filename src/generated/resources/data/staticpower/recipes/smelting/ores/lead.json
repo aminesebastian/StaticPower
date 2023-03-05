@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.5,
   "ingredient": {
-    "tag": "forge:ore/lead"
+    "tag": "forge:ores/lead"
   },
   "result": "staticpower:ingot_lead"
 }

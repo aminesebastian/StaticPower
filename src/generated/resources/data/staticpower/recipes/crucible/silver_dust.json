@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:crucible",
+  "input_item": {
+    "ingredient": {
+      "tag": "forge:dusts/silver"
+    }
+  },
+  "output_fluid": {
+    "amount": 144,
+    "fluid_name": "staticpower:molten_silver"
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 200
+  },
+  "slag_item": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:slag"
+    }
+  }
+}

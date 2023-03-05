@@ -38,6 +38,7 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeProcessor<AutoSmithRecipe> {
@@ -90,7 +91,7 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<AutoSmithRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.autoSmithProcessingTime.get(),
-				AutoSmithRecipe.RECIPE_TYPE, this));
+				ModRecipeTypes.AUTO_SMITH_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -121,7 +122,7 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 			return stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent();
 		} else {
 			// Test for modifier materials.
-			List<AutoSmithRecipe> recipes = getLevel().getRecipeManager().getAllRecipesFor(AutoSmithRecipe.RECIPE_TYPE);
+			List<AutoSmithRecipe> recipes = getLevel().getRecipeManager().getAllRecipesFor(ModRecipeTypes.AUTO_SMITH_RECIPE_TYPE.get());
 			for (AutoSmithRecipe recipe : recipes) {
 				if (recipe.getModifierMaterial().test(stack)) {
 					return true;
@@ -148,7 +149,7 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 		ItemStack toModifyItem = inputInventory.extractItem(0, transferCount, false);
 		outputContainer.addInputItem(toModifyItem, CaptureType.NONE, true);
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getModifierMaterial().getCount(), true), CaptureType.BOTH);
-		outputContainer.addInputFluid(recipe.getModifierFluid(), CaptureType.BOTH);
+		outputContainer.addInputFluid(fluidTankComponent.drain(recipe.getModifierFluid().getAmount(), FluidAction.SIMULATE), CaptureType.BOTH);
 
 		recipe.applyToItemStack(toModifyItem);
 		outputContainer.addOutputItem(toModifyItem, CaptureType.BOTH);
@@ -161,6 +162,9 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 	@Override
 	public void processingStarted(RecipeProcessingComponent<AutoSmithRecipe> component, AutoSmithRecipe recipe, ProcessingOutputContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getModifierMaterial().getCount(), false);
+		if (outputContainer.hasInputFluids()) {
+			fluidTankComponent.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
+		}
 	}
 
 	@Override
@@ -187,11 +191,6 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 			outputInventory.insertItem(0, output, false);
 		} else {
 			completedOutputInventory.insertItem(0, output, false);
-		}
-
-		// Drain the fluid.
-		if (outputContainer.hasInputFluids()) {
-			fluidTankComponent.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
 		}
 
 		// Play the crafting sound.

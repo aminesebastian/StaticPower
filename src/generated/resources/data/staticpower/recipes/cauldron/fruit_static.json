@@ -7,8 +7,8 @@
     }
   },
   "output_fluid": {
-    "Amount": 100,
-    "FluidName": "staticpower:fluid_static"
+    "amount": 100,
+    "fluid_name": "staticpower:fluid_static"
   },
   "output_item": {
     "item": {

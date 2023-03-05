@@ -1,6 +1,6 @@
 {
   "values": [
-    "#forge:ingots/lead",
-    "#forge:plates/lead"
+    "#forge:plates/lead",
+    "#forge:ingots/lead"
   ]
 }

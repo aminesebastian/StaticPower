@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -93,7 +92,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 
 		// This doesn't actually draw the fluid, just the bars.
 		if (!recipe.getRecipe().getModifierFluid().isEmpty()) {
-			GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getRecipe().getModifierFluid(), 0, 0, 77, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+			GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 77, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 		}
 
 		// Draw the power bar.
@@ -174,8 +173,8 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 	public void setRecipe(IRecipeLayoutBuilder builder, SmithingRecipeJEIWrapper recipe, IFocusGroup ingredients) {
 		builder.addSlot(RecipeIngredientRole.INPUT, 50, 0).addIngredients(recipe.getInput());
 		builder.addSlot(RecipeIngredientRole.INPUT, 80, 20).addIngredients(recipe.getRecipe().getModifierMaterial().getIngredient());
-		builder.addSlot(RecipeIngredientRole.INPUT, 77, 4).addIngredient(ForgeTypes.FLUID_STACK, recipe.getRecipe().getModifierFluid())
-				.setFluidRenderer(getFluidTankDisplaySize(recipe.getRecipe().getModifierFluid()), false, 16, 52);
+
+		addFluidIngredientSlot(builder, 77, 4, 16, 52, recipe.getRecipe().getModifierFluid());
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 50, 42).addItemStack(recipe.getResultItem());
 

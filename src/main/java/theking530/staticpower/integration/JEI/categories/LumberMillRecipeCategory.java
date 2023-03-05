@@ -25,7 +25,6 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -43,7 +42,6 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public LumberMillRecipeCategory(IGuiHelper guiHelper) {
@@ -84,7 +82,6 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
@@ -125,8 +122,8 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 153, 6).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid())
 					.setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false, 16, 48);
 		}
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

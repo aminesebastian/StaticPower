@@ -1,8 +1,16 @@
 package theking530.staticpower.data.crafting.wrappers.autosmith;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,32 +18,43 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.fluids.FluidStack;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 import theking530.api.attributes.modifiers.AbstractAttributeModifier;
 import theking530.api.attributes.registration.AttributeModifierRegistry;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class AutoSmithRecipe extends AbstractMachineRecipe {
 	public static final String ID = "auto_smith";
-	public static final RecipeType<AutoSmithRecipe> RECIPE_TYPE = new StaticPowerRecipeType<AutoSmithRecipe>();
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
+
+	public static final Codec<AutoSmithRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					StaticPowerIngredient.CODEC.optionalFieldOf("smith_target", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getSmithTarget()),
+					StaticPowerIngredient.CODEC.fieldOf("modifier_item").forGetter(recipe -> recipe.getModifierMaterial()),
+					FluidIngredient.CODEC.fieldOf("modifier_fluid").forGetter(recipe -> recipe.getModifierFluid()),
+					RecipeModifierWrapper.CODEC.listOf().fieldOf("modifiers").forGetter(recipe -> recipe.getModifiers()),
+					Codec.INT.fieldOf("repair_amount").forGetter(recipe -> recipe.getRepairAmount()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, AutoSmithRecipe::new));
 
 	@Nullable
 	private final StaticPowerIngredient smithTarget;
 	private final StaticPowerIngredient modifierMaterial;
-	private final FluidStack modifierFluid;
-	private final RecipeModifierWrapper[] modifiers;
+	private final FluidIngredient modifierFluid;
+	private final List<RecipeModifierWrapper> modifiers;
 	private final int repairAmount;
 
-	public AutoSmithRecipe(ResourceLocation name, @Nullable StaticPowerIngredient smithTarget, StaticPowerIngredient modifierMaterial, FluidStack modifierFluid,
-			RecipeModifierWrapper[] modifiers, int repairAmount, MachineRecipeProcessingSection processing) {
-		super(name, processing);
+	public AutoSmithRecipe(ResourceLocation id, @Nullable StaticPowerIngredient smithTarget, StaticPowerIngredient modifierMaterial, FluidIngredient modifierFluid,
+			List<RecipeModifierWrapper> modifiers, int repairAmount, MachineRecipeProcessingSection processing) {
+		super(id, processing);
 		this.modifierMaterial = modifierMaterial;
 		this.smithTarget = smithTarget;
 		this.modifierFluid = modifierFluid;
@@ -114,25 +133,21 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			if (!matchParams.hasFluids()) {
 				return false;
 			}
-			if (!matchParams.getFluids()[0].isFluidEqual(matchParams.getFluids()[0])) {
+
+			if (!modifierFluid.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts())) {
 				return false;
-			}
-			if (matchParams.shouldVerifyFluidAmounts()) {
-				if (matchParams.getFluids()[0].getAmount() < modifierFluid.getAmount()) {
-					return false;
-				}
 			}
 		}
 
 		return true;
 	}
 
-	public RecipeModifierWrapper[] getModifiers() {
+	public List<RecipeModifierWrapper> getModifiers() {
 		return modifiers;
 	}
 
 	public boolean hasModifiers() {
-		return modifiers.length > 0;
+		return modifiers.size() > 0;
 	}
 
 	public boolean performsRepair() {
@@ -155,18 +170,18 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		return modifierMaterial;
 	}
 
-	public FluidStack getModifierFluid() {
+	public FluidIngredient getModifierFluid() {
 		return modifierFluid;
 	}
 
 	@Override
 	public RecipeSerializer<AutoSmithRecipe> getSerializer() {
-		return AutoSmithRecipeSerializer.INSTANCE;
+		return ModRecipeSerializers.AUTO_SMITH_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<AutoSmithRecipe> getType() {
-		return RECIPE_TYPE;
+		return ModRecipeTypes.AUTO_SMITH_RECIPE_TYPE.get();
 	}
 
 	public boolean canApplyToItemStack(ItemStack stack) {
@@ -228,24 +243,27 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		return false;
 	}
 
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
+	}
+
 	public static class RecipeModifierWrapper {
+		public static final Codec<RecipeModifierWrapper> CODEC = Codec.PASSTHROUGH.comapFlatMap(dynamic -> {
+			try {
+				RecipeModifierWrapper ingredient = RecipeModifierWrapper.fromJson(dynamic.convert(JsonOps.INSTANCE).getValue());
+				return DataResult.success(ingredient);
+			} catch (Exception e) {
+				return DataResult.error(e.getMessage());
+			}
+		}, ingredient -> new Dynamic<JsonElement>(JsonOps.INSTANCE, ingredient.toJson()));
+
 		private final ResourceLocation attributeId;
 		private final AbstractAttributeModifier<?> modifier;
 
 		public RecipeModifierWrapper(ResourceLocation attributeId, AbstractAttributeModifier<?> modifier) {
 			this.attributeId = attributeId;
 			this.modifier = modifier;
-		}
-
-		public RecipeModifierWrapper(JsonObject json) {
-			this.attributeId = new ResourceLocation(json.get("id").getAsString());
-			this.modifier = AttributeModifierRegistry.createInstance(json.get("modifier").getAsJsonObject());
-		}
-
-		public RecipeModifierWrapper(FriendlyByteBuf buffer) {
-			CompoundTag data = buffer.readNbt();
-			this.attributeId = new ResourceLocation(data.getString("attribute_id"));
-			this.modifier = AttributeModifierRegistry.createInstance(data.getCompound("modifier"));
 		}
 
 		public CompoundTag serialize() {
@@ -257,6 +275,36 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 
 		public ResourceLocation getAttributeId() {
 			return attributeId;
+		}
+
+		public static RecipeModifierWrapper fromJson(JsonElement element) {
+			if (!(element instanceof JsonObject)) {
+				throw new RuntimeException(String.format("Unable to deserialize modifier from Json: %1$s. Expected an object.", element));
+			}
+
+			JsonObject json = (JsonObject) element;
+
+			ResourceLocation attributeId = new ResourceLocation(json.get("id").getAsString());
+			AbstractAttributeModifier<?> modifier = AttributeModifierRegistry.createInstance(json.get("modifier").getAsJsonObject());
+			return new RecipeModifierWrapper(attributeId, modifier);
+		}
+
+		public JsonElement toJson() {
+			JsonObject output = new JsonObject();
+			output.addProperty("id", attributeId.toString());
+			output.addProperty("modifier", modifier.getType());
+			return output;
+		}
+
+		public static RecipeModifierWrapper readFromBuffer(FriendlyByteBuf buffer) {
+			CompoundTag data = buffer.readNbt();
+			ResourceLocation attributeId = new ResourceLocation(data.getString("attribute_id"));
+			AbstractAttributeModifier<?> modifier = AttributeModifierRegistry.createInstance(data.getCompound("modifier"));
+			return new RecipeModifierWrapper(attributeId, modifier);
+		}
+
+		public void writeToBuffer(FriendlyByteBuf buffer) {
+			buffer.writeNbt(modifier.serialize());
 		}
 
 		public AbstractAttributeModifier<?> getModifier() {

@@ -1,6 +1,6 @@
 {
   "values": [
-    "#forge:ingots/brass",
-    "#forge:plates/brass"
+    "#forge:plates/brass",
+    "#forge:ingots/brass"
   ]
 }

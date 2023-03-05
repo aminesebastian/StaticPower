@@ -24,7 +24,6 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -78,7 +77,6 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, processingTimer.getValue(), processingTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 28, 5, 72, 18, 0);
@@ -103,7 +101,8 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	public void setRecipe(IRecipeLayoutBuilder builder, BottleRecipe recipe, IFocusGroup ingredients) {
 		builder.addSlot(RecipeIngredientRole.INPUT, 109, 12).addIngredients(recipe.getEmptyBottle().getIngredient());
 
-		addFluidIngredientSlot(builder, RecipeIngredientRole.INPUT, 50, 4, 16, 52, recipe.getFluid());
+		addFluidIngredientSlot(builder, 50, 4, 16, 52, recipe.getFluid());
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 109, 38).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getFilledBottle());
 

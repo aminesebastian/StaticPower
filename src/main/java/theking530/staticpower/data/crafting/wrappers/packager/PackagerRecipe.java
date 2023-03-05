@@ -1,18 +1,29 @@
 package theking530.staticpower.data.crafting.wrappers.packager;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class PackagerRecipe extends AbstractMachineRecipe {
 	public static final String ID = "packager";
 	public static final RecipeType<PackagerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<PackagerRecipe>();
+	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final double DEFAULT_POWER_COST = 5.0;
+
+	public static final Codec<PackagerRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					Codec.INT.fieldOf("size").forGetter(recipe -> recipe.getSize()), StaticPowerIngredient.CODEC.fieldOf("input").forGetter(recipe -> recipe.getInputIngredient()),
+					StaticPowerOutputItem.CODEC.optionalFieldOf("output", StaticPowerOutputItem.EMPTY).forGetter(recipe -> recipe.getOutput()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, PackagerRecipe::new));
 
 	private final StaticPowerIngredient inputItem;
 	private final StaticPowerOutputItem outputItem;
@@ -67,5 +78,10 @@ public class PackagerRecipe extends AbstractMachineRecipe {
 	@Override
 	public RecipeType<PackagerRecipe> getType() {
 		return RECIPE_TYPE;
+	}
+
+	@Override
+	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
+		return MachineRecipeProcessingSection.hardcoded(DEFAULT_PROCESSING_TIME, DEFAULT_POWER_COST, 0, 0);
 	}
 }

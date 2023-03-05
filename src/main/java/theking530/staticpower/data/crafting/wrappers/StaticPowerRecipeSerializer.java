@@ -26,11 +26,8 @@ public abstract class StaticPowerRecipeSerializer<T extends Recipe<?>> implement
 		return null;
 	}
 
-	public Codec<T> getCodec() {
-		return null;
-	}
+	public abstract Codec<T> getCodec();
 
-	// TODO: Make this abstract.
 	public JsonObject toJson(T recipe) {
 		if (getCodec() != null) {
 			return getCodec().encodeStart(JsonOps.INSTANCE, recipe).result().get().getAsJsonObject();

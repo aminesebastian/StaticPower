@@ -5,7 +5,7 @@
       "tag": "forge:rubber"
     },
     "i": {
-      "tag": "forge:wires/brass"
+      "tag": "staticpower:wires/brass"
     },
     "w": {
       "tag": "forge:ingots/iron"

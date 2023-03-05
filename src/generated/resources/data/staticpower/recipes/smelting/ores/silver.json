@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.5,
   "ingredient": {
-    "tag": "forge:ore/silver"
+    "tag": "forge:ores/silver"
   },
   "result": "staticpower:ingot_silver"
 }

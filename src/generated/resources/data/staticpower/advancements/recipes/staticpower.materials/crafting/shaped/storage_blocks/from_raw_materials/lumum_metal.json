@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_lumum_metal_raw_material": {
+    "has_raw_material": {
       "conditions": {
         "items": [
           {
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_lumum_metal_raw_material",
+      "has_raw_material",
       "has_the_recipe"
     ]
   ],

@@ -31,6 +31,7 @@ import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderFlui
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModRecipeTypes;
 
 public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRecipeProcessor<FluidGeneratorRecipe> {
 	@BlockEntityTypePopulator()
@@ -53,7 +54,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 		super(TYPE, pos, state);
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		registerComponent(processingComponent = new RecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", FluidGeneratorRecipe.RECIPE_TYPE, this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", ModRecipeTypes.FLUID_GENERATOR_RECIPE_TYPE.get(), this));
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setMaxProcessingTime(0);
 		processingComponent.setMoveTime(0);

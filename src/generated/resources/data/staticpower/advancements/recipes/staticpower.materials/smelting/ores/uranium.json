@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ore": {
+    "has_dust": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:ore/uranium"
+            "tag": "forge:ores/uranium"
           }
         ]
       },
@@ -20,7 +20,7 @@
   },
   "requirements": [
     [
-      "has_ore",
+      "has_dust",
       "has_the_recipe"
     ]
   ],

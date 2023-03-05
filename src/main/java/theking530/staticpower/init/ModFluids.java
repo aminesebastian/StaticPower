@@ -83,63 +83,6 @@ public class ModFluids {
 		builder.viscosity(500).density(32);
 	}));
 
-	public static final StaticPowerFluidBundle MoltenIron = registerFluid(new StaticPowerFluidBuilder("molten_iron", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-		builder.viscosity(4000).density(32).temperature(2800).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-				SoundEvents.BUCKET_EMPTY_LAVA);
-	}));
-	public static final StaticPowerFluidBundle MoltenGold = registerFluid(new StaticPowerFluidBuilder("molten_gold", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-		builder.viscosity(6000).density(32).temperature(1064).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-				SoundEvents.BUCKET_EMPTY_LAVA);
-	}));
-	public static final StaticPowerFluidBundle MoltenCopper = registerFluid(new StaticPowerFluidBuilder("molten_copper", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-		builder.viscosity(4000).density(32).temperature(1084).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-				SoundEvents.BUCKET_EMPTY_LAVA);
-	}));
-	public static final StaticPowerFluidBundle MoltenTin = registerFluid(new StaticPowerFluidBuilder("molten_tin", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-		builder.viscosity(4000).density(32).temperature(450).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-				SoundEvents.BUCKET_EMPTY_LAVA);
-	}));
-	public static final StaticPowerFluidBundle MoltenZinc = registerFluid(new StaticPowerFluidBuilder("molten_zinc", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-		builder.viscosity(4000).density(32).temperature(420).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-				SoundEvents.BUCKET_EMPTY_LAVA);
-	}));
-	public static final StaticPowerFluidBundle MoltenMagnesium = registerFluid(
-			new StaticPowerFluidBuilder("molten_magnesium", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-				builder.viscosity(4000).density(32).temperature(1202).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-						SoundEvents.BUCKET_EMPTY_LAVA);
-			}));
-	public static final StaticPowerFluidBundle MoltenTungsten = registerFluid(
-			new StaticPowerFluidBuilder("molten_tungsten", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-				builder.viscosity(8000).density(32).temperature(3400).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-						SoundEvents.BUCKET_EMPTY_LAVA);
-			}));
-	public static final StaticPowerFluidBundle MoltenSilver = registerFluid(new StaticPowerFluidBuilder("molten_silver", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-		builder.viscosity(3000).density(32).temperature(961).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-				SoundEvents.BUCKET_EMPTY_LAVA);
-	}));
-	public static final StaticPowerFluidBundle MoltenLead = registerFluid(new StaticPowerFluidBuilder("molten_lead", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-		builder.viscosity(2000).density(32).temperature(328).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-				SoundEvents.BUCKET_EMPTY_LAVA);
-	}));
-	public static final StaticPowerFluidBundle MoltenAluminum = registerFluid(
-			new StaticPowerFluidBuilder("molten_aluminum", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-				builder.viscosity(2000).density(32).temperature(660).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-						SoundEvents.BUCKET_EMPTY_LAVA);
-			}));
-	public static final StaticPowerFluidBundle MoltenPlatinum = registerFluid(
-			new StaticPowerFluidBuilder("molten_platinum", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-				builder.viscosity(4000).density(32).temperature(1770).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-						SoundEvents.BUCKET_EMPTY_LAVA);
-			}));
-	public static final StaticPowerFluidBundle MoltenBrass = registerFluid(new StaticPowerFluidBuilder("molten_brass", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-		builder.viscosity(3000).density(32).temperature(1710).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-				SoundEvents.BUCKET_EMPTY_LAVA);
-	}));
-	public static final StaticPowerFluidBundle MoltenBronze = registerFluid(new StaticPowerFluidBuilder("molten_bronze", new SDColor(1.0f, 0.25f, 0.1f)).addProperties(builder -> {
-		builder.viscosity(4000).density(32).temperature(950).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY,
-				SoundEvents.BUCKET_EMPTY_LAVA);
-	}));
-
 	public static final StaticPowerFluidBundle CrudeOil = registerFluid(new StaticPowerFluidBuilder("oil_crude", new SDColor(0.1f, 0.1f, 0.1f)).addProperties(builder -> {
 		builder.viscosity(6000).density(32).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_LAVA);
 	}));
@@ -182,7 +125,7 @@ public class ModFluids {
 	}
 
 	public static void init(IEventBus eventBus) {
-		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
 			bundle.generateFluids();
 		}
 		FLUID_TYPES.register(eventBus);
