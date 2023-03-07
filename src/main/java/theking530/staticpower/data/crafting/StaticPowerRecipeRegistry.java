@@ -207,10 +207,8 @@ public class StaticPowerRecipeRegistry {
 		handleCraftingResearchRecipeReplacement(manager, newRecipes.getOrDefault(RecipeType.CRAFTING, new HashMap<ResourceLocation, Recipe<?>>()));
 
 		// Cache additional recipes.
-		// cacheDynamicBottlerRecipes(manager, getOrPutDefault(newRecipes,
-		// BottleRecipe.RECIPE_TYPE));
-		// cacheDynamicSolidGeneratorRecipes(manager, getOrPutDefault(newRecipes,
-		// SolidFuelRecipe.RECIPE_TYPE));
+		cacheDynamicBottlerRecipes(manager, getOrPutDefault(newRecipes, ModRecipeTypes.BOTTLER_RECIPE_TYPE.get()));
+		cacheDynamicSolidGeneratorRecipes(manager, getOrPutDefault(newRecipes, SolidFuelRecipe.RECIPE_TYPE));
 
 		// Replace the recipes.
 		// TODO: This feels so dirty, wish I could just add recipes.

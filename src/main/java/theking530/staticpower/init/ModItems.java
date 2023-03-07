@@ -276,23 +276,23 @@ public class ModItems {
 
 	public static final RegistryObject<Hammer> IronMetalHammer = ITEMS.register("hammer_iron", () -> new Hammer(StaticPowerTiers.IRON, () -> Items.IRON_INGOT));
 	public static final RegistryObject<Hammer> ZincMetalHammer = ITEMS.register("hammer_zinc",
-			() -> new Hammer(StaticPowerTiers.ZINC, () -> NewModMaterials.ZINC.get(MaterialTypes.INGOT).get()));
+			() -> new Hammer(StaticPowerTiers.ZINC, () -> ModMaterials.ZINC.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<Hammer> CopperMetalHammer = ITEMS.register("hammer_copper", () -> new Hammer(StaticPowerTiers.COPPER, () -> Items.COPPER_INGOT));
 	public static final RegistryObject<Hammer> TinMetalHammer = ITEMS.register("hammer_tin",
-			() -> new Hammer(StaticPowerTiers.TIN, NewModMaterials.TIN.get(MaterialTypes.INGOT).getSupplier()));
+			() -> new Hammer(StaticPowerTiers.TIN, ModMaterials.TIN.get(MaterialTypes.INGOT).getSupplier()));
 	public static final RegistryObject<Hammer> BronzeMetalHammer = ITEMS.register("hammer_bronze",
-			() -> new Hammer(StaticPowerTiers.BRONZE, () -> NewModMaterials.BRONZE.get(MaterialTypes.INGOT).get()));
+			() -> new Hammer(StaticPowerTiers.BRONZE, () -> ModMaterials.BRONZE.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<Hammer> TungstenMetalHammer = ITEMS.register("hammer_tungsten",
-			() -> new Hammer(StaticPowerTiers.TUNGSTEN, () -> NewModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).get()));
+			() -> new Hammer(StaticPowerTiers.TUNGSTEN, () -> ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<Hammer> CreativeMetalHammer = ITEMS.register("hammer_creative", () -> new Hammer(StaticPowerTiers.CREATIVE, () -> Items.AIR));
 
 	public static final RegistryObject<WireCutters> IronWireCutters = ITEMS.register("wire_cutters_iron", () -> new WireCutters(StaticPowerTiers.IRON, () -> Items.IRON_INGOT));
 	public static final RegistryObject<WireCutters> ZincWireCutters = ITEMS.register("wire_cutters_zinc",
-			() -> new WireCutters(StaticPowerTiers.ZINC, () -> NewModMaterials.ZINC.get(MaterialTypes.INGOT).get()));
+			() -> new WireCutters(StaticPowerTiers.ZINC, () -> ModMaterials.ZINC.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<WireCutters> BronzeWireCutters = ITEMS.register("wire_cutters_bronze",
-			() -> new WireCutters(StaticPowerTiers.BRONZE, () -> NewModMaterials.BRONZE.get(MaterialTypes.INGOT).get()));
+			() -> new WireCutters(StaticPowerTiers.BRONZE, () -> ModMaterials.BRONZE.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<WireCutters> TungstenWireCutters = ITEMS.register("wire_cutters_tungsten",
-			() -> new WireCutters(StaticPowerTiers.TUNGSTEN, () -> NewModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).get()));
+			() -> new WireCutters(StaticPowerTiers.TUNGSTEN, () -> ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<WireCutters> CreativeWireCutters = ITEMS.register("wire_cutters_creative",
 			() -> new WireCutters(StaticPowerTiers.CREATIVE, () -> Items.AIR));
 
@@ -526,7 +526,7 @@ public class ModItems {
 	public static final RegistryObject<BaseHeatUpgrade> LumumHeatUpgrade = ITEMS.register("upgrade_heat_lumum", () -> new BaseHeatUpgrade(StaticPowerTiers.LUMUM));;
 
 	public static void init(IEventBus eventBus) {
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			bundle.generateItems(ITEMS);
 		}
 		ITEMS.register(eventBus);

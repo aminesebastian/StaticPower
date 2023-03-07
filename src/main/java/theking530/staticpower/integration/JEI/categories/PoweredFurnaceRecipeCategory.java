@@ -24,7 +24,6 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
@@ -32,6 +31,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.machines.poweredfurnace.BlockEntityPoweredFurnace;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 
@@ -43,7 +43,6 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public PoweredFurnaceRecipeCategory(IGuiHelper guiHelper) {
@@ -80,9 +79,6 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 	public void draw(SmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 41, 19, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 89, 17, 0);
-
-		// This doesn't actually draw the fluid, just the bars.
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
@@ -123,9 +119,9 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 	public void setRecipe(IRecipeLayoutBuilder builder, SmeltingRecipe recipe, IFocusGroup ingredients) {
 		builder.addSlot(RecipeIngredientRole.INPUT, 41, 19).addIngredients(recipe.getIngredients().get(0));
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 91, 19).addItemStack(recipe.getResultItem());
+		addPowerInputSlot(builder, 5, 6, 16, 48,
+				MachineRecipeProcessingSection.hardcoded(BlockEntityPoweredFurnace.getCookTime(recipe), StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get(), 0, 0));
 
-		powerTimer = guiHelper.createTickTimer(BlockEntityPoweredFurnace.getCookTime(recipe),
-				(int) (BlockEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get()), true);
 		processingTimer = guiHelper.createTickTimer(BlockEntityPoweredFurnace.getCookTime(recipe), BlockEntityPoweredFurnace.getCookTime(recipe), false);
 	}
 }

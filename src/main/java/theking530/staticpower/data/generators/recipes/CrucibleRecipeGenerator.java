@@ -12,7 +12,7 @@ import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 
 public class CrucibleRecipeGenerator extends SPRecipeProvider<CrucibleRecipe> {
 
@@ -22,15 +22,20 @@ public class CrucibleRecipeGenerator extends SPRecipeProvider<CrucibleRecipe> {
 
 	@Override
 	protected void buildRecipes() {
-		for (MaterialBundle material : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
 			if (!material.has(MaterialTypes.MOLTEN_FLUID)) {
 				continue;
 			}
 
 			if (material.has(MaterialTypes.NUGGET)) {
 				addRecipe("/" + material.getName() + "_nugget",
-						create(StaticPowerIngredient.of(material.get(MaterialTypes.NUGGET).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get()),
+						create(StaticPowerIngredient.of(material.get(MaterialTypes.NUGGET).getItemTag()), StaticPowerOutputItem.EMPTY,
 								new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 16), CastingRecipe.DEFAULT_PROCESSING_TIME / 9));
+			}
+			if (material.has(MaterialTypes.CHUNKS)) {
+				addRecipe("/" + material.getName() + "_chunks",
+						create(StaticPowerIngredient.of(material.get(MaterialTypes.CHUNKS).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 1),
+								new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 72), CastingRecipe.DEFAULT_PROCESSING_TIME));
 			}
 			if (material.has(MaterialTypes.INGOT)) {
 				addRecipe("/" + material.getName() + "_ingot",
@@ -42,24 +47,19 @@ public class CrucibleRecipeGenerator extends SPRecipeProvider<CrucibleRecipe> {
 						create(StaticPowerIngredient.of(material.get(MaterialTypes.DUST).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 2),
 								new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 144), CastingRecipe.DEFAULT_PROCESSING_TIME));
 			}
-			if (material.has(MaterialTypes.CHUNKS)) {
-				addRecipe("/" + material.getName() + "_chunks",
-						create(StaticPowerIngredient.of(material.get(MaterialTypes.CHUNKS).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 1),
-								new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 72), CastingRecipe.DEFAULT_PROCESSING_TIME));
-			}
 			if (material.has(MaterialTypes.RAW_MATERIAL)) {
 				addRecipe("/" + material.getName() + "_raw_material",
-						create(StaticPowerIngredient.of(material.get(MaterialTypes.RAW_MATERIAL).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 2),
-								new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 144), CastingRecipe.DEFAULT_PROCESSING_TIME));
+						create(StaticPowerIngredient.of(material.get(MaterialTypes.RAW_MATERIAL).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 5),
+								new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 1296), CastingRecipe.DEFAULT_PROCESSING_TIME));
 			}
 			if (material.has(MaterialTypes.STORAGE_BLOCK)) {
 				addRecipe("/" + material.getName() + "_block",
-						create(StaticPowerIngredient.of(material.get(MaterialTypes.STORAGE_BLOCK).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 9),
+						create(StaticPowerIngredient.of(material.get(MaterialTypes.STORAGE_BLOCK).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 3),
 								new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 1296), CastingRecipe.DEFAULT_PROCESSING_TIME * 9));
 			}
 			if (material.has(MaterialTypes.RAW_STOARGE_BLOCK)) {
 				addRecipe("/" + material.getName() + "_raw_material_block",
-						create(StaticPowerIngredient.of(material.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 9),
+						create(StaticPowerIngredient.of(material.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 3),
 								new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 1296), CastingRecipe.DEFAULT_PROCESSING_TIME * 9));
 			}
 			if (material.hasOre()) {

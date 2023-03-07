@@ -27,6 +27,8 @@ public class MaterialBundle {
 	private TagKey<Item> oreItemTag;
 	private TagKey<Block> oreBlockTag;
 
+	private TagKey<Item> plateOrIngotTag;
+
 	public MaterialBundle(String name, MaterialBundleType type) {
 		this.name = name;
 		this.type = type;
@@ -51,6 +53,10 @@ public class MaterialBundle {
 		if (hasOre()) {
 			oreBlockTag = ModBlockTags.createForgeTag(String.format(MaterialTypes.OVERWORLD_ORE.getTagFormat(), name));
 			oreItemTag = ModItemTags.createForgeTag(String.format(MaterialTypes.OVERWORLD_ORE.getTagFormat(), name));
+		}
+
+		if (has(MaterialTypes.PLATE) && has(MaterialTypes.INGOT)) {
+			plateOrIngotTag = ModItemTags.create("ingot_or_plate/" + name);
 		}
 	}
 
@@ -84,6 +90,10 @@ public class MaterialBundle {
 
 	public TagKey<Block> getOreBlockTag() {
 		return oreBlockTag;
+	}
+
+	public TagKey<Item> getPlateOrIngotTag() {
+		return plateOrIngotTag;
 	}
 
 	public String getName() {

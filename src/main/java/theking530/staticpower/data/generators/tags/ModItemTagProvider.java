@@ -18,7 +18,7 @@ import theking530.staticpower.data.materials.Material.MaterialClass;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModBlockTags;
 import theking530.staticpower.init.tags.ModItemTags;
 
@@ -64,27 +64,32 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		copy(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE, Tags.Items.ORES_IN_GROUND_DEEPSLATE);
 
 		tag(Tags.Items.INGOTS)
-				.add(toArray(
-						NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.INGOT)).map((bundle) -> bundle.get(MaterialTypes.INGOT).get())))
-				.add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.HEATED_INGOT))
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.INGOT)).map((bundle) -> bundle.get(MaterialTypes.INGOT).get())))
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.HEATED_INGOT))
 						.map((bundle) -> bundle.get(MaterialTypes.HEATED_INGOT).get())));
 
-		tag(Tags.Items.GEMS).add(NewModMaterials.SAPPHIRE.get(MaterialTypes.RAW_MATERIAL).get(), NewModMaterials.RUBY.get(MaterialTypes.RAW_MATERIAL).get());
+		tag(Tags.Items.GEMS).add(ModMaterials.SAPPHIRE.get(MaterialTypes.RAW_MATERIAL).get(), ModMaterials.RUBY.get(MaterialTypes.RAW_MATERIAL).get());
+
+		tag(ModItemTags.OBSIDIAN_DUST).add(ModItems.DustObsidian.get());
+		tag(ModItemTags.WOOD_DUST).add(ModItems.DustWood.get());
 
 		tag(Tags.Items.NUGGETS).add(
-				toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.NUGGET)).map((bundle) -> bundle.get(MaterialTypes.NUGGET).get())));
+				toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.NUGGET)).map((bundle) -> bundle.get(MaterialTypes.NUGGET).get())));
 
-		tag(ModItemTags.PLATES).add(ModItems.RubberSheet.get()).add(
-				toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.PLATE)).map((bundle) -> bundle.get(MaterialTypes.PLATE).get())));
+		tag(ModItemTags.PLATES).add(ModItems.RubberSheet.get())
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.PLATE)).map((bundle) -> bundle.get(MaterialTypes.PLATE).get())));
+
+		tag(ModItemTags.WIRES)
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.WIRE)).map((bundle) -> bundle.get(MaterialTypes.WIRE).get())));
 
 		tag(ModItemTags.GEARS)
-				.add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.GEAR)).map((bundle) -> bundle.get(MaterialTypes.GEAR).get())));
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.GEAR)).map((bundle) -> bundle.get(MaterialTypes.GEAR).get())));
 
 		tag(Tags.Items.DUSTS).add(ModItems.DustSaltpeter.get(), ModItems.DustSulfur.get(), ModItems.DustCoalSmall.get(), ModItems.DustCharcoalSmall.get(), ModItems.DustWood.get())
-				.add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.DUST)).map((bundle) -> bundle.get(MaterialTypes.DUST).get())));
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.DUST)).map((bundle) -> bundle.get(MaterialTypes.DUST).get())));
 
-		tag(Tags.Items.RAW_MATERIALS).add(ModItems.RawRustyIron.get()).add(toArray(NewModMaterials.MATERIALS.values().stream()
-				.filter((bundle) -> bundle.has(MaterialTypes.RAW_MATERIAL)).map((bundle) -> bundle.get(MaterialTypes.RAW_MATERIAL).get())));
+		tag(Tags.Items.RAW_MATERIALS).add(ModItems.RawRustyIron.get()).add(toArray(
+				ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.RAW_MATERIAL)).map((bundle) -> bundle.get(MaterialTypes.RAW_MATERIAL).get())));
 
 		tag(ModItemTags.MATERIALS).addTag(Tags.Items.INGOTS).addTag(Tags.Items.DUSTS).addTag(Tags.Items.RODS).addTag(Tags.Items.GEMS).addTag(Tags.Items.RAW_MATERIALS)
 				.addTag(ModItemTags.GEARS).addTag(ModItemTags.PLATES).addTag(ModItemTags.HEATED_INGOTS).add(ModItems.RubberWoodBark.get()).add(ModItems.LatexChunk.get())
@@ -165,17 +170,17 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModItemTags.TOOL_BACKPACK).addTag(Tags.Items.TOOLS_PICKAXES).addTag(Tags.Items.TOOLS_SHOVELS).addTag(Tags.Items.TOOLS_AXES).addTag(Tags.Items.TOOLS_HOES)
 				.addTag(ModItemTags.TOOLS);
 
-		tag(ModItemTags.HEATED_INGOTS).add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.HEATED_INGOT))
-				.map((bundle) -> bundle.get(MaterialTypes.HEATED_INGOT).get())));
+		tag(ModItemTags.HEATED_INGOTS).add(toArray(
+				ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.HEATED_INGOT)).map((bundle) -> bundle.get(MaterialTypes.HEATED_INGOT).get())));
 
 		tag(ModItemTags.WIRE_COILS).add(ModItems.WireCoilDigistore.get())
-				.add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.WIRE_COIL))
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.WIRE_COIL))
 						.map((bundle) -> bundle.get(MaterialTypes.WIRE_COIL).get())))
-				.add(toArray(NewModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.INSULATED_WIRE_COIL))
+				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.INSULATED_WIRE_COIL))
 						.map((bundle) -> bundle.get(MaterialTypes.INSULATED_WIRE_COIL).get())));
 
-		tag(ModItemTags.createForgeTag("gems/ruby")).add(NewModMaterials.RUBY.get(MaterialTypes.RAW_MATERIAL).get());
-		tag(ModItemTags.createForgeTag("gems/sapphire")).add(NewModMaterials.SAPPHIRE.get(MaterialTypes.RAW_MATERIAL).get());
+		tag(ModItemTags.createForgeTag("gems/ruby")).add(ModMaterials.RUBY.get(MaterialTypes.RAW_MATERIAL).get());
+		tag(ModItemTags.createForgeTag("gems/sapphire")).add(ModMaterials.SAPPHIRE.get(MaterialTypes.RAW_MATERIAL).get());
 
 		tag(ModItemTags.RUBBER).add(ModItems.RubberBar.get());
 		tag(ModItemTags.RUBBER_SHEET).add(ModItems.RubberSheet.get());
@@ -184,7 +189,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModItemTags.createForgeTag("seeds")).add(ModItems.StaticSeeds.get(), ModItems.EnergizedSeeds.get(), ModItems.LumumSeeds.get());
 		tag(ModItemTags.createForgeTag("silicon")).add(ModItems.Silicon.get());
 
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasGeneratedOre()) {
 				copy(bundle.getOreBlockTag(), bundle.getOreItemTag());
 			}
@@ -203,9 +208,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				}
 			}
 
-			if (bundle.hasWithTag(MaterialTypes.PLATE) && bundle.hasWithTag(MaterialTypes.INGOT)) {
-				tag(ModItemTags.create("ingot_or_plate/" + bundle.getName())).addTag(bundle.get(MaterialTypes.PLATE).getItemTag())
-						.addTag(bundle.get(MaterialTypes.INGOT).getItemTag());
+			if (bundle.getPlateOrIngotTag() != null) {
+				tag(bundle.getPlateOrIngotTag()).addTag(bundle.get(MaterialTypes.PLATE).getItemTag()).addTag(bundle.get(MaterialTypes.INGOT).getItemTag());
 			}
 		}
 

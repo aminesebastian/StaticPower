@@ -1,0 +1,16 @@
+{
+  "type": "staticpower:squeezer",
+  "input": {
+    "ingredient": {
+      "tag": "staticpower:dusts/woood"
+    }
+  },
+  "output_fluid": {
+    "amount": 1,
+    "fluid_name": "staticpower:oil_tree"
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 20
+  }
+}

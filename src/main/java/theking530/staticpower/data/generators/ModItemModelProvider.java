@@ -27,7 +27,7 @@ import theking530.staticpower.entities.AbstractSpawnableMobType;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 
 public class ModItemModelProvider extends ItemModelProvider {
 	private final Set<Block> customModelBlockItems;
@@ -77,7 +77,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 		simpleItem(ModItems.RawRustyIron.get(), "materials/raw_ores/raw_rusty_iron");
 
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasGeneratedMaterial(MaterialTypes.RAW_MATERIAL)) {
 				simpleItem(bundle.get(MaterialTypes.RAW_MATERIAL).get(), "materials/raw_ores/" + bundle.get(MaterialTypes.RAW_MATERIAL).getFormattedName(bundle.getName()));
 			}
@@ -87,12 +87,12 @@ public class ModItemModelProvider extends ItemModelProvider {
 			}
 
 			if (bundle.hasGeneratedMaterial(MaterialTypes.HEATED_INGOT)) {
-				if (bundle == NewModMaterials.IRON) {
-					simpleItemVanillaTexture(NewModMaterials.IRON.get(MaterialTypes.HEATED_INGOT).get(), "iron_ingot");
-				} else if (bundle == NewModMaterials.GOLD) {
-					simpleItemVanillaTexture(NewModMaterials.GOLD.get(MaterialTypes.HEATED_INGOT).get(), "gold_ingot");
-				} else if (bundle == NewModMaterials.COPPER) {
-					simpleItemVanillaTexture(NewModMaterials.COPPER.get(MaterialTypes.HEATED_INGOT).get(), "copper_ingot");
+				if (bundle == ModMaterials.IRON) {
+					simpleItemVanillaTexture(ModMaterials.IRON.get(MaterialTypes.HEATED_INGOT).get(), "iron_ingot");
+				} else if (bundle == ModMaterials.GOLD) {
+					simpleItemVanillaTexture(ModMaterials.GOLD.get(MaterialTypes.HEATED_INGOT).get(), "gold_ingot");
+				} else if (bundle == ModMaterials.COPPER) {
+					simpleItemVanillaTexture(ModMaterials.COPPER.get(MaterialTypes.HEATED_INGOT).get(), "copper_ingot");
 				} else {
 					simpleItem(bundle.get(MaterialTypes.HEATED_INGOT).get(), "materials/ingots/" + bundle.get(MaterialTypes.INGOT).getFormattedName(bundle.getName()));
 				}

@@ -16,13 +16,13 @@ public class FertilizerRecipeGenerator extends SPRecipeProvider<FertalizerRecipe
 
 	@Override
 	protected void buildRecipes() {
-		addRecipe("water", FluidIngredient.of(1, FluidTags.WATER), 0.01f);
-		addRecipe("mash", FluidIngredient.of(1, ModFluids.Mash.getTag()), 0.05f);
-		addRecipe("liquid_fertilizer", FluidIngredient.of(1, ModFluids.Fertilizer.getTag()), 0.1f);
+		addRecipe("water", FluidIngredient.of(FluidTags.WATER, 1), 0.01f);
+		addRecipe("mash", FluidIngredient.of(ModFluids.Mash.getTag(), 1), 0.05f);
+		addRecipe("liquid_fertilizer", FluidIngredient.of(ModFluids.Fertilizer.getTag(), 1), 0.1f);
 
-		addRecipe("fluid_static", FluidIngredient.of(1, ModFluids.StaticFluid.getTag()), 0.15f);
-		addRecipe("fluid_energized", FluidIngredient.of(1, ModFluids.EnergizedFluid.getTag()), 0.2f);
-		addRecipe("fluid_lumum", FluidIngredient.of(1, ModFluids.LumumFluid.getTag()), 0.3f);
+		addRecipe("fluid_static", FluidIngredient.of(ModFluids.StaticFluid.getTag(), 1), 0.15f);
+		addRecipe("fluid_energized", FluidIngredient.of(ModFluids.EnergizedFluid.getTag(), 1), 0.2f);
+		addRecipe("fluid_lumum", FluidIngredient.of(ModFluids.LumumFluid.getTag(), 1), 0.3f);
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient inputFluid, float fertalizationAmount) {

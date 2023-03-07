@@ -21,7 +21,7 @@ public class CauldronRecipeGenerator extends SPRecipeProvider<CauldronRecipe> {
 	@Override
 	protected void buildRecipes() {
 		addRecipe("rubber_wood_bark", create(StaticPowerIngredient.of(ModItems.RubberWoodBark.get()), StaticPowerOutputItem.of(ModItems.LatexChunk.get()),
-				FluidIngredient.of(1000, FluidTags.WATER), true, 100));
+				FluidIngredient.of(FluidTags.WATER, 1000), true, 100));
 
 		addRecipe("fruit_static", create(StaticPowerIngredient.of(ModItems.StaticFruit.get()), StaticPowerOutputItem.of(ModItems.DepletedFruit.get()), FluidIngredient.EMPTY,
 				new FluidStack(ModFluids.StaticFluid.getSource().get(), 100), false, 200));

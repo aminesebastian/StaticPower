@@ -16,6 +16,7 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 	public static final String ID = "alloy_furnace";
+	public static final int DEFAULT_PROCESSING_TIME = 200;
 
 	public static final Codec<AlloyFurnaceRecipe> CODEC = RecordCodecBuilder
 			.create(instance -> instance
@@ -89,6 +90,6 @@ public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 
 	@Override
 	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
-		return MachineRecipeProcessingSection.hardcoded(() -> 400, () -> 0.0, () -> 0, () -> 0);
+		return MachineRecipeProcessingSection.hardcoded(() -> DEFAULT_PROCESSING_TIME, () -> 0.0, () -> 0, () -> 0);
 	}
 }

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:plates/iron"
+    },
+    "p": {
+      "tag": "forge:plates/brass"
+    },
+    "r": {
+      "item": "staticpower:processor_advanced"
+    }
+  },
+  "pattern": [
+    " i ",
+    " r ",
+    " p "
+  ],
+  "result": {
+    "item": "staticpower:upgrade_plate_advanced"
+  }
+}

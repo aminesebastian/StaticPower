@@ -85,8 +85,8 @@ import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 
 @JeiPlugin
 public class PluginJEI implements IModPlugin {
-	public static final IIngredientType<StaticPowerOutputItem> PROBABILITY_ITEM_STACK = () -> StaticPowerOutputItem.class;
-	public static final IIngredientType<MachineRecipeProcessingSection> POWER_INGREDIENT = () -> MachineRecipeProcessingSection.class;
+	public static IIngredientType<StaticPowerOutputItem> PROBABILITY_ITEM_STACK;
+	public static IIngredientType<MachineRecipeProcessingSection> POWER_INGREDIENT;
 
 	public static IJeiRuntime RUNTIME;
 
@@ -98,11 +98,13 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public void registerIngredients(IModIngredientRegistration registration) {
+		PROBABILITY_ITEM_STACK = () -> StaticPowerOutputItem.class;
 		List<StaticPowerOutputItem> probabilityStacks = new ArrayList<StaticPowerOutputItem>();
 		ProbabilityItemStackHelper itemStackHelper = new ProbabilityItemStackHelper(registration);
 		ProbabilityItemStackRenderer itemStackRenderer = new ProbabilityItemStackRenderer();
 		registration.register(PROBABILITY_ITEM_STACK, probabilityStacks, itemStackHelper, itemStackRenderer);
 
+		POWER_INGREDIENT = () -> MachineRecipeProcessingSection.class;
 		List<MachineRecipeProcessingSection> powerStack = new ArrayList<MachineRecipeProcessingSection>();
 		PowerIngredientHelper powerIngredientHelper = new PowerIngredientHelper(registration);
 		PowerIngredientRenderer powerIngredientRenderer = new PowerIngredientRenderer();

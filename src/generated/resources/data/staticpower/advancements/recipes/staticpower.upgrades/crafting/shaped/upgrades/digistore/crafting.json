@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "staticpower:crafting/shaped/upgrades/digistore/crafting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_upgrade_plate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "staticpower:upgrade_plate_energized"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_upgrade_plate",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "staticpower:crafting/shaped/upgrades/digistore/crafting"
+    ]
+  }
+}

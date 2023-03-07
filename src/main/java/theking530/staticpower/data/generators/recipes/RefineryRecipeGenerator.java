@@ -20,18 +20,18 @@ public class RefineryRecipeGenerator extends SPRecipeProvider<RefineryRecipe> {
 
 	@Override
 	protected void buildRecipes() {
-		addRecipe("fuel", FluidIngredient.of(100, ModFluids.CrudeOil.getTag()), FluidIngredient.EMPTY, FluidStack.EMPTY, FluidStack.EMPTY,
+		addRecipe("fuel", FluidIngredient.of(ModFluids.CrudeOil.getTag(), 100), FluidIngredient.EMPTY, FluidStack.EMPTY, FluidStack.EMPTY,
 				new FluidStack(ModFluids.Fuel.getSource().get(), 45));
 
-		addRecipe("crude_cracking", FluidIngredient.of(100, ModFluids.CrudeOil.getTag()), FluidIngredient.of(50, FluidTags.WATER),
+		addRecipe("crude_cracking", FluidIngredient.of(ModFluids.CrudeOil.getTag(), 100), FluidIngredient.of(FluidTags.WATER, 50),
 				new FluidStack(ModFluids.HeavyOil.getSource().get(), 25), new FluidStack(ModFluids.LightOil.getSource().get(), 45),
 				new FluidStack(ModFluids.Fuel.getSource().get(), 55));
-		addRecipe("light_cracking", FluidIngredient.of(30, ModFluids.LightOil.getTag()), FluidIngredient.of(30, FluidTags.WATER), FluidStack.EMPTY,
+		addRecipe("light_cracking", FluidIngredient.of(ModFluids.LightOil.getTag(), 30), FluidIngredient.of(FluidTags.WATER, 30), FluidStack.EMPTY,
 				new FluidStack(ModFluids.Fuel.getSource().get(), 20), FluidStack.EMPTY);
-		addRecipe("heavy_cracking", FluidIngredient.of(40, ModFluids.HeavyOil.getTag()), FluidIngredient.of(30, FluidTags.WATER), FluidStack.EMPTY,
+		addRecipe("heavy_cracking", FluidIngredient.of(ModFluids.HeavyOil.getTag(), 40), FluidIngredient.of(FluidTags.WATER, 30), FluidStack.EMPTY,
 				new FluidStack(ModFluids.Fuel.getSource().get(), 30), FluidStack.EMPTY);
 
-		addRecipe("coal_liquifaction", FluidIngredient.of(25, ModFluids.HeavyOil.getTag()), FluidIngredient.of(50, ModFluids.Steam.getTag()),
+		addRecipe("coal_liquifaction", FluidIngredient.of(ModFluids.HeavyOil.getTag(), 25), FluidIngredient.of(ModFluids.Steam.getTag(), 50),
 				StaticPowerIngredient.of(ModItems.DustCoalSmall.get()), new FluidStack(ModFluids.HeavyOil.getSource().get(), 90),
 				new FluidStack(ModFluids.LightOil.getSource().get(), 20), new FluidStack(ModFluids.Fuel.getSource().get(), 10));
 

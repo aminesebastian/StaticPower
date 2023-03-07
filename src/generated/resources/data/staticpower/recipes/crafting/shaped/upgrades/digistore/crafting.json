@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "d": {
+      "tag": "forge:gems/diamond"
+    },
+    "g": {
+      "tag": "forge:glass"
+    },
+    "r": {
+      "item": "minecraft:crafting_table"
+    },
+    "u": {
+      "item": "staticpower:upgrade_plate_energized"
+    }
+  },
+  "pattern": [
+    "ggg",
+    "drd",
+    "gug"
+  ],
+  "result": {
+    "item": "staticpower:upgrade_crafting"
+  }
+}

@@ -12,7 +12,7 @@ import theking530.staticpower.data.materials.MaterialBundle.MaterialBundleType;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 
 public class SmeltingRecipeGenerator extends SPRecipeProvider<BlastingRecipe> {
 
@@ -23,7 +23,7 @@ public class SmeltingRecipeGenerator extends SPRecipeProvider<BlastingRecipe> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void buildRecipes() {
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.getMaterialType() == MaterialBundleType.METAL) {
 				if (bundle.hasGeneratedMaterial(MaterialTypes.DUST) && bundle.has(MaterialTypes.INGOT)) {
 					addRecipe("dusts/" + bundle.getName(), create(Ingredient.of(bundle.get(MaterialTypes.DUST).getItemTag()), bundle.get(MaterialTypes.INGOT).get())

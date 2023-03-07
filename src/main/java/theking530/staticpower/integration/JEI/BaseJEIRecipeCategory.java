@@ -39,6 +39,17 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 		return getNetHighestMultipleOf10(amount);
 	}
 
+	public int getFluidTankDisplaySize(FluidIngredient... fluids) {
+		int amount = 0;
+		for (FluidIngredient ing : fluids) {
+			if (ing.isEmpty()) {
+				continue;
+			}
+			amount = Math.max(amount, ing.getAmount());
+		}
+		return getNetHighestMultipleOf10(amount);
+	}
+
 	/**
 	 * Gets the fluid input from the recipe slots view. The offset values determines
 	 * which fluid input. Example: when offset == 1, we return the first fluid input
@@ -112,7 +123,11 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 	}
 
 	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, FluidIngredient ingredient) {
-		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, x, y).setFluidRenderer(getFluidTankDisplaySize(ingredient.getAmount()), false, width, height);
+		return addFluidIngredientSlot(builder, x, y, width, height, ingredient, getFluidTankDisplaySize(ingredient.getAmount()));
+	}
+
+	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, FluidIngredient ingredient, int tankDisplayCapacity) {
+		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, x, y).setFluidRenderer(tankDisplayCapacity, false, width, height);
 		for (FluidStack fluid : ingredient.getFluids()) {
 			fluidSlot.addFluidStack(fluid.getFluid(), ingredient.getAmount());
 		}

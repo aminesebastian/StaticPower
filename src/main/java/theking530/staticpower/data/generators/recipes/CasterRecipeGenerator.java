@@ -15,7 +15,7 @@ import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 
 public class CasterRecipeGenerator extends SPRecipeProvider<CastingRecipe> {
 
@@ -25,7 +25,7 @@ public class CasterRecipeGenerator extends SPRecipeProvider<CastingRecipe> {
 
 	@Override
 	protected void buildRecipes() {
-		for (MaterialBundle material : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
 			if (!material.has(MaterialTypes.MOLTEN_FLUID)) {
 				continue;
 			}
@@ -33,55 +33,55 @@ public class CasterRecipeGenerator extends SPRecipeProvider<CastingRecipe> {
 			if (material.has(MaterialTypes.NUGGET)) {
 				addRecipe("nuggets/" + material.getName(),
 						create(StaticPowerIngredient.of(ModItems.MoldNugget.get()), StaticPowerOutputItem.of(material.get(MaterialTypes.NUGGET).get()),
-								FluidIngredient.of(16, material.get(MaterialTypes.MOLTEN_FLUID).get().getTag()), CastingRecipe.DEFAULT_PROCESSING_TIME / 9));
+								FluidIngredient.of(material.get(MaterialTypes.MOLTEN_FLUID).get().getTag(), 16), CastingRecipe.DEFAULT_PROCESSING_TIME / 9));
 			}
 			if (material.has(MaterialTypes.INGOT)) {
 				addRecipe("ingots/" + material.getName(),
 						create(StaticPowerIngredient.of(ModItems.MoldIngot.get()), StaticPowerOutputItem.of(material.get(MaterialTypes.INGOT).get()),
-								FluidIngredient.of(144, material.get(MaterialTypes.MOLTEN_FLUID).get().getTag()), CastingRecipe.DEFAULT_PROCESSING_TIME));
+								FluidIngredient.of(material.get(MaterialTypes.MOLTEN_FLUID).get().getTag(), 144), CastingRecipe.DEFAULT_PROCESSING_TIME));
 			}
 			if (material.has(MaterialTypes.STORAGE_BLOCK)) {
 				addRecipe("blocks/" + material.getName(),
 						create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(material.get(MaterialTypes.STORAGE_BLOCK).get()),
-								FluidIngredient.of(1296, material.get(MaterialTypes.MOLTEN_FLUID).get().getTag()), CastingRecipe.DEFAULT_PROCESSING_TIME * 9));
+								FluidIngredient.of(material.get(MaterialTypes.MOLTEN_FLUID).get().getTag(), 1296), CastingRecipe.DEFAULT_PROCESSING_TIME * 9));
 			}
 		}
 
 		addRecipe("concrete/white", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.WHITE_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.WHITE).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.WHITE).getTag(), 1000)));
 		addRecipe("concrete/orange", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.ORANGE_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.ORANGE).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.ORANGE).getTag(), 1000)));
 		addRecipe("concrete/magenta", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.MAGENTA_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.MAGENTA).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.MAGENTA).getTag(), 1000)));
 		addRecipe("concrete/light_blue", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.LIGHT_BLUE_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.LIGHT_BLUE).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.LIGHT_BLUE).getTag(), 1000)));
 		addRecipe("concrete/yellow", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.YELLOW_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.YELLOW).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.YELLOW).getTag(), 1000)));
 		addRecipe("concrete/lime", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.LIME_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.LIME).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.LIME).getTag(), 1000)));
 		addRecipe("concrete/pink", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.PINK_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.PINK).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.PINK).getTag(), 1000)));
 		addRecipe("concrete/gray", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.GRAY_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.GRAY).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.GRAY).getTag(), 1000)));
 		addRecipe("concrete/light_gray", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.LIGHT_GRAY_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.LIGHT_GRAY).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.LIGHT_GRAY).getTag(), 1000)));
 		addRecipe("concrete/cyan", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.CYAN_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.CYAN).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.CYAN).getTag(), 1000)));
 		addRecipe("concrete/purple", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.PURPLE_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.PURPLE).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.PURPLE).getTag(), 1000)));
 		addRecipe("concrete/blue", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.BLUE_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.BLUE).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.BLUE).getTag(), 1000)));
 		addRecipe("concrete/brown", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.BROWN_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.BROWN).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.BROWN).getTag(), 1000)));
 		addRecipe("concrete/green", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.GREEN_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.GREEN).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.GREEN).getTag(), 1000)));
 		addRecipe("concrete/red", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.RED_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.RED).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.RED).getTag(), 1000)));
 		addRecipe("concrete/black", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(Blocks.BLACK_CONCRETE),
-				FluidIngredient.of(1000, ModFluids.CONCRETE.get(MinecraftColor.BLACK).getTag())));
+				FluidIngredient.of(ModFluids.CONCRETE.get(MinecraftColor.BLACK).getTag(), 1000)));
 
 		addRecipe("latex", create(StaticPowerIngredient.of(ModItems.MoldBlock.get()), StaticPowerOutputItem.of(ModBlocks.BlockLatex.get()),
-				FluidIngredient.of(1000, ModFluids.Latex.getTag())));
+				FluidIngredient.of(ModFluids.Latex.getTag(), 1000)));
 	}
 
 	protected SPRecipeBuilder<CastingRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem output, FluidIngredient inputFluid) {

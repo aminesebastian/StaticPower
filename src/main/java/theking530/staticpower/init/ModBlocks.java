@@ -421,7 +421,7 @@ public class ModBlocks {
 			() -> new StaticPowerSapling(() -> ModFeatures.RUBBER_TREE.getTreeGrower(), Block.Properties.copy(Blocks.OAK_SAPLING)));
 
 	public static void init(IEventBus eventBus) {
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			bundle.generateBlocks();
 		}
 		BLOCKS.register(eventBus);

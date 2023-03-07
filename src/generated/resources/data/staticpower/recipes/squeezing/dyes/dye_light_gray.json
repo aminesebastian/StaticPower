@@ -1,0 +1,16 @@
+{
+  "type": "staticpower:squeezer",
+  "input": {
+    "ingredient": {
+      "tag": "forge:dyes/light_gray"
+    }
+  },
+  "output_fluid": {
+    "amount": 100,
+    "fluid_name": "staticpower:dye_light_gray"
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

@@ -23,7 +23,6 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
@@ -84,8 +83,8 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipe
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 10, MachineSideMode.Output));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 
-		registerComponent(processingComponent = new RecipeProcessingComponent<HydroponicFarmingRecipe>("ProcessingComponent",
-				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(), this));
+		registerComponent(
+				processingComponent = new RecipeProcessingComponent<HydroponicFarmingRecipe>("ProcessingComponent", ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 
 		owningFarmer = null;

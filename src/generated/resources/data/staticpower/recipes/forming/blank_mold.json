@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:former",
+  "input": {
+    "ingredient": {
+      "tag": "forge:plates/tungsten"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "tag": "forge:plates/iron"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:mold_blank"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

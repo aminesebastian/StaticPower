@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-05T05:49:01.7900269	Item Models: staticpower
+// 1.19.2	2023-03-06T22:37:59.5449519	Item Models: staticpower
 6027aa6d17b10a748c750596a1e41617fddb06da assets/staticpower/models/item/alloy_furnace.json
 a719b3e89ea4ecd25522280007f7e8b66eacafc0 assets/staticpower/models/item/automatic_placer.json
 32a59e36d1d4e959c6c1f1436a7c1d1efed2bf87 assets/staticpower/models/item/backpack.json
@@ -640,6 +640,8 @@ d367ec4782362f0be95e518fdd4c924f82c1c975 assets/staticpower/models/item/pump_tub
 1d02dd3a8c01b597e91523c93954481704319605 assets/staticpower/models/item/random_item_generator.json
 c99bf975c437ba3c4aabc99893a3fc8d890b3780 assets/staticpower/models/item/random_ore_generator.json
 67deca607ba4667434d5c7078ed401e7ff63b36a assets/staticpower/models/item/raw_aluminum.json
+ccc5ecc3dc75cae58e8939b79bc38f5e66fc6f27 assets/staticpower/models/item/raw_brass.json
+cd0ed3b5ae6aa7b93c4234cae22c082ce7c08faf assets/staticpower/models/item/raw_bronze.json
 259fdfab0ac69e49d0a4a9eb19ed38d8794db69d assets/staticpower/models/item/raw_energized_metal.json
 15ee303262ae8a71161eca90bdc2166f27c6d6b6 assets/staticpower/models/item/raw_inert_infusion_alloy.json
 5833de6facb3e252b20897f983d867cbd951e682 assets/staticpower/models/item/raw_lead.json

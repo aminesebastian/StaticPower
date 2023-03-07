@@ -9,7 +9,7 @@ import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
 import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 
 public class TumblerRecipeGenerator extends SPRecipeProvider<TumblerRecipe> {
 
@@ -19,7 +19,7 @@ public class TumblerRecipeGenerator extends SPRecipeProvider<TumblerRecipe> {
 
 	@Override
 	protected void buildRecipes() {
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasOre() && bundle.has(MaterialTypes.CHUNKS)) {
 				addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.getOreItemTag()),
 						StaticPowerOutputItem.of(bundle.get(MaterialTypes.CHUNKS).get(), 6, 1, 2, 0.25f));

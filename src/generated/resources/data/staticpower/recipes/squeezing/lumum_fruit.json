@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:squeezer",
+  "input": {
+    "ingredient": {
+      "item": "staticpower:fruit_lumum"
+    }
+  },
+  "output_fluid": {
+    "amount": 100,
+    "fluid_name": "staticpower:fluid_lumum"
+  },
+  "output_item": {
+    "item": {
+      "count": 100,
+      "id": "staticpower:fruit_depleted"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

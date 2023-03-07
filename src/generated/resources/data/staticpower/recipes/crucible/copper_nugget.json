@@ -14,8 +14,10 @@
     "processing_time": 22
   },
   "slag_item": {
+    "chance": 0.0,
     "item": {
-      "id": "staticpower:slag"
+      "count": 0,
+      "id": "minecraft:air"
     }
   }
 }

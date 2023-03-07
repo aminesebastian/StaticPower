@@ -18,12 +18,19 @@ import theking530.staticpower.data.generators.recipes.EvaporationRecipeGenerator
 import theking530.staticpower.data.generators.recipes.FermenterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.FertilizerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.FluidGeneratorRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.FormerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.FusionFurnaceRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.GrindingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.HammerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.HydroponicFarmerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.MixerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.RefineryRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmeltingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmokingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.SqueezerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.TumblerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.TurbineRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.VulcanizerRecipeGenerator;
 import theking530.staticpower.data.generators.tags.ModBiomeTagProvider;
 import theking530.staticpower.data.generators.tags.ModBlockTagProvider;
 import theking530.staticpower.data.generators.tags.ModFluidTagProvider;
@@ -54,6 +61,13 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new SmokingRecipeGenerator(generator));
 		generator.addProvider(true, new TumblerRecipeGenerator(generator));
 		generator.addProvider(true, new CrucibleRecipeGenerator(generator));
+		generator.addProvider(true, new HydroponicFarmerRecipeGenerator(generator));
+		generator.addProvider(true, new MixerRecipeGenerator(generator));
+		generator.addProvider(true, new TurbineRecipeGenerator(generator));
+		generator.addProvider(true, new VulcanizerRecipeGenerator(generator));
+		generator.addProvider(true, new FormerRecipeGenerator(generator));
+		generator.addProvider(true, new SqueezerRecipeGenerator(generator));
+		generator.addProvider(true, new FusionFurnaceRecipeGenerator(generator));
 		
 		generator.addProvider(true, new ModLootTableProvider(generator));
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));

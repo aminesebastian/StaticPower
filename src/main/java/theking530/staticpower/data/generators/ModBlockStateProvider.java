@@ -27,7 +27,7 @@ import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 
 public class ModBlockStateProvider extends BlockStateProvider {
 	public ModBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
@@ -73,7 +73,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		simpleBlockWithCustomTexture(ModBlocks.BlockLatex.get(), "storageblocks/block_latex");
 		simpleBlockWithCustomTexture(ModBlocks.BlockRubber.get(), "storageblocks/block_rubber");
 
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasGeneratedMaterial(MaterialTypes.OVERWORLD_ORE)) {
 				simpleBlockWithCustomTexture(bundle.get(MaterialTypes.OVERWORLD_ORE).get(), "ore/ore_" + bundle.getName());
 			}

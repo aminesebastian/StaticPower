@@ -18,6 +18,7 @@ import theking530.api.upgrades.UpgradeType;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
@@ -34,7 +35,7 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	}
 
 	public BaseUpgrade(ResourceLocation tier, Properties properties, UpgradeType... upgradeTypes) {
-		super(properties);
+		super(properties.tab(ModCreativeTabs.UPGRADES));
 		this.tier = tier;
 		this.upgradeTypes = new HashSet<UpgradeType>();
 

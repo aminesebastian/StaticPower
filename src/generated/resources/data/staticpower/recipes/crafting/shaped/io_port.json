@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "tag": "forge:plates/copper"
+    },
+    "r": {
+      "tag": "forge:rubber_sheet"
+    },
+    "t": {
+      "tag": "forge:plates/tin"
+    }
+  },
+  "pattern": [
+    "   ",
+    "trc",
+    "   "
+  ],
+  "result": {
+    "item": "staticpower:io_port"
+  }
+}

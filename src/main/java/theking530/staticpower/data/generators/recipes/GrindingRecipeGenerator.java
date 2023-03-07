@@ -21,7 +21,7 @@ import theking530.staticpower.data.materials.MaterialBundle.MaterialBundleType;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
 public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
@@ -32,7 +32,7 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 
 	@Override
 	protected void buildRecipes() {
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.getMaterialType() == MaterialBundleType.METAL && bundle.has(MaterialTypes.DUST)) {
 				if (bundle.has(MaterialTypes.INGOT)) {
 					singleItemTodust("ingots/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.INGOT).getItemTag()), bundle.get(MaterialTypes.DUST).get());
@@ -68,12 +68,12 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 			}
 		}
 
-		metalOre(NewModMaterials.IRON, StaticPowerOutputItem.of(NewModMaterials.ZINC.get(MaterialTypes.DUST).get(), 1, 0.05f));
-		metalOre(NewModMaterials.GOLD, StaticPowerOutputItem.of(NewModMaterials.COPPER.get(MaterialTypes.DUST).get(), 1, 0.05f));
-		metalOre(NewModMaterials.COPPER, StaticPowerOutputItem.of(NewModMaterials.GOLD.get(MaterialTypes.DUST).get(), 1, 0.05f));
+		metalOre(ModMaterials.IRON, StaticPowerOutputItem.of(ModMaterials.ZINC.get(MaterialTypes.DUST).get(), 1, 0.05f));
+		metalOre(ModMaterials.GOLD, StaticPowerOutputItem.of(ModMaterials.COPPER.get(MaterialTypes.DUST).get(), 1, 0.05f));
+		metalOre(ModMaterials.COPPER, StaticPowerOutputItem.of(ModMaterials.GOLD.get(MaterialTypes.DUST).get(), 1, 0.05f));
 
-		metalOre(NewModMaterials.LEAD, StaticPowerOutputItem.of(NewModMaterials.TUNGSTEN.get(MaterialTypes.DUST).get(), 1, 0.05f));
-		metalOre(NewModMaterials.TIN, StaticPowerOutputItem.of(NewModMaterials.SILVER.get(MaterialTypes.DUST).get(), 1, 0.05f));
+		metalOre(ModMaterials.LEAD, StaticPowerOutputItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.DUST).get(), 1, 0.05f));
+		metalOre(ModMaterials.TIN, StaticPowerOutputItem.of(ModMaterials.SILVER.get(MaterialTypes.DUST).get(), 1, 0.05f));
 
 		addRecipe("ores/lapis_lazuli", StaticPowerIngredient.of(RecipeItem.of(Tags.Items.ORES_LAPIS)), true, StaticPowerOutputItem.of(Items.LAPIS_LAZULI, 5, 1, 1, 0.4f));
 		addRecipe("ores/redstone", StaticPowerIngredient.of(RecipeItem.of(Tags.Items.ORES_REDSTONE)), true, StaticPowerOutputItem.of(Items.REDSTONE, 4, 1, 2, 0.4f));

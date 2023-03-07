@@ -40,7 +40,7 @@ import theking530.staticpower.init.ModNetworkMessages;
 import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.init.ModRecipeTypes;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.cables.ModCableCapabilities;
 import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
@@ -86,7 +86,7 @@ public class StaticPower {
 		StaticCoreRegistry.preInitialize();
 		ModIntegrations.preInit(eventBus);
 
-		NewModMaterials.init();
+		ModMaterials.init();
 		ModRecipeTypes.init(eventBus);
 		ModRecipeSerializers.init(eventBus);
 		ModBlocks.init(eventBus);

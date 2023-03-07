@@ -124,16 +124,18 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 		builder.addSlot(RecipeIngredientRole.INPUT, 56, 2).addIngredients(recipe.getPrimaryItemInput().getIngredient());
 		builder.addSlot(RecipeIngredientRole.INPUT, 56, 38).addIngredients(recipe.getSecondaryItemInput().getIngredient());
 
+		int displayCapacity = getFluidTankDisplaySize(recipe.getPrimaryFluidInput(), recipe.getSecondaryFluidInput());
+
 		// Add the input fluids.
 		if (!recipe.getPrimaryFluidInput().isEmpty()) {
-			addFluidIngredientSlot(builder, 32, 2, 16, 52, recipe.getPrimaryFluidInput());
+			addFluidIngredientSlot(builder, 32, 2, 16, 52, recipe.getPrimaryFluidInput(), displayCapacity);
 		}
 		if (!recipe.getSecondaryFluidInput().isEmpty()) {
-			addFluidIngredientSlot(builder, 80, 2, 16, 52, recipe.getSecondaryFluidInput());
+			addFluidIngredientSlot(builder, 80, 2, 16, 52, recipe.getSecondaryFluidInput(), displayCapacity);
 		}
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 2).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutput()).setFluidRenderer(getFluidTankDisplaySize(recipe.getOutput()),
 				false, 16, 52);
-		
+
 		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);

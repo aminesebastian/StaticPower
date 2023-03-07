@@ -68,21 +68,21 @@ public class FluidIngredient implements Predicate<FluidStack> {
 	}
 
 	public static FluidIngredient of(int amount, Fluid... fluids) {
-		return of(amount, Arrays.stream(fluids).map((fluid) -> new FluidStack(fluid, amount)));
+		return of(Arrays.stream(fluids).map((fluid) -> new FluidStack(fluid, amount)), amount);
 	}
 
 	public static FluidIngredient of(int amount, FluidStack... fluids) {
-		return of(amount, Arrays.stream(fluids));
+		return of(Arrays.stream(fluids), amount);
 	}
 
-	public static FluidIngredient of(int amount, Stream<FluidStack> p_43922_) {
-		return fromValues(p_43922_.filter((p_43944_) -> {
+	public static FluidIngredient of(Stream<FluidStack> fluids, int amount) {
+		return fromValues(fluids.filter((p_43944_) -> {
 			return !p_43944_.isEmpty();
 		}).map(FluidIngredient.FluidValue::new), amount);
 	}
 
-	public static FluidIngredient of(int amount, TagKey<Fluid> p_204133_) {
-		return fromValues(Stream.of(new FluidIngredient.TagValue(p_204133_)), amount);
+	public static FluidIngredient of(TagKey<Fluid> fluidTag, int amount) {
+		return fromValues(Stream.of(new FluidIngredient.TagValue(fluidTag)), amount);
 	}
 
 	public FluidStack[] getFluids() {

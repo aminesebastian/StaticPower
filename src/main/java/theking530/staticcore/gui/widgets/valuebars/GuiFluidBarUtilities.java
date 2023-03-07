@@ -130,14 +130,14 @@ public class GuiFluidBarUtilities {
 				}
 				depthEffect = Math.min(height - depthHeightStart, depthEffect);
 
-				BufferBuilder tes = tessellator.getBuilder();
-				tes.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-				tes.vertex(pose.last().pose(), x + width + 0.1f, y - depthHeightStart, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f).uv(uMax, vMin).endVertex();
-				tes.vertex(pose.last().pose(), x + width - depthEffectSides, y - depthHeightStart - depthEffect, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f)
+				BufferBuilder bufferBuilder = tessellator.getBuilder();
+				bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+				bufferBuilder.vertex(pose.last().pose(), x + width + 0.1f, y - depthHeightStart, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f).uv(uMax, vMin).endVertex();
+				bufferBuilder.vertex(pose.last().pose(), x + width - depthEffectSides, y - depthHeightStart - depthEffect, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f)
 						.uv(uMax, vMin + (filledRatio * diffV)).endVertex();
-				tes.vertex(pose.last().pose(), x + depthEffectSides, y - depthHeightStart - depthEffect, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f)
+				bufferBuilder.vertex(pose.last().pose(), x + depthEffectSides, y - depthHeightStart - depthEffect, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f)
 						.uv(uMin, vMin + (filledRatio * diffV)).endVertex();
-				tes.vertex(pose.last().pose(), x - 0.1f, y - depthHeightStart, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f).uv(uMin, vMin).endVertex();
+				bufferBuilder.vertex(pose.last().pose(), x - 0.1f, y - depthHeightStart, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f).uv(uMin, vMin).endVertex();
 				tessellator.end();
 			}
 

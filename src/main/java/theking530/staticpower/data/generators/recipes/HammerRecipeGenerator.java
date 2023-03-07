@@ -12,7 +12,7 @@ import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
 public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> {
@@ -26,7 +26,7 @@ public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> {
 		addBlockRecipe("sand_to_silicon", BlockTags.SAND, StaticPowerOutputItem.of(ModItems.Silicon.get(), 1, 0.15f));
 		addItemRecipe("rubber_sheet", StaticPowerIngredient.of(ModItemTags.RUBBER), StaticPowerOutputItem.of(ModItems.RubberSheet.get()));
 
-		for (MaterialBundle material : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
 			if (material.has(MaterialTypes.HEATED_INGOT) && material.has(MaterialTypes.PLATE)) {
 				addItemRecipe("plates/" + material.getName(), StaticPowerIngredient.of(material.get(MaterialTypes.HEATED_INGOT).get()),
 						StaticPowerOutputItem.of(material.get(MaterialTypes.PLATE).get(), 2));

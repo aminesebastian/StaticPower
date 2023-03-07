@@ -1,0 +1,25 @@
+{
+  "type": "staticpower:fusion_furnace",
+  "inputs": [
+    {
+      "count": 3,
+      "ingredient": {
+        "tag": "forge:raw_materials/copper"
+      }
+    },
+    {
+      "ingredient": {
+        "tag": "forge:raw_materials/zinc"
+      }
+    }
+  ],
+  "output": {
+    "item": {
+      "id": "staticpower:raw_bronze"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

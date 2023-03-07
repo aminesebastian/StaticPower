@@ -15,7 +15,7 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class HydroponicFarmingRecipe extends AbstractMachineRecipe {
 	public static final String ID = "hydroponic_farming";
-	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final int DEFAULT_PROCESSING_TIME = 12000;
 	public static final double DEFAULT_POWER_COST = 5.0;
 
 	public static final Codec<HydroponicFarmingRecipe> CODEC = RecordCodecBuilder

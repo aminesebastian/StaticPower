@@ -8,6 +8,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.StaticPower;
 
 public class ModFluidTags {
+	public static final TagKey<Fluid> CONCRETE = create("concrete");
+	public static final TagKey<Fluid> DYE = create("dye");
 
 	public static boolean matches(TagKey<Fluid> tag, Fluid biome) {
 		return ForgeRegistries.FLUIDS.tags().getTag(tag).contains(biome);

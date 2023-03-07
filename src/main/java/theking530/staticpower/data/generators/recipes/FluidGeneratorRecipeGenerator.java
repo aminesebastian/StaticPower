@@ -16,23 +16,23 @@ public class FluidGeneratorRecipeGenerator extends SPRecipeProvider<FluidGenerat
 
 	@Override
 	protected void buildRecipes() {
-		addRecipe("sap_tree", FluidIngredient.of(1, ModFluids.TreeSap.getTag()), 4);
-		addRecipe("sap_infernal_tree", FluidIngredient.of(1, ModFluids.InfernalTreeSap.getTag()), 18);
+		addRecipe("sap_tree", FluidIngredient.of(ModFluids.TreeSap.getTag(), 1), 4);
+		addRecipe("sap_infernal_tree", FluidIngredient.of(ModFluids.InfernalTreeSap.getTag(), 1), 18);
 
-		addRecipe("fluid_static", FluidIngredient.of(1, ModFluids.StaticFluid.getTag()), 8);
-		addRecipe("fluid_energized", FluidIngredient.of(1, ModFluids.EnergizedFluid.getTag()), 16);
-		addRecipe("fluid_lumum", FluidIngredient.of(1, ModFluids.LumumFluid.getTag()), 32);
+		addRecipe("fluid_static", FluidIngredient.of(ModFluids.StaticFluid.getTag(), 1), 8);
+		addRecipe("fluid_energized", FluidIngredient.of(ModFluids.EnergizedFluid.getTag(), 1), 16);
+		addRecipe("fluid_lumum", FluidIngredient.of(ModFluids.LumumFluid.getTag(), 1), 32);
 
-		addRecipe("mash", FluidIngredient.of(1, ModFluids.Mash.getTag()), 2);
-		addRecipe("ethanol", FluidIngredient.of(1, ModFluids.Ethanol.getTag()), 12);
+		addRecipe("mash", FluidIngredient.of(ModFluids.Mash.getTag(), 1), 2);
+		addRecipe("ethanol", FluidIngredient.of(ModFluids.Ethanol.getTag(), 1), 12);
 
-		addRecipe("oil_seed", FluidIngredient.of(1, ModFluids.SeedOil.getTag()), 7);
-		addRecipe("oil_tree", FluidIngredient.of(1, ModFluids.TreeOil.getTag()), 4);
-		addRecipe("oil_crude", FluidIngredient.of(1, ModFluids.CrudeOil.getTag()), 12);
-		addRecipe("oil_light", FluidIngredient.of(1, ModFluids.LightOil.getTag()), 48);
-		addRecipe("oil_heavy", FluidIngredient.of(1, ModFluids.HeavyOil.getTag()), 36);
+		addRecipe("oil_seed", FluidIngredient.of(ModFluids.SeedOil.getTag(), 1), 7);
+		addRecipe("oil_tree", FluidIngredient.of(ModFluids.TreeOil.getTag(), 1), 4);
+		addRecipe("oil_crude", FluidIngredient.of(ModFluids.CrudeOil.getTag(), 1), 12);
+		addRecipe("oil_light", FluidIngredient.of(ModFluids.LightOil.getTag(), 1), 48);
+		addRecipe("oil_heavy", FluidIngredient.of(ModFluids.HeavyOil.getTag(), 1), 36);
 
-		addRecipe("fuel", FluidIngredient.of(1, ModFluids.Fuel.getTag()), 60);
+		addRecipe("fuel", FluidIngredient.of(ModFluids.Fuel.getTag(), 1), 60);
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluid, int powerGeneration) {

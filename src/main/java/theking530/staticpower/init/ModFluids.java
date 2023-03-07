@@ -125,7 +125,7 @@ public class ModFluids {
 	}
 
 	public static void init(IEventBus eventBus) {
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			bundle.generateFluids();
 		}
 		FLUID_TYPES.register(eventBus);

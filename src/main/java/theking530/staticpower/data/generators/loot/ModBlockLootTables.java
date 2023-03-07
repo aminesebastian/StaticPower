@@ -22,7 +22,7 @@ import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.NewModMaterials;
+import theking530.staticpower.init.ModMaterials;
 
 public class ModBlockLootTables extends BlockLoot {
 
@@ -36,7 +36,7 @@ public class ModBlockLootTables extends BlockLoot {
 			}
 		}
 
-		for (MaterialBundle bundle : NewModMaterials.MATERIALS.values()) {
+		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasGeneratedMaterial(MaterialTypes.OVERWORLD_ORE)) {
 				addOre(bundle.get(MaterialTypes.OVERWORLD_ORE).get(), bundle.get(MaterialTypes.RAW_MATERIAL).get());
 			}

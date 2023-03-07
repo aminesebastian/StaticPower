@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "forge:glass_panes"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "t": {
+      "tag": "forge:ingots/tin"
+    }
+  },
+  "pattern": [
+    "igi",
+    "ttt",
+    "trt"
+  ],
+  "result": {
+    "item": "staticpower:cable_network_analyzer"
+  }
+}

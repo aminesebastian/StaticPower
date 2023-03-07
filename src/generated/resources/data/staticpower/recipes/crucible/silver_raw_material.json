@@ -6,7 +6,7 @@
     }
   },
   "output_fluid": {
-    "amount": 144,
+    "amount": 1296,
     "fluid_name": "staticpower:molten_silver"
   },
   "processing": {
@@ -15,7 +15,7 @@
   },
   "slag_item": {
     "item": {
-      "count": 2,
+      "count": 5,
       "id": "staticpower:slag"
     }
   }

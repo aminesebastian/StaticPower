@@ -1,5 +1,7 @@
 package theking530.staticpower.data.crafting;
 
+import java.util.stream.Stream;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
@@ -39,6 +41,17 @@ public class StaticPowerIngredient {
 		this.count = count;
 	}
 
+	protected StaticPowerIngredient(int count, ItemLike... itemLikes) {
+		ingredient = Ingredient.of(itemLikes);
+		this.count = count;
+	}
+
+	@SafeVarargs
+	protected StaticPowerIngredient(int count, TagKey<Item>... tags) {
+		ingredient = Ingredient.fromValues(Stream.of(tags).map(tag -> new Ingredient.TagValue(tag)));
+		this.count = count;
+	}
+
 	protected StaticPowerIngredient(Ingredient ingredient, int count) {
 		this.ingredient = ingredient;
 		this.count = count;
@@ -54,6 +67,16 @@ public class StaticPowerIngredient {
 
 	public static StaticPowerIngredient of(TagKey<Item> item) {
 		return new StaticPowerIngredient(RecipeItem.of(item), 1);
+	}
+
+	@SafeVarargs
+	public static StaticPowerIngredient of(TagKey<Item>... items) {
+		return new StaticPowerIngredient(1, items);
+	}
+
+	@SafeVarargs
+	public static StaticPowerIngredient of(int count, TagKey<Item>... items) {
+		return new StaticPowerIngredient(count, items);
 	}
 
 	public static StaticPowerIngredient of(TagKey<Item> item, int count) {

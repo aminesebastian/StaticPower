@@ -23,22 +23,22 @@ public class BottlerRecipeGenerator extends SPRecipeProvider<BottleRecipe> {
 	@Override
 	protected void buildRecipes() {
 		addRecipe("apple_juice", create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(ModItems.AppleJuiceBottle.get()),
-				FluidIngredient.of(1000, ModFluids.AppleJuice.getTag())));
+				FluidIngredient.of(ModFluids.AppleJuice.getTag(), 1000)));
 		addRecipe("beetroot_juice", create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(ModItems.BeetJuiceBottle.get()),
-				FluidIngredient.of(1000, ModFluids.BeetJuice.getTag())));
+				FluidIngredient.of(ModFluids.BeetJuice.getTag(), 1000)));
 		addRecipe("berry_juice", create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(ModItems.BerryJuiceBottle.get()),
-				FluidIngredient.of(1000, ModFluids.BerryJuice.getTag())));
+				FluidIngredient.of(ModFluids.BerryJuice.getTag(), 1000)));
 		addRecipe("carrot_juice", create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(ModItems.CarrotJuiceBottle.get()),
-				FluidIngredient.of(1000, ModFluids.CarrotJuice.getTag())));
+				FluidIngredient.of(ModFluids.CarrotJuice.getTag(), 1000)));
 		addRecipe("honey_bottle",
-				create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(Items.HONEY_BOTTLE), FluidIngredient.of(1000, ModFluids.Honey.getTag())));
+				create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(Items.HONEY_BOTTLE), FluidIngredient.of(ModFluids.Honey.getTag(), 1000)));
 		addRecipe("melon_juice", create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(ModItems.MelonJuiceBottle.get()),
-				FluidIngredient.of(1000, ModFluids.WatermelonJuice.getTag())));
-		addRecipe("milk", create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(ModItems.MilkBottle.get()), FluidIngredient.of(1000, Fluids.MILK)));
+				FluidIngredient.of(ModFluids.WatermelonJuice.getTag(), 1000)));
+		addRecipe("milk", create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(ModItems.MilkBottle.get()), FluidIngredient.of(Fluids.MILK, 1000)));
 		addRecipe("pumpkin_juice", create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(ModItems.PumpkinJuiceBottle.get()),
-				FluidIngredient.of(1000, ModFluids.PumpkinJuice.getTag())));
+				FluidIngredient.of(ModFluids.PumpkinJuice.getTag(), 1000)));
 		addRecipe("water_bottle",
-				create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(Items.GLASS_BOTTLE), FluidIngredient.of(1000, FluidTags.WATER)));
+				create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(Items.GLASS_BOTTLE), FluidIngredient.of(FluidTags.WATER, 1000)));
 	}
 
 	protected SPRecipeBuilder<BottleRecipe> create(StaticPowerIngredient emptyBottle, StaticPowerOutputItem filledBottle, FluidIngredient fluid) {

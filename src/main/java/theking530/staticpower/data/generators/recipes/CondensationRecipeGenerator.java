@@ -18,8 +18,8 @@ public class CondensationRecipeGenerator extends SPRecipeProvider<CondensationRe
 
 	@Override
 	protected void buildRecipes() {
-		addRecipe("ethanol", create(FluidIngredient.of(10, ModFluids.EvaporatedMash.getTag()), new FluidStack(ModFluids.Ethanol.getSource().get(), 1), 20, 100));
-		addRecipe("water_from_steam", create(FluidIngredient.of(10, ModFluids.Steam.getTag()), new FluidStack(Fluids.WATER, 1), 10, 100));
+		addRecipe("ethanol", create(FluidIngredient.of(ModFluids.EvaporatedMash.getTag(), 10), new FluidStack(ModFluids.Ethanol.getSource().get(), 1), 20, 100));
+		addRecipe("water_from_steam", create(FluidIngredient.of(ModFluids.Steam.getTag(), 10), new FluidStack(Fluids.WATER, 1), 10, 100));
 
 	}
 

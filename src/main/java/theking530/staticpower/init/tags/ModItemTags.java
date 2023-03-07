@@ -76,6 +76,7 @@ public class ModItemTags {
 
 	public static final TagKey<Item> HEATED_INGOTS = create("heated_ingots");
 	public static final TagKey<Item> WIRE_COILS = create("wire_coils");
+	public static final TagKey<Item> WIRES = create("wires");
 	public static final TagKey<Item> PLATES = createForgeTag("plates");
 	public static final TagKey<Item> GEARS = createForgeTag("gear");
 
@@ -85,6 +86,9 @@ public class ModItemTags {
 
 	public static final TagKey<Item> COAL_DUST = createForgeTag("dusts/coal");
 	public static final TagKey<Item> CHARCOAL_DUST = createForgeTag("dusts/charcoal");
+	
+	public static final TagKey<Item> OBSIDIAN_DUST = create("dusts/obsidian");
+	public static final TagKey<Item> WOOD_DUST = create("dusts/woood");
 
 	public static boolean matches(TagKey<Item> tag, Item item) {
 		return ForgeRegistries.ITEMS.tags().getTag(tag).contains(item);
