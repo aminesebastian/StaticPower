@@ -11,5 +11,6 @@
       "count": 2,
       "id": "staticpower:plate_lead"
     }
-  }
+  },
+  "requires_anvil": true
 }

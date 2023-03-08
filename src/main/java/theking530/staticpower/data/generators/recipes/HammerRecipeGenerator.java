@@ -23,27 +23,31 @@ public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> {
 
 	@Override
 	protected void buildRecipes() {
-		addBlockRecipe("sand_to_silicon", BlockTags.SAND, StaticPowerOutputItem.of(ModItems.Silicon.get(), 1, 0.15f));
-		addItemRecipe("rubber_sheet", StaticPowerIngredient.of(ModItemTags.RUBBER), StaticPowerOutputItem.of(ModItems.RubberSheet.get()));
-
 		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
 			if (material.has(MaterialTypes.HEATED_INGOT) && material.has(MaterialTypes.PLATE)) {
 				addItemRecipe("plates/" + material.getName(), StaticPowerIngredient.of(material.get(MaterialTypes.HEATED_INGOT).get()),
-						StaticPowerOutputItem.of(material.get(MaterialTypes.PLATE).get(), 2));
+						StaticPowerOutputItem.of(material.get(MaterialTypes.PLATE).get(), 2), true);
 			}
 		}
+
+		addBlockRecipe("sand_to_silicon", BlockTags.SAND, StaticPowerOutputItem.of(ModItems.Silicon.get(), 1, 0.15f));
+		addItemRecipe("rubber_sheet", StaticPowerIngredient.of(ModItemTags.RUBBER), StaticPowerOutputItem.of(ModItems.RubberSheet.get()), false);
+		addItemRecipe("coal_dust", StaticPowerIngredient.of(ModMaterials.COAL.get(MaterialTypes.RAW_MATERIAL).getItemTag()),
+				StaticPowerOutputItem.of(ModMaterials.COAL.get(MaterialTypes.DUST).get()), false);
+		addItemRecipe("charcoal_dust", StaticPowerIngredient.of(ModMaterials.CHARCOAL.get(MaterialTypes.RAW_MATERIAL).getItemTag()),
+				StaticPowerOutputItem.of(ModMaterials.CHARCOAL.get(MaterialTypes.DUST).get()), false);
 	}
 
 	protected void addBlockRecipe(String nameOverride, TagKey<Block> block, StaticPowerOutputItem output) {
-		addRecipe(nameOverride, block, null, output);
+		addRecipe(nameOverride, block, null, output, false);
 	}
 
-	protected void addItemRecipe(String nameOverride, StaticPowerIngredient inputItem, StaticPowerOutputItem output) {
-		addRecipe(nameOverride, null, inputItem, output);
+	protected void addItemRecipe(String nameOverride, StaticPowerIngredient inputItem, StaticPowerOutputItem output, boolean requiresAnvil) {
+		addRecipe(nameOverride, null, inputItem, output, requiresAnvil);
 	}
 
-	protected void addRecipe(String nameOverride, TagKey<Block> block, StaticPowerIngredient inputItem, StaticPowerOutputItem output) {
-		HammerRecipe recipe = new HammerRecipe(null, 1, inputItem, block, output);
+	protected void addRecipe(String nameOverride, TagKey<Block> block, StaticPowerIngredient inputItem, StaticPowerOutputItem output, boolean requiresAnvil) {
+		HammerRecipe recipe = new HammerRecipe(null, 1, HammerRecipe.DEFAULT_HAMMERS, inputItem, block, output, requiresAnvil);
 		addRecipe(nameOverride, SPRecipeBuilder.create(recipe));
 	}
 }

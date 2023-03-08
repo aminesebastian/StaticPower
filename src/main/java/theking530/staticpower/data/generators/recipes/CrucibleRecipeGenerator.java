@@ -63,7 +63,7 @@ public class CrucibleRecipeGenerator extends SPRecipeProvider<CrucibleRecipe> {
 								new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 1296), CastingRecipe.DEFAULT_PROCESSING_TIME * 9));
 			}
 			if (material.hasOre()) {
-				addRecipe("/" + material.getName() + "_ore", create(StaticPowerIngredient.of(material.getOreItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 9),
+				addRecipe("/" + material.getName() + "_ore", create(StaticPowerIngredient.of(material.oreItemTag()), StaticPowerOutputItem.of(ModItems.Slag.get(), 9),
 						new FluidStack(material.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get(), 1296), CastingRecipe.DEFAULT_PROCESSING_TIME * 9));
 			}
 		}

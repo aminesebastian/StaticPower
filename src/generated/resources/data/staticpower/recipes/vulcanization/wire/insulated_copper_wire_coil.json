@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:vulcanizer",
+  "input_fluid": {
+    "amount": 1000,
+    "fluids": {
+      "tag": "staticpower:latex"
+    }
+  },
+  "input_item": {
+    "ingredient": {
+      "tag": "forge:wire_coil/copper"
+    }
+  },
+  "output_item": {
+    "item": {
+      "id": "staticpower:wire_coil_insulated_copper"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

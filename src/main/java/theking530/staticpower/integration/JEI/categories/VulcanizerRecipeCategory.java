@@ -24,7 +24,6 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe;
@@ -39,7 +38,6 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 	private final IDrawable background;
 	private final IDrawable icon;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public VulcanizerRecipeCategory(IGuiHelper guiHelper) {
@@ -73,11 +71,11 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 
 	@Override
 	public void draw(VulcanizerRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 76, 40, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 112, 15, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 40, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 43, 5, 62, 23, 0);
@@ -97,11 +95,12 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, VulcanizerRecipe recipe, IFocusGroup ingredients) {
+		builder.addSlot(RecipeIngredientRole.INPUT, 76, 40).addIngredients(recipe.getInputItem().getIngredient());
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 114, 17).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 		addFluidIngredientSlot(builder, 40, 4, 16, 52, recipe.getInputFluid());
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

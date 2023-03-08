@@ -1,0 +1,24 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "n": {
+      "tag": "forge:nuggets/gold"
+    },
+    "p": {
+      "tag": "staticpower:plates/energized_metal"
+    },
+    "s": {
+      "item": "staticpower:silicon_doped_energized"
+    }
+  },
+  "pattern": [
+    "pnp",
+    "nsn",
+    "pnp"
+  ],
+  "result": {
+    "item": {
+      "id": "staticpower:processor_energized"
+    }
+  }
+}

@@ -11,5 +11,6 @@
       "count": 2,
       "id": "staticpower:plate_inert_infusion_alloy"
     }
-  }
+  },
+  "requires_anvil": true
 }

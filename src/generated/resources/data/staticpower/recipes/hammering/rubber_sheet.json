@@ -10,5 +10,6 @@
     "item": {
       "id": "staticpower:rubber_sheet"
     }
-  }
+  },
+  "requires_anvil": false
 }

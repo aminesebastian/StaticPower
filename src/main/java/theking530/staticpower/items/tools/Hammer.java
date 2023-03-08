@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -28,7 +29,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,6 +40,7 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.init.ModRecipeTypes;
+import theking530.staticpower.init.tags.ModBlockTags;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -103,61 +104,74 @@ public class Hammer extends StaticPowerItem {
 	}
 
 	public boolean onHitBlockLeftClick(ItemStack stack, Player player, BlockPos pos, Direction face) {
-		// Only craft if on an anvil.
-		if (player.getCommandSenderWorld().getBlockState(pos).is(Blocks.ANVIL) || player.getCommandSenderWorld().getBlockState(pos).is(Blocks.CHIPPED_ANVIL)
-				|| player.getCommandSenderWorld().getBlockState(pos).is(Blocks.DAMAGED_ANVIL)) {
-			// Check for all items on the block above the one we hit.
-			boolean crafted = false;
-			AABB bounds = new AABB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1);
-			List<ItemEntity> droppedItems = player.getCommandSenderWorld().getEntitiesOfClass(ItemEntity.class, bounds, (ItemEntity entity) -> true);
-			for (int i = droppedItems.size() - 1; i >= 0; i--) {
-				// Get the item entity.
-				ItemEntity entity = droppedItems.get(i);
-				if (entity == null || entity.getItem().isEmpty()) {
+		BlockState hitBlock = player.level.getBlockState(pos);
+		boolean hitAnvil = ModBlockTags.matches(BlockTags.ANVIL, hitBlock.getBlock());
+
+		// Check for all items on the block above the one we hit.
+		boolean crafted = false;
+		BlockPos targetPos = pos.relative(face);
+		AABB bounds = new AABB(targetPos.getX(), targetPos.getY(), targetPos.getZ(), targetPos.getX() + 1, targetPos.getY() + 1, targetPos.getZ() + 1);
+		List<ItemEntity> droppedItems = player.getCommandSenderWorld().getEntitiesOfClass(ItemEntity.class, bounds, (ItemEntity entity) -> true);
+		for (int i = droppedItems.size() - 1; i >= 0; i--) {
+			// Get the item entity.
+			ItemEntity entity = droppedItems.get(i);
+			if (entity == null || entity.getItem().isEmpty()) {
+				continue;
+			}
+
+			// Create the params and attempt to get the recipe.
+			RecipeMatchParameters params = new RecipeMatchParameters(entity.getItem().copy());
+			Optional<HammerRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.HAMMER_RECIPE_TYPE.get(), params);
+
+			// If we have a recipe, craft using the recipe.
+			if (recipe.isPresent() && !recipe.get().isBlockType()) {
+				if (recipe.get().requiresAnvil() && !hitAnvil) {
 					continue;
 				}
 
-				// Create the params and attempt to get the recipe.
-				RecipeMatchParameters params = new RecipeMatchParameters(entity.getItem().copy());
-				Optional<HammerRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.HAMMER_RECIPE_TYPE.get(), params);
-
-				// If we have a recipe, craft using the recipe.
-				if (recipe.isPresent() && !recipe.get().isBlockType()) {
-
-					// Perform the crafting only on the server.
-					if (!player.getCommandSenderWorld().isClientSide()) {
-						if (craftRecipe(stack, (Player) player, pos, recipe.get())) {
-							entity.getItem().shrink(recipe.get().getInputItem().getCount());
+				// Perform the crafting only on the server.
+				if (!player.getCommandSenderWorld().isClientSide()) {
+					if (craftRecipe(stack, (Player) player, pos, recipe.get())) {
+						entity.getItem().shrink(recipe.get().getInputItem().getCount());
+						if (hitAnvil) {
 							entity.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.5F, (float) (0.8F + Math.random() * 0.3));
-							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
-									0.00D);
 							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D,
 									0.0D, 0.00D);
 							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.LAVA, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
 									0.1D);
-							crafted = true;
-							break;
+						} else {
+							entity.getCommandSenderWorld().playSound(null, pos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 0.5F, (float) (0.8F + Math.random() * 0.3));
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.ASH, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
+									0.00D);
 						}
+
+						((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
+								0.00D);
+
+						crafted = true;
+						break;
 					}
 				}
 			}
-
-			// If we haven't crafted, still play a sound on the server.
-			if (!player.getCommandSenderWorld().isClientSide()) {
-				if (crafted) {
-					// Get the tier.
-					StaticPowerTier tier = StaticPowerConfig.getTier(this.tier);
-
-					// Set the cooldown before the player can hammer again.
-					player.getCooldowns().addCooldown(stack.getItem(), tier.toolConfiguration.hammerCooldown.get());
-				} else {
-					player.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.5F, (float) (1.2F + Math.random() * 0.3));
-					player.getCooldowns().addCooldown(stack.getItem(), 5);
-				}
-			}
-			return crafted;
 		}
-		return false;
+
+		// If we haven't crafted, still play a sound on the server.
+		if (!player.getCommandSenderWorld().isClientSide()) {
+			if (crafted) {
+				// Get the tier.
+				StaticPowerTier tier = StaticPowerConfig.getTier(this.tier);
+
+				// Set the cooldown before the player can hammer again.
+				player.getCooldowns().addCooldown(stack.getItem(), tier.toolConfiguration.hammerCooldown.get());
+			} else {
+				if (hitAnvil) {
+					player.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.3F, (float) (1.2F + Math.random() * 0.3));
+				}
+
+				player.getCooldowns().addCooldown(stack.getItem(), 5);
+			}
+		}
+		return crafted;
 	}
 
 	@Override

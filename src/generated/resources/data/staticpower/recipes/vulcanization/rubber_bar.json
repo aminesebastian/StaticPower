@@ -6,6 +6,11 @@
       "tag": "staticpower:latex"
     }
   },
+  "input_item": {
+    "ingredient": {
+      "tag": "staticpower:dusts/coals"
+    }
+  },
   "output_item": {
     "item": {
       "id": "staticpower:rubber_bar"

@@ -63,7 +63,7 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 	public FluidStack getNthFluidInput(IRecipeSlotsView recipeSlotsView, int offset) {
 		int hits = 0;
 		for (IRecipeSlotView view : recipeSlotsView.getSlotViews(RecipeIngredientRole.INPUT)) {
-			if (view.getDisplayedIngredient().get().getIngredient() instanceof FluidStack) {
+			if (view.getDisplayedIngredient().isPresent() && view.getDisplayedIngredient().get().getIngredient() instanceof FluidStack) {
 				if (hits == offset) {
 					return (FluidStack) view.getDisplayedIngredient().get().getIngredient();
 				}

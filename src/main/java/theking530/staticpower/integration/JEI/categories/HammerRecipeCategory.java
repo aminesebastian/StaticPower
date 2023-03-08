@@ -79,7 +79,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		GuiDrawUtilities.drawItem(matrixStack, recipe.getHammer().getItems()[0], 31, 13, 0, 32, 32, 1.0f);
-		if (!recipe.isBlockType()) {
+		if (!recipe.isBlockType() && recipe.requiresAnvil()) {
 			GuiDrawUtilities.drawString(matrixStack, "Requires Anvil", 89, 47, 0.0f, 1.0f, SDColor.EIGHT_BIT_GREY, false);
 		}
 	}

@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-06T22:51:18.2073173	Tags for minecraft:item
+// 1.19.2	2023-03-08T01:42:18.8319249	Tags for minecraft:item
 51b00e5b14b17e9df81bc1b25cec37a2fe8031dc data/forge/tags/items/chunks/aluminum.json
 51bedc018c85271eca5afd8b657d0c5c1c7ffeac data/forge/tags/items/chunks/coal.json
 d8a3eb079dc5e7de3ceeafed90cc657c79950b6c data/forge/tags/items/chunks/copper.json
@@ -54,8 +54,8 @@ fdab8ddd5529ae14b26bc1853b004131135318a4 data/forge/tags/items/gems/diamond.json
 8c4f379d97e2cd8c7f9297bf4fab7e60083ecb0d data/forge/tags/items/gems/emerald.json
 42605e6989bb70ecdd5f2ded50fbb315b1c185ec data/forge/tags/items/gems/lapis.json
 42605e6989bb70ecdd5f2ded50fbb315b1c185ec data/forge/tags/items/gems/quartz.json
-4e98c27e72bf120d41db5c4f7bb9b9ce47a7e513 data/forge/tags/items/gems/ruby.json
-3db48d72bd130ed3a4ff8946f8cf8b43989317fb data/forge/tags/items/gems/sapphire.json
+a952b693618782dfcfb8873e6089dc16c9e2a904 data/forge/tags/items/gems/ruby.json
+b3ed154a817d8414a72d883081c53da3f54feda6 data/forge/tags/items/gems/sapphire.json
 18b8d719feb3a5420d93e7a9269d1ed19a5041f6 data/forge/tags/items/ingots.json
 491b0bcab23a9db9c95381f8972087760a897cf8 data/forge/tags/items/ingots/aluminum.json
 7f8e594f723324bafc97d1c6f51098673989d3bb data/forge/tags/items/ingots/brass.json
@@ -90,11 +90,11 @@ fa3fe04857c986e0a44a6667f34c61476ce44c3d data/forge/tags/items/nuggets/tungsten.
 1ed8c6375235d71cbedaa412167804ea4fb8fc97 data/forge/tags/items/ores.json
 a2bda67c5d909a46c468ef0fe160e60f0bf49f1e data/forge/tags/items/ores/aluminum.json
 6ab60a84dde670dba86298809f66887a05c426c4 data/forge/tags/items/ores/coal.json
-eead424cffc987dc75af69c04d0544dc849f75c0 data/forge/tags/items/ores/copper.json
+d1c688f6b4d83d63871b6d81f913f656c42ff10d data/forge/tags/items/ores/copper.json
 3e785627fc8676629e25406630d77b36f8c19890 data/forge/tags/items/ores/diamond.json
 81984ab90ad9a6d70742045f6fb24d214c84750e data/forge/tags/items/ores/emerald.json
-1618925ae9ef48897c974a69ac84ada5a10407e7 data/forge/tags/items/ores/gold.json
-2aebc51370923c24dc84a46410ccebdfb7d66246 data/forge/tags/items/ores/iron.json
+9ebccd990449eb0dc4e5b543497d9ba8d7e4fb56 data/forge/tags/items/ores/gold.json
+6f644be81935031ad964cbde4b17688dbe2bf388 data/forge/tags/items/ores/iron.json
 f26dad5c414194fa368d5bb30692d0407602b04e data/forge/tags/items/ores/lapis.json
 1ea484565567160e9431ce43a1d4348cc22b2426 data/forge/tags/items/ores/lead.json
 8b05808d79ab659bd72e616c0ed1a8d117985786 data/forge/tags/items/ores/magnesium.json
@@ -147,7 +147,6 @@ b1a2fb1fedd49e2d69ef4ff2467c80ee9df7df8a data/forge/tags/items/rods/tin.json
 62825bba6f7bc405fe766363cff0df34ace3c202 data/forge/tags/items/rubber_sheet.json
 4b4657fe925db0ed31f82d95aabc53d11894e1a4 data/forge/tags/items/rubber_wood_logs.json
 f8c5ffdfabe244c3950910be77feb2367ec3a6bf data/forge/tags/items/seeds.json
-36d36b2390fbb1e0f0a9cc7e97c3f3464a558703 data/forge/tags/items/silicon.json
 d7ce7eec94a7267109bfc05c228f1736caadef2e data/forge/tags/items/storage_blocks/aluminum.json
 150da1135a6d5d7b9cb1ec65250c0aceaa835dff data/forge/tags/items/storage_blocks/coal.json
 43a45a1abbda26eb85071635bb20e4db6d13fdab data/forge/tags/items/storage_blocks/copper.json
@@ -221,13 +220,14 @@ f3496554445a0ae3e4bf0d14007db874293a2aa1 data/staticpower/tags/items/cauldrons.j
 b5528cd01649a1309202d569b50e24035689575d data/staticpower/tags/items/chests.json
 be555cbc5abd8b3fe4b58955a78d28fa6945a6ee data/staticpower/tags/items/circuit_breakers.json
 2fffdb63683f8a6653f815eec7ebc8e7db031f8c data/staticpower/tags/items/conveyors.json
+ac62d95136049e6f8645f1989fb7200668330c3c data/staticpower/tags/items/dusts/coals.json
 247dbcb1edd946d719ff1791e46f16ea6bcd4c4a data/staticpower/tags/items/dusts/energized_metal.json
 c796756261b201aca282a3da3bf4664aa5e38fa6 data/staticpower/tags/items/dusts/inert_infusion_alloy.json
 8e7f5c96d3e26703a588f48b766f4c477e140214 data/staticpower/tags/items/dusts/lumum_metal.json
 42591d5cc2e073be85a207880f9001ad07731d1e data/staticpower/tags/items/dusts/obsidian.json
 04624cf65e6ed1646e121fbc911dc92fe9d216bc data/staticpower/tags/items/dusts/redstone_alloy.json
 38b508af4d3ad77eaebd5eaeee86dd719ad31ac2 data/staticpower/tags/items/dusts/static_metal.json
-58d7369a835d2de65eccc9bd2d5bc4682b63ae92 data/staticpower/tags/items/dusts/woood.json
+58d7369a835d2de65eccc9bd2d5bc4682b63ae92 data/staticpower/tags/items/dusts/wood.json
 16196247eb2d7d338876c9c35a37a72484c0dfab data/staticpower/tags/items/farming_axe.json
 e34e35e2a96500e7b235aa6526f455d2fa5ab910 data/staticpower/tags/items/farming_hoe.json
 8a17076acc085e2ec1d9ed201a24cd695d0d0cc2 data/staticpower/tags/items/farming_seeds.json
@@ -263,7 +263,7 @@ e931e350be5042e282e2061a6667161aedcb8fd4 data/staticpower/tags/items/ingot_or_pl
 35c86d69724a6fbde4f9778cbae604be21d4430b data/staticpower/tags/items/ingot_or_plate/tin.json
 c3ee03b6ec91f239e2a1e4dbe7ca9f3414305560 data/staticpower/tags/items/ingot_or_plate/tungsten.json
 6b12387585a43cc1314d136279dda18d1d1a86b6 data/staticpower/tags/items/ingot_or_plate/zinc.json
-d7e060942a107650e9d70cd7b8efc1b26baa4e72 data/staticpower/tags/items/lightbulbs.json
+66d0f6cbf1b662320789f38ca7a97cfad2fe5c35 data/staticpower/tags/items/lightbulbs.json
 4c78890f8ac79bcc95b16dcae9c786673881a181 data/staticpower/tags/items/machines.json
 2528913fac539e196dfc1dd3beaf5a78d22819ff data/staticpower/tags/items/machine_blocks.json
 e8f309955d537f37f48055743def9728df64488b data/staticpower/tags/items/materials.json
@@ -293,6 +293,7 @@ e4170793b6a2bf7d0b358319e97c88fca1f604a5 data/staticpower/tags/items/research.js
 dd3f15d12d2d0498e96daebfadee969cc1dda403 data/staticpower/tags/items/rods/inert_infusion_alloy.json
 6ae414b9e5a2b8227cf3cd580cecd25ef1ddd907 data/staticpower/tags/items/rods/lumum_metal.json
 e867b867c9a82c9c8f0f8c7241c3441e48dfe4b5 data/staticpower/tags/items/rods/static_metal.json
+36d36b2390fbb1e0f0a9cc7e97c3f3464a558703 data/staticpower/tags/items/silicon.json
 5b40be9ae298e2db7fbf313dd26f5d616f26f563 data/staticpower/tags/items/solar_panels.json
 77bef6b77933b44c7650876fdf0942216673d947 data/staticpower/tags/items/storage_blocks/cut_energized_metal.json
 4a88f050f36ef96153bac8af7016280a7ea8a77f data/staticpower/tags/items/storage_blocks/cut_inert_infusion_alloy.json

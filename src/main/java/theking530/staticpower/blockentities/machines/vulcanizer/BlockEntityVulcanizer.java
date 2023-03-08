@@ -22,6 +22,7 @@ import theking530.staticpower.blockentities.components.fluids.FluidTankComponent
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
+import theking530.staticpower.blockentities.components.items.InputServoComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
@@ -38,6 +39,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 	public static final BlockEntityTypeAllocator<BlockEntityVulcanizer> TYPE = new BlockEntityTypeAllocator<BlockEntityVulcanizer>("vulcanizer",
 			(type, pos, state) -> new BlockEntityVulcanizer(pos, state), ModBlocks.Vulcanizer);
 
+	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -55,6 +57,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 		StaticPowerTier tierObject = getTierObject();
 
 		// Setup the inventories.
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
@@ -68,6 +71,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the I/O servos.
+		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Setup the fluid tanks and servo.
@@ -92,7 +96,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<VulcanizerRecipe> component) {
-		return new RecipeMatchParameters(fluidTankComponent.getFluid());
+		return new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
@@ -107,6 +111,9 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 	public void captureInputsAndProducts(RecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+		if (recipe.hasInputItem()) {
+			outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputItem().getCount(), false), CaptureType.BOTH);
+		}
 		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getInputFluid().getAmount(), CaptureType.BOTH);
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
 	}

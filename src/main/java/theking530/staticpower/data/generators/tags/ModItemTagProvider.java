@@ -73,6 +73,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModItemTags.OBSIDIAN_DUST).add(ModItems.DustObsidian.get());
 		tag(ModItemTags.WOOD_DUST).add(ModItems.DustWood.get());
 
+		tag(ModItemTags.COALS_DUST).addTag(ModMaterials.COAL.get(MaterialTypes.DUST).getItemTag()).addTag(ModMaterials.CHARCOAL.get(MaterialTypes.DUST).getItemTag());
+
 		tag(Tags.Items.NUGGETS).add(
 				toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.NUGGET)).map((bundle) -> bundle.get(MaterialTypes.NUGGET).get())));
 
@@ -179,19 +181,16 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				.add(toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.INSULATED_WIRE_COIL))
 						.map((bundle) -> bundle.get(MaterialTypes.INSULATED_WIRE_COIL).get())));
 
-		tag(ModItemTags.createForgeTag("gems/ruby")).add(ModMaterials.RUBY.get(MaterialTypes.RAW_MATERIAL).get());
-		tag(ModItemTags.createForgeTag("gems/sapphire")).add(ModMaterials.SAPPHIRE.get(MaterialTypes.RAW_MATERIAL).get());
-
 		tag(ModItemTags.RUBBER).add(ModItems.RubberBar.get());
 		tag(ModItemTags.RUBBER_SHEET).add(ModItems.RubberSheet.get());
 
-		tag(ModItemTags.createForgeTag("leather")).add(ModItems.Eather.get());
-		tag(ModItemTags.createForgeTag("seeds")).add(ModItems.StaticSeeds.get(), ModItems.EnergizedSeeds.get(), ModItems.LumumSeeds.get());
-		tag(ModItemTags.createForgeTag("silicon")).add(ModItems.Silicon.get());
+		tag(Tags.Items.LEATHER).add(ModItems.Eather.get());
+		tag(Tags.Items.SEEDS).add(ModItems.StaticSeeds.get(), ModItems.EnergizedSeeds.get(), ModItems.LumumSeeds.get());
+		tag(ModItemTags.SILICON).add(ModItems.Silicon.get());
 
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasGeneratedOre()) {
-				copy(bundle.getOreBlockTag(), bundle.getOreItemTag());
+				copy(bundle.oreBlockTag(), bundle.oreItemTag());
 			}
 
 			for (Material<?> material : bundle.getMaterials()) {
@@ -208,8 +207,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 				}
 			}
 
-			if (bundle.getPlateOrIngotTag() != null) {
-				tag(bundle.getPlateOrIngotTag()).addTag(bundle.get(MaterialTypes.PLATE).getItemTag()).addTag(bundle.get(MaterialTypes.INGOT).getItemTag());
+			if (bundle.plateOrIngotTag() != null) {
+				tag(bundle.plateOrIngotTag()).addTag(bundle.get(MaterialTypes.PLATE).getItemTag()).addTag(bundle.get(MaterialTypes.INGOT).getItemTag());
 			}
 		}
 

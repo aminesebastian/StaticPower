@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "c": {
+      "tag": "forge:wire_coil/copper"
+    },
+    "t": {
+      "tag": "forge:plates/tin"
+    }
+  },
+  "pattern": [
+    " t ",
+    "tct",
+    " t "
+  ],
+  "result": {
+    "item": {
+      "count": 3,
+      "id": "staticpower:servo"
+    }
+  }
+}

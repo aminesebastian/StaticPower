@@ -21,7 +21,7 @@ public class TumblerRecipeGenerator extends SPRecipeProvider<TumblerRecipe> {
 	protected void buildRecipes() {
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasOre() && bundle.has(MaterialTypes.CHUNKS)) {
-				addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.getOreItemTag()),
+				addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.oreItemTag()),
 						StaticPowerOutputItem.of(bundle.get(MaterialTypes.CHUNKS).get(), 6, 1, 2, 0.25f));
 			}
 			if (bundle.has(MaterialTypes.RAW_MATERIAL) && bundle.has(MaterialTypes.CHUNKS)) {

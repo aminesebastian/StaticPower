@@ -46,7 +46,6 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 	private final ArrowProgressBar pBar;
 	private final FireProgressBar fireBar;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public SolidGeneratorRecipeCategory(IGuiHelper guiHelper) {
@@ -131,7 +130,6 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		int burnTime = recipe.getFuelAmount();
 		addPowerOutputSlot(builder, 5, 6, 16, 48, MachineRecipeProcessingSection.hardcoded(burnTime, StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get(), 0, 0));
 
-		powerTimer = guiHelper.createTickTimer(Math.max(1, burnTime / 10), (int) (StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get() * burnTime), false);
 		processingTimer = guiHelper.createTickTimer(burnTime, burnTime, false);
 	}
 }

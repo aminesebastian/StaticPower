@@ -1,0 +1,24 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "n": {
+      "tag": "forge:nuggets/copper"
+    },
+    "p": {
+      "tag": "forge:plates/tin"
+    },
+    "s": {
+      "tag": "staticpower:silicon"
+    }
+  },
+  "pattern": [
+    "pnp",
+    "nsn",
+    "pnp"
+  ],
+  "result": {
+    "item": {
+      "id": "staticpower:processor_basic"
+    }
+  }
+}

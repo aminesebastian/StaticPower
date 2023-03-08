@@ -2,7 +2,7 @@
   "type": "staticpower:squeezer",
   "input": {
     "ingredient": {
-      "tag": "staticpower:dusts/woood"
+      "tag": "staticpower:dusts/wood"
     }
   },
   "output_fluid": {

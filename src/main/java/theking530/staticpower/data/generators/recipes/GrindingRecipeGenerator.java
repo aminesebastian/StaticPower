@@ -22,7 +22,6 @@ import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
-import theking530.staticpower.init.tags.ModItemTags;
 
 public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 
@@ -38,7 +37,7 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 					singleItemTodust("ingots/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.INGOT).getItemTag()), bundle.get(MaterialTypes.DUST).get());
 				}
 				if (bundle.hasOre()) {
-					singleItemTodust("ores/" + bundle.getName(), RecipeItem.of(bundle.getOreItemTag()), bundle.get(MaterialTypes.DUST).get(), 2);
+					singleItemTodust("ores/" + bundle.getName(), RecipeItem.of(bundle.oreItemTag()), bundle.get(MaterialTypes.DUST).get(), 2);
 				}
 				if (bundle.has(MaterialTypes.RAW_MATERIAL)) {
 					singleItemTodust("raw_material/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), bundle.get(MaterialTypes.DUST).get(),
@@ -48,7 +47,7 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 
 			if (bundle.getMaterialType() == MaterialBundleType.GEM && bundle.has(MaterialTypes.DUST)) {
 				if (bundle.hasOre()) {
-					addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.getOreItemTag()),
+					addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.oreItemTag()),
 							StaticPowerOutputItem.of(bundle.get(MaterialTypes.RAW_MATERIAL).get(), 3, 1, 1, 0.25f),
 							StaticPowerOutputItem.of(bundle.get(MaterialTypes.DUST).get(), 1, 0.1f));
 				}
@@ -59,7 +58,7 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 
 			if (bundle.getMaterialType() == MaterialBundleType.DUST && bundle.has(MaterialTypes.DUST)) {
 				if (bundle.hasOre()) {
-					singleItemTodust("ores/" + bundle.getName(), RecipeItem.of(bundle.getOreItemTag()), bundle.get(MaterialTypes.DUST).get(), 2);
+					singleItemTodust("ores/" + bundle.getName(), RecipeItem.of(bundle.oreItemTag()), bundle.get(MaterialTypes.DUST).get(), 2);
 				}
 			}
 
@@ -82,8 +81,8 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 		addRecipe("ores/rusty_iron", StaticPowerIngredient.of(RecipeItem.of(ModBlocks.OreRustyIron.get())),
 				StaticPowerOutputItem.of(ModItems.RustyIronScrap.get(), 4, 1, 1, 0.25f));
 
-		singleItemTodust("misc/charcoal_dust", RecipeItem.of(ModItemTags.CHARCOAL_DUST), ModItems.DustCharcoalSmall.get(), 9);
-		singleItemTodust("misc/coal_dust", RecipeItem.of(ModItemTags.COAL_DUST), ModItems.DustCoalSmall.get(), 9);
+		singleItemTodust("misc/charcoal_dust", RecipeItem.of(ModMaterials.CHARCOAL.get(MaterialTypes.DUST).getItemTag()), ModItems.DustCharcoalSmall.get(), 9);
+		singleItemTodust("misc/coal_dust", RecipeItem.of(ModMaterials.COAL.get(MaterialTypes.DUST).getItemTag()), ModItems.DustCoalSmall.get(), 9);
 
 		addRecipe("misc/wheat_to_flour", StaticPowerIngredient.of(RecipeItem.of(Tags.Items.CROPS_WHEAT)), StaticPowerOutputItem.of(ModItems.WheatFlour.get(), 2));
 		addRecipe("misc/potato_to_flour", StaticPowerIngredient.of(RecipeItem.of(Tags.Items.CROPS_POTATO)), StaticPowerOutputItem.of(ModItems.PotatoFlour.get(), 2));
@@ -118,7 +117,7 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 		StaticPowerOutputItem[] result = Arrays.copyOf(dustResult, dustResult.length + extraOutputs.length);
 		System.arraycopy(extraOutputs, 0, result, dustResult.length, extraOutputs.length);
 
-		addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.getOreItemTag()), true, result);
+		addRecipe("ores/" + bundle.getName(), StaticPowerIngredient.of(bundle.oreItemTag()), true, result);
 		addRecipe("raw_materials/" + bundle.getName(), StaticPowerIngredient.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), true, result);
 	}
 

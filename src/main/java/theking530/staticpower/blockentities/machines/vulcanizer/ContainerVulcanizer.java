@@ -9,6 +9,7 @@ import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
+import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
 
 public class ContainerVulcanizer extends StaticPowerTileEntityContainer<BlockEntityVulcanizer> {
@@ -30,6 +31,9 @@ public class ContainerVulcanizer extends StaticPowerTileEntityContainer<BlockEnt
 
 	@Override
 	public void initializeContainer() {
+		// Input
+		addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 77, 52));
+
 		// Output
 		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 112, 54));
 

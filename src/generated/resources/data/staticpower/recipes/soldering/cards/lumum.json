@@ -1,0 +1,30 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "g": {
+      "item": "staticpower:crystal_lumum"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "l": {
+      "tag": "staticpower:plates/lumum_metal"
+    },
+    "p": {
+      "item": "staticpower:processor_lumum"
+    },
+    "w": {
+      "tag": "forge:ingots/platinum"
+    }
+  },
+  "pattern": [
+    "lwl",
+    "gpg",
+    "iii"
+  ],
+  "result": {
+    "item": {
+      "id": "staticpower:card_lumum"
+    }
+  }
+}

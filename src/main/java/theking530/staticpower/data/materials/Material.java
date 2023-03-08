@@ -197,8 +197,16 @@ public abstract class Material<T> {
 			return new ItemMaterial<T>(type, null, true, domain, null, null, null, null, true);
 		}
 
+		public static <T extends Item> ItemMaterial<T> generate(MaterialType<T> type, MaterialDomain domain, Supplier<T> customSupplier) {
+			return new ItemMaterial<T>(type, customSupplier, true, domain, null, null, null, null, true);
+		}
+
 		public static <T extends Item> ItemMaterial<T> generateNoTag(MaterialType<T> type) {
 			return new ItemMaterial<T>(type, null, true, null, null, null, null, null, false);
+		}
+
+		public static <T extends Item> ItemMaterial<T> generateNoTag(MaterialType<T> type, Supplier<T> customSupplier) {
+			return new ItemMaterial<T>(type, customSupplier, true, null, null, null, null, null, false);
 		}
 
 		public static <T extends Item> ItemMaterial<T> existing(MaterialType<T> type, MaterialDomain domain, String nameFormatOverride, String tagFormatOverride,

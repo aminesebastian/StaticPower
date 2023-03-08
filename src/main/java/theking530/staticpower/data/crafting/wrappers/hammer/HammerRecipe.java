@@ -27,43 +27,44 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 	public static final String ID = "hammer";
 	public static final Ingredient DEFAULT_HAMMERS = Ingredient.of(ModItemTags.HAMMER);
 
-	public static final Codec<HammerRecipe> CODEC = RecordCodecBuilder
-			.create(instance -> instance
-					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-							Codec.FLOAT.fieldOf("experience").forGetter(recipe -> recipe.getExperience()),
-							JsonUtilities.INGREDIENT_CODEC.optionalFieldOf("hammer", DEFAULT_HAMMERS).forGetter(recipe -> recipe.getHammer()),
-							StaticPowerIngredient.CODEC.optionalFieldOf("item").forGetter(recipe -> Optional.ofNullable(recipe.getInputItem())),
-							TagKey.codec(ForgeRegistries.BLOCKS.getRegistryKey()).optionalFieldOf("block").forGetter(recipe -> Optional.ofNullable(recipe.getBlock())),
-							StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()))
-					.apply(instance, (id, experience, hammer, item, block, output) -> {
-						return new HammerRecipe(id, experience, hammer, item.orElse(null), block.orElse(null), output);
-					}));
+	public static final Codec<HammerRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()), Codec.FLOAT.fieldOf("experience").forGetter(recipe -> recipe.getExperience()),
+			JsonUtilities.INGREDIENT_CODEC.optionalFieldOf("hammer", DEFAULT_HAMMERS).forGetter(recipe -> recipe.getHammer()),
+			StaticPowerIngredient.CODEC.optionalFieldOf("item").forGetter(recipe -> Optional.ofNullable(recipe.getInputItem())),
+			TagKey.codec(ForgeRegistries.BLOCKS.getRegistryKey()).optionalFieldOf("block").forGetter(recipe -> Optional.ofNullable(recipe.getBlock())),
+			StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()), Codec.BOOL.fieldOf("requires_anvil").forGetter(recipe -> recipe.requiresAnvil()))
+			.apply(instance, (id, experience, hammer, item, block, output, requiresAnvil) -> {
+				return new HammerRecipe(id, experience, hammer, item.orElse(null), block.orElse(null), output, requiresAnvil);
+			}));
 
 	private final Ingredient hammer;
 	private final StaticPowerIngredient inputItem;
 	private final TagKey<Block> blockTag;
 	private final StaticPowerOutputItem outputItem;
 	private final boolean isBlockType;
+	private final boolean requiresAnvil;
 
 	public HammerRecipe(ResourceLocation id, float experience, Ingredient hammer, TagKey<Block> block, StaticPowerOutputItem outputItem) {
-		this(id, experience, hammer, null, block, outputItem);
+		this(id, experience, hammer, null, block, outputItem, false);
 	}
 
-	public HammerRecipe(ResourceLocation id, float experience, Ingredient hammer, StaticPowerIngredient inputItem, StaticPowerOutputItem outputItem) {
-		this(id, experience, hammer, inputItem, null, outputItem);
+	public HammerRecipe(ResourceLocation id, float experience, Ingredient hammer, StaticPowerIngredient inputItem, StaticPowerOutputItem outputItem, boolean requiresAnvil) {
+		this(id, experience, hammer, inputItem, null, outputItem, requiresAnvil);
 	}
 
-	public HammerRecipe(ResourceLocation id, float experience, StaticPowerIngredient inputItem, TagKey<Block> block, StaticPowerOutputItem outputItem) {
-		this(id, experience, DEFAULT_HAMMERS, inputItem, block, outputItem);
-	}
-
-	public HammerRecipe(ResourceLocation id, float experience, Ingredient hammer, StaticPowerIngredient inputItem, TagKey<Block> block, StaticPowerOutputItem outputItem) {
+	public HammerRecipe(ResourceLocation id, float experience, Ingredient hammer, StaticPowerIngredient inputItem, TagKey<Block> block, StaticPowerOutputItem outputItem,
+			boolean requiresAnvil) {
 		super(id, experience);
 		this.hammer = hammer;
 		this.inputItem = inputItem;
 		this.blockTag = block;
 		this.isBlockType = block != null;
 		this.outputItem = outputItem;
+		this.requiresAnvil = requiresAnvil;
+	}
+
+	public boolean requiresAnvil() {
+		return requiresAnvil;
 	}
 
 	public StaticPowerOutputItem getOutput() {

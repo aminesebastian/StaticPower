@@ -4,7 +4,10 @@ import java.util.stream.Stream;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -174,15 +177,13 @@ public class StaticPowerIngredient {
 				inputCount = jsonObject.get("count").getAsInt();
 			}
 		}
-
-		// Set the counts when we create the recipe. This is only for JEI.
-//		ItemStack[] stacks = input.getItems();
-//		for (ItemStack stack : stacks) {
-//			stack.setCount(inputCount);
-//		}
-//		
 		// Create the ingredient wrapper..
 		return new StaticPowerIngredient(input, inputCount);
+	}
+
+	public static StaticPowerIngredient fromJson(JsonElement json) {
+		DataResult<Pair<StaticPowerIngredient, JsonElement>> encodedResult = StaticPowerIngredient.CODEC.decode(JsonOps.INSTANCE, json);
+		return encodedResult.result().get().getFirst();
 	}
 
 	public void writeToBuffer(FriendlyByteBuf buffer) {

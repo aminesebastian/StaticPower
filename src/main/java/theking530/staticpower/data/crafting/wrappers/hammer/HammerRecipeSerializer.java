@@ -27,6 +27,7 @@ public class HammerRecipeSerializer extends StaticPowerRecipeSerializer<HammerRe
 		StaticPowerOutputItem outputs = StaticPowerOutputItem.readFromBuffer(buffer);
 		Ingredient hammer = Ingredient.fromNetwork(buffer);
 		float experience = buffer.readFloat();
+		boolean requiresAnvil = buffer.readBoolean();
 
 		if (isBlockType) {
 			JsonObject parsedBlockTagKey = GsonHelper.parse(buffer.readUtf());
@@ -34,7 +35,7 @@ public class HammerRecipeSerializer extends StaticPowerRecipeSerializer<HammerRe
 			return new HammerRecipe(recipeId, experience, hammer, blockTagKey, outputs);
 		} else {
 			StaticPowerIngredient inputItem = StaticPowerIngredient.readFromBuffer(buffer);
-			return new HammerRecipe(recipeId, experience, hammer, inputItem, outputs);
+			return new HammerRecipe(recipeId, experience, hammer, inputItem, outputs, requiresAnvil);
 		}
 	}
 
@@ -44,6 +45,7 @@ public class HammerRecipeSerializer extends StaticPowerRecipeSerializer<HammerRe
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getHammer().toNetwork(buffer);
 		buffer.writeFloat(recipe.getExperience());
+		buffer.writeBoolean(recipe.requiresAnvil());
 
 		if (recipe.isBlockType()) {
 			buffer.writeUtf(recipe.getEncodedBlockTag());

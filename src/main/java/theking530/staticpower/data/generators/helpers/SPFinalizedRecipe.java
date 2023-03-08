@@ -20,18 +20,22 @@ public class SPFinalizedRecipe<T extends Recipe<?>> implements FinishedRecipe {
 		this.recipe = recipe;
 	}
 
-	@Override
-	public void serializeRecipeData(JsonObject json) {
+	protected JsonObject convert(T recipe) {
 		StaticPowerRecipeSerializer<T> serializer = (StaticPowerRecipeSerializer<T>) getType();
 		if (serializer != null) {
-			JsonObject serializedRecipe = serializer.toJson(recipe);
-			for (Entry<String, JsonElement> entry : serializedRecipe.entrySet()) {
-				json.add(entry.getKey(), entry.getValue());
-			}
+			return serializer.toJson(recipe);
 		} else {
 			throw new RuntimeException(String.format(
 					"Recipe serializer for recipe: %1$s of type: %2$s does not inheirt from StaticPowerRecipeSerializer. You must override #serializerRecipedata and serialize the recipe manually.",
 					recipe.getId(), recipe.getType()));
+		}
+	}
+
+	@Override
+	public void serializeRecipeData(JsonObject json) {
+		JsonObject serializedRecipe = convert(recipe);
+		for (Entry<String, JsonElement> entry : serializedRecipe.entrySet()) {
+			json.add(entry.getKey(), entry.getValue());
 		}
 	}
 

@@ -31,7 +31,7 @@ public class SmeltingRecipeGenerator extends SPRecipeProvider<BlastingRecipe> {
 				}
 				if (bundle.hasGeneratedOre()) {
 					addRecipe("ores/" + bundle.getName(),
-							create(Ingredient.of(bundle.getOreItemTag()), bundle.get(MaterialTypes.INGOT).get()).unlockedBy("has_dust", hasItems(bundle.getOreItemTag())));
+							create(Ingredient.of(bundle.oreItemTag()), bundle.get(MaterialTypes.INGOT).get()).unlockedBy("has_dust", hasItems(bundle.oreItemTag())));
 				}
 				if (bundle.hasGeneratedMaterial(MaterialTypes.RAW_MATERIAL) && bundle.has(MaterialTypes.INGOT)) {
 					addRecipe("raw_material/" + bundle.getName(), create(Ingredient.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), bundle.get(MaterialTypes.INGOT).get())

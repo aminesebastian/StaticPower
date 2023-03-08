@@ -1,0 +1,24 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "n": {
+      "tag": "forge:nuggets/platinum"
+    },
+    "p": {
+      "tag": "staticpower:plates/lumum_metal"
+    },
+    "s": {
+      "item": "staticpower:silicon_doped_lumum"
+    }
+  },
+  "pattern": [
+    "pnp",
+    "nsn",
+    "pnp"
+  ],
+  "result": {
+    "item": {
+      "id": "staticpower:processor_lumum"
+    }
+  }
+}

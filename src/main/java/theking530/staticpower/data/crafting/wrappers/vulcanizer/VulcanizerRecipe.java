@@ -11,6 +11,7 @@ import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -22,15 +23,19 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 
 	public static final Codec<VulcanizerRecipe> CODEC = RecordCodecBuilder
 			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					StaticPowerIngredient.CODEC.optionalFieldOf("input_item", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getInputItem()),
 					FluidIngredient.CODEC.fieldOf("input_fluid").forGetter(recipe -> recipe.getInputFluid()),
 					StaticPowerOutputItem.CODEC.fieldOf("output_item").forGetter(recipe -> recipe.getOutput()),
 					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, VulcanizerRecipe::new));
 
+	private final StaticPowerIngredient inputItem;
 	private final FluidIngredient inputFluid;
 	private final StaticPowerOutputItem output;
 
-	public VulcanizerRecipe(ResourceLocation id, FluidIngredient inputFluid, StaticPowerOutputItem output, MachineRecipeProcessingSection processing) {
+	public VulcanizerRecipe(ResourceLocation id, StaticPowerIngredient inputItem, FluidIngredient inputFluid, StaticPowerOutputItem output,
+			MachineRecipeProcessingSection processing) {
 		super(id, processing);
+		this.inputItem = inputItem;
 		this.output = output;
 		this.inputFluid = inputFluid;
 	}
@@ -43,21 +48,42 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 		return inputFluid;
 	}
 
+	public StaticPowerIngredient getInputItem() {
+		return inputItem;
+	}
+
+	public boolean hasInputItem() {
+		return !inputItem.isEmpty();
+	}
+
 	public ItemStack getRawOutputItem() {
 		return output.getItemStack();
 	}
 
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		boolean matched = true;
 
 		// Check fluid.
 		if (matchParams.shouldVerifyFluids()) {
-			matched &= matchParams.hasFluids();
-			matched &= inputFluid.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts());
+			if (!matchParams.hasFluids()) {
+				return false;
+			}
+			if (!inputFluid.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts())) {
+				return false;
+			}
 		}
 
-		return matched;
+		if (hasInputItem() && matchParams.shouldVerifyItems()) {
+			if (!matchParams.hasItems()) {
+				return false;
+			}
+
+			if (!inputItem.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override

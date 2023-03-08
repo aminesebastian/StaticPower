@@ -706,7 +706,7 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		beginShapedRecipe(ModItems.DigistoreCore.get())
 			.define('g', Tags.Items.DUSTS_GLOWSTONE)
 			.define('r', Tags.Items.DUSTS_REDSTONE)
-			.define('z', ModMaterials.ZINC.getPlateOrIngotTag())
+			.define('z', ModMaterials.ZINC.plateOrIngotTag())
 			.pattern("   ")
 			.pattern("rzg")
 			.pattern("   ")
@@ -755,7 +755,7 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 			.unlockedBy("has_items", hasItems( ModItemTags.RUBBER_SHEET));
 		// @formatter:on
 
-		beginShapelessRecipe(ModItems.RubberBar.get(), "rubber_bar_from_latex").requires(ModItems.LatexChunk.get(), 2).unlockedBy("has_latex_chunk",
+		beginShapelessRecipe(ModItems.RubberBar.get(), "rubber_bar_from_latex").requires(ModItems.LatexChunk.get(), 2).requires(ModItemTags.COALS_DUST).unlockedBy("has_latex_chunk",
 				hasItems(ModItems.LatexChunk.get()));
 
 		// @formatter:off

@@ -114,7 +114,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasGeneratedOre()) {
-				TagsProvider.TagAppender<Block> tag = tag(bundle.getOreBlockTag());
+				TagsProvider.TagAppender<Block> tag = tag(bundle.oreBlockTag());
 				if (bundle.has(MaterialTypes.OVERWORLD_ORE)) {
 					tag.add(bundle.get(MaterialTypes.OVERWORLD_ORE).get());
 				}

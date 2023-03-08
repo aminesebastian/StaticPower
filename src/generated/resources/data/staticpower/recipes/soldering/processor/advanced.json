@@ -1,0 +1,24 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "n": {
+      "tag": "forge:nuggets/tin"
+    },
+    "p": {
+      "tag": "forge:plates/brass"
+    },
+    "s": {
+      "tag": "staticpower:silicon"
+    }
+  },
+  "pattern": [
+    "pnp",
+    "nsn",
+    "pnp"
+  ],
+  "result": {
+    "item": {
+      "id": "staticpower:processor_advanced"
+    }
+  }
+}

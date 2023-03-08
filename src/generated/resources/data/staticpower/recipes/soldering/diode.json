@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "s": {
+      "tag": "staticpower:silicon"
+    },
+    "w": {
+      "tag": "forge:wires/copper"
+    }
+  },
+  "pattern": [
+    "   ",
+    "wsw",
+    "   "
+  ],
+  "result": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:diode"
+    }
+  }
+}

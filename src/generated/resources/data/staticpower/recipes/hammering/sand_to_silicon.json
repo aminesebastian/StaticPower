@@ -7,5 +7,6 @@
     "item": {
       "id": "staticpower:silicon"
     }
-  }
+  },
+  "requires_anvil": false
 }

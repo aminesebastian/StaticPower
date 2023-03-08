@@ -1,0 +1,30 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "g": {
+      "tag": "forge:dusts/redstone"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "l": {
+      "tag": "forge:plates/tin"
+    },
+    "p": {
+      "item": "staticpower:processor_basic"
+    },
+    "w": {
+      "tag": "forge:ingots/copper"
+    }
+  },
+  "pattern": [
+    "lwl",
+    "gpg",
+    "iii"
+  ],
+  "result": {
+    "item": {
+      "id": "staticpower:card_basic"
+    }
+  }
+}

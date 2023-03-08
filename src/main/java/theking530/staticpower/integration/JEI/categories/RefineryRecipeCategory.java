@@ -25,7 +25,6 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -40,7 +39,6 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 	private final IDrawable background;
 	private final IDrawable icon;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 	private final FluidProgressBar fluidBar1;
 	private final FluidProgressBar fluidBar2;
@@ -89,8 +87,6 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput1(), 0, 0, 104, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput2(), 0, 0, 126, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput3(), 0, 0, 148, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
-
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid (can't use the widget here because this is a
 		// singleton class).
@@ -159,8 +155,8 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 148, 2).addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluidOutput3())
 					.setFluidRenderer(getFluidTankDisplaySize(recipe.getFluidOutput3()), false, 16, 52);
 		}
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

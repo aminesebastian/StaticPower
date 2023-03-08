@@ -1,0 +1,24 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "n": {
+      "tag": "forge:nuggets/silver"
+    },
+    "p": {
+      "tag": "staticpower:plates/static_metal"
+    },
+    "s": {
+      "item": "staticpower:silicon_doped_static"
+    }
+  },
+  "pattern": [
+    "pnp",
+    "nsn",
+    "pnp"
+  ],
+  "result": {
+    "item": {
+      "id": "staticpower:processor_static"
+    }
+  }
+}

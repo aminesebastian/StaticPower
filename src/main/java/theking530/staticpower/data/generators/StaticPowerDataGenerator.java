@@ -18,6 +18,7 @@ import theking530.staticpower.data.generators.recipes.EvaporationRecipeGenerator
 import theking530.staticpower.data.generators.recipes.FermenterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.FertilizerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.FluidGeneratorRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.FluidInfusionRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.FormerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.FusionFurnaceRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.GrindingRecipeGenerator;
@@ -27,6 +28,7 @@ import theking530.staticpower.data.generators.recipes.MixerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.RefineryRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmeltingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmokingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.SolderingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SqueezerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.TumblerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.TurbineRecipeGenerator;
@@ -68,6 +70,8 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new FormerRecipeGenerator(generator));
 		generator.addProvider(true, new SqueezerRecipeGenerator(generator));
 		generator.addProvider(true, new FusionFurnaceRecipeGenerator(generator));
+		generator.addProvider(true, new FluidInfusionRecipeGenerator(generator));
+		generator.addProvider(true, new SolderingRecipeGenerator(generator));
 		
 		generator.addProvider(true, new ModLootTableProvider(generator));
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));

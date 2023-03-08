@@ -84,11 +84,12 @@ public class ModItemTags {
 	public static final TagKey<Item> RUBBER_SHEET = createForgeTag("rubber_sheet");
 	public static final TagKey<Item> RUBBER_WOOD_LOGS = createForgeTag("rubber_wood_logs");
 
-	public static final TagKey<Item> COAL_DUST = createForgeTag("dusts/coal");
-	public static final TagKey<Item> CHARCOAL_DUST = createForgeTag("dusts/charcoal");
-	
+	public static final TagKey<Item> COALS_DUST = create("dusts/coals");
+
 	public static final TagKey<Item> OBSIDIAN_DUST = create("dusts/obsidian");
-	public static final TagKey<Item> WOOD_DUST = create("dusts/woood");
+	public static final TagKey<Item> WOOD_DUST = create("dusts/wood");
+
+	public static final TagKey<Item> SILICON = create("silicon");
 
 	public static boolean matches(TagKey<Item> tag, Item item) {
 		return ForgeRegistries.ITEMS.tags().getTag(tag).contains(item);

@@ -35,6 +35,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 		RECIPES = new ArrayList<ThermalConductivityJEIRecipeWrapper>();
 
 		// Get all thermal conductivity recipes.
+		@SuppressWarnings("resource")
 		List<ThermalConductivityRecipe> originalRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get());
 
 		// Iterate through all the recipes.

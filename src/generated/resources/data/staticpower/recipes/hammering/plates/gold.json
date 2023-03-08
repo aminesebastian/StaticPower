@@ -11,5 +11,6 @@
       "count": 2,
       "id": "staticpower:plate_gold"
     }
-  }
+  },
+  "requires_anvil": true
 }

@@ -84,15 +84,15 @@ public class MaterialBundle {
 		}
 	}
 
-	public TagKey<Item> getOreItemTag() {
+	public TagKey<Item> oreItemTag() {
 		return oreItemTag;
 	}
 
-	public TagKey<Block> getOreBlockTag() {
+	public TagKey<Block> oreBlockTag() {
 		return oreBlockTag;
 	}
 
-	public TagKey<Item> getPlateOrIngotTag() {
+	public TagKey<Item> plateOrIngotTag() {
 		return plateOrIngotTag;
 	}
 

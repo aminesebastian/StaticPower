@@ -1,6 +1,5 @@
 package theking530.staticpower.data.crafting.wrappers.soldering;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -13,8 +12,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -36,43 +32,44 @@ import theking530.staticpower.init.tags.ModItemTags;
 
 public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	public static final String ID = "soldering";
-	public static final StaticPowerIngredient DEFAULT_SOLDERING_IRON = StaticPowerIngredient.of(ModItemTags.SOLDERING_IRON);
+	public static final Ingredient DEFAULT_SOLDERING_IRON = Ingredient.of(ModItemTags.SOLDERING_IRON);
 
 	protected static final int MAX_WIDTH = 3;
 	protected static final int MAX_HEIGHT = 3;
 
-	public static final Codec<SolderingRecipe> CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-					Codec.INT.fieldOf("width").forGetter(recipe -> recipe.getRecipeWidth()), Codec.INT.fieldOf("height").forGetter(recipe -> recipe.getRecipeHeight()),
-					StaticPowerIngredient.CODEC.optionalFieldOf("soldering_iron").forGetter(recipe -> Optional.of(recipe.getSolderingIron())),
-					StaticPowerIngredient.CODEC.listOf().fieldOf("pattern").forGetter(recipe -> recipe.getInputs()),
-					StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput())).apply(instance, SolderingRecipe::new));
+	private final String[] pattern;
+	private final Map<Character, Ingredient> ingredientMap;
+	private final Ingredient solderingIron;
+	private final StaticPowerOutputItem recipeOutput;
 
 	private final int recipeWidth;
 	private final int recipeHeight;
-	private final NonNullList<StaticPowerIngredient> recipeItems;
-	private final StaticPowerIngredient solderingIron;
-	private final StaticPowerOutputItem recipeOutput;
+	private final NonNullList<Ingredient> recipeItems;
 
-	public SolderingRecipe(ResourceLocation id, int recipeWidthIn, int recipeHeightIn, Optional<StaticPowerIngredient> solderingIron, List<StaticPowerIngredient> recipeItemsIn,
+	public SolderingRecipe(ResourceLocation id, String[] pattern, Map<Character, Ingredient> ingredients, Optional<Ingredient> solderingIron,
 			StaticPowerOutputItem recipeOutputIn) {
 		super(id);
 
+		this.pattern = pattern;
+		this.ingredientMap = ingredients;
 		if (solderingIron.isPresent()) {
 			this.solderingIron = solderingIron.get();
 		} else {
 			this.solderingIron = DEFAULT_SOLDERING_IRON;
 		}
-
-		this.recipeWidth = recipeWidthIn;
-		this.recipeHeight = recipeHeightIn;
-
-		this.recipeItems = NonNullList.withSize(recipeWidthIn * recipeHeightIn, StaticPowerIngredient.EMPTY);
-		for (StaticPowerIngredient input : recipeItemsIn) {
-			recipeItems.add(input);
-		}
-
 		this.recipeOutput = recipeOutputIn;
+
+		this.recipeWidth = pattern[0].length();
+		this.recipeHeight = pattern.length;
+		this.recipeItems = SolderingRecipe.deserializeIngredients(pattern, ingredients, recipeWidth, recipeHeight);
+	}
+
+	public String[] getPattern() {
+		return pattern;
+	}
+
+	public Map<Character, Ingredient> getIngredientMap() {
+		return ingredientMap;
 	}
 
 	public RecipeSerializer<SolderingRecipe> getSerializer() {
@@ -83,11 +80,11 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 		return recipeOutput;
 	}
 
-	public StaticPowerIngredient getSolderingIron() {
+	public Ingredient getSolderingIron() {
 		return this.solderingIron;
 	}
 
-	public NonNullList<StaticPowerIngredient> getInputs() {
+	public NonNullList<Ingredient> getInputs() {
 		return this.recipeItems;
 	}
 
@@ -147,7 +144,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 			for (int j = 0; j < recipeHeight; ++j) {
 				int k = i - p_77573_2_;
 				int l = j - p_77573_3_;
-				StaticPowerIngredient ingredient = StaticPowerIngredient.EMPTY;
+				Ingredient ingredient = Ingredient.EMPTY;
 				if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight) {
 					if (p_77573_4_) {
 						ingredient = this.recipeItems.get(this.recipeWidth - k - 1 + l * this.recipeWidth);
@@ -172,14 +169,19 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 		return this.getResultItem().copy();
 	}
 
-	public static NonNullList<Ingredient> deserializeIngredients(String[] pattern, Map<String, Ingredient> keys, int patternWidth, int patternHeight) {
+	public static NonNullList<Ingredient> deserializeIngredients(String[] pattern, Map<Character, Ingredient> keys, int patternWidth, int patternHeight) {
 		NonNullList<Ingredient> nonnulllist = NonNullList.withSize(patternWidth * patternHeight, Ingredient.EMPTY);
-		Set<String> set = Sets.newHashSet(keys.keySet());
-		set.remove(" ");
+		Set<Character> set = Sets.newHashSet(keys.keySet());
+		set.remove(' ');
 
 		for (int i = 0; i < pattern.length; ++i) {
 			for (int j = 0; j < pattern[i].length(); ++j) {
-				String s = pattern[i].substring(j, j + 1);
+				Character s = pattern[i].charAt(j);
+				if (s == ' ') {
+		            set.remove(s);
+					continue;
+				}
+				
 				Ingredient ingredient = keys.get(s);
 				if (ingredient == null) {
 					throw new JsonSyntaxException("Pattern references symbol '" + s + "' but it's not defined in the key");
@@ -278,8 +280,8 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	/**
 	 * Returns a key json object as a Java HashMap.
 	 */
-	public static Map<String, Ingredient> deserializeKey(JsonObject json) {
-		Map<String, Ingredient> map = Maps.newHashMap();
+	public static Map<Character, Ingredient> deserializeKey(JsonObject json) {
+		Map<Character, Ingredient> map = Maps.newHashMap();
 
 		for (Entry<String, JsonElement> entry : json.entrySet()) {
 			if (entry.getKey().length() != 1) {
@@ -290,10 +292,28 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 				throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
 			}
 
-			map.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
+			map.put(entry.getKey().charAt(0), Ingredient.fromJson(entry.getValue()));
 		}
 
-		map.put(" ", Ingredient.EMPTY);
+		map.put(' ', Ingredient.EMPTY);
 		return map;
+	}
+
+	public JsonObject toJson() {
+		JsonObject json = new JsonObject();
+		JsonArray jsonarray = new JsonArray();
+		for (String s : this.pattern) {
+			jsonarray.add(s);
+		}
+		json.add("pattern", jsonarray);
+
+		JsonObject jsonobject = new JsonObject();
+		for (Entry<Character, Ingredient> entry : this.ingredientMap.entrySet()) {
+			jsonobject.add(String.valueOf(entry.getKey()), entry.getValue().toJson());
+		}
+		json.add("key", jsonobject);
+
+		json.add("result", getOutput().toJson());
+		return json;
 	}
 }

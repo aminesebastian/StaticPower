@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -40,7 +39,6 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
 
-	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
 
 	public PackagerRecipeCategory(IGuiHelper guiHelper) {
@@ -76,11 +74,7 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 	@Override
 	public void draw(PackagerRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 28, 22, 0);
-
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 75, 20, 0);
-
-		// This doesn't actually draw the fluid, just the bars.
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
@@ -111,8 +105,8 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 	public void setRecipe(IRecipeLayoutBuilder builder, PackagerRecipe recipe, IFocusGroup ingredients) {
 		builder.addSlot(RecipeIngredientRole.INPUT, 28, 22).addIngredients(recipe.getInputIngredient().getIngredient());
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 77, 22).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
+		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

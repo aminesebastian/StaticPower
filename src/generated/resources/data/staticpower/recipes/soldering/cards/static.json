@@ -1,0 +1,30 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "g": {
+      "item": "staticpower:crystal_static"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "l": {
+      "tag": "staticpower:plates/static_metal"
+    },
+    "p": {
+      "item": "staticpower:processor_static"
+    },
+    "w": {
+      "tag": "forge:ingots/silver"
+    }
+  },
+  "pattern": [
+    "lwl",
+    "gpg",
+    "iii"
+  ],
+  "result": {
+    "item": {
+      "id": "staticpower:card_static"
+    }
+  }
+}

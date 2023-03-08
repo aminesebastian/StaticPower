@@ -1,0 +1,25 @@
+{
+  "type": "staticpower:soldering",
+  "key": {
+    "p": {
+      "tag": "forge:plates/tin"
+    },
+    "s": {
+      "tag": "staticpower:silicon"
+    },
+    "w": {
+      "tag": "forge:wires/copper"
+    }
+  },
+  "pattern": [
+    "www",
+    "psp",
+    "www"
+  ],
+  "result": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:memory_chip"
+    }
+  }
+}
