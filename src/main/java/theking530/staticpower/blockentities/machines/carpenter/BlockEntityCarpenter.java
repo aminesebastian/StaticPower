@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.lathe;
+package theking530.staticpower.blockentities.machines.carpenter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,15 +28,15 @@ import theking530.staticpower.blockentities.components.items.OutputServoComponen
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
+import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProcessor<LatheRecipe> {
+public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeProcessor<CarpenterRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityLathe> TYPE = new BlockEntityTypeAllocator<>("lathe", (type, pos, state) -> new BlockEntityLathe(pos, state),
-			ModBlocks.Lathe);
+	public static final BlockEntityTypeAllocator<BlockEntityCarpenter> TYPE = new BlockEntityTypeAllocator<>("carpenter", (type, pos, state) -> new BlockEntityCarpenter(pos, state),
+			ModBlocks.Carpenter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;
@@ -45,10 +45,10 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final RecipeProcessingComponent<LatheRecipe> processingComponent;
+	public final RecipeProcessingComponent<CarpenterRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
-	public BlockEntityLathe(BlockPos pos, BlockState state) {
+	public BlockEntityCarpenter(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
 		// Get the tier object.
@@ -64,7 +64,7 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<LatheRecipe>("ProcessingComponent", ModRecipeTypes.LATHE_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CarpenterRecipe>("ProcessingComponent", ModRecipeTypes.LATHE_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -92,14 +92,14 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<LatheRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CarpenterRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
 				inputInventory.getStackInSlot(4), inputInventory.getStackInSlot(5), inputInventory.getStackInSlot(6), inputInventory.getStackInSlot(7),
 				inputInventory.getStackInSlot(8));
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the items.
 		for (int i = 0; i < 9; i++) {
 			outputContainer.addInputItem(inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), true), CaptureType.BOTH);
@@ -115,7 +115,7 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the items.
 		for (int i = 0; i < 9; i++) {
 			inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), false);
@@ -123,7 +123,7 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -142,7 +142,7 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, ProcessingOutputContainer outputContainer) {
 		mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 		if (outputContainer.getOutputItems().size() > 1) {
 			secondaryOutputInventory.insertItem(0, outputContainer.getOutputItem(1).item().copy(), false);
@@ -152,7 +152,7 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 
 	@Override
 	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return LatheSideConfiguration.INSTANCE;
+		return CarpenterSideConfiguration.INSTANCE;
 	}
 
 	@Override

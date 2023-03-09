@@ -7,7 +7,7 @@
   },
   "output_fluid": {
     "amount": 100,
-    "fluid_name": "staticpower:juice_carrot"
+    "fluid": "staticpower:juice_carrot"
   },
   "processing": {
     "power": 5.0,

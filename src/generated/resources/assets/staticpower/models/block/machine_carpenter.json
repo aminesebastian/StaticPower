@@ -2,7 +2,7 @@
   "parent": "staticpower:block/base_models/machine_base",
   "textures": {
     "front": "staticpower:blocks/machines/sides/static_machine_front",
-    "front_overlay": "staticpower:blocks/machines/lathe",
+    "front_overlay": "staticpower:blocks/machines/carpenter",
     "io_frame": "staticpower:blocks/machines/sides/static_io_frame",
     "particle": "staticpower:blocks/machines/sides/static_machine_side",
     "side": "staticpower:blocks/machines/sides/static_machine_side",

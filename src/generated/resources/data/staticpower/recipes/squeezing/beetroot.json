@@ -7,7 +7,7 @@
   },
   "output_fluid": {
     "amount": 125,
-    "fluid_name": "staticpower:juice_beetroot"
+    "fluid": "staticpower:juice_beetroot"
   },
   "output_item": {
     "item": {

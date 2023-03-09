@@ -8,7 +8,7 @@
   },
   "output": {
     "amount": 1,
-    "fluid_name": "staticpower:evaporated_mash"
+    "fluid": "staticpower:evaporated_mash"
   },
   "processing": {
     "heat": 5,

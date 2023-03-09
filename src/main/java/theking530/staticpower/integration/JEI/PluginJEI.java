@@ -250,7 +250,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge.get()), CentrifugeRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator.get()), SolidGeneratorRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSmith.get()), SmithingRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Lathe.get()), LatheRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Carpenter.get()), LatheRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler.get()), TumblerRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Packager.get()), PackagerRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Fermenter.get()), FermenterRecipeCategory.TYPE);

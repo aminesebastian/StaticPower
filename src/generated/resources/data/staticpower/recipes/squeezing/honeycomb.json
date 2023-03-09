@@ -7,7 +7,7 @@
   },
   "output_fluid": {
     "amount": 80,
-    "fluid_name": "staticpower:honey"
+    "fluid": "staticpower:honey"
   },
   "processing": {
     "power": 5.0,

@@ -14,7 +14,7 @@
   },
   "output_fluid": {
     "amount": 100,
-    "fluid_name": "staticpower:concrete_black"
+    "fluid": "staticpower:concrete_black"
   },
   "processing": {
     "power": 5.0,

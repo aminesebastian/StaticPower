@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.lathe;
+package theking530.staticpower.blockentities.machines.carpenter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -10,9 +10,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockLathe extends StaticPowerMachineBlock {
+public class BlockCarpenter extends StaticPowerMachineBlock {
 
-	public BlockLathe() {
+	public BlockCarpenter() {
 		super(StaticPowerTiers.STATIC);
 	}
 
@@ -23,6 +23,6 @@ public class BlockLathe extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return BlockEntityLathe.TYPE.create(pos, state);
+		return BlockEntityCarpenter.TYPE.create(pos, state);
 	}
 }

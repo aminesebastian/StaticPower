@@ -1,14 +1,18 @@
 package theking530.staticpower.data.generators.recipes;
 
+import java.util.Optional;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.generators.RecipeItem;
 import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
 import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
-import theking530.staticpower.data.generators.helpers.SolderingRecipeBuilder;
+import theking530.staticpower.data.generators.helpers.ShapedRecipePatternBuilder;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
@@ -48,7 +52,7 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 				RecipeItem.of(ModMaterials.PLATINUM.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(ModItems.LumumDopedSilicon.get()));
 
 		// @formatter:off
-		addRecipe("servo_from_ingots", SolderingRecipeBuilder.shaped(ModItems.Servo.get(), 3)
+		addRecipe("servo_from_ingots", StaticPowerOutputItem.of(ModItems.Servo.get(), 3), ShapedRecipePatternBuilder.create()
 			.define('t', ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag())
 			.define('c', ModMaterials.COPPER.get(MaterialTypes.WIRE_COIL).getItemTag())
 			.pattern(" t ")
@@ -57,7 +61,7 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 		// @formatter:on
 
 		// @formatter:off
-		addRecipe("servo_from_plates", SolderingRecipeBuilder.shaped(ModItems.Servo.get(), 3)
+		addRecipe("servo_from_plates", StaticPowerOutputItem.of(ModItems.Servo.get(), 3), ShapedRecipePatternBuilder.create()
 			.define('t', ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag())
 			.define('c', ModMaterials.COPPER.get(MaterialTypes.WIRE_COIL).getItemTag())
 			.pattern(" t ")
@@ -66,7 +70,7 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 		// @formatter:on
 
 		// @formatter:off
-		addRecipe("transistor", SolderingRecipeBuilder.shaped(ModItems.Transistor.get(), 2)
+		addRecipe("transistor", StaticPowerOutputItem.of(ModItems.Transistor.get(), 2), ShapedRecipePatternBuilder.create()
 			.define('p', ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag())
 			.define('s', ModItemTags.SILICON)
 			.define('w', ModMaterials.COPPER.get(MaterialTypes.WIRE).getItemTag())
@@ -76,7 +80,7 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 		// @formatter:on
 
 		// @formatter:off
-		addRecipe("diode", SolderingRecipeBuilder.shaped(ModItems.Diode.get(), 2)
+		addRecipe("diode", StaticPowerOutputItem.of(ModItems.Diode.get(), 2), ShapedRecipePatternBuilder.create()
 			.define('w', ModMaterials.COPPER.get(MaterialTypes.WIRE).getItemTag())
 			.define('s', ModItemTags.SILICON)
 			.pattern("   ")
@@ -85,7 +89,7 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 		// @formatter:on
 
 		// @formatter:off
-		addRecipe("memory_chip", SolderingRecipeBuilder.shaped(ModItems.MemoryChip.get(), 2)
+		addRecipe("memory_chip", StaticPowerOutputItem.of(ModItems.MemoryChip.get(), 2), ShapedRecipePatternBuilder.create()
 			.define('p', ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag())
 			.define('s', ModItemTags.SILICON)
 			.define('w', ModMaterials.COPPER.get(MaterialTypes.WIRE).getItemTag())
@@ -95,7 +99,7 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 		// @formatter:on
 
 		// @formatter:off
-		addRecipe("internal_clock", SolderingRecipeBuilder.shaped(ModItems.MemoryChip.get(), 2)
+		addRecipe("internal_clock", StaticPowerOutputItem.of(ModItems.MemoryChip.get(), 2), ShapedRecipePatternBuilder.create()
 			.define('p', ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag())
 			.define('c', Items.CLOCK)
 			.define('w', ModMaterials.COPPER.get(MaterialTypes.WIRE).getItemTag())
@@ -107,7 +111,7 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 
 	protected void addCardRecipe(String name, ItemLike output, RecipeItem plate, RecipeItem processor, RecipeItem contactMetal, RecipeItem sides) {
 		// @formatter:off
-		addRecipe("cards/"+name, SolderingRecipeBuilder.shaped(output)
+		addRecipe("cards/"+name, StaticPowerOutputItem.of(output), ShapedRecipePatternBuilder.create()
 			.define('l', plate)
 			.define('p', processor)
 			.define('w', contactMetal)
@@ -121,7 +125,7 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 
 	protected void addProcessorRecipe(String name, ItemLike output, RecipeItem plate, RecipeItem nugget, RecipeItem silicon) {
 		// @formatter:off
-		addRecipe("processor/"+name, SolderingRecipeBuilder.shaped(output)
+		addRecipe("processor/"+name, StaticPowerOutputItem.of(output), ShapedRecipePatternBuilder.create()
 			.define('p', plate)
 			.define('n', nugget)
 			.define('s', silicon)
@@ -131,7 +135,11 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 		// @formatter:on
 	}
 
-	protected void addRecipe(String nameOverride, SolderingRecipeBuilder builder) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(builder.build(nameOverride), (recipe) -> recipe.toJson()));
+	protected void addRecipe(String nameOverride, StaticPowerOutputItem output, ShapedRecipePatternBuilder builder) {
+		addRecipe(nameOverride, output, builder, null);
+	}
+
+	protected void addRecipe(String nameOverride, StaticPowerOutputItem output, ShapedRecipePatternBuilder builder, Ingredient solderingIron) {
+		addRecipe(nameOverride, SPRecipeBuilder.create(new SolderingRecipe(null, builder.build(), Optional.ofNullable(solderingIron), output)));
 	}
 }

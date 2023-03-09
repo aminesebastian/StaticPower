@@ -1,24 +1,35 @@
 {
   "type": "staticpower:soldering",
-  "key": {
-    "n": {
-      "tag": "forge:nuggets/platinum"
+  "input_items": {
+    "key": {
+      "n": {
+        "ingredient": {
+          "tag": "forge:nuggets/platinum"
+        }
+      },
+      "p": {
+        "ingredient": {
+          "tag": "staticpower:plates/lumum_metal"
+        }
+      },
+      "s": {
+        "ingredient": {
+          "item": "staticpower:silicon_doped_lumum"
+        }
+      }
     },
-    "p": {
-      "tag": "staticpower:plates/lumum_metal"
-    },
-    "s": {
-      "item": "staticpower:silicon_doped_lumum"
-    }
+    "pattern": [
+      "pnp",
+      "nsn",
+      "pnp"
+    ]
   },
-  "pattern": [
-    "pnp",
-    "nsn",
-    "pnp"
-  ],
-  "result": {
+  "output": {
     "item": {
       "id": "staticpower:processor_lumum"
     }
+  },
+  "soldering_iron": {
+    "tag": "staticpower:tools/soldering_iron"
   }
 }

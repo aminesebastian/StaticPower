@@ -1,24 +1,35 @@
 {
   "type": "staticpower:soldering",
-  "key": {
-    "n": {
-      "tag": "forge:nuggets/tin"
+  "input_items": {
+    "key": {
+      "n": {
+        "ingredient": {
+          "tag": "forge:nuggets/tin"
+        }
+      },
+      "p": {
+        "ingredient": {
+          "tag": "forge:plates/brass"
+        }
+      },
+      "s": {
+        "ingredient": {
+          "tag": "staticpower:silicon"
+        }
+      }
     },
-    "p": {
-      "tag": "forge:plates/brass"
-    },
-    "s": {
-      "tag": "staticpower:silicon"
-    }
+    "pattern": [
+      "pnp",
+      "nsn",
+      "pnp"
+    ]
   },
-  "pattern": [
-    "pnp",
-    "nsn",
-    "pnp"
-  ],
-  "result": {
+  "output": {
     "item": {
       "id": "staticpower:processor_advanced"
     }
+  },
+  "soldering_iron": {
+    "tag": "staticpower:tools/soldering_iron"
   }
 }

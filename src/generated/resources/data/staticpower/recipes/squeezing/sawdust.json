@@ -7,7 +7,7 @@
   },
   "output_fluid": {
     "amount": 1,
-    "fluid_name": "staticpower:oil_tree"
+    "fluid": "staticpower:oil_tree"
   },
   "processing": {
     "power": 5.0,

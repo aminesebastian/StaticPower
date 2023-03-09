@@ -7,7 +7,7 @@
   },
   "output_fluid": {
     "amount": 1296,
-    "fluid_name": "staticpower:molten_tin"
+    "fluid": "staticpower:molten_tin"
   },
   "processing": {
     "power": 2.0,

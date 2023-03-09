@@ -9,6 +9,6 @@
   },
   "output_fluid": {
     "amount": 1,
-    "fluid_name": "minecraft:water"
+    "fluid": "minecraft:water"
   }
 }

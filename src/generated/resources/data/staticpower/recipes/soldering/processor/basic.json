@@ -1,24 +1,35 @@
 {
   "type": "staticpower:soldering",
-  "key": {
-    "n": {
-      "tag": "forge:nuggets/copper"
+  "input_items": {
+    "key": {
+      "n": {
+        "ingredient": {
+          "tag": "forge:nuggets/copper"
+        }
+      },
+      "p": {
+        "ingredient": {
+          "tag": "forge:plates/tin"
+        }
+      },
+      "s": {
+        "ingredient": {
+          "tag": "staticpower:silicon"
+        }
+      }
     },
-    "p": {
-      "tag": "forge:plates/tin"
-    },
-    "s": {
-      "tag": "staticpower:silicon"
-    }
+    "pattern": [
+      "pnp",
+      "nsn",
+      "pnp"
+    ]
   },
-  "pattern": [
-    "pnp",
-    "nsn",
-    "pnp"
-  ],
-  "result": {
+  "output": {
     "item": {
       "id": "staticpower:processor_basic"
     }
+  },
+  "soldering_iron": {
+    "tag": "staticpower:tools/soldering_iron"
   }
 }

@@ -1,25 +1,36 @@
 {
   "type": "staticpower:soldering",
-  "key": {
-    "p": {
-      "tag": "forge:plates/tin"
+  "input_items": {
+    "key": {
+      "p": {
+        "ingredient": {
+          "tag": "forge:plates/tin"
+        }
+      },
+      "s": {
+        "ingredient": {
+          "tag": "staticpower:silicon"
+        }
+      },
+      "w": {
+        "ingredient": {
+          "tag": "forge:wires/copper"
+        }
+      }
     },
-    "s": {
-      "tag": "staticpower:silicon"
-    },
-    "w": {
-      "tag": "forge:wires/copper"
-    }
+    "pattern": [
+      " p ",
+      "psp",
+      "www"
+    ]
   },
-  "pattern": [
-    " p ",
-    "psp",
-    "www"
-  ],
-  "result": {
+  "output": {
     "item": {
       "count": 2,
       "id": "staticpower:transistor"
     }
+  },
+  "soldering_iron": {
+    "tag": "staticpower:tools/soldering_iron"
   }
 }

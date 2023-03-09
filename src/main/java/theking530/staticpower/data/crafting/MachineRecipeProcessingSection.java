@@ -2,7 +2,11 @@ package theking530.staticpower.data.crafting;
 
 import java.util.function.Supplier;
 
+import com.google.gson.JsonElement;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -74,6 +78,11 @@ public class MachineRecipeProcessingSection {
 
 	public MachineRecipeProcessingSection copy() {
 		return new MachineRecipeProcessingSection(this.processingTime, this.power, this.minimumHeat, this.heat);
+	}
+
+	public static MachineRecipeProcessingSection fromJson(JsonElement json) {
+		DataResult<Pair<MachineRecipeProcessingSection, JsonElement>> encodedResult = CODEC.decode(JsonOps.INSTANCE, json);
+		return encodedResult.result().get().getFirst();
 	}
 
 	public void writeToBuffer(FriendlyByteBuf buf) {

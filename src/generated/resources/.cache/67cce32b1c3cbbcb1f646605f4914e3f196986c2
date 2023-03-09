@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-05T05:36:47.7576744	LootTables
+// 1.19.2	2023-03-09T01:07:07.2827568	LootTables
 5f1c4bd7d919817df3c517022b2bb5c6d61b5d9d data/staticpower/loot_tables/blocks/alloy_furnace.json
 ec0346cd8a4b004d8afe4ac900233eb8bfd496e4 data/staticpower/loot_tables/blocks/automatic_placer.json
 f782be601a12395d5e5c205629f67cdcf8579ac0 data/staticpower/loot_tables/blocks/battery_block_advanced.json
@@ -211,6 +211,7 @@ b5cfb6f431c1efa138e2c7c8ff0f5911c421adcc data/staticpower/loot_tables/blocks/mac
 651a1cc62d7e2bd3edd915289681c3477a01ad60 data/staticpower/loot_tables/blocks/machine_block_lumum.json
 fb79b369e789b7a206af48be5e42170a920d9d2a data/staticpower/loot_tables/blocks/machine_block_static.json
 da4a9405913b445535e4d3239c01f08c1976e789 data/staticpower/loot_tables/blocks/machine_bottler.json
+c1c2eb010826a57248c96dbc171b39847ebc2e69 data/staticpower/loot_tables/blocks/machine_carpenter.json
 198fd45462b8b51363b8482a56eae1a1d1cc6082 data/staticpower/loot_tables/blocks/machine_caster.json
 2638169cda7b075c4bfd79cab4c27f4a98a7fd60 data/staticpower/loot_tables/blocks/machine_centrifuge.json
 cf5356be9a9340b3355c5808dc14574c39632e88 data/staticpower/loot_tables/blocks/machine_charging_station.json
@@ -229,7 +230,6 @@ e4d978de2c0c3454bad376d897aca6ea708cc3ec data/staticpower/loot_tables/blocks/mac
 8e843006f92b680663d69173c7defa1951307612 data/staticpower/loot_tables/blocks/machine_hydroponic_pod.json
 7abd057028f214bbf2472db590d6e39e4342cc0b data/staticpower/loot_tables/blocks/machine_industrial_crafting_table.json
 d37cfe32cfe992795af8bed399edd59370ef5d66 data/staticpower/loot_tables/blocks/machine_industrial_soldering_table.json
-cd75086ded107becc962a28405374ccaa0d39de0 data/staticpower/loot_tables/blocks/machine_lathe.json
 d6952c3ed8052583bf79d28fda4444411cf3eed7 data/staticpower/loot_tables/blocks/machine_lumber_mill.json
 eb5e719dfb3f6ae3d38eac2f41188476ab3cad54 data/staticpower/loot_tables/blocks/machine_miner.json
 8a357cb417188fe020f5736177c8f7ec93762203 data/staticpower/loot_tables/blocks/machine_mixer.json

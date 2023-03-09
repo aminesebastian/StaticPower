@@ -12,6 +12,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -21,11 +23,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerOutputItem;
+import theking530.staticpower.data.crafting.wrappers.ShapedRecipePattern;
 import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.tags.ModItemTags;
@@ -37,39 +40,34 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	protected static final int MAX_WIDTH = 3;
 	protected static final int MAX_HEIGHT = 3;
 
-	private final String[] pattern;
-	private final Map<Character, Ingredient> ingredientMap;
+	public static final Codec<SolderingRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					ShapedRecipePattern.CODEC.fieldOf("input_items").forGetter(recipe -> recipe.getPattern()),
+					JsonUtilities.INGREDIENT_CODEC.optionalFieldOf("soldering_iron").forGetter(recipe -> Optional.of(recipe.getSolderingIron())),
+					StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput())).apply(instance, SolderingRecipe::new));
+
+	private final ShapedRecipePattern pattern;
 	private final Ingredient solderingIron;
 	private final StaticPowerOutputItem recipeOutput;
 
-	private final int recipeWidth;
-	private final int recipeHeight;
-	private final NonNullList<Ingredient> recipeItems;
-
-	public SolderingRecipe(ResourceLocation id, String[] pattern, Map<Character, Ingredient> ingredients, Optional<Ingredient> solderingIron,
-			StaticPowerOutputItem recipeOutputIn) {
+	public SolderingRecipe(ResourceLocation id, ShapedRecipePattern pattern, Optional<Ingredient> solderingIron, StaticPowerOutputItem recipeOutputIn) {
 		super(id);
 
 		this.pattern = pattern;
-		this.ingredientMap = ingredients;
 		if (solderingIron.isPresent()) {
 			this.solderingIron = solderingIron.get();
 		} else {
 			this.solderingIron = DEFAULT_SOLDERING_IRON;
 		}
 		this.recipeOutput = recipeOutputIn;
-
-		this.recipeWidth = pattern[0].length();
-		this.recipeHeight = pattern.length;
-		this.recipeItems = SolderingRecipe.deserializeIngredients(pattern, ingredients, recipeWidth, recipeHeight);
 	}
 
-	public String[] getPattern() {
+	public ShapedRecipePattern getPattern() {
 		return pattern;
 	}
 
-	public Map<Character, Ingredient> getIngredientMap() {
-		return ingredientMap;
+	public NonNullList<StaticPowerIngredient> getInputs() {
+		return pattern.getIngredients();
 	}
 
 	public RecipeSerializer<SolderingRecipe> getSerializer() {
@@ -84,21 +82,9 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 		return this.solderingIron;
 	}
 
-	public NonNullList<Ingredient> getInputs() {
-		return this.recipeItems;
-	}
-
 	@Override
 	public RecipeType<SolderingRecipe> getType() {
 		return ModRecipeTypes.SOLDERING_RECIPE_TYPE.get();
-	}
-
-	public int getRecipeWidth() {
-		return recipeWidth;
-	}
-
-	public int getRecipeHeight() {
-		return recipeHeight;
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
@@ -107,58 +93,13 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 			return false;
 		}
 
-		for (int i = 0; i < this.recipeWidth; i++) {
-			for (int j = 0; j < this.recipeHeight; j++) {
-				if (!recipeItems.get(i + j * this.recipeWidth).test(matchParams.getItems()[i + j * this.recipeWidth])) {
+		for (int i = 0; i < pattern.getRecipeWidth(); i++) {
+			for (int j = 0; j < pattern.getRecipeHeight(); j++) {
+				if (!pattern.getIngredients().get(i + j * pattern.getRecipeWidth()).testWithCount(matchParams.getItems()[i + j * pattern.getRecipeWidth()])) {
 					return false;
 				}
 			}
 		}
-		return true;
-	}
-
-	/**
-	 * Used to check if a recipe matches current crafting inventory
-	 */
-	public boolean matches(IItemHandler inv, Level worldIn) {
-		for (int i = 0; i <= this.recipeWidth; ++i) {
-			for (int j = 0; j <= this.recipeHeight; ++j) {
-				if (this.checkMatch(inv, i, j, true)) {
-					return true;
-				}
-
-				if (this.checkMatch(inv, i, j, false)) {
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Checks if the region of a crafting inventory is match for the recipe.
-	 */
-	private boolean checkMatch(IItemHandler craftingInventory, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
-		for (int i = 0; i < recipeWidth; ++i) {
-			for (int j = 0; j < recipeHeight; ++j) {
-				int k = i - p_77573_2_;
-				int l = j - p_77573_3_;
-				Ingredient ingredient = Ingredient.EMPTY;
-				if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight) {
-					if (p_77573_4_) {
-						ingredient = this.recipeItems.get(this.recipeWidth - k - 1 + l * this.recipeWidth);
-					} else {
-						ingredient = this.recipeItems.get(k + l * this.recipeWidth);
-					}
-				}
-
-				if (!ingredient.test(craftingInventory.getStackInSlot(i + j * recipeWidth))) {
-					return false;
-				}
-			}
-		}
-
 		return true;
 	}
 
@@ -169,8 +110,8 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 		return this.getResultItem().copy();
 	}
 
-	public static NonNullList<Ingredient> deserializeIngredients(String[] pattern, Map<Character, Ingredient> keys, int patternWidth, int patternHeight) {
-		NonNullList<Ingredient> nonnulllist = NonNullList.withSize(patternWidth * patternHeight, Ingredient.EMPTY);
+	public static NonNullList<StaticPowerIngredient> deserializeIngredients(String[] pattern, Map<Character, StaticPowerIngredient> keys, int patternWidth, int patternHeight) {
+		NonNullList<StaticPowerIngredient> nonnulllist = NonNullList.withSize(patternWidth * patternHeight, StaticPowerIngredient.EMPTY);
 		Set<Character> set = Sets.newHashSet(keys.keySet());
 		set.remove(' ');
 
@@ -178,11 +119,11 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 			for (int j = 0; j < pattern[i].length(); ++j) {
 				Character s = pattern[i].charAt(j);
 				if (s == ' ') {
-		            set.remove(s);
+					set.remove(s);
 					continue;
 				}
-				
-				Ingredient ingredient = keys.get(s);
+
+				StaticPowerIngredient ingredient = keys.get(s);
 				if (ingredient == null) {
 					throw new JsonSyntaxException("Pattern references symbol '" + s + "' but it's not defined in the key");
 				}
@@ -280,8 +221,8 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	/**
 	 * Returns a key json object as a Java HashMap.
 	 */
-	public static Map<Character, Ingredient> deserializeKey(JsonObject json) {
-		Map<Character, Ingredient> map = Maps.newHashMap();
+	public static Map<Character, StaticPowerIngredient> deserializeKey(JsonObject json) {
+		Map<Character, StaticPowerIngredient> map = Maps.newHashMap();
 
 		for (Entry<String, JsonElement> entry : json.entrySet()) {
 			if (entry.getKey().length() != 1) {
@@ -292,28 +233,10 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 				throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
 			}
 
-			map.put(entry.getKey().charAt(0), Ingredient.fromJson(entry.getValue()));
+			map.put(entry.getKey().charAt(0), StaticPowerIngredient.fromJson(entry.getValue()));
 		}
 
-		map.put(' ', Ingredient.EMPTY);
+		map.put(' ', StaticPowerIngredient.EMPTY);
 		return map;
-	}
-
-	public JsonObject toJson() {
-		JsonObject json = new JsonObject();
-		JsonArray jsonarray = new JsonArray();
-		for (String s : this.pattern) {
-			jsonarray.add(s);
-		}
-		json.add("pattern", jsonarray);
-
-		JsonObject jsonobject = new JsonObject();
-		for (Entry<Character, Ingredient> entry : this.ingredientMap.entrySet()) {
-			jsonobject.add(String.valueOf(entry.getKey()), entry.getValue().toJson());
-		}
-		json.add("key", jsonobject);
-
-		json.add("result", getOutput().toJson());
-		return json;
 	}
 }

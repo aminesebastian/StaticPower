@@ -8,7 +8,7 @@
   },
   "output": {
     "amount": 1,
-    "fluid_name": "minecraft:water"
+    "fluid": "minecraft:water"
   },
   "processing": {
     "heat": 10,

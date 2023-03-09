@@ -19,15 +19,15 @@
   },
   "output_fluid_1": {
     "amount": 90,
-    "fluid_name": "staticpower:oil_heavy"
+    "fluid": "staticpower:oil_heavy"
   },
   "output_fluid_2": {
     "amount": 20,
-    "fluid_name": "staticpower:oil_light"
+    "fluid": "staticpower:oil_light"
   },
   "output_fluid_3": {
     "amount": 10,
-    "fluid_name": "staticpower:fuel"
+    "fluid": "staticpower:fuel"
   },
   "processing": {
     "power": 5.0,

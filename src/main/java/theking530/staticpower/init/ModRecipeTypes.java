@@ -10,6 +10,7 @@ import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
+import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
@@ -27,7 +28,6 @@ import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnace
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.data.crafting.wrappers.hydroponicfarming.HydroponicFarmingRecipe;
-import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
 import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
@@ -66,7 +66,7 @@ public class ModRecipeTypes {
 			() -> new StaticPowerRecipeType<FusionFurnaceRecipe>());
 	public static final RegistryObject<RecipeType<GrinderRecipe>> GRINDER_RECIPE_TYPE = TYPES.register(GrinderRecipe.ID, () -> new StaticPowerRecipeType<GrinderRecipe>());
 	public static final RegistryObject<RecipeType<HammerRecipe>> HAMMER_RECIPE_TYPE = TYPES.register(HammerRecipe.ID, () -> new StaticPowerRecipeType<HammerRecipe>());
-	public static final RegistryObject<RecipeType<LatheRecipe>> LATHE_RECIPE_TYPE = TYPES.register(LatheRecipe.ID, () -> new StaticPowerRecipeType<LatheRecipe>());
+	public static final RegistryObject<RecipeType<CarpenterRecipe>> LATHE_RECIPE_TYPE = TYPES.register(CarpenterRecipe.ID, () -> new StaticPowerRecipeType<CarpenterRecipe>());
 	public static final RegistryObject<RecipeType<LumberMillRecipe>> LUMBER_MILL_RECIPE_TYPE = TYPES.register(LumberMillRecipe.ID,
 			() -> new StaticPowerRecipeType<LumberMillRecipe>());
 	public static final RegistryObject<RecipeType<MixerRecipe>> MIXER_RECIPE_TYPE = TYPES.register(MixerRecipe.ID, () -> new StaticPowerRecipeType<MixerRecipe>());

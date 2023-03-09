@@ -10,7 +10,9 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.nbt.ByteArrayTag;
@@ -50,13 +52,30 @@ public class JsonUtilities {
 	});
 
 	public static final Codec<FluidStack> FLUIDSTACK_CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(ForgeRegistries.FLUIDS.getCodec().fieldOf("fluid_name").forGetter(FluidStack::getFluid),
+			.create(instance -> instance.group(ForgeRegistries.FLUIDS.getCodec().fieldOf("fluid").forGetter(FluidStack::getFluid),
 					Codec.INT.fieldOf("amount").forGetter(FluidStack::getAmount), CompoundTag.CODEC.optionalFieldOf("tag").forGetter(stack -> Optional.ofNullable(stack.getTag())))
 					.apply(instance, (fluid, amount, tag) -> {
 						FluidStack stack = new FluidStack(fluid, amount);
 						tag.ifPresent(stack::setTag);
 						return stack;
 					}));
+
+	public static final PrimitiveCodec<Character> CHAR = new PrimitiveCodec<Character>() {
+		@Override
+		public <T> DataResult<Character> read(final DynamicOps<T> ops, final T input) {
+			return ops.getStringValue(input).map((string) -> string.charAt(0));
+		}
+
+		@Override
+		public <T> T write(final DynamicOps<T> ops, final Character value) {
+			return ops.createString(value.toString());
+		}
+
+		@Override
+		public String toString() {
+			return "Character";
+		}
+	};
 
 	public static JsonElement fluidStackToJson(FluidStack fluid) {
 		DataResult<JsonElement> encodedResult = FLUIDSTACK_CODEC.encodeStart(JsonOps.INSTANCE, fluid);

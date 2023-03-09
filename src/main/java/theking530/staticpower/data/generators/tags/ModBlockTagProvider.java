@@ -69,7 +69,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				ModBlocks.FluidGenerator.get(), ModBlocks.Crucible.get(), ModBlocks.Squeezer.get(), ModBlocks.Bottler.get(), ModBlocks.SolderingTable.get(),
 				ModBlocks.AutoSolderingTable.get(), ModBlocks.AutoCraftingTable.get(), ModBlocks.FluidInfuser.get(), ModBlocks.Centrifuge.get(), ModBlocks.FusionFurnace.get(),
 				ModBlocks.Miner.get(), ModBlocks.ElectricMiner.get(), ModBlocks.Evaporator.get(), ModBlocks.Condenser.get(), ModBlocks.Vulcanizer.get(), ModBlocks.AutoSmith.get(),
-				ModBlocks.Lathe.get(), ModBlocks.Mixer.get(), ModBlocks.Caster.get(), ModBlocks.Tumbler.get(), ModBlocks.Turbine.get(), ModBlocks.Packager.get(),
+				ModBlocks.Carpenter.get(), ModBlocks.Mixer.get(), ModBlocks.Caster.get(), ModBlocks.Tumbler.get(), ModBlocks.Turbine.get(), ModBlocks.Packager.get(),
 				ModBlocks.ExperienceHopper.get(), ModBlocks.RustyCauldron.get(), ModBlocks.CleanCauldron.get(), ModBlocks.DirectDropper.get(), ModBlocks.AutomaticPlacer.get(),
 				ModBlocks.Enchanter.get(), ModBlocks.RandomItemGenerator.get(), ModBlocks.RandomOreGenerator.get(), ModBlocks.HydroponicFarmer.get(), ModBlocks.HydroponicPod.get(),
 				ModBlocks.AlloyFurnace.get(), ModBlocks.RefineryController.get(), ModBlocks.RefineryPowerTap.get(), ModBlocks.RefineryFluidInput.get(),

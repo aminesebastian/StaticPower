@@ -8,7 +8,7 @@
   },
   "output": {
     "amount": 1,
-    "fluid_name": "staticpower:ethanol"
+    "fluid": "staticpower:ethanol"
   },
   "processing": {
     "heat": 20,

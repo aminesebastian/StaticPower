@@ -1,0 +1,41 @@
+{
+  "type": "staticpower:carpenter",
+  "input_items": {
+    "key": {
+      "r": {
+        "ingredient": {
+          "tag": "forge:dusts/redstone"
+        }
+      },
+      "w": {
+        "ingredient": {
+          "tag": "minecraft:planks"
+        }
+      }
+    },
+    "pattern": [
+      "www",
+      "wrw",
+      "www"
+    ]
+  },
+  "output_fluid": {
+    "amount": 40,
+    "fluid": "staticpower:oil_tree"
+  },
+  "primary_output_item": {
+    "item": {
+      "id": "minecraft:note_block"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output_item": {
+    "item": {
+      "count": 8,
+      "id": "staticpower:dust_wood"
+    }
+  }
+}

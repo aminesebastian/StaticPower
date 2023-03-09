@@ -156,7 +156,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		machine(ModBlocks.Condenser.get(), "static", "machines/condenser");
 		machine(ModBlocks.Vulcanizer.get(), "basic", "machines/vulcanizer");
 		machine(ModBlocks.AutoSmith.get(), "advanced", "machines/auto_smith");
-		machine(ModBlocks.Lathe.get(), "static", "machines/lathe");
+		machine(ModBlocks.Carpenter.get(), "static", "machines/carpenter");
 		machine(ModBlocks.Mixer.get(), "advanced", "machines/mixer");
 		machine(ModBlocks.Caster.get(), "energized", "machines/caster");
 		machine(ModBlocks.Tumbler.get(), "energized", "machines/tumbler");

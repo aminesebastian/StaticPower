@@ -1,13 +1,13 @@
-package theking530.staticpower.blockentities.machines.lathe;
+package theking530.staticpower.blockentities.machines.carpenter;
 
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachinePreset;
 
-public class LatheSideConfiguration extends DefaultMachinePreset {
-	public static final LatheSideConfiguration INSTANCE = new LatheSideConfiguration();
+public class CarpenterSideConfiguration extends DefaultMachinePreset {
+	public static final CarpenterSideConfiguration INSTANCE = new CarpenterSideConfiguration();
 
-	public LatheSideConfiguration() {
+	public CarpenterSideConfiguration() {
 		for (BlockSide side : BlockSide.values()) {
 			if (side == BlockSide.FRONT) {
 				continue;

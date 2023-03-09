@@ -1,24 +1,35 @@
 {
   "type": "staticpower:soldering",
-  "key": {
-    "n": {
-      "tag": "forge:nuggets/gold"
+  "input_items": {
+    "key": {
+      "n": {
+        "ingredient": {
+          "tag": "forge:nuggets/gold"
+        }
+      },
+      "p": {
+        "ingredient": {
+          "tag": "staticpower:plates/energized_metal"
+        }
+      },
+      "s": {
+        "ingredient": {
+          "item": "staticpower:silicon_doped_energized"
+        }
+      }
     },
-    "p": {
-      "tag": "staticpower:plates/energized_metal"
-    },
-    "s": {
-      "item": "staticpower:silicon_doped_energized"
-    }
+    "pattern": [
+      "pnp",
+      "nsn",
+      "pnp"
+    ]
   },
-  "pattern": [
-    "pnp",
-    "nsn",
-    "pnp"
-  ],
-  "result": {
+  "output": {
     "item": {
       "id": "staticpower:processor_energized"
     }
+  },
+  "soldering_iron": {
+    "tag": "staticpower:tools/soldering_iron"
   }
 }

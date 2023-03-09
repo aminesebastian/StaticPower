@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-06T22:37:59.5449519	Item Models: staticpower
+// 1.19.2	2023-03-09T01:07:07.2677366	Item Models: staticpower
 6027aa6d17b10a748c750596a1e41617fddb06da assets/staticpower/models/item/alloy_furnace.json
 a719b3e89ea4ecd25522280007f7e8b66eacafc0 assets/staticpower/models/item/automatic_placer.json
 32a59e36d1d4e959c6c1f1436a7c1d1efed2bf87 assets/staticpower/models/item/backpack.json
@@ -486,6 +486,7 @@ fd8c498b1b133bf611a20f6b3896fe554f8be89f assets/staticpower/models/item/machine_
 5dfe13f65d7813e61a158db9002bdc589ed11bf6 assets/staticpower/models/item/machine_block_lumum.json
 f26a84d7da201dd6c2d53e33457cdcbb87300670 assets/staticpower/models/item/machine_block_static.json
 b85e0c387a9545a73620a120df076551c89ae8a9 assets/staticpower/models/item/machine_bottler.json
+63e3cc84c5864c77b18a136957e1b140fa013689 assets/staticpower/models/item/machine_carpenter.json
 cb003631c61653b2fec01126bec9915dcf0d7039 assets/staticpower/models/item/machine_caster.json
 be6120c50b6aa2316d649de4a8e57cbbb0fea42b assets/staticpower/models/item/machine_centrifuge.json
 8d23cb1991e713c5c342a2820c51f54ce50744b3 assets/staticpower/models/item/machine_charging_station.json
@@ -504,7 +505,6 @@ b7981b36e73736234dd71ef8960fdbdd534d2435 assets/staticpower/models/item/machine_
 6d775ec12c2df2a2b9db3c004a57b5b69cec97d8 assets/staticpower/models/item/machine_hydroponic_pod.json
 89cbc65e268a14abf1002d449c3d90e0d0c2b1a3 assets/staticpower/models/item/machine_industrial_crafting_table.json
 d8e29d87ebf33a355c8c3e2c1a85654727c10262 assets/staticpower/models/item/machine_industrial_soldering_table.json
-21d2e03dd7516b5459780ff3d84f13aa3b6c3f3e assets/staticpower/models/item/machine_lathe.json
 ea2565bdf1f0499358570fd316ab571120567c30 assets/staticpower/models/item/machine_lumber_mill.json
 32e08d232cfc39de65683280a3143d7c94d559a8 assets/staticpower/models/item/machine_miner.json
 3d011ad1b771634a4e27bc8a32ea3772fcd668eb assets/staticpower/models/item/machine_mixer.json

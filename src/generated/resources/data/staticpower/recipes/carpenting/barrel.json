@@ -1,0 +1,41 @@
+{
+  "type": "staticpower:carpenter",
+  "input_items": {
+    "key": {
+      "s": {
+        "ingredient": {
+          "tag": "minecraft:wooden_slabs"
+        }
+      },
+      "w": {
+        "ingredient": {
+          "tag": "minecraft:planks"
+        }
+      }
+    },
+    "pattern": [
+      "wsw",
+      "w w",
+      "wsw"
+    ]
+  },
+  "output_fluid": {
+    "amount": 30,
+    "fluid": "staticpower:oil_tree"
+  },
+  "primary_output_item": {
+    "item": {
+      "id": "minecraft:barrel"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output_item": {
+    "item": {
+      "count": 6,
+      "id": "staticpower:dust_wood"
+    }
+  }
+}

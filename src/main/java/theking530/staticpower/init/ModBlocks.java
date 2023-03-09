@@ -24,6 +24,7 @@ import theking530.staticpower.blockentities.machines.autocrafter.BlockAutoCrafti
 import theking530.staticpower.blockentities.machines.autosmith.BlockAutoSmith;
 import theking530.staticpower.blockentities.machines.autosolderingtable.BlockAutoSolderingTable;
 import theking530.staticpower.blockentities.machines.bottler.BlockBottler;
+import theking530.staticpower.blockentities.machines.carpenter.BlockCarpenter;
 import theking530.staticpower.blockentities.machines.caster.BlockCaster;
 import theking530.staticpower.blockentities.machines.centrifuge.BlockCentrifuge;
 import theking530.staticpower.blockentities.machines.chargingstation.BlockChargingStation;
@@ -37,7 +38,6 @@ import theking530.staticpower.blockentities.machines.fusionfurnace.BlockFusionFu
 import theking530.staticpower.blockentities.machines.hydroponics.farmer.BlockHydroponicFarmer;
 import theking530.staticpower.blockentities.machines.hydroponics.pod.BlockHydroponicPod;
 import theking530.staticpower.blockentities.machines.laboratory.BlockLaboratory;
-import theking530.staticpower.blockentities.machines.lathe.BlockLathe;
 import theking530.staticpower.blockentities.machines.lumbermill.BlockLumberMill;
 import theking530.staticpower.blockentities.machines.mixer.BlockMixer;
 import theking530.staticpower.blockentities.machines.packager.BlockPackager;
@@ -125,7 +125,6 @@ import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.Tiers.ResistorTier;
 import theking530.staticpower.data.Tiers.TierPair;
 import theking530.staticpower.data.materials.MaterialBundle;
-import theking530.staticpower.data.materials.OldMaterialBundle;
 
 public class ModBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StaticPower.MOD_ID);
@@ -240,7 +239,7 @@ public class ModBlocks {
 	public static final RegistryObject<BlockCondenser> Condenser = registerBlock("machine_condenser", () -> new BlockCondenser());
 	public static final RegistryObject<BlockVulcanizer> Vulcanizer = registerBlock("machine_vulcanizer", () -> new BlockVulcanizer());
 	public static final RegistryObject<BlockAutoSmith> AutoSmith = registerBlock("machine_auto_smith", () -> new BlockAutoSmith());
-	public static final RegistryObject<BlockLathe> Lathe = registerBlock("machine_lathe", () -> new BlockLathe());
+	public static final RegistryObject<BlockCarpenter> Carpenter = registerBlock("machine_carpenter", () -> new BlockCarpenter());
 	public static final RegistryObject<BlockMixer> Mixer = registerBlock("machine_mixer", () -> new BlockMixer());
 	public static final RegistryObject<BlockCaster> Caster = registerBlock("machine_caster", () -> new BlockCaster());
 	public static final RegistryObject<BlockTumbler> Tumbler = registerBlock("machine_tumbler", () -> new BlockTumbler());

@@ -7,7 +7,7 @@
   },
   "output_fluid": {
     "amount": 144,
-    "fluid_name": "staticpower:molten_aluminum"
+    "fluid": "staticpower:molten_aluminum"
   },
   "processing": {
     "power": 2.0,

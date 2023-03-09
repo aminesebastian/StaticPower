@@ -29,13 +29,13 @@ import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
+import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
-public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
-	public static final RecipeType<LatheRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "lathe"), LatheRecipe.class);
+public class LatheRecipeCategory extends BaseJEIRecipeCategory<CarpenterRecipe> {
+	public static final RecipeType<CarpenterRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "lathe"), CarpenterRecipe.class);
 
 	private final MutableComponent locTitle;
 	private final IDrawable background;
@@ -46,9 +46,9 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 
 	public LatheRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = Component.translatable(ModBlocks.Lathe.get().getDescriptionId());
+		locTitle = Component.translatable(ModBlocks.Carpenter.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Lathe.get()));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Carpenter.get()));
 		pBar = new ArrowProgressBar(91, 6);
 	}
 
@@ -65,7 +65,7 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	}
 
 	@Override
-	public RecipeType<LatheRecipe> getRecipeType() {
+	public RecipeType<CarpenterRecipe> getRecipeType() {
 		return TYPE;
 	}
 
@@ -75,7 +75,7 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	}
 
 	@Override
-	public void draw(LatheRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CarpenterRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
 				GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 32 + x * 18, 5 + y * 18, 0);
@@ -94,7 +94,7 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(LatheRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(CarpenterRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			output.add(Component.literal("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
@@ -114,7 +114,7 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, LatheRecipe recipe, IFocusGroup ingredients) {
+	public void setRecipe(IRecipeLayoutBuilder builder, CarpenterRecipe recipe, IFocusGroup ingredients) {
 		// Add the inputs.
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {

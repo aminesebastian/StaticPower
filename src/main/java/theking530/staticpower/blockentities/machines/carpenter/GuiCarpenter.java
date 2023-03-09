@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.lathe;
+package theking530.staticpower.blockentities.machines.carpenter;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,9 +15,9 @@ import theking530.staticpower.blockentities.components.control.RedstoneControlCo
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
-public class GuiLathe extends StaticPowerTileEntityGui<ContainerLathe, BlockEntityLathe> {
+public class GuiCarpenter extends StaticPowerTileEntityGui<ContainerLathe, BlockEntityCarpenter> {
 
-	public GuiLathe(ContainerLathe container, Inventory invPlayer, Component name) {
+	public GuiCarpenter(ContainerLathe container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 174);
 	}
 

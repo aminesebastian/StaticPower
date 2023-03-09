@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "staticpower:machine_lathe"
+          "name": "staticpower:machine_carpenter"
         }
       ],
       "rolls": 1.0

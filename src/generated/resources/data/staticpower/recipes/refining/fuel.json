@@ -8,11 +8,11 @@
   },
   "output_fluid_1": {
     "amount": 0,
-    "fluid_name": "minecraft:empty"
+    "fluid": "minecraft:empty"
   },
   "output_fluid_3": {
     "amount": 45,
-    "fluid_name": "staticpower:fuel"
+    "fluid": "staticpower:fuel"
   },
   "processing": {
     "power": 5.0,

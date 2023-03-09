@@ -14,7 +14,7 @@
   },
   "output_fluid": {
     "amount": 100,
-    "fluid_name": "staticpower:concrete_pink"
+    "fluid": "staticpower:concrete_pink"
   },
   "processing": {
     "power": 5.0,

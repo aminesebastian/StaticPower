@@ -7,7 +7,7 @@
   },
   "output_fluid": {
     "amount": 100,
-    "fluid_name": "staticpower:dye_lime"
+    "fluid": "staticpower:dye_lime"
   },
   "processing": {
     "power": 5.0,

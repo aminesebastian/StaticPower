@@ -1,25 +1,36 @@
 {
   "type": "staticpower:soldering",
-  "key": {
-    "c": {
-      "item": "minecraft:clock"
+  "input_items": {
+    "key": {
+      "c": {
+        "ingredient": {
+          "item": "minecraft:clock"
+        }
+      },
+      "p": {
+        "ingredient": {
+          "tag": "forge:plates/tin"
+        }
+      },
+      "w": {
+        "ingredient": {
+          "tag": "forge:wires/copper"
+        }
+      }
     },
-    "p": {
-      "tag": "forge:plates/tin"
-    },
-    "w": {
-      "tag": "forge:wires/copper"
-    }
+    "pattern": [
+      "ppp",
+      "pcp",
+      "w w"
+    ]
   },
-  "pattern": [
-    "ppp",
-    "pcp",
-    "w w"
-  ],
-  "result": {
+  "output": {
     "item": {
       "count": 2,
       "id": "staticpower:memory_chip"
     }
+  },
+  "soldering_iron": {
+    "tag": "staticpower:tools/soldering_iron"
   }
 }

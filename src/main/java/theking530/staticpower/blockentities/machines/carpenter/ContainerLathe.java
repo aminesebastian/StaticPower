@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.lathe;
+package theking530.staticpower.blockentities.machines.carpenter;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,20 +11,20 @@ import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 
-public class ContainerLathe extends StaticPowerTileEntityContainer<BlockEntityLathe> {
+public class ContainerLathe extends StaticPowerTileEntityContainer<BlockEntityCarpenter> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerLathe, GuiLathe> TYPE = new ContainerTypeAllocator<>("machine_lathe", ContainerLathe::new);
+	public static final ContainerTypeAllocator<ContainerLathe, GuiCarpenter> TYPE = new ContainerTypeAllocator<>("machine_lathe", ContainerLathe::new);
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			TYPE.setScreenFactory(GuiLathe::new);
+			TYPE.setScreenFactory(GuiCarpenter::new);
 		}
 	}
 
 	public ContainerLathe(int windowId, Inventory inv, FriendlyByteBuf data) {
-		this(windowId, inv, (BlockEntityLathe) resolveTileEntityFromDataPacket(inv, data));
+		this(windowId, inv, (BlockEntityCarpenter) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerLathe(int windowId, Inventory playerInventory, BlockEntityLathe owner) {
+	public ContainerLathe(int windowId, Inventory playerInventory, BlockEntityCarpenter owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

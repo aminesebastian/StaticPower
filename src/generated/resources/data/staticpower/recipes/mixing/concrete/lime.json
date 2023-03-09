@@ -14,7 +14,7 @@
   },
   "output_fluid": {
     "amount": 100,
-    "fluid_name": "staticpower:concrete_lime"
+    "fluid": "staticpower:concrete_lime"
   },
   "processing": {
     "power": 5.0,
