@@ -10,6 +10,7 @@
     }
   ],
   "input_item": {
+    "count": 3,
     "ingredient": {
       "item": "staticpower:portable_smelting_core"
     }

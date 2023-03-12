@@ -1,10 +1,12 @@
 package theking530.api.attributes.rendering;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
@@ -15,18 +17,17 @@ import net.minecraftforge.client.model.data.ModelData;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.type.AttributeType;
 
-public class AttributableItemRenderLayers {
-	private final Map<AttributeType<?>, AbstractAttributeRenderLayer> layers;
+public class ItemAttributeRegistration {
+	private final Map<AttributeType<?>, AttributeRegistration<?>> attributes;
+
+	public record AttributeRegistration<T> (AttributeType<T> attribute, T baseValue, AbstractAttributeRenderLayer renderLayer) {
+	}
 
 	/**
 	 * Creates an empty attributable render layer container.
 	 */
-	public AttributableItemRenderLayers() {
-		layers = new HashMap<>();
-	}
-
-	public void clear() {
-		layers.clear();
+	public ItemAttributeRegistration() {
+		attributes = new HashMap<>();
 	}
 
 	/**
@@ -35,8 +36,21 @@ public class AttributableItemRenderLayers {
 	 * 
 	 * @param layer
 	 */
-	public void addLayer(AttributeType<?> attributeId, AbstractAttributeRenderLayer layer) {
-		layers.put(attributeId, layer);
+	public <T> void addAttribute(AttributeType<T> attributeId, T baseValue, AbstractAttributeRenderLayer layer) {
+		attributes.put(attributeId, new AttributeRegistration<T>(attributeId, baseValue, layer));
+	}
+
+	public Set<AttributeType<?>> getAttributes() {
+		return attributes.keySet();
+	}
+
+	public Collection<AttributeRegistration<?>> getRegistrations() {
+		return attributes.values();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> AttributeRegistration<T> getAttribute(AttributeType<T> type) {
+		return (AttributeRegistration<T>) attributes.get(type);
 	}
 
 	/**
@@ -52,8 +66,8 @@ public class AttributableItemRenderLayers {
 
 		// Then get all the layers in an unordered fashion.
 		for (AttributeType<?> attribute : attributable.getAllAttributes()) {
-			if (layers.containsKey(attribute) && attributable.getAttribute(attribute).isActive()) {
-				applicableLayers.add(layers.get(attribute));
+			if (attributes.containsKey(attribute) && attributable.getAttribute(attribute).isActive()) {
+				applicableLayers.add(attributes.get(attribute).renderLayer());
 			}
 		}
 

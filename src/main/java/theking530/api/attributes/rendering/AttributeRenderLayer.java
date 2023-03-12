@@ -1,5 +1,7 @@
 package theking530.api.attributes.rendering;
 
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
@@ -10,9 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.api.attributes.capability.IAttributable;
 
-import java.util.List;
-
-public class BasicAttributeRenderLayer extends AbstractAttributeRenderLayer {
+public class AttributeRenderLayer extends AbstractAttributeRenderLayer {
 	private ResourceLocation modelLocation;
 
 	/**
@@ -21,7 +21,7 @@ public class BasicAttributeRenderLayer extends AbstractAttributeRenderLayer {
 	 * @param layer
 	 * @param modelLocation
 	 */
-	public BasicAttributeRenderLayer(ResourceLocation modelLocation, int layer) {
+	public AttributeRenderLayer(ResourceLocation modelLocation, int layer) {
 		super(layer);
 		this.modelLocation = modelLocation;
 	}

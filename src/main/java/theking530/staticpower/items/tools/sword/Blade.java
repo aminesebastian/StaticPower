@@ -15,14 +15,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
-import theking530.api.attributes.Attributes;
-import theking530.api.attributes.capability.AttributeableHandler;
-import theking530.api.attributes.rendering.AttributableItemRenderLayers;
-import theking530.api.attributes.rendering.BasicAttributeRenderLayer;
 import theking530.api.multipartitem.AbstractToolPart;
 import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.items.BladeItemModel;
 import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.utilities.MetricConverter;
@@ -33,18 +28,6 @@ public class Blade extends AbstractToolPart {
 	public Blade(Tiers miningTier, ResourceLocation tier) {
 		super(tier, new Item.Properties().stacksTo(1).durability(1).tab(ModCreativeTabs.TOOLS));
 		this.miningTier = miningTier;
-	}
-
-	@Override
-	protected void initializeAttributes(AttributeableHandler handler) {
-		handler.addAttribute(Attributes.Smelting.get(), false);
-		handler.addAttribute(Attributes.Haste.get(), 0);
-	}
-
-	@Override
-	protected void initializeRenderLayers(AttributableItemRenderLayers renderLayers) {
-		renderLayers.addLayer(Attributes.Smelting.get(), new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_SMELTING, 2));
-		renderLayers.addLayer(Attributes.Haste.get(), new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_HASTE, 3));
 	}
 
 	@Override

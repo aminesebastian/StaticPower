@@ -6,7 +6,7 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 
 public class CapabilityAttributable {
-	public static Capability<IAttributable> ATTRIBUTABLE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+	public static final Capability<IAttributable> ATTRIBUTABLE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
 	});
 
 	public static void register(RegisterCapabilitiesEvent event) {

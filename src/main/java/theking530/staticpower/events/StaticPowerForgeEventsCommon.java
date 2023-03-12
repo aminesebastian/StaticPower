@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -41,6 +42,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.IdMappingEvent;
+import theking530.api.Events;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
@@ -164,12 +166,17 @@ public class StaticPowerForgeEventsCommon {
 	}
 
 	@SubscribeEvent
-	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+	public static void onAttachEventCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof Player) {
 			if (!event.getObject().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).isPresent()) {
 				event.addCapability(STATIC_POWER_PLAYER_DATA, new StaticPowerPlayerCapabilityProvider());
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void onAttachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
+		Events.onAttachItemCapabilities(event);
 	}
 
 	@SubscribeEvent

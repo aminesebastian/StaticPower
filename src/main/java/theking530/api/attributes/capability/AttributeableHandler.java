@@ -4,24 +4,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.attributes.AttributeInstance;
+import theking530.api.attributes.rendering.ItemAttributeRegistration.AttributeRegistration;
 import theking530.api.attributes.type.AttributeType;
-import theking530.staticcore.item.IItemMultiCapability;
-import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.utilities.NBTUtilities;
 
-public class AttributeableHandler implements IAttributable, INBTSerializable<CompoundTag>, IItemMultiCapability {
+public class AttributeableHandler implements IAttributable, INBTSerializable<CompoundTag>, ICapabilityProvider {
 	private final HashMap<AttributeType<?>, AttributeInstance<?>> attributes;
-	private String name;
-	private ItemStackMultiCapabilityProvider parent;
 
-	public AttributeableHandler(String name) {
-		this.name = name;
+	public AttributeableHandler() {
 		attributes = new HashMap<>();
 	}
 
@@ -33,6 +35,10 @@ public class AttributeableHandler implements IAttributable, INBTSerializable<Com
 	@Override
 	public boolean hasAttribute(AttributeType<?> attribute) {
 		return attributes.containsKey(attribute);
+	}
+
+	public <T> boolean addAttribute(AttributeRegistration<T> attribute) {
+		return addAttribute(attribute.attribute(), attribute.baseValue());
 	}
 
 	@Override
@@ -69,22 +75,10 @@ public class AttributeableHandler implements IAttributable, INBTSerializable<Com
 	}
 
 	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public ItemStackMultiCapabilityProvider getOwningProvider() {
-		return parent;
-	}
-
-	@Override
-	public void setOwningProvider(ItemStackMultiCapabilityProvider owningProvider) {
-		parent = owningProvider;
-	}
-
-	@Override
-	public Capability<?>[] getCapabilityTypes() {
-		return new Capability[] { CapabilityAttributable.ATTRIBUTABLE_CAPABILITY };
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (cap == CapabilityAttributable.ATTRIBUTABLE_CAPABILITY) {
+			return LazyOptional.of(() -> this).cast();
+		}
+		return LazyOptional.empty();
 	}
 }

@@ -2,54 +2,27 @@ package theking530.api.multipartitem;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.attributes.AttributeInstance;
-import theking530.api.attributes.capability.AttributeableHandler;
 import theking530.api.attributes.capability.CapabilityAttributable;
-import theking530.api.attributes.rendering.AttributableItemRenderLayers;
 import theking530.api.attributes.type.AbstractHardenedAttributeType;
 import theking530.api.attributes.type.AttributeType;
 import theking530.staticcore.client.ICustomModelProvider;
-import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerItem;
 
 public abstract class AbstractToolPart extends StaticPowerItem implements ICustomModelProvider {
 	protected final ResourceLocation tier;
-	protected final AttributableItemRenderLayers renderLayers;
 
 	public AbstractToolPart(ResourceLocation tier, Properties properties) {
 		super(properties);
 		this.tier = tier;
-		this.renderLayers = new AttributableItemRenderLayers();
 	}
 
 	public ResourceLocation getTier() {
 		return this.tier;
-	}
-
-	public AttributableItemRenderLayers getRenderLayers() {
-		return this.renderLayers;
-	}
-
-	@Override
-	public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
-		renderLayers.clear();
-		initializeRenderLayers(renderLayers);
-	}
-
-	@Nullable
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		AttributeableHandler handler = new AttributeableHandler("attributes");
-		initializeAttributes(handler);
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(handler);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -99,7 +72,4 @@ public abstract class AbstractToolPart extends StaticPowerItem implements ICusto
 
 	protected abstract int getBaseDurability();
 
-	protected abstract void initializeAttributes(AttributeableHandler handler);
-
-	protected abstract void initializeRenderLayers(AttributableItemRenderLayers renderLayers);
 }

@@ -1,9 +1,6 @@
 package theking530.staticcore.utilities;
 
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.client.event.RenderHighlightEvent.Block;
 
 /**
  * Special thanks to the u/Metroite for breaking down the initial color values.

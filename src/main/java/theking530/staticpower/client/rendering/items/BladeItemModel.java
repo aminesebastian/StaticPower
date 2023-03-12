@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
+import theking530.api.attributes.ItemAttributeRegistry;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
@@ -106,7 +107,7 @@ public class BladeItemModel implements BakedModel {
 			Blade bit = (Blade) stack.getItem();
 
 			// Add all the quads.
-			List<BakedQuad> layers = bit.getRenderLayers().getOrderedRenderQuads(stack, attributable, state, side, rand, data);
+			List<BakedQuad> layers = ItemAttributeRegistry.get().getLayers(bit).getOrderedRenderQuads(stack, attributable, state, side, rand, data);
 			output.addAll(layers);
 
 			return output;

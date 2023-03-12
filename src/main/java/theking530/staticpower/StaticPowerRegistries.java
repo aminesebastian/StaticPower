@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.RegistryManager;
 import theking530.api.attributes.modifiers.AttributeModifierType;
+import theking530.api.attributes.rendering.ItemAttributeType;
 import theking530.api.attributes.type.AttributeType;
 import theking530.api.attributes.values.AttributeValueType;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
@@ -21,6 +22,7 @@ public class StaticPowerRegistries {
 	public static final ResourceLocation ATTRIBUTE_REGISTRY = new ResourceLocation(StaticPower.MOD_ID, "attribute");
 	public static final ResourceLocation ATTRIBUTE_MODIFIER_REGISTRY = new ResourceLocation(StaticPower.MOD_ID, "attribute_modifier");
 	public static final ResourceLocation ATTRIBUTE_VALUE_REGISTRY = new ResourceLocation(StaticPower.MOD_ID, "attribute_value");
+	public static final ResourceLocation ITEM_ATTRIBUTE_REGISTRY = new ResourceLocation(StaticPower.MOD_ID, "item_attribute_registry");
 
 	public static final ForgeRegistry<CableDestination> CableDestinationRegistry() {
 		return RegistryManager.ACTIVE.getRegistry(StaticPowerRegistries.CABLE_DESTINATION_REGISTRY);
@@ -48,5 +50,9 @@ public class StaticPowerRegistries {
 
 	public static final ForgeRegistry<AttributeValueType<?>> AttributeValue() {
 		return RegistryManager.ACTIVE.getRegistry(StaticPowerRegistries.ATTRIBUTE_VALUE_REGISTRY);
+	}
+
+	public static final ForgeRegistry<ItemAttributeType> ItemAttribute() {
+		return RegistryManager.ACTIVE.getRegistry(StaticPowerRegistries.ITEM_ATTRIBUTE_REGISTRY);
 	}
 }

@@ -26,6 +26,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
+import theking530.api.attributes.ItemAttributeRegistry;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
@@ -109,7 +110,7 @@ public class DrillBitItemModel implements BakedModel {
 			DrillBit bit = (DrillBit) stack.getItem();
 
 			// Add all the quads.
-			List<BakedQuad> layers = bit.getRenderLayers().getOrderedRenderQuads(stack, attributable, state, side, rand, data);
+			List<BakedQuad> layers = ItemAttributeRegistry.get().getLayers(bit).getOrderedRenderQuads(stack, attributable, state, side, rand, data);
 			output.addAll(layers);
 
 			return output;
