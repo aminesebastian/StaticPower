@@ -1,0 +1,28 @@
+{
+  "type": "staticpower:lumber_mill",
+  "input": {
+    "ingredient": {
+      "tag": "minecraft:dark_oak_logs"
+    }
+  },
+  "output_fluid": {
+    "amount": 60,
+    "fluid": "staticpower:oil_tree"
+  },
+  "primary_output_item": {
+    "item": {
+      "count": 6,
+      "id": "minecraft:dark_oak_planks"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output_item": {
+    "item": {
+      "count": 6,
+      "id": "staticpower:dust_wood"
+    }
+  }
+}

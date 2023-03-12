@@ -1,7 +1,5 @@
 package theking530.api.attributes.rendering;
 
-import java.util.List;
-
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -10,14 +8,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.api.attributes.capability.IAttributable;
 
+import java.util.List;
+
 public abstract class AbstractAttributeRenderLayer {
 	protected int layer;
 
 	/**
 	 * Creates an abstract render layer for the provided attribute and defaulting to
 	 * the provided layer.
-	 * 
-	 * @param attributeId
+	 *
 	 * @param layer
 	 */
 	public AbstractAttributeRenderLayer(int layer) {

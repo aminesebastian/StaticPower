@@ -153,7 +153,7 @@ public class StaticPowerRecipeRegistry {
 	 * @return
 	 */
 	public static boolean isValidFormerMold(ItemStack stack) {
-		for (AbstractStaticPowerRecipe recipe : RECIPES.get(ModRecipeTypes.FORMER_RECIPE_TYPE.getClass())) {
+		for (AbstractStaticPowerRecipe recipe : RECIPES.get(ModRecipeTypes.FORMER_RECIPE_TYPE.get())) {
 			FormerRecipe formerRecipe = (FormerRecipe) recipe;
 			if (formerRecipe.getRequiredMold().test(stack)) {
 				return true;

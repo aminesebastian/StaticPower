@@ -45,13 +45,9 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.attributes.AttributeUtilities;
+import theking530.api.attributes.Attributes;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
-import theking530.api.attributes.defenitions.FortuneAttributeDefenition;
-import theking530.api.attributes.defenitions.GrindingAttributeDefenition;
-import theking530.api.attributes.defenitions.HasteAttributeDefenition;
-import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
-import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
@@ -159,9 +155,9 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			DrillBit drillBit = (DrillBit) drillBitStack.getItem();
 			efficiency.set(drillBit.getMiningTier(drillBitStack).getSpeed() * 0.25f);
 			drillBitStack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
-				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
-					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
-					efficiency.set(efficiency.get() * (((hasteDefenition.getValue() * 10.0f) / 300.0f) + 1.0f));
+				if (attributable.hasAttribute(Attributes.Haste.get())) {
+					Number hasteDefenition = attributable.getAttributeValue(Attributes.Haste.get());
+					efficiency.set(efficiency.get() * (((hasteDefenition.floatValue() * 10.0f) / 300.0f) + 1.0f));
 				}
 			});
 		}
@@ -200,16 +196,16 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (drillBitAttributes != null) {
 			// Check for the grinder attribute. If we do, we add the grindable items to the
 			// list if grindable.
-			if (drillBitAttributes.hasAttribute(GrindingAttributeDefenition.ID)) {
+			if (drillBitAttributes.hasAttribute(Attributes.Grinding.get())) {
 				// Get the grinding attribute and check if its enabled.
-				GrindingAttributeDefenition grindingAttribute = (GrindingAttributeDefenition) drillBitAttributes.getAttribute(GrindingAttributeDefenition.ID);
+				boolean grindingAttribute = drillBitAttributes.getAttributeValue(Attributes.Grinding.get());
 				handleGrindingAttribute(grindingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
 			}
 
 			// Check for the smelting attribute. If we do, handle it.
-			if (drillBitAttributes.hasAttribute(SmeltingAttributeDefenition.ID)) {
+			if (drillBitAttributes.hasAttribute(Attributes.Smelting.get())) {
 				// Get the smelting attribute.
-				SmeltingAttributeDefenition smeltingAttribute = (SmeltingAttributeDefenition) drillBitAttributes.getAttribute(SmeltingAttributeDefenition.ID);
+				boolean smeltingAttribute = drillBitAttributes.getAttributeValue(Attributes.Smelting.get());
 				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
 			}
 		}
@@ -228,8 +224,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem, true);
 	}
 
-	protected boolean handleGrindingAttribute(GrindingAttributeDefenition grindingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
-			ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleGrindingAttribute(boolean grindingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
+			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was ground.
 		boolean wasAnythingGround = false;
@@ -238,7 +234,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		List<ItemStack> groundItems = new ArrayList<ItemStack>();
 
 		// Get the grinding attribute and check if its enabled.
-		if (grindingAttribute.getValue()) {
+		if (grindingAttribute) {
 			// Iterate through all the items that were going to be dropped.
 			for (int i = droppableItems.size() - 1; i >= 0; i--) {
 				// Get the droppable stack and get the grinding recipe for it if it exists.
@@ -272,14 +268,14 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		return wasAnythingGround;
 	}
 
-	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
-			ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleSmeltingAttribute(boolean smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
+			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was smelted.
 		boolean wasAnythingSmelted = false;
 
 		// If the smelting attribute is enabled.
-		if (smeltingAttribute.getValue()) {
+		if (smeltingAttribute) {
 			// Iterate through all the items that were going to be dropped.
 			for (int i = droppableItems.size() - 1; i >= 0; i--) {
 				// Get the droppable stack and get the furnace recipe for it if it exists.
@@ -305,14 +301,12 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (isSlotPopulated(stack, MultiPartSlots.DRILL_BIT)) {
 			ItemStack bit = getPartInSlot(stack, MultiPartSlots.DRILL_BIT);
 			bit.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
-				if (attributable.hasAttribute(FortuneAttributeDefenition.ID)) {
-					FortuneAttributeDefenition fortune = (FortuneAttributeDefenition) attributable.getAttribute(FortuneAttributeDefenition.ID);
-					int fLevel = fortune.getFortuneLevelWithChance();
+				if (attributable.hasAttribute(Attributes.Fortune.get())) {
+					int fLevel = Attributes.Fortune.get().getFortuneLevelWithChance(attributable.getAttribute(Attributes.Fortune.get()));
 					stack.enchant(Enchantments.BLOCK_FORTUNE, fLevel);
 				}
-				if (attributable.hasAttribute(SilkTouchAttributeDefenition.ID)) {
-					SilkTouchAttributeDefenition silkTouch = (SilkTouchAttributeDefenition) attributable.getAttribute(SilkTouchAttributeDefenition.ID);
-					if (silkTouch.getValue()) {
+				if (attributable.hasAttribute(Attributes.SilkTouch.get())) {
+					if (attributable.getAttributeValue(Attributes.SilkTouch.get())) {
 						stack.enchant(Enchantments.SILK_TOUCH, 1);
 					}
 				}

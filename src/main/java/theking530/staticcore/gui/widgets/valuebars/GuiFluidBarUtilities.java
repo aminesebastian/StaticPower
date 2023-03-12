@@ -13,6 +13,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
@@ -69,11 +70,28 @@ public class GuiFluidBarUtilities {
 			Component name = fluid.getDisplayName();
 			tooltip.add(name);
 			tooltip.add(Component.literal(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity))
-					.append(Component.translatable("gui.staticpower.millbuckets")));
+					.append(" ").append(Component.translatable("gui.staticpower.millibuckets")).withStyle(ChatFormatting.GRAY));
 			return tooltip;
 		} else {
 			tooltip.add(Component.translatable("gui.staticpower.empty"));
-			tooltip.add(Component.literal("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).append(Component.translatable("gui.staticpower.millbuckets")));
+			tooltip.add(Component.literal("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).append(" ")
+					.append(Component.translatable("gui.staticpower.millibuckets")).withStyle(ChatFormatting.GRAY));
+			return tooltip;
+		}
+	}
+
+	public static List<Component> getTooltip(int fluidAmount, FluidStack fluid) {
+		List<Component> tooltip = new ArrayList<Component>();
+
+		if (fluid != null && !fluid.isEmpty()) {
+			Component name = fluid.getDisplayName();
+			tooltip.add(name);
+			tooltip.add(Component.literal(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount)).append(" ").append(Component.translatable("gui.staticpower.millibuckets"))
+					.withStyle(ChatFormatting.GRAY));
+			return tooltip;
+		} else {
+			tooltip.add(Component.translatable("gui.staticpower.empty"));
+			tooltip.add(Component.literal("0").append(" ").append(Component.translatable("gui.staticpower.millibuckets")).withStyle(ChatFormatting.GRAY));
 			return tooltip;
 		}
 	}
@@ -132,9 +150,10 @@ public class GuiFluidBarUtilities {
 
 				BufferBuilder bufferBuilder = tessellator.getBuilder();
 				bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-				bufferBuilder.vertex(pose.last().pose(), x + width + 0.1f, y - depthHeightStart, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f).uv(uMax, vMin).endVertex();
-				bufferBuilder.vertex(pose.last().pose(), x + width - depthEffectSides, y - depthHeightStart - depthEffect, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f)
-						.uv(uMax, vMin + (filledRatio * diffV)).endVertex();
+				bufferBuilder.vertex(pose.last().pose(), x + width + 0.1f, y - depthHeightStart, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f).uv(uMax, vMin)
+						.endVertex();
+				bufferBuilder.vertex(pose.last().pose(), x + width - depthEffectSides, y - depthHeightStart - depthEffect, zLevel)
+						.color(topColorTint, topColorTint, topColorTint, 1.0f).uv(uMax, vMin + (filledRatio * diffV)).endVertex();
 				bufferBuilder.vertex(pose.last().pose(), x + depthEffectSides, y - depthHeightStart - depthEffect, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f)
 						.uv(uMin, vMin + (filledRatio * diffV)).endVertex();
 				bufferBuilder.vertex(pose.last().pose(), x - 0.1f, y - depthHeightStart, zLevel).color(topColorTint, topColorTint, topColorTint, 1.0f).uv(uMin, vMin).endVertex();

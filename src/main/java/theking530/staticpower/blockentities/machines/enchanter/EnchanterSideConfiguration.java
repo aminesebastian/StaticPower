@@ -2,9 +2,9 @@ package theking530.staticpower.blockentities.machines.enchanter;
 
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachinePreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachineNoFacePreset;
 
-public class EnchanterSideConfiguration extends DefaultMachinePreset {
+public class EnchanterSideConfiguration extends DefaultMachineNoFacePreset {
 	public static final EnchanterSideConfiguration INSTANCE = new EnchanterSideConfiguration();
 
 	public EnchanterSideConfiguration() {

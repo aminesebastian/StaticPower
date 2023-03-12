@@ -40,7 +40,7 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 					singleItemTodust("ores/" + bundle.getName(), RecipeItem.of(bundle.oreItemTag()), bundle.get(MaterialTypes.DUST).get(), 2);
 				}
 				if (bundle.has(MaterialTypes.RAW_MATERIAL)) {
-					singleItemTodust("raw_material/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), bundle.get(MaterialTypes.DUST).get(),
+					singleItemTodust("raw_materials/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), bundle.get(MaterialTypes.DUST).get(),
 							2);
 				}
 			}
@@ -52,7 +52,7 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 							StaticPowerOutputItem.of(bundle.get(MaterialTypes.DUST).get(), 1, 0.1f));
 				}
 				if (bundle.has(MaterialTypes.RAW_MATERIAL)) {
-					singleItemTodust("raw_material/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), bundle.get(MaterialTypes.DUST).get());
+					singleItemTodust("raw_materials/" + bundle.getName(), RecipeItem.of(bundle.get(MaterialTypes.RAW_MATERIAL).getItemTag()), bundle.get(MaterialTypes.DUST).get());
 				}
 			}
 

@@ -2,17 +2,19 @@ package theking530.api.attributes.capability;
 
 import java.util.Set;
 
-import net.minecraft.resources.ResourceLocation;
-import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
+import theking530.api.attributes.AttributeInstance;
+import theking530.api.attributes.type.AttributeType;
 
 public interface IAttributable {
-	public Set<ResourceLocation> getAllAttributes();
+	public Set<AttributeType<?>> getAllAttributes();
 
-	public boolean hasAttribute(ResourceLocation id);
+	public boolean hasAttribute(AttributeType<?> id);
 
-	public boolean addAttribute(ResourceLocation attributeId);
+	public <T> boolean addAttribute(AttributeType<T> attribute, T baseValue);
 
-	public boolean addAttribute(AbstractAttributeDefenition<?, ?> attribute);
+	public <T> AttributeInstance<T> getAttribute(AttributeType<T> attribute);
 
-	public AbstractAttributeDefenition<?, ?> getAttribute(ResourceLocation attributeId);
+	public default <T> T getAttributeValue(AttributeType<T> attribute) {
+		return getAttribute(attribute).getValue();
+	}
 }

@@ -2,9 +2,9 @@ package theking530.staticpower.blockentities.machines.mixer;
 
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachinePreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachineNoFacePreset;
 
-public class MixerSideConfiguration extends DefaultMachinePreset {
+public class MixerSideConfiguration extends DefaultMachineNoFacePreset {
 	public static final MixerSideConfiguration INSTANCE = new MixerSideConfiguration();
 
 	public MixerSideConfiguration() {

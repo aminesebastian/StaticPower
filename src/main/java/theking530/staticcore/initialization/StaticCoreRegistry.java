@@ -1,7 +1,6 @@
 package theking530.staticcore.initialization;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Type;
 
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,12 +26,9 @@ import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.forgespi.language.ModFileScanData.AnnotationData;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
-import theking530.api.attributes.modifiers.AbstractAttributeModifier;
-import theking530.api.attributes.registration.AttributeModifierRegistration;
-import theking530.api.attributes.registration.AttributeModifierRegistry;
-import theking530.api.attributes.registration.AttributeRegistration;
-import theking530.api.attributes.registration.AttributeRegistry;
+import theking530.api.attributes.AttributeModifiers;
+import theking530.api.attributes.AttributeValues;
+import theking530.api.attributes.Attributes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -53,24 +48,16 @@ public class StaticCoreRegistry {
 	private static boolean preInitialized;
 	private static boolean initialized;
 
-	public static void preInitialize() {
+	public static void preInitialize(IEventBus eventBus) {
 		// Don't preinitialize more than once.
 		if (preInitialized) {
 			throw new RuntimeException("Attempted to pre-initialize StaticCore more than once!");
 		}
 
 		LOGGER.info("Pre-Initializing StaticCore.");
-
-		// Register first the modifiers, then the defenitions.
-		LOGGER.info("Pre-Initializing Registry Attributes and Modifiers.");
-		try {
-			registerAttributeModifiers();
-			registerAttributeDefenitions();
-		} catch (Exception e) {
-			throw new RuntimeException("An error occured when attempting to register attribute modifiers or defenitions!", e);
-		}
-		LOGGER.info(String.format("Pre-Initialized: %1$d Attribute Defenitions and %2$d Attribute Modifiers.", AttributeRegistry.getRegisteredAttributeCount(),
-				AttributeModifierRegistry.getRegisteredAttributeModifierCount()));
+		AttributeValues.init(eventBus);
+		AttributeModifiers.init(eventBus);
+		Attributes.init(eventBus);
 
 		preInitialized = true;
 		LOGGER.info("StaticCore Pre-Initialized.");
@@ -106,54 +93,6 @@ public class StaticCoreRegistry {
 			BLOCK_ENTITIES.register(allocator.getName(), () -> allocator.getType());
 		}
 		BLOCK_ENTITIES.register(eventBus);
-	}
-
-	public static void registerAttributeDefenitions() throws Exception {
-		// Process the attributes.
-		for (AnnotationData annotation : getAnnotationsOfType(AttributeRegistration.class)) {
-			try {
-				// Get the constructor on the class that takes a resource location.
-				Constructor<?> cons = Class.forName(annotation.memberName()).getConstructor(ResourceLocation.class);
-
-				// Get the ID for the annotation.
-				ResourceLocation id = new ResourceLocation(annotation.annotationData().get("value").toString());
-
-				// Register the attribute defenition.
-				AttributeRegistry.registerAttribute(id, (idIn) -> {
-					try {
-						return (AbstractAttributeDefenition<?, ?>) cons.newInstance(idIn);
-					} catch (Exception e) {
-						throw new RuntimeException(String.format("An error occured when attempting to register attribute defenition: %1$s.", id.toString()), e);
-					}
-				});
-			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to process attribute defeinition: %1$s.", annotation.memberName()), e);
-			}
-		}
-	}
-
-	public static void registerAttributeModifiers() throws Exception {
-		// Process the attributes.
-		for (AnnotationData annotation : getAnnotationsOfType(AttributeModifierRegistration.class)) {
-			try {
-				// Get the constructor on the class.
-				Constructor<?> cons = Class.forName(annotation.memberName()).getConstructor();
-
-				// Get the ID for the annotation.
-				String id = annotation.annotationData().get("value").toString();
-
-				// Register the attribute defenition.
-				AttributeModifierRegistry.registerAttributeType(id, () -> {
-					try {
-						return (AbstractAttributeModifier<?>) cons.newInstance();
-					} catch (Exception e) {
-						throw new RuntimeException(String.format("An error occured when attempting to register attribute modifier: %1$s.", id.toString()), e);
-					}
-				});
-			} catch (Exception e) {
-				throw new Exception(String.format("An error occured when attempting to process attribute modifier: %1$s.", annotation.memberName()), e);
-			}
-		}
 	}
 
 	@OnlyIn(Dist.CLIENT)

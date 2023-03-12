@@ -8,15 +8,15 @@ import java.util.Map;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.api.attributes.capability.IAttributable;
+import theking530.api.attributes.type.AttributeType;
 
 public class AttributableItemRenderLayers {
-	private final Map<ResourceLocation, AbstractAttributeRenderLayer> layers;
+	private final Map<AttributeType<?>, AbstractAttributeRenderLayer> layers;
 
 	/**
 	 * Creates an empty attributable render layer container.
@@ -25,13 +25,17 @@ public class AttributableItemRenderLayers {
 		layers = new HashMap<>();
 	}
 
+	public void clear() {
+		layers.clear();
+	}
+
 	/**
 	 * Adds a layer to this render layer set. Only one layer can be added per
 	 * attribute id.
 	 * 
 	 * @param layer
 	 */
-	public void addLayer(ResourceLocation attributeId, AbstractAttributeRenderLayer layer) {
+	public void addLayer(AttributeType<?> attributeId, AbstractAttributeRenderLayer layer) {
 		layers.put(attributeId, layer);
 	}
 
@@ -47,7 +51,7 @@ public class AttributableItemRenderLayers {
 		ArrayList<AbstractAttributeRenderLayer> applicableLayers = new ArrayList<>();
 
 		// Then get all the layers in an unordered fashion.
-		for (ResourceLocation attribute : attributable.getAllAttributes()) {
+		for (AttributeType<?> attribute : attributable.getAllAttributes()) {
 			if (layers.containsKey(attribute) && attributable.getAttribute(attribute).isActive()) {
 				applicableLayers.add(layers.get(attribute));
 			}

@@ -6,6 +6,9 @@ import java.util.Optional;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -24,10 +27,12 @@ import net.minecraft.nbt.LongArrayTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.StringTagVisitor;
 import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import theking530.staticpower.StaticPower;
 
 public class JsonUtilities {
 	public static final Codec<Ingredient> INGREDIENT_CODEC = Codec.PASSTHROUGH.comapFlatMap(dynamic -> {
@@ -99,6 +104,19 @@ public class JsonUtilities {
 
 	public static String nbtToPrettyJson(CompoundTag tag) {
 		return new StringTagVisitor().visit(tag);
+	}
+
+	public static JsonObject nbtToJsonObject(CompoundTag tag) {
+		return JsonParser.parseString(nbtToPrettyJson(tag)).getAsJsonObject();
+	}
+
+	public static CompoundTag jsonToNbt(JsonObject json) {
+		try {
+			return TagParser.parseTag(json.toString());
+		} catch (CommandSyntaxException e) {
+			StaticPower.LOGGER.error(String.format("There was an error when attempting to parse Json: %1$s.", json.getAsString()), e);
+		}
+		return null;
 	}
 
 	public static class SDStringTagVisitor extends StringTagVisitor {

@@ -2,9 +2,9 @@ package theking530.staticpower.blockentities.machines.lumbermill;
 
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachinePreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachineNoFacePreset;
 
-public class LumbermillSideConfiguration extends DefaultMachinePreset {
+public class LumbermillSideConfiguration extends DefaultMachineNoFacePreset {
 	public static final LumbermillSideConfiguration INSTANCE = new LumbermillSideConfiguration();
 
 	public LumbermillSideConfiguration() {

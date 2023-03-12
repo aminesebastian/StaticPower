@@ -15,16 +15,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
+import theking530.api.attributes.Attributes;
 import theking530.api.attributes.capability.AttributeableHandler;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
-import theking530.api.attributes.defenitions.DiamondHardenedDefenition;
-import theking530.api.attributes.defenitions.EmeraldHardenedDefenition;
-import theking530.api.attributes.defenitions.HasteAttributeDefenition;
-import theking530.api.attributes.defenitions.PromotedAttributeDefenition;
-import theking530.api.attributes.defenitions.RubyHardenedDefenition;
-import theking530.api.attributes.defenitions.SapphireHardenedDefenition;
-import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
 import theking530.api.attributes.rendering.BasicAttributeRenderLayer;
 import theking530.api.multipartitem.AbstractToolPart;
@@ -45,24 +39,26 @@ public class ChainsawBlade extends AbstractToolPart {
 
 	@Override
 	protected void initializeAttributes(AttributeableHandler handler) {
-		handler.addAttribute(HasteAttributeDefenition.ID);
-		handler.addAttribute(DiamondHardenedDefenition.ID);
-		handler.addAttribute(RubyHardenedDefenition.ID);
-		handler.addAttribute(SapphireHardenedDefenition.ID);
-		handler.addAttribute(EmeraldHardenedDefenition.ID);
-		handler.addAttribute(SmeltingAttributeDefenition.ID);
-		handler.addAttribute(PromotedAttributeDefenition.ID);
+
+		handler.addAttribute(Attributes.Haste.get(), 0);
+
+		handler.addAttribute(Attributes.Smelting.get(), false);
+		handler.addAttribute(Attributes.DiamondHardened.get(), false);
+		handler.addAttribute(Attributes.RubyHardened.get(), false);
+		handler.addAttribute(Attributes.SapphireHardened.get(), false);
+		handler.addAttribute(Attributes.EmeraldHardened.get(), false);
+		handler.addAttribute(Attributes.Promoted.get(), false);
 	}
 
 	@Override
 	protected void initializeRenderLayers(AttributableItemRenderLayers renderLayers) {
-		renderLayers.addLayer(SmeltingAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_SMELTING, 2));
-		renderLayers.addLayer(HasteAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_HASTE, 2));
+		renderLayers.addLayer(Attributes.Smelting.get(), new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_SMELTING, 2));
+		renderLayers.addLayer(Attributes.Haste.get(), new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_HASTE, 2));
 
-		renderLayers.addLayer(DiamondHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_DIAMOND, 3));
-		renderLayers.addLayer(RubyHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_RUBY, 3));
-		renderLayers.addLayer(SapphireHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_SAPPHIRE, 3));
-		renderLayers.addLayer(EmeraldHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_EMERALD, 3));
+		renderLayers.addLayer(Attributes.DiamondHardened.get(), new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_DIAMOND, 3));
+		renderLayers.addLayer(Attributes.RubyHardened.get(), new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_RUBY, 3));
+		renderLayers.addLayer(Attributes.SapphireHardened.get(), new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_SAPPHIRE, 3));
+		renderLayers.addLayer(Attributes.RubyHardened.get(), new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_EMERALD, 3));
 	}
 
 	@Override
@@ -74,9 +70,8 @@ public class ChainsawBlade extends AbstractToolPart {
 		// Get the drill bit attributes, check if it has the promoted attribute. If it
 		// does, promote the item.
 		IAttributable drillBitAttributes = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
-		if (drillBitAttributes != null && drillBitAttributes.hasAttribute(PromotedAttributeDefenition.ID)) {
-			PromotedAttributeDefenition defenition = (PromotedAttributeDefenition) drillBitAttributes.getAttribute(PromotedAttributeDefenition.ID);
-			return defenition.modifyItemTier(miningTier);
+		if (drillBitAttributes != null && drillBitAttributes.hasAttribute(Attributes.Promoted.get())) {
+			return Attributes.Promoted.get().modifyItemTier(drillBitAttributes.getAttribute(Attributes.Promoted.get()), miningTier);
 		}
 		return miningTier;
 	}

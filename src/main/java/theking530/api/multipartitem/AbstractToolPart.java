@@ -9,11 +9,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import theking530.api.attributes.AttributeInstance;
 import theking530.api.attributes.capability.AttributeableHandler;
 import theking530.api.attributes.capability.CapabilityAttributable;
-import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
-import theking530.api.attributes.defenitions.AbstractHardenedDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
+import theking530.api.attributes.type.AbstractHardenedAttributeType;
+import theking530.api.attributes.type.AttributeType;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -27,7 +28,6 @@ public abstract class AbstractToolPart extends StaticPowerItem implements ICusto
 		super(properties);
 		this.tier = tier;
 		this.renderLayers = new AttributableItemRenderLayers();
-		initializeRenderLayers(renderLayers); // Do this in the constructor as we only want this one ONCE.
 	}
 
 	public ResourceLocation getTier() {
@@ -38,6 +38,12 @@ public abstract class AbstractToolPart extends StaticPowerItem implements ICusto
 		return this.renderLayers;
 	}
 
+	@Override
+	public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+		renderLayers.clear();
+		initializeRenderLayers(renderLayers);
+	}
+
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
@@ -46,6 +52,7 @@ public abstract class AbstractToolPart extends StaticPowerItem implements ICusto
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(handler);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int getMaxDamage(ItemStack stack) {
 		// Get the base durability.
@@ -55,17 +62,17 @@ public abstract class AbstractToolPart extends StaticPowerItem implements ICusto
 		stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 
 			// Check to see if we have an activated hardening attribute.
-			for (ResourceLocation id : attributable.getAllAttributes()) {
+			for (AttributeType<?> attribute : attributable.getAllAttributes()) {
 				// Get the instance.
-				AbstractAttributeDefenition<?, ?> attributeInstance = attributable.getAttribute(id);
+				AttributeInstance<?> attributeInstance = attributable.getAttribute(attribute);
 
 				// If it is an abstract hardened defenition and it IS activated.
-				if (attributeInstance instanceof AbstractHardenedDefenition && ((AbstractHardenedDefenition) attributeInstance).getValue()) {
+				if (attribute instanceof AbstractHardenedAttributeType && attributeInstance.isActive()) {
 					// Get an instance.
-					AbstractHardenedDefenition attrib = (AbstractHardenedDefenition) attributable.getAttribute(id);
+					AbstractHardenedAttributeType attrib = (AbstractHardenedAttributeType) attribute;
 
 					// Apply the durability change. Then break the loop.
-					baseDurability.set(attrib.applyHardening(baseDurability.get()));
+					baseDurability.set(attrib.applyHardening((AttributeInstance<Boolean>) attributeInstance, baseDurability.get()));
 					break;
 				}
 			}

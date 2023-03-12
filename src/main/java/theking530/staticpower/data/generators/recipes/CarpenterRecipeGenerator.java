@@ -31,7 +31,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern("w w")
 			.pattern("wsw"),
 			StaticPowerOutputItem.of(Blocks.BARREL),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 6),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 12),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 30));
 		// @formatter:on
 
@@ -43,7 +43,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern("hhh")
 			.pattern("www"),
 			StaticPowerOutputItem.of(Blocks.BEEHIVE),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 6),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 12),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 30));
 		// @formatter:on
 
@@ -54,7 +54,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern("w w")
 			.pattern(" w "),
 			StaticPowerOutputItem.of(Items.BOWL, 4),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 3),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 6),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 15));
 		// @formatter:on
 
@@ -65,7 +65,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern("w w")
 			.pattern("www"),
 			StaticPowerOutputItem.of(Blocks.CHEST),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 8),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 16),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 40));
 		// @formatter:on
 
@@ -76,7 +76,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern(" w ")
 			.pattern("   "),
 			StaticPowerOutputItem.of(Items.STICK),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 2),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 4),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 10));
 		// @formatter:on
 
@@ -88,7 +88,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern("www")
 			.pattern(" w "),
 			StaticPowerOutputItem.of(Items.SHIELD),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 6),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 12),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 30));
 		// @formatter:on
 
@@ -100,7 +100,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern("lll")
 			.pattern("w w"),
 			StaticPowerOutputItem.of(Blocks.RED_BED),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 2),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 4),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 10));
 		// @formatter:on
 
@@ -114,7 +114,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern("wiw")
 			.pattern("srs"),
 			StaticPowerOutputItem.of(Blocks.PISTON),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 5),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 10),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 20));
 		// @formatter:on
 
@@ -126,7 +126,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern("wrw")
 			.pattern("www"),
 			StaticPowerOutputItem.of(Blocks.NOTE_BLOCK),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 8),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 16),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 40));
 		// @formatter:on
 
@@ -137,7 +137,7 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 			.pattern("ww ")
 			.pattern("   "),
 			StaticPowerOutputItem.of(Blocks.CRAFTING_TABLE),
-			StaticPowerOutputItem.of(ModItems.DustWood.get(), 4),
+			StaticPowerOutputItem.of(ModItems.DustWood.get(), 8),
 			new FluidStack(ModFluids.TreeOil.getSource().get(), 20));
 		// @formatter:on
 	}

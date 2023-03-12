@@ -3,6 +3,7 @@ package theking530.staticpower.integration.JEI;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector4f;
 
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
@@ -16,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
+import theking530.staticpower.integration.JEI.ingredients.JEICustomFluidRenderer;
 import theking530.staticpower.integration.JEI.ingredients.power.PowerIngredientRenderer;
 
 public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> implements IRecipeCategory<T> {
@@ -127,10 +129,21 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 	}
 
 	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, FluidIngredient ingredient, int tankDisplayCapacity) {
-		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, x, y).setFluidRenderer(tankDisplayCapacity, false, width, height);
+		JEICustomFluidRenderer renderer = new JEICustomFluidRenderer(width, height, tankDisplayCapacity);
+
+		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, x, y).setCustomRenderer(ForgeTypes.FLUID_STACK, renderer);
 		for (FluidStack fluid : ingredient.getFluids()) {
 			fluidSlot.addFluidStack(fluid.getFluid(), ingredient.getAmount());
 		}
+		return fluidSlot;
+	}
+
+	protected IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, RecipeIngredientRole role, int x, int y, int width, int height, FluidStack ingredient,
+			int tankDisplayCapacity) {
+		JEICustomFluidRenderer renderer = new JEICustomFluidRenderer(width, height, tankDisplayCapacity);
+
+		IRecipeSlotBuilder fluidSlot = builder.addSlot(role, x, y).setCustomRenderer(ForgeTypes.FLUID_STACK, renderer);
+		fluidSlot.addFluidStack(ingredient.getFluid(), ingredient.getAmount());
 		return fluidSlot;
 	}
 }

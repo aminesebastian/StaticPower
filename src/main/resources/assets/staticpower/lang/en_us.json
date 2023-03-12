@@ -702,7 +702,7 @@
 	"block.staticpower.machine_fusion_furnace": "Fusion Furnace",
 	"block.staticpower.machine_auto_smith": "Auto Smith",
 	"block.staticpower.machine_charging_station": "Charging Station",
-	"block.staticpower.machine_lathe": "Lathe",
+	"block.staticpower.machine_carpenter": "Carpenter",
 	"block.staticpower.machine_mixer": "Mixer",
 	"block.staticpower.machine_caster": "Caster",
 	"block.staticpower.machine_tumbler": "Tumbler",
@@ -1146,7 +1146,7 @@
 	
 	"gui.staticpower.transfomer_ratio": "Transformer Ratio",
 	
-	"gui.staticpower.millbuckets": "mB",
+	"gui.staticpower.millibuckets": "mB",
 	"gui.staticpower.fluid_unit": "B",
 	"gui.staticpower.fluid_unit_per_tick": "B/t",
 	

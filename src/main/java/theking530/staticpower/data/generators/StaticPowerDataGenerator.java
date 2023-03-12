@@ -9,6 +9,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.generators.recipes.AlloyFurnaceRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.BlastingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.BottlerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.CarpenterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CasterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CauldronRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CondensationRecipeGenerator;
@@ -24,10 +25,11 @@ import theking530.staticpower.data.generators.recipes.FusionFurnaceRecipeGenerat
 import theking530.staticpower.data.generators.recipes.GrindingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.HammerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.HydroponicFarmerRecipeGenerator;
-import theking530.staticpower.data.generators.recipes.CarpenterRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.LumberMillRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.MixerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.RefineryRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmeltingRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.SmithingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmokingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SolderingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SqueezerRecipeGenerator;
@@ -74,6 +76,8 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new FluidInfusionRecipeGenerator(generator));
 		generator.addProvider(true, new SolderingRecipeGenerator(generator));
 		generator.addProvider(true, new CarpenterRecipeGenerator(generator));
+		generator.addProvider(true, new LumberMillRecipeGenerator(generator));
+		generator.addProvider(true, new SmithingRecipeGenerator(generator));
 		
 		generator.addProvider(true, new ModLootTableProvider(generator));
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));

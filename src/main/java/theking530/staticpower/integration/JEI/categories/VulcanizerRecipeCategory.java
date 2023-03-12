@@ -43,7 +43,7 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 	public VulcanizerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
 		locTitle = Component.translatable(ModBlocks.Vulcanizer.get().getDescriptionId());
-		background = guiHelper.createBlankDrawable(146, 60);
+		background = guiHelper.createBlankDrawable(132, 66);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Vulcanizer.get()));
 	}
 
@@ -71,17 +71,17 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 
 	@Override
 	public void draw(VulcanizerRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 76, 40, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 112, 15, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 62, 4, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 104, 18, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 40, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(matrixStack, 43, 5, 62, 23, 0);
-		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 43;
+		GuiDrawUtilities.drawSlot(matrixStack, 34, 5, 62, 25, 0);
+		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 34.0f;
 		FluidStack fluid = this.getNthFluidInput(recipeSlotsView, 0);
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 62, 28, 1, progress, 5, false);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 62, 30, 1, progress, 5, false);
 	}
 
 	@Override
@@ -95,8 +95,8 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, VulcanizerRecipe recipe, IFocusGroup ingredients) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 76, 40).addIngredients(recipe.getInputItem().getIngredient());
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 114, 17).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
+		builder.addSlot(RecipeIngredientRole.INPUT, 62, 4).addIngredients(recipe.getInputItem().getIngredient());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 106, 20).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 
 		addPowerInputSlot(builder, 5, 6, 16, 48, recipe.getProcessingSection());
 		addFluidIngredientSlot(builder, 40, 4, 16, 52, recipe.getInputFluid());

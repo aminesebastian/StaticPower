@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
-import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
+import theking530.api.attributes.type.AttributeType;
 
 public class AttributeUtilities {
 	public static void addTooltipsForAttribute(ItemStack stack, List<Component> tooltip, boolean showAdvanced) {
@@ -18,9 +17,9 @@ public class AttributeUtilities {
 			List<Component> attributeTooltips = new ArrayList<Component>();
 
 			// Add all the attribute tooltips.
-			for (ResourceLocation id : attributable.getAllAttributes()) {
+			for (AttributeType<?> id : attributable.getAllAttributes()) {
 				// Only add the tooltip if the attribute requests it.
-				AbstractAttributeDefenition<?, ?> attribute = attributable.getAttribute(id);
+				AttributeInstance<?> attribute = attributable.getAttribute(id);
 				if (attribute.isActive()) {
 					attributeTooltips.add(attribute.getAttributeTitle(showAdvanced));
 					attribute.addAdditionalTooltipValues(attributeTooltips, showAdvanced);
@@ -35,7 +34,7 @@ public class AttributeUtilities {
 		});
 	}
 
-	public static void addTooltipsForAttribute(AbstractAttributeDefenition<?, ?> attribute, List<Component> tooltip, boolean showAdvanced) {
+	public static void addTooltipsForAttribute(AttributeInstance<?> attribute, List<Component> tooltip, boolean showAdvanced) {
 		// Only add the tooltip if the attribute requests it.
 		if (attribute.isActive()) {
 			tooltip.add(attribute.getAttributeTitle(showAdvanced));
@@ -43,11 +42,11 @@ public class AttributeUtilities {
 		}
 	}
 
-	public static boolean safeCheckAttributeValue(IAttributable attributable, ResourceLocation attributeId, Object value) {
-		if (!attributable.hasAttribute(attributeId)) {
+	public static boolean safeCheckAttributeValue(IAttributable attributable, AttributeType<?> attribute, Object value) {
+		if (!attributable.hasAttribute(attribute)) {
 			return false;
 		}
 
-		return attributable.getAttribute(attributeId).getValue() == value;
+		return attributable.getAttribute(attribute).getValue() == value;
 	}
 }

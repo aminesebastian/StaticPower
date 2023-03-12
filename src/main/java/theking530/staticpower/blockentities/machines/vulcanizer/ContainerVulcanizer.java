@@ -32,10 +32,10 @@ public class ContainerVulcanizer extends StaticPowerTileEntityContainer<BlockEnt
 	@Override
 	public void initializeContainer() {
 		// Input
-		addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 77, 52));
+		addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 77, 22));
 
 		// Output
-		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 112, 54));
+		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 116, 40));
 
 		// Upgrades
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 12));

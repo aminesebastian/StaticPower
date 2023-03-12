@@ -39,7 +39,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<StaticP
 			if (ingredient.getOutputChance() != 1.0f) {
 				String percentageString = GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getOutputChance() * 100).getString() + "%";
 				int width = font.width(percentageString);
-				GuiDrawUtilities.drawString(matrixStack, percentageString, -1.5f + (width / 2), 2, 0.0f, 0.5f, SDColor.EIGHT_BIT_YELLOW, true);
+				GuiDrawUtilities.drawString(matrixStack, percentageString, -1.25f + (width / 2), 2.25f, 0.0f, 0.5f, SDColor.EIGHT_BIT_YELLOW, true);
 			} else if (ingredient.getAdditionalBonus() > 0) {
 				GuiDrawUtilities.drawString(matrixStack, "*", 3, 6, 0.0f, 1.0f, SDColor.EIGHT_BIT_YELLOW, true);
 			}

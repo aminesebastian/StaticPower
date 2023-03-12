@@ -29,7 +29,7 @@ public class LumberMillRecipe extends AbstractMachineRecipe {
 			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
 					StaticPowerIngredient.CODEC.fieldOf("input").forGetter(recipe -> recipe.getInput()),
 					StaticPowerOutputItem.CODEC.optionalFieldOf("primary_output_item", StaticPowerOutputItem.EMPTY).forGetter(recipe -> recipe.getPrimaryOutput()),
-					StaticPowerOutputItem.CODEC.optionalFieldOf("secondary_output_item", StaticPowerOutputItem.EMPTY).forGetter(recipe -> recipe.getPrimaryOutput()),
+					StaticPowerOutputItem.CODEC.optionalFieldOf("secondary_output_item", StaticPowerOutputItem.EMPTY).forGetter(recipe -> recipe.getSecondaryOutput()),
 					JsonUtilities.FLUIDSTACK_CODEC.optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(recipe -> recipe.getOutputFluid()),
 					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, LumberMillRecipe::new));
 

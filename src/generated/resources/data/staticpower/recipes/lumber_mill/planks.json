@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:lumber_mill",
+  "input": {
+    "ingredient": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "output_fluid": {
+    "amount": 60,
+    "fluid": "staticpower:oil_tree"
+  },
+  "primary_output_item": {
+    "item": {
+      "count": 6,
+      "id": "staticpower:dust_wood"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

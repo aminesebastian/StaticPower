@@ -22,9 +22,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import theking530.api.attributes.AttributeInstance;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
-import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
+import theking530.api.attributes.type.AttributeType;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.AutoSmithProgressBar;
@@ -135,18 +136,23 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 			}
 
 			// List the attribute changes.
-			for (ResourceLocation attribId : copyAttributable.getAllAttributes()) {
-				AbstractAttributeDefenition<?, ?> originalAttribute = originalAttributable.getAttribute(attribId);
-				AbstractAttributeDefenition<?, ?> copyAttribute = copyAttributable.getAttribute(attribId);
-				MutableComponent differenceLabel = copyAttribute.getDifferenceLabel(originalAttribute);
+			for (AttributeType<?> attribute : copyAttributable.getAllAttributes()) {
+				MutableComponent differenceLabel = getDifferenceLabel(attribute, originalAttributable, copyAttributable);
 
 				if (differenceLabel != null) {
-					Minecraft.getInstance().font.drawShadow(matrixStack, differenceLabel.getString(), 116, yOffset, originalAttribute.getColor().getColor());
+					Minecraft.getInstance().font.drawShadow(matrixStack, differenceLabel.getString(), 116, yOffset, attribute.getColor().getColor());
 					yOffset += 9.5f;
 				}
 			}
 			matrixStack.popPose();
 		}
+	}
+
+	@SuppressWarnings("resource")
+	private <T> MutableComponent getDifferenceLabel(AttributeType<T> type, IAttributable originalAttributable, IAttributable copyAttributable) {
+		AttributeInstance<T> originalAttribute = originalAttributable.getAttribute(type);
+		AttributeInstance<T> copyAttribute = copyAttributable.getAttribute(type);
+		return type.getDifferenceLabel(originalAttribute, copyAttribute);
 	}
 
 	@Override

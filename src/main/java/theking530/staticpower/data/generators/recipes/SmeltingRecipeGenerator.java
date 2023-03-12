@@ -3,8 +3,8 @@ package theking530.staticpower.data.generators.recipes;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
 import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
@@ -14,7 +14,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 
-public class SmeltingRecipeGenerator extends SPRecipeProvider<BlastingRecipe> {
+public class SmeltingRecipeGenerator extends SPRecipeProvider<SmeltingRecipe> {
 
 	public SmeltingRecipeGenerator(DataGenerator dataGenerator) {
 		super("smelting", dataGenerator);

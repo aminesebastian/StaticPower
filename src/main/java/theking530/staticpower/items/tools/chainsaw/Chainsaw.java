@@ -46,11 +46,11 @@ import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
+import theking530.api.attributes.AttributeInstance;
 import theking530.api.attributes.AttributeUtilities;
+import theking530.api.attributes.Attributes;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
-import theking530.api.attributes.defenitions.HasteAttributeDefenition;
-import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
@@ -158,9 +158,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
 			efficiency.set(bladeItem.getMiningTier(blade).getSpeed() * 0.5f);
 			blade.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
-				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
-					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
-					efficiency.set(efficiency.get() * (((hasteDefenition.getValue() * 10.0f) / 300.0f) + 1.0f));
+				if (attributable.hasAttribute(Attributes.Haste.get())) {
+					AttributeInstance<Number> hasteDefenition = attributable.getAttribute(Attributes.Haste.get());
+					efficiency.set(efficiency.get() * (((hasteDefenition.getValue().floatValue() * 10.0f) / 300.0f) + 1.0f));
 				}
 			});
 		}
@@ -197,9 +197,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		// If we have attributes.
 		if (drillBitAttributes != null) {
 			// Check for the smelting attribute. If we do, handle it.
-			if (drillBitAttributes.hasAttribute(SmeltingAttributeDefenition.ID)) {
+			if (drillBitAttributes.hasAttribute(Attributes.Smelting.get())) {
 				// Get the smelting attribute.
-				SmeltingAttributeDefenition smeltingAttribute = (SmeltingAttributeDefenition) drillBitAttributes.getAttribute(SmeltingAttributeDefenition.ID);
+				AttributeInstance<Boolean> smeltingAttribute = drillBitAttributes.getAttribute(Attributes.Smelting.get());
 				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
 			}
 		}
@@ -218,7 +218,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem, true);
 	}
 
-	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
+	protected boolean handleSmeltingAttribute(AttributeInstance<Boolean> smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
 			ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was smelted.

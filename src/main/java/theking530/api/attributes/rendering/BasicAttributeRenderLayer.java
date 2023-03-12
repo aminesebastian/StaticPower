@@ -1,7 +1,5 @@
 package theking530.api.attributes.rendering;
 
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
@@ -12,13 +10,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import theking530.api.attributes.capability.IAttributable;
 
+import java.util.List;
+
 public class BasicAttributeRenderLayer extends AbstractAttributeRenderLayer {
 	private ResourceLocation modelLocation;
 
 	/**
 	 * Creates a basic layer from a model.
-	 * 
-	 * @param attributeId
+	 *
 	 * @param layer
 	 * @param modelLocation
 	 */

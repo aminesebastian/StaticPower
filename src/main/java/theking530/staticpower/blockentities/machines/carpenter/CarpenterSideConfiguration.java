@@ -2,9 +2,9 @@ package theking530.staticpower.blockentities.machines.carpenter;
 
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachinePreset;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.presets.DefaultMachineNoFacePreset;
 
-public class CarpenterSideConfiguration extends DefaultMachinePreset {
+public class CarpenterSideConfiguration extends DefaultMachineNoFacePreset {
 	public static final CarpenterSideConfiguration INSTANCE = new CarpenterSideConfiguration();
 
 	public CarpenterSideConfiguration() {

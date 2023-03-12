@@ -12,7 +12,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -66,9 +65,9 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 			@Override
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				if (slot == 0) {
-					return isValidInput(stack, false);
+					return true;
 				}
-				return isValidInput(stack, true);
+				return isValidModifier(stack);
 			}
 		}));
 
@@ -117,24 +116,28 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	public boolean isValidInput(ItemStack stack, boolean modifier) {
-		if (!modifier) {
-			return stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent();
-		} else {
-			// Test for modifier materials.
-			List<AutoSmithRecipe> recipes = getLevel().getRecipeManager().getAllRecipesFor(ModRecipeTypes.AUTO_SMITH_RECIPE_TYPE.get());
-			for (AutoSmithRecipe recipe : recipes) {
-				if (recipe.getModifierMaterial().test(stack)) {
-					return true;
-				}
+	public boolean isValidModifier(ItemStack stack) {
+		// Check to see if we have a tool we can repair.
+		if (!inputInventory.getStackInSlot(0).isEmpty()) {
+			ItemStack toolStack = inputInventory.getStackInSlot(0);
+			if (toolStack.isRepairable() && toolStack.getItem().isValidRepairItem(toolStack, stack)) {
+				return true;
 			}
-			return false;
 		}
+
+		// Test for modifier materials.
+		List<AutoSmithRecipe> recipes = getLevel().getRecipeManager().getAllRecipesFor(ModRecipeTypes.AUTO_SMITH_RECIPE_TYPE.get());
+		for (AutoSmithRecipe recipe : recipes) {
+			if (recipe.getModifierMaterial().test(stack)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
 	protected SideConfigurationPreset getDefaultSideConfiguration() {
-		return AutoSmithPreset.INSTANCE;
+		return AutoSmithSideConfiguration.INSTANCE;
 	}
 
 	@Override

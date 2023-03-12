@@ -1,0 +1,19 @@
+{
+  "type": "staticpower:auto_smith",
+  "attributes": [
+    {
+      "type": "staticpower:grinding",
+      "modifier": {
+        "type": "staticpower:boolean",
+        "value": true
+      }
+    }
+  ],
+  "input_item": {
+    "ingredient": []
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

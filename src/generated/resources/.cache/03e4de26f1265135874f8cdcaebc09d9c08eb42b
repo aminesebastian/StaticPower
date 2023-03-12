@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-09T01:18:00.5847008	Tags for minecraft:item
+// 1.19.2	2023-03-12T08:07:34.8263227	Tags for minecraft:item
 51b00e5b14b17e9df81bc1b25cec37a2fe8031dc data/forge/tags/items/chunks/aluminum.json
 51bedc018c85271eca5afd8b657d0c5c1c7ffeac data/forge/tags/items/chunks/coal.json
 d8a3eb079dc5e7de3ceeafed90cc657c79950b6c data/forge/tags/items/chunks/copper.json
@@ -89,18 +89,18 @@ fa3fe04857c986e0a44a6667f34c61476ce44c3d data/forge/tags/items/nuggets/tungsten.
 780033a8996fa783177e4b1f89dc329120e0f53c data/forge/tags/items/nuggets/zinc.json
 1ed8c6375235d71cbedaa412167804ea4fb8fc97 data/forge/tags/items/ores.json
 a2bda67c5d909a46c468ef0fe160e60f0bf49f1e data/forge/tags/items/ores/aluminum.json
-f39705f4e55200454d5fcae9f82f6b82a044533e data/forge/tags/items/ores/coal.json
+6ab60a84dde670dba86298809f66887a05c426c4 data/forge/tags/items/ores/coal.json
 d1c688f6b4d83d63871b6d81f913f656c42ff10d data/forge/tags/items/ores/copper.json
-c50398a1ce7e26a563cf50432e7ba5be7fd8f117 data/forge/tags/items/ores/diamond.json
-feca734c34839ae3f52e66a58db5438a149ac63a data/forge/tags/items/ores/emerald.json
+3e785627fc8676629e25406630d77b36f8c19890 data/forge/tags/items/ores/diamond.json
+81984ab90ad9a6d70742045f6fb24d214c84750e data/forge/tags/items/ores/emerald.json
 9ebccd990449eb0dc4e5b543497d9ba8d7e4fb56 data/forge/tags/items/ores/gold.json
 6f644be81935031ad964cbde4b17688dbe2bf388 data/forge/tags/items/ores/iron.json
-ce37975a737467aa49d138bbfd2ecdb180870f89 data/forge/tags/items/ores/lapis.json
+f26dad5c414194fa368d5bb30692d0407602b04e data/forge/tags/items/ores/lapis.json
 1ea484565567160e9431ce43a1d4348cc22b2426 data/forge/tags/items/ores/lead.json
 8b05808d79ab659bd72e616c0ed1a8d117985786 data/forge/tags/items/ores/magnesium.json
 790ca15ed8965110621dec733061a4cdcc447c93 data/forge/tags/items/ores/platinum.json
 d6cc7b45842bf7bada70aae6db2b46a4d2882c31 data/forge/tags/items/ores/quartz.json
-03a12aefb1906eabbd36ba94c43a5e192fffc03b data/forge/tags/items/ores/redstone.json
+d36cea6cc4c6bb09b043d7216d2b7299454b4abe data/forge/tags/items/ores/redstone.json
 6255b0bfa9467a786fc5d05158284257f26e3943 data/forge/tags/items/ores/ruby.json
 163cf6ca087cea2c47af13bbfee1795391d36038 data/forge/tags/items/ores/sapphire.json
 4d851757267ce40c0d5b7f2188f6d59b80932897 data/forge/tags/items/ores/silver.json
@@ -263,7 +263,7 @@ e931e350be5042e282e2061a6667161aedcb8fd4 data/staticpower/tags/items/ingot_or_pl
 35c86d69724a6fbde4f9778cbae604be21d4430b data/staticpower/tags/items/ingot_or_plate/tin.json
 c3ee03b6ec91f239e2a1e4dbe7ca9f3414305560 data/staticpower/tags/items/ingot_or_plate/tungsten.json
 6b12387585a43cc1314d136279dda18d1d1a86b6 data/staticpower/tags/items/ingot_or_plate/zinc.json
-8c9e45af091da21e3644892e86706f4ae8b1d6f3 data/staticpower/tags/items/lightbulbs.json
+8a8b7941ff8d187698386aa0ec36000c2b713a51 data/staticpower/tags/items/lightbulbs.json
 a69680e41844ef84fad37036549c67565cabe5db data/staticpower/tags/items/machines.json
 2528913fac539e196dfc1dd3beaf5a78d22819ff data/staticpower/tags/items/machine_blocks.json
 e8f309955d537f37f48055743def9728df64488b data/staticpower/tags/items/materials.json

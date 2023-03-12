@@ -36,11 +36,11 @@ import theking530.staticpower.init.ModFeatures;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModLootSerializers;
+import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.ModNetworkMessages;
 import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.init.ModRecipeTypes;
-import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.cables.ModCableCapabilities;
 import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
@@ -83,7 +83,7 @@ public class StaticPower {
 		StaticPowerConfig.registerTier(StaticPowerTiers.SAPPHIRE, StaticPowerTierSapphire::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.EMERALD, StaticPowerTierEmerald::new);
 
-		StaticCoreRegistry.preInitialize();
+		StaticCoreRegistry.preInitialize(eventBus);
 		ModIntegrations.preInit(eventBus);
 
 		ModMaterials.init();

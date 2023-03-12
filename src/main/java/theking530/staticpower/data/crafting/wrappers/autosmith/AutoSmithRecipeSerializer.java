@@ -11,7 +11,7 @@ import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
-import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeModifierWrapper;
+import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeAttributeWrapper;
 
 public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoSmithRecipe> {
 	@Override
@@ -33,9 +33,9 @@ public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoS
 		int modifierCount = buffer.readInt();
 
 		// Read the modifiers.
-		List<RecipeModifierWrapper> modifiers = new ArrayList<RecipeModifierWrapper>();
+		List<RecipeAttributeWrapper<?>> modifiers = new ArrayList<RecipeAttributeWrapper<?>>();
 		for (int i = 0; i < modifierCount; i++) {
-			modifiers.add(RecipeModifierWrapper.readFromBuffer(buffer));
+			modifiers.add(RecipeAttributeWrapper.readFromBuffer(buffer));
 		}
 
 		// Create the recipe.
@@ -56,7 +56,7 @@ public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoS
 		buffer.writeInt(recipe.getModifiers().size());
 
 		// Write the modifiers.
-		for (RecipeModifierWrapper modifier : recipe.getModifiers()) {
+		for (RecipeAttributeWrapper<?> modifier : recipe.getModifiers()) {
 			modifier.writeToBuffer(buffer);
 		}
 
