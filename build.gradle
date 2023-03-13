@@ -15,11 +15,10 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "${mc_version}-${staticpower_major_version}.${staticpower_minor_version}." + "0"  //project.getProperty("build_number")
+version = "${mc_version}-${staticpower_major_version}.${staticpower_minor_version}." + "0"  
 group = "com.theking530.staticpower" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StaticPower"
 
@@ -44,10 +43,7 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 			
 			// For Patchuloi
@@ -64,10 +60,7 @@ minecraft {
         server {
             workingDirectory project.file('run')
 
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 			
 			// For Patchuloi
@@ -84,10 +77,7 @@ minecraft {
         data {
             workingDirectory project.file('run')
 
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
 			// For Patchuloi
@@ -109,9 +99,7 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 configurations {
-	// Create the library configuration, where our non-mod libraries will be added to
 	library
-	// Any dependency in the library configuration will also be added to the implementation configuration
 	implementation.extendsFrom library
 }
 
@@ -144,7 +132,6 @@ dependencies {
 
 repositories {
 	maven {
-		// location of the maven that hosts JEI files
 		name = "Progwml6 maven"
 		url = "https://dvs1.progwml6.com/files/maven/"
 	}
