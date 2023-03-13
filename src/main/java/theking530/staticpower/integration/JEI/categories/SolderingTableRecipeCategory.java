@@ -77,7 +77,7 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				builder.addSlot(RecipeIngredientRole.INPUT, 44 + x * 18, 5 + y * 18).addIngredients(recipe.getIngredients().get(x + (y * 3)));
+				builder.addSlot(RecipeIngredientRole.INPUT, 44 + x * 18, 5 + y * 18).addIngredients(recipe.getInputs().get(x + (y * 3)).getIngredient());
 			}
 		}
 

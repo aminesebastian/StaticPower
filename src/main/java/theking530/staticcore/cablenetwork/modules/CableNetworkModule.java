@@ -7,8 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 
 public abstract class CableNetworkModule {

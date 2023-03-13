@@ -108,7 +108,7 @@ public class ChainsawBladeItemModel extends ItemModel {
 			ChainsawBlade blade = (ChainsawBlade) stack.getItem();
 
 			// Add all the quads.
-			List<BakedQuad> layers = ItemAttributeRegistry.get().getLayers(blade).getOrderedRenderQuads(stack, attributable, state, side, rand, data);
+			List<BakedQuad> layers = ItemAttributeRegistry.get(blade).getOrderedRenderQuads(stack, attributable, state, side, rand, data);
 			output.addAll(layers);
 
 			return output;

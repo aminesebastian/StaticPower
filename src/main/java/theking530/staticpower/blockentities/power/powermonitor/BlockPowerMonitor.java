@@ -25,8 +25,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
 

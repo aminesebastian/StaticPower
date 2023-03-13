@@ -42,8 +42,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.IdMappingEvent;
-import theking530.api.Events;
 import theking530.api.attributes.AttributeUtilities;
+import theking530.api.attributes.ItemAttributeRegistry;
+import theking530.api.attributes.capability.AttributeableHandler;
+import theking530.api.attributes.rendering.ItemAttributeRegistration;
+import theking530.api.attributes.type.AttributeType;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.data.StaticPowerGameDataManager;
@@ -176,7 +179,19 @@ public class StaticPowerForgeEventsCommon {
 
 	@SubscribeEvent
 	public static void onAttachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-		Events.onAttachItemCapabilities(event);
+		if (event.getObject() instanceof ItemStack) {
+			ItemAttributeRegistration registration = ItemAttributeRegistry.get(event.getObject().getItem());
+			if (registration == null) {
+				return;
+			}
+
+			// Add all the attributes to the item stack.
+			AttributeableHandler handler = new AttributeableHandler();
+			for (AttributeType<?> attribute : registration.getAttributes()) {
+				handler.addAttribute(registration.getAttribute(attribute));
+			}
+			event.addCapability(new ResourceLocation(StaticPower.MOD_ID, "attributes"), handler);
+		}
 	}
 
 	@SubscribeEvent

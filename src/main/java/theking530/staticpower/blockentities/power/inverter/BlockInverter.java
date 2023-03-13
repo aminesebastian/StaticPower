@@ -23,8 +23,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 
 public class BlockInverter extends StaticPowerMachineBlock {
 	public static final VoxelShape X_AXIS_SHAPE;

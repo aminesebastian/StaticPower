@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fml.event.IModBusEvent;
 import theking530.api.attributes.rendering.AbstractAttributeRenderLayer;
 import theking530.api.attributes.rendering.ItemAttributeRegistration;
 import theking530.api.attributes.type.AttributeType;
@@ -26,18 +27,14 @@ public class ItemAttributeRegistry {
 		layers.get(item).addAttribute(attribute, baseValue, layer);
 	}
 
-	public @Nullable ItemAttributeRegistration getLayers(Item item) {
-		if (!layers.containsKey(item)) {
+	public static @Nullable ItemAttributeRegistration get(Item item) {
+		if (!INSTANCE.layers.containsKey(item)) {
 			return null;
 		}
-		return layers.get(item);
+		return INSTANCE.layers.get(item);
 	}
 
-	public static ItemAttributeRegistry get() {
-		return INSTANCE;
-	}
-
-	public static class ItemAttributeRegisterEvent extends Event {
+	public static class ItemAttributeRegisterEvent extends Event implements IModBusEvent {
 
 		public <T> void attach(Item item, AttributeType<T> attribute, T baseValue, AbstractAttributeRenderLayer layer) {
 			INSTANCE.registerLayer(item, attribute, baseValue, layer);

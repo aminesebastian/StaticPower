@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.CableNetwork;
 
 public class ClientCableNetworkManager implements ICableNetworkManager {
 	private final Level level;

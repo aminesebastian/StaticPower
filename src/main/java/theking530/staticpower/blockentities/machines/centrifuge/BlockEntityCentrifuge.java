@@ -31,8 +31,8 @@ import theking530.staticpower.blockentities.components.items.OutputServoComponen
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
-import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerOutputItem;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;

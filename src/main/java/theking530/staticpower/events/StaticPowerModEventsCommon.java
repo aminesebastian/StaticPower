@@ -9,14 +9,17 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
-import theking530.api.Events;
+import theking530.api.attributes.Attributes;
+import theking530.api.attributes.ItemAttributeRegistry.ItemAttributeRegisterEvent;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.modifiers.AttributeModifierType;
+import theking530.api.attributes.rendering.AttributeRenderLayer;
 import theking530.api.attributes.rendering.ItemAttributeType;
 import theking530.api.attributes.type.AttributeType;
 import theking530.api.attributes.values.AttributeValueType;
@@ -37,9 +40,11 @@ import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.Gener
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.NetherWartCropHarvester;
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.StemCropHarvester;
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.SugarCaneCropHarvester;
+import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.teams.TeamManager;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
@@ -68,10 +73,16 @@ public class StaticPowerModEventsCommon {
 			});
 
 			ModEntities.registerPlacements(event);
-			Events.commonSetupEvent(event);
+			ItemAttributeRegisterEvent itemAttributeEvent = new ItemAttributeRegisterEvent();
+			ModLoader.get().postEvent(itemAttributeEvent);
 
 			LOGGER.info("Static Power Common Setup Completed!");
 		});
+	}
+
+	@SubscribeEvent
+	public static void registerItemAttributes(ItemAttributeRegisterEvent event) {
+		event.attach(ModItems.AdvancedDrillBit.get(), Attributes.DiamondHardened.get(), false, new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_DIAMOND, 2));
 	}
 
 	@SubscribeEvent

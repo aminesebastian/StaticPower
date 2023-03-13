@@ -110,7 +110,7 @@ public class DrillBitItemModel implements BakedModel {
 			DrillBit bit = (DrillBit) stack.getItem();
 
 			// Add all the quads.
-			List<BakedQuad> layers = ItemAttributeRegistry.get().getLayers(bit).getOrderedRenderQuads(stack, attributable, state, side, rand, data);
+			List<BakedQuad> layers = ItemAttributeRegistry.get(bit).getOrderedRenderQuads(stack, attributable, state, side, rand, data);
 			output.addAll(layers);
 
 			return output;

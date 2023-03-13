@@ -28,8 +28,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.gui.text.TooltipUtilities;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockTransformer extends StaticPowerMachineBlock {
