@@ -25,3 +25,6 @@ server
 # Files from Forge MDK
 forge*changelog.txt
 /.DS_Store
+
+src/test
+src/main
