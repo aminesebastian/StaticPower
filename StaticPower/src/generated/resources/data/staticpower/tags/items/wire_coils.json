@@ -1,0 +1,15 @@
+{
+  "values": [
+    "staticpower:wire_coil_digistore",
+    "staticpower:wire_coil_static_metal",
+    "staticpower:wire_coil_lumum_metal",
+    "staticpower:wire_coil_energized_metal",
+    "staticpower:wire_coil_copper",
+    "staticpower:wire_coil_brass",
+    "staticpower:wire_coil_insulated_static_metal",
+    "staticpower:wire_coil_insulated_lumum_metal",
+    "staticpower:wire_coil_insulated_energized_metal",
+    "staticpower:wire_coil_insulated_copper",
+    "staticpower:wire_coil_insulated_brass"
+  ]
+}

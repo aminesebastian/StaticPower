@@ -1,0 +1,22 @@
+{
+	"display": {
+		"icon": {
+			"item": "staticpower:seed_static"
+		},
+		"title": "Static Power!",
+		"description": "Your journey begins! Plant these seeds and take your first steps towards a better future.",
+		"background": "staticpower:textures/blocks/decorative/planks_static.png"
+	},
+	"criteria": {
+		"seeds_in_inventory": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "staticpower:seed_static"
+					}
+				]
+			}
+		}
+	}
+}

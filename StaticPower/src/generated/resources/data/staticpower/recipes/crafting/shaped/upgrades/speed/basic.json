@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/silver"
+    },
+    "p": {
+      "item": "staticpower:upgrade_plate_basic"
+    },
+    "r": {
+      "tag": "forge:dusts/glowstone"
+    }
+  },
+  "pattern": [
+    " i ",
+    " r ",
+    " p "
+  ],
+  "result": {
+    "item": "staticpower:upgrade_speed_basic"
+  }
+}

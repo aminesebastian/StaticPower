@@ -1,0 +1,9 @@
+{
+  "parent": "staticpower:block/base_models/conveyor_extractor",
+  "textures": {
+    "bottom": "staticpower:blocks/machines/sides/lumum_machine_top",
+    "io_frame": "staticpower:blocks/machines/sides/lumum_io_frame",
+    "side": "staticpower:blocks/machines/sides/lumum_machine_front",
+    "side_with_bolts": "staticpower:blocks/machines/sides/lumum_machine_side"
+  }
+}

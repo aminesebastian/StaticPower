@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=east,is_on=false": {
+      "model": "staticpower:block/machine_refinery_power_tap"
+    },
+    "facing=east,is_on=true": {
+      "model": "staticpower:block/machine_refinery_power_tap_on"
+    },
+    "facing=north,is_on=false": {
+      "model": "staticpower:block/machine_refinery_power_tap"
+    },
+    "facing=north,is_on=true": {
+      "model": "staticpower:block/machine_refinery_power_tap_on"
+    },
+    "facing=south,is_on=false": {
+      "model": "staticpower:block/machine_refinery_power_tap"
+    },
+    "facing=south,is_on=true": {
+      "model": "staticpower:block/machine_refinery_power_tap_on"
+    },
+    "facing=west,is_on=false": {
+      "model": "staticpower:block/machine_refinery_power_tap"
+    },
+    "facing=west,is_on=true": {
+      "model": "staticpower:block/machine_refinery_power_tap_on"
+    }
+  }
+}

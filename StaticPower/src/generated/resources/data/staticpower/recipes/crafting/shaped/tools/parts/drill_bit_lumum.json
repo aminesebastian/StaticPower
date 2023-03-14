@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "staticpower:ingots/lumum_metal"
+    },
+    "p": {
+      "tag": "staticpower:plates/lumum_metal"
+    }
+  },
+  "pattern": [
+    "iii",
+    "pip",
+    " i "
+  ],
+  "result": {
+    "item": "staticpower:drill_bit_lumum"
+  }
+}

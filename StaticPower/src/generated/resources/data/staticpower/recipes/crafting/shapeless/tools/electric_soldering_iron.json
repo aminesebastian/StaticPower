@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "staticpower:soldering_iron"
+    },
+    {
+      "item": "staticpower:portable_battery_basic"
+    }
+  ],
+  "result": {
+    "item": "staticpower:soldering_iron_electric"
+  }
+}

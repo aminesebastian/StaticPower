@@ -1,0 +1,25 @@
+{
+  "type": "staticpower:fusion_furnace",
+  "inputs": [
+    {
+      "count": 3,
+      "ingredient": {
+        "tag": "forge:nuggets/copper"
+      }
+    },
+    {
+      "ingredient": {
+        "tag": "forge:nuggets/zinc"
+      }
+    }
+  ],
+  "output": {
+    "item": {
+      "id": "staticpower:nugget_bronze"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 22
+  }
+}

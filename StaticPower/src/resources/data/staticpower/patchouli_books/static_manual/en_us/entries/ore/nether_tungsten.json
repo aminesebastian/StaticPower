@@ -1,0 +1,17 @@
+{
+	"name": "Nether Tungsten",
+	"icon": "staticpower:ore_nether_tungsten",
+	"category": "staticpower:world",
+	"pages": [
+		{
+			"type": "spotlight",
+			"item": "staticpower:ore_nether_tungsten",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "spotlight",
+			"item": "staticpower:nugget_tungsten",
+			"text": "This is a test entry, but it should show up!"
+		}
+	]
+}

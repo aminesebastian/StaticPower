@@ -1,0 +1,25 @@
+{
+	"name": "Heat",
+	"icon": "staticpower:cable_heat_copper",
+	"category": "staticpower:transport",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cables/heat/heat_cable_copper",
+			"recipe2": "staticpower:crafting/cables/heat/heat_cable_tin"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cables/heat/heat_cable_silver",
+			"recipe2": "staticpower:crafting/cables/heat/heat_cable_gold"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cables/heat/heat_cable_aluminum"
+		}
+	]
+}

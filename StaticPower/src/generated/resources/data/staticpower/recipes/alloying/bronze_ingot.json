@@ -1,0 +1,24 @@
+{
+  "type": "staticpower:alloy_furnace",
+  "experience": 0.25,
+  "input_1": {
+    "count": 3,
+    "ingredient": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "input_2": {
+    "ingredient": {
+      "item": "staticpower:ingot_tin"
+    }
+  },
+  "output": {
+    "item": {
+      "count": 4,
+      "id": "staticpower:ingot_bronze"
+    }
+  },
+  "processing": {
+    "processing_time": 200
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:fluid_infusion",
+  "input_fluid": {
+    "amount": 500,
+    "fluids": {
+      "tag": "staticpower:fluid_static"
+    }
+  },
+  "input_item": {
+    "ingredient": {
+      "tag": "minecraft:logs"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:log_static"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

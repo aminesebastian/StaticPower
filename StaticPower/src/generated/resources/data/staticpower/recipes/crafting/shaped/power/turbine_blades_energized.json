@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "item": "staticpower:gear_box_energized_metal"
+    },
+    "i": {
+      "tag": "staticpower:ingots/energized_metal"
+    }
+  },
+  "pattern": [
+    "i i",
+    " g ",
+    "i i"
+  ],
+  "result": {
+    "item": "staticpower:turbine_blades_energized"
+  }
+}

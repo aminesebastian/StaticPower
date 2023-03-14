@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "item": "minecraft:packed_ice"
+    },
+    "p": {
+      "item": "staticpower:upgrade_plate_static"
+    },
+    "r": {
+      "item": "staticpower:upgrade_heat_capacity_static"
+    }
+  },
+  "pattern": [
+    " i ",
+    " r ",
+    " p "
+  ],
+  "result": {
+    "item": "staticpower:upgrade_heat_static"
+  }
+}

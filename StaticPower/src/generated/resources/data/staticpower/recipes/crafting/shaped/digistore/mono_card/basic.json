@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:digistore_core"
+    },
+    "d": {
+      "item": "staticpower:card_basic"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "t": {
+      "tag": "forge:plates/tin"
+    }
+  },
+  "pattern": [
+    "trt",
+    "tct",
+    "tdt"
+  ],
+  "result": {
+    "item": "staticpower:digistore_card_singular_basic"
+  }
+}

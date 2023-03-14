@@ -1,0 +1,13 @@
+{
+  "type": "staticpower:fluid_generator",
+  "input_fluid": {
+    "amount": 1,
+    "fluids": {
+      "tag": "staticpower:fluid_energized"
+    }
+  },
+  "processing": {
+    "power": 16.0,
+    "processing_time": 1
+  }
+}

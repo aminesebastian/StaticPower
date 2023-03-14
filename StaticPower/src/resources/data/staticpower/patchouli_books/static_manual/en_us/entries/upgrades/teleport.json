@@ -1,0 +1,15 @@
+{
+	"name": "Teleport",
+	"icon": "staticpower:upgrade_teleport",
+	"category": "staticpower:upgrades",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/teleport"
+		}
+	]
+}

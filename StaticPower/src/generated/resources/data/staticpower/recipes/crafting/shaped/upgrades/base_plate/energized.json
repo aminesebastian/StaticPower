@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:plates/iron"
+    },
+    "p": {
+      "tag": "staticpower:plates/energized_metal"
+    },
+    "r": {
+      "item": "staticpower:processor_energized"
+    }
+  },
+  "pattern": [
+    " i ",
+    " r ",
+    " p "
+  ],
+  "result": {
+    "item": "staticpower:upgrade_plate_energized"
+  }
+}

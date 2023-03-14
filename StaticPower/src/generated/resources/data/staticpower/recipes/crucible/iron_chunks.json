@@ -1,0 +1,21 @@
+{
+  "type": "staticpower:crucible",
+  "input_item": {
+    "ingredient": {
+      "tag": "forge:chunks/iron"
+    }
+  },
+  "output_fluid": {
+    "amount": 72,
+    "fluid": "staticpower:molten_iron"
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 200
+  },
+  "slag_item": {
+    "item": {
+      "id": "staticpower:slag"
+    }
+  }
+}

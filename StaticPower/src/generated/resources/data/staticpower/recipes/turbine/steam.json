@@ -1,0 +1,14 @@
+{
+  "type": "staticpower:turbine",
+  "generation_amount": 10,
+  "input_fluid": {
+    "amount": 20,
+    "fluids": {
+      "tag": "staticpower:steam"
+    }
+  },
+  "output_fluid": {
+    "amount": 1,
+    "fluid": "minecraft:water"
+  }
+}

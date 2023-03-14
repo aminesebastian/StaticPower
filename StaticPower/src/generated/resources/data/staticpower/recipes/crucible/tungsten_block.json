@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:crucible",
+  "input_item": {
+    "ingredient": {
+      "tag": "forge:storage_blocks/raw_tungsten"
+    }
+  },
+  "output_fluid": {
+    "amount": 1296,
+    "fluid": "staticpower:molten_tungsten"
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 1800
+  },
+  "slag_item": {
+    "item": {
+      "count": 3,
+      "id": "staticpower:slag"
+    }
+  }
+}

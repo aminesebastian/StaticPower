@@ -1,0 +1,16 @@
+{
+  "type": "staticpower:squeezer",
+  "input": {
+    "ingredient": {
+      "item": "minecraft:honey_block"
+    }
+  },
+  "output_fluid": {
+    "amount": 1000,
+    "fluid": "staticpower:honey"
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

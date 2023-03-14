@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/zinc"
+    },
+    "s": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "pattern": [
+    "iii",
+    "isi",
+    " s "
+  ],
+  "result": {
+    "item": "staticpower:hammer_zinc"
+  }
+}

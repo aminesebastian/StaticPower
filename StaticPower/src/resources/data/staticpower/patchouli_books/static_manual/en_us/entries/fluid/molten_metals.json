@@ -1,0 +1,26 @@
+{
+	"name": "Molten Metals",
+	"icon": "staticpower:bucket_molten_gold",
+	"category": "staticpower:fluids",
+	"extra_recipe_mappings": {
+		"staticpower:bucket_molten_iron": 0,
+		"staticpower:bucket_molten_gold": 0,
+		"staticpower:bucket_molten_copper": 0,
+		"staticpower:bucket_molten_tin": 0,
+		"staticpower:bucket_molten_zinc": 0,
+		"staticpower:bucket_molten_magnesium": 0,
+		"staticpower:bucket_molten_tungsten": 0,
+		"staticpower:bucket_molten_silver": 0,
+		"staticpower:bucket_molten_lead": 0,
+		"staticpower:bucket_molten_aluminum": 0,
+		"staticpower:bucket_molten_platinum": 0,
+		"staticpower:bucket_molten_brass": 0,
+		"staticpower:bucket_molten_bronze": 0
+	},
+	"pages": [
+		{
+			"type": "text",
+			"text": "Want to use our fancy cover technology but don't have any cables in the area? Fret not! For now you can use our patented scaffolding cable technology to anchor covers everywhere and anywhere you want!"
+		}
+	]
+}

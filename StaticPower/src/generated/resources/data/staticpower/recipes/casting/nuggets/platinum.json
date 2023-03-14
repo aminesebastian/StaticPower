@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:casting",
+  "fluid": {
+    "amount": 16,
+    "fluids": {
+      "tag": "staticpower:molten_platinum"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "staticpower:mold_nugget"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:nugget_platinum"
+    }
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 22
+  }
+}

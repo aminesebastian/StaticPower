@@ -1,0 +1,35 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"cable_texture": "staticpower:blocks/cables/cable_digistore"
+	},
+	"elements": [
+		{
+			"name": "Core",
+			"from": [6.5, 6.5, 6.5],
+			"to": [9.5, 9.5, 9.5],
+			"faces": {
+				"north": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"east": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"south": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"west": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"up": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"down": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"}
+			}
+		},
+		{
+			"name": "Core inverted",
+			"from": [9.5, 9.5, 9.5],
+			"to": [6.5, 6.5, 6.5],
+			"faces": {
+				"north": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"east": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"south": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"west": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"up": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"},
+				"down": {"uv": [5, 7, 8, 10], "texture": "#cable_texture"}
+			}
+		}
+	]
+}

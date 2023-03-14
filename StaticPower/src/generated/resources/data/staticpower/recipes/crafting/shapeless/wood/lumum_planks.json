@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "staticpower:log_lumum"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "staticpower:planks_lumum"
+  }
+}

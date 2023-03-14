@@ -1,0 +1,19 @@
+{
+  "type": "staticpower:grinder",
+  "input": {
+    "ingredient": {
+      "tag": "forge:sand"
+    }
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "staticpower:raw_silicon"
+      }
+    }
+  ],
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

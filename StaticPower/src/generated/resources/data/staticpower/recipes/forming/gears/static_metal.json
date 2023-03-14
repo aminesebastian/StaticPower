@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:former",
+  "input": {
+    "ingredient": {
+      "item": "staticpower:mold_gear"
+    }
+  },
+  "mold": {
+    "count": 2,
+    "ingredient": {
+      "item": "staticpower:ingot_static_metal"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:gear_static_metal"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

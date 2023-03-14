@@ -1,0 +1,10 @@
+{
+  "values": [
+    "staticpower:fluid_capsule_basic",
+    "staticpower:fluid_capsule_advanced",
+    "staticpower:fluid_capsule_static",
+    "staticpower:fluid_capsule_energized",
+    "staticpower:fluid_capsule_lumum",
+    "staticpower:fluid_capsule_creative"
+  ]
+}

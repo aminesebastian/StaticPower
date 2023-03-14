@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:casting",
+  "fluid": {
+    "amount": 1296,
+    "fluids": {
+      "tag": "staticpower:molten_copper"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "staticpower:mold_block"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "minecraft:copper_block"
+    }
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 1800
+  }
+}

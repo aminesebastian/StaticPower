@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "p": {
+      "tag": "forge:plates/iron"
+    }
+  },
+  "pattern": [
+    "iii",
+    "pip",
+    " i "
+  ],
+  "result": {
+    "item": "staticpower:drill_bit_iron"
+  }
+}

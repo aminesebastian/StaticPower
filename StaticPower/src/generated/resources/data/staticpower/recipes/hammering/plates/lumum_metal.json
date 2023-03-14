@@ -1,0 +1,16 @@
+{
+  "type": "staticpower:hammer",
+  "experience": 1.0,
+  "item": {
+    "ingredient": {
+      "item": "staticpower:ingot_lumum_metal_heated"
+    }
+  },
+  "output": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:plate_lumum_metal"
+    }
+  },
+  "requires_anvil": true
+}

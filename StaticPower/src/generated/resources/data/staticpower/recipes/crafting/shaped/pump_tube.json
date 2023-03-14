@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "l": {
+      "tag": "forge:leather"
+    },
+    "r": {
+      "tag": "forge:rubber_sheet"
+    },
+    "t": {
+      "tag": "forge:plates/tin"
+    }
+  },
+  "pattern": [
+    "trt",
+    "l l",
+    "trt"
+  ],
+  "result": {
+    "item": "staticpower:pump_tube"
+  }
+}

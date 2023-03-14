@@ -1,0 +1,6 @@
+{
+  "parent": "staticpower:block/base_models/pump_connector",
+  "textures": {
+    "texture": "staticpower:blocks/machines/pumps/pump_creative"
+  }
+}

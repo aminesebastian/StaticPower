@@ -1,0 +1,7 @@
+{
+	"parent": "staticpower:block/turbine_blades/turbine_blades_basic",
+	"textures": {
+		"particle": "staticpower:blocks/machines/turbine_blades/turbine_blades_advanced",
+		"texture": "staticpower:blocks/machines/turbine_blades/turbine_blades_advanced"
+	}
+}

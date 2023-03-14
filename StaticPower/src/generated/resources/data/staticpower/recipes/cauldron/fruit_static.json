@@ -1,0 +1,19 @@
+{
+  "type": "staticpower:cauldron",
+  "drain_after_craft": false,
+  "input_item": {
+    "ingredient": {
+      "item": "staticpower:fruit_static"
+    }
+  },
+  "output_fluid": {
+    "amount": 100,
+    "fluid": "staticpower:fluid_static"
+  },
+  "output_item": {
+    "item": {
+      "id": "staticpower:fruit_depleted"
+    }
+  },
+  "time": 200
+}

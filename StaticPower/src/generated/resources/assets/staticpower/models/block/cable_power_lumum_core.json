@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/base_models/cables/cable_5_core",
+  "textures": {
+    "cable_texture": "staticpower:blocks/cables/cable_power_lumum",
+    "particle": "staticpower:blocks/cables/cable_power_lumum"
+  }
+}

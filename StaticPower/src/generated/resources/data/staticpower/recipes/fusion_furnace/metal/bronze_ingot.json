@@ -1,0 +1,25 @@
+{
+  "type": "staticpower:fusion_furnace",
+  "inputs": [
+    {
+      "count": 3,
+      "ingredient": {
+        "tag": "forge:ingots/copper"
+      }
+    },
+    {
+      "ingredient": {
+        "tag": "forge:ingots/zinc"
+      }
+    }
+  ],
+  "output": {
+    "item": {
+      "id": "staticpower:ingot_bronze"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

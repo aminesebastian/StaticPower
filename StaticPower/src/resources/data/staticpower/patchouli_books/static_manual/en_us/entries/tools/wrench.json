@@ -1,0 +1,15 @@
+{
+	"name": "Wrench",
+	"icon": "staticpower:wrench",
+	"category": "staticpower:tools",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/wrench"
+		}
+	]
+}

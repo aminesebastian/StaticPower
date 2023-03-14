@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "staticpower:block/digistore_server_rack",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "staticpower:block/digistore_server_rack"
+    },
+    "facing=south": {
+      "model": "staticpower:block/digistore_server_rack",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "staticpower:block/digistore_server_rack",
+      "y": 270
+    }
+  }
+}

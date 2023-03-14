@@ -1,0 +1,36 @@
+{
+  "type": "staticpower:refinery",
+  "catalyst": {
+    "ingredient": {
+      "item": "staticpower:dust_coal_small"
+    }
+  },
+  "input_fluid_1": {
+    "amount": 25,
+    "fluids": {
+      "tag": "staticpower:oil_heavy"
+    }
+  },
+  "input_fluid_2": {
+    "amount": 50,
+    "fluids": {
+      "tag": "staticpower:steam"
+    }
+  },
+  "output_fluid_1": {
+    "amount": 90,
+    "fluid": "staticpower:oil_heavy"
+  },
+  "output_fluid_2": {
+    "amount": 20,
+    "fluid": "staticpower:oil_light"
+  },
+  "output_fluid_3": {
+    "amount": 10,
+    "fluid": "staticpower:fuel"
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

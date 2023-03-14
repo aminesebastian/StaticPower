@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:item/base_models/digistore_basic_attachment",
+  "gui_light": "front",
+  "textures": {
+    "texture": "staticpower:blocks/cables/attachments/cable_digistore_crafting_interface_attachment"
+  }
+}

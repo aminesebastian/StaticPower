@@ -1,0 +1,6 @@
+{
+	"type": "forge:add_features",
+	"biomes": "#staticpower:rubber_tree_suitable",
+	"features": "staticpower:rubber_tree_placed",
+	"step": "vegetal_decoration"
+}

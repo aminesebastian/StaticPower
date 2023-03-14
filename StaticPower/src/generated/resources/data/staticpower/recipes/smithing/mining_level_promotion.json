@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:auto_smith",
+  "attributes": [
+    {
+      "type": "staticpower:promoted",
+      "modifier": {
+        "type": "staticpower:boolean",
+        "value": true
+      }
+    }
+  ],
+  "input_item": {
+    "count": 2,
+    "ingredient": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

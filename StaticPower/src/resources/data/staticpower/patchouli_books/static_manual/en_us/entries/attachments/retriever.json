@@ -1,0 +1,25 @@
+{
+	"name": "Retriever",
+	"icon": "staticpower:cable_attachment_basic_retriever",
+	"category": "staticpower:attachments",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cable_attachments/retriever/basic_retriever",			
+			"recipe2": "staticpower:crafting/cable_attachments/retriever/advanced_retriever"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cable_attachments/retriever/static_retriever",			
+			"recipe2": "staticpower:crafting/cable_attachments/retriever/energized_retriever"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cable_attachments/retriever/lumum_retriever"
+		}
+	]
+}

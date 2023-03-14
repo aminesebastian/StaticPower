@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "position=bottom": {
+      "model": "staticpower:block/refinery_tower/bottom"
+    },
+    "position=full": {
+      "model": "staticpower:block/refinery_tower/full"
+    },
+    "position=middle": {
+      "model": "staticpower:block/refinery_tower/middle"
+    },
+    "position=top": {
+      "model": "staticpower:block/refinery_tower/top"
+    }
+  }
+}

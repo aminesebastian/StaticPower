@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:grinder",
+  "input": {
+    "ingredient": {
+      "item": "minecraft:bone"
+    }
+  },
+  "outputs": [
+    {
+      "additionalBonus": 1,
+      "bonusChance": 0.25,
+      "item": {
+        "count": 5,
+        "id": "minecraft:bone_meal"
+      }
+    }
+  ],
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

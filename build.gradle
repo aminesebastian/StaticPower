@@ -1,0 +1,91 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }	
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    }
+}
+
+allprojects {
+	apply plugin: 'net.minecraftforge.gradle'
+	apply plugin: 'eclipse'
+	apply plugin: 'maven-publish'
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
+	}
+
+	version = "${mc_version}-${mod_version}"
+	group = "theking530"
+	archivesBaseName = "StaticPower"
+	
+    minecraft {
+		mappings channel: 'official', version: '1.19.2'
+		accessTransformer = file('src/staticpower/resources/META-INF/accesstransformer.cfg')
+
+		runs {
+			client {
+				workingDirectory project.file('run')
+
+				property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+				property 'forge.logging.console.level', 'debug'
+				
+				// For Patchuloi
+				property 'mixin.env.remapRefMap', 'true'
+				property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+				
+				mods {
+					staticpower {
+						source sourceSets.main
+					}
+				}
+			}
+
+			server {
+				workingDirectory project.file('run')
+
+				property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+				property 'forge.logging.console.level', 'debug'
+				
+				// For Patchuloi
+				property 'mixin.env.remapRefMap', 'true'
+				property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+				
+				mods {
+					staticpower {
+						source sourceSets.main
+					}
+				}
+			}
+
+			data {
+				workingDirectory project.file('run')
+
+				property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+				property 'forge.logging.console.level', 'debug'
+
+				// For Patchuloi
+				property 'mixin.env.remapRefMap', 'true'
+				property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+				args '--mod', 'staticpower', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+				mods {
+					staticpower {
+						source sourceSets.main
+					}
+				}
+			}
+		}
+		
+		dependencies {
+			minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+		}
+	}
+}

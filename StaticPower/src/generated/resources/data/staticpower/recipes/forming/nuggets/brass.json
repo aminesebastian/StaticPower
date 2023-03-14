@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:former",
+  "input": {
+    "ingredient": {
+      "item": "staticpower:mold_nugget"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "staticpower:ingot_brass"
+    }
+  },
+  "output": {
+    "item": {
+      "count": 9,
+      "id": "staticpower:nugget_brass"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

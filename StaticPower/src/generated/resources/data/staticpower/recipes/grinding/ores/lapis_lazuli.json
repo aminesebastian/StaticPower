@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:grinder",
+  "input": {
+    "ingredient": {
+      "tag": "forge:ores/lapis"
+    }
+  },
+  "outputs": [
+    {
+      "additionalBonus": 1,
+      "bonusChance": 0.4,
+      "item": {
+        "count": 5,
+        "id": "minecraft:lapis_lazuli"
+      }
+    }
+  ],
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

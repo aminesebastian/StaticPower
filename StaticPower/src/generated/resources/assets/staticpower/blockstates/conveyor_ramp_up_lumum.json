@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "staticpower:block/conveyor_ramp_up_lumum",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "staticpower:block/conveyor_ramp_up_lumum",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "staticpower:block/conveyor_ramp_up_lumum"
+    },
+    "facing=west": {
+      "model": "staticpower:block/conveyor_ramp_up_lumum",
+      "y": 90
+    }
+  }
+}

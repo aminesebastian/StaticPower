@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.5,
+  "ingredient": {
+    "tag": "forge:chunks/iron"
+  },
+  "result": "minecraft:iron_ingot"
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "t": {
+      "tag": "forge:ingots/tin"
+    }
+  },
+  "pattern": [
+    " t ",
+    "t t",
+    "i i"
+  ],
+  "result": {
+    "item": "staticpower:magnet_weak"
+  }
+}

@@ -1,0 +1,35 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"cable_texture": "staticpower:blocks/cables/cable_industrial_power_basic"
+	},
+	"elements": [
+		{
+			"name": "Core",
+			"from": [4.5, 4.5, 4.5],
+			"to": [11.5, 11.5, 11.5],
+			"faces": {
+				"north": {"uv": [8.25, 6.25, 11.75, 9.75], "texture": "#cable_texture"},
+				"east": {"uv": [8.25, 6.25, 11.75, 9.75], "texture": "#cable_texture"},
+				"south": {"uv": [8.25, 6.25, 11.75, 9.75], "texture": "#cable_texture"},
+				"west": {"uv": [8.25, 6.25, 11.75, 9.75], "texture": "#cable_texture"},
+				"up": {"uv": [8.25, 6.25, 11.75, 9.75], "texture": "#cable_texture"},
+				"down": {"uv": [8.25, 6.25, 11.75, 9.75], "texture": "#cable_texture"}
+			}
+		},
+		{
+			"name": "Core inverted",
+			"from": [11.5, 11.5, 11.5],
+			"to": [4.5, 4.5, 4.5],
+			"faces": {
+				"north": {"uv": [8.25, 9.75, 11.75, 6.25], "texture": "#cable_texture"},
+				"east": {"uv": [8.25, 9.75, 11.75, 6.25], "texture": "#cable_texture"},
+				"south": {"uv": [8.25, 9.75, 11.75, 6.25], "texture": "#cable_texture"},
+				"west": {"uv": [8.25, 9.75, 11.75, 6.25], "texture": "#cable_texture"},
+				"up": {"uv": [11.75, 6.25, 8.25, 9.75], "texture": "#cable_texture"},
+				"down": {"uv": [11.75, 6.25, 8.25, 9.75], "texture": "#cable_texture"}
+			}
+		}
+	]
+}

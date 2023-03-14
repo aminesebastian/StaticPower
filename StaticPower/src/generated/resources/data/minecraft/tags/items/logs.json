@@ -1,0 +1,11 @@
+{
+  "values": [
+    "staticpower:log_static",
+    "staticpower:log_energized",
+    "staticpower:log_lumum",
+    "staticpower:rubber_tree_wood",
+    "staticpower:rubber_tree_log",
+    "staticpower:rubber_tree_stripped_log",
+    "staticpower:rubber_tree_stripped_wood"
+  ]
+}

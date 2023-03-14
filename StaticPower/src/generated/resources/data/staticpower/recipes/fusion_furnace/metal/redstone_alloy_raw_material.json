@@ -1,0 +1,24 @@
+{
+  "type": "staticpower:fusion_furnace",
+  "inputs": [
+    {
+      "ingredient": {
+        "tag": "forge:dusts/redstone"
+      }
+    },
+    {
+      "ingredient": {
+        "tag": "forge:raw_materials/silver"
+      }
+    }
+  ],
+  "output": {
+    "item": {
+      "id": "staticpower:raw_redstone_alloy"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

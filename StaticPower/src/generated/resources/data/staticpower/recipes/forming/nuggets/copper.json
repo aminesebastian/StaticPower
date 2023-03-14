@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:former",
+  "input": {
+    "ingredient": {
+      "item": "staticpower:mold_nugget"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "output": {
+    "item": {
+      "count": 9,
+      "id": "staticpower:nugget_copper"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

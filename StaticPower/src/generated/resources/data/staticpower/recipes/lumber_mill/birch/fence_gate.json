@@ -1,0 +1,28 @@
+{
+  "type": "staticpower:lumber_mill",
+  "input": {
+    "ingredient": {
+      "item": "minecraft:birch_fence_gate"
+    }
+  },
+  "output_fluid": {
+    "amount": 20,
+    "fluid": "staticpower:oil_tree"
+  },
+  "primary_output_item": {
+    "item": {
+      "count": 2,
+      "id": "minecraft:birch_planks"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output_item": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:dust_wood"
+    }
+  }
+}

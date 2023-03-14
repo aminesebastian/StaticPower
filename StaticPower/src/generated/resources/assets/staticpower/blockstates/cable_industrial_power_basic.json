@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "staticpower:block/cable_industrial_power_basic_core"
+    }
+  }
+}

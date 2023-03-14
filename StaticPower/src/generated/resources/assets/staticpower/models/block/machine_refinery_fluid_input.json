@@ -1,0 +1,6 @@
+{
+  "parent": "staticpower:block/base_models/refinery_block",
+  "textures": {
+    "side_overlay": "staticpower:blocks/machines/refinery/fluid_input"
+  }
+}
