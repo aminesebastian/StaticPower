@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "cookingtime": 200,
-  "experience": 0.5,
-  "ingredient": {
-    "tag": "staticpower:dusts/energized_metal"
-  },
-  "result": "staticpower:ingot_energized_metal"
-}

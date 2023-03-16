@@ -1,7 +1,0 @@
-{
-  "parent": "staticpower:block/base_models/conveyor_hopper",
-  "textures": {
-    "base": "staticpower:blocks/machines/sides/basic_machine_front",
-    "filter": "minecraft:block/iron_trapdoor"
-  }
-}

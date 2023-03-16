@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "cookingtime": 100,
-  "experience": 0.1,
-  "ingredient": {
-    "item": "staticpower:raw_rusty_iron"
-  },
-  "result": "staticpower:rusty_iron_scrap"
-}

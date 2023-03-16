@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "cookingtime": 200,
-  "experience": 0.5,
-  "ingredient": {
-    "tag": "staticpower:raw_materials/lumum_metal"
-  },
-  "result": "staticpower:ingot_lumum_metal"
-}

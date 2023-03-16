@@ -1,7 +1,0 @@
-{
-  "parent": "staticpower:block/base_models/conveyor_straight",
-  "textures": {
-    "base_bottom": "staticpower:blocks/machines/sides/energized_machine_top",
-    "base_side": "staticpower:blocks/machines/sides/energized_machine_side"
-  }
-}

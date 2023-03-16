@@ -1,6 +1,0 @@
-{
-  "parent": "staticpower:item/base_models/cable_5_inventory",
-  "textures": {
-    "cable_texture": "staticpower:blocks/cables/cable_fluid_creative"
-  }
-}

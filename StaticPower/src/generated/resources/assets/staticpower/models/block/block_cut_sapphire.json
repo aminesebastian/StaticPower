@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "staticpower:blocks/storageblocks/block_cut_sapphire"
-  }
-}

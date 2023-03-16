@@ -1,2 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="theking530.staticcore.item.StaticCoreItem"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="theking530.staticpower.StaticPower"/>
+    <fullyQualifiedTypeName name="theking530.staticcore.init.StaticCoreKeyBindings.KeyBinding"/>
+    <fullyQualifiedTypeName name="theking530.staticcore.init.StaticCoreItems"/>
+    <fullyQualifiedTypeName name="theking530.staticcore.StaticCoreItemGroup"/>
+    <fullyQualifiedTypeName name="theking530.staticcore.gui.StaticCoreGuiTextures"/>
+    <fullyQualifiedTypeName name="javax.annotation.Nullable"/>
+    <fullyQualifiedTypeName name="net.minecraft.world.level.block.state.BlockBehaviour.Properties"/>
+    <fullyQualifiedTypeName name="theking530.staticcore.init.StaticCoreProductTypes"/>
+    <fullyQualifiedTypeName name="net.minecraft.world.Container"/>
+    <fullyQualifiedTypeName name="net.minecraft.client.Minecraft"/>
+    <fullyQualifiedTypeName name="net.minecraft.world.item.crafting.RecipeManager"/>
+    <fullyQualifiedTypeName name="net.minecraft.world.level.Level"/>
+    <fullyQualifiedTypeName name="net.minecraft.world.item.Item"/>
+    <fullyQualifiedTypeName name="net.minecraft.world.level.block.Block"/>
+    <fullyQualifiedTypeName name="theking530.staticcore.item.StaticCoreFluidBucket"/>
+    <fullyQualifiedTypeName name="theking530.staticcore.client.rendering.BlockModel"/>
+    <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="theking530.staticcore.teams.Team"/>
+</qualifiedTypeNameHistroy>

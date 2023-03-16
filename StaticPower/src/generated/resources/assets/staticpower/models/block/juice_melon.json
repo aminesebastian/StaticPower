@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "staticpower:blocks/fluids/juice_melon_still"
-  }
-}

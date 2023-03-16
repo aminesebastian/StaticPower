@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "staticpower:blocks/ore/ore_nether_silver"
-  }
-}

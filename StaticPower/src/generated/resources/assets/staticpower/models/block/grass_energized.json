@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "staticpower:blocks/decorative/grass_energized_top",
-    "side": "staticpower:blocks/decorative/grass_energized"
-  }
-}

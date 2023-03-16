@@ -1,8 +1,0 @@
-{
-  "parent": "staticpower:block/base_models/conveyor_slope_down",
-  "textures": {
-    "bottom_texture": "staticpower:blocks/machines/sides/lumum_machine_top",
-    "particle": "staticpower:blocks/machines/sides/lumum_machine_top",
-    "side_texture": "staticpower:blocks/machines/sides/lumum_machine_front"
-  }
-}

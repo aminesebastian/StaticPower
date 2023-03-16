@@ -1,7 +1,0 @@
-{
-  "parent": "staticpower:block/base_models/solar_panel",
-  "textures": {
-    "panel": "staticpower:blocks/machines/solar_panel/energized",
-    "particle": "staticpower:blocks/machines/solar_panel/energized"
-  }
-}

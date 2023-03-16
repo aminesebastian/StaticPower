@@ -1,7 +1,0 @@
-{
-  "parent": "staticpower:block/base_models/cables/cable_7_attachment",
-  "textures": {
-    "cable_texture": "staticpower:blocks/cables/cable_industrial_fluid_advanced",
-    "particle": "staticpower:blocks/cables/cable_industrial_fluid_advanced"
-  }
-}

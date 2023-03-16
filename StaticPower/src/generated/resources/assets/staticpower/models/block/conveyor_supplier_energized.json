@@ -1,9 +1,0 @@
-{
-  "parent": "staticpower:block/base_models/conveyor_supplier",
-  "textures": {
-    "bottom": "staticpower:blocks/machines/sides/energized_machine_top",
-    "io_frame": "staticpower:blocks/machines/sides/energized_io_frame",
-    "side": "staticpower:blocks/machines/sides/energized_machine_front",
-    "side_with_bolts": "staticpower:blocks/machines/sides/energized_machine_side"
-  }
-}

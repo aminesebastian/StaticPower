@@ -1,6 +1,0 @@
-{
-	"parent":"staticpower:block/digistore_cards/base_digistore_card",
-	"textures": {
-		"0": "staticpower:blocks/digistore/digistore_card_energized"
-	}
-}

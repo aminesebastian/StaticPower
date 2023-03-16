@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/crop",
-  "textures": {
-    "crop": "staticpower:blocks/crops/lumum_7",
-    "particle": "staticpower:blocks/crops/lumum_7"
-  }
-}

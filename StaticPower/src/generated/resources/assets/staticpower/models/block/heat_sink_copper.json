@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "staticpower:blocks/heat_sink_copper_top",
-    "side": "staticpower:blocks/heat_sink_copper"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "cookingtime": 200,
-  "experience": 0.5,
-  "ingredient": {
-    "tag": "staticpower:raw_materials/redstone_alloy"
-  },
-  "result": "staticpower:ingot_redstone_alloy"
-}

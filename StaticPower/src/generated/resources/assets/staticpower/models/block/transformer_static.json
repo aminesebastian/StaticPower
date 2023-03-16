@@ -1,7 +1,0 @@
-{
-  "parent": "staticpower:block/base_models/transformer",
-  "textures": {
-    "particle": "staticpower:blocks/power/transformers/transformer_static",
-    "texture": "staticpower:blocks/power/transformers/transformer_static"
-  }
-}

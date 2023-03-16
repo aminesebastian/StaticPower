@@ -1,6 +1,0 @@
-{
-  "parent": "staticpower:item/base_models/light_bulb",
-  "textures": {
-    "glass": "staticpower:items/light_bulb/pink_bulb"
-  }
-}

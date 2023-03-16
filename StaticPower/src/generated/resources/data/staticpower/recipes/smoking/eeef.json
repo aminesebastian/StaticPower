@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smoking",
-  "cookingtime": 100,
-  "experience": 0.5,
-  "ingredient": {
-    "item": "staticpower:eeef_raw"
-  },
-  "result": "staticpower:eeef_cooked"
-}

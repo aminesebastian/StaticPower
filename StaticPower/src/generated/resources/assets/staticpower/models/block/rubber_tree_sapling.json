@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cross",
-  "textures": {
-    "cross": "staticpower:blocks/trees/rubber_tree_sapling"
-  }
-}
