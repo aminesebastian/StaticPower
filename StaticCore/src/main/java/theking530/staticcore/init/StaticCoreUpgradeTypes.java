@@ -9,7 +9,7 @@ import theking530.staticcore.StaticCore;
 import theking530.staticcore.StaticCoreRegistries;
 
 public class StaticCoreUpgradeTypes {
-	private static final DeferredRegister<UpgradeType<?>> UPGRADE_TYPE_REGISTRY = DeferredRegister.create(StaticCoreRegistries.UPGRADE_TYPES, StaticCore.MOD_ID);
+	private static final DeferredRegister<UpgradeType<?>> UPGRADE_TYPE_REGISTRY = DeferredRegister.create(StaticCoreRegistries.UPGRADE_TYPES_REGISTRY_KEY, StaticCore.MOD_ID);
 
 	public static final RegistryObject<UpgradeType<Float>> SPEED = UPGRADE_TYPE_REGISTRY.register("speed", () -> new UpgradeType<Float>());
 	public static final RegistryObject<UpgradeType<Float>> POWER_USAGE = UPGRADE_TYPE_REGISTRY.register("power_usage", () -> new UpgradeType<Float>());

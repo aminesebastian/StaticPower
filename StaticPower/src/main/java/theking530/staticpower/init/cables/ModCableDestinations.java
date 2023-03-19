@@ -14,7 +14,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.destinations.CableDestinationDigistore;
 
 public class ModCableDestinations {
-	private static final DeferredRegister<CableDestination> DESTINATIONS = DeferredRegister.create(StaticCoreRegistries.CABLE_DESTINATION_TYPE, StaticPower.MOD_ID);
+	private static final DeferredRegister<CableDestination> DESTINATIONS = DeferredRegister.create(StaticCoreRegistries.CABLE_DESTINATION_REGISTRY_KEY, StaticPower.MOD_ID);
 
 	public static final RegistryObject<CableDestinationCapability> Power = DESTINATIONS.register("power", () -> new CableDestinationCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY));
 	public static final RegistryObject<CableDestinationCapability> Item = DESTINATIONS.register("item", () -> new CableDestinationCapability(ForgeCapabilities.ITEM_HANDLER));

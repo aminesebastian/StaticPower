@@ -18,7 +18,7 @@ import theking530.staticcore.attribiutes.types.SilkTouchAttributeType;
 import theking530.staticcore.attribiutes.types.SmeltingAttributeType;
 
 public class Attributes {
-	private static final DeferredRegister<AttributeType<?>> ATTRIBUTES = DeferredRegister.create(StaticCoreRegistries.ATTRIBUTE_TYPE, StaticCore.MOD_ID);
+	private static final DeferredRegister<AttributeType<?>> ATTRIBUTES = DeferredRegister.create(StaticCoreRegistries.ATTRIBUTE_REGISTRY_KEY, StaticCore.MOD_ID);
 
 	public static final RegistryObject<DiamondAttributeType> DiamondHardened = ATTRIBUTES.register("hardened_diamond", () -> new DiamondAttributeType());
 	public static final RegistryObject<EmeraldAttributeType> EmeraldHardened = ATTRIBUTES.register("hardened_emerald", () -> new EmeraldAttributeType());

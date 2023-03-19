@@ -285,7 +285,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 
 			JsonObject json = (JsonObject) element;
 			ResourceLocation attributeType = new ResourceLocation(json.get("type").getAsString());
-			AttributeType<T> attribute = (AttributeType<T>) StaticCoreRegistries.ATTRIBUTE_TYPE.getValue(attributeType);
+			AttributeType<T> attribute = (AttributeType<T>) StaticCoreRegistries.Attribute().getValue(attributeType);
 
 			AttributeModifierInstance<T> modifierInstance = AttributeModifierInstance.deserializeFromJson(json.get("modifier").getAsJsonObject());
 			return new RecipeAttributeWrapper<T>(attribute, modifierInstance);
@@ -294,7 +294,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		public JsonElement toJson() {
 			JsonObject output = new JsonObject();
 
-			output.addProperty("type", StaticCoreRegistries.ATTRIBUTE_TYPE.getKey(attributeType).toString());
+			output.addProperty("type", StaticCoreRegistries.Attribute().getKey(attributeType).toString());
 			output.add("modifier", getModifier().serializeToJson());
 
 			return output;
@@ -303,7 +303,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		@SuppressWarnings("unchecked")
 		public static <T> RecipeAttributeWrapper<T> readFromBuffer(FriendlyByteBuf buffer) {
 			ResourceLocation attributeKey = new ResourceLocation(buffer.readUtf());
-			AttributeType<T> type = (AttributeType<T>) StaticCoreRegistries.ATTRIBUTE_TYPE.getValue(attributeKey);
+			AttributeType<T> type = (AttributeType<T>) StaticCoreRegistries.Attribute().getValue(attributeKey);
 
 			CompoundTag data = buffer.readNbt();
 			AttributeModifierInstance<T> modifier = AttributeModifierInstance.deserialize(data);
@@ -311,7 +311,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		}
 
 		public void writeToBuffer(FriendlyByteBuf buffer) {
-			buffer.writeUtf(StaticCoreRegistries.ATTRIBUTE_TYPE.getKey(attributeType).toString());
+			buffer.writeUtf(StaticCoreRegistries.Attribute().getKey(attributeType).toString());
 
 			CompoundTag modifierData = new CompoundTag();
 			modifier.serialize(modifierData);

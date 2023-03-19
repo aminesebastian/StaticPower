@@ -7,15 +7,12 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.api.attributes.ItemAttributeRegistry.ItemAttributeRegisterEvent;
 import theking530.api.attributes.rendering.AttributeRenderLayer;
 import theking530.staticcore.attribiutes.Attributes;
-import theking530.staticcore.data.StaticPowerGameDataManager;
-import theking530.staticcore.teams.TeamManager;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.machines.cropfarmer.BlockEntityBasicFarmer;
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.CactusCropHarvester;
@@ -49,14 +46,7 @@ public class StaticPowerModEventsCommon {
 				ComposterBlock.COMPOSTABLES.put(ModBlocks.RubberTreeLeaves.get().asItem(), 0.6f);
 			});
 
-			// Register data classes.
-			StaticPowerGameDataManager.registerDataFactory(TeamManager.ID, (isClientSide) -> {
-				return new TeamManager(isClientSide);
-			});
-
 			ModEntities.registerPlacements(event);
-			ItemAttributeRegisterEvent itemAttributeEvent = new ItemAttributeRegisterEvent();
-			ModLoader.get().postEvent(itemAttributeEvent);
 
 			LOGGER.info("Static Power Common Setup Completed!");
 		});

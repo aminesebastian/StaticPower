@@ -21,7 +21,7 @@ public class ProductionManager {
 		this.isClientSide = isClientSide;
 		cache = new HashMap<>();
 
-		Collection<ProductType<?>> registeredProducts = StaticCoreRegistries.PRODUCT_TYPE.getValues();
+		Collection<ProductType<?>> registeredProducts = StaticCoreRegistries.ProductRegistry().getValues();
 		for (ProductType<?> productType : registeredProducts) {
 			cache.put(productType, productType.createNewCacheInstance(isClientSide));
 		}

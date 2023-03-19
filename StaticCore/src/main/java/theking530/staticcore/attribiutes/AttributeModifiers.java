@@ -11,7 +11,7 @@ import theking530.staticcore.attribiutes.modifiers.BooleanAttributeModifierType;
 import theking530.staticcore.attribiutes.modifiers.MultiplicativeNumberAttributeModifierType;
 
 public class AttributeModifiers {
-	private static final DeferredRegister<AttributeModifierType<?>> ATTRIBUTE_MODIFIERS = DeferredRegister.create(StaticCoreRegistries.ATTRIBUTE_MODIFIER_TYPE, StaticCore.MOD_ID);
+	private static final DeferredRegister<AttributeModifierType<?>> ATTRIBUTE_MODIFIERS = DeferredRegister.create(StaticCoreRegistries.ATTRIBUTE_MODIFIER_REGISTRY_KEY, StaticCore.MOD_ID);
 
 	public static final RegistryObject<AdditiveNumberAttributeModifierType> NumberAdditive = ATTRIBUTE_MODIFIERS.register("number_additive", () -> new AdditiveNumberAttributeModifierType());
 	public static final RegistryObject<MultiplicativeNumberAttributeModifierType> NumberMultiplicative = ATTRIBUTE_MODIFIERS.register("number_multiplicative",

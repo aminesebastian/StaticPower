@@ -14,7 +14,7 @@ import theking530.staticcore.productivity.product.ProductType;
 public record ProductivityTimeline(ProductType<?> productType, String serializedProduct, MetricPeriod period, ImmutableList<ProductivityTimelineEntry> entries) {
 
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeUtf(StaticCoreRegistries.PRODUCT_TYPE.getKey(productType).toString());
+		buffer.writeUtf(StaticCoreRegistries.ProductRegistry().getKey(productType).toString());
 		buffer.writeUtf(serializedProduct);
 		buffer.writeByte(period.ordinal());
 		buffer.writeInt(entries.size());
@@ -24,7 +24,7 @@ public record ProductivityTimeline(ProductType<?> productType, String serialized
 	}
 
 	public static ProductivityTimeline decode(FriendlyByteBuf buffer) {
-		ProductType<?> productType = StaticCoreRegistries.PRODUCT_TYPE.getValue(new ResourceLocation(buffer.readUtf()));
+		ProductType<?> productType = StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
 		String serializedProduct = buffer.readUtf();
 		MetricPeriod period = MetricPeriod.values()[buffer.readByte()];
 

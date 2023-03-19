@@ -26,13 +26,13 @@ public class PacketRecieveProductionMetrics extends NetworkMessage {
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeUtf(StaticCoreRegistries.PRODUCT_TYPE.getKey(productType).toString());
+		buffer.writeUtf(StaticCoreRegistries.ProductRegistry().getKey(productType).toString());
 		metrics.encode(buffer);
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
-		productType = StaticCoreRegistries.PRODUCT_TYPE.getValue(new ResourceLocation(buffer.readUtf()));
+		productType = StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
 		metrics = ProductionMetrics.decode(buffer);
 	}
 

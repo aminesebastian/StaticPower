@@ -38,7 +38,7 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeUtf(StaticCoreRegistries.PRODUCT_TYPE.getKey(productType).toString());
+		buffer.writeUtf(StaticCoreRegistries.ProductRegistry().getKey(productType).toString());
 		buffer.writeByte(period.ordinal());
 		buffer.writeByte(type.ordinal());
 		buffer.writeByte(productHashCodes.size());
@@ -49,7 +49,7 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
-		productType = StaticCoreRegistries.PRODUCT_TYPE.getValue(new ResourceLocation(buffer.readUtf()));
+		productType = StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
 		period = MetricPeriod.values()[buffer.readByte()];
 		type = MetricType.values()[buffer.readByte()];
 

@@ -68,7 +68,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		// Initialize the selected research widget.
 		registerWidget(selectedResearchWidget = new SelectedResearchWidget(0, 0, 109, 0).setZLevel(500));
-		Research research = getResearchManager().getLastCompletedResearch();
+		Research research = null;
 		ResearchInstance researchInstance = null;
 
 		if (getResearchManager().hasSelectedResearch()) {
@@ -87,7 +87,11 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		}
 
 		selectedResearchWidget.setResearch(research, researchInstance);
-		currentResearch = research.getId();
+
+		// Maybe there are no research recipes OR something else is going on here.
+		if (research != null) {
+			currentResearch = research.getId();
+		}
 
 		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
@@ -121,7 +125,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		}
 
 		// Track when the current research changes.
-		if (!currentResearch.equals(selectedResearch.getId())) {
+		if (currentResearch != null && !currentResearch.equals(selectedResearch.getId())) {
 			if (selectedResearchInstance != null) {
 				currentResearch = selectedResearchInstance.getId();
 				selectedResearchChanged(selectedResearch, selectedResearchInstance);

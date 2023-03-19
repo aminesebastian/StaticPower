@@ -83,7 +83,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		registerWidget(productionGraph = new DataGraphWidget(0, 0, 0, 0));
 
 		// Create the product type buttons.
-		for (ProductType<?> prodType : StaticCoreRegistries.PRODUCT_TYPE.getValues()) {
+		for (ProductType<?> prodType : StaticCoreRegistries.ProductRegistry().getValues()) {
 			StandardButton button = new TextButton(0, 0, 14, Component.translatable(prodType.getUnlocalizedName(2)).getString(), (self, mouseButton) -> {
 				for (AbstractGuiWidget<?> otherButton : productButtonContainer.getChildren()) {
 					TextButton castOtherButton = (TextButton) otherButton;

@@ -104,7 +104,7 @@ public class AttributeInstance<T> implements INBTSerializable<CompoundTag> {
 	@Override
 	public CompoundTag serializeNBT() {
 		CompoundTag output = new CompoundTag();
-		output.putString("type", StaticCoreRegistries.ATTRIBUTE_TYPE.getKey(attribute).toString());
+		output.putString("type", StaticCoreRegistries.Attribute().getKey(attribute).toString());
 		attribute.getValueType().serializeValue(baseValue, output);
 
 		// Serialize the modifiers.
@@ -137,7 +137,7 @@ public class AttributeInstance<T> implements INBTSerializable<CompoundTag> {
 	@SuppressWarnings("unchecked")
 	public static <T> AttributeInstance<T> deserialize(CompoundTag nbt) {
 		ResourceLocation attributeType = new ResourceLocation(nbt.getString("type"));
-		AttributeType<T> attribute = (AttributeType<T>) StaticCoreRegistries.ATTRIBUTE_TYPE.getValue(attributeType);
+		AttributeType<T> attribute = (AttributeType<T>) StaticCoreRegistries.Attribute().getValue(attributeType);
 
 		AttributeInstance<T> instance = new AttributeInstance<T>(attribute);
 		instance.deserializeNBT(nbt);

@@ -436,7 +436,7 @@ public class Cable {
 		for (Tag moduleTag : modules) {
 			CompoundTag moduleTagCompound = (CompoundTag) moduleTag;
 			ResourceLocation registryName = new ResourceLocation(moduleTagCompound.getString("module_type"));
-			supportedNetworkModules.add(StaticCoreRegistries.CABLE_MODULE_TYPE.getValue(registryName));
+			supportedNetworkModules.add(StaticCoreRegistries.CableModuleRegsitry().getValue(registryName));
 		}
 
 		// Create the links.
@@ -458,7 +458,7 @@ public class Cable {
 		supportedDestinationTypes = new HashSet<CableDestination>();
 		NBTUtilities.deserialize(tag.getList("destination_types", Tag.TAG_STRING), (destTag) -> {
 			ResourceLocation key = new ResourceLocation(destTag.getAsString());
-			CableDestination dest = StaticCoreRegistries.CABLE_DESTINATION_TYPE.getValue(key);
+			CableDestination dest = StaticCoreRegistries.CableDestinationRegistry().getValue(key);
 			supportedDestinationTypes.add(dest);
 			return dest;
 		});
@@ -468,7 +468,7 @@ public class Cable {
 		NBTUtilities.deserialize(tag.getList("capability_types", Tag.TAG_COMPOUND), (rawTag) -> {
 			CompoundTag capabilityTag = (CompoundTag) rawTag;
 			ResourceLocation key = new ResourceLocation(capabilityTag.getString("type"));
-			ServerCableCapabilityType<?> type = StaticCoreRegistries.CABLE_CAPABILITY_TYPE.getValue(key);
+			ServerCableCapabilityType<?> type = StaticCoreRegistries.CableCapabilityRegistry().getValue(key);
 			ServerCableCapability cap = type.create(this, capabilityTag);
 			capabilities.put(cap.getType(), cap);
 			return cap;
@@ -484,7 +484,7 @@ public class Cable {
 		ListTag supportedModules = new ListTag();
 		supportedNetworkModules.forEach(moduleType -> {
 			CompoundTag moduleTag = new CompoundTag();
-			moduleTag.putString("module_type", StaticCoreRegistries.CABLE_MODULE_TYPE.getKey(moduleType).toString());
+			moduleTag.putString("module_type", StaticCoreRegistries.CableModuleRegsitry().getKey(moduleType).toString());
 			supportedModules.add(moduleTag);
 		});
 		tag.put("supported_modules", supportedModules);
@@ -505,14 +505,14 @@ public class Cable {
 
 		// Serialize the destination types.
 		ListTag destinationList = NBTUtilities.serialize(supportedDestinationTypes, (dest) -> {
-			return StringTag.valueOf(StaticCoreRegistries.CABLE_DESTINATION_TYPE.getKey(dest).toString());
+			return StringTag.valueOf(StaticCoreRegistries.CableDestinationRegistry().getKey(dest).toString());
 		});
 		tag.put("destination_types", destinationList);
 
 		// Serialize the capabilities.
 		ListTag capabilityList = NBTUtilities.serialize(capabilities.keySet(), (capType) -> {
 			CompoundTag capTag = new CompoundTag();
-			capTag.putString("type", StaticCoreRegistries.CABLE_CAPABILITY_TYPE.getKey(capType).toString());
+			capTag.putString("type", StaticCoreRegistries.CableCapabilityRegistry().getKey(capType).toString());
 			capabilities.get(capType).save(capTag);
 			return capTag;
 		});

@@ -37,7 +37,7 @@ public class PacketRecieveProductionTimeline extends NetworkMessage {
 			timeline.encode(buffer);
 		}
 
-		buffer.writeUtf(StaticCoreRegistries.PRODUCT_TYPE.getKey(productType).toString());
+		buffer.writeUtf(StaticCoreRegistries.ProductRegistry().getKey(productType).toString());
 		buffer.writeByte(period.ordinal());
 		buffer.writeByte(type.ordinal());
 	}
@@ -50,7 +50,7 @@ public class PacketRecieveProductionTimeline extends NetworkMessage {
 			timelines.add(ProductivityTimeline.decode(buffer));
 		}
 
-		productType = StaticCoreRegistries.PRODUCT_TYPE.getValue(new ResourceLocation(buffer.readUtf()));
+		productType = StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
 		period = MetricPeriod.values()[buffer.readByte()];
 		type = MetricType.values()[buffer.readByte()];
 	}

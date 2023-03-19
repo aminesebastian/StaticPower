@@ -249,7 +249,7 @@ public class CableNetwork {
 			ResourceLocation moduleType = new ResourceLocation(moduleTagCompound.getString("type"));
 
 			// Create the module.
-			CableNetworkModule moduleInstance = StaticCoreRegistries.CABLE_MODULE_TYPE.getValue(moduleType).create();
+			CableNetworkModule moduleInstance = StaticCoreRegistries.CableModuleRegsitry().getValue(moduleType).create();
 
 			// Add the attachment to the attachments list.
 			network.addModule(moduleInstance);
@@ -268,7 +268,7 @@ public class CableNetwork {
 		ListTag moduleTagList = new ListTag();
 		modules.values().forEach(module -> {
 			CompoundTag moduleTag = new CompoundTag();
-			moduleTag.putString("type", StaticCoreRegistries.CABLE_MODULE_TYPE.getKey(module.getType()).toString());
+			moduleTag.putString("type", StaticCoreRegistries.CableModuleRegsitry().getKey(module.getType()).toString());
 			module.writeToNbt(moduleTag);
 			moduleTagList.add(moduleTag);
 		});

@@ -14,7 +14,7 @@ import theking530.staticcore.productivity.product.power.PowerProductType;
 import theking530.staticcore.productivity.product.power.PowerProductionStack;
 
 public class StaticCoreProductTypes {
-	private static final DeferredRegister<ProductType<?>> PRODUCT_REGISTRY = DeferredRegister.create(StaticCoreRegistries.PRODUCT_TYPE, StaticCore.MOD_ID);
+	private static final DeferredRegister<ProductType<?>> PRODUCT_REGISTRY = DeferredRegister.create(StaticCoreRegistries.PRODUCT_TYPE_REGISTRY_KEY, StaticCore.MOD_ID);
 
 	public static final RegistryObject<ProductType<ItemStack>> Item = PRODUCT_REGISTRY.register("item", () -> new ItemStackProductType());
 	public static final RegistryObject<ProductType<FluidStack>> Fluid = PRODUCT_REGISTRY.register("fluid", () -> new FluidStackProductType());

@@ -40,7 +40,7 @@ public class ProductionCache<T> {
 	public ProductionCache(ProductType<T> productType, boolean isClientSide) {
 		this.isClientSide = isClientSide;
 		this.productType = productType;
-		this.productTablePrefix = StaticCoreRegistries.PRODUCT_TYPE.getKey(productType).toString().replace(":", "_");
+		this.productTablePrefix = StaticCoreRegistries.ProductRegistry().getKey(productType).toString().replace(":", "_");
 		bucketRoundRobinIndex = 0;
 		productivityBucketMap = new HashMap<>();
 		productivityBuckets = new LinkedList<Map<Integer, ProductionEntry<T>>>();

@@ -106,7 +106,7 @@ public class DestinationWrapper {
 		HashSet<CableDestination> types = new HashSet<CableDestination>();
 
 		// Check for all destinations to see if they're supported.
-		for (CableDestination type : StaticCoreRegistries.CABLE_DESTINATION_TYPE) {
+		for (CableDestination type : StaticCoreRegistries.CableDestinationRegistry()) {
 			if (type.match(level, cablePosition, cableSide, pos, cableSide.getOpposite(), getTileEntity())) {
 				types.add(type);
 			}

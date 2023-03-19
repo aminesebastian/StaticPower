@@ -11,7 +11,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class ModItemAttributes {
-	private static final DeferredRegister<ItemAttributeType> ITEM_ATTRIBUTES = DeferredRegister.create(StaticCoreRegistries.ITEM_ATTRIBUTE_TYPE, StaticPower.MOD_ID);
+	private static final DeferredRegister<ItemAttributeType> ITEM_ATTRIBUTES = DeferredRegister.create(StaticCoreRegistries.ITEM_ATTRIBUTE_REGISTRY_KEY, StaticPower.MOD_ID);
 
 	public static final RegistryObject<ItemAttributeType> DrillHardened = ITEM_ATTRIBUTES.register("drill_hardened",
 			() -> new ItemAttributeType(Attributes.Smelting, ModItems.BasicMiningDrill, new AttributeRenderLayer(StaticPowerAdditionalModels.BLADE_SMELTING, 2)));

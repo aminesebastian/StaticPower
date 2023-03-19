@@ -9,7 +9,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.fluid.FluidCableCapability.FluidCableCapabilityType;
 
 public class ModCableCapabilities {
-	private static final DeferredRegister<ServerCableCapabilityType<?>> CAPABILITIES = DeferredRegister.create(StaticCoreRegistries.CABLE_CAPABILITY_TYPE, StaticPower.MOD_ID);
+	private static final DeferredRegister<ServerCableCapabilityType<?>> CAPABILITIES = DeferredRegister.create(StaticCoreRegistries.CABLE_CAPABILITY_REGISTRY_KEY, StaticPower.MOD_ID);
 
 	public static final RegistryObject<FluidCableCapabilityType> Fluid = CAPABILITIES.register("fluid", () -> new FluidCableCapabilityType());
 

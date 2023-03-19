@@ -32,21 +32,21 @@ public class AttributeModifierInstance<T> {
 	}
 
 	public void serialize(CompoundTag nbt) {
-		nbt.putString("type", StaticCoreRegistries.ATTRIBUTE_MODIFIER_TYPE.getKey(type).toString());
+		nbt.putString("type", StaticCoreRegistries.AttributeModifier().getKey(type).toString());
 		getType().getValueType().serializeValue(modifierValue, nbt);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> AttributeModifierInstance<T> deserialize(CompoundTag nbt) {
 		ResourceLocation modifierKey = new ResourceLocation(nbt.getString("type"));
-		AttributeModifierType<T> type = (AttributeModifierType<T>) StaticCoreRegistries.ATTRIBUTE_MODIFIER_TYPE.getValue(modifierKey);
+		AttributeModifierType<T> type = (AttributeModifierType<T>) StaticCoreRegistries.AttributeModifier().getValue(modifierKey);
 		T value = type.getValueType().deserializeValue(nbt);
 		return new AttributeModifierInstance<T>(type, value);
 	}
 
 	public JsonObject serializeToJson() {
 		JsonObject output = new JsonObject();
-		output.addProperty("type", StaticCoreRegistries.ATTRIBUTE_MODIFIER_TYPE.getKey(type).toString());
+		output.addProperty("type", StaticCoreRegistries.AttributeModifier().getKey(type).toString());
 		output.add("value", type.getValueType().serializeValueToJson(modifierValue));
 		return output;
 	}
@@ -54,7 +54,7 @@ public class AttributeModifierInstance<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> AttributeModifierInstance<T> deserializeFromJson(JsonObject json) {
 		ResourceLocation modifierKey = new ResourceLocation(json.get("type").getAsString());
-		AttributeModifierType<T> type = (AttributeModifierType<T>) StaticCoreRegistries.ATTRIBUTE_MODIFIER_TYPE.getValue(modifierKey);
+		AttributeModifierType<T> type = (AttributeModifierType<T>) StaticCoreRegistries.AttributeModifier().getValue(modifierKey);
 
 		T value = type.getValueType().deserializeValueFromJson(json.get("value"));
 		return new AttributeModifierInstance<T>(type, value);

@@ -21,7 +21,7 @@ import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModu
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 
 public class ModCableModules {
-	private static final DeferredRegister<CableNetworkModuleType> MODULES = DeferredRegister.create(StaticCoreRegistries.CABLE_MODULE_TYPE, StaticPower.MOD_ID);
+	private static final DeferredRegister<CableNetworkModuleType> MODULES = DeferredRegister.create(StaticCoreRegistries.CABLE_MODULE_REGISTRY_KEY, StaticPower.MOD_ID);
 
 	public static final RegistryObject<CableNetworkModuleType> Power = MODULES.register("power", () -> new PowerNetworkModuleFactory());
 	public static final RegistryObject<CableNetworkModuleType> Item = MODULES.register("item", () -> new ItemNetworkModuleFactory());
@@ -49,7 +49,7 @@ public class ModCableModules {
 			return false;
 		}
 
-		for (CableNetworkModuleType type : StaticCoreRegistries.CABLE_MODULE_TYPE.getValues()) {
+		for (CableNetworkModuleType type : StaticCoreRegistries.CableModuleRegsitry().getValues()) {
 			if (type instanceof RedstoneNetworkModuleFactory) {
 				if (network.hasModule(type)) {
 					return true;

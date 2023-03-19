@@ -45,7 +45,7 @@ public class Path {
 		// Get the source and destination locations.
 		sourceLocation = BlockPos.of(nbt.getLong("source"));
 		destinationLocation = BlockPos.of(nbt.getLong("destination"));
-		supportedNetworkType = StaticCoreRegistries.CABLE_MODULE_TYPE.getValue(new ResourceLocation(nbt.getString("supported_network_module")));
+		supportedNetworkType = StaticCoreRegistries.CableModuleRegsitry().getValue(new ResourceLocation(nbt.getString("supported_network_module")));
 	}
 
 	public BlockPos getSourceLocation() {
@@ -113,7 +113,7 @@ public class Path {
 		}
 		nbt.put("entries", pathNBTList);
 		nbt.putFloat("length", length);
-		nbt.putString("supported_network_module", StaticCoreRegistries.CABLE_MODULE_TYPE.getKey(supportedNetworkType).toString());
+		nbt.putString("supported_network_module", StaticCoreRegistries.CableModuleRegsitry().getKey(supportedNetworkType).toString());
 		return nbt;
 	}
 
