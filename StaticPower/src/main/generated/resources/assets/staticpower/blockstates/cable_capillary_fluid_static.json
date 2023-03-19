@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "staticpower:block/cable_capillary_fluid_static_core"
+    }
+  }
+}

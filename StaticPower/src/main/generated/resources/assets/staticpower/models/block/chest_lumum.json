@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/base_models/base_chest",
+  "textures": {
+    "particle": "staticpower:entity/chest/lumum_chest",
+    "texture": "staticpower:entity/chest/lumum_chest"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "p": {
+      "tag": "staticpower:plates/lumum_metal"
+    },
+    "r": {
+      "item": "staticpower:crystal_lumum"
+    },
+    "w": {
+      "tag": "forge:nuggets/platinum"
+    }
+  },
+  "pattern": [
+    " w ",
+    "prp",
+    "prp"
+  ],
+  "result": {
+    "item": "staticpower:portable_battery_lumum"
+  }
+}

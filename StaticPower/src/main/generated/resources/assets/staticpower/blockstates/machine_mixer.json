@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,is_on=false": {
+      "model": "staticpower:block/machine_mixer",
+      "y": 90
+    },
+    "facing=east,is_on=true": {
+      "model": "staticpower:block/machine_mixer_on",
+      "y": 90
+    },
+    "facing=north,is_on=false": {
+      "model": "staticpower:block/machine_mixer"
+    },
+    "facing=north,is_on=true": {
+      "model": "staticpower:block/machine_mixer_on"
+    },
+    "facing=south,is_on=false": {
+      "model": "staticpower:block/machine_mixer",
+      "y": 180
+    },
+    "facing=south,is_on=true": {
+      "model": "staticpower:block/machine_mixer_on",
+      "y": 180
+    },
+    "facing=west,is_on=false": {
+      "model": "staticpower:block/machine_mixer",
+      "y": 270
+    },
+    "facing=west,is_on=true": {
+      "model": "staticpower:block/machine_mixer_on",
+      "y": 270
+    }
+  }
+}

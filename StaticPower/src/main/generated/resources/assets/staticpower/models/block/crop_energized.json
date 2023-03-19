@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "staticpower:blocks/crops/energized_7",
+    "particle": "staticpower:blocks/crops/energized_7"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "staticpower:squeezer",
+  "input": {
+    "ingredient": {
+      "item": "minecraft:melon"
+    }
+  },
+  "output_fluid": {
+    "amount": 1000,
+    "fluid": "staticpower:juice_melon"
+  },
+  "output_item": {
+    "additionalBonus": 2,
+    "bonusChance": 0.5,
+    "item": {
+      "count": 3,
+      "id": "minecraft:melon_seeds"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

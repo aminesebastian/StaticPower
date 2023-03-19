@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"cable_texture": "staticpower:blocks/cables/redstone/cable_basic_redstone_naked"
+	},
+	"elements": [
+		{
+			"name": "Core",
+			"from": [7.25, 7.25, 7.25],
+			"to": [8.75, 8.75, 8.75],
+			"faces": {
+				"north": {"uv": [6.25, 8.5, 7.75, 10], "texture": "#cable_texture"},
+				"east": {"uv": [6.25, 8.5, 7.75, 10], "texture": "#cable_texture"},
+				"south": {"uv": [6.25, 8.5, 7.75, 10], "texture": "#cable_texture"},
+				"west": {"uv": [6.25, 8.5, 7.75, 10], "texture": "#cable_texture"},
+				"up": {"uv": [6.25, 8.5, 7.75, 10], "texture": "#cable_texture"},
+				"down": {"uv": [6.25, 8.5, 7.75, 10], "texture": "#cable_texture"}
+			}
+		}
+	]
+}

@@ -12,6 +12,7 @@
 	<item key="org.eclipse.jdt.uiformatter_page.preference_scroll_position" value="0"/>
 	<item key="org.eclipse.jdt.ui.codeformatter.create_profile_dialog.open_edit" value="true"/>
 	<item key="org.eclipse.jdt.uiformatter_page.last_focus_index" value="355"/>
+	<item key="delegateUpdating" value="false"/>
 	<section name="org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart">
 		<item key="group_libraries" value="true"/>
 		<item key="layout" value="1"/>

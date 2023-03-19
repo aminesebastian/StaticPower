@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:vulcanizer",
+  "input_fluid": {
+    "amount": 100,
+    "fluids": {
+      "tag": "staticpower:latex"
+    }
+  },
+  "input_item": {
+    "ingredient": {
+      "tag": "staticpower:dusts/coals"
+    }
+  },
+  "output_item": {
+    "item": {
+      "id": "staticpower:rubber_bar"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

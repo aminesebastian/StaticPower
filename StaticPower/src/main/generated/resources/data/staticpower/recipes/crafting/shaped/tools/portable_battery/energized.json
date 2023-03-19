@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "p": {
+      "tag": "staticpower:plates/energized_metal"
+    },
+    "r": {
+      "item": "staticpower:crystal_energized"
+    },
+    "w": {
+      "tag": "forge:nuggets/gold"
+    }
+  },
+  "pattern": [
+    " w ",
+    "prp",
+    "prp"
+  ],
+  "result": {
+    "item": "staticpower:portable_battery_energized"
+  }
+}

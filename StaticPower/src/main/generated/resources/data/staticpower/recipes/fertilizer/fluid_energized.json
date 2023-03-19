@@ -1,0 +1,10 @@
+{
+  "type": "staticpower:farming_fertalizer",
+  "fertilization_chance": 0.2,
+  "fluid": {
+    "amount": 1,
+    "fluids": {
+      "tag": "staticpower:fluid_energized"
+    }
+  }
+}

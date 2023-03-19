@@ -1,0 +1,24 @@
+{
+  "values": [
+    "staticpower:ore_rusty_iron",
+    "staticpower:ore_aluminum",
+    "minecraft:gold_ore",
+    "staticpower:ore_platinum",
+    "staticpower:ore_tungsten",
+    "staticpower:ore_tin",
+    "minecraft:copper_ore",
+    "minecraft:lapis_ore",
+    "staticpower:ore_zinc",
+    "staticpower:ore_sapphire",
+    "staticpower:ore_magnesium",
+    "staticpower:ore_lead",
+    "staticpower:ore_ruby",
+    "minecraft:diamond_ore",
+    "minecraft:iron_ore",
+    "minecraft:coal_ore",
+    "staticpower:ore_silver",
+    "staticpower:ore_uranium",
+    "minecraft:emerald_ore",
+    "minecraft:redstone_ore"
+  ]
+}

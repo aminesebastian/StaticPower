@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.5,
+  "ingredient": {
+    "tag": "forge:chunks/aluminum"
+  },
+  "result": "staticpower:ingot_aluminum"
+}

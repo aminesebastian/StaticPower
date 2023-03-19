@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:fluid_infusion",
+  "input_fluid": {
+    "amount": 1000,
+    "fluids": {
+      "tag": "staticpower:fluid_energized"
+    }
+  },
+  "input_item": {
+    "ingredient": {
+      "item": "staticpower:wrench"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:wrench_energized"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

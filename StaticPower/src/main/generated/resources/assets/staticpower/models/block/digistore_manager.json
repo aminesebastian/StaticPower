@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/base_models/digistore_base",
+  "textures": {
+    "front_overlay": "staticpower:blocks/digistore/manager_front",
+    "side_overlay": "staticpower:blocks/digistore/manager_side"
+  }
+}

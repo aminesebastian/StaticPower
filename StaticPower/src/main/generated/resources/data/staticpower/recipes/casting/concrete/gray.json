@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:casting",
+  "fluid": {
+    "amount": 1000,
+    "fluids": {
+      "tag": "staticpower:concrete_gray"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "staticpower:mold_block"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "minecraft:gray_concrete"
+    }
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 200
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "staticpower:block/pump_advanced",
+      "x": -90
+    },
+    "facing=east": {
+      "model": "staticpower:block/pump_advanced",
+      "y": -90
+    },
+    "facing=north": {
+      "model": "staticpower:block/pump_advanced"
+    },
+    "facing=south": {
+      "model": "staticpower:block/pump_advanced",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "staticpower:block/pump_advanced",
+      "x": 90
+    },
+    "facing=west": {
+      "model": "staticpower:block/pump_advanced",
+      "y": 90
+    }
+  }
+}

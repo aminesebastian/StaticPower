@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "tag": "staticpower:storage_blocks/raw_redstone_alloy"
+    },
+    "p": {
+      "item": "staticpower:cable_power_static"
+    },
+    "r": {
+      "tag": "staticpower:ingots/redstone_alloy"
+    }
+  },
+  "pattern": [
+    "prp",
+    "rbr",
+    "prp"
+  ],
+  "result": {
+    "count": 4,
+    "item": "staticpower:cable_industrial_power_static"
+  }
+}

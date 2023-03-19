@@ -1,0 +1,31 @@
+{
+	"name": "Rubber Tree",
+	"icon": "staticpower:rubber_tree_sapling",
+	"category": "staticpower:world",
+	"pages": [
+		{
+			"type": "spotlight",
+			"item": "staticpower:rubber_wood_bark",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "spotlight",
+			"item": "staticpower:rubber_tree_log",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "spotlight",
+			"item": "staticpower:rubber_tree_leaves",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/wood/planks_rubber"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/wood/rubber_wood",
+			"recipe2": "staticpower:crafting/wood/stripped_rubber_wood"
+		}
+	]
+}

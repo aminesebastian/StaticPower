@@ -6,4 +6,6 @@
 			<item value="org.eclipse.buildship.ui.importwizards"/>
 		</list>
 	</section>
+	<section name="EditorSelectionDialog">
+	</section>
 </section>

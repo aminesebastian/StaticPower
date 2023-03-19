@@ -1,0 +1,15 @@
+{
+  "values": [
+    "#forge:ores",
+    "#forge:ores_in_ground/deepslate",
+    "#forge:ores_in_ground/netherrack",
+    "#forge:ores_in_ground/stone",
+    "#forge:raw_materials",
+    "#forge:gems",
+    "#minecraft:coals",
+    "#forge:dusts/glowstone",
+    "#forge:dusts/redstone",
+    "#forge:gems/prismarine",
+    "#forge:dusts/prismarine"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "staticpower:block/conveyor_hopper_filtered_advanced",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "staticpower:block/conveyor_hopper_filtered_advanced"
+    },
+    "facing=south": {
+      "model": "staticpower:block/conveyor_hopper_filtered_advanced",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "staticpower:block/conveyor_hopper_filtered_advanced",
+      "y": 270
+    }
+  }
+}

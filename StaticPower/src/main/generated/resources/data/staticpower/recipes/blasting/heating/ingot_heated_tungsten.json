@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.5,
+  "ingredient": {
+    "tag": "forge:ingots/tungsten"
+  },
+  "result": "staticpower:ingot_tungsten_heated"
+}

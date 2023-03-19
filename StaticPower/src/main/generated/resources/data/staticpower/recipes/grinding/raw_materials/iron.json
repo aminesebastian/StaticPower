@@ -1,0 +1,26 @@
+{
+  "type": "staticpower:grinder",
+  "input": {
+    "ingredient": {
+      "tag": "forge:raw_materials/iron"
+    }
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 2,
+        "id": "staticpower:dust_iron"
+      }
+    },
+    {
+      "chance": 0.05,
+      "item": {
+        "id": "staticpower:dust_zinc"
+      }
+    }
+  ],
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

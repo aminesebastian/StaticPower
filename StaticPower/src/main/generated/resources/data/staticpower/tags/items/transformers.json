@@ -1,0 +1,9 @@
+{
+  "values": [
+    "staticpower:transformer_basic",
+    "staticpower:transformer_advanced",
+    "staticpower:transformer_static",
+    "staticpower:transformer_energized",
+    "staticpower:transformer_lumum"
+  ]
+}

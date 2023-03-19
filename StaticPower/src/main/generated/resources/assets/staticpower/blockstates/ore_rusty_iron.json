@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "staticpower:block/ore_rusty_iron"
+    }
+  }
+}

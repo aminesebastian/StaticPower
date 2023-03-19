@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:gears/iron"
+    },
+    "p": {
+      "item": "staticpower:upgrade_plate_lumum"
+    },
+    "r": {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  },
+  "pattern": [
+    " i ",
+    " r ",
+    " p "
+  ],
+  "result": {
+    "item": "staticpower:upgrade_output_multiplier_lumum"
+  }
+}

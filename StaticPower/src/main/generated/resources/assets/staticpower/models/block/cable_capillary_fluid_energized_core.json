@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/base_models/cables/cable_2_core",
+  "textures": {
+    "cable_texture": "staticpower:blocks/cables/cable_capillary_fluid_energized",
+    "particle": "staticpower:blocks/cables/cable_capillary_fluid_energized"
+  }
+}

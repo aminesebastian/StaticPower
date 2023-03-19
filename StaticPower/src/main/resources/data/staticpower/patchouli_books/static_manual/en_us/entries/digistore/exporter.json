@@ -1,0 +1,15 @@
+{
+	"name": "Exporter",
+	"icon": "staticpower:cable_attachment_digistore_exporter",
+	"category": "staticpower:digistore",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cable_attachments/digistore_exporter"
+		}
+	]
+}

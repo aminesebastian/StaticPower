@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "forge:glass_panes"
+    },
+    "i": {
+      "tag": "staticpower:plates/lumum_metal"
+    },
+    "r": {
+      "tag": "forge:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "igi",
+    "rgr",
+    "igi"
+  ],
+  "result": {
+    "count": 6,
+    "item": "staticpower:cable_fluid_lumum"
+  }
+}

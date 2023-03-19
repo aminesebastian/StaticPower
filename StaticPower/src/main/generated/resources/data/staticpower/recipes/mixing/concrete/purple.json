@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:mixer",
+  "input_fluid_1": {
+    "amount": 100,
+    "fluids": {
+      "tag": "staticpower:concrete"
+    }
+  },
+  "input_fluid_2": {
+    "amount": 10,
+    "fluids": {
+      "tag": "staticpower:dye_purple"
+    }
+  },
+  "output_fluid": {
+    "amount": 100,
+    "fluid": "staticpower:concrete_purple"
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

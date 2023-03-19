@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:former",
+  "input": {
+    "ingredient": {
+      "item": "staticpower:mold_plate"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "staticpower:ingot_brass"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:plate_brass"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

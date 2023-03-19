@@ -1,0 +1,21 @@
+{
+  "type": "staticpower:fermenter",
+  "input": {
+    "ingredient": {
+      "tag": "forge:crops/carrot"
+    }
+  },
+  "output_fluid": {
+    "amount": 65,
+    "fluid": "staticpower:mash"
+  },
+  "output_item": {
+    "item": {
+      "id": "staticpower:distillery_grain"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

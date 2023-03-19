@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:digistore_card_energized"
+    },
+    "d": {
+      "item": "staticpower:digistore_card_singular_static"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "t": {
+      "tag": "staticpower:plates/energized_metal"
+    }
+  },
+  "pattern": [
+    "trt",
+    "tct",
+    "tdt"
+  ],
+  "result": {
+    "item": "staticpower:digistore_card_singular_energized"
+  }
+}

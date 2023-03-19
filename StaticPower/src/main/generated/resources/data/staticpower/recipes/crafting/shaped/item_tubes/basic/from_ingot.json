@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "forge:glass_panes"
+    },
+    "i": {
+      "tag": "forge:ingots/tin"
+    }
+  },
+  "pattern": [
+    "igi",
+    "igi",
+    "igi"
+  ],
+  "result": {
+    "count": 6,
+    "item": "staticpower:cable_item_basic"
+  }
+}

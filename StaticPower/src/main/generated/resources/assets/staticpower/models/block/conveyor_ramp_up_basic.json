@@ -1,0 +1,8 @@
+{
+  "parent": "staticpower:block/base_models/conveyor_slope_up",
+  "textures": {
+    "bottom_texture": "staticpower:blocks/machines/sides/basic_machine_top",
+    "particle": "staticpower:blocks/machines/sides/basic_machine_top",
+    "side_texture": "staticpower:blocks/machines/sides/basic_machine_front"
+  }
+}

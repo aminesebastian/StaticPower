@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "staticpower:items/upgrades/upgrade_heat",
+    "layer1": "staticpower:items/upgrades/overlay_upgrade_lumum"
+  }
+}

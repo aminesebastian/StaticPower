@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "staticpower:plates/static_metal"
+    },
+    {
+      "tag": "staticpower:tools/wire_cutter"
+    }
+  ],
+  "result": {
+    "count": 3,
+    "item": "staticpower:wire_static_metal"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:fluid_infusion",
+  "input_fluid": {
+    "amount": 1296,
+    "fluids": {
+      "tag": "staticpower:fluid_static"
+    }
+  },
+  "input_item": {
+    "ingredient": {
+      "tag": "forge:storage_blocks/copper"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:block_static_metal"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

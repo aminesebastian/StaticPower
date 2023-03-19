@@ -1,0 +1,12 @@
+{
+  "values": [
+    "staticpower:blade_iron",
+    "staticpower:blade_bronze",
+    "staticpower:blade_advanced",
+    "staticpower:blade_static",
+    "staticpower:blade_energized",
+    "staticpower:blade_lumum",
+    "staticpower:blade_tungsten",
+    "staticpower:blade_creative"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "staticpower:item/base_models/cable_2_inventory_vertical",
+  "textures": {
+    "cable_texture": "staticpower:blocks/cables/cable_capillary_fluid_static"
+  }
+}

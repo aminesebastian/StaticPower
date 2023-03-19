@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:crucible",
+  "input_item": {
+    "ingredient": {
+      "tag": "forge:ingots/platinum"
+    }
+  },
+  "output_fluid": {
+    "amount": 144,
+    "fluid": "staticpower:molten_platinum"
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 200
+  },
+  "slag_item": {
+    "item": {
+      "count": 2,
+      "id": "staticpower:slag"
+    }
+  }
+}

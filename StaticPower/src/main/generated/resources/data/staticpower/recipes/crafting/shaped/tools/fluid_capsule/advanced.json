@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:fluid_capsule_basic"
+    },
+    "g": {
+      "tag": "forge:glass"
+    },
+    "p": {
+      "tag": "forge:plates/brass"
+    }
+  },
+  "pattern": [
+    "pbp",
+    "gpg",
+    "pbp"
+  ],
+  "result": {
+    "item": "staticpower:fluid_capsule_advanced"
+  }
+}

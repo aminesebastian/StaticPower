@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "o": {
+      "tag": "forge:obsidian"
+    },
+    "p": {
+      "tag": "forge:gems/emerald"
+    },
+    "u": {
+      "item": "staticpower:upgrade_plate_basic"
+    }
+  },
+  "pattern": [
+    "ooo",
+    "opo",
+    "ouo"
+  ],
+  "result": {
+    "item": "staticpower:upgrade_experience_vacuum"
+  }
+}

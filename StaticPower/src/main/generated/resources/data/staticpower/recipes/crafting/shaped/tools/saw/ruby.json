@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:gems/ruby"
+    },
+    "s": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "pattern": [
+    "  s",
+    " si",
+    "si "
+  ],
+  "result": {
+    "item": "staticpower:saw_ruby"
+  }
+}

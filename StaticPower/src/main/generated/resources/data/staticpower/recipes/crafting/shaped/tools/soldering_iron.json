@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "l": {
+      "tag": "forge:rubber"
+    }
+  },
+  "pattern": [
+    "ii ",
+    " i ",
+    " l "
+  ],
+  "result": {
+    "item": "staticpower:soldering_iron"
+  }
+}

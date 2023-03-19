@@ -1,0 +1,20 @@
+{
+  "type": "staticpower:tumbler",
+  "input": {
+    "ingredient": {
+      "tag": "forge:gems/emerald"
+    }
+  },
+  "output": {
+    "additionalBonus": 2,
+    "bonusChance": 0.25,
+    "item": {
+      "count": 6,
+      "id": "staticpower:chunks_emerald"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

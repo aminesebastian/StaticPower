@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "staticpower:blocks/fluids/evaporated_mash_still"
+  }
+}

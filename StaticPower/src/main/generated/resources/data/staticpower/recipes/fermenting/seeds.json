@@ -1,0 +1,21 @@
+{
+  "type": "staticpower:fermenter",
+  "input": {
+    "ingredient": {
+      "tag": "forge:seeds"
+    }
+  },
+  "output_fluid": {
+    "amount": 10,
+    "fluid": "staticpower:mash"
+  },
+  "output_item": {
+    "item": {
+      "id": "staticpower:distillery_grain"
+    }
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 100
+  }
+}

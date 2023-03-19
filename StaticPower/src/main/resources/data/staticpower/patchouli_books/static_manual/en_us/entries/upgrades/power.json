@@ -1,0 +1,23 @@
+{
+	"name": "Power",
+	"icon": "staticpower:upgrade_power_basic",
+	"category": "staticpower:upgrades",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/power/basic_power",
+			"recipe2": "staticpower:crafting/upgrades/power/static_power",
+			"title": "Basic & Static"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/power/energized_power",
+			"recipe2": "staticpower:crafting/upgrades/power/lumum_power",
+			"title": "Energized & Lumum"
+		}
+	]
+}

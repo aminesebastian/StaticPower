@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:former",
+  "input": {
+    "ingredient": {
+      "item": "staticpower:mold_blank"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "tag": "staticpower:wires"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:mold_wire"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

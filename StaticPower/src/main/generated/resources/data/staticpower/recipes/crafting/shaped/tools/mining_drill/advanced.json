@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_advanced"
+    },
+    "g": {
+      "tag": "staticpower:gears/brass"
+    },
+    "i": {
+      "tag": "forge:plates/brass"
+    },
+    "l": {
+      "item": "minecraft:lever"
+    },
+    "m": {
+      "item": "staticpower:motor"
+    },
+    "p": {
+      "item": "staticpower:processor_advanced"
+    }
+  },
+  "pattern": [
+    "ilg",
+    "bmb",
+    "ipi"
+  ],
+  "result": {
+    "item": "staticpower:mining_drill_advanced"
+  }
+}

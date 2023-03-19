@@ -1,0 +1,26 @@
+{
+  "type": "staticpower:former",
+  "input": {
+    "ingredient": {
+      "item": "staticpower:mold_blade"
+    }
+  },
+  "mold": {
+    "count": 5,
+    "ingredient": {
+      "item": "staticpower:ingot_lumum_metal"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:blade_lumum",
+      "tag": {
+        "Damage": 0
+      }
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

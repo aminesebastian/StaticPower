@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:grinder",
+  "input": {
+    "ingredient": {
+      "tag": "forge:ores/redstone"
+    }
+  },
+  "outputs": [
+    {
+      "additionalBonus": 2,
+      "bonusChance": 0.4,
+      "item": {
+        "count": 4,
+        "id": "minecraft:redstone"
+      }
+    }
+  ],
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

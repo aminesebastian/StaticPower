@@ -1,0 +1,16 @@
+{
+  "type": "staticpower:squeezer",
+  "input": {
+    "ingredient": {
+      "item": "staticpower:fruit_depleted"
+    }
+  },
+  "output_fluid": {
+    "amount": 50,
+    "fluid": "staticpower:fertilizer"
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

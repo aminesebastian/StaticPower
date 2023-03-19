@@ -1,0 +1,22 @@
+{
+	"name": "Ruby",
+	"icon": "staticpower:ore_ruby",
+	"category": "staticpower:world",
+	"pages": [
+		{
+			"type": "spotlight",
+			"item": "staticpower:ore_ruby",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "spotlight",
+			"item": "staticpower:ore_deepslate_ruby",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "spotlight",
+			"item": "staticpower:gem_ruby",
+			"text": "This is a test entry, but it should show up!"
+		}
+	]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_static"
+    },
+    "i": {
+      "tag": "staticpower:ingots/static_metal"
+    }
+  },
+  "pattern": [
+    "iii",
+    "i i",
+    "b b"
+  ],
+  "result": {
+    "item": "staticpower:magnet_static"
+  }
+}

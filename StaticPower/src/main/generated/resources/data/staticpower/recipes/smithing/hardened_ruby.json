@@ -1,0 +1,21 @@
+{
+  "type": "staticpower:auto_smith",
+  "attributes": [
+    {
+      "type": "staticpower:hardened_ruby",
+      "modifier": {
+        "type": "staticpower:boolean",
+        "value": true
+      }
+    }
+  ],
+  "input_item": {
+    "ingredient": {
+      "tag": "forge:dusts/ruby"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

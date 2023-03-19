@@ -1,0 +1,16 @@
+{
+  "type": "staticpower:squeezer",
+  "input": {
+    "ingredient": {
+      "tag": "forge:dyes/purple"
+    }
+  },
+  "output_fluid": {
+    "amount": 100,
+    "fluid": "staticpower:dye_purple"
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

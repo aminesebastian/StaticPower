@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_card": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "staticpower:digistore_card_stacked_static"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_previous_card": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "staticpower:digistore_card_energized"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "staticpower:crafting/shaped/digistore/stacked_card/energized"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_card",
+      "has_previous_card",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "staticpower:crafting/shaped/digistore/stacked_card/energized"
+    ]
+  }
+}

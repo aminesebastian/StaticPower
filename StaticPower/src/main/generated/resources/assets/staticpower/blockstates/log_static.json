@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "staticpower:block/log_static_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "staticpower:block/log_static"
+    },
+    "axis=z": {
+      "model": "staticpower:block/log_static_horizontal",
+      "x": 90
+    }
+  }
+}

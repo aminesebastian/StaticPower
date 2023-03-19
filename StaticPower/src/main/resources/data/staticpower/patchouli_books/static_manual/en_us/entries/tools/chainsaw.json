@@ -1,0 +1,25 @@
+{
+	"name": "Chainsaw",
+	"icon": "staticpower:chainsaw_basic",
+	"category": "staticpower:tools",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/chainsaw_basic",
+			"recipe2": "staticpower:crafting/tools/chainsaw_advanced"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/chainsaw_static",
+			"recipe2": "staticpower:crafting/tools/chainsaw_energized"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/chainsaw_lumum"
+		}
+	]
+}
