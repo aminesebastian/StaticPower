@@ -16,8 +16,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockStaticChest extends StaticPowerRotateableBlockEntityBlock {
 	protected static final VoxelShape AABB = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
@@ -33,15 +33,15 @@ public class BlockStaticChest extends StaticPowerRotateableBlockEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
+		if (getTier() == StaticCoreTiers.BASIC) {
 			return BlockEntityStaticChest.BASIC_TYPE.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
+		} else if (getTier() == StaticCoreTiers.ADVANCED) {
 			return BlockEntityStaticChest.ADVANCED_TYPE.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
+		} else if (getTier() == StaticCoreTiers.STATIC) {
 			return BlockEntityStaticChest.STATIC_TYPE.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
+		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
 			return BlockEntityStaticChest.ENERGIZED_TYPE.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
+		} else if (getTier() == StaticCoreTiers.LUMUM) {
 			return BlockEntityStaticChest.LUMUM_TYPE.create(pos, state);
 		} else {
 			throw new RuntimeException("Unsupported tier for Static Chest!");

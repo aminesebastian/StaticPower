@@ -27,13 +27,13 @@ import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter
 import theking530.staticcore.blockentity.components.items.OutputServoComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.gui.GuiTextUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.item.InventoryUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -57,7 +57,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 		super(TYPE, pos, state);
 
 		// Get the tier object.
-		StaticPowerTier tier = getTierObject();
+		StaticCoreTier tier = getTierObject();
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

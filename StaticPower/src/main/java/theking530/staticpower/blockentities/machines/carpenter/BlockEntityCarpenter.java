@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
@@ -23,12 +24,11 @@ import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.OutputServoComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.item.InventoryUtilities;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -52,7 +52,7 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeP
 		super(TYPE, pos, state);
 
 		// Get the tier object.
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setSlotsLockable(true));
 

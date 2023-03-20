@@ -25,12 +25,12 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.gui.text.TooltipUtilities;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockTransformer extends StaticPowerMachineBlock {
 	private static final HashMap<Direction, VoxelShape> SHAPES = new HashMap<>();
@@ -84,7 +84,7 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (this.tier == StaticPowerTiers.LUMUM || this.tier == StaticPowerTiers.CREATIVE) {
+		if (this.getTier() == StaticCoreTiers.LUMUM || this.getTier() == StaticCoreTiers.CREATIVE) {
 			return HasGuiType.ALWAYS;
 		}
 		return HasGuiType.NEVER;
@@ -95,10 +95,10 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
 
-		if (tier == StaticPowerTiers.LUMUM) {
+		if (getTier() == StaticCoreTiers.LUMUM) {
 			TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.transfomer_ratio", ChatFormatting.GREEN, Component.translatable("gui.staticpower.variable"));
 		} else {
-			int transformerRatio = StaticPowerConfig.getTier(tier).powerConfiguration.transfomerRatio.get();
+			int transformerRatio = StaticCoreConfig.getTier(getTier()).powerConfiguration.transfomerRatio.get();
 			PowerTooltips.addTransformerRatioTooltip(tooltip, transformerRatio);
 		}
 
@@ -112,15 +112,15 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
+		if (getTier() == StaticCoreTiers.BASIC) {
 			return BlockEntityTransformer.BASIC_TRANSFORMER.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
+		} else if (getTier() == StaticCoreTiers.ADVANCED) {
 			return BlockEntityTransformer.ADVANCED_TRANSFORMER.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
+		} else if (getTier() == StaticCoreTiers.STATIC) {
 			return BlockEntityTransformer.STATIC_TRANSFORMER.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
+		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
 			return BlockEntityTransformer.ENERGIZED_TRANSFORMER.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
+		} else if (getTier() == StaticCoreTiers.LUMUM) {
 			return BlockEntityTransformer.LUMUM_TRANSFORMER.create(pos, state);
 		}
 		return null;

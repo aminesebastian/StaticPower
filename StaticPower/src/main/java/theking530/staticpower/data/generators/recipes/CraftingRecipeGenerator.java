@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.crafting.RecipeItem;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.utilities.MinecraftColor;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
@@ -210,9 +210,9 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		batteryPack("lumum", ModItems.LumumBatteryPack.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.WIRE).getItemTag()),
 				RecipeItem.of(ModItems.LumumPortableBattery.get()), RecipeItem.of(ModItems.LumumProcessor.get()));
 
-		heatCable("aluminum", ModBlocks.HeatCables.get(StaticPowerTiers.ALUMINUM).get(), RecipeItem.of(ModMaterials.ALUMINUM.get(MaterialTypes.INGOT).getItemTag()));
-		heatCable("copper", ModBlocks.HeatCables.get(StaticPowerTiers.COPPER).get(), RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.INGOT).getItemTag()));
-		heatCable("gold", ModBlocks.HeatCables.get(StaticPowerTiers.GOLD).get(), RecipeItem.of(Tags.Items.INGOTS_GOLD));
+		heatCable("aluminum", ModBlocks.HeatCables.get(StaticCoreTiers.ALUMINUM).get(), RecipeItem.of(ModMaterials.ALUMINUM.get(MaterialTypes.INGOT).getItemTag()));
+		heatCable("copper", ModBlocks.HeatCables.get(StaticCoreTiers.COPPER).get(), RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.INGOT).getItemTag()));
+		heatCable("gold", ModBlocks.HeatCables.get(StaticCoreTiers.GOLD).get(), RecipeItem.of(Tags.Items.INGOTS_GOLD));
 
 		// @formatter:off
 		beginShapedRecipe(ModBlocks.ScaffoldCable.get(), 8, "scaffold_cable")
@@ -234,75 +234,75 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 			.unlockedBy("has_items", hasItems(Tags.Items.INGOTS_COPPER, ItemTags.WOOL));
 		// @formatter:on
 
-		itemTube("basic", ModBlocks.ItemCables.get(StaticPowerTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("basic", ModBlocks.ItemCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		itemTube("advanced", ModBlocks.ItemCables.get(StaticPowerTiers.ADVANCED).get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("advanced", ModBlocks.ItemCables.get(StaticCoreTiers.ADVANCED).get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		itemTube("static", ModBlocks.ItemCables.get(StaticPowerTiers.STATIC).get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("static", ModBlocks.ItemCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		itemTube("energized", ModBlocks.ItemCables.get(StaticPowerTiers.ENERGIZED).get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("energized", ModBlocks.ItemCables.get(StaticCoreTiers.ENERGIZED).get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		itemTube("lumum", ModBlocks.ItemCables.get(StaticPowerTiers.LUMUM).get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("lumum", ModBlocks.ItemCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
-		fluidPipe("basic", ModBlocks.FluidCables.get(StaticPowerTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("basic", ModBlocks.FluidCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		fluidPipe("advanced", ModBlocks.FluidCables.get(StaticPowerTiers.ADVANCED).get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("advanced", ModBlocks.FluidCables.get(StaticCoreTiers.ADVANCED).get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		fluidPipe("static", ModBlocks.FluidCables.get(StaticPowerTiers.STATIC).get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("static", ModBlocks.FluidCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		fluidPipe("energized", ModBlocks.FluidCables.get(StaticPowerTiers.ENERGIZED).get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("energized", ModBlocks.FluidCables.get(StaticCoreTiers.ENERGIZED).get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		fluidPipe("lumum", ModBlocks.FluidCables.get(StaticPowerTiers.LUMUM).get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("lumum", ModBlocks.FluidCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
-		capillaryFluidPipe("basic", ModBlocks.CapillaryFluidCables.get(StaticPowerTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		capillaryFluidPipe("basic", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		capillaryFluidPipe("advanced", ModBlocks.CapillaryFluidCables.get(StaticPowerTiers.ADVANCED).get(),
+		capillaryFluidPipe("advanced", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.ADVANCED).get(),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		capillaryFluidPipe("static", ModBlocks.CapillaryFluidCables.get(StaticPowerTiers.STATIC).get(),
+		capillaryFluidPipe("static", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.STATIC).get(),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		capillaryFluidPipe("energized", ModBlocks.CapillaryFluidCables.get(StaticPowerTiers.ENERGIZED).get(),
+		capillaryFluidPipe("energized", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.ENERGIZED).get(),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		capillaryFluidPipe("lumum", ModBlocks.CapillaryFluidCables.get(StaticPowerTiers.LUMUM).get(),
+		capillaryFluidPipe("lumum", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.LUMUM).get(),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
-		industrialFluidPipe("basic", ModBlocks.IndustrialFluidCables.get(StaticPowerTiers.BASIC).get(), RecipeItem.of(ModBlocks.FluidCables.get(StaticPowerTiers.LUMUM).get()));
-		industrialFluidPipe("advanced", ModBlocks.IndustrialFluidCables.get(StaticPowerTiers.ADVANCED).get(),
-				RecipeItem.of(ModBlocks.FluidCables.get(StaticPowerTiers.ADVANCED).get()));
-		industrialFluidPipe("static", ModBlocks.IndustrialFluidCables.get(StaticPowerTiers.STATIC).get(), RecipeItem.of(ModBlocks.FluidCables.get(StaticPowerTiers.STATIC).get()));
-		industrialFluidPipe("energized", ModBlocks.IndustrialFluidCables.get(StaticPowerTiers.ENERGIZED).get(),
-				RecipeItem.of(ModBlocks.FluidCables.get(StaticPowerTiers.ENERGIZED).get()));
-		industrialFluidPipe("lumum", ModBlocks.IndustrialFluidCables.get(StaticPowerTiers.LUMUM).get(), RecipeItem.of(ModBlocks.FluidCables.get(StaticPowerTiers.LUMUM).get()));
+		industrialFluidPipe("basic", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.LUMUM).get()));
+		industrialFluidPipe("advanced", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.ADVANCED).get(),
+				RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.ADVANCED).get()));
+		industrialFluidPipe("static", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.STATIC).get()));
+		industrialFluidPipe("energized", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.ENERGIZED).get(),
+				RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.ENERGIZED).get()));
+		industrialFluidPipe("lumum", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.LUMUM).get()));
 
-		powerCable("basic", ModBlocks.PowerCables.get(StaticPowerTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		powerCable("basic", ModBlocks.PowerCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		powerCable("advanced", ModBlocks.PowerCables.get(StaticPowerTiers.ADVANCED).get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		powerCable("advanced", ModBlocks.PowerCables.get(StaticCoreTiers.ADVANCED).get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		powerCable("static", ModBlocks.PowerCables.get(StaticPowerTiers.STATIC).get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		powerCable("static", ModBlocks.PowerCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		powerCable("energized", ModBlocks.PowerCables.get(StaticPowerTiers.ENERGIZED).get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		powerCable("energized", ModBlocks.PowerCables.get(StaticCoreTiers.ENERGIZED).get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		powerCable("lumum", ModBlocks.PowerCables.get(StaticPowerTiers.LUMUM).get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		powerCable("lumum", ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
-		insulatedPowerCable("basic", ModBlocks.InsulatedPowerCables.get(StaticPowerTiers.BASIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.BASIC).get()));
-		insulatedPowerCable("advanced", ModBlocks.InsulatedPowerCables.get(StaticPowerTiers.ADVANCED).get(),
-				RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.ADVANCED).get()));
-		insulatedPowerCable("static", ModBlocks.InsulatedPowerCables.get(StaticPowerTiers.STATIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.STATIC).get()));
-		insulatedPowerCable("energized", ModBlocks.InsulatedPowerCables.get(StaticPowerTiers.ENERGIZED).get(),
-				RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.ENERGIZED).get()));
-		insulatedPowerCable("lumum", ModBlocks.InsulatedPowerCables.get(StaticPowerTiers.LUMUM).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.LUMUM).get()));
+		insulatedPowerCable("basic", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.BASIC).get()));
+		insulatedPowerCable("advanced", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.ADVANCED).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.ADVANCED).get()));
+		insulatedPowerCable("static", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.STATIC).get()));
+		insulatedPowerCable("energized", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.ENERGIZED).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.ENERGIZED).get()));
+		insulatedPowerCable("lumum", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get()));
 
-		industrialPowerCable("basic", ModBlocks.IndustrialPowerCables.get(StaticPowerTiers.BASIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.LUMUM).get()));
-		industrialPowerCable("advanced", ModBlocks.IndustrialPowerCables.get(StaticPowerTiers.ADVANCED).get(),
-				RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.ADVANCED).get()));
-		industrialPowerCable("static", ModBlocks.IndustrialPowerCables.get(StaticPowerTiers.STATIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.STATIC).get()));
-		industrialPowerCable("energized", ModBlocks.IndustrialPowerCables.get(StaticPowerTiers.ENERGIZED).get(),
-				RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.ENERGIZED).get()));
-		industrialPowerCable("lumum", ModBlocks.IndustrialPowerCables.get(StaticPowerTiers.LUMUM).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticPowerTiers.LUMUM).get()));
+		industrialPowerCable("basic", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get()));
+		industrialPowerCable("advanced", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.ADVANCED).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.ADVANCED).get()));
+		industrialPowerCable("static", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.STATIC).get()));
+		industrialPowerCable("energized", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.ENERGIZED).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.ENERGIZED).get()));
+		industrialPowerCable("lumum", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get()));
 
 		// @formatter:off
 		beginShapedRecipe(ModBlocks.BasicRedstoneCableNaked.get(), 6, "redstone_cable/naked")

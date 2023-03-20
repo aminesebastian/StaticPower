@@ -16,13 +16,13 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.attachment.AbstractCableAttachment;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticcore.utilities.math.Vector3D;
 import theking530.staticcore.world.WorldUtilities;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.init.ModCreativeTabs;
@@ -79,7 +79,7 @@ public class DrainAttachment extends AbstractCableAttachment {
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractorRate.get()) {
+		if (currentTimer >= StaticCoreConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractorRate.get()) {
 			getAttachmentTag(attachment).putInt(DRAINER_TIMER_TAG, 0);
 			return true;
 		} else {

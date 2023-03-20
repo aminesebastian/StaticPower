@@ -12,10 +12,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.data.StaticCoreTier;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.utilities.SDTime;
-import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
@@ -31,7 +31,7 @@ public class TurbineBlades extends StaticPowerItem {
 
 	@Override
 	public int getMaxDamage(ItemStack stack) {
-		return StaticPowerConfig.getTier(tier).turbineBladeDurabilityTicks.get();
+		return StaticCoreConfig.getTier(tier).turbineBladeDurabilityTicks.get();
 	}
 
 	public ResourceLocation getTier() {
@@ -44,13 +44,13 @@ public class TurbineBlades extends StaticPowerItem {
 
 	@Override
 	public boolean isFoil(ItemStack stack) {
-		return this.tier == StaticPowerTiers.CREATIVE;
+		return this.tier == StaticCoreTiers.CREATIVE;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(tier);
 
 		// Add the generation time.
 		String generationTime = SDTime.ticksToTimeString(getMaxDamage(stack) - getDamage(stack));

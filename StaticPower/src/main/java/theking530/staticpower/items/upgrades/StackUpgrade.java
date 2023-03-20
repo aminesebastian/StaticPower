@@ -10,12 +10,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.upgrades.UpgradeTypes;
+import theking530.staticpower.init.ModUpgradeTypes;
 
 public class StackUpgrade extends BaseUpgrade {
 
 	public StackUpgrade() {
-		super(new Properties().stacksTo(1), UpgradeTypes.DIGISTORE_ATTACHMENT);
+		super(new Properties().stacksTo(1));
+		addUpgrade(ModUpgradeTypes.DIGISTORE_STACK.get(), (type, item) -> true);
 	}
 
 	@Override

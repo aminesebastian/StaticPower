@@ -10,9 +10,9 @@ import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.cablenetwork.SparseCableLink;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityWireConnector extends BlockEntityBase {
@@ -37,7 +37,7 @@ public class BlockEntityWireConnector extends BlockEntityBase {
 	public BlockEntityWireConnector(BlockEntityTypeAllocator<BlockEntityWireConnector> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 
-		StaticPowerTier tier = getTierObject();
+		StaticCoreTier tier = getTierObject();
 		StaticPowerVoltage voltage = tier.cablePowerConfiguration.wireTerminalMaxVoltage.get();
 		double maxPower = tier.cablePowerConfiguration.wireTerminalMaxCurrent.get();
 		double powerLoss = tier.cablePowerConfiguration.wireCoilPowerLossPerBlock.get();

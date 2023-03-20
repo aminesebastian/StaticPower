@@ -22,15 +22,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.data.StaticCoreTier;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.gui.text.TooltipUtilities;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerItemBlockCustomModel;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
-import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockBattery extends StaticPowerMachineBlock {
 
@@ -45,22 +45,22 @@ public class BlockBattery extends StaticPowerMachineBlock {
 
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.getMaximumBatteryInputVoltage();
+		return StaticCoreConfig.getTier(getTier()).powerConfiguration.getMaximumBatteryInputVoltage();
 	}
 
 	@Override
 	public double getMaximumInputPower() {
-		if (tier == null) {
+		if (getTier() == null) {
 			return 0;
 		}
-		return StaticPowerConfig.getTier(tier).powerConfiguration.batteryMaximumPowerInput.get();
+		return StaticCoreConfig.getTier(getTier()).powerConfiguration.batteryMaximumPowerInput.get();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 
 		PowerTooltips.addPowerCapacityTooltip(tooltip, tierObject.powerConfiguration.batteryCapacity.get());
 		if (!isShowingAdvanced) {
@@ -71,7 +71,7 @@ public class BlockBattery extends StaticPowerMachineBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 		PowerTooltips.addOutputVoltageTooltip(tooltip, tierObject.powerConfiguration.batteryOutputVoltage.get());
 		PowerTooltips.addMaximumOutputPowerTooltip(tooltip, tierObject.powerConfiguration.batteryMaximumPowerOutput.get());
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.battery_block_charging_tooltip", ChatFormatting.GRAY);
@@ -84,17 +84,17 @@ public class BlockBattery extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
+		if (getTier() == StaticCoreTiers.BASIC) {
 			return BlockEntityBattery.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
+		} else if (getTier() == StaticCoreTiers.ADVANCED) {
 			return BlockEntityBattery.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
+		} else if (getTier() == StaticCoreTiers.STATIC) {
 			return BlockEntityBattery.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
+		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
 			return BlockEntityBattery.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
+		} else if (getTier() == StaticCoreTiers.LUMUM) {
 			return BlockEntityBattery.TYPE_LUMUM.create(pos, state);
-		} else if (tier == StaticPowerTiers.CREATIVE) {
+		} else if (getTier() == StaticCoreTiers.CREATIVE) {
 			return BlockEntityBattery.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;

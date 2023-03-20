@@ -1,6 +1,7 @@
 package theking530.staticpower.data;
 
 import net.minecraft.resources.ResourceLocation;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPower;
 
@@ -9,12 +10,12 @@ public class Tiers {
 	public record TierPair(ResourceLocation location, String name) {
 	}
 
-	private static final TierPair[] CABLE_TIERS = new TierPair[] { new TierPair(StaticPowerTiers.BASIC, "basic"), new TierPair(StaticPowerTiers.ADVANCED, "advanced"),
-			new TierPair(StaticPowerTiers.STATIC, "static"), new TierPair(StaticPowerTiers.ENERGIZED, "energized"), new TierPair(StaticPowerTiers.LUMUM, "lumum"),
-			new TierPair(StaticPowerTiers.CREATIVE, "creative") };
+	private static final TierPair[] CABLE_TIERS = new TierPair[] { new TierPair(StaticCoreTiers.BASIC, "basic"), new TierPair(StaticCoreTiers.ADVANCED, "advanced"),
+			new TierPair(StaticCoreTiers.STATIC, "static"), new TierPair(StaticCoreTiers.ENERGIZED, "energized"), new TierPair(StaticCoreTiers.LUMUM, "lumum"),
+			new TierPair(StaticCoreTiers.CREATIVE, "creative") };
 
-	private static final TierPair[] HEAT_CABLE_TIERS = new TierPair[] { new TierPair(StaticPowerTiers.ALUMINUM, "aluminum"), new TierPair(StaticPowerTiers.COPPER, "copper"),
-			new TierPair(StaticPowerTiers.GOLD, "gold") };
+	private static final TierPair[] HEAT_CABLE_TIERS = new TierPair[] { new TierPair(StaticCoreTiers.ALUMINUM, "aluminum"), new TierPair(StaticCoreTiers.COPPER, "copper"),
+			new TierPair(StaticCoreTiers.GOLD, "gold") };
 
 	public record RedstoneCableTier(ResourceLocation location, MinecraftColor color) {
 	}
@@ -28,8 +29,8 @@ public class Tiers {
 		}
 	}
 
-	private static final TierPair[] CONVEYOR_TIERS = new TierPair[] { new TierPair(StaticPowerTiers.BASIC, "basic"), new TierPair(StaticPowerTiers.ADVANCED, "advanced"),
-			new TierPair(StaticPowerTiers.STATIC, "static"), new TierPair(StaticPowerTiers.ENERGIZED, "energized"), new TierPair(StaticPowerTiers.LUMUM, "lumum") };
+	private static final TierPair[] CONVEYOR_TIERS = new TierPair[] { new TierPair(StaticCoreTiers.BASIC, "basic"), new TierPair(StaticCoreTiers.ADVANCED, "advanced"),
+			new TierPair(StaticCoreTiers.STATIC, "static"), new TierPair(StaticCoreTiers.ENERGIZED, "energized"), new TierPair(StaticCoreTiers.LUMUM, "lumum") };
 
 	private static final int[] CIRCUIT_BREAKER_TIERS = new int[] { 2, 5, 10, 20, 50, 100 };
 

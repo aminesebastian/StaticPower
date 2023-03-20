@@ -14,6 +14,7 @@ import theking530.staticcore.blockentity.components.energy.PowerDistributionComp
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
+import theking530.staticpower.blockentities.components.TieredPowerStorageComponent;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityInverter extends BlockEntityBase {
@@ -31,7 +32,7 @@ public class BlockEntityInverter extends BlockEntityBase {
 		// Add the power distributor.
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", FrontBackInputOutputOnly.INSTANCE));
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));
-		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
+		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(PowerStack stack, boolean simulate) {
 				return transferPower(stack, simulate);

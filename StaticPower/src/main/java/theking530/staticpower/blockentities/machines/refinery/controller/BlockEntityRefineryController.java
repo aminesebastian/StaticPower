@@ -31,6 +31,7 @@ import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.gui.GuiTextUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -47,7 +48,6 @@ import theking530.staticpower.blockentities.utilities.MultiBlockWrapper;
 import theking530.staticpower.blocks.StaticPowerBlockProperties;
 import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
@@ -76,7 +76,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		multiBlockCache = new MultiBlockCache<>(this::isValidForMultiBlock, IRefineryBlockEntity.class);
 
 		// Get the tier object.
-		StaticPowerTier tier = getTierObject();
+		StaticCoreTier tier = getTierObject();
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		// Setup the inventories.

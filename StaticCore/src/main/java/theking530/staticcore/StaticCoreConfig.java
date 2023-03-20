@@ -3,7 +3,7 @@ package theking530.staticcore;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -89,9 +89,11 @@ public class StaticCoreConfig {
 		}
 	}
 
-	public static void registerTier(String modId, ResourceLocation tierId, Function<Builder, StaticCoreTier> tierConstructor) {
-		Pair<StaticCoreTier, ForgeConfigSpec> basicPair = new ForgeConfigSpec.Builder().configure(tierConstructor);
-		TIERS.put(tierId.toString(), new ConfigPair(basicPair.getRight(), basicPair.getLeft()));
+	public static void registerTier(String modId, ResourceLocation tierId, BiFunction<Builder, String, StaticCoreTier> tierConstructor) {
+		Builder builder = new ForgeConfigSpec.Builder();
+		StaticCoreTier tier = tierConstructor.apply(builder, modId);
+		ForgeConfigSpec spec = builder.build();
+		TIERS.put(tierId.toString(), new ConfigPair(spec, tier));
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StaticCoreConfig.TIERS.get(tierId.toString()).spec, modId + "\\tiers\\" + tierId.getPath() + ".toml");
 	}
 

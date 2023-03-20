@@ -41,8 +41,8 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 			// If it is a valid upgrade item, and it is of the requested type, check to see
 			// if the tier is higher than the current tier.
 			if (upgradeItem != null && upgradeItem.isOfType(upgradeStack, type)) {
-				if (maxTier == null || StaticCoreConfig.getTier(upgradeItem.getTier()).getUpgradeConfiguration().upgradeOrdinal
-						.get() > StaticCoreConfig.getTier(maxTier).getUpgradeConfiguration().upgradeOrdinal.get()) {
+				if (maxTier == null || StaticCoreConfig.getTier(upgradeItem.getTier()).upgradeConfiguration.upgradeOrdinal
+						.get() > StaticCoreConfig.getTier(maxTier).upgradeConfiguration.upgradeOrdinal.get()) {
 					maxTier = upgradeItem.getTier();
 					maxTierUpgradeStack = upgradeStack;
 					count = upgradeStack.getCount();
@@ -115,6 +115,14 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 			this.stack = stack;
 			this.upgradeItem = (IUpgradeItem) stack.getItem();
 			this.isEmpty = stack.isEmpty();
+		}
+
+		public IUpgradeItem getUpgradeItem() {
+			return upgradeItem;
+		}
+
+		public <K> boolean upgradeIsAlsoOfType(UpgradeType<K> type) {
+			return getUpgradeItem().isOfType(stack, type);
 		}
 
 		public T getUpgradeValue() {

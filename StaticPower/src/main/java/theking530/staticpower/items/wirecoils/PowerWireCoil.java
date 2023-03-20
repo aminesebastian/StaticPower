@@ -11,11 +11,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.utilities.SDColor;
-import theking530.staticpower.StaticPowerConfig;
 
 public class PowerWireCoil extends AbstractWireCoil {
 
@@ -24,11 +24,11 @@ public class PowerWireCoil extends AbstractWireCoil {
 	}
 
 	public double getPowerLoss(ItemStack wireStack) {
-		return StaticPowerConfig.getTier(tier).cablePowerConfiguration.wireCoilPowerLossPerBlock.get();
+		return StaticCoreConfig.getTier(tier).cablePowerConfiguration.wireCoilPowerLossPerBlock.get();
 	}
 
 	public double getMaxCurrent(ItemStack wireStack) {
-		return StaticPowerConfig.getTier(tier).cablePowerConfiguration.wireCoilMaxCurrent.get();
+		return StaticCoreConfig.getTier(tier).cablePowerConfiguration.wireCoilMaxCurrent.get();
 	}
 
 	public boolean canApplyToTerminal(ItemStack coil, AbstractCableProviderComponent component) {

@@ -17,11 +17,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.attribiutes.Attributes;
 import theking530.staticcore.item.multipartitem.AbstractToolPart;
 import theking530.staticcore.utilities.MetricConverter;
 import theking530.staticcore.utilities.item.ItemTierUtilities;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.ChainsawBladeItemModel;
 import theking530.staticpower.init.ModCreativeTabs;
 
@@ -35,7 +35,7 @@ public class ChainsawBlade extends AbstractToolPart {
 
 	@Override
 	protected int getBaseDurability() {
-		return StaticPowerConfig.getTier(tier).toolConfiguration.chainsawBladeUses.get();
+		return StaticCoreConfig.getTier(tier).toolConfiguration.chainsawBladeUses.get();
 	}
 
 	public Tier getMiningTier(ItemStack stack) {

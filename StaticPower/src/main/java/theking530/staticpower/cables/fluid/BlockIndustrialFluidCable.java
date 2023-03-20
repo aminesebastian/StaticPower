@@ -21,13 +21,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.cablenetwork.AbstractCableBlock;
 import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.gui.GuiTextUtilities;
 import theking530.staticcore.utilities.math.Vector3D;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
@@ -44,7 +44,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_fluid_rate", ChatFormatting.AQUA,
-				GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(getTier()).cableFluidConfiguration.cableIndustrialFluidTransferRate.get()).getString());
+				GuiTextUtilities.formatFluidRateToString(StaticCoreConfig.getTier(getTier()).cableFluidConfiguration.cableIndustrialFluidTransferRate.get()).getString());
 		tooltip.add(Component.translatable("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
 	}
 

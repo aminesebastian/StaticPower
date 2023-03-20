@@ -13,12 +13,12 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Si
 import theking530.staticcore.blockentity.components.control.sideconfiguration.presets.FrontInputOnly;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.math.Vector3D;
 import theking530.staticpower.blockentities.components.ConveyorMotionComponent;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlockEntity;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
 
@@ -70,7 +70,7 @@ public class BlockEntityConveyorExtractor extends AbstractConveyorBlockEntity {
 	}
 
 	@Override
-	protected void configureConveyorComponent(ConveyorMotionComponent component, StaticPowerTier tier, Level world, BlockPos pos, BlockState state) {
+	protected void configureConveyorComponent(ConveyorMotionComponent component, StaticCoreTier tier, Level world, BlockPos pos, BlockState state) {
 		component.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 		component.setShouldAffectEntitiesAbove(false);
 		component.setVelocity(new Vector3D(-(float) (0.05f * tier.conveyorSpeedMultiplier.get()), 0f, 0f));

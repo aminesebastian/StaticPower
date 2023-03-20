@@ -54,6 +54,7 @@ import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter
 import theking530.staticcore.blockentity.components.items.OutputServoComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
+import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -65,7 +66,6 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderTreeFarmer;
 import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -125,7 +125,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.treeFarmerPowerUsage.get());
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
-			return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluid)).isPresent();
+			return CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluid), getLevel()).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory).setAutoSyncPacketsEnabled(true));
 
 		currentBlockIndex = 0;
@@ -151,7 +151,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	}
 
 	public float getGrowthBonus() {
-		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(this.fluidTankComponent.getFluid()))
+		FertalizerRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(this.fluidTankComponent.getFluid()), getLevel())
 				.orElse(null);
 		if (recipe != null) {
 			return recipe.getFertalizationAmount();

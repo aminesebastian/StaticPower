@@ -19,11 +19,12 @@ import theking530.staticcore.blockentity.components.energy.PowerDistributionComp
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityMachine;
+import theking530.staticpower.blockentities.components.TieredPowerStorageComponent;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderBatteryBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityBattery extends BlockEntityMachine {
@@ -72,13 +73,13 @@ public class BlockEntityBattery extends BlockEntityMachine {
 	public BlockEntityBattery(BlockEntityTypeAllocator<BlockEntityBattery> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 
-		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
+		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
 			public double addPower(PowerStack stack, boolean simulate) {
 				// Creative batteries will always accept the full incoming stack.
 				// Useful for debugging purposes and not having batteries fill up on you while
 				// testing.
-				if (getTier() == StaticPowerTiers.CREATIVE) {
+				if (getTier() == StaticCoreTiers.CREATIVE) {
 					super.addPower(stack, simulate);
 					return stack.getPower();
 				}
@@ -99,7 +100,7 @@ public class BlockEntityBattery extends BlockEntityMachine {
 
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", powerStorage));
 
-		if (this.getTier() == StaticPowerTiers.CREATIVE) {
+		if (this.getTier() == StaticCoreTiers.CREATIVE) {
 			powerStorage.setMaximumInputPower(StaticPowerEnergyUtilities.getMaximumPower());
 			powerStorage.setMaximumOutputPower(StaticPowerEnergyUtilities.getMaximumPower());
 		}
@@ -115,7 +116,7 @@ public class BlockEntityBattery extends BlockEntityMachine {
 	public void process() {
 		if (!getLevel().isClientSide()) {
 			// If this is a creative battery, always keep the power at max.
-			if (getTier() == StaticPowerTiers.CREATIVE) {
+			if (getTier() == StaticCoreTiers.CREATIVE) {
 				powerStorage.addPower(new PowerStack(StaticPowerEnergyUtilities.getMaximumPower(), StaticPowerVoltage.LOW), false);
 			}
 

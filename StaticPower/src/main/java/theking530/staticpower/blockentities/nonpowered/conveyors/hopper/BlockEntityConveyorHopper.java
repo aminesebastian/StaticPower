@@ -19,13 +19,13 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Si
 import theking530.staticcore.blockentity.components.control.sideconfiguration.presets.BottomOutputOnly;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.OutputServoComponent;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.math.Vector3D;
 import theking530.staticpower.blockentities.components.ConveyorMotionComponent;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlockEntity;
 import theking530.staticpower.blockentities.nonpowered.conveyors.IConveyorBlock;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.itemfilter.ItemFilter;
@@ -120,7 +120,7 @@ public class BlockEntityConveyorHopper extends AbstractConveyorBlockEntity {
 	}
 
 	@Override
-	protected void configureConveyorComponent(ConveyorMotionComponent component, StaticPowerTier tier, Level world, BlockPos pos, BlockState state) {
+	protected void configureConveyorComponent(ConveyorMotionComponent component, StaticCoreTier tier, Level world, BlockPos pos, BlockState state) {
 		hopperBox = new AABB(pos.getX() + .25, pos.getY(), pos.getZ() + .25, pos.getX() + .75, pos.getY() + 0.1, pos.getZ() + .75);
 		component.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 		component.setShouldAffectEntitiesAbove(false);

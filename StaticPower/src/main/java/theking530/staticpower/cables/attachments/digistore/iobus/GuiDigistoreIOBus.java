@@ -9,7 +9,6 @@ import theking530.staticcore.gui.widgets.DrawableWidget;
 import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiCableAttachmentRedstoneTab;
-import theking530.staticpower.client.StaticPowerSprites;
 
 public class GuiDigistoreIOBus extends AbstractCableAttachmentGui<ContainerDigistoreIOBus, DigistoreIOBusAttachment> {
 

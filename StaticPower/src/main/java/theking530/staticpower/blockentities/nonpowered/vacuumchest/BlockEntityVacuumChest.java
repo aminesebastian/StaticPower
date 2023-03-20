@@ -38,13 +38,14 @@ import theking530.staticcore.blockentity.components.items.OutputServoComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
+import theking530.staticcore.init.StaticCoreUpgradeTypes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticcore.upgrades.UpgradeTypes;
 import theking530.staticcore.utilities.item.InventoryUtilities;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.init.ModUpgradeTypes;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
@@ -52,8 +53,8 @@ import theking530.staticpower.items.upgrades.TeleportUpgrade;
 
 public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvider {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityVacuumChest> TYPE = new BlockEntityTypeAllocator<>("vacuum_chest",
-			(type, pos, state) -> new BlockEntityVacuumChest(pos, state), ModBlocks.VacuumChest);
+	public static final BlockEntityTypeAllocator<BlockEntityVacuumChest> TYPE = new BlockEntityTypeAllocator<>("vacuum_chest", (type, pos, state) -> new BlockEntityVacuumChest(pos, state),
+			ModBlocks.VacuumChest);
 
 	public static final int DEFAULT_RANGE = 6;
 	public static final int DEFAULT_TANK_SIZE = 5000;
@@ -84,8 +85,7 @@ public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvi
 		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1).setShiftClickEnabled(true).setShiftClickPriority(100));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output)
-				.setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 		registerComponent(fluidOutputServo = new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
@@ -104,8 +104,7 @@ public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvi
 			// Vacuum every other tick.
 			if (SDMath.diceRoll(0.75)) {
 				// Create the AABB to search within.
-				AABB aabb = new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX() + 1, worldPosition.getY() + 1,
-						worldPosition.getZ() + 1);
+				AABB aabb = new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX() + 1, worldPosition.getY() + 1, worldPosition.getZ() + 1);
 				aabb = aabb.expandTowards(vacuumDiamater, vacuumDiamater, vacuumDiamater);
 				aabb = aabb.move(-vacuumDiamater / 2, -vacuumDiamater / 2, -vacuumDiamater / 2);
 
@@ -133,10 +132,9 @@ public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvi
 				if (distance < 0.6f || (shouldTeleport && distance < getRadius() - 0.1f)) {
 					InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
 					entity.remove(RemovalReason.DISCARDED);
-					((ServerLevel) getLevel()).sendParticles(ParticleTypes.PORTAL, worldPosition.getX() + 0.5, (double) worldPosition.getY() + 1.0,
-							(double) worldPosition.getZ() + 0.5, 1, 0.0D, 0.0D, 0.0D, 0.0D);
-					getLevel().playSound(null, (double) worldPosition.getX(), (double) worldPosition.getY(), (double) worldPosition.getZ(), SoundEvents.CHICKEN_EGG,
-							SoundSource.BLOCKS, 0.5F, 1.0F);
+					((ServerLevel) getLevel()).sendParticles(ParticleTypes.PORTAL, worldPosition.getX() + 0.5, (double) worldPosition.getY() + 1.0, (double) worldPosition.getZ() + 0.5, 1, 0.0D, 0.0D,
+							0.0D, 0.0D);
+					getLevel().playSound(null, (double) worldPosition.getX(), (double) worldPosition.getY(), (double) worldPosition.getZ(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.5F, 1.0F);
 				} else {
 					double var11 = 1.0 - distance / 15.0;
 					if (var11 > 0.0D) {
@@ -170,8 +168,8 @@ public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvi
 							// FluidStack(ModFluids.LiquidExperience, orb.getXpValue()), false) > 0) {
 					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.getSource().get(), orb.value), FluidAction.EXECUTE);
 					orb.remove(RemovalReason.DISCARDED);
-					getLevel().playSound(null, (double) worldPosition.getX(), (double) worldPosition.getY(), (double) worldPosition.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP,
-							SoundSource.BLOCKS, 0.5F, (getLevel().random.nextFloat() + 1) / 2);
+					getLevel().playSound(null, (double) worldPosition.getX(), (double) worldPosition.getY(), (double) worldPosition.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.5F,
+							(getLevel().random.nextFloat() + 1) / 2);
 				}
 			} else {
 				double var11 = 1.0 - distance / 15.0;
@@ -213,8 +211,8 @@ public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvi
 
 	/* Update Handling */
 	public void upgradeTick() {
-		shouldTeleport = upgradesInventory.hasUpgradeOfClass(TeleportUpgrade.class);
-		shouldVacuumExperience = upgradesInventory.hasUpgradeOfClass(ExperienceVacuumUpgrade.class);
+		shouldTeleport = upgradesInventory.hasUpgradeOfType(ModUpgradeTypes.TELEPORT.get());
+		shouldVacuumExperience = upgradesInventory.hasUpgradeOfType(ModUpgradeTypes.EXPERIENCE_VACUUM.get());
 
 		// Set the enabled state of the fluid components.
 		fluidTankComponent.setEnabled(shouldVacuumExperience);
@@ -223,9 +221,9 @@ public class BlockEntityVacuumChest extends BlockEntityBase implements MenuProvi
 		fluidOutputServo.setEnabled(shouldVacuumExperience);
 
 		// Get the range upgrade.
-		UpgradeItemWrapper rangeUpgrade = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeTypes.RANGE);
+		UpgradeItemWrapper<Double> rangeUpgrade = upgradesInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.RANGE.get());
 		if (!rangeUpgrade.isEmpty()) {
-			vacuumDiamater = (float) (DEFAULT_RANGE * rangeUpgrade.getTier().upgradeConfiguration.rangeUpgrade.get());
+			vacuumDiamater = (float) (DEFAULT_RANGE * rangeUpgrade.getUpgradeValue());
 		} else {
 			vacuumDiamater = DEFAULT_RANGE;
 		}

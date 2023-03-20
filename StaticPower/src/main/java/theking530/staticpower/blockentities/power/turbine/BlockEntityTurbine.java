@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.energy.PowerStack;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
@@ -34,15 +35,14 @@ import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
+import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.math.SDMath;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderTurbine;
-import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.turbine.TurbineRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -78,7 +78,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 		this.renderingState = new TurbineRenderingState();
 
 		// Get the tier.
-		StaticPowerTier tier = getTierObject();
+		StaticCoreTier tier = getTierObject();
 
 		// Register the input inventory and only let it receive items if they are
 		// burnable.
@@ -193,7 +193,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 			// return the default of the recipe.
 			if (hasTurbineBlades()) {
 				TurbineBlades bladeItem = getTurbileBladesItem();
-				return (int) (recipe.getGenerationAmount() * StaticPowerConfig.getTier(bladeItem.getTier()).turbineBladeGenerationBoost.get());
+				return (int) (recipe.getGenerationAmount() * StaticCoreConfig.getTier(bladeItem.getTier()).turbineBladeGenerationBoost.get());
 			} else {
 				return recipe.getGenerationAmount();
 			}
@@ -223,7 +223,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 
 	public Optional<TurbineRecipe> getRecipe() {
 		RecipeMatchParameters matchParams = new RecipeMatchParameters(inputFluidTankComponent.getFluid());
-		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams);
+		return CraftingUtilities.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams, getLevel());
 	}
 
 	public boolean hasTurbineBlades() {
@@ -264,7 +264,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 				RecipeMatchParameters matchParams = new RecipeMatchParameters(fluid);
 
 				// If there is a recipe for that fluid, attempt to suck it up.
-				if (StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams).isPresent()) {
+				if (CraftingUtilities.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams, getLevel()).isPresent()) {
 					// Simulate a fill using the fluid.
 					int filled = inputFluidTankComponent.fill(new FluidStack(fluid, 1000), FluidAction.SIMULATE);
 

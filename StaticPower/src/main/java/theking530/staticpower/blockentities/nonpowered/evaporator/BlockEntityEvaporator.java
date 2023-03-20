@@ -25,12 +25,12 @@ import theking530.staticcore.blockentity.components.fluids.FluidOutputServoCompo
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
 import theking530.staticcore.blockentity.components.heat.HeatStorageComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
+import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderEvaporator;
-import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -60,7 +60,7 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 		super(TYPE, pos, state);
 
 		// Get the tier.
-		StaticPowerTier tierObject = getTierObject();
+		StaticCoreTier tierObject = getTierObject();
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachineNoFacePreset.INSTANCE));
 
@@ -154,7 +154,7 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 		if (ignoreAmount) {
 			matchParams.ignoreFluidAmounts();
 		}
-		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.EVAPORATOR_RECIPE_TYPE.get(), matchParams);
+		return CraftingUtilities.getRecipe(ModRecipeTypes.EVAPORATOR_RECIPE_TYPE.get(), matchParams, getLevel());
 	}
 
 	@Override

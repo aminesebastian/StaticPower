@@ -171,7 +171,7 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 			return;
 		}
 		// Get the upgrade.
-		UpgradeItemWrapper<Float> upgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.TANK_CAPACITY.get());
+		UpgradeItemWrapper<Double> upgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.TANK_CAPACITY.get());
 
 		// If it is not valid, set the values back to the defaults. Otherwise, set the
 		// new processing speeds.

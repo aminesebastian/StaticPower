@@ -21,16 +21,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.cablenetwork.AbstractCableBlock;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.utilities.math.Vector3D;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModCreativeTabs;
 
 public class BlockIndustrialPowerCable extends AbstractCableBlock {
@@ -47,7 +47,7 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 
 		PowerTooltips.addMaximumCurrentTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerMaxPower.get());
 		PowerTooltips.addResistanceTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerResistance.get());

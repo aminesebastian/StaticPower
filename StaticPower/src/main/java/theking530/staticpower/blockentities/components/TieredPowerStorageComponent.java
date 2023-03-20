@@ -5,7 +5,7 @@ import theking530.api.energy.CurrentType;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
-import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticcore.data.StaticCoreTier;
 
 public class TieredPowerStorageComponent extends PowerStorageComponent {
 	
@@ -14,7 +14,7 @@ public class TieredPowerStorageComponent extends PowerStorageComponent {
 				canOutputExternalPower);
 
 		// Get the tier.
-		StaticPowerTier tierObject = (StaticPowerTier)StaticCoreConfig.getTier(staticPowerTier);
+		StaticCoreTier tierObject = (StaticCoreTier)StaticCoreConfig.getTier(staticPowerTier);
 		setCapacity(tierObject.powerConfiguration.defaultPowerCapacity.get());
 		setInputVoltageRange(tierObject.powerConfiguration.getDefaultInputVoltageRange().copy());
 		setMaximumInputPower(tierObject.powerConfiguration.defaultMaximumPowerInput.get());

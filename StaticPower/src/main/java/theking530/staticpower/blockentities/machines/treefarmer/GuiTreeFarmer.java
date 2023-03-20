@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.gui.GuiTextUtilities;
+import theking530.staticcore.gui.StaticCoreSprites;
 import theking530.staticcore.gui.screens.StaticCoreBlockEntityScreen;
 import theking530.staticcore.gui.widgets.ProcessingComponentStateWidget;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
@@ -20,7 +21,6 @@ import theking530.staticcore.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
-import theking530.staticpower.client.StaticPowerSprites;
 
 public class GuiTreeFarmer extends StaticCoreBlockEntityScreen<ContainerTreeFarmer, BlockEntityTreeFarm> {
 
@@ -46,7 +46,7 @@ public class GuiTreeFarmer extends StaticCoreBlockEntityScreen<ContainerTreeFarm
 		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiAxeTab(this.menu, getTileEntity()).setTabSide(TabSide.LEFT));
 
-		registerWidget(drawPreviewButton = new SpriteButton(153, 71, 10, 10, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
+		registerWidget(drawPreviewButton = new SpriteButton(153, 71, 10, 10, StaticCoreSprites.RANGE_ICON, null, this::buttonPressed));
 		drawPreviewButton.setTooltip(Component.literal("Preview Range"));
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());

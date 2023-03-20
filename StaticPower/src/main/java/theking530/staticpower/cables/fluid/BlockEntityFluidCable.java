@@ -5,10 +5,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.blockentity.BlockEntityBase;
+import theking530.staticcore.data.tier.cables.TierFluidCableConfiguration;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderFluidCable;
-import theking530.staticpower.data.tiers.categories.cables.TierFluidCableConfiguration;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityFluidCable extends BlockEntityBase {

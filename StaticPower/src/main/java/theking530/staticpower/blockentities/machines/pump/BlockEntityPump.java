@@ -54,6 +54,7 @@ import theking530.staticcore.blockentity.components.items.InputServoComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.world.WorldUtilities;
@@ -61,7 +62,6 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderPump;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.tags.ModItemTags;
 
@@ -100,7 +100,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 		pumpTubeCache = null;
 
 		// Get the tier.
-		StaticPowerTier tierObject = getTierObject();
+		StaticCoreTier tierObject = getTierObject();
 		int pumpRate = tierObject.pumpRate.get();
 
 		registerComponent(tubeInventory = new InventoryComponent("TubeInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

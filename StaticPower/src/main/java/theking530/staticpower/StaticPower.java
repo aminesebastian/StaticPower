@@ -13,28 +13,28 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.data.StaticCoreTiers;
+import theking530.staticcore.data.tiers.advanced.StaticCoreTierAdvanced;
+import theking530.staticcore.data.tiers.aluminum.StaticCoreTierAluminum;
+import theking530.staticcore.data.tiers.basic.StaticCoreTierBasic;
+import theking530.staticcore.data.tiers.bronze.StaticCoreTierBronze;
+import theking530.staticcore.data.tiers.copper.StaticCoreTierCopper;
+import theking530.staticcore.data.tiers.creative.StaticCoreTierCreative;
+import theking530.staticcore.data.tiers.diamond.StaticCoreTierDiamond;
+import theking530.staticcore.data.tiers.emerald.StaticCoreTierEmerald;
+import theking530.staticcore.data.tiers.energized.StaticCoreTierEnergized;
+import theking530.staticcore.data.tiers.gold.StaticCoreTierGold;
+import theking530.staticcore.data.tiers.iron.StaticCoreTierIron;
+import theking530.staticcore.data.tiers.lumum.StaticCoreTierLumum;
+import theking530.staticcore.data.tiers.ruby.StaticCoreTierRuby;
+import theking530.staticcore.data.tiers.sapphire.StaticCoreTierSapphire;
+import theking530.staticcore.data.tiers.silver.StaticCoreTierSilver;
+import theking530.staticcore.data.tiers.statictier.StaticCoreTierStatic;
+import theking530.staticcore.data.tiers.tin.StaticCoreTierTin;
+import theking530.staticcore.data.tiers.tungsten.StaticCoreTierTungsten;
+import theking530.staticcore.data.tiers.wood.StaticCoreTierWood;
+import theking530.staticcore.data.tiers.zinc.StaticCoreTierZinc;
 import theking530.staticcore.initialization.StaticCoreRegistrationHelpers;
-import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.tiers.advanced.StaticPowerTierAdvanced;
-import theking530.staticpower.data.tiers.aluminum.StaticPowerTierAluminum;
-import theking530.staticpower.data.tiers.basic.StaticPowerTierBasic;
-import theking530.staticpower.data.tiers.bronze.StaticPowerTierBronze;
-import theking530.staticpower.data.tiers.copper.StaticPowerTierCopper;
-import theking530.staticpower.data.tiers.creative.StaticPowerTierCreative;
-import theking530.staticpower.data.tiers.diamond.StaticPowerTierDiamond;
-import theking530.staticpower.data.tiers.emerald.StaticPowerTierEmerald;
-import theking530.staticpower.data.tiers.energized.StaticPowerTierEnergized;
-import theking530.staticpower.data.tiers.gold.StaticPowerTierGold;
-import theking530.staticpower.data.tiers.iron.StaticPowerTierIron;
-import theking530.staticpower.data.tiers.lumum.StaticPowerTierLumum;
-import theking530.staticpower.data.tiers.ruby.StaticPowerTierRuby;
-import theking530.staticpower.data.tiers.sapphire.StaticPowerTierSapphire;
-import theking530.staticpower.data.tiers.silver.StaticPowerTierSilver;
-import theking530.staticpower.data.tiers.statictier.StaticPowerTierStatic;
-import theking530.staticpower.data.tiers.tin.StaticPowerTierTin;
-import theking530.staticpower.data.tiers.tungsten.StaticPowerTierTungsten;
-import theking530.staticpower.data.tiers.wood.StaticPowerTierWood;
-import theking530.staticpower.data.tiers.zinc.StaticPowerTierZinc;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFeatures;
@@ -59,7 +59,8 @@ public class StaticPower {
 	public static final Logger LOGGER = LogManager.getLogger("Static Power");
 	public static final String MOD_ID = "staticpower";
 
-	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, StaticPower.MOD_ID);
+	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES,
+			StaticPower.MOD_ID);
 	private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, StaticPower.MOD_ID);
 
 	public StaticPower() {
@@ -70,28 +71,28 @@ public class StaticPower {
 
 		StaticPowerConfig.preInitialize();
 
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.WOOD, StaticPowerTierWood::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.BASIC, StaticPowerTierBasic::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.ADVANCED, StaticPowerTierAdvanced::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.STATIC, StaticPowerTierStatic::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.ENERGIZED, StaticPowerTierEnergized::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.LUMUM, StaticPowerTierLumum::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.CREATIVE, StaticPowerTierCreative::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.WOOD, StaticCoreTierWood::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.BASIC, StaticCoreTierBasic::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.ADVANCED, StaticCoreTierAdvanced::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.STATIC, StaticCoreTierStatic::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.ENERGIZED, StaticCoreTierEnergized::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.LUMUM, StaticCoreTierLumum::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.CREATIVE, StaticCoreTierCreative::new);
 
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.ALUMINUM, StaticPowerTierAluminum::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.ZINC, StaticPowerTierZinc::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.BRONZE, StaticPowerTierBronze::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.COPPER, StaticPowerTierCopper::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.GOLD, StaticPowerTierGold::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.IRON, StaticPowerTierIron::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.SILVER, StaticPowerTierSilver::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.TIN, StaticPowerTierTin::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.TUNGSTEN, StaticPowerTierTungsten::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.ALUMINUM, StaticCoreTierAluminum::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.ZINC, StaticCoreTierZinc::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.BRONZE, StaticCoreTierBronze::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.COPPER, StaticCoreTierCopper::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.GOLD, StaticCoreTierGold::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.IRON, StaticCoreTierIron::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.SILVER, StaticCoreTierSilver::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.TIN, StaticCoreTierTin::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.TUNGSTEN, StaticCoreTierTungsten::new);
 
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.DIAMOND, StaticPowerTierDiamond::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.RUBY, StaticPowerTierRuby::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.SAPPHIRE, StaticPowerTierSapphire::new);
-		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticPowerTiers.EMERALD, StaticPowerTierEmerald::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.DIAMOND, StaticCoreTierDiamond::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.RUBY, StaticCoreTierRuby::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.SAPPHIRE, StaticCoreTierSapphire::new);
+		StaticCoreConfig.registerTier(StaticPower.MOD_ID, StaticCoreTiers.EMERALD, StaticCoreTierEmerald::new);
 
 		ModIntegrations.preInit(eventBus);
 

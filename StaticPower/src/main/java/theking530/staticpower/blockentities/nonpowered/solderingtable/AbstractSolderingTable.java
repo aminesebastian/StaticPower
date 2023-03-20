@@ -15,9 +15,9 @@ import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter;
+import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.init.ModRecipeTypes;
 
@@ -175,7 +175,7 @@ public abstract class AbstractSolderingTable extends BlockEntityBase implements 
 	}
 
 	public Optional<SolderingRecipe> getRecipeForItems(ItemStack... items) {
-		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.SOLDERING_RECIPE_TYPE.get(), new RecipeMatchParameters(items));
+		return CraftingUtilities.getRecipe(ModRecipeTypes.SOLDERING_RECIPE_TYPE.get(), new RecipeMatchParameters(items), getLevel());
 	}
 
 	protected boolean requiresSolderingIron() {

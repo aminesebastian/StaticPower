@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import theking530.staticpower.StaticPowerConfig;
+import theking530.staticcore.StaticCoreConfig;
 
 public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityProvider {
 
@@ -83,7 +83,7 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 	@Override
 	public int getTankCapacity(int tank) {
 		ResourceLocation tier = new ResourceLocation(container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).getString(TIER_NBT_KEY));
-		return StaticPowerConfig.getTier(tier).capsuleCapacity.get();
+		return StaticCoreConfig.getTier(tier).capsuleCapacity.get();
 	}
 
 	@Override

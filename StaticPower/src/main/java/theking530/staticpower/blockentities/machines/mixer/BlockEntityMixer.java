@@ -23,10 +23,10 @@ import theking530.staticcore.blockentity.components.items.InputServoComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -52,7 +52,7 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 		super(TYPE, pos, state);
 
 		// Get the tier object.
-		StaticPowerTier tier = getTierObject();
+		StaticCoreTier tier = getTierObject();
 
 		// Setup the inventories.
 		registerComponent(input1Inventory = new InventoryComponent("Input1Inventory", 1, MachineSideMode.Input2).setShiftClickEnabled(true));

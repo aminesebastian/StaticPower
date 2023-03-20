@@ -23,11 +23,11 @@ import theking530.staticcore.blockentity.components.items.FluidContainerInventor
 import theking530.staticcore.blockentity.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderTank;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.upgrades.VoidUpgrade;
 
@@ -78,7 +78,7 @@ public class BlockEntityTank extends BlockEntityBase {
 		super(allocator, pos, state);
 
 		// Get the tier.
-		StaticPowerTier tierObject = getTierObject();
+		StaticCoreTier tierObject = getTierObject();
 
 		// Add the void upgrade component.
 		registerComponent(voidUpgradeInventory = new UpgradeInventoryComponent("VoidUpgradeInventory", 1));

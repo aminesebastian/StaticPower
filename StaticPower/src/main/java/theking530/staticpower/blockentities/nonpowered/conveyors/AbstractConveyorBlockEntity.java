@@ -4,9 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.BlockEntityBase;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticpower.blockentities.components.ConveyorMotionComponent;
-import theking530.staticpower.data.StaticPowerTier;
 
 public abstract class AbstractConveyorBlockEntity extends BlockEntityBase {
 	protected final ConveyorMotionComponent conveyor;
@@ -22,5 +22,5 @@ public abstract class AbstractConveyorBlockEntity extends BlockEntityBase {
 		configureConveyorComponent(conveyor, getTierObject(), world, pos, state);
 	}
 
-	protected abstract void configureConveyorComponent(ConveyorMotionComponent component, StaticPowerTier tier, Level world, BlockPos pos, BlockState state);
+	protected abstract void configureConveyorComponent(ConveyorMotionComponent component, StaticCoreTier tier, Level world, BlockPos pos, BlockState state);
 }

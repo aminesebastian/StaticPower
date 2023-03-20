@@ -28,6 +28,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.item.InventoryUtilities;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blockentities.components.TieredPowerStorageComponent;
 import theking530.staticpower.blockentities.nonpowered.solderingtable.AbstractSolderingTable;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderAutoSolderingTable;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
@@ -55,7 +56,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 	public BlockEntityAutoSolderingTable(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
-		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, false));
+		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, false));
 
 		// Set the inventory component to the input mode.
 		inventory.setMode(MachineSideMode.Input).setSlotsLockable(true);

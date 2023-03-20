@@ -7,13 +7,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockRefineryController extends StaticPowerMachineBlock {
 
 	public BlockRefineryController() {
-		super(StaticPowerTiers.STATIC);
+		super(StaticCoreTiers.STATIC);
 	}
 
 	@Override

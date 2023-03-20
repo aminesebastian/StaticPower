@@ -27,7 +27,6 @@ import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticcore.utilities.item.ItemUtilities;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.init.ModCreativeTabs;
 
@@ -47,7 +46,7 @@ public class FilterAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		int slots = !StaticCoreConfig.isConfigLoaded(tierType) ? 0 : StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableFilterSlots.get();
+		int slots = !StaticCoreConfig.isConfigLoaded(tierType) ? 0 : StaticCoreConfig.getTier(tierType).cableAttachmentConfiguration.cableFilterSlots.get();
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots));
 	}
 
@@ -98,7 +97,7 @@ public class FilterAttachment extends AbstractCableAttachment {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(Component.translatable("gui.staticpower.filter_tooltip"));
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableFilterSlots.get(), tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticCoreConfig.getTier(tierType).cableAttachmentConfiguration.cableFilterSlots.get(), tooltip);
 	}
 
 	protected class FilterContainerProvider extends AbstractCableAttachmentContainerProvider {

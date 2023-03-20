@@ -11,12 +11,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.upgrades.UpgradeTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes.CombinedHeatUpgradeValue;
 
 public class BaseHeatUpgrade extends BaseUpgrade {
 
 	public BaseHeatUpgrade(ResourceLocation tier) {
-		super(tier, UpgradeTypes.HEAT);
+		super(tier);
+		addUpgrade(StaticCoreUpgradeTypes.HEAT_COMBINED.get(),
+				(type, item) -> new CombinedHeatUpgradeValue(getTierObject().upgradeConfiguration.heatCapacityUpgrade.get(),
+						getTierObject().upgradeConfiguration.heatConductivityUpgrade.get()));
 	}
 
 	@Override
@@ -28,9 +32,10 @@ public class BaseHeatUpgrade extends BaseUpgrade {
 		double capacityUpgrade = getTierObject().upgradeConfiguration.heatCapacityUpgrade.get();
 		capacityUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
-		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(capacityUpgrade * 100) + "%" + ChatFormatting.GREEN + " Heat Capacity"));
-		tooltip.add(
-				Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(conductivityUpgrade * 100) + "%" + ChatFormatting.GREEN + " Heat Conductivity"));
+		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(capacityUpgrade * 100) + "%"
+				+ ChatFormatting.GREEN + " Heat Capacity"));
+		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(conductivityUpgrade * 100) + "%"
+				+ ChatFormatting.GREEN + " Heat Conductivity"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

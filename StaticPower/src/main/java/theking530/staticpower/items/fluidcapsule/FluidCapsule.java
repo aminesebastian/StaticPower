@@ -39,10 +39,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.client.ICustomModelProvider;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.GuiTextUtilities;
 import theking530.staticcore.world.WorldUtilities;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
@@ -90,12 +90,12 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelProvide
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable net.minecraft.nbt.CompoundTag nbt) {
-		return new FluidCapsuleCapability(stack, tier, tier == StaticPowerTiers.CREATIVE);
+		return new FluidCapsuleCapability(stack, tier, tier == StaticCoreTiers.CREATIVE);
 	}
 
 	@Override
 	public boolean isFoil(ItemStack stack) {
-		return tier == StaticPowerTiers.CREATIVE;
+		return tier == StaticCoreTiers.CREATIVE;
 	}
 
 	@Override

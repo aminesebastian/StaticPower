@@ -12,13 +12,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
+import theking530.staticcore.init.StaticCoreUpgradeTypes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticcore.upgrades.UpgradeTypes;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blockentities.components.TieredPowerStorageComponent;
 import theking530.staticpower.blockentities.nonpowered.miner.AbstractTileEntityMiner;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityElectricMiner extends AbstractTileEntityMiner {
@@ -32,7 +32,7 @@ public class BlockEntityElectricMiner extends AbstractTileEntityMiner {
 	public BlockEntityElectricMiner(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
-		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", getTier(), true, false));
+		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, false));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 
 		// Set the processing parameters.
@@ -82,7 +82,7 @@ public class BlockEntityElectricMiner extends AbstractTileEntityMiner {
 	@Override
 	public int getRadius() {
 		// Get the range upgrade.
-		UpgradeItemWrapper upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeTypes.RANGE);
+		UpgradeItemWrapper<Double> upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.RANGE.get());
 
 		// If there isn't one, return the base level.
 		if (upgradeWrapper.isEmpty()) {
@@ -90,8 +90,7 @@ public class BlockEntityElectricMiner extends AbstractTileEntityMiner {
 		}
 
 		// Otherwise, caluclate the new range.
-		StaticPowerTier tier = upgradeWrapper.getTier();
-		double newRange = tier.upgradeConfiguration.rangeUpgrade.get() * StaticPowerConfig.SERVER.electricMinerRadius.get();
+		double newRange = upgradeWrapper.getUpgradeValue() * StaticPowerConfig.SERVER.electricMinerRadius.get();
 		return (int) newRange;
 	}
 

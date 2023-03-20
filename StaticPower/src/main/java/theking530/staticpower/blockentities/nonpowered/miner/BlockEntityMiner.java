@@ -17,18 +17,16 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Ma
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
+import theking530.staticcore.init.StaticCoreUpgradeTypes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticcore.upgrades.UpgradeTypes;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityMiner extends AbstractTileEntityMiner {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityMiner> TYPE = new BlockEntityTypeAllocator<>("miner", (type, pos, state) -> new BlockEntityMiner(pos, state),
-			ModBlocks.Miner);
+	public static final BlockEntityTypeAllocator<BlockEntityMiner> TYPE = new BlockEntityTypeAllocator<>("miner", (type, pos, state) -> new BlockEntityMiner(pos, state), ModBlocks.Miner);
 
 	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;
@@ -40,11 +38,10 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 		super(TYPE, pos, state);
 		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
 		registerComponent(fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
-		registerComponent(
-				fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
-						.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel,
-				this::fuelProcessingCompleted, true).setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
+				.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel, this::fuelProcessingCompleted, true)
+				.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(new InputServoComponent("FuelInputServo", 20, fuelInventory));
 	}
 
@@ -64,10 +61,10 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 
 				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
 				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
-				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
-						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
-				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
-						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
+				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
+						0.0f);
+				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
+						0.0f);
 			}
 		}
 	}
@@ -143,7 +140,7 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 	@Override
 	public int getRadius() {
 		// Get the range upgrade.
-		UpgradeItemWrapper upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeTypes.RANGE);
+		UpgradeItemWrapper<Double> upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.RANGE.get());
 
 		// If there isn't one, return the base level.
 		if (upgradeWrapper.isEmpty()) {
@@ -151,8 +148,7 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 		}
 
 		// Otherwise, caluclate the new range.
-		StaticPowerTier tier = upgradeWrapper.getTier();
-		double newRange = tier.upgradeConfiguration.rangeUpgrade.get() * StaticPowerConfig.SERVER.minerRadius.get();
+		double newRange = upgradeWrapper.getUpgradeValue() * StaticPowerConfig.SERVER.minerRadius.get();
 		return (int) newRange;
 	}
 

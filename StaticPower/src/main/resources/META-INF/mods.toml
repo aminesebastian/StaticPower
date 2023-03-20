@@ -12,10 +12,3 @@ license="All Rights Reserved"
 	In your adventures, you've discovered the seeds of an ancient alien plant - the crops of which radiate energy! 
 	Perhaps by studying these crops, you can unlock the secrets of this long extinct species and rediscover some of their impressive technology.
 	'''
-	
-[[dependencies.staticpower]]
-    modId="staticcore"
-    mandatory=true
-    versionRange="[${version},)"
-    ordering="AFTER"
-    side="BOTH"

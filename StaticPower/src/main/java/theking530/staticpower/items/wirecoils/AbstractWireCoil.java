@@ -21,12 +21,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.gui.text.TooltipUtilities;
 import theking530.staticcore.utilities.SDColor;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
 import theking530.staticpower.items.StaticPowerItem;
 
@@ -56,9 +56,9 @@ public class AbstractWireCoil extends StaticPowerItem {
 
 	public int getMaximumDistance(ItemStack wireStack) {
 		if (isInsulated) {
-			return StaticPowerConfig.getTier(tier).cablePowerConfiguration.insulatedWireCoilMaxDistance.get();
+			return StaticCoreConfig.getTier(tier).cablePowerConfiguration.insulatedWireCoilMaxDistance.get();
 		} else {
-			return StaticPowerConfig.getTier(tier).cablePowerConfiguration.wireCoilMaxDistance.get();
+			return StaticCoreConfig.getTier(tier).cablePowerConfiguration.wireCoilMaxDistance.get();
 		}
 	}
 

@@ -33,10 +33,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.world.WorldUtilities;
-import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -78,7 +78,7 @@ public class Hammer extends StaticPowerItem {
 
 	@Override
 	public int getMaxDamage(ItemStack stack) {
-		return StaticPowerConfig.getTier(tier).toolConfiguration.hammerUses.get();
+		return StaticCoreConfig.getTier(tier).toolConfiguration.hammerUses.get();
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class Hammer extends StaticPowerItem {
 	@Override
 	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
 		// Get the tier.
-		StaticPowerTier tier = StaticPowerConfig.getTier(this.tier);
+		StaticCoreTier tier = StaticCoreConfig.getTier(this.tier);
 
 		// Add the swinging speed modifier.
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -152,7 +152,7 @@ public class Hammer extends StaticPowerItem {
 		if (!player.getCommandSenderWorld().isClientSide()) {
 			if (crafted) {
 				// Get the tier.
-				StaticPowerTier tier = StaticPowerConfig.getTier(this.tier);
+				StaticCoreTier tier = StaticCoreConfig.getTier(this.tier);
 
 				// Set the cooldown before the player can hammer again.
 				player.getCooldowns().addCooldown(stack.getItem(), tier.toolConfiguration.hammerCooldown.get());

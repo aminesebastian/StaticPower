@@ -29,7 +29,6 @@ import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticcore.upgrades.UpgradeTypes;
 import theking530.staticcore.utilities.item.InventoryUtilities;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -37,6 +36,8 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
+import theking530.staticpower.init.ModUpgradeTypes;
+import theking530.staticpower.init.ModUpgradeTypes.CentrifugeUpgradeValue;
 
 public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipeProcessor<CentrifugeRecipe> {
 	@BlockEntityTypePopulator()
@@ -84,7 +85,8 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent", ModRecipeTypes.CENTRIFUGE_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent",
+				ModRecipeTypes.CENTRIFUGE_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -136,14 +138,14 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 
 	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
 		// Get the centrifuge upgrade.
-		UpgradeItemWrapper upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeTypes.CENTRIFUGE);
+		UpgradeItemWrapper<CentrifugeUpgradeValue> upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(ModUpgradeTypes.CENTRIFUGE.get());
 
 		// If it is not valid, set the values back to the defaults. Otherwise, set the
 		// new max speed.
 		if (!upgradeWrapper.isEmpty()) {
-			maxSpeed = upgradeWrapper.getTier().upgradeConfiguration.maxCentrifugeSpeedUpgrade.get();
+			maxSpeed = upgradeWrapper.getUpgradeValue().maxRPM();
 			centrifugeMotorPowerCost = StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get()
-					* (1.0f + upgradeWrapper.getTier().upgradeConfiguration.centrifugeUpgradedPowerIncrease.get());
+					* (1.0f + upgradeWrapper.getUpgradeValue().powerUsageIncrease());
 		} else {
 			maxSpeed = StaticPowerConfig.SERVER.centrifugeInitialMaxSpeed.get();
 			centrifugeMotorPowerCost = StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get();
@@ -171,7 +173,8 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 		for (StaticPowerOutputItem output : recipe.getOutputs()) {
 			outputContainer.addOutputItem(output.calculateOutput(), CaptureType.BOTH);
@@ -181,12 +184,14 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
 		if (!canInsertRecipeIntoOutputs(outputContainer)) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -198,7 +203,8 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
 		for (int i = 0; i < outputContainer.getOutputItems().size(); i++) {
 			outputInventories.get(i).insertItem(0, outputContainer.getOutputItem(i).item().copy(), false);
 		}

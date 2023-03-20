@@ -18,11 +18,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.cablenetwork.AbstractCableBlock;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
 import theking530.staticcore.gui.GuiTextUtilities;
 import theking530.staticcore.utilities.math.Vector3D;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
@@ -50,7 +50,7 @@ public class BlockItemCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		double blocksPerTick = StaticPowerConfig.getTier(getTier()).cableItemConfiguration.itemCableMaxSpeed.get();
+		double blocksPerTick = StaticCoreConfig.getTier(getTier()).cableItemConfiguration.itemCableMaxSpeed.get();
 
 		tooltip.add(Component.translatable("gui.staticpower.max_transfer_rate"));
 		tooltip.add(Component.literal("• ").append(Component.translatable("gui.staticpower.item_cable_transfer_rate",
@@ -61,9 +61,9 @@ public class BlockItemCable extends AbstractCableBlock {
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		tooltip.add(Component.literal(""));
 		tooltip.add(Component.translatable("gui.staticpower.item_cable_acceleration",
-				ChatFormatting.BLUE + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(getTier()).cableItemConfiguration.itemCableAcceleration.get() * 100).getString()));
+				ChatFormatting.BLUE + GuiTextUtilities.formatUnitRateToString(StaticCoreConfig.getTier(getTier()).cableItemConfiguration.itemCableAcceleration.get() * 100).getString()));
 		tooltip.add(Component.translatable("gui.staticpower.item_cable_friction",
-				ChatFormatting.RED + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(getTier()).cableItemConfiguration.itemCableFriction.get() * 100).getString()));
+				ChatFormatting.RED + GuiTextUtilities.formatUnitRateToString(StaticCoreConfig.getTier(getTier()).cableItemConfiguration.itemCableFriction.get() * 100).getString()));
 	}
 
 	@Override

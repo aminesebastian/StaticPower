@@ -15,13 +15,14 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Si
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticcore.blockentity.components.energy.PowerDistributionComponent;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
+import theking530.staticcore.data.StaticCoreTiers;
+import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.product.power.PowerProductionStack;
-import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.blockentities.components.TieredPowerStorageComponent;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModProducts;
 
 public class BlockEntitySolarPanel extends BlockEntityBase {
 	@BlockEntityTypePopulator()
@@ -59,11 +60,11 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 	public BlockEntitySolarPanel(BlockEntityTypeAllocator<BlockEntitySolarPanel> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		// Set the values based on the tier.
-		isCreative = getTier() == StaticPowerTiers.CREATIVE;
+		isCreative = getTier() == StaticCoreTiers.CREATIVE;
 		generationPerTick = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
 
 		// Set the energy storage.
-		registerComponent(powerStorage = new PowerStorageComponent("Powerbuffer", getTier(), false, true));
+		registerComponent(powerStorage = new TieredPowerStorageComponent("Powerbuffer", getTier(), false, true));
 		powerStorage.setCapacity(getTierObject().powerConfiguration.solarPanelPowerStorage.get());
 		powerStorage.setOutputVoltage(StaticPowerVoltage.LOW);
 		powerStorage.setMaximumOutputPower(generationPerTick);
@@ -89,7 +90,7 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 
 	// Functionality
 	public void generateRF() {
-		ProductionTrackingToken<PowerProductionStack> powerToken = trackingComponent.getToken(ModProducts.Power.get());
+		ProductionTrackingToken<PowerProductionStack> powerToken = trackingComponent.getToken(StaticCoreProductTypes.Power.get());
 		if (isGenerating()) {
 			double maxGeneration = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
 			double actualGeneration = maxGeneration;

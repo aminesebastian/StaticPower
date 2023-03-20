@@ -28,10 +28,10 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.api.wrench.RegularWrenchMode;
+import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.gui.GuiTextUtilities;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
-import theking530.staticpower.data.StaticPowerTier;
 
 public abstract class AbstractConveyorBlock extends StaticPowerRotateableBlockEntityBlock implements IConveyorBlock {
 	protected final Map<Direction, VoxelShape> ENTITY_SHAPES = new HashMap<>();
@@ -76,8 +76,8 @@ public abstract class AbstractConveyorBlock extends StaticPowerRotateableBlockEn
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
-			StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-			tooltip.add(Component.literal("� ").append(Component.translatable("gui.staticpower.conveyor_speed_multiplier"))
+			StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
+			tooltip.add(Component.literal("- ").append(Component.translatable("gui.staticpower.conveyor_speed_multiplier"))
 					.append(GuiTextUtilities.formatNumberAsPercentStringOneDecimal(tierObject.conveyorSpeedMultiplier.get()).withStyle(ChatFormatting.GREEN)));
 		}
 	}

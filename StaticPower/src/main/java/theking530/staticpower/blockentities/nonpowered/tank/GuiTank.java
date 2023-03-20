@@ -2,6 +2,7 @@ package theking530.staticpower.blockentities.nonpowered.tank;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.screens.StaticCoreBlockEntityScreen;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
@@ -26,6 +27,6 @@ public class GuiTank extends StaticCoreBlockEntityScreen<ContainerTank, BlockEnt
 
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiUpgradeTab(menu, getTileEntity().voidUpgradeInventory, ModItems.VoidUpgrade.get()).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(menu, getTileEntity().voidUpgradeInventory, new ItemDrawable(ModItems.VoidUpgrade.get())).setTabSide(TabSide.LEFT));
 	}
 }

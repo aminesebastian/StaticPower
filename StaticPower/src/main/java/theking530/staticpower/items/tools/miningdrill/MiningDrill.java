@@ -51,6 +51,7 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.attribiutes.Attributes;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.crafting.RecipeMatchParameters;
@@ -81,23 +82,23 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	public double getCapacity() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get() * 2;
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get() * 2;
 	}
 
 	public StaticVoltageRange getInputVoltageRange() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
 	}
 
 	public double getMaximumInputPower() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
 	}
 
 	public StaticPowerVoltage getOutputVoltage() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
 	}
 
 	public double getMaximumOutputPower() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
 
 	public ItemStack getFilledVariant() {
@@ -159,7 +160,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 				}
 			});
 		}
-		return efficiency.get() * StaticPowerConfig.getTier(tier).toolConfiguration.drillSpeedMultiplier.get();
+		return efficiency.get() * StaticCoreConfig.getTier(tier).toolConfiguration.drillSpeedMultiplier.get();
 	}
 
 	/**
@@ -335,7 +336,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(Component.literal(" ").append(GuiTextUtilities.formatNumberAsString(StaticPowerConfig.getTier(tier).toolConfiguration.drillSpeedMultiplier.get())).append("x ")
+		tooltip.add(Component.literal(" ").append(GuiTextUtilities.formatNumberAsString(StaticCoreConfig.getTier(tier).toolConfiguration.drillSpeedMultiplier.get())).append("x ")
 				.append(Component.translatable("gui.staticpower.tool_speed_multiplier")).withStyle(ChatFormatting.DARK_GREEN));
 
 		tooltip.add(Component.literal(" "));

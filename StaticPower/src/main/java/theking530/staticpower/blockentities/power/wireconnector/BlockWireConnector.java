@@ -29,11 +29,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.data.StaticCoreTier;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTooltips;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
-import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockWireConnector extends StaticPowerRotateableBlockEntityBlock {
 	public static final Map<Direction, VoxelShape> SHAPES = new HashMap<>();
@@ -75,8 +75,8 @@ public class BlockWireConnector extends StaticPowerRotateableBlockEntityBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
-		if (tier != null) {
-			StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		if (getTier() != null) {
+			StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 			PowerTooltips.addVoltageInputTooltip(tooltip, new StaticVoltageRange(StaticPowerVoltage.LOW, tierObject.cablePowerConfiguration.wireTerminalMaxVoltage.get()));
 			PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.wireTerminalMaxCurrent.get());
 		}
@@ -106,15 +106,15 @@ public class BlockWireConnector extends StaticPowerRotateableBlockEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
+		if (getTier() == StaticCoreTiers.BASIC) {
 			return BlockEntityWireConnector.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
+		} else if (getTier() == StaticCoreTiers.ADVANCED) {
 			return BlockEntityWireConnector.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
+		} else if (getTier() == StaticCoreTiers.STATIC) {
 			return BlockEntityWireConnector.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
+		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
 			return BlockEntityWireConnector.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
+		} else if (getTier() == StaticCoreTiers.LUMUM) {
 			return BlockEntityWireConnector.TYPE_LUMUM.create(pos, state);
 		}
 		return null;

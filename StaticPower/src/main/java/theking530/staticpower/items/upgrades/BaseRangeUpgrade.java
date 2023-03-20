@@ -11,12 +11,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.upgrades.UpgradeTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes;
 
 public class BaseRangeUpgrade extends BaseUpgrade {
 
 	public BaseRangeUpgrade(ResourceLocation tier) {
-		super(tier, new Properties().stacksTo(1), UpgradeTypes.RANGE);
+		super(tier, new Properties().stacksTo(1));
+		addUpgrade(StaticCoreUpgradeTypes.RANGE.get(), (type, item) -> getTierObject().upgradeConfiguration.rangeUpgrade.get());
 	}
 
 	@Override
@@ -25,9 +26,11 @@ public class BaseRangeUpgrade extends BaseUpgrade {
 		double upgradeAmount = getTierObject().upgradeConfiguration.rangeUpgrade.get();
 
 		if (upgradeAmount < 0) {
-			tooltip.add(Component.literal(ChatFormatting.RED + "-" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "% " + ChatFormatting.WHITE + "Range"));
+			tooltip.add(Component.literal(
+					ChatFormatting.RED + "-" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "% " + ChatFormatting.WHITE + "Range"));
 		} else {
-			tooltip.add(Component.literal(ChatFormatting.GREEN + "+" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "% " + ChatFormatting.WHITE + "Range"));
+			tooltip.add(Component.literal(ChatFormatting.GREEN + "+" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "% "
+					+ ChatFormatting.WHITE + "Range"));
 		}
 	}
 }

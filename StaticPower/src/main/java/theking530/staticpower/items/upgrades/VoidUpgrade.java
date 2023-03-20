@@ -10,11 +10,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.init.StaticCoreUpgradeTypes;
 
 public class VoidUpgrade extends BaseUpgrade {
 
 	public VoidUpgrade() {
 		super(new Properties().stacksTo(1));
+		addUpgrade(StaticCoreUpgradeTypes.VOID.get(), (type, item) -> true);
 	}
 
 	@Override

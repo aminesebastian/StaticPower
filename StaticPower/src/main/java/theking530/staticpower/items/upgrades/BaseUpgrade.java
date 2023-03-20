@@ -1,8 +1,8 @@
 package theking530.staticpower.items.upgrades;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -14,44 +14,34 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.IUpgradeItem;
+import theking530.api.upgrades.IUpgradeSupplier;
 import theking530.api.upgrades.UpgradeType;
-import theking530.staticcore.upgrades.UpgradeTypes;
-import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 
 	private final ResourceLocation tier;
-	private final Set<UpgradeType> upgradeTypes;
+	private final Map<UpgradeType<?>, IUpgradeSupplier<?>> upgradeTypes;
 
-	public BaseUpgrade(Properties properties, UpgradeType... upgradeTypes) {
-		this(null, properties, upgradeTypes);
+	public BaseUpgrade(Properties properties) {
+		this(null, properties);
 	}
 
-	public BaseUpgrade(ResourceLocation tier, UpgradeType... upgradeTypes) {
-		this(tier, new Properties().stacksTo(16), upgradeTypes);
+	public BaseUpgrade(ResourceLocation tier) {
+		this(tier, new Properties().stacksTo(16));
 	}
 
-	public BaseUpgrade(ResourceLocation tier, Properties properties, UpgradeType... upgradeTypes) {
+	public BaseUpgrade(ResourceLocation tier, Properties properties) {
 		super(properties.tab(ModCreativeTabs.UPGRADES));
 		this.tier = tier;
-		this.upgradeTypes = new HashSet<UpgradeType>();
-
-		// If no upgrade type was supplied, then mark this as a special singular
-		// upgrade.
-		if (upgradeTypes.length == 0) {
-			this.upgradeTypes.add(UpgradeTypes.SPECIAL);
-		} else {
-			for (UpgradeType type : upgradeTypes) {
-				this.upgradeTypes.add(type);
-			}
-		}
+		this.upgradeTypes = new HashMap<>();
 	}
 
-	public StaticPowerTier getTierObject() {
-		return StaticPowerConfig.getTier(tier);
+	public StaticCoreTier getTierObject() {
+		return StaticCoreConfig.getTier(tier);
 	}
 
 	@Override
@@ -64,8 +54,8 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	}
 
 	@Override
-	public boolean isOfType(UpgradeType type) {
-		return upgradeTypes.contains(type);
+	public boolean isOfType(ItemStack upgradeStack, UpgradeType<?> type) {
+		return upgradeTypes.containsKey(type);
 	}
 
 	@Override
@@ -77,5 +67,17 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	@Override
 	public boolean isTiered() {
 		return tier != null;
+	}
+
+	protected <T> BaseUpgrade addUpgrade(UpgradeType<T> type, IUpgradeSupplier<T> supplier) {
+		upgradeTypes.put(type, supplier);
+		return this;
+	}
+
+	@Override
+	public <T> T getUpgradeValue(ItemStack upgradeStack, UpgradeType<T> type) {
+		@SuppressWarnings("unchecked")
+		IUpgradeSupplier<T> supplier = (IUpgradeSupplier<T>) upgradeTypes.get(type);
+		return supplier.apply(type, upgradeStack);
 	}
 }

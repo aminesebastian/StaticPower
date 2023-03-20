@@ -32,15 +32,15 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.client.ICustomModelProvider;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.GuiTextUtilities;
 import theking530.staticcore.utilities.math.SDMath;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerItemBlockCustomModel;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements ICustomModelProvider {
 
@@ -52,7 +52,7 @@ public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(Component.literal(ChatFormatting.GREEN.toString() + "� Capacity ").append(GuiTextUtilities.formatFluidToString(
-				SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultTankCapacity.get(), BlockEntityTank.MACHINE_TANK_CAPACITY_MULTIPLIER))));
+				SDMath.multiplyRespectingOverflow(StaticCoreConfig.getTier(getTier()).defaultTankCapacity.get(), BlockEntityTank.MACHINE_TANK_CAPACITY_MULTIPLIER))));
 
 		// Check to see if the stack has the serialized nbt.If it does, add the stored
 		// amount of fluid to the tooltip.
@@ -155,19 +155,19 @@ public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements 
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.IRON) {
+		if (getTier() == StaticCoreTiers.IRON) {
 			return BlockEntityTank.TYPE_IRON.create(pos, state);
-		} else if (tier == StaticPowerTiers.BASIC) {
+		} else if (getTier() == StaticCoreTiers.BASIC) {
 			return BlockEntityTank.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
+		} else if (getTier() == StaticCoreTiers.ADVANCED) {
 			return BlockEntityTank.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
+		} else if (getTier() == StaticCoreTiers.STATIC) {
 			return BlockEntityTank.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
+		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
 			return BlockEntityTank.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
+		} else if (getTier() == StaticCoreTiers.LUMUM) {
 			return BlockEntityTank.TYPE_LUMUM.create(pos, state);
-		} else if (tier == StaticPowerTiers.CREATIVE) {
+		} else if (getTier() == StaticCoreTiers.CREATIVE) {
 			return BlockEntityTank.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;

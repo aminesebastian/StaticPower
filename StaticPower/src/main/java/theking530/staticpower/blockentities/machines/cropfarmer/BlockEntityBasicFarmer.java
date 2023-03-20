@@ -39,6 +39,7 @@ import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter
 import theking530.staticcore.blockentity.components.items.OutputServoComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
+import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -51,7 +52,6 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.machines.cropfarmer.IFarmerHarvester.HarvestResult;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderFarmer;
 import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -104,16 +104,15 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
-		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
-				.setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
+		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.basicFarmerProcessingTime.get(), this::canFarm,
-				this::canFarm, this::processingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.basicFarmerProcessingTime.get(), this::canFarm, this::canFarm,
+				this::processingCompleted, true));
 		processingComponent.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage)
 				.setProcessingPowerUsage(StaticPowerConfig.SERVER.basicFarmerPowerUsage.get());
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
-			return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluid)).isPresent();
+			return CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluid), getLevel()).isPresent();
 		}));
 
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
@@ -153,8 +152,7 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	}
 
 	public float getGrowthBonus() {
-		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(this.fluidTankComponent.getFluid()))
-				.orElse(null);
+		FertalizerRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(this.fluidTankComponent.getFluid()), getLevel()).orElse(null);
 		if (recipe != null) {
 			return recipe.getFertalizationAmount();
 		}
@@ -216,8 +214,8 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 				wateringTicket.invalidate();
 			}
 
-			AABB rangeBounds = new AABB(getBlockPos().getX() - range - 1, getBlockPos().getY() - 1, getBlockPos().getZ() - range - 1, getBlockPos().getX() + range + 1,
-					getBlockPos().getY(), getBlockPos().getZ() + range + 1);
+			AABB rangeBounds = new AABB(getBlockPos().getX() - range - 1, getBlockPos().getY() - 1, getBlockPos().getZ() - range - 1, getBlockPos().getX() + range + 1, getBlockPos().getY(),
+					getBlockPos().getZ() + range + 1);
 			wateringTicket = FarmlandWaterManager.addAABBTicket(getLevel(), rangeBounds);
 			StaticPower.LOGGER.debug(String.format("Adding farmland watering ticket for farmer at position: %1$s.", getBlockPos().toString()));
 		}
@@ -258,8 +256,8 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 		// Return true if we finished clearing the internal inventory.
 		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
 			if (harvested) {
-				((ServerLevel) getLevel()).sendParticles(ParticleTypes.FALLING_WATER, getCurrentPosition().getX() + 0.5D, getCurrentPosition().getY() + 1.0D,
-						getCurrentPosition().getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+				((ServerLevel) getLevel()).sendParticles(ParticleTypes.FALLING_WATER, getCurrentPosition().getX() + 0.5D, getCurrentPosition().getY() + 1.0D, getCurrentPosition().getZ() + 0.5D, 1,
+						0.0D, 0.0D, 0.0D, 0.0D);
 				return ProcessingCheckState.ok();
 			} else {
 				return ProcessingCheckState.cancel();
@@ -373,8 +371,7 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 		range = StaticPowerConfig.SERVER.basicFarmerDefaultRange.get();
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
-				range = (int) Math.max(range,
-						StaticPowerConfig.SERVER.basicFarmerDefaultRange.get() * ((BaseRangeUpgrade) stack.getItem()).getTierObject().upgradeConfiguration.rangeUpgrade.get());
+				range = (int) Math.max(range, StaticPowerConfig.SERVER.basicFarmerDefaultRange.get() * ((BaseRangeUpgrade) stack.getItem()).getTierObject().upgradeConfiguration.rangeUpgrade.get());
 			}
 		}
 		refreshBlocksInRange(range);

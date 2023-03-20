@@ -16,7 +16,7 @@ public class SapphireAttributeType extends AbstractHardenedAttributeType {
 		}
 
 		// Get the modifier amount.
-		double modifier = 500; // StaticPowerConfig.getTier(StaticPowerTiers.SAPPHIRE).toolConfiguration.hardenedDurabilityBoost.get();
+		double modifier = 500; // StaticCoreConfig.getTier(StaticCoreTiers.SAPPHIRE).toolConfiguration.hardenedDurabilityBoost.get();
 		value += modifier;
 
 		// Return the modified value.

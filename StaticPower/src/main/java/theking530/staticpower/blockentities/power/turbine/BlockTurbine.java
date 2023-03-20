@@ -12,14 +12,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockTurbine extends StaticPowerMachineBlock {
 
 	public BlockTurbine() {
-		super(StaticPowerTiers.BASIC);
+		super(StaticCoreTiers.BASIC);
 	}
 
 	@Override

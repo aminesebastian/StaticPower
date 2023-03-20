@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -13,8 +12,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.staticcore.StaticCoreConfig;
-import theking530.staticpower.data.StaticPowerTier;
 
 @EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerConfig {
@@ -754,10 +751,6 @@ public class StaticPowerConfig {
 		// Add the server and common configs.
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, StaticPowerConfig.SERVER_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StaticPowerConfig.COMMON_SPEC, StaticPower.MOD_ID + "\\" + StaticPower.MOD_ID + "-common.toml");
-	}
-
-	public static StaticPowerTier getTier(ResourceLocation tier) {
-		return (StaticPowerTier) StaticCoreConfig.getTier(tier);
 	}
 
 	private static void checkOrCreateFolder(String path) {

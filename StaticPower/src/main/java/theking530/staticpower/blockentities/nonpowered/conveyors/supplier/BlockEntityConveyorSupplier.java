@@ -17,12 +17,12 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Si
 import theking530.staticcore.blockentity.components.control.sideconfiguration.presets.FrontOutputOnly;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.OutputServoComponent;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.math.Vector3D;
 import theking530.staticpower.blockentities.components.ConveyorMotionComponent;
 import theking530.staticpower.blockentities.nonpowered.conveyors.AbstractConveyorBlockEntity;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
 
@@ -84,7 +84,7 @@ public class BlockEntityConveyorSupplier extends AbstractConveyorBlockEntity {
 	}
 
 	@Override
-	protected void configureConveyorComponent(ConveyorMotionComponent component, StaticPowerTier tier, Level world, BlockPos pos, BlockState state) {
+	protected void configureConveyorComponent(ConveyorMotionComponent component, StaticCoreTier tier, Level world, BlockPos pos, BlockState state) {
 		float conveyorLength = 0.9f;
 		float inverseConveyorLength = 1.0f - conveyorLength;
 

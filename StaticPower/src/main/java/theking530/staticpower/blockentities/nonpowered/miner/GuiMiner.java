@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.GuiTextUtilities;
+import theking530.staticcore.gui.StaticCoreSprites;
 import theking530.staticcore.gui.screens.StaticCoreBlockEntityScreen;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
@@ -25,7 +26,6 @@ import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDTime;
-import theking530.staticpower.client.StaticPowerSprites;
 
 public class GuiMiner extends StaticCoreBlockEntityScreen<ContainerMiner, BlockEntityMiner> {
 	private SpriteButton drawPreviewButton;
@@ -40,7 +40,7 @@ public class GuiMiner extends StaticCoreBlockEntityScreen<ContainerMiner, BlockE
 		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage, 8, 16, 2, 52));
 		registerWidget(new FireProgressBar(19, 52).bindToMachineProcessingComponent(getTileEntity().fuelComponent));
 		registerWidget(new SquareProgressBar(78, 55, 20, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent));
-		registerWidget(drawPreviewButton = new SpriteButton(156, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
+		registerWidget(drawPreviewButton = new SpriteButton(156, 61, 12, 12, StaticCoreSprites.RANGE_ICON, null, this::buttonPressed));
 		drawPreviewButton.setTooltip(Component.literal("Preview Range"));
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());

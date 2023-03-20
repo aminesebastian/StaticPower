@@ -20,12 +20,12 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.PacketDistributor;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
@@ -264,7 +264,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 					// Attempt to insert the stack into the cable. We will use the default
 					// extraction speed.
 					ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), side.getOpposite(), false,
-							StaticPowerConfig.getTier(tier).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
+							StaticCoreConfig.getTier(tier).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
 					if (remainingAmount.getCount() < insertStack.getCount()) {
 						getBlockEntity().setChanged();
 						stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());

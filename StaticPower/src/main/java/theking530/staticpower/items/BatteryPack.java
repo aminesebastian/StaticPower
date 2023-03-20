@@ -26,9 +26,9 @@ import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.utilities.math.SDMath;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.BatteryPackItemModel;
 import theking530.staticpower.init.ModCreativeTabs;
 
@@ -155,27 +155,27 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	public double getCapacity() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get() * 3;
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get() * 3;
 	}
 
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
 	}
 
 	@Override
 	public double getMaximumInputPower() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
 	}
 
 	@Override
 	public StaticPowerVoltage getOutputVoltage() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
 	}
 
 	@Override
 	public double getMaximumOutputPower() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
 
 	@Override

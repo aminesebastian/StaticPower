@@ -6,7 +6,7 @@ import theking530.staticcore.blockentity.components.control.processing.Processin
 import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 
-public interface IRecipeProcessor<T extends Recipe<RecipeMatchParameters>> {
+public interface IRecipeProcessor<T extends Recipe<?>> {
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<T> component);
 
 	public void captureInputsAndProducts(RecipeProcessingComponent<T> component, T recipe, ProcessingOutputContainer outputContainer);

@@ -20,11 +20,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.heat.HeatTooltipUtilities;
+import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.data.StaticCoreTier;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
-import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 	protected final ResourceLocation heatSinkTier;
@@ -32,7 +32,7 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 	public BlockHeatSink(ResourceLocation heatSinkTier) {
 		// NOTE: This tier is the tier that provides the machine properties of this
 		// heatsink, not the heat properties.
-		super(StaticPowerTiers.BASIC, Block.Properties.of(Material.METAL).strength(3.5f));
+		super(StaticCoreTiers.BASIC, Block.Properties.of(Material.METAL).strength(3.5f));
 		this.heatSinkTier = heatSinkTier;
 	}
 
@@ -40,7 +40,7 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 		tooltip.add(HeatTooltipUtilities.getHeatConductivityTooltip(tierObject.heatSinkConductivity.get()));
 		tooltip.add(HeatTooltipUtilities.getOverheatingTooltip(tierObject.heatSinkOverheatTemperature.get()));
 		tooltip.add(HeatTooltipUtilities.getMaximumHeatTooltip(tierObject.heatSinkMaximumTemperature.get()));
@@ -50,7 +50,7 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		super.getAdvancedTooltip(stack, worldIn, tooltip);
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(tierObject.heatSinkElectricHeatGeneration.get()));
 		tooltip.add(Component.literal(ChatFormatting.GRAY + "Generation Usage: ")
 				.append(PowerTextFormatting.formatPowerRateToString(tierObject.heatSinkElectricHeatPowerUsage.get())).withStyle(ChatFormatting.RED));
@@ -63,11 +63,11 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.COPPER) {
+		if (getTier() == StaticCoreTiers.COPPER) {
 			return BlockEntityHeatSink.TYPE_COPPER.create(pos, state);
-		} else if (tier == StaticPowerTiers.GOLD) {
+		} else if (getTier() == StaticCoreTiers.GOLD) {
 			return BlockEntityHeatSink.TYPE_GOLD.create(pos, state);
-		} else if (tier == StaticPowerTiers.ALUMINUM) {
+		} else if (getTier() == StaticCoreTiers.ALUMINUM) {
 			return BlockEntityHeatSink.TYPE_ALUMINUM.create(pos, state);
 		}
 		return null;

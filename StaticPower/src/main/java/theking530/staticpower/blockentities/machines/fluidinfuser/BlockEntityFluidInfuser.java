@@ -24,12 +24,12 @@ import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.OutputServoComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.item.InventoryUtilities;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderFluidInfuser;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -57,7 +57,7 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 		super(TYPE, pos, state);
 
 		// Get the tier object.
-		StaticPowerTier tier = getTierObject();
+		StaticCoreTier tier = getTierObject();
 
 		// Setup the inventories.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));

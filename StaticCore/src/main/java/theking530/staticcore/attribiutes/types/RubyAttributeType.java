@@ -16,7 +16,7 @@ public class RubyAttributeType extends AbstractHardenedAttributeType {
 		}
 
 		// Get the modifier amount.
-		double modifier = 1.25f; // StaticPowerConfig.getTier(StaticPowerTiers.RUBY).toolConfiguration.hardenedDurabilityBoost.get();
+		double modifier = 1.25f; // StaticCoreConfig.getTier(StaticCoreTiers.RUBY).toolConfiguration.hardenedDurabilityBoost.get();
 		value *= modifier;
 
 		// Return the modified value.

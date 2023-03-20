@@ -9,8 +9,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.client.ICustomModelProvider;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.PortableBatteryItemModel;
 import theking530.staticpower.init.ModCreativeTabs;
 
@@ -35,27 +35,27 @@ public class PortableBattery extends StaticPowerEnergyStoringItem implements ICu
 
 	@Override
 	public double getCapacity() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get();
 	}
 
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
 	}
 
 	@Override
 	public double getMaximumInputPower() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
 	}
 
 	@Override
 	public StaticPowerVoltage getOutputVoltage() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
 	}
 
 	@Override
 	public double getMaximumOutputPower() {
-		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
+		return StaticCoreConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
 
 	@Override

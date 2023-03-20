@@ -66,7 +66,7 @@ public abstract class AbstractToolPart extends StaticCoreItem implements ICustom
 
 //	@Override
 //	public boolean isFoil(ItemStack stack) {
-//		return this.tier == StaticPowerTiers.CREATIVE;
+//		return this.tier == StaticCoreTiers.CREATIVE;
 //	}
 
 	protected abstract int getBaseDurability();

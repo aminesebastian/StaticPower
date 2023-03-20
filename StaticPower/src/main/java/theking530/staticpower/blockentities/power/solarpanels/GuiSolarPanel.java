@@ -4,13 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import theking530.staticcore.gui.StaticCoreSprites;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.screens.StaticCoreBlockEntityScreen;
 import theking530.staticcore.gui.widgets.DrawableWidget;
 import theking530.staticcore.gui.widgets.TimeOfDayDrawable;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiPowerInfoTab;
-import theking530.staticpower.client.StaticPowerSprites;
 
 public class GuiSolarPanel extends StaticCoreBlockEntityScreen<ContainerSolarPanel, BlockEntitySolarPanel> {
 
@@ -27,8 +27,8 @@ public class GuiSolarPanel extends StaticCoreBlockEntityScreen<ContainerSolarPan
 		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
 
 		registerWidget(new TimeOfDayDrawable(19, 9, 50, getTileEntity().getLevel(), getTileEntity().getBlockPos()));
-		registerWidget(generatingWidget = new DrawableWidget<SpriteDrawable>(53, 65, 20, 20, new SpriteDrawable(StaticPowerSprites.GREEN_CHECK, 16, 16)));
-		registerWidget(notGeneratingWidget = new DrawableWidget<SpriteDrawable>(53, 65, 20, 20, new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16)));
+		registerWidget(generatingWidget = new DrawableWidget<SpriteDrawable>(53, 65, 20, 20, new SpriteDrawable(StaticCoreSprites.GREEN_CHECK, 16, 16)));
+		registerWidget(notGeneratingWidget = new DrawableWidget<SpriteDrawable>(53, 65, 20, 20, new SpriteDrawable(StaticCoreSprites.ERROR, 16, 16)));
 
 		generatingWidget.setVisible(getTileEntity().isGenerating());
 		notGeneratingWidget.setVisible(!getTileEntity().isGenerating());

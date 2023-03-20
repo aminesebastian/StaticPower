@@ -10,13 +10,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.upgrades.UpgradeTypes;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.init.ModUpgradeTypes;
 
 public class AcceleratorUpgrade extends BaseUpgrade {
 
 	public AcceleratorUpgrade() {
-		super(new Properties().stacksTo(8), UpgradeTypes.DIGISTORE_ATTACHMENT);
+		super(new Properties().stacksTo(8));
+		addUpgrade(ModUpgradeTypes.DIGISTORE_ACCELERATION.get(), (type, item) -> StaticPowerConfig.SERVER.acceleratorCardImprovment.get());
 	}
 
 	@Override
@@ -27,8 +28,8 @@ public class AcceleratorUpgrade extends BaseUpgrade {
 
 		double percentIncrease = StaticPowerConfig.SERVER.acceleratorCardImprovment.get();
 		percentIncrease *= (float) stack.getCount() / stack.getMaxStackSize();
-		tooltip.add(
-				Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(percentIncrease * 100) + "%" + ChatFormatting.GREEN + " Transfer Speed"));
+		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(percentIncrease * 100) + "%"
+				+ ChatFormatting.GREEN + " Transfer Speed"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

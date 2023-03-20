@@ -23,9 +23,9 @@ import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
 import theking530.api.IBreakSerializeable;
 import theking530.api.energy.StaticPowerStorage;
 import theking530.api.energy.StaticVoltageRange;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.gui.text.PowerTooltips;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 
 public abstract class StaticPowerMachineBlock extends StaticPowerRotateableBlockEntityBlock implements ICustomModelProvider {
@@ -58,14 +58,14 @@ public abstract class StaticPowerMachineBlock extends StaticPowerRotateableBlock
 		if (getTier() == null) {
 			return StaticVoltageRange.ZERO_VOLTAGE;
 		}
-		return StaticPowerConfig.getTier(getTier()).powerConfiguration.getDefaultInputVoltageRange();
+		return StaticCoreConfig.getTier(getTier()).powerConfiguration.getDefaultInputVoltageRange();
 	}
 
 	public double getMaximumInputPower() {
 		if (getTier() == null) {
 			return 0;
 		}
-		return StaticPowerConfig.getTier(getTier()).powerConfiguration.defaultMaximumPowerInput.get();
+		return StaticCoreConfig.getTier(getTier()).powerConfiguration.defaultMaximumPowerInput.get();
 	}
 
 	@OnlyIn(Dist.CLIENT)

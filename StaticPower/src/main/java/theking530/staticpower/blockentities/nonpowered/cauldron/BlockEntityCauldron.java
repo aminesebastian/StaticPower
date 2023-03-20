@@ -16,22 +16,22 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
 import theking530.staticcore.blockentity.components.heat.HeatStorageComponent;
 import theking530.staticcore.blockentity.components.heat.HeatStorageComponent.HeatManipulationAction;
+import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.FluidUtilities;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.utilities.math.Vector2D;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderCauldron;
-import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntity;
 import theking530.staticpower.init.ModBlocks;
@@ -58,7 +58,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 
 	public BlockEntityCauldron(BlockEntityTypeAllocator<BlockEntityCauldron> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
-		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.BASIC);
+		StaticCoreTier tier = StaticCoreConfig.getTier(StaticCoreTiers.BASIC);
 
 		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 1000).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
 
@@ -203,6 +203,6 @@ public class BlockEntityCauldron extends BlockEntityBase {
 	}
 
 	public Optional<CauldronRecipe> getRecipe(ItemStack input) {
-		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.CAULDRON_RECIPE_TYPE.get(), new RecipeMatchParameters(input).setFluids(internalTank.getFluid()));
+		return CraftingUtilities.getRecipe(ModRecipeTypes.CAULDRON_RECIPE_TYPE.get(), new RecipeMatchParameters(input).setFluids(internalTank.getFluid()), getLevel());
 	}
 }

@@ -311,16 +311,16 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 			return;
 		}
 
-		UpgradeItemWrapper<Float> heatCapacityUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_CAPACITY.get());
+		UpgradeItemWrapper<Double> heatCapacityUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_CAPACITY.get());
 		if (!heatCapacityUpgrade.isEmpty()) {
-			heatCapacityUpgradeMultiplier = (1.0f + (heatCapacityUpgrade.getUpgradeValue() * heatCapacityUpgrade.getUpgradeWeight()));
+			heatCapacityUpgradeMultiplier = (float) (1.0f + (heatCapacityUpgrade.getUpgradeValue() * heatCapacityUpgrade.getUpgradeWeight()));
 		} else {
 			heatCapacityUpgradeMultiplier = 1.0f;
 		}
 
-		UpgradeItemWrapper<Float> heatTransferUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_TRANSFER.get());
+		UpgradeItemWrapper<Double> heatTransferUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_TRANSFER.get());
 		if (!heatTransferUpgrade.isEmpty()) {
-			heatConductivityMultiplier = (1.0f + (heatTransferUpgrade.getUpgradeValue() * heatTransferUpgrade.getUpgradeWeight()));
+			heatConductivityMultiplier = (float) (1.0f + (heatTransferUpgrade.getUpgradeValue() * heatTransferUpgrade.getUpgradeWeight()));
 		} else {
 			heatConductivityMultiplier = 1.0f;
 		}

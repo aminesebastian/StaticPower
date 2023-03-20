@@ -17,11 +17,12 @@ import theking530.staticcore.blockentity.components.team.TeamComponent;
 import theking530.staticcore.container.FakeCraftingInventory;
 import theking530.staticcore.crafting.AbstractMachineRecipe;
 import theking530.staticcore.crafting.AbstractStaticPowerRecipe;
+import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
-public class RecipeProcessingComponent<T extends Recipe<RecipeMatchParameters>> extends AbstractProcesingComponent<RecipeProcessingComponent<T>> {
+public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProcesingComponent<RecipeProcessingComponent<T>> {
 	public static final int MOVE_TIME = 8;
 
 	private final RecipeType<T> recipeType;
@@ -97,26 +98,30 @@ public class RecipeProcessingComponent<T extends Recipe<RecipeMatchParameters>> 
 		super.updateProductionStatistics(teamComp);
 		for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
 			if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
-				getItemProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.item(), output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)),
+				getItemProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.item(),
+						output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)),
 						output.item().getCount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
 		for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
 			if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
-				getItemProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.item(), input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)),
+				getItemProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.item(),
+						input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)),
 						input.item().getCount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
 
 		for (ProcessingFluidWrapper output : outputContainer.getOutputFluids()) {
 			if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
-				getFluidProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.fluid(), output.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)),
+				getFluidProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.fluid(),
+						output.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)),
 						output.fluid().getAmount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
 		for (ProcessingFluidWrapper input : outputContainer.getInputFluids()) {
 			if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
-				getFluidProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.fluid(), input.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)),
+				getFluidProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.fluid(),
+						input.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)),
 						input.fluid().getAmount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
@@ -188,7 +193,6 @@ public class RecipeProcessingComponent<T extends Recipe<RecipeMatchParameters>> 
 		if (getCurrentRecipe().isPresent()) {
 			// If we can immediately start processing again, do so without a move delay.
 			processor.processingCompleted(this, getCurrentRecipe().get(), outputContainer);
-
 		} else {
 			System.out.println("wtf");
 		}
@@ -232,19 +236,22 @@ public class RecipeProcessingComponent<T extends Recipe<RecipeMatchParameters>> 
 		return getRecipeMatchingParameters(processor.getRecipeMatchParameters(this));
 	}
 
+	@SuppressWarnings("unchecked")
 	public Optional<T> getCurrentRecipe() {
 		ResourceLocation recipeId = this.outputContainer.getRecipe();
 		if (recipeId == null) {
 			return Optional.empty();
 		}
-		return getLevel().getRecipeManager().getAllRecipesFor(recipeType).stream().filter((recipe) -> recipe.getId().equals(recipeId)).findFirst();
+
+		return (Optional<T>) CraftingUtilities.getRecipeByKey(recipeId, getLevel());
 	}
 
 	@SuppressWarnings("unchecked")
 	public Optional<T> getRecipeMatchingParameters(RecipeMatchParameters matchParameters) {
 		// Check for the recipe.
 		if (recipeType == RecipeType.SMELTING) {
-			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), getLevel());
+			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]),
+					getLevel());
 		} else if (recipeType == RecipeType.CRAFTING) {
 			FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3);
 			for (int i = 0; i < 9; i++) {
@@ -252,7 +259,8 @@ public class RecipeProcessingComponent<T extends Recipe<RecipeMatchParameters>> 
 			}
 			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getLevel());
 		} else {
-			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(recipeType, matchParameters, getLevel());
+			RecipeType<Recipe<RecipeMatchParameters>> castType = (RecipeType<Recipe<RecipeMatchParameters>>) recipeType;
+			return (Optional<T>) CraftingUtilities.getRecipe(castType, matchParameters, getLevel());
 		}
 	}
 

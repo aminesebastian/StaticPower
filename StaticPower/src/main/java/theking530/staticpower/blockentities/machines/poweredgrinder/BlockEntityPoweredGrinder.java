@@ -24,9 +24,10 @@ import theking530.staticcore.blockentity.components.items.UpgradeInventoryCompon
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.init.StaticCoreUpgradeTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes.OutputMultiplierUpgradeValue;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticcore.upgrades.UpgradeTypes;
 import theking530.staticcore.utilities.item.InventoryUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
@@ -52,11 +53,12 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 		super(TYPE, pos, state);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
-			}
-		}));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true)
+				.setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
+					}
+				}));
 
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 3, MachineSideMode.Output));
@@ -66,8 +68,8 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<GrinderRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(),
-				ModRecipeTypes.GRINDER_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<GrinderRecipe>("ProcessingComponent",
+				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), ModRecipeTypes.GRINDER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -90,7 +92,8 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
 
 		for (StaticPowerOutputItem outputItem : recipe.getOutputItems()) {
@@ -101,20 +104,24 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItems().stream().map(x -> x.item()).toList())) {
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory,
+				outputContainer.getOutputItems().stream().map(x -> x.item()).toList())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
 		for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
 			InventoryUtilities.insertItemIntoInventory(outputInventory, output.item().copy(), false);
 		}
@@ -122,13 +129,14 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 
 	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
 		bonusOutputChance = StaticPowerConfig.SERVER.poweredGrinderOutputBonusChance.get();
-		UpgradeItemWrapper upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeTypes.OUTPUT_MULTIPLIER);
+		UpgradeItemWrapper<OutputMultiplierUpgradeValue> upgradeWrapper = upgradesInventory
+				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.OUTPUT_MULTIPLIER.get());
 
 		// If it is not valid, set the values back to the defaults. Otherwise, set the
 		// new processing speeds.
 		double upgradeAmount = bonusOutputChance;
 		if (!upgradeWrapper.isEmpty()) {
-			upgradeAmount = (float) (1.0f + (upgradeWrapper.getTier().upgradeConfiguration.outputMultiplierUpgrade.get() * upgradeWrapper.getUpgradeWeight()));
+			upgradeAmount = (1.0f + (upgradeWrapper.getUpgradeValue().outputMultiplierIncrease() * upgradeWrapper.getUpgradeWeight()));
 		}
 
 		// Set the bonus output amount.

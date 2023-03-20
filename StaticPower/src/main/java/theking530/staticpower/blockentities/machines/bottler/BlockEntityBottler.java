@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.components.control.processing.MachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
@@ -23,14 +24,14 @@ import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter;
 import theking530.staticcore.blockentity.components.items.OutputServoComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
+import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.item.InventoryUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -56,7 +57,7 @@ public class BlockEntityBottler extends BlockEntityMachine {
 		super(TYPE, pos, state);
 
 		// Get the tier object.
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -250,7 +251,7 @@ public class BlockEntityBottler extends BlockEntityMachine {
 	}
 
 	protected BottleRecipe getRecipe(ItemStack stack) {
-		return StaticPowerRecipeRegistry.getRecipe(ModRecipeTypes.BOTTLER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(stack)).orElse(null);
+		return CraftingUtilities.getRecipe(ModRecipeTypes.BOTTLER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(stack), getLevel()).orElse(null);
 	}
 
 	@Override

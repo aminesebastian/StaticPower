@@ -10,13 +10,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockAutomaticPlacer extends StaticPowerMachineBlock {
 
 	public BlockAutomaticPlacer() {
-		super(StaticPowerTiers.BASIC);
+		super(StaticCoreTiers.BASIC);
 	}
 
 	@Override

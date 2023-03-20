@@ -26,6 +26,7 @@ import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.crafting.StaticPowerIngredient;
+import theking530.staticcore.init.StaticCoreItems;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.research.gui.ResearchManager.ResearchInstance;
@@ -34,7 +35,6 @@ import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModItems;
 
 public class BlockEntityLaboratory extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
@@ -63,19 +63,19 @@ public class BlockEntityLaboratory extends BlockEntityMachine {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				switch (slot) {
 				case 0:
-					return stack.getItem() == ModItems.ResearchTier1.get();
+					return stack.getItem() == StaticCoreItems.ResearchTier1.get();
 				case 1:
-					return stack.getItem() == ModItems.ResearchTier2.get();
+					return stack.getItem() == StaticCoreItems.ResearchTier2.get();
 				case 2:
-					return stack.getItem() == ModItems.ResearchTier3.get();
+					return stack.getItem() == StaticCoreItems.ResearchTier3.get();
 				case 3:
-					return stack.getItem() == ModItems.ResearchTier4.get();
+					return stack.getItem() == StaticCoreItems.ResearchTier4.get();
 				case 4:
-					return stack.getItem() == ModItems.ResearchTier5.get();
+					return stack.getItem() == StaticCoreItems.ResearchTier5.get();
 				case 5:
-					return stack.getItem() == ModItems.ResearchTier6.get();
+					return stack.getItem() == StaticCoreItems.ResearchTier6.get();
 				case 6:
-					return stack.getItem() == ModItems.ResearchTier7.get();
+					return stack.getItem() == StaticCoreItems.ResearchTier7.get();
 				default:
 					return false;
 				}

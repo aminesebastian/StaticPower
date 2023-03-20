@@ -22,6 +22,7 @@ import theking530.staticcore.blockentity.components.team.TeamComponent;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.init.StaticCoreUpgradeTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes.SpeedMultiplierUpgradeValue;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.product.power.PowerProductionStack;
@@ -369,7 +370,8 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 
 	protected void updateProductionStatistics(TeamComponent teamComp) {
 		if (powerComponent != null && getPowerUsage() > 0) {
-			getPowerProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), powerProductionStack, getPowerUsage() * 20, fullSatisfactionPowerUsage * 20);
+			getPowerProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), powerProductionStack, getPowerUsage() * 20,
+					fullSatisfactionPowerUsage * 20);
 		}
 	}
 
@@ -555,18 +557,14 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 			return;
 		}
 
-		UpgradeItemWrapper<Float> speedUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.SPEED.get());
+		UpgradeItemWrapper<SpeedMultiplierUpgradeValue> speedUpgrade = upgradeInventory
+				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.SPEED.get());
 		if (speedUpgrade.isEmpty()) {
 			processingSpeedUpgradeMultiplier = 1.0f;
-		} else {
-			processingSpeedUpgradeMultiplier = (float) (1.0f + (speedUpgrade.getUpgradeValue()) * speedUpgrade.getUpgradeWeight());
-		}
-
-		UpgradeItemWrapper<Float> powerUsageUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.POWER_USAGE.get());
-		if (speedUpgrade.isEmpty()) {
 			powerUsageIncreaseMultiplier = 1.0f;
 		} else {
-			powerUsageIncreaseMultiplier = (float) (1.0f + (powerUsageUpgrade.getUpgradeValue()) * speedUpgrade.getUpgradeWeight());
+			processingSpeedUpgradeMultiplier = (float) (1.0f + (speedUpgrade.getUpgradeValue().speedIncrease()) * speedUpgrade.getUpgradeWeight());
+			powerUsageIncreaseMultiplier = (float) (1.0f + (speedUpgrade.getUpgradeValue().powerUsageIncrease()) * speedUpgrade.getUpgradeWeight());
 		}
 
 		// Set the processing time.
@@ -634,7 +632,8 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 				}
 
 				if (getPowerUsage() > powerComponent.getMaximumPowerOutput()) {
-					return ProcessingCheckState.error(Component.literal("Recipe's power per tick requirement (").append(PowerTextFormatting.formatPowerRateToString(getPowerUsage()))
+					return ProcessingCheckState.error(Component.literal("Recipe's power per tick requirement (")
+							.append(PowerTextFormatting.formatPowerRateToString(getPowerUsage()))
 							.append(") is larger than the amount this machine can handle!").getString());
 				}
 			}
@@ -706,7 +705,8 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 			lastSyncProcessingTime = currentProcessingTimer;
 			// Send the packet to all clients within the requested radius.
 			ProcesingComponentSyncPacket msg = new ProcesingComponentSyncPacket(getPos(), this);
-			StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
+			StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(),
+					SYNC_PACKET_UPDATE_RADIUS, msg);
 		}
 	}
 

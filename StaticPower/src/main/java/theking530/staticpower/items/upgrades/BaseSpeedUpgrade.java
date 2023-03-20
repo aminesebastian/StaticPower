@@ -11,12 +11,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.upgrades.UpgradeTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes.SpeedMultiplierUpgradeValue;
 
 public class BaseSpeedUpgrade extends BaseUpgrade {
 
 	public BaseSpeedUpgrade(ResourceLocation tier) {
-		super(tier, UpgradeTypes.SPEED);
+		super(tier);
+		addUpgrade(StaticCoreUpgradeTypes.SPEED.get(),
+				(type, item) -> new SpeedMultiplierUpgradeValue(getTierObject().upgradeConfiguration.processingSpeedUpgrade.get(),
+						getTierObject().upgradeConfiguration.processingSpeedPowerCost.get()));
 	}
 
 	@Override
@@ -28,8 +32,10 @@ public class BaseSpeedUpgrade extends BaseUpgrade {
 		double powerRateUpgrade = getTierObject().upgradeConfiguration.processingSpeedPowerCost.get();
 		powerRateUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
-		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(speedUpgrade * 100) + "%" + ChatFormatting.GREEN + " Processing Speed"));
-		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerRateUpgrade * 100) + "%" + ChatFormatting.RED + " Power Use"));
+		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(speedUpgrade * 100) + "%"
+				+ ChatFormatting.GREEN + " Processing Speed"));
+		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerRateUpgrade * 100) + "%"
+				+ ChatFormatting.RED + " Power Use"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 

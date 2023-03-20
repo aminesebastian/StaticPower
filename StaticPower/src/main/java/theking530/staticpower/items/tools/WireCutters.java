@@ -18,8 +18,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.power.wireconnector.BlockEntityWireConnector;
 import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
 import theking530.staticpower.init.ModCreativeTabs;
@@ -74,7 +74,7 @@ public class WireCutters extends StaticPowerItem {
 
 	@Override
 	public int getMaxDamage(ItemStack stack) {
-		return StaticPowerConfig.getTier(tier).toolConfiguration.wireCutterUses.get();
+		return StaticCoreConfig.getTier(tier).toolConfiguration.wireCutterUses.get();
 	}
 
 	@Override

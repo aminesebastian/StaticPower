@@ -21,10 +21,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockSolarPanel extends StaticPowerRotateableBlockEntityBlock {
 	public static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.5D, 16.0D);
@@ -47,22 +47,22 @@ public class BlockSolarPanel extends StaticPowerRotateableBlockEntityBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(Component.literal(ChatFormatting.GREEN.toString() + " • Generation ")
-				.append(PowerTextFormatting.formatPowerRateToString(StaticPowerConfig.getTier(tier).powerConfiguration.solarPanelPowerGeneration.get())));
+				.append(PowerTextFormatting.formatPowerRateToString(StaticCoreConfig.getTier(getTier()).powerConfiguration.solarPanelPowerGeneration.get())));
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
+		if (getTier() == StaticCoreTiers.BASIC) {
 			return BlockEntitySolarPanel.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
+		} else if (getTier() == StaticCoreTiers.ADVANCED) {
 			return BlockEntitySolarPanel.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
+		} else if (getTier() == StaticCoreTiers.STATIC) {
 			return BlockEntitySolarPanel.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
+		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
 			return BlockEntitySolarPanel.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
+		} else if (getTier() == StaticCoreTiers.LUMUM) {
 			return BlockEntitySolarPanel.TYPE_LUMUM.create(pos, state);
-		} else if (tier == StaticPowerTiers.CREATIVE) {
+		} else if (getTier() == StaticCoreTiers.CREATIVE) {
 			return BlockEntitySolarPanel.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;

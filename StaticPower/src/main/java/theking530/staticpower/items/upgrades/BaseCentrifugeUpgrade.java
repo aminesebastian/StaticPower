@@ -11,12 +11,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.upgrades.UpgradeTypes;
+import theking530.staticpower.init.ModUpgradeTypes;
+import theking530.staticpower.init.ModUpgradeTypes.CentrifugeUpgradeValue;
 
 public class BaseCentrifugeUpgrade extends BaseUpgrade {
 
 	public BaseCentrifugeUpgrade(ResourceLocation tier) {
-		super(tier, new Properties().stacksTo(1), UpgradeTypes.CENTRIFUGE);
+		super(tier, new Properties().stacksTo(1));
+		addUpgrade(ModUpgradeTypes.CENTRIFUGE.get(),
+				(type, item) -> new CentrifugeUpgradeValue(getTierObject().upgradeConfiguration.maxCentrifugeSpeedUpgrade.get(),
+						getTierObject().upgradeConfiguration.centrifugeUpgradedPowerIncrease.get()));
 	}
 
 	@Override
@@ -25,7 +29,9 @@ public class BaseCentrifugeUpgrade extends BaseUpgrade {
 		int speedUpgrade = getTierObject().upgradeConfiguration.maxCentrifugeSpeedUpgrade.get();
 		double powerUsageUpgrade = getTierObject().upgradeConfiguration.centrifugeUpgradedPowerIncrease.get();
 
-		tooltip.add(Component.literal(ChatFormatting.WHITE + new java.text.DecimalFormat("#").format(speedUpgrade) + ChatFormatting.GREEN + " RPM Max Speed"));
-		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerUsageUpgrade * 100) + "%" + ChatFormatting.RED + " RF Per Tick"));
+		tooltip.add(Component
+				.literal(ChatFormatting.WHITE + new java.text.DecimalFormat("#").format(speedUpgrade) + ChatFormatting.GREEN + " RPM Max Speed"));
+		tooltip.add(Component.literal(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerUsageUpgrade * 100) + "%"
+				+ ChatFormatting.RED + " RF Per Tick"));
 	}
 }

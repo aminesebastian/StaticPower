@@ -17,28 +17,29 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import theking530.api.heat.IHeatStorage;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.presets.AllSidesInput;
 import theking530.staticcore.blockentity.components.heat.HeatStorageComponent;
+import theking530.staticcore.data.StaticCoreTier;
+import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvider {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_ALUMINUM = new BlockEntityTypeAllocator<BlockEntityHeatSink>("heat_sink_aluminum",
-			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.ALUMINUM), ModBlocks.AluminumHeatSink);
+			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticCoreTiers.ALUMINUM), ModBlocks.AluminumHeatSink);
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_COPPER = new BlockEntityTypeAllocator<BlockEntityHeatSink>("heat_sink_copper",
-			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.COPPER), ModBlocks.CopperHeatSink);
+			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticCoreTiers.COPPER), ModBlocks.CopperHeatSink);
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_GOLD = new BlockEntityTypeAllocator<BlockEntityHeatSink>("heat_sink_gold",
-			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.GOLD), ModBlocks.GoldHeatSink);
+			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticCoreTiers.GOLD), ModBlocks.GoldHeatSink);
 
 	public final HeatStorageComponent heatStorage;
 	private final ResourceLocation heatSinkTier;
@@ -46,7 +47,7 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 	public BlockEntityHeatSink(BlockEntityTypeAllocator<BlockEntityHeatSink> allocator, BlockPos pos, BlockState state, ResourceLocation heatSinkTier) {
 		super(allocator, pos, state);
 		this.heatSinkTier = heatSinkTier;
-		StaticPowerTier tier = StaticPowerConfig.getTier(heatSinkTier);
+		StaticCoreTier tier = StaticCoreConfig.getTier(heatSinkTier);
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), 1.0f));
 	}
 
@@ -82,7 +83,7 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 
 	protected void generateHeat() {
 		if (powerStorage.getStoredPower() > 0) {
-			StaticPowerTier tier = StaticPowerConfig.getTier(heatSinkTier);
+			StaticCoreTier tier = StaticCoreConfig.getTier(heatSinkTier);
 			int generation = tier.heatSinkElectricHeatGeneration.get();
 			double generationCost = tier.heatSinkElectricHeatPowerUsage.get();
 

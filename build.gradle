@@ -23,7 +23,7 @@ subprojects {
 
 	version = "${mc_version}-${mod_version}"
 	group = "theking530"
-	archivesBaseName = "TheKing530"
+	archivesBaseName = "${project.name.toString().toLowerCase()}"
 	
     minecraft {
 		mappings channel: 'official', version: '1.19.2'
@@ -73,7 +73,7 @@ subprojects {
 				property 'mixin.env.remapRefMap', 'true'
 				property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
-				args '--mod', "${project.name.toString().toLowerCase()}", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+				args '--mod', "${archivesBaseName}", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
 				mods {
 					mod {
@@ -102,12 +102,13 @@ subprojects {
 		maven {
 			url 'https://maven.covers1624.net'
 		}
+		
 		maven {
 			url "https://maven.k-4u.nl"
 		}
 
 	}
-			
+	
 	dependencies {
 		minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 		
@@ -122,5 +123,28 @@ subprojects {
 		implementation fg.deobf("codechicken:CodeChickenLib:${mc_version}-${ccl_version}:universal")
 		
 		compileOnly fg.deobf("curse.maven:the-one-probe-245211:3965693")
+	}
+	
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				artifact jar
+			}
+		}
+		repositories {
+			maven {
+				url "file://${projectDir}/mcmodsrepo"
+			}
+		}
+	}
+}
+
+project(':StaticCore') {
+
+}
+
+project(':StaticPower') {
+	dependencies { 
+		implementation fg.deobf(project(':StaticCore'))
 	}
 }

@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
@@ -25,12 +26,11 @@ import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter
 import theking530.staticcore.blockentity.components.items.OutputServoComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.item.InventoryUtilities;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
@@ -54,7 +54,7 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 		super(TYPE, pos, state);
 
 		// Get the tier.
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 
 		// Create the input inventory.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
