@@ -20,7 +20,7 @@ public enum MachineSideMode {
 	private SDColor color;
 
 	private MachineSideMode(String name, ChatFormatting fontColor, SDColor color) {
-		this.name = "gui.staticpower.mode." + name;
+		this.name = "gui.staticcore.mode." + name;
 		this.fontColor = fontColor;
 		this.color = color;
 	}

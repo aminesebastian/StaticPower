@@ -7,9 +7,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import theking530.staticcore.attribiutes.AttributeModifiers;
-import theking530.staticcore.attribiutes.AttributeValues;
-import theking530.staticcore.attribiutes.Attributes;
+import theking530.staticcore.attributes.AttributeModifiers;
+import theking530.staticcore.attributes.AttributeValues;
 import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.data.tiers.advanced.StaticCoreTierAdvanced;
 import theking530.staticcore.data.tiers.aluminum.StaticCoreTierAluminum;
@@ -73,7 +72,6 @@ public class StaticCore {
 
 		AttributeValues.init(eventBus);
 		AttributeModifiers.init(eventBus);
-		Attributes.init(eventBus);
 
 		StaticCoreItems.init(eventBus);
 		StaticCoreRecipeTypes.init(eventBus);

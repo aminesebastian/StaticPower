@@ -1,4 +1,4 @@
-package theking530.staticcore.attribiutes;
+package theking530.staticcore.attributes;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -6,9 +6,9 @@ import net.minecraftforge.registries.RegistryObject;
 import theking530.api.attributes.modifiers.AttributeModifierType;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.StaticCoreRegistries;
-import theking530.staticcore.attribiutes.modifiers.AdditiveNumberAttributeModifierType;
-import theking530.staticcore.attribiutes.modifiers.BooleanAttributeModifierType;
-import theking530.staticcore.attribiutes.modifiers.MultiplicativeNumberAttributeModifierType;
+import theking530.staticcore.attributes.modifiers.AdditiveNumberAttributeModifierType;
+import theking530.staticcore.attributes.modifiers.BooleanAttributeModifierType;
+import theking530.staticcore.attributes.modifiers.MultiplicativeNumberAttributeModifierType;
 
 public class AttributeModifiers {
 	private static final DeferredRegister<AttributeModifierType<?>> ATTRIBUTE_MODIFIERS = DeferredRegister.create(StaticCoreRegistries.ATTRIBUTE_MODIFIER_REGISTRY_KEY, StaticCore.MOD_ID);

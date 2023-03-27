@@ -1,4 +1,4 @@
-package theking530.staticcore.attribiutes.types;
+package theking530.staticpower.attributes;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import theking530.api.attributes.AttributeInstance;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.AttributeModifierInstance;
 import theking530.api.attributes.type.AttributeType;
-import theking530.staticcore.attribiutes.AttributeValues;
+import theking530.staticcore.attributes.AttributeValues;
 
 public class PromotedAttributeType extends AttributeType<Boolean> {
 

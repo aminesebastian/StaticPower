@@ -52,6 +52,7 @@ public class FakeSlotButton extends StandardButton {
 		return itemIcon;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (!itemIcon.isEmpty()) {

@@ -35,8 +35,11 @@ public class ItemAttributeRegistry {
 	}
 
 	public static class ItemAttributeRegisterEvent extends Event implements IModBusEvent {
+		public <T> void attach(Item item, AttributeType<T> attribute, T baseValue) {
+			INSTANCE.registerLayer(item, attribute, baseValue, null);
+		}
 
-		public <T> void attach(Item item, AttributeType<T> attribute, T baseValue, AbstractAttributeRenderLayer layer) {
+		public <T> void attach(Item item, AttributeType<T> attribute, T baseValue, @Nullable AbstractAttributeRenderLayer layer) {
 			INSTANCE.registerLayer(item, attribute, baseValue, layer);
 		}
 	}

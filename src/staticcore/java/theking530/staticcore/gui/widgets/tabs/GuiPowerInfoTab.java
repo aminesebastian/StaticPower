@@ -32,10 +32,10 @@ public class GuiPowerInfoTab extends AbstractInfoTab {
 		super("Power I/O", new SDColor(242, 0, 255), 105, new SDColor(0.6f, 0.1f, 1.0f), new SpriteDrawable(StaticCoreGuiTextures.POWER_TAB_ICON, 16, 16));
 		this.energyStorage = storage;
 
-		this.inputLabel = "gui.staticpower.power_tab.power_input";
-		this.maxInputLabel = "gui.staticpower.power_tab.max_power_input";
-		this.outputLabel = "gui.staticpower.power_tab.power_output";
-		this.maxOutputLabel = "gui.staticpower.power_tab.max_power_output";
+		this.inputLabel = "gui.staticcore.power_tab.power_input";
+		this.maxInputLabel = "gui.staticcore.power_tab.max_power_input";
+		this.outputLabel = "gui.staticcore.power_tab.power_output";
+		this.maxOutputLabel = "gui.staticcore.power_tab.max_power_output";
 		this.connectedPowerLineWidth = 0;
 	}
 
@@ -62,7 +62,7 @@ public class GuiPowerInfoTab extends AbstractInfoTab {
 		}
 		MutableComponent connPowerLine = PowerTextFormatting.formatVoltageToString(energyStorage.getLastRecievedVoltage());
 		connectedPowerLineWidth = Minecraft.getInstance().font.width(connPowerLine);
-		addKeyValueTwoLiner("Connection", Component.translatable("gui.staticpower.power_tab.connected_power"), connPowerLine, ChatFormatting.AQUA);
+		addKeyValueTwoLiner("Connection", Component.translatable("gui.staticcore.power_tab.connected_power"), connPowerLine, ChatFormatting.AQUA);
 	}
 
 	@Override

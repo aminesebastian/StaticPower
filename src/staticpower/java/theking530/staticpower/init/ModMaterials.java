@@ -382,7 +382,7 @@ public class ModMaterials {
 			.blockMaterial(BlockMaterial.existing(MaterialTypes.OVERWORLD_ORE, () -> Blocks.LAPIS_ORE, Tags.Items.ORES_LAPIS, Tags.Blocks.ORES_LAPIS))
 			.blockMaterial(BlockMaterial.existing(MaterialTypes.DEEPSLATE_ORE, () -> Blocks.DEEPSLATE_LAPIS_ORE, Tags.Items.ORES_LAPIS, Tags.Blocks.ORES_LAPIS))
 			.blockMaterial(BlockMaterial.existing(MaterialTypes.RAW_STOARGE_BLOCK, () -> Blocks.LAPIS_BLOCK, Tags.Items.STORAGE_BLOCKS_LAPIS, Tags.Blocks.STORAGE_BLOCKS_LAPIS))
-			.itemMaterial(ItemMaterial.existing(MaterialTypes.RAW_MATERIAL, () -> Items.QUARTZ, Tags.Items.GEMS_LAPIS))
+			.itemMaterial(ItemMaterial.existing(MaterialTypes.RAW_MATERIAL, () -> Items.LAPIS_LAZULI, Tags.Items.GEMS_LAPIS))
 			.itemMaterial(ItemMaterial.generate(MaterialTypes.CHUNKS, MaterialDomain.FORGE));
 	
 	public static final MaterialBundle REDSTONE = registerMaterial("redstone", MaterialBundleType.DUST)

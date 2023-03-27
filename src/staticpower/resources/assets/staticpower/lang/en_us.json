@@ -6,6 +6,17 @@
 	"itemGroup.staticpower.food": "Static Power: Food",
 	"itemGroup.staticpower.upgrades": "Static Power: Upgrades",
 	
+	"attribute.staticpower.fortune": "Fortune",
+	"attribute.staticpower.haste": "Haste",
+	"attribute.staticpower.grinding": "Grinding",
+	"attribute.staticpower.smelting": "Smelting",
+	"attribute.staticpower.silk_touch": "Silk Touch",
+	"attribute.staticpower.hardened_diamond": "Hardened",
+	"attribute.staticpower.hardened_ruby": "Hardened",
+	"attribute.staticpower.hardened_sapphire": "Hardened",
+	"attribute.staticpower.hardened_emerald": "Hardened",
+	"attribute.staticpower.promoted": "Promoted",
+
 	"item.staticpower.thermometer": "Thermometer",
 	
 	"item.staticpower.wrench": "Wrench",
@@ -520,7 +531,7 @@
 	"item.staticpower.bucket_molten_copper": "Molten Copper Bucket",
 	"item.staticpower.bucket_molten_tin": "Molten Tin Bucket",
 	"item.staticpower.bucket_molten_zinc": "Molten Zinc Bucket",
-	"item.staticpower.bucket_molten_magnesium": "Molten Magneisum Bucket",
+	"item.staticpower.bucket_molten_magnesium": "Molten Magnesium Bucket",
 	"item.staticpower.bucket_molten_aluminum": "Molten Aluminum Bucket",
 	"item.staticpower.bucket_molten_platinum": "Molten Platinum Bucket",
 	"item.staticpower.bucket_molten_tungsten": "Molten Tungsten Bucket",
@@ -1110,9 +1121,9 @@
 	"gui.staticpower.experience_hopper_tooltip": "Hoppin' full of XP!",
 	"gui.staticpower.experience_hopper_description": "This hopper is specifically engineered to drain the raw volatile power of liquid experience from a living thing!",
 	"gui.staticpower.rusty_cauldron_tooltip": "Double, double toil and trouble!",
-	"gui.staticpower.rusty_cauldron_description": "The BRAND NEW Static Industries Cauldron! Made from entirely recyled materials, this marvel of engineering will serve as a solid foundation for all your future endeavours. Warranty does not cover damages resulting from excessive rust. You have your tetanus shot, right?",
+	"gui.staticpower.rusty_cauldron_description": "The BRAND NEW Static Industries Cauldron! Made from entirely recycled materials, this marvel of engineering will serve as a solid foundation for all your future endeavors. Warranty does not cover damages resulting from excessive rust. You have your tetanus shot, right?",
 	"gui.staticpower.clean_cauldron_tooltip": "An elegant bucket, for a more civilized age.",
-	"gui.staticpower.clean_cauldron_description": "None of those NASTY recycled materials here. Every atom of this glorious, lustrous metalic shell is sourced from only the most abusive and vile silver mines, resulting in near double the efficiency! Rest easy knowing that 6 full grown men and 3 donkeys died to bring you this shiny metal bucket.",
+	"gui.staticpower.clean_cauldron_description": "None of those NASTY recycled materials here. Every atom of this glorious, lustrous metallic shell is sourced from only the most abusive and vile silver mines, resulting in near double the efficiency! Rest easy knowing that 6 full grown men and 3 donkeys died to bring you this shiny metal bucket.",
 	
 	"gui.staticpower.digistore_crafting_missing_items": "This crafting request cannot continue due to the missing items below!",
 	"gui.staticpower.digistore_crafting_missing_interface": "This crafting request cannot continue as there is no crafting interface capable of crafting one of the required items!",
@@ -1161,8 +1172,8 @@
 	
 	"gui.staticpower.digistore_wireless_terminal_advanced_tooltip": "Bound to terminal: %1$s",
 	
-	"gui.staticpower.fertlization": "Fertilization",
-	"gui.staticpower.fertlization_chance": "Fertilization Chance",
+	"gui.staticpower.fertilization": "Fertilization",
+	"gui.staticpower.fertilization_chance": "Fertilization Chance",
 	"gui.staticpower.remaining_heat_time": "Remaining Heat Time:",
 	"gui.staticpower.tool_speed_multiplier": "Mining Speed",
 	"gui.staticpower.transformer_upgrade_tooltip": "Upgrades a Machine from %1$s to %2$s",
@@ -1178,12 +1189,6 @@
 	"gui.staticpower.backpack_mode.locked": "Locked",
 	"gui.staticpower.backpack_mode.reload": "Reload",
 	
-	"gui.staticpower.product.fluid": "Fluid",
-	"gui.staticpower.product.fluids": "Fluids",
-	"gui.staticpower.product.item": "Item",
-	"gui.staticpower.product.items": "Items",
-	"gui.staticpower.product.power": "Power",
-	
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox",
 	"key.categories.staticpower": "Static Power",
@@ -1196,7 +1201,7 @@
 	"research.basic_cauldron.title": "Rubber Galore",
 	"research.basic_farming.title": "Alien Farming",
 	"research.basic_farming.description": "Get yourself a green thumb.",
-	"research.basic_hamering.title": "Hammer Time",
+	"research.basic_hammering.title": "Hammer Time",
 	"research.basic_research.title": "Back to School!",
 	"research.basic_research.description": "Here at Static Co., we take our research and development VERY seriously. So much so that you guys are the ONLY team we pay more than minimum wage. How you choose to spend that extra nickel is up to you.",
 	"research.basic_soldering.title": "Basic Soldering",

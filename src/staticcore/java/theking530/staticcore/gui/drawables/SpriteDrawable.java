@@ -69,7 +69,6 @@ public class SpriteDrawable implements IDrawable {
 		if (sprite != null) {
 			// Check to see if this is a REAL sprite, or just a texture. We could also just
 			// check for a file extension, but this seems safer.
-			@SuppressWarnings("deprecation")
 			TextureAtlasSprite atlasSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(sprite);
 			if (atlasSprite.getName().toString().equals("minecraft:missingno")) {
 				GuiDrawUtilities.drawTexture(pose, sprite, size.getX(), size.getY(), x, y, z, getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);

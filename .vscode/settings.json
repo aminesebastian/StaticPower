@@ -22,10 +22,40 @@
         "changelog.txt": true,
         "CREDITS.txt": true,
         ".project": true,
-        ".gitattributes": true
+        ".gitattributes": true,
+        "src/test": true,
+        "src/main": true,
+        ".gitignore": true,
+        "gradlew": true,
+        "**/.cache": true
     },
     "explorerExclude.backup": {},
     "cSpell.words": [
-        "DIGISTORE"
-    ]
+        "Crafter",
+        "Deepslate",
+        "DIGISTORE",
+        "drillable",
+        "Eather",
+        "Eeef",
+        "Enox",
+        "Fermenter",
+        "Hoppin",
+        "Lumum",
+        "minecraftforge",
+        "netherite",
+        "S'Meep",
+        "smeep",
+        "smutton",
+        "staticcore",
+        "staticpower",
+        "theking",
+        "unlocalized"
+    ],
+    "mcmodel-viewer.assetsRoots": [
+        "w:\\StaticPower\\Mod\\StaticPower\\src\\staticpower\\resources\\assets"
+    ],
+    "java.dependency.packagePresentation": "hierarchical",
+    "editor.fontSize": 14,
+    "prettier.printWidth": 165,
+    "java.debug.settings.hotCodeReplace": "auto"
 }

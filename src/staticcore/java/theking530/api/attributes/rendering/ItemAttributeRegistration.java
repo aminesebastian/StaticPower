@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -20,7 +22,10 @@ import theking530.api.attributes.type.AttributeType;
 public class ItemAttributeRegistration {
 	private final Map<AttributeType<?>, AttributeRegistration<?>> attributes;
 
-	public record AttributeRegistration<T> (AttributeType<T> attribute, T baseValue, AbstractAttributeRenderLayer renderLayer) {
+	public record AttributeRegistration<T> (AttributeType<T> attribute, T baseValue, @Nullable AbstractAttributeRenderLayer renderLayer) {
+		public boolean hasRenderLayer() {
+			return renderLayer != null;
+		}
 	}
 
 	/**
@@ -36,7 +41,7 @@ public class ItemAttributeRegistration {
 	 * 
 	 * @param layer
 	 */
-	public <T> void addAttribute(AttributeType<T> attributeId, T baseValue, AbstractAttributeRenderLayer layer) {
+	public <T> void addAttribute(AttributeType<T> attributeId, T baseValue, @Nullable AbstractAttributeRenderLayer layer) {
 		attributes.put(attributeId, new AttributeRegistration<T>(attributeId, baseValue, layer));
 	}
 
@@ -67,7 +72,9 @@ public class ItemAttributeRegistration {
 		// Then get all the layers in an unordered fashion.
 		for (AttributeType<?> attribute : attributable.getAllAttributes()) {
 			if (attributes.containsKey(attribute) && attributable.getAttribute(attribute).isActive()) {
-				applicableLayers.add(attributes.get(attribute).renderLayer());
+				if (attributes.get(attribute).hasRenderLayer()) {
+					applicableLayers.add(attributes.get(attribute).renderLayer());
+				}
 			}
 		}
 

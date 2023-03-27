@@ -16,11 +16,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.item.multipartitem.AbstractToolPart;
 import theking530.staticcore.utilities.MetricConverter;
 import theking530.staticcore.utilities.item.ItemTierUtilities;
 import theking530.staticpower.client.rendering.items.BladeItemModel;
 import theking530.staticpower.init.ModCreativeTabs;
+import theking530.staticpower.items.AbstractToolPart;
 
 public class Blade extends AbstractToolPart {
 	public final Tiers miningTier;

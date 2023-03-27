@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "minecraft:planks"
+    },
+    "i": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "pattern": [
+    "i i",
+    " g ",
+    "i i"
+  ],
+  "result": {
+    "item": "staticpower:turbine_blades_basic"
+  }
+}

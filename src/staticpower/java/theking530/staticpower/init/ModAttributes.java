@@ -1,4 +1,4 @@
-package theking530.staticcore.attribiutes;
+package theking530.staticpower.init;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -6,18 +6,18 @@ import net.minecraftforge.registries.RegistryObject;
 import theking530.api.attributes.type.AttributeType;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.StaticCoreRegistries;
-import theking530.staticcore.attribiutes.types.DiamondAttributeType;
-import theking530.staticcore.attribiutes.types.EmeraldAttributeType;
-import theking530.staticcore.attribiutes.types.FortuneAttributeType;
-import theking530.staticcore.attribiutes.types.GrindingAttributeType;
-import theking530.staticcore.attribiutes.types.HasteAttributeType;
-import theking530.staticcore.attribiutes.types.PromotedAttributeType;
-import theking530.staticcore.attribiutes.types.RubyAttributeType;
-import theking530.staticcore.attribiutes.types.SapphireAttributeType;
-import theking530.staticcore.attribiutes.types.SilkTouchAttributeType;
-import theking530.staticcore.attribiutes.types.SmeltingAttributeType;
+import theking530.staticpower.attributes.DiamondAttributeType;
+import theking530.staticpower.attributes.EmeraldAttributeType;
+import theking530.staticpower.attributes.FortuneAttributeType;
+import theking530.staticpower.attributes.GrindingAttributeType;
+import theking530.staticpower.attributes.HasteAttributeType;
+import theking530.staticpower.attributes.PromotedAttributeType;
+import theking530.staticpower.attributes.RubyAttributeType;
+import theking530.staticpower.attributes.SapphireAttributeType;
+import theking530.staticpower.attributes.SilkTouchAttributeType;
+import theking530.staticpower.attributes.SmeltingAttributeType;
 
-public class Attributes {
+public class ModAttributes {
 	private static final DeferredRegister<AttributeType<?>> ATTRIBUTES = DeferredRegister.create(StaticCoreRegistries.ATTRIBUTE_REGISTRY_KEY, StaticCore.MOD_ID);
 
 	public static final RegistryObject<DiamondAttributeType> DiamondHardened = ATTRIBUTES.register("hardened_diamond", () -> new DiamondAttributeType());

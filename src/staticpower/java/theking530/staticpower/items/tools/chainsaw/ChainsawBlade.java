@@ -18,12 +18,12 @@ import net.minecraftforge.client.event.ModelEvent;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.attribiutes.Attributes;
-import theking530.staticcore.item.multipartitem.AbstractToolPart;
 import theking530.staticcore.utilities.MetricConverter;
 import theking530.staticcore.utilities.item.ItemTierUtilities;
 import theking530.staticpower.client.rendering.items.ChainsawBladeItemModel;
+import theking530.staticpower.init.ModAttributes;
 import theking530.staticpower.init.ModCreativeTabs;
+import theking530.staticpower.items.AbstractToolPart;
 
 public class ChainsawBlade extends AbstractToolPart {
 	public final Tier miningTier;
@@ -42,8 +42,8 @@ public class ChainsawBlade extends AbstractToolPart {
 		// Get the drill bit attributes, check if it has the promoted attribute. If it
 		// does, promote the item.
 		IAttributable drillBitAttributes = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
-		if (drillBitAttributes != null && drillBitAttributes.hasAttribute(Attributes.Promoted.get())) {
-			return Attributes.Promoted.get().modifyItemTier(drillBitAttributes.getAttribute(Attributes.Promoted.get()), miningTier);
+		if (drillBitAttributes != null && drillBitAttributes.hasAttribute(ModAttributes.Promoted.get())) {
+			return ModAttributes.Promoted.get().modifyItemTier(drillBitAttributes.getAttribute(ModAttributes.Promoted.get()), miningTier);
 		}
 		return miningTier;
 	}

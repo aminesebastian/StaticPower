@@ -112,7 +112,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		if (burnTimeRemaining <= 0) {
-			return ProcessingCheckState.error("gui.staticpower.alert.out_of_fuel");
+			return ProcessingCheckState.error("gui.staticcore.alert.out_of_fuel");
 		}
 		return ProcessingCheckState.ok();
 	}

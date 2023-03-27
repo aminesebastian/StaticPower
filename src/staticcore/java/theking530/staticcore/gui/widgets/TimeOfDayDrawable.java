@@ -73,13 +73,13 @@ public class TimeOfDayDrawable extends AbstractGuiWidget<TimeOfDayDrawable> {
 		// Add the state of the day.
 		EStateOfDay dayState = getDayState();
 		if (dayState == EStateOfDay.DAY) {
-			output = Component.translatable("gui.staticpower.day");
+			output = Component.translatable("gui.staticcore.day");
 		} else if (dayState == EStateOfDay.SUNSET) {
-			output = Component.translatable("gui.staticpower.sunset");
+			output = Component.translatable("gui.staticcore.sunset");
 		} else if (dayState == EStateOfDay.SUNRISE) {
-			output = Component.translatable("gui.staticpower.sunrise");
+			output = Component.translatable("gui.staticcore.sunrise");
 		} else {
-			output = Component.translatable("gui.staticpower.night");
+			output = Component.translatable("gui.staticcore.night");
 		}
 
 		// Open parenthesis for the weather report.
@@ -87,11 +87,11 @@ public class TimeOfDayDrawable extends AbstractGuiWidget<TimeOfDayDrawable> {
 
 		// Add the weather report.
 		if (isRaining()) {
-			output.append(Component.translatable("gui.staticpower.rainy"));
+			output.append(Component.translatable("gui.staticcore.rainy"));
 		} else if (isSnowing()) {
-			output.append(Component.translatable("gui.staticpower.snowy"));
+			output.append(Component.translatable("gui.staticcore.snowy"));
 		} else {
-			output.append(Component.translatable("gui.staticpower.clear"));
+			output.append(Component.translatable("gui.staticcore.clear"));
 		}
 
 		// Close parenthesis for the weather report.

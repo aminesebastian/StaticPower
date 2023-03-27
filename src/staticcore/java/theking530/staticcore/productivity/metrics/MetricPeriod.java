@@ -4,10 +4,10 @@ import theking530.staticcore.utilities.SDTime;
 
 public enum MetricPeriod {
 	//@formatter:off
-		SECOND("second", "gui.staticpower.seconds", "gui.staticpower.seconds.short", SDTime.TICKS_PER_SECOND * 60,  1), 
-		MINUTE("minute", "gui.staticpower.minutes", "gui.staticpower.minutes.short", SDTime.TICKS_PER_MINUTE * 60, 60),
-		HOUR("hour", "gui.staticpower.hours", "gui.staticpower.hours.short", SDTime.TICKS_PER_HOUR * 24,  3600), 
-		DAY("day", "gui.staticpower.days", "gui.staticpower.days.short",  -1, 86400);
+		SECOND("second", "gui.staticcore.seconds", "gui.staticcore.seconds.short", SDTime.TICKS_PER_SECOND * 60,  1), 
+		MINUTE("minute", "gui.staticcore.minutes", "gui.staticcore.minutes.short", SDTime.TICKS_PER_MINUTE * 60, 60),
+		HOUR("hour", "gui.staticcore.hours", "gui.staticcore.hours.short", SDTime.TICKS_PER_HOUR * 24,  3600), 
+		DAY("day", "gui.staticcore.days", "gui.staticcore.days.short",  -1, 86400);
 		//@formatter:on
 
 	private final String tableKey;

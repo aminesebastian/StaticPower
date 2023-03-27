@@ -1,4 +1,4 @@
-package theking530.staticcore.item.multipartitem;
+package theking530.staticpower.items;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -8,9 +8,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.attributes.AttributeInstance;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.type.AttributeType;
-import theking530.staticcore.attribiutes.types.AbstractHardenedAttributeType;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.item.StaticCoreItem;
+import theking530.staticpower.attributes.AbstractHardenedAttributeType;
 
 public abstract class AbstractToolPart extends StaticCoreItem implements ICustomModelProvider {
 	protected final ResourceLocation tier;

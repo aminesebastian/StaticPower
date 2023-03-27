@@ -17,7 +17,7 @@ public class PowerProductType extends ProductType<PowerProductionStack> {
 
 	@Override
 	public String getUnlocalizedName(int amount) {
-		return "gui.staticpower.product.power";
+		return "gui.staticcore.product.power";
 	}
 
 	@Override

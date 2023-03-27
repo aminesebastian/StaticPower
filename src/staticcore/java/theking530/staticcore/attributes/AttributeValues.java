@@ -1,4 +1,4 @@
-package theking530.staticcore.attribiutes;
+package theking530.staticcore.attributes;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;

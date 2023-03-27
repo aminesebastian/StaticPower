@@ -110,10 +110,10 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 			// Draw the tooltip.
 			String openTooltip;
 			if (team.getResearchManager().hasSelectedResearch()) {
-				openTooltip = Component.translatable("gui.staticpower.research_menu_key_tooltip", StaticCoreKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
+				openTooltip = Component.translatable("gui.staticcore.research_menu_key_tooltip", StaticCoreKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
 						.getString();
 			} else {
-				openTooltip = Component.translatable("gui.staticpower.research_menu_no_selected_research_key_tooltip", StaticCoreKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
+				openTooltip = Component.translatable("gui.staticcore.research_menu_no_selected_research_key_tooltip", StaticCoreKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
 						.getString();
 			}
 

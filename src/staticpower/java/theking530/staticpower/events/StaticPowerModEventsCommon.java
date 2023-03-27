@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.api.attributes.ItemAttributeRegistry.ItemAttributeRegisterEvent;
 import theking530.api.attributes.rendering.AttributeRenderLayer;
-import theking530.staticcore.attribiutes.Attributes;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.machines.cropfarmer.BlockEntityBasicFarmer;
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.CactusCropHarvester;
@@ -22,6 +21,7 @@ import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.StemC
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.SugarCaneCropHarvester;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.entities.player.datacapability.IStaticPowerPlayerData;
+import theking530.staticpower.init.ModAttributes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModItems;
@@ -54,7 +54,24 @@ public class StaticPowerModEventsCommon {
 
 	@SubscribeEvent
 	public static void registerItemAttributes(ItemAttributeRegisterEvent event) {
-		event.attach(ModItems.AdvancedDrillBit.get(), Attributes.DiamondHardened.get(), false, new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_DIAMOND, 2));
+		event.attach(ModItems.AdvancedDrillBit.get(), ModAttributes.Grinding.get(), false, new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_GRINDING, -1));
+		event.attach(ModItems.AdvancedDrillBit.get(), ModAttributes.Smelting.get(), false, new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_SMELTING, 1));
+
+		event.attach(ModItems.AdvancedDrillBit.get(), ModAttributes.DiamondHardened.get(), false,
+				new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_DIAMOND, 2));
+		event.attach(ModItems.AdvancedDrillBit.get(), ModAttributes.EmeraldHardened.get(), false,
+				new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_EMERALD, 2));
+		event.attach(ModItems.AdvancedDrillBit.get(), ModAttributes.RubyHardened.get(), false,
+				new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_RUBY, 2));
+		event.attach(ModItems.AdvancedDrillBit.get(), ModAttributes.SapphireHardened.get(), false,
+				new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_SAPPHIRE, 2));
+
+		event.attach(ModItems.AdvancedDrillBit.get(), ModAttributes.Haste.get(), 0, new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HASTE, 3));
+
+		event.attach(ModItems.AdvancedDrillBit.get(), ModAttributes.SilkTouch.get(), false,
+				new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_SILK_TOUCH, 3));
+
+		event.attach(ModItems.AdvancedDrillBit.get(), ModAttributes.Fortune.get(), 0, new AttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_FORTUNE, 10));
 	}
 
 	@SubscribeEvent

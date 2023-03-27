@@ -22,7 +22,7 @@ public class SideConfigurationUtilities {
 		}
 
 		public MutableComponent getName() {
-			return Component.translatable("gui.staticpower.side." + name.toLowerCase());
+			return Component.translatable("gui.staticcore.side." + name.toLowerCase());
 		}
 
 		public Direction.AxisDirection getSign() {

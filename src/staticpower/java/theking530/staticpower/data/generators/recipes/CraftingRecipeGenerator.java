@@ -37,12 +37,16 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 	@Override
 	protected void buildRecipes() {
 
-		beginShapelessRecipe(ModBlocks.StaticPlanks.get(), 4, "wood/static_planks").requires(ModBlocks.StaticLog.get()).unlockedBy("has_log", hasItems(ModBlocks.StaticLog.get()));
-		beginShapelessRecipe(ModBlocks.EnergizedPlanks.get(), 4, "wood/energized_planks").requires(ModBlocks.EnergizedLog.get()).unlockedBy("has_log",
-				hasItems(ModBlocks.EnergizedLog.get()));
-		beginShapelessRecipe(ModBlocks.LumumPlanks.get(), 4, "wood/lumum_planks").requires(ModBlocks.LumumLog.get()).unlockedBy("has_log", hasItems(ModBlocks.LumumLog.get()));
-		beginShapelessRecipe(ModBlocks.RubberTreePlanks.get(), 4, "wood/rubber_planks").requires(ModItemTags.RUBBER_WOOD_LOGS).unlockedBy("has_log",
-				hasItems(ModItemTags.RUBBER_WOOD_LOGS));
+		beginShapelessRecipe(ModBlocks.StaticPlanks.get(), 4, "wood/static_planks").requires(ModBlocks.StaticLog.get())
+				.unlockedBy("has_log", hasItems(ModBlocks.StaticLog.get()));
+		beginShapelessRecipe(ModBlocks.EnergizedPlanks.get(), 4, "wood/energized_planks")
+				.requires(ModBlocks.EnergizedLog.get()).unlockedBy("has_log",
+						hasItems(ModBlocks.EnergizedLog.get()));
+		beginShapelessRecipe(ModBlocks.LumumPlanks.get(), 4, "wood/lumum_planks").requires(ModBlocks.LumumLog.get())
+				.unlockedBy("has_log", hasItems(ModBlocks.LumumLog.get()));
+		beginShapelessRecipe(ModBlocks.RubberTreePlanks.get(), 4, "wood/rubber_planks")
+				.requires(ModItemTags.RUBBER_WOOD_LOGS).unlockedBy("has_log",
+						hasItems(ModItemTags.RUBBER_WOOD_LOGS));
 
 		// @formatter:off
 		beginShapedRecipe(ModBlocks.RubberTreeStrippedWood.get(), "wood/rubber_wood_stripped/")
@@ -54,7 +58,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 
 		for (MaterialBundle material : ModMaterials.MATERIALS.values()) {
-			if (material.hasGeneratedMaterial(MaterialTypes.STORAGE_BLOCK) && material.hasGeneratedMaterial(MaterialTypes.INGOT)) {
+			if (material.hasGeneratedMaterial(MaterialTypes.STORAGE_BLOCK)
+					&& material.hasGeneratedMaterial(MaterialTypes.INGOT)) {
 				// @formatter:off
 				beginShapedRecipe(material.get(MaterialTypes.STORAGE_BLOCK).get(), "storage_blocks/from_ingots/" + material.getName())
 					.define('i', material.get(MaterialTypes.INGOT).getItemTag())
@@ -64,12 +69,14 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 					.unlockedBy("has_ingot", hasItems(material.get(MaterialTypes.INGOT).getItemTag()));
 				// @formatter:on
 
-				beginShapelessRecipe(material.get(MaterialTypes.INGOT).get(), 9, "ingots/from_block/" + material.getName())
+				beginShapelessRecipe(material.get(MaterialTypes.INGOT).get(), 9,
+						"ingots/from_block/" + material.getName())
 						.requires(material.get(MaterialTypes.STORAGE_BLOCK).getItemTag())
 						.unlockedBy("has__block", hasItems(material.get(MaterialTypes.STORAGE_BLOCK).getItemTag()));
 			}
 
-			if (material.hasGeneratedMaterial(MaterialTypes.RAW_STOARGE_BLOCK) && material.hasGeneratedMaterial(MaterialTypes.RAW_MATERIAL)) {
+			if (material.hasGeneratedMaterial(MaterialTypes.RAW_STOARGE_BLOCK)
+					&& material.hasGeneratedMaterial(MaterialTypes.RAW_MATERIAL)) {
 				// @formatter:off
 				beginShapedRecipe(material.get(MaterialTypes.RAW_STOARGE_BLOCK).get(), "storage_blocks/from_raw_materials/" + material.getName())
 					.define('i', material.get(MaterialTypes.RAW_MATERIAL).getItemTag())
@@ -79,9 +86,11 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 					.unlockedBy("has_raw_material", hasItems(material.get(MaterialTypes.RAW_MATERIAL).getItemTag()));
 				// @formatter:on
 
-				beginShapelessRecipe(material.get(MaterialTypes.RAW_MATERIAL).get(), 9, "raw_materials/from_block/" + material.getName())
+				beginShapelessRecipe(material.get(MaterialTypes.RAW_MATERIAL).get(), 9,
+						"raw_materials/from_block/" + material.getName())
 						.requires(material.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag())
-						.unlockedBy("has_raw_block", hasItems(material.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag()));
+						.unlockedBy("has_raw_block",
+								hasItems(material.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag()));
 			}
 
 			if (material.has(MaterialTypes.INGOT) && material.hasGeneratedMaterial(MaterialTypes.NUGGET)) {
@@ -94,8 +103,10 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 					.unlockedBy("has_nugget", hasItems(material.get(MaterialTypes.NUGGET).getItemTag()));
 				// @formatter:on
 
-				beginShapelessRecipe(material.get(MaterialTypes.NUGGET).get(), 9, "nuggets/from_ingot/" + material.getName())
-						.requires(material.get(MaterialTypes.INGOT).getItemTag()).unlockedBy("has_ingot", hasItems(material.get(MaterialTypes.INGOT).getItemTag()));
+				beginShapelessRecipe(material.get(MaterialTypes.NUGGET).get(), 9,
+						"nuggets/from_ingot/" + material.getName())
+						.requires(material.get(MaterialTypes.INGOT).getItemTag())
+						.unlockedBy("has_ingot", hasItems(material.get(MaterialTypes.INGOT).getItemTag()));
 			}
 
 			if (material.has(MaterialTypes.GEAR)) {
@@ -122,14 +133,18 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 			}
 
 			if (material.has(MaterialTypes.WIRE)) {
-				beginShapelessRecipe(material.get(MaterialTypes.WIRE).get(), 3, "wire/from_ingot/" + material.getName()).requires(material.get(MaterialTypes.INGOT).getItemTag())
-						.requires(ModItemTags.WIRE_CUTTER).unlockedBy("has_ingot", hasItems(material.get(MaterialTypes.INGOT).getItemTag()))
+				beginShapelessRecipe(material.get(MaterialTypes.WIRE).get(), 3, "wire/from_ingot/" + material.getName())
+						.requires(material.get(MaterialTypes.INGOT).getItemTag())
+						.requires(ModItemTags.WIRE_CUTTER)
+						.unlockedBy("has_ingot", hasItems(material.get(MaterialTypes.INGOT).getItemTag()))
 						.unlockedBy("has_wire_cutter", hasWireCutter());
 
 				if (material.has(MaterialTypes.PLATE)) {
-					beginShapelessRecipe(material.get(MaterialTypes.WIRE).get(), 3, "wire/from_plate/" + material.getName())
+					beginShapelessRecipe(material.get(MaterialTypes.WIRE).get(), 3,
+							"wire/from_plate/" + material.getName())
 							.requires(material.get(MaterialTypes.PLATE).getItemTag()).requires(ModItemTags.WIRE_CUTTER)
-							.unlockedBy("has_plate", hasItems(material.get(MaterialTypes.INGOT).getItemTag())).unlockedBy("has_wire_cutter", hasWireCutter());
+							.unlockedBy("has_plate", hasItems(material.get(MaterialTypes.INGOT).getItemTag()))
+							.unlockedBy("has_wire_cutter", hasWireCutter());
 				}
 			}
 
@@ -147,7 +162,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 			}
 
 			if (material.has(MaterialTypes.WIRE_COIL)) {
-				wireCoil(material.getName(), material.get(MaterialTypes.WIRE_COIL).get(), RecipeItem.of(material.get(MaterialTypes.WIRE).getItemTag()));
+				wireCoil(material.getName(), material.get(MaterialTypes.WIRE_COIL).get(),
+						RecipeItem.of(material.get(MaterialTypes.WIRE).getItemTag()));
 			}
 
 			if (material.has(MaterialTypes.INSULATED_WIRE_COIL)) {
@@ -168,50 +184,78 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 
 		beginShapelessRecipe(ModMaterials.COPPER.get(MaterialTypes.DUST).get(), 2, "dusts/brass_from_dusts")
-				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag()).requires(ModMaterials.ZINC.get(MaterialTypes.DUST).getItemTag())
+				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag())
+				.requires(ModMaterials.ZINC.get(MaterialTypes.DUST).getItemTag())
 				.unlockedBy("has_brass_dust_components",
-						hasItems(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag(), ModMaterials.ZINC.get(MaterialTypes.DUST).getItemTag()));
+						hasItems(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag(),
+								ModMaterials.ZINC.get(MaterialTypes.DUST).getItemTag()));
 
 		beginShapelessRecipe(ModMaterials.COPPER.get(MaterialTypes.DUST).get(), 4, "dusts/bronze_from_dusts")
-				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag()).requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag())
-				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag()).requires(ModMaterials.TIN.get(MaterialTypes.DUST).getItemTag())
+				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag())
+				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag())
+				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag())
+				.requires(ModMaterials.TIN.get(MaterialTypes.DUST).getItemTag())
 				.unlockedBy("has_brass_dust_components",
-						hasItems(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag(), ModMaterials.TIN.get(MaterialTypes.DUST).getItemTag()));
+						hasItems(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag(),
+								ModMaterials.TIN.get(MaterialTypes.DUST).getItemTag()));
 
-		beginShapelessRecipe(ModMaterials.INERT_INFUSION.get(MaterialTypes.DUST).get(), 3, "dusts/inert_infusion_from_dusts")
-				.requires(ModMaterials.IRON.get(MaterialTypes.DUST).getItemTag()).requires(ModMaterials.GOLD.get(MaterialTypes.DUST).getItemTag())
+		beginShapelessRecipe(ModMaterials.INERT_INFUSION.get(MaterialTypes.DUST).get(), 3,
+				"dusts/inert_infusion_from_dusts")
+				.requires(ModMaterials.IRON.get(MaterialTypes.DUST).getItemTag())
+				.requires(ModMaterials.GOLD.get(MaterialTypes.DUST).getItemTag())
 				.requires(ModMaterials.PLATINUM.get(MaterialTypes.DUST).getItemTag())
-				.unlockedBy("has_inert_infusion_dust_components", hasItems(ModMaterials.IRON.get(MaterialTypes.DUST).getItemTag(),
-						ModMaterials.GOLD.get(MaterialTypes.DUST).getItemTag(), ModMaterials.PLATINUM.get(MaterialTypes.DUST).getItemTag()));
+				.unlockedBy("has_inert_infusion_dust_components",
+						hasItems(ModMaterials.IRON.get(MaterialTypes.DUST).getItemTag(),
+								ModMaterials.GOLD.get(MaterialTypes.DUST).getItemTag(),
+								ModMaterials.PLATINUM.get(MaterialTypes.DUST).getItemTag()));
 
-		beginShapelessRecipe(ModMaterials.REDSTONE_ALLOY.get(MaterialTypes.DUST).get(), 2, "dusts/redstone_alloy_from_dusts")
+		beginShapelessRecipe(ModMaterials.REDSTONE_ALLOY.get(MaterialTypes.DUST).get(), 2,
+				"dusts/redstone_alloy_from_dusts")
 				.requires(ModMaterials.SILVER.get(MaterialTypes.DUST).getItemTag()).requires(Items.REDSTONE)
-				.unlockedBy("has_redston_alloy_dust_components", hasItems(ModMaterials.SILVER.get(MaterialTypes.DUST).getItemTag(), Tags.Items.DUSTS_REDSTONE));
+				.unlockedBy("has_redston_alloy_dust_components",
+						hasItems(ModMaterials.SILVER.get(MaterialTypes.DUST).getItemTag(), Tags.Items.DUSTS_REDSTONE));
 
-		portableBattery("basic", ModItems.BasicPortableBattery.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(Tags.Items.DUSTS_REDSTONE));
-		portableBattery("advanced", ModItems.AdvancedPortableBattery.get(), RecipeItem.of(ModMaterials.GOLD.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(Tags.Items.DUSTS_REDSTONE));
-		portableBattery("static", ModItems.StaticPortableBattery.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(ModItems.CrystalStatic.get()));
-		portableBattery("energized", ModItems.EnergizedPortableBattery.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		portableBattery("basic", ModItems.BasicPortableBattery.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.NUGGET).getItemTag()),
+				RecipeItem.of(Tags.Items.DUSTS_REDSTONE));
+		portableBattery("advanced", ModItems.AdvancedPortableBattery.get(),
+				RecipeItem.of(ModMaterials.GOLD.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.NUGGET).getItemTag()),
+				RecipeItem.of(Tags.Items.DUSTS_REDSTONE));
+		portableBattery("static", ModItems.StaticPortableBattery.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.NUGGET).getItemTag()),
+				RecipeItem.of(ModItems.CrystalStatic.get()));
+		portableBattery("energized", ModItems.EnergizedPortableBattery.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(Tags.Items.NUGGETS_GOLD), RecipeItem.of(ModItems.CrystalEnergized.get()));
-		portableBattery("lumum", ModItems.LumumPortableBattery.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.PLATINUM.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(ModItems.CrystalLumum.get()));
+		portableBattery("lumum", ModItems.LumumPortableBattery.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.PLATINUM.get(MaterialTypes.NUGGET).getItemTag()),
+				RecipeItem.of(ModItems.CrystalLumum.get()));
 
-		batteryPack("basic", ModItems.BasicBatteryPack.get(), RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.WIRE).getItemTag()),
+		batteryPack("basic", ModItems.BasicBatteryPack.get(),
+				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.WIRE).getItemTag()),
 				RecipeItem.of(ModItems.BasicPortableBattery.get()), RecipeItem.of(ModItems.BasicProcessor.get()));
-		batteryPack("advanced", ModItems.AdvancedBatteryPack.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.WIRE).getItemTag()),
+		batteryPack("advanced", ModItems.AdvancedBatteryPack.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.WIRE).getItemTag()),
 				RecipeItem.of(ModItems.AdvancedPortableBattery.get()), RecipeItem.of(ModItems.AdvancedProcessor.get()));
-		batteryPack("static", ModItems.StaticBatteryPack.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.WIRE).getItemTag()),
+		batteryPack("static", ModItems.StaticBatteryPack.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.WIRE).getItemTag()),
 				RecipeItem.of(ModItems.StaticPortableBattery.get()), RecipeItem.of(ModItems.StaticProcessor.get()));
-		batteryPack("energized", ModItems.EnergizedBatteryPack.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.WIRE).getItemTag()),
-				RecipeItem.of(ModItems.EnergizedPortableBattery.get()), RecipeItem.of(ModItems.EnergizedProcessor.get()));
-		batteryPack("lumum", ModItems.LumumBatteryPack.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.WIRE).getItemTag()),
+		batteryPack("energized", ModItems.EnergizedBatteryPack.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.WIRE).getItemTag()),
+				RecipeItem.of(ModItems.EnergizedPortableBattery.get()),
+				RecipeItem.of(ModItems.EnergizedProcessor.get()));
+		batteryPack("lumum", ModItems.LumumBatteryPack.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.WIRE).getItemTag()),
 				RecipeItem.of(ModItems.LumumPortableBattery.get()), RecipeItem.of(ModItems.LumumProcessor.get()));
 
-		heatCable("aluminum", ModBlocks.HeatCables.get(StaticCoreTiers.ALUMINUM).get(), RecipeItem.of(ModMaterials.ALUMINUM.get(MaterialTypes.INGOT).getItemTag()));
-		heatCable("copper", ModBlocks.HeatCables.get(StaticCoreTiers.COPPER).get(), RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.INGOT).getItemTag()));
+		heatCable("aluminum", ModBlocks.HeatCables.get(StaticCoreTiers.ALUMINUM).get(),
+				RecipeItem.of(ModMaterials.ALUMINUM.get(MaterialTypes.INGOT).getItemTag()));
+		heatCable("copper", ModBlocks.HeatCables.get(StaticCoreTiers.COPPER).get(),
+				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.INGOT).getItemTag()));
 		heatCable("gold", ModBlocks.HeatCables.get(StaticCoreTiers.GOLD).get(), RecipeItem.of(Tags.Items.INGOTS_GOLD));
 
 		// @formatter:off
@@ -234,32 +278,44 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 			.unlockedBy("has_items", hasItems(Tags.Items.INGOTS_COPPER, ItemTags.WOOL));
 		// @formatter:on
 
-		itemTube("basic", ModBlocks.ItemCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("basic", ModBlocks.ItemCables.get(StaticCoreTiers.BASIC).get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		itemTube("advanced", ModBlocks.ItemCables.get(StaticCoreTiers.ADVANCED).get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("advanced", ModBlocks.ItemCables.get(StaticCoreTiers.ADVANCED).get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		itemTube("static", ModBlocks.ItemCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("static", ModBlocks.ItemCables.get(StaticCoreTiers.STATIC).get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		itemTube("energized", ModBlocks.ItemCables.get(StaticCoreTiers.ENERGIZED).get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("energized", ModBlocks.ItemCables.get(StaticCoreTiers.ENERGIZED).get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		itemTube("lumum", ModBlocks.ItemCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		itemTube("lumum", ModBlocks.ItemCables.get(StaticCoreTiers.LUMUM).get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
-		fluidPipe("basic", ModBlocks.FluidCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("basic", ModBlocks.FluidCables.get(StaticCoreTiers.BASIC).get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		fluidPipe("advanced", ModBlocks.FluidCables.get(StaticCoreTiers.ADVANCED).get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("advanced", ModBlocks.FluidCables.get(StaticCoreTiers.ADVANCED).get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		fluidPipe("static", ModBlocks.FluidCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("static", ModBlocks.FluidCables.get(StaticCoreTiers.STATIC).get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		fluidPipe("energized", ModBlocks.FluidCables.get(StaticCoreTiers.ENERGIZED).get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("energized", ModBlocks.FluidCables.get(StaticCoreTiers.ENERGIZED).get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		fluidPipe("lumum", ModBlocks.FluidCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		fluidPipe("lumum", ModBlocks.FluidCables.get(StaticCoreTiers.LUMUM).get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
-		capillaryFluidPipe("basic", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		capillaryFluidPipe("basic", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.BASIC).get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
 		capillaryFluidPipe("advanced", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.ADVANCED).get(),
-				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
 		capillaryFluidPipe("static", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.STATIC).get(),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
@@ -267,42 +323,57 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
 		capillaryFluidPipe("lumum", ModBlocks.CapillaryFluidCables.get(StaticCoreTiers.LUMUM).get(),
-				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
-
-		industrialFluidPipe("basic", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.LUMUM).get()));
-		industrialFluidPipe("advanced", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.ADVANCED).get(),
-				RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.ADVANCED).get()));
-		industrialFluidPipe("static", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.STATIC).get()));
-		industrialFluidPipe("energized", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.ENERGIZED).get(),
-				RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.ENERGIZED).get()));
-		industrialFluidPipe("lumum", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.LUMUM).get()));
-
-		powerCable("basic", ModBlocks.PowerCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		powerCable("advanced", ModBlocks.PowerCables.get(StaticCoreTiers.ADVANCED).get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		powerCable("static", ModBlocks.PowerCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		powerCable("energized", ModBlocks.PowerCables.get(StaticCoreTiers.ENERGIZED).get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		powerCable("lumum", ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
-		insulatedPowerCable("basic", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.BASIC).get()));
+		industrialFluidPipe("basic", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.BASIC).get(),
+				RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.LUMUM).get()));
+		industrialFluidPipe("advanced", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.ADVANCED).get(),
+				RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.ADVANCED).get()));
+		industrialFluidPipe("static", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.STATIC).get(),
+				RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.STATIC).get()));
+		industrialFluidPipe("energized", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.ENERGIZED).get(),
+				RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.ENERGIZED).get()));
+		industrialFluidPipe("lumum", ModBlocks.IndustrialFluidCables.get(StaticCoreTiers.LUMUM).get(),
+				RecipeItem.of(ModBlocks.FluidCables.get(StaticCoreTiers.LUMUM).get()));
+
+		powerCable("basic", ModBlocks.PowerCables.get(StaticCoreTiers.BASIC).get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
+		powerCable("advanced", ModBlocks.PowerCables.get(StaticCoreTiers.ADVANCED).get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
+		powerCable("static", ModBlocks.PowerCables.get(StaticCoreTiers.STATIC).get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		powerCable("energized", ModBlocks.PowerCables.get(StaticCoreTiers.ENERGIZED).get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		powerCable("lumum", ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
+
+		insulatedPowerCable("basic", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.BASIC).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.BASIC).get()));
 		insulatedPowerCable("advanced", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.ADVANCED).get(),
 				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.ADVANCED).get()));
-		insulatedPowerCable("static", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.STATIC).get()));
+		insulatedPowerCable("static", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.STATIC).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.STATIC).get()));
 		insulatedPowerCable("energized", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.ENERGIZED).get(),
 				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.ENERGIZED).get()));
-		insulatedPowerCable("lumum", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get()));
+		insulatedPowerCable("lumum", ModBlocks.InsulatedPowerCables.get(StaticCoreTiers.LUMUM).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get()));
 
-		industrialPowerCable("basic", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.BASIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get()));
+		industrialPowerCable("basic", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.BASIC).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get()));
 		industrialPowerCable("advanced", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.ADVANCED).get(),
 				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.ADVANCED).get()));
-		industrialPowerCable("static", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.STATIC).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.STATIC).get()));
+		industrialPowerCable("static", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.STATIC).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.STATIC).get()));
 		industrialPowerCable("energized", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.ENERGIZED).get(),
 				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.ENERGIZED).get()));
-		industrialPowerCable("lumum", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.LUMUM).get(), RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get()));
+		industrialPowerCable("lumum", ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.LUMUM).get(),
+				RecipeItem.of(ModBlocks.PowerCables.get(StaticCoreTiers.LUMUM).get()));
 
 		// @formatter:off
 		beginShapedRecipe(ModBlocks.BasicRedstoneCableNaked.get(), 6, "redstone_cable/naked")
@@ -318,23 +389,38 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 					RecipeItem.of(ModItemTags.createForgeTag("wool/" + tier.color().getName())));
 		}
 
-		extractorAttachment("basic", ModItems.BasicExtractorAttachment.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		extractorAttachment("advanced", ModItems.AdvancedExtractorAttachment.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		extractorAttachment("static", ModItems.StaticExtractorAttachment.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		extractorAttachment("energized", ModItems.EnergizedExtractorAttachment.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		extractorAttachment("lumum", ModItems.LumumExtractorAttachment.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		extractorAttachment("basic", ModItems.BasicExtractorAttachment.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
+		extractorAttachment("advanced", ModItems.AdvancedExtractorAttachment.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
+		extractorAttachment("static", ModItems.StaticExtractorAttachment.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		extractorAttachment("energized", ModItems.EnergizedExtractorAttachment.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		extractorAttachment("lumum", ModItems.LumumExtractorAttachment.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
-		filterAttachment("basic", ModItems.BasicFilterAttachment.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		filterAttachment("advanced", ModItems.AdvancedFilterAttachment.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		filterAttachment("static", ModItems.StaticFilterAttachment.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		filterAttachment("energized", ModItems.EnergizedFilterAttachment.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		filterAttachment("lumum", ModItems.LumumFilterAttachment.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		filterAttachment("basic", ModItems.BasicFilterAttachment.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
+		filterAttachment("advanced", ModItems.AdvancedFilterAttachment.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
+		filterAttachment("static", ModItems.StaticFilterAttachment.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		filterAttachment("energized", ModItems.EnergizedFilterAttachment.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		filterAttachment("lumum", ModItems.LumumFilterAttachment.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
-		retrieverAttachment("basic", ModItems.BasicRetrieverAttachment.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		retrieverAttachment("advanced", ModItems.AdvancedRetrieverAttachment.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
-		retrieverAttachment("static", ModItems.StaticRetrieverAttachment.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		retrieverAttachment("energized", ModItems.EnergizedRetrieverAttachment.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
-		retrieverAttachment("lumum", ModItems.LumumRetrieverAttachment.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		retrieverAttachment("basic", ModItems.BasicRetrieverAttachment.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
+		retrieverAttachment("advanced", ModItems.AdvancedRetrieverAttachment.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()));
+		retrieverAttachment("static", ModItems.StaticRetrieverAttachment.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		retrieverAttachment("energized", ModItems.EnergizedRetrieverAttachment.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()));
+		retrieverAttachment("lumum", ModItems.LumumRetrieverAttachment.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()));
 
 		chainsawBlade("iron", ModItems.IronChainsawBlade.get(), RecipeItem.of(ModItems.IronBlade.get()));
 		chainsawBlade("bronze", ModItems.BronzeChainsawBlade.get(), RecipeItem.of(ModItems.BronzeBlade.get()));
@@ -344,27 +430,38 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		chainsawBlade("lumum", ModItems.LumumChainsawBlade.get(), RecipeItem.of(ModItems.LumumBlade.get()));
 		chainsawBlade("tungsten", ModItems.TungstenChainsawBlade.get(), RecipeItem.of(ModItems.TungstenBlade.get()));
 
-		chest("basic", ModBlocks.BasicChest.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()),
+		chest("basic", ModBlocks.BasicChest.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()));
-		chest("advanced", ModBlocks.AdvancedChest.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
+		chest("advanced", ModBlocks.AdvancedChest.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()));
-		chest("static", ModBlocks.StaticChest.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		chest("static", ModBlocks.StaticChest.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()));
-		chest("energized", ModBlocks.EnergizedChest.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		chest("energized", ModBlocks.EnergizedChest.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()));
-		chest("lumum", ModBlocks.LumumChest.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		chest("lumum", ModBlocks.LumumChest.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()));
 
-		fluidCapsule("iron", ModItems.IronFluidCapsule.get(), RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.PLATE).getItemTag()), RecipeItem.of(Items.BUCKET));
-		fluidCapsule("basic", ModItems.BasicFluidCapsule.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		fluidCapsule("iron", ModItems.IronFluidCapsule.get(),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.PLATE).getItemTag()), RecipeItem.of(Items.BUCKET));
+		fluidCapsule("basic", ModItems.BasicFluidCapsule.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.IronFluidCapsule.get()));
-		fluidCapsule("advanced", ModItems.AdvancedFluidCapsule.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		fluidCapsule("advanced", ModItems.AdvancedFluidCapsule.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.BasicFluidCapsule.get()));
-		fluidCapsule("static", ModItems.StaticFluidCapsule.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		fluidCapsule("static", ModItems.StaticFluidCapsule.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.AdvancedFluidCapsule.get()));
-		fluidCapsule("energized", ModItems.EnergizedFluidCapsule.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		fluidCapsule("energized", ModItems.EnergizedFluidCapsule.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.StaticFluidCapsule.get()));
-		fluidCapsule("lumum", ModItems.LumumFluidCapsule.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		fluidCapsule("lumum", ModItems.LumumFluidCapsule.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.EnergizedFluidCapsule.get()));
 
 		pie("apple", ModItems.ApplePie.get(), RecipeItem.of(Items.APPLE));
@@ -373,7 +470,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		pie("lumum", ModItems.LumumPie.get(), RecipeItem.of(ModItems.LumumFruit.get()));
 
 		for (MinecraftColor color : MinecraftColor.values()) {
-			lightbulb(color.getName(), ModItems.Lightbulbs.get(color).get(), RecipeItem.of(ModItemTags.createForgeTag("glass_panes/" + color.getName())));
+			lightbulb(color.getName(), ModItems.Lightbulbs.get(color).get(),
+					RecipeItem.of(ModItemTags.createForgeTag("glass_panes/" + color.getName())));
 		}
 
 		bed(MinecraftColor.WHITE.getName(), Blocks.WHITE_BED, RecipeItem.of(Blocks.WHITE_WOOL));
@@ -393,15 +491,20 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		bed(MinecraftColor.PURPLE.getName(), Blocks.PURPLE_BED, RecipeItem.of(Blocks.PURPLE_WOOL));
 		bed(MinecraftColor.MAGENTA.getName(), Blocks.MAGENTA_BED, RecipeItem.of(Blocks.MAGENTA_WOOL));
 
-		poweredMagnet("basic", ModItems.BasicMagnet.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()),
+		poweredMagnet("basic", ModItems.BasicMagnet.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModItems.BasicPortableBattery.get()));
-		poweredMagnet("advanced", ModItems.AdvancedMagnet.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
+		poweredMagnet("advanced", ModItems.AdvancedMagnet.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModItems.AdvancedPortableBattery.get()));
-		poweredMagnet("static", ModItems.StaticMagnet.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		poweredMagnet("static", ModItems.StaticMagnet.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModItems.StaticPortableBattery.get()));
-		poweredMagnet("energized", ModItems.EnergizedMagnet.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		poweredMagnet("energized", ModItems.EnergizedMagnet.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModItems.EnergizedPortableBattery.get()));
-		poweredMagnet("lumum", ModItems.LumumMagnet.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		poweredMagnet("lumum", ModItems.LumumMagnet.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModItems.LumumPortableBattery.get()));
 
 		// @formatter:off
@@ -414,103 +517,165 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 			.unlockedBy("has_items", hasItems(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag(), ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()));
 		// @formatter:on
 
-		solarPanel("basic", ModBlocks.SolarPanelBasic.get(), RecipeItem.of(ModItems.BasicProcessor.get()), RecipeItem.of(ModItems.Silicon.get()));
-		solarPanel("advanced", ModBlocks.SolarPanelAdvanced.get(), RecipeItem.of(ModItems.AdvancedProcessor.get()), RecipeItem.of(ModItems.Silicon.get()));
-		solarPanel("static", ModBlocks.SolarPanelStatic.get(), RecipeItem.of(ModItems.StaticProcessor.get()), RecipeItem.of(ModItems.StaticDopedSilicon.get()));
-		solarPanel("energized", ModBlocks.SolarPanelEnergized.get(), RecipeItem.of(ModItems.EnergizedProcessor.get()), RecipeItem.of(ModItems.EnergizedDopedSilicon.get()));
-		solarPanel("lumum", ModBlocks.SolarPanelLumum.get(), RecipeItem.of(ModItems.LumumProcessor.get()), RecipeItem.of(ModItems.LumumDopedSilicon.get()));
+		solarPanel("basic", ModBlocks.SolarPanelBasic.get(), RecipeItem.of(ModItems.BasicProcessor.get()),
+				RecipeItem.of(ModItems.Silicon.get()));
+		solarPanel("advanced", ModBlocks.SolarPanelAdvanced.get(), RecipeItem.of(ModItems.AdvancedProcessor.get()),
+				RecipeItem.of(ModItems.Silicon.get()));
+		solarPanel("static", ModBlocks.SolarPanelStatic.get(), RecipeItem.of(ModItems.StaticProcessor.get()),
+				RecipeItem.of(ModItems.StaticDopedSilicon.get()));
+		solarPanel("energized", ModBlocks.SolarPanelEnergized.get(), RecipeItem.of(ModItems.EnergizedProcessor.get()),
+				RecipeItem.of(ModItems.EnergizedDopedSilicon.get()));
+		solarPanel("lumum", ModBlocks.SolarPanelLumum.get(), RecipeItem.of(ModItems.LumumProcessor.get()),
+				RecipeItem.of(ModItems.LumumDopedSilicon.get()));
 
-		turbineBlade("basic", ModItems.BasicTurbineBlades.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()),
+		turbineBlade("wooden", ModItems.WoodTurbineBlades.get(), RecipeItem.of(Tags.Items.RODS_WOODEN),
+				RecipeItem.of(ItemTags.PLANKS));
+		turbineBlade("basic", ModItems.BasicTurbineBlades.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.GEAR_BOX).get()));
-		turbineBlade("advanced", ModItems.AdvancedTurbineBlades.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
+		turbineBlade("advanced", ModItems.AdvancedTurbineBlades.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.GEAR_BOX).get()));
-		turbineBlade("static", ModItems.StaticTurbineBlades.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		turbineBlade("static", ModItems.StaticTurbineBlades.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.GEAR_BOX).get()));
-		turbineBlade("energized", ModItems.EnergizedTurbineBlades.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		turbineBlade("energized", ModItems.EnergizedTurbineBlades.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.GEAR_BOX).get()));
-		turbineBlade("lumum", ModItems.LumumTurbineBlades.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		turbineBlade("lumum", ModItems.LumumTurbineBlades.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.GEAR_BOX).get()));
 
-		wireTerminal("low_voltage", ModBlocks.WireConnectorLV.get(), RecipeItem.of(Items.BRICK), RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
+		wireTerminal("low_voltage", ModBlocks.WireConnectorLV.get(), RecipeItem.of(Items.BRICK),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.WIRE).getItemTag()));
 		wireTerminal("medium_voltage", ModBlocks.WireConnectorMV.get(), RecipeItem.of(ModItemTags.RUBBER),
-				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.WIRE).getItemTag()));
-		wireTerminal("high_voltage", ModBlocks.WireConnectorHV.get(), RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.INGOT).getItemTag()),
-				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.WIRE).getItemTag()));
-		wireTerminal("extreme_voltage", ModBlocks.WireConnectorEV.get(), RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.INGOT).getItemTag()),
-				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.WIRE).getItemTag()));
-		wireTerminal("bonkers_voltage", ModBlocks.WireConnectorBV.get(), RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.INGOT).getItemTag()),
-				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.WIRE).getItemTag()));
-		wireTerminal("digistore", ModBlocks.WireConnectorDigistore.get(), RecipeItem.of(ItemTags.WOOL), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.WIRE).getItemTag()));
+		wireTerminal("high_voltage", ModBlocks.WireConnectorHV.get(),
+				RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.INGOT).getItemTag()),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.WIRE).getItemTag()));
+		wireTerminal("extreme_voltage", ModBlocks.WireConnectorEV.get(),
+				RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.INGOT).getItemTag()),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.WIRE).getItemTag()));
+		wireTerminal("bonkers_voltage", ModBlocks.WireConnectorBV.get(),
+				RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.INGOT).getItemTag()),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.WIRE).getItemTag()));
+		wireTerminal("digistore", ModBlocks.WireConnectorDigistore.get(), RecipeItem.of(ItemTags.WOOL),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.WIRE).getItemTag()));
 
-		chainsaw("basic", ModItems.BasicChainsaw.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.BasicPortableBattery.get()),
+		chainsaw("basic", ModItems.BasicChainsaw.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.BasicPortableBattery.get()),
 				RecipeItem.of(ModItems.BasicProcessor.get()));
-		chainsaw("advanced", ModItems.AdvancedChainsaw.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.AdvancedPortableBattery.get()),
+		chainsaw("advanced", ModItems.AdvancedChainsaw.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.AdvancedPortableBattery.get()),
 				RecipeItem.of(ModItems.AdvancedProcessor.get()));
-		chainsaw("static", ModItems.StaticChainsaw.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.StaticPortableBattery.get()),
+		chainsaw("static", ModItems.StaticChainsaw.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.StaticPortableBattery.get()),
 				RecipeItem.of(ModItems.StaticProcessor.get()));
-		chainsaw("energized", ModItems.EnergizedChainsaw.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.EnergizedPortableBattery.get()),
+		chainsaw("energized", ModItems.EnergizedChainsaw.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.EnergizedPortableBattery.get()),
 				RecipeItem.of(ModItems.EnergizedProcessor.get()));
-		chainsaw("lumum", ModItems.LumumChainsaw.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.LumumPortableBattery.get()),
+		chainsaw("lumum", ModItems.LumumChainsaw.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.LumumPortableBattery.get()),
 				RecipeItem.of(ModItems.LumumProcessor.get()));
 
-		miningDrill("basic", ModItems.BasicMiningDrill.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.BasicPortableBattery.get()),
+		miningDrill("basic", ModItems.BasicMiningDrill.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.BasicPortableBattery.get()),
 				RecipeItem.of(ModItems.BasicProcessor.get()));
-		miningDrill("advanced", ModItems.AdvancedMiningDrill.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.AdvancedPortableBattery.get()),
+		miningDrill("advanced", ModItems.AdvancedMiningDrill.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.AdvancedPortableBattery.get()),
 				RecipeItem.of(ModItems.AdvancedProcessor.get()));
-		miningDrill("static", ModItems.StaticMiningDrill.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.StaticPortableBattery.get()),
+		miningDrill("static", ModItems.StaticMiningDrill.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.StaticPortableBattery.get()),
 				RecipeItem.of(ModItems.StaticProcessor.get()));
-		miningDrill("energized", ModItems.EnergizedMiningDrill.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.EnergizedPortableBattery.get()),
+		miningDrill("energized", ModItems.EnergizedMiningDrill.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.EnergizedPortableBattery.get()),
 				RecipeItem.of(ModItems.EnergizedProcessor.get()));
-		miningDrill("lumum", ModItems.LumumMiningDrill.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.GEAR).getItemTag()), RecipeItem.of(ModItems.LumumPortableBattery.get()),
+		miningDrill("lumum", ModItems.LumumMiningDrill.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.GEAR).getItemTag()),
+				RecipeItem.of(ModItems.LumumPortableBattery.get()),
 				RecipeItem.of(ModItems.LumumProcessor.get()));
 
-		hammer("iron", ModItems.IronMetalHammer.get(), RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()));
-		hammer("zinc", ModItems.ZincMetalHammer.get(), RecipeItem.of(ModMaterials.ZINC.get(MaterialTypes.INGOT).getItemTag()));
-		hammer("tin", ModItems.TinMetalHammer.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
-		hammer("copper", ModItems.CopperMetalHammer.get(), RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.INGOT).getItemTag()));
-		hammer("bronze", ModItems.BronzeMetalHammer.get(), RecipeItem.of(ModMaterials.BRONZE.get(MaterialTypes.INGOT).getItemTag()));
-		hammer("tungsten", ModItems.TungstenMetalHammer.get(), RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).getItemTag()));
+		hammer("iron", ModItems.IronMetalHammer.get(),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()));
+		hammer("zinc", ModItems.ZincMetalHammer.get(),
+				RecipeItem.of(ModMaterials.ZINC.get(MaterialTypes.INGOT).getItemTag()));
+		hammer("tin", ModItems.TinMetalHammer.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()));
+		hammer("copper", ModItems.CopperMetalHammer.get(),
+				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.INGOT).getItemTag()));
+		hammer("bronze", ModItems.BronzeMetalHammer.get(),
+				RecipeItem.of(ModMaterials.BRONZE.get(MaterialTypes.INGOT).getItemTag()));
+		hammer("tungsten", ModItems.TungstenMetalHammer.get(),
+				RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).getItemTag()));
 
-		wireCutter("iron", ModItems.IronWireCutters.get(), RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
+		wireCutter("iron", ModItems.IronWireCutters.get(),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.GEAR).getItemTag()));
-		wireCutter("zinc", ModItems.ZincWireCutters.get(), RecipeItem.of(ModMaterials.ZINC.get(MaterialTypes.INGOT).getItemTag()),
+		wireCutter("zinc", ModItems.ZincWireCutters.get(),
+				RecipeItem.of(ModMaterials.ZINC.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.ZINC.get(MaterialTypes.GEAR).getItemTag()));
-		wireCutter("bronze", ModItems.BronzeWireCutters.get(), RecipeItem.of(ModMaterials.BRONZE.get(MaterialTypes.INGOT).getItemTag()),
+		wireCutter("bronze", ModItems.BronzeWireCutters.get(),
+				RecipeItem.of(ModMaterials.BRONZE.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.BRONZE.get(MaterialTypes.GEAR).getItemTag()));
-		wireCutter("tungsten", ModItems.TungstenWireCutters.get(), RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).getItemTag()),
+		wireCutter("tungsten", ModItems.TungstenWireCutters.get(),
+				RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.GEAR).getItemTag()));
 
-		saw("iron", ModItems.IronCoverSaw.get(), RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()));
-		saw("ruby", ModItems.RubyCoverSaw.get(), RecipeItem.of(ModMaterials.RUBY.get(MaterialTypes.RAW_MATERIAL).getItemTag()));
-		saw("saphhire", ModItems.SapphireCoverSaw.get(), RecipeItem.of(ModMaterials.SAPPHIRE.get(MaterialTypes.RAW_MATERIAL).getItemTag()));
+		saw("iron", ModItems.IronCoverSaw.get(),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()));
+		saw("ruby", ModItems.RubyCoverSaw.get(),
+				RecipeItem.of(ModMaterials.RUBY.get(MaterialTypes.RAW_MATERIAL).getItemTag()));
+		saw("saphhire", ModItems.SapphireCoverSaw.get(),
+				RecipeItem.of(ModMaterials.SAPPHIRE.get(MaterialTypes.RAW_MATERIAL).getItemTag()));
 		saw("diamond", ModItems.DiamondCoverSaw.get(), RecipeItem.of(Tags.Items.GEMS_DIAMOND));
-		saw("tungsten", ModItems.TungstenCoverSaw.get(), RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).getItemTag()));
+		saw("tungsten", ModItems.TungstenCoverSaw.get(),
+				RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).getItemTag()));
 
-		drillBit("iron", ModItems.IronDrillBit.get(), RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
+		drillBit("iron", ModItems.IronDrillBit.get(),
+				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.PLATE).getItemTag()));
-		drillBit("advanced", ModItems.AdvancedDrillBit.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
+		drillBit("advanced", ModItems.AdvancedDrillBit.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()));
-		drillBit("bronze", ModItems.BronzeDrillBit.get(), RecipeItem.of(ModMaterials.BRONZE.get(MaterialTypes.INGOT).getItemTag()),
+		drillBit("bronze", ModItems.BronzeDrillBit.get(),
+				RecipeItem.of(ModMaterials.BRONZE.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.BRONZE.get(MaterialTypes.PLATE).getItemTag()));
-		drillBit("static", ModItems.StaticDrillBit.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		drillBit("static", ModItems.StaticDrillBit.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()));
-		drillBit("energized", ModItems.EnergizedDrillBit.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		drillBit("energized", ModItems.EnergizedDrillBit.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()));
-		drillBit("lumum", ModItems.LumumDrillBit.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()),
+		drillBit("lumum", ModItems.LumumDrillBit.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()));
-		drillBit("tungsten", ModItems.TungstenDrillBit.get(), RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).getItemTag()),
+		drillBit("tungsten", ModItems.TungstenDrillBit.get(),
+				RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModMaterials.TUNGSTEN.get(MaterialTypes.PLATE).getItemTag()));
 
 		filter("basic", ModItems.BasicFilter.get(), RecipeItem.of(ModItems.BasicProcessor.get()));
@@ -523,39 +688,57 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		farmland("energized", ModBlocks.EnergizedFarmland.get(), RecipeItem.of(ModItems.EnergizedProcessor.get()));
 		farmland("lumum", ModBlocks.LumumFarmland.get(), RecipeItem.of(ModItems.LumumProcessor.get()));
 
-		digistoreCard("basic", ModItems.BasicDigistoreCard.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()), RecipeItem.of(ModItems.BasicCard.get()),
+		digistoreCard("basic", ModItems.BasicDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModItems.BasicCard.get()),
 				RecipeItem.of(ModItems.DigistoreCore.get()));
-		digistoreStackedCard("basic", ModItems.BasicStackedDigistoreCard.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreStackedCard("basic", ModItems.BasicStackedDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.BasicCard.get()), RecipeItem.of(ModItems.DigistoreCore.get()));
-		digistoreMonoCard("basic", ModItems.BasicSingularDigistoreCard.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreMonoCard("basic", ModItems.BasicSingularDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.BasicCard.get()), RecipeItem.of(ModItems.DigistoreCore.get()));
 
-		digistoreCard("advanced", ModItems.AdvancedDigistoreCard.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreCard("advanced", ModItems.AdvancedDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.AdvancedCard.get()), RecipeItem.of(ModItems.BasicDigistoreCard.get()));
-		digistoreStackedCard("advanced", ModItems.AdvancedStackedDigistoreCard.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreStackedCard("advanced", ModItems.AdvancedStackedDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.AdvancedCard.get()), RecipeItem.of(ModItems.BasicStackedDigistoreCard.get()));
-		digistoreMonoCard("advanced", ModItems.AdvancedSingularDigistoreCard.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreMonoCard("advanced", ModItems.AdvancedSingularDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.AdvancedCard.get()), RecipeItem.of(ModItems.BasicSingularDigistoreCard.get()));
 
-		digistoreCard("static", ModItems.StaticDigistoreCard.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreCard("static", ModItems.StaticDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.StaticCard.get()), RecipeItem.of(ModItems.AdvancedDigistoreCard.get()));
-		digistoreStackedCard("static", ModItems.StaticStackedDigistoreCard.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreStackedCard("static", ModItems.StaticStackedDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.StaticCard.get()), RecipeItem.of(ModItems.AdvancedStackedDigistoreCard.get()));
-		digistoreMonoCard("static", ModItems.StaticSingularDigistoreCard.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreMonoCard("static", ModItems.StaticSingularDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.StaticCard.get()), RecipeItem.of(ModItems.AdvancedSingularDigistoreCard.get()));
 
-		digistoreCard("energized", ModItems.EnergizedDigistoreCard.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreCard("energized", ModItems.EnergizedDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.EnergizedCard.get()), RecipeItem.of(ModItems.StaticDigistoreCard.get()));
-		digistoreStackedCard("energized", ModItems.EnergizedStackedDigistoreCard.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModItems.StaticStackedDigistoreCard.get()), RecipeItem.of(ModItems.EnergizedDigistoreCard.get()));
-		digistoreMonoCard("energized", ModItems.EnergizedSingularDigistoreCard.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModItems.StaticSingularDigistoreCard.get()), RecipeItem.of(ModItems.EnergizedDigistoreCard.get()));
+		digistoreStackedCard("energized", ModItems.EnergizedStackedDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModItems.StaticStackedDigistoreCard.get()),
+				RecipeItem.of(ModItems.EnergizedDigistoreCard.get()));
+		digistoreMonoCard("energized", ModItems.EnergizedSingularDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModItems.StaticSingularDigistoreCard.get()),
+				RecipeItem.of(ModItems.EnergizedDigistoreCard.get()));
 
-		digistoreCard("lumum", ModItems.LumumDigistoreCard.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreCard("lumum", ModItems.LumumDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.LumumCard.get()), RecipeItem.of(ModItems.EnergizedDigistoreCard.get()));
-		digistoreStackedCard("lumum", ModItems.LumumStackedDigistoreCard.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreStackedCard("lumum", ModItems.LumumStackedDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.LumumCard.get()), RecipeItem.of(ModItems.EnergizedStackedDigistoreCard.get()));
-		digistoreMonoCard("lumum", ModItems.LumumSingularDigistoreCard.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		digistoreMonoCard("lumum", ModItems.LumumSingularDigistoreCard.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.LumumCard.get()), RecipeItem.of(ModItems.EnergizedSingularDigistoreCard.get()));
 
 		// @formatter:off
@@ -638,49 +821,71 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 			.unlockedBy("has_upgrade_plate", hasItems(ModItems.StaticUpgradePlate.get()));
 		// @formatter:on
 
-		upgradePlate("basic", ModItems.BasicUpgradePlate.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+		upgradePlate("basic", ModItems.BasicUpgradePlate.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.BasicProcessor.get()));
-		upgradePlate("advanced", ModItems.AdvancedUpgradePlate.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+		upgradePlate("advanced", ModItems.AdvancedUpgradePlate.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.AdvancedProcessor.get()));
-		upgradePlate("static", ModItems.StaticUpgradePlate.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		upgradePlate("static", ModItems.StaticUpgradePlate.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.StaticProcessor.get()));
-		upgradePlate("energized", ModItems.EnergizedUpgradePlate.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		upgradePlate("energized", ModItems.EnergizedUpgradePlate.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.EnergizedProcessor.get()));
-		upgradePlate("lumum", ModItems.LumumUpgradePlate.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+		upgradePlate("lumum", ModItems.LumumUpgradePlate.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.LumumProcessor.get()));
 
-		centrifugeUpgrade("basic", ModItems.BasicCentrifugeUpgrade.get(), RecipeItem.of(ModItems.BasicUpgradePlate.get()),
+		centrifugeUpgrade("basic", ModItems.BasicCentrifugeUpgrade.get(),
+				RecipeItem.of(ModItems.BasicUpgradePlate.get()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.GEAR).getItemTag()));
-		centrifugeUpgrade("static", ModItems.StaticCentrifugeUpgrade.get(), RecipeItem.of(ModItems.StaticUpgradePlate.get()),
+		centrifugeUpgrade("static", ModItems.StaticCentrifugeUpgrade.get(),
+				RecipeItem.of(ModItems.StaticUpgradePlate.get()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.GEAR).getItemTag()));
-		centrifugeUpgrade("energized", ModItems.EnergizedCentrifugeUpgrade.get(), RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
+		centrifugeUpgrade("energized", ModItems.EnergizedCentrifugeUpgrade.get(),
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.GEAR).getItemTag()));
-		centrifugeUpgrade("lumum", ModItems.LumumCentrifugeUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()),
+		centrifugeUpgrade("lumum", ModItems.LumumCentrifugeUpgrade.get(),
+				RecipeItem.of(ModItems.LumumUpgradePlate.get()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.GEAR).getItemTag()));
 
-		heatUpgrade("basic", ModItems.BasicHeatUpgrade.get(), RecipeItem.of(ModItems.BasicUpgradePlate.get()), RecipeItem.of(ModItems.BasicHeatCapacityUpgrade.get()));
-		heatUpgrade("static", ModItems.StaticHeatUpgrade.get(), RecipeItem.of(ModItems.StaticUpgradePlate.get()), RecipeItem.of(ModItems.StaticHeatCapacityUpgrade.get()));
-		heatUpgrade("energized", ModItems.EnergizedHeatUpgrade.get(), RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
+		heatUpgrade("basic", ModItems.BasicHeatUpgrade.get(), RecipeItem.of(ModItems.BasicUpgradePlate.get()),
+				RecipeItem.of(ModItems.BasicHeatCapacityUpgrade.get()));
+		heatUpgrade("static", ModItems.StaticHeatUpgrade.get(), RecipeItem.of(ModItems.StaticUpgradePlate.get()),
+				RecipeItem.of(ModItems.StaticHeatCapacityUpgrade.get()));
+		heatUpgrade("energized", ModItems.EnergizedHeatUpgrade.get(),
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
 				RecipeItem.of(ModItems.EnergizedHeatCapacityUpgrade.get()));
-		heatUpgrade("lumum", ModItems.LumumHeatUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()), RecipeItem.of(ModItems.LumumHeatCapacityUpgrade.get()));
+		heatUpgrade("lumum", ModItems.LumumHeatUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()),
+				RecipeItem.of(ModItems.LumumHeatCapacityUpgrade.get()));
 
-		heatCapacityUpgrade("basic", ModItems.BasicHeatCapacityUpgrade.get(), RecipeItem.of(ModItems.BasicUpgradePlate.get()), RecipeItem.of(ModBlocks.AluminumHeatSink.get()));
-		heatCapacityUpgrade("static", ModItems.StaticHeatCapacityUpgrade.get(), RecipeItem.of(ModItems.StaticUpgradePlate.get()), RecipeItem.of(ModBlocks.CopperHeatSink.get()));
-		heatCapacityUpgrade("energized", ModItems.EnergizedHeatCapacityUpgrade.get(), RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
+		heatCapacityUpgrade("basic", ModItems.BasicHeatCapacityUpgrade.get(),
+				RecipeItem.of(ModItems.BasicUpgradePlate.get()), RecipeItem.of(ModBlocks.AluminumHeatSink.get()));
+		heatCapacityUpgrade("static", ModItems.StaticHeatCapacityUpgrade.get(),
+				RecipeItem.of(ModItems.StaticUpgradePlate.get()), RecipeItem.of(ModBlocks.CopperHeatSink.get()));
+		heatCapacityUpgrade("energized", ModItems.EnergizedHeatCapacityUpgrade.get(),
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
 				RecipeItem.of(ModBlocks.GoldHeatSink.get()));
-		heatCapacityUpgrade("lumum", ModItems.LumumHeatCapacityUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()), RecipeItem.of(ModBlocks.GoldHeatSink.get()));
+		heatCapacityUpgrade("lumum", ModItems.LumumHeatCapacityUpgrade.get(),
+				RecipeItem.of(ModItems.LumumUpgradePlate.get()), RecipeItem.of(ModBlocks.GoldHeatSink.get()));
 
-		outputUpgrade("basic", ModItems.BasicOutputMultiplierUpgrade.get(), RecipeItem.of(ModItems.BasicUpgradePlate.get()), RecipeItem.of(Tags.Items.GEMS_LAPIS));
-		outputUpgrade("static", ModItems.StaticOutputMultiplierUpgrade.get(), RecipeItem.of(ModItems.StaticUpgradePlate.get()), RecipeItem.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
-		outputUpgrade("energized", ModItems.EnergizedOutputMultiplierUpgrade.get(), RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
+		outputUpgrade("basic", ModItems.BasicOutputMultiplierUpgrade.get(),
+				RecipeItem.of(ModItems.BasicUpgradePlate.get()), RecipeItem.of(Tags.Items.GEMS_LAPIS));
+		outputUpgrade("static", ModItems.StaticOutputMultiplierUpgrade.get(),
+				RecipeItem.of(ModItems.StaticUpgradePlate.get()), RecipeItem.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
+		outputUpgrade("energized", ModItems.EnergizedOutputMultiplierUpgrade.get(),
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
 				RecipeItem.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
-		outputUpgrade("lumum", ModItems.LumumOutputMultiplierUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()), RecipeItem.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
+		outputUpgrade("lumum", ModItems.LumumOutputMultiplierUpgrade.get(),
+				RecipeItem.of(ModItems.LumumUpgradePlate.get()), RecipeItem.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
 
 		powerUpgrade("basic", ModItems.BasicPowerUpgrade.get(), RecipeItem.of(ModItems.BasicUpgradePlate.get()),
 				RecipeItem.of(ModMaterials.REDSTONE_ALLOY.get(MaterialTypes.INGOT).getItemTag()));
 		powerUpgrade("static", ModItems.StaticPowerUpgrade.get(), RecipeItem.of(ModItems.StaticUpgradePlate.get()),
 				RecipeItem.of(ModMaterials.REDSTONE_ALLOY.get(MaterialTypes.INGOT).getItemTag()));
-		powerUpgrade("energized", ModItems.EnergizedPowerUpgrade.get(), RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
+		powerUpgrade("energized", ModItems.EnergizedPowerUpgrade.get(),
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
 				RecipeItem.of(ModMaterials.REDSTONE_ALLOY.get(MaterialTypes.STORAGE_BLOCK).getItemTag()));
 		powerUpgrade("lumum", ModItems.LumumPowerUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()),
 				RecipeItem.of(ModMaterials.REDSTONE_ALLOY.get(MaterialTypes.STORAGE_BLOCK).getItemTag()));
@@ -689,17 +894,21 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 				RecipeItem.of(ModMaterials.RUBY.get(MaterialTypes.RAW_MATERIAL).getItemTag()));
 		rangeUpgrade("static", ModItems.StaticRangeUpgrade.get(), RecipeItem.of(ModItems.StaticUpgradePlate.get()),
 				RecipeItem.of(ModMaterials.SAPPHIRE.get(MaterialTypes.RAW_MATERIAL).getItemTag()));
-		rangeUpgrade("energized", ModItems.EnergizedRangeUpgrade.get(), RecipeItem.of(ModItems.EnergizedUpgradePlate.get()), RecipeItem.of(Tags.Items.GEMS_EMERALD));
-		rangeUpgrade("lumum", ModItems.LumumRangeUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()), RecipeItem.of(Tags.Items.GEMS_DIAMOND));
+		rangeUpgrade("energized", ModItems.EnergizedRangeUpgrade.get(),
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()), RecipeItem.of(Tags.Items.GEMS_EMERALD));
+		rangeUpgrade("lumum", ModItems.LumumRangeUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()),
+				RecipeItem.of(Tags.Items.GEMS_DIAMOND));
 
 		speedUpgrade("basic", ModItems.BasicSpeedUpgrade.get(), RecipeItem.of(ModItems.BasicUpgradePlate.get()));
 		speedUpgrade("static", ModItems.StaticSpeedUpgrade.get(), RecipeItem.of(ModItems.StaticUpgradePlate.get()));
-		speedUpgrade("energized", ModItems.EnergizedSpeedUpgrade.get(), RecipeItem.of(ModItems.EnergizedUpgradePlate.get()));
+		speedUpgrade("energized", ModItems.EnergizedSpeedUpgrade.get(),
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()));
 		speedUpgrade("lumum", ModItems.LumumSpeedUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()));
 
 		tankUpgrade("basic", ModItems.BasicTankUpgrade.get(), RecipeItem.of(ModItems.BasicUpgradePlate.get()));
 		tankUpgrade("static", ModItems.StaticTankUpgrade.get(), RecipeItem.of(ModItems.StaticUpgradePlate.get()));
-		tankUpgrade("energized", ModItems.EnergizedTankUpgrade.get(), RecipeItem.of(ModItems.EnergizedUpgradePlate.get()));
+		tankUpgrade("energized", ModItems.EnergizedTankUpgrade.get(),
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()));
 		tankUpgrade("lumum", ModItems.LumumTankUpgrade.get(), RecipeItem.of(ModItems.LumumUpgradePlate.get()));
 
 		// @formatter:off
@@ -755,8 +964,9 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 			.unlockedBy("has_items", hasItems( ModItemTags.RUBBER_SHEET));
 		// @formatter:on
 
-		beginShapelessRecipe(ModItems.RubberBar.get(), "rubber_bar_from_latex").requires(ModItems.LatexChunk.get(), 2).requires(ModItemTags.COALS_DUST).unlockedBy("has_latex_chunk",
-				hasItems(ModItems.LatexChunk.get()));
+		beginShapelessRecipe(ModItems.RubberBar.get(), "rubber_bar_from_latex").requires(ModItems.LatexChunk.get(), 2)
+				.requires(ModItemTags.COALS_DUST).unlockedBy("has_latex_chunk",
+						hasItems(ModItems.LatexChunk.get()));
 
 		// @formatter:off
 		beginShapedRecipe(ModItems.Motor.get())
@@ -800,8 +1010,10 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 			.unlockedBy("has_items", hasItems( ModItemTags.RUBBER));
 		// @formatter:on
 
-		beginShapelessRecipe(ModItems.ElectringSolderingIron.get(), "tools/electric_soldering_iron").requires(ModItems.SolderingIron.get())
-				.requires(ModItems.BasicPortableBattery.get()).unlockedBy("has_battery", hasItems(ModItems.BasicPortableBattery.get()));
+		beginShapelessRecipe(ModItems.ElectringSolderingIron.get(), "tools/electric_soldering_iron")
+				.requires(ModItems.SolderingIron.get())
+				.requires(ModItems.BasicPortableBattery.get())
+				.unlockedBy("has_battery", hasItems(ModItems.BasicPortableBattery.get()));
 
 		// @formatter:off
 		beginShapedRecipe(ModItems.Thermometer.get(), "tools/thermometer")
@@ -877,7 +1089,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 	}
 
-	protected void batteryPack(String name, ItemLike output, RecipeItem wire, RecipeItem battery, RecipeItem processor) {
+	protected void batteryPack(String name, ItemLike output, RecipeItem wire, RecipeItem battery,
+			RecipeItem processor) {
 		// @formatter:off
 		beginShapedRecipe(output, "tools/portable_battery_pack/" + name)
 			.define('w', wire)
@@ -1025,7 +1238,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 	}
 
 	protected void insulatedPowerCable(String name, ItemLike output, RecipeItem cable) {
-		beginShapelessRecipe(output, "power_cables/" + name + "/insulated").requires(cable).requires(ModItemTags.RUBBER).unlockedBy("has_items", hasItems(cable));
+		beginShapelessRecipe(output, "power_cables/" + name + "/insulated").requires(cable).requires(ModItemTags.RUBBER)
+				.unlockedBy("has_items", hasItems(cable));
 	}
 
 	protected void extractorAttachment(String name, ItemLike output, RecipeItem ingot) {
@@ -1193,7 +1407,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 	}
 
-	protected void chainsaw(String name, ItemLike output, RecipeItem plate, RecipeItem gear, RecipeItem battery, RecipeItem processor) {
+	protected void chainsaw(String name, ItemLike output, RecipeItem plate, RecipeItem gear, RecipeItem battery,
+			RecipeItem processor) {
 		// @formatter:off
 		beginShapedRecipe(output, "tools/chainsaw/" + name)
 			.define('i', plate)
@@ -1209,7 +1424,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 	}
 
-	protected void miningDrill(String name, ItemLike output, RecipeItem plate, RecipeItem gear, RecipeItem battery, RecipeItem processor) {
+	protected void miningDrill(String name, ItemLike output, RecipeItem plate, RecipeItem gear, RecipeItem battery,
+			RecipeItem processor) {
 		// @formatter:off
 		beginShapedRecipe(output, "tools/mining_drill/" + name)
 			.define('i', plate)
@@ -1299,7 +1515,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 	}
 
-	protected void digistoreCard(String name, ItemLike output, RecipeItem material, RecipeItem card, RecipeItem previousDigistoreCard) {
+	protected void digistoreCard(String name, ItemLike output, RecipeItem material, RecipeItem card,
+			RecipeItem previousDigistoreCard) {
 		// @formatter:off
 		beginShapedRecipe(output, "digistore/card/" + name)
 			.define('t', material)
@@ -1314,7 +1531,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 	}
 
-	protected void digistoreStackedCard(String name, ItemLike output, RecipeItem material, RecipeItem card, RecipeItem previousDigistoreCard) {
+	protected void digistoreStackedCard(String name, ItemLike output, RecipeItem material, RecipeItem card,
+			RecipeItem previousDigistoreCard) {
 		// @formatter:off
 		beginShapedRecipe(output, "digistore/stacked_card/" + name)
 			.define('t', material)
@@ -1330,7 +1548,8 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 	}
 
-	protected void digistoreMonoCard(String name, ItemLike output, RecipeItem material, RecipeItem card, RecipeItem previousDigistoreCard) {
+	protected void digistoreMonoCard(String name, ItemLike output, RecipeItem material, RecipeItem card,
+			RecipeItem previousDigistoreCard) {
 		// @formatter:off
 		beginShapedRecipe(output, "digistore/mono_card/" + name)
 			.define('t', material)
@@ -1346,11 +1565,13 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 	}
 
 	protected void pie(String name, ItemLike output, RecipeItem fruit) {
-		beginShapelessRecipe(output, "food/pie_" + name).requires(fruit).requires(Items.EGG).requires(Items.SUGAR).requires(fruit).unlockedBy("has_items", hasItems(fruit));
+		beginShapelessRecipe(output, "food/pie_" + name).requires(fruit).requires(Items.EGG).requires(Items.SUGAR)
+				.requires(fruit).unlockedBy("has_items", hasItems(fruit));
 	}
 
 	protected void filter(String name, ItemLike output, RecipeItem processor) {
-		beginShapelessRecipe(output, "filter/" + name).requires(Items.PAPER).requires(processor).unlockedBy("has_items", hasItems(processor));
+		beginShapelessRecipe(output, "filter/" + name).requires(Items.PAPER).requires(processor).unlockedBy("has_items",
+				hasItems(processor));
 	}
 
 	protected void upgradePlate(String name, ItemLike output, RecipeItem plate, RecipeItem processor) {

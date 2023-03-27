@@ -49,10 +49,10 @@ public class ProcessingComponentStateWidget extends AbstractGuiWidget<Processing
 			String remainingTime = decimalFormat.format((machineProcessingComponent.getMaxProcessingTime() - machineProcessingComponent.getCurrentProcessingTime())
 					/ (machineProcessingComponent.getTimeUnitsPerTick() * 20.0f));
 			tooltips.add(
-					Component.translatable("gui.staticpower.remaining").append(": ").append(remainingTime).append(Component.translatable("gui.staticpower.seconds.short")));
+					Component.translatable("gui.staticcore.remaining").append(": ").append(remainingTime).append(Component.translatable("gui.staticcore.seconds.short")));
 		} else {
 			String maxTime = decimalFormat.format(machineProcessingComponent.getMaxProcessingTime() / (machineProcessingComponent.getTimeUnitsPerTick() * 20.0f));
-			tooltips.add(Component.translatable("gui.staticpower.max").append(": ").append(maxTime).append(Component.translatable("gui.staticpower.seconds.short")));
+			tooltips.add(Component.translatable("gui.staticcore.max").append(": ").append(maxTime).append(Component.translatable("gui.staticcore.seconds.short")));
 		}
 	}
 }

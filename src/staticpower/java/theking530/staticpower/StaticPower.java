@@ -35,6 +35,7 @@ import theking530.staticcore.data.tiers.tungsten.StaticCoreTierTungsten;
 import theking530.staticcore.data.tiers.wood.StaticCoreTierWood;
 import theking530.staticcore.data.tiers.zinc.StaticCoreTierZinc;
 import theking530.staticcore.initialization.StaticCoreRegistrationHelper;
+import theking530.staticpower.init.ModAttributes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFeatures;
@@ -114,6 +115,7 @@ public class StaticPower {
 		ModLootSerializers.init(eventBus);
 		ModFeatures.init(eventBus);
 		ModIntegrations.init(eventBus);
+		ModAttributes.init(eventBus);
 
 		REGISTRATION.registerBlockEntityTypes(eventBus, BLOCK_ENTITY_TYPES);
 		REGISTRATION.registerContainerTypes(eventBus, MENU_TYPES);

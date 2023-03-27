@@ -1,4 +1,4 @@
-package theking530.staticcore.attribiutes.types;
+package theking530.staticpower.attributes;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
@@ -7,7 +7,7 @@ import theking530.api.attributes.AttributeUtilities;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.AttributeModifierInstance;
 import theking530.api.attributes.type.AttributeType;
-import theking530.staticcore.attribiutes.AttributeValues;
+import theking530.staticcore.attributes.AttributeValues;
 
 public abstract class AbstractHardenedAttributeType extends AttributeType<Boolean> {
 

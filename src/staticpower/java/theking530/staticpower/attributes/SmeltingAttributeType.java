@@ -1,4 +1,4 @@
-package theking530.staticcore.attribiutes.types;
+package theking530.staticpower.attributes;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
@@ -6,17 +6,16 @@ import theking530.api.attributes.AttributeInstance;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.AttributeModifierInstance;
 import theking530.api.attributes.type.AttributeType;
-import theking530.staticcore.attribiutes.AttributeValues;
+import theking530.staticcore.attributes.AttributeValues;
 
-public class GrindingAttributeType extends AttributeType<Boolean> {
+public class SmeltingAttributeType extends AttributeType<Boolean> {
 
-	public GrindingAttributeType() {
-		super("attribute.staticpower.grinding", ChatFormatting.GRAY, AttributeValues.Boolean);
+	public SmeltingAttributeType() {
+		super("attribute.staticpower.smelting", ChatFormatting.GOLD, AttributeValues.Boolean);
 	}
 
 	@Override
 	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Boolean> instance, AttributeModifierInstance<Boolean> modifier) {
-		// If we already have the grinding modifier, dont do anything.
 		return !instance.getValue();
 	}
 
@@ -30,6 +29,6 @@ public class GrindingAttributeType extends AttributeType<Boolean> {
 		if (first.getValue() == second.getValue()) {
 			return null;
 		}
-		return getAttributeTitle(first, false);
+		return super.getAttributeTitle(first, false);
 	}
 }

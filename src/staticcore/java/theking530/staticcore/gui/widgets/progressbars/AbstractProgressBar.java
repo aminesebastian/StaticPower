@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,7 +35,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * exists).
 	 */
 	@Nullable
-	protected AbstractProcesingComponent machineProcessingComponent;
+	protected AbstractProcesingComponent<?> machineProcessingComponent;
 
 	/**
 	 * The visual current progress. This is interpolated to match the current
@@ -165,12 +165,12 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 		} else if (enableProgressTooltip) {
 			if (currentProgress > 0) {
 				MutableComponent remainingTime = GuiTextUtilities.formatTicksToTimeUnit((int) ((maxProgress - currentProgress) / (tickDownRate)));
-				tooltips.add(Component.translatable("gui.staticpower.remaining").append(": ").append(remainingTime));
+				tooltips.add(Component.translatable("gui.staticcore.remaining").append(": ").append(remainingTime));
 			}
 
-			if (currentProgress <= 0 || Minecraft.getInstance().screen.hasShiftDown()) {
+			if (currentProgress <= 0 || Screen.hasShiftDown()) {
 				MutableComponent maxTime = GuiTextUtilities.formatTicksToTimeUnit((int) (maxProgress / (tickDownRate)));
-				tooltips.add(Component.translatable("gui.staticpower.max").append(": ").append(maxTime));
+				tooltips.add(Component.translatable("gui.staticcore.max").append(": ").append(maxTime));
 			}
 		}
 	}
@@ -226,7 +226,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * @param component The component to bind to.
 	 * @return This progress bar for chaining of commands.
 	 */
-	public T bindToMachineProcessingComponent(AbstractProcesingComponent component) {
+	public T bindToMachineProcessingComponent(AbstractProcesingComponent<?> component) {
 		machineProcessingComponent = component;
 
 		// Set the initial values.

@@ -1,4 +1,4 @@
-package theking530.staticcore.attribiutes.types;
+package theking530.staticpower.attributes;
 
 import net.minecraft.ChatFormatting;
 import theking530.api.attributes.AttributeInstance;

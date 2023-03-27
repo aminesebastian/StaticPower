@@ -199,7 +199,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(Component.translatable("gui.staticpower.importer_tooltip"));
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.SERVER.digistoreImporterSlots.get(), tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticcore.slots", StaticPowerConfig.SERVER.digistoreImporterSlots.get(), tooltip);
 	}
 
 	protected class ImporterContainerProvider extends AbstractCableAttachmentContainerProvider {

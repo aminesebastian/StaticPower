@@ -1,4 +1,4 @@
-package theking530.staticcore.attribiutes.types;
+package theking530.staticpower.attributes;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -7,7 +7,7 @@ import theking530.api.attributes.AttributeInstance;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.AttributeModifierInstance;
 import theking530.api.attributes.type.AttributeType;
-import theking530.staticcore.attribiutes.AttributeValues;
+import theking530.staticcore.attributes.AttributeValues;
 
 public class HasteAttributeType extends AttributeType<Number> {
 	public static final int MAX_VALUE = 300;
@@ -71,7 +71,10 @@ public class HasteAttributeType extends AttributeType<Number> {
 
 	@Override
 	public MutableComponent getDifferenceLabel(AttributeInstance<Number> instance, AttributeInstance<Number> other) {
-		int difference = instance.getValue().intValue() - other.getValue().intValue();
+		if (!(other.getAttribute() instanceof HasteAttributeType)) {
+			return null;
+		}
+		int difference = other.getValue().intValue() - instance.getValue().intValue();
 		if (difference == 0) {
 			return null;
 		}

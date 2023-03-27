@@ -1,4 +1,4 @@
-package theking530.staticcore.attribiutes.types;
+package theking530.staticpower.attributes;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
@@ -6,12 +6,12 @@ import theking530.api.attributes.AttributeInstance;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.AttributeModifierInstance;
 import theking530.api.attributes.type.AttributeType;
-import theking530.staticcore.attribiutes.AttributeValues;
+import theking530.staticcore.attributes.AttributeValues;
 
-public class SmeltingAttributeType extends AttributeType<Boolean> {
+public class SilkTouchAttributeType extends AttributeType<Boolean> {
 
-	public SmeltingAttributeType() {
-		super("attribute.staticpower.smelting", ChatFormatting.GOLD, AttributeValues.Boolean);
+	public SilkTouchAttributeType() {
+		super("attribute.staticpower.silk_touch", ChatFormatting.WHITE, AttributeValues.Boolean);
 	}
 
 	@Override

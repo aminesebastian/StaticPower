@@ -70,12 +70,12 @@ public class GuiFluidBarUtilities {
 			Component name = fluid.getDisplayName();
 			tooltip.add(name);
 			tooltip.add(Component.literal(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity))
-					.append(" ").append(Component.translatable("gui.staticpower.millibuckets")).withStyle(ChatFormatting.GRAY));
+					.append(" ").append(Component.translatable("gui.staticcore.millibuckets")).withStyle(ChatFormatting.GRAY));
 			return tooltip;
 		} else {
-			tooltip.add(Component.translatable("gui.staticpower.empty"));
+			tooltip.add(Component.translatable("gui.staticcore.empty"));
 			tooltip.add(Component.literal("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).append(" ")
-					.append(Component.translatable("gui.staticpower.millibuckets")).withStyle(ChatFormatting.GRAY));
+					.append(Component.translatable("gui.staticcore.millibuckets")).withStyle(ChatFormatting.GRAY));
 			return tooltip;
 		}
 	}
@@ -86,12 +86,12 @@ public class GuiFluidBarUtilities {
 		if (fluid != null && !fluid.isEmpty()) {
 			Component name = fluid.getDisplayName();
 			tooltip.add(name);
-			tooltip.add(Component.literal(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount)).append(" ").append(Component.translatable("gui.staticpower.millibuckets"))
+			tooltip.add(Component.literal(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount)).append(" ").append(Component.translatable("gui.staticcore.millibuckets"))
 					.withStyle(ChatFormatting.GRAY));
 			return tooltip;
 		} else {
-			tooltip.add(Component.translatable("gui.staticpower.empty"));
-			tooltip.add(Component.literal("0").append(" ").append(Component.translatable("gui.staticpower.millibuckets")).withStyle(ChatFormatting.GRAY));
+			tooltip.add(Component.translatable("gui.staticcore.empty"));
+			tooltip.add(Component.literal("0").append(" ").append(Component.translatable("gui.staticcore.millibuckets")).withStyle(ChatFormatting.GRAY));
 			return tooltip;
 		}
 	}

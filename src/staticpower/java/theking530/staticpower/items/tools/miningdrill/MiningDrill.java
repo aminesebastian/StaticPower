@@ -52,7 +52,6 @@ import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.attribiutes.Attributes;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
@@ -67,6 +66,7 @@ import theking530.staticcore.world.WorldUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.MiningDrillItemModel;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
+import theking530.staticpower.init.ModAttributes;
 import theking530.staticpower.init.ModMultiPartSlots;
 import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
@@ -154,8 +154,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			DrillBit drillBit = (DrillBit) drillBitStack.getItem();
 			efficiency.set(drillBit.getMiningTier(drillBitStack).getSpeed() * 0.25f);
 			drillBitStack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
-				if (attributable.hasAttribute(Attributes.Haste.get())) {
-					Number hasteDefenition = attributable.getAttributeValue(Attributes.Haste.get());
+				if (attributable.hasAttribute(ModAttributes.Haste.get())) {
+					Number hasteDefenition = attributable.getAttributeValue(ModAttributes.Haste.get());
 					efficiency.set(efficiency.get() * (((hasteDefenition.floatValue() * 10.0f) / 300.0f) + 1.0f));
 				}
 			});
@@ -194,16 +194,16 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (drillBitAttributes != null) {
 			// Check for the grinder attribute. If we do, we add the grindable items to the
 			// list if grindable.
-			if (drillBitAttributes.hasAttribute(Attributes.Grinding.get())) {
+			if (drillBitAttributes.hasAttribute(ModAttributes.Grinding.get())) {
 				// Get the grinding attribute and check if its enabled.
-				boolean grindingAttribute = drillBitAttributes.getAttributeValue(Attributes.Grinding.get());
+				boolean grindingAttribute = drillBitAttributes.getAttributeValue(ModAttributes.Grinding.get());
 				handleGrindingAttribute(grindingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
 			}
 
 			// Check for the smelting attribute. If we do, handle it.
-			if (drillBitAttributes.hasAttribute(Attributes.Smelting.get())) {
+			if (drillBitAttributes.hasAttribute(ModAttributes.Smelting.get())) {
 				// Get the smelting attribute.
-				boolean smeltingAttribute = drillBitAttributes.getAttributeValue(Attributes.Smelting.get());
+				boolean smeltingAttribute = drillBitAttributes.getAttributeValue(ModAttributes.Smelting.get());
 				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
 			}
 		}
@@ -298,12 +298,12 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (isSlotPopulated(stack, ModMultiPartSlots.DRILL_BIT)) {
 			ItemStack bit = getPartInSlot(stack, ModMultiPartSlots.DRILL_BIT);
 			bit.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
-				if (attributable.hasAttribute(Attributes.Fortune.get())) {
-					int fLevel = Attributes.Fortune.get().getFortuneLevelWithChance(attributable.getAttribute(Attributes.Fortune.get()));
+				if (attributable.hasAttribute(ModAttributes.Fortune.get())) {
+					int fLevel = ModAttributes.Fortune.get().getFortuneLevelWithChance(attributable.getAttribute(ModAttributes.Fortune.get()));
 					stack.enchant(Enchantments.BLOCK_FORTUNE, fLevel);
 				}
-				if (attributable.hasAttribute(Attributes.SilkTouch.get())) {
-					if (attributable.getAttributeValue(Attributes.SilkTouch.get())) {
+				if (attributable.hasAttribute(ModAttributes.SilkTouch.get())) {
+					if (attributable.getAttributeValue(ModAttributes.SilkTouch.get())) {
 						stack.enchant(Enchantments.SILK_TOUCH, 1);
 					}
 				}

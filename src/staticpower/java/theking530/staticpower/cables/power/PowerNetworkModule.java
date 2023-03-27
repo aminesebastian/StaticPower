@@ -149,21 +149,21 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			Component usedCurrentComponent = PowerTextFormatting.formatCurrentToString(energyTracker.getAverageCurrent(), false, true);
 			Component maxCurrentComponent = PowerTextFormatting.formatCurrentToString(properties.maxCurrent);
 
-			output.add(Component.translatable("gui.staticpower.current").append(": ")
+			output.add(Component.translatable("gui.staticcore.current").append(": ")
 					.append(ChatFormatting.RED.toString() + String.format("%1$s/%2$s", usedCurrentComponent.getString(), maxCurrentComponent.getString())));
 		}
 		{
 			Component usedPowerComponent = PowerTextFormatting.formatPowerToString(energyTracker.getAveragePowerAddedPerTick(), false, true);
 			Component maxPowerComponent = PowerTextFormatting.formatPowerRateToString(properties.maxCurrent * energyTracker.getAverageVoltage().getValue());
 
-			output.add(Component.translatable("gui.staticpower.power").append(": ")
+			output.add(Component.translatable("gui.staticcore.power").append(": ")
 					.append(ChatFormatting.GOLD.toString() + String.format("%1$s/%2$s", usedPowerComponent.getString(), maxPowerComponent.getString())));
 		}
 
-		output.add(Component.translatable("gui.staticpower.resistance").append(": ")
+		output.add(Component.translatable("gui.staticcore.resistance").append(": ")
 				.append(ChatFormatting.GOLD.toString() + PowerTextFormatting.formatResistanceToString(properties.resistance).getString()));
 
-		output.add(Component.translatable("gui.staticpower.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.length()));
+		output.add(Component.translatable("gui.staticcore.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.length()));
 	}
 
 	public ElectricalPathProperties getPropertiesBetweenPoints(BlockPos start, BlockPos end) {

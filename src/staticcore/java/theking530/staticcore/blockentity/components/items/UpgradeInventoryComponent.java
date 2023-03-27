@@ -36,13 +36,16 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 				continue;
 			}
 			// Get the upgrade item.
-			IUpgradeItem upgradeItem = upgradeStack.getItem() instanceof IUpgradeItem ? (IUpgradeItem) upgradeStack.getItem() : null;
+			IUpgradeItem upgradeItem = upgradeStack.getItem() instanceof IUpgradeItem
+					? (IUpgradeItem) upgradeStack.getItem()
+					: null;
 
 			// If it is a valid upgrade item, and it is of the requested type, check to see
 			// if the tier is higher than the current tier.
 			if (upgradeItem != null && upgradeItem.isOfType(upgradeStack, type)) {
-				if (maxTier == null || StaticCoreConfig.getTier(upgradeItem.getTier()).upgradeConfiguration.upgradeOrdinal
-						.get() > StaticCoreConfig.getTier(maxTier).upgradeConfiguration.upgradeOrdinal.get()) {
+				if (maxTier == null
+						|| StaticCoreConfig.getTier(upgradeItem.getTier()).upgradeConfiguration.upgradeOrdinal
+								.get() > StaticCoreConfig.getTier(maxTier).upgradeConfiguration.upgradeOrdinal.get()) {
 					maxTier = upgradeItem.getTier();
 					maxTierUpgradeStack = upgradeStack;
 					count = upgradeStack.getCount();
@@ -68,7 +71,9 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 				continue;
 			}
 			// Get the upgrade item.
-			IUpgradeItem upgradeItem = upgradeStack.getItem() instanceof IUpgradeItem ? (IUpgradeItem) upgradeStack.getItem() : null;
+			IUpgradeItem upgradeItem = upgradeStack.getItem() instanceof IUpgradeItem
+					? (IUpgradeItem) upgradeStack.getItem()
+					: null;
 
 			// If it is a valid upgrade item, and it is of the requested type, add it.
 			if (upgradeItem != null && upgradeItem.isOfType(upgradeStack, type)) {
@@ -113,8 +118,8 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 		public UpgradeItemWrapper(UpgradeType<T> type, ItemStack stack) {
 			this.type = type;
 			this.stack = stack;
-			this.upgradeItem = (IUpgradeItem) stack.getItem();
 			this.isEmpty = stack.isEmpty();
+			this.upgradeItem = isEmpty ? null : (IUpgradeItem) stack.getItem();
 		}
 
 		public IUpgradeItem getUpgradeItem() {

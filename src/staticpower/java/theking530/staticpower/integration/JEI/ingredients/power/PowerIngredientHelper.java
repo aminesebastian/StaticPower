@@ -20,7 +20,7 @@ public class PowerIngredientHelper implements IIngredientHelper<MachineRecipePro
 
 	@Override
 	public String getDisplayName(MachineRecipeProcessingSection ingredient) {
-		Component displayNameTextComponent = Component.translatable("gui.staticpower.power");
+		Component displayNameTextComponent = Component.translatable("gui.staticcore.power");
 		return displayNameTextComponent.getString();
 	}
 

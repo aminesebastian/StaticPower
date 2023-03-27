@@ -56,7 +56,6 @@ import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.attribiutes.Attributes;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.gui.text.GuiTextUtilities;
@@ -68,6 +67,7 @@ import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.world.WorldUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.ChainsawItemModel;
+import theking530.staticpower.init.ModAttributes;
 import theking530.staticpower.init.ModMultiPartSlots;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
@@ -159,8 +159,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
 			efficiency.set(bladeItem.getMiningTier(blade).getSpeed() * 0.5f);
 			blade.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
-				if (attributable.hasAttribute(Attributes.Haste.get())) {
-					AttributeInstance<Number> hasteDefenition = attributable.getAttribute(Attributes.Haste.get());
+				if (attributable.hasAttribute(ModAttributes.Haste.get())) {
+					AttributeInstance<Number> hasteDefenition = attributable.getAttribute(ModAttributes.Haste.get());
 					efficiency.set(efficiency.get() * (((hasteDefenition.getValue().floatValue() * 10.0f) / 300.0f) + 1.0f));
 				}
 			});
@@ -198,9 +198,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		// If we have attributes.
 		if (drillBitAttributes != null) {
 			// Check for the smelting attribute. If we do, handle it.
-			if (drillBitAttributes.hasAttribute(Attributes.Smelting.get())) {
+			if (drillBitAttributes.hasAttribute(ModAttributes.Smelting.get())) {
 				// Get the smelting attribute.
-				AttributeInstance<Boolean> smeltingAttribute = drillBitAttributes.getAttribute(Attributes.Smelting.get());
+				AttributeInstance<Boolean> smeltingAttribute = drillBitAttributes.getAttribute(ModAttributes.Smelting.get());
 				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
 			}
 		}

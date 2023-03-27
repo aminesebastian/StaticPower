@@ -35,7 +35,7 @@ public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRe
 
 	public FertilizerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = Component.translatable("gui.staticpower.fertlization");
+		locTitle = Component.translatable("gui.staticpower.fertilization");
 		background = guiHelper.createBlankDrawable(130, 60);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.BasicFarmer.get()));
 	}
@@ -65,7 +65,7 @@ public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRe
 	@Override
 	public void draw(FertalizerRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiFluidBarUtilities.drawFluidBarOutline(matrixStack, 53, 56, 1.0f, 24, 40, MachineSideMode.Never, true);
-		MutableComponent bonus = Component.translatable("gui.staticpower.fertlization_chance").append(": ")
+		MutableComponent bonus = Component.translatable("gui.staticpower.fertilization_chance").append(": ")
 				.append(GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
 		bonus.append(Component.literal("%"));
 		GuiDrawUtilities.drawStringCentered(matrixStack, bonus.getString(), 65, 9, 0.0f, 1f, SDColor.EIGHT_BIT_DARK_GREY, false);
@@ -76,7 +76,7 @@ public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRe
 		addFluidIngredientSlot(builder, 53, 16, 24, 40, recipe.getRequiredFluid()).addTooltipCallback((recipeSlotView, tooltip) -> {
 			tooltip.add(tooltip.get(tooltip.size() - 1));
 
-			MutableComponent bonus = Component.translatable("gui.staticpower.fertlization_bonus",
+			MutableComponent bonus = Component.translatable("gui.staticpower.fertilization_bonus",
 					GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
 			bonus.append(Component.literal("%"));
 			bonus.withStyle(ChatFormatting.GOLD);

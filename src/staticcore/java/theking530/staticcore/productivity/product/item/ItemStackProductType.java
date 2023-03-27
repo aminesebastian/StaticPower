@@ -19,9 +19,9 @@ public class ItemStackProductType extends ProductType<ItemStack> {
 	@Override
 	public String getUnlocalizedName(int amount) {
 		if (amount > 1) {
-			return "gui.staticpower.product.items";
+			return "gui.staticcore.product.items";
 		}
-		return "gui.staticpower.product.item";
+		return "gui.staticcore.product.item";
 	}
 
 	@Override

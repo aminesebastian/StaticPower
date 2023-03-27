@@ -36,9 +36,9 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 			updateToggledButton(highRedstoneButton);
 		}));
 
-		highRedstoneButton.setTooltip(Component.translatable("gui.staticpower.redstone_mode.high"));
-		ignoreRedstoneButton.setClickSoundPitch(0.7f).setTooltip(Component.translatable("gui.staticpower.redstone_mode.ignore"));
-		lowRedstoneButton.setClickSoundPitch(0.85f).setTooltip(Component.translatable("gui.staticpower.redstone_mode.low"));
+		highRedstoneButton.setTooltip(Component.translatable("gui.staticcore.redstone_mode.high"));
+		ignoreRedstoneButton.setClickSoundPitch(0.7f).setTooltip(Component.translatable("gui.staticcore.redstone_mode.ignore"));
+		lowRedstoneButton.setClickSoundPitch(0.85f).setTooltip(Component.translatable("gui.staticcore.redstone_mode.low"));
 
 		// Initialize the correct button.
 		if (currentMode == RedstoneMode.Ignore) {

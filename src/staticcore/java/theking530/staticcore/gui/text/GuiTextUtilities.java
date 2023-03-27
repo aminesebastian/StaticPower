@@ -54,7 +54,7 @@ public class GuiTextUtilities {
 	}
 
 	public static MutableComponent formatTicksToTimeUnit(int ticks) {
-		return Component.translatable(NUMBER_FORMATTER_ONE_DECIMAL.format(ticks / 20)).append(Component.translatable("gui.staticpower.seconds.short"));
+		return Component.translatable(NUMBER_FORMATTER_ONE_DECIMAL.format(ticks / 20)).append(Component.translatable("gui.staticcore.seconds.short"));
 	}
 
 	public static MutableComponent formatHeatToString(int currentHeat, int capacity) {

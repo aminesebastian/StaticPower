@@ -65,35 +65,35 @@ public class ProcessingCheckState {
 	}
 
 	public static ProcessingCheckState notCorrectFluid() {
-		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.requires_different_input_fluid");
+		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.requires_different_input_fluid");
 	}
 
 	public static ProcessingCheckState notEnoughFluid() {
-		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.not_enough_fluid");
+		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.not_enough_fluid");
 	}
 
 	public static ProcessingCheckState notEnoughPower(double requiredPower) {
-		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticpower.alert.not_enough_power", requiredPower));
+		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticcore.alert.not_enough_power", requiredPower));
 	}
 
 	public static ProcessingCheckState notEnoughHeatCapacity(double requiredHeatCapacity) {
-		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticpower.alert.not_enough_heat_capacity", requiredHeatCapacity));
+		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticcore.alert.not_enough_heat_capacity", requiredHeatCapacity));
 	}
 
 	public static ProcessingCheckState heatStorageTooHot(double mininumHeat) {
-		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticpower.alert.heat_storage_too_hot", mininumHeat));
+		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticcore.alert.heat_storage_too_hot", mininumHeat));
 	}
 
 	public static ProcessingCheckState powerOutputFull() {
-		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.power_output_full");
+		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.power_output_full");
 	}
 
 	public static ProcessingCheckState fluidOutputFull() {
-		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.fluid_output_full");
+		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.fluid_output_full");
 	}
 
 	public static ProcessingCheckState outputFluidDoesNotMatch() {
-		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.fluid_output_mismatch");
+		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.fluid_output_mismatch");
 	}
 
 	public static ProcessingCheckState internalBufferNotEmpty() {
@@ -101,6 +101,6 @@ public class ProcessingCheckState {
 	}
 
 	public static ProcessingCheckState outputsCannotTakeRecipe() {
-		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.machine_ouput_cannot_fit_recipe");
+		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.machine_ouput_cannot_fit_recipe");
 	}
 }

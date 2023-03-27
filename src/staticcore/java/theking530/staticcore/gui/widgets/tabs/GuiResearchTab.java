@@ -20,10 +20,10 @@ public class GuiResearchTab extends AbstractInfoTab {
 	public TextButton setTeamButton;
 
 	public GuiResearchTab(TeamComponent teamComponent) {
-		super("gui.staticpower.tab_title.team", new SDColor(255, 255, 255), 100, new SDColor(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(Blocks.LECTERN.asItem()));
+		super("gui.staticcore.tab_title.team", new SDColor(255, 255, 255), 100, new SDColor(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(Blocks.LECTERN.asItem()));
 		this.teamComponent = teamComponent;
-		registerWidget(setTeamButton = new TextButton(14, 18, 16, Component.translatable("gui.staticpower.set_team").getString(), this::setTeamClicked));
-		setTeamButton.setTooltip(Component.translatable("gui.staticpower.machine_set_team"));
+		registerWidget(setTeamButton = new TextButton(14, 18, 16, Component.translatable("gui.staticcore.set_team").getString(), this::setTeamClicked));
+		setTeamButton.setTooltip(Component.translatable("gui.staticcore.machine_set_team"));
 	}
 
 	public void setTeamClicked(StandardButton button, MouseButton mouseButton) {

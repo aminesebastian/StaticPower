@@ -15,8 +15,8 @@ public class GuiMachinePowerInfoTab extends GuiPowerInfoTab {
 
 	public GuiMachinePowerInfoTab(PowerStorageComponent storage) {
 		super(storage);
-		this.setOutputLabel("gui.staticpower.power_tab.power_usage");
-		this.setMaxOutputLabel("gui.staticpower.power_tab.max_power_usage");
+		this.setOutputLabel("gui.staticcore.power_tab.power_usage");
+		this.setMaxOutputLabel("gui.staticcore.power_tab.max_power_usage");
 	}
 
 	@Override

@@ -57,9 +57,9 @@ public class StaticPowerSapling extends BushBlock implements BonemealableBlock, 
 		if (state.getValue(STAGE) == 0) {
 			serverWorld.setBlock(pos, state.cycle(STAGE), 4);
 		} else {
-			if (!ForgeEventFactory.saplingGrowTree(serverWorld, rand, pos))
-				return;
-			this.tree.get().growTree(serverWorld, serverWorld.getChunkSource().getGenerator(), pos, state, rand);
+			if (!ForgeEventFactory.blockGrowFeature(serverWorld, rand, pos, null).isCanceled()) {
+				tree.get().growTree(serverWorld, serverWorld.getChunkSource().getGenerator(), pos, state, rand);
+			}
 		}
 	}
 

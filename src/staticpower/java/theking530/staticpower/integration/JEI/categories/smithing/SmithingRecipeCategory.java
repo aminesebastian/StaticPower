@@ -105,7 +105,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		// Draw the attribute title.
-		Minecraft.getInstance().font.drawShadow(matrixStack, Component.translatable("gui.staticpower.attributes").append(": ").getString(), 104.5f, 2,
+		Minecraft.getInstance().font.drawShadow(matrixStack, Component.translatable("gui.staticcore.attributes").append(": ").getString(), 104.5f, 2,
 				SDColor.EIGHT_BIT_WHITE.encodeInInteger());
 
 		// Create a copy of the input.

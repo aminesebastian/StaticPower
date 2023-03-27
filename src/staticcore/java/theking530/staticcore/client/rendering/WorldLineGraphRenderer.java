@@ -44,6 +44,7 @@ public class WorldLineGraphRenderer {
 		this.dataSets.put(label, data);
 	}
 
+	@SuppressWarnings("resource")
 	private void renderData(float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
 		// Do nothing if there is no data.
 		if (dataSets.size() == 0) {

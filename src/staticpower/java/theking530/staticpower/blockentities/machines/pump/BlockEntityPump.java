@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

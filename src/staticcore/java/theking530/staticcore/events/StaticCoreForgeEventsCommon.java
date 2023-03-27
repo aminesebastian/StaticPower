@@ -250,7 +250,7 @@ public class StaticCoreForgeEventsCommon {
 
 				// Add the "Hold Shift" indentifier.
 				if (advancedToolTips.size() > 0) {
-					event.getToolTip().add(Component.translatable("gui.staticpower.hold_shift").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+					event.getToolTip().add(Component.translatable("gui.staticcore.hold_shift").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
 				}
 			}
 		}

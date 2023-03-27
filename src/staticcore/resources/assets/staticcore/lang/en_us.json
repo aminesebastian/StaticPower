@@ -9,23 +9,12 @@
 	"item.staticcore.research_tier_6": "Research Vol. 6",
 	"item.staticcore.research_tier_7": "Research Vol. 7",
 	
-	"attribute.staticcore.fortune": "Fortune",
-	"attribute.staticcore.haste": "Haste",
-	"attribute.staticcore.grinding": "Grinding",
-	"attribute.staticcore.smelting": "Smelting",
-	"attribute.staticcore.silk_touch": "Silk Touch",
-	"attribute.staticcore.hardened_diamond": "Hardened",
-	"attribute.staticcore.hardened_ruby": "Hardened",
-	"attribute.staticcore.hardened_sapphire": "Hardened",
-	"attribute.staticcore.hardened_emerald": "Hardened",
-	"attribute.staticcore.promoted": "Promoted",
 	"gui.staticcore.empty": "Empty",
 	"gui.staticcore.input": "Input",
 	"gui.staticcore.min_input": "Max Input",
 	"gui.staticcore.max_input": "Max Input",
 	"gui.staticcore.max_output": "Max Output",
 	"gui.staticcore.capacity": "Capacity",
-	"gui.staticcore.stored_power": "Stored Power",
 	"gui.staticcore.usage": "Usage",
 	"gui.staticcore.per_tick": "Per Tick",
 	"gui.staticcore.generation": "Generation",
@@ -171,7 +160,7 @@
 	"gui.staticcore.active": "Active",
 	"gui.staticcore.inactive": "Inactive",
 	"gui.staticcore.attributes": "Attributes",
-	
+
 	"gui.staticcore.hold_shift": "Hold Shift",
 	"gui.staticcore.hold_control": "Hold Control",
 	
@@ -235,7 +224,7 @@
 	"gui.staticcore.alert.not_enough_power": "Not enough power! %1$s required!",
 	"gui.staticcore.alert.power_output_full": "Energy storage is full!",
 	"gui.staticcore.alert.internal_buffer_not_empty": "Machine's internal buffer not empty.",
-	"gui.staticcore.alert.machine_ouput_cannot_fit_recipe": "Recipe output cannot be placed in machine output.",
+	"gui.staticcore.alert.machine_output_cannot_fit_recipe": "Recipe output cannot be placed in machine output.",
 	
 	"gui.staticcore.product.fluid": "Fluid",
 	"gui.staticcore.product.fluids": "Fluids",
