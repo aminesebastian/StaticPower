@@ -1,0 +1,258 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }	
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+version = "${mc_version}-${mod_version}"  
+group = "theking530"
+archivesBaseName = "StaticPower"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle' 
+
+sourceSets {
+	staticcore {
+        compileClasspath = main.compileClasspath
+    }
+	staticpower {
+        compileClasspath = main.compileClasspath
+        compileClasspath += staticcore.output
+    }
+}
+
+sourceSets.each {
+    it.resources.srcDirs += "src/${it.name}/generated/resources"
+}
+
+jarJar.enable()
+jar.enabled = false
+
+minecraft {
+	mappings channel: 'official', version: '1.19.2'
+    accessTransformer = file('src/staticcore/resources/META-INF/accesstransformer.cfg')
+
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+			
+			// For Patchuloi
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+			
+            mods {
+                staticcore {
+                    source sourceSets.staticcore
+                }
+				staticpower {
+                    source sourceSets.staticpower
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+			
+			// For Patchuloi
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+			
+            mods {
+                staticcore {
+                    source sourceSets.staticcore
+                }
+				staticpower {
+                    source sourceSets.staticpower
+                }
+            }
+        }
+
+		data {
+			workingDirectory project.file('run')
+
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'debug'
+
+			// For Patchuloi
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+			args '--mod', "staticpower", '--all', '--output', file("src/staticpower/generated/resources/"), '--existing', file("src/staticpower/resources/")
+			mods {
+				staticcore {
+					source sourceSets.staticcore
+				}
+				staticpower {
+					source sourceSets.staticpower
+				}
+			}
+		}
+		data_core {
+			workingDirectory project.file('run')
+
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'debug'
+
+			// For Patchuloi
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+			args '--mod', "staticcore", '--all', '--output', file("src/staticcore/generated/resources/"), '--existing', file("src/staticcore/resources/")
+			mods {
+				staticcore {
+					source sourceSets.staticcore
+				}
+			}
+		}
+    }
+}
+
+repositories {
+	mavenLocal()
+	maven {
+		name = "Progwml6 maven"
+		url = "https://dvs1.progwml6.com/files/maven/"
+	}
+	maven { 
+		name = "Patchouli Maven"
+		url = "https://maven.blamejared.com"
+	}
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+	maven { 
+		url 'https://oss.sonatype.org/content/repositories/snapshots' 
+	}
+	maven {
+		url 'https://maven.covers1624.net'
+	}
+    maven {
+        url "https://maven.k-4u.nl"
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+
+	implementation fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
+	compileOnly   fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+	
+	compileOnly  fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
+	
+    implementation fg.deobf("curse.maven:jade-324717:${jade_version}")
+	implementation fg.deobf("codechicken:CodeChickenLib:${mc_version}-${ccl_version}:universal")
+	
+	compileOnly fg.deobf("curse.maven:the-one-probe-245211:3965693")
+	
+	minecraftLibrary 'org.xerial:sqlite-jdbc:3.39.3.0'
+	jarJar(group: 'org.xerial', name: 'sqlite-jdbc', version: '[3.39.3.0,4.0.0.0)')
+}
+
+afterEvaluate {
+    // Collect deps in runtimeClasspath but NOT in minecraft
+    def deps = (configurations.runtimeClasspath - configurations.minecraft).join(';')
+    // Add deps to classpath
+    minecraft.runs.each { run ->
+        run.token 'minecraft_classpath', deps
+    }
+}
+
+task spDeobfJar(type: Jar, dependsOn: 'jar') {
+    classifier "dev"
+    from "build/source/staticpower"
+}
+
+task spSourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.staticpower.allSource
+}
+
+task spJar(type: Jar) {
+    classifier = ''
+    from(sourceSets.staticpower.output)
+	finalizedBy 'reobfSpJar'
+}
+
+
+
+task scDeobfJar(type: Jar, dependsOn: 'jar') {
+    classifier "dev"
+    from "build/source/staticcore"
+}
+
+task scSourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.staticcore.allSource
+}
+
+tasks.jarJar.configure {
+    from(sourceSets.staticcore.output)
+    classifier ''
+	finalizedBy 'reobfJarJar'
+}
+
+reobf {  
+	jar { enabled = false } //Disable main sourceset
+    spJar {}
+    jarJar {}
+}
+
+artifacts {
+	archives spDeobfJar
+	archives spSourcesJar
+	archives spJar
+	
+	archives scDeobfJar
+	archives scSourcesJar
+}
+
+publishing {
+    publications {
+		staticPower(MavenPublication) {
+			groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+			
+			artifact spDeobfJar
+			artifact spSourcesJar
+			artifact spJar
+        }
+		staticCore(MavenPublication) {
+			groupId project.group
+            artifactId "StaticCore"
+            version project.version
+
+			artifact scDeobfJar
+			artifact scSourcesJar	
+			artifact tasks.jarJar
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' 
+}

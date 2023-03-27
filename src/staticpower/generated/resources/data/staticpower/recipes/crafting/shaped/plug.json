@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "t": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "pattern": [
+    "t t",
+    " r ",
+    "   "
+  ],
+  "result": {
+    "item": "staticpower:plug"
+  }
+}

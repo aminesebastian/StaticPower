@@ -1,0 +1,8 @@
+{
+  "parent": "staticpower:block/base_models/cables/cable_5_attachment",
+  "gui_light": "front",
+  "textures": {
+    "cable_texture": "staticpower:blocks/cables/attachments/cable_basic_item_attachment",
+    "overlay": "staticpower:blocks/cables/attachments/cable_attachment_filter"
+  }
+}

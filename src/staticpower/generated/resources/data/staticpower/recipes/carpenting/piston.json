@@ -1,0 +1,51 @@
+{
+  "type": "staticpower:carpenter",
+  "input_items": {
+    "key": {
+      "i": {
+        "ingredient": {
+          "tag": "forge:ingots/iron"
+        }
+      },
+      "r": {
+        "ingredient": {
+          "tag": "forge:dusts/redstone"
+        }
+      },
+      "s": {
+        "ingredient": {
+          "tag": "forge:cobblestone"
+        }
+      },
+      "w": {
+        "ingredient": {
+          "tag": "minecraft:planks"
+        }
+      }
+    },
+    "pattern": [
+      "www",
+      "wiw",
+      "srs"
+    ]
+  },
+  "output_fluid": {
+    "amount": 20,
+    "fluid": "staticpower:oil_tree"
+  },
+  "primary_output_item": {
+    "item": {
+      "id": "minecraft:piston"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output_item": {
+    "item": {
+      "count": 10,
+      "id": "staticpower:dust_wood"
+    }
+  }
+}

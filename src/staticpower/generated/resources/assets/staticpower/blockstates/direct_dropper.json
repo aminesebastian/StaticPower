@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,is_on=false": {
+      "model": "staticpower:block/direct_dropper",
+      "y": 90
+    },
+    "facing=east,is_on=true": {
+      "model": "staticpower:block/direct_dropper_on",
+      "y": 90
+    },
+    "facing=north,is_on=false": {
+      "model": "staticpower:block/direct_dropper"
+    },
+    "facing=north,is_on=true": {
+      "model": "staticpower:block/direct_dropper_on"
+    },
+    "facing=south,is_on=false": {
+      "model": "staticpower:block/direct_dropper",
+      "y": 180
+    },
+    "facing=south,is_on=true": {
+      "model": "staticpower:block/direct_dropper_on",
+      "y": 180
+    },
+    "facing=west,is_on=false": {
+      "model": "staticpower:block/direct_dropper",
+      "y": 270
+    },
+    "facing=west,is_on=true": {
+      "model": "staticpower:block/direct_dropper_on",
+      "y": 270
+    }
+  }
+}

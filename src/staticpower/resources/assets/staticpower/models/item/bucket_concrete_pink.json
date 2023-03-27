@@ -1,0 +1,9 @@
+{
+	"parent": "forge:fluid_container",
+	"loader": "forge:fluid_container",
+	"textures": {
+		"base": "item/bucket",
+		"fluid": "staticpower:items/buckets/bucket_concrete_mask"
+	},
+	"fluid": "staticpower:concrete_pink"
+}

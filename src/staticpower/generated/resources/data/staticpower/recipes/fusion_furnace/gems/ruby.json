@@ -1,0 +1,29 @@
+{
+  "type": "staticpower:fusion_furnace",
+  "inputs": [
+    {
+      "ingredient": {
+        "tag": "forge:dusts/ruby"
+      }
+    },
+    {
+      "ingredient": [
+        {
+          "tag": "forge:dusts/charcoal"
+        },
+        {
+          "tag": "forge:dusts/coal"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "item": {
+      "id": "staticpower:gem_ruby"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

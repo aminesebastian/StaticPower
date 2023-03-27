@@ -1,0 +1,25 @@
+{
+	"name": "Mining Drill",
+	"icon": "staticpower:mining_drill_basic",
+	"category": "staticpower:tools",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/mining_drill_basic",
+			"recipe2": "staticpower:crafting/tools/mining_drill_advanced"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/mining_drill_static",
+			"recipe2": "staticpower:crafting/tools/mining_drill_energized"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/mining_drill_lumum"
+		}
+	]
+}

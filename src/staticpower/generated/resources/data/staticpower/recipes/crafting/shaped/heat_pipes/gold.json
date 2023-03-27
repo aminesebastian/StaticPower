@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "pattern": [
+    " i ",
+    " i ",
+    " i "
+  ],
+  "result": {
+    "item": "staticpower:cable_heat_gold"
+  }
+}

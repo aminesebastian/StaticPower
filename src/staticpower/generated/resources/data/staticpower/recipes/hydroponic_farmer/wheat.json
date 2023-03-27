@@ -1,0 +1,12 @@
+{
+  "type": "staticpower:hydroponic_farming",
+  "input_fluid": {
+    "ingredient": {
+      "tag": "forge:seeds/wheat"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 12000
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:plates/lead"
+    },
+    "p": {
+      "item": "staticpower:upgrade_plate_energized"
+    },
+    "r": {
+      "item": "staticpower:heat_sink_gold"
+    }
+  },
+  "pattern": [
+    " i ",
+    " r ",
+    " p "
+  ],
+  "result": {
+    "item": "staticpower:upgrade_heat_capacity_energized"
+  }
+}

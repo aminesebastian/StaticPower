@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:digistore_card_stacked_energized"
+    },
+    "d": {
+      "item": "staticpower:card_lumum"
+    },
+    "e": {
+      "tag": "forge:chests/wooden"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "t": {
+      "tag": "staticpower:plates/lumum_metal"
+    }
+  },
+  "pattern": [
+    "trt",
+    "ece",
+    "dtd"
+  ],
+  "result": {
+    "item": "staticpower:digistore_card_stacked_lumum"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "staticpower:condensation",
+  "input": {
+    "amount": 10,
+    "fluids": {
+      "tag": "staticpower:evaporated_mash"
+    }
+  },
+  "output": {
+    "amount": 1,
+    "fluid": "staticpower:ethanol"
+  },
+  "processing": {
+    "heat": 20,
+    "minimum_heat": 100,
+    "processing_time": 40
+  }
+}

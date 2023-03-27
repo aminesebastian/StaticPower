@@ -1,0 +1,12 @@
+{
+  "values": [
+    "staticpower:backpack",
+    "staticpower:backpack_builder",
+    "staticpower:backpack_digger",
+    "staticpower:backpack_engineer",
+    "staticpower:backpack_farmer",
+    "staticpower:backpack_lumberjack",
+    "staticpower:backpack_miner",
+    "staticpower:backpack_tool"
+  ]
+}

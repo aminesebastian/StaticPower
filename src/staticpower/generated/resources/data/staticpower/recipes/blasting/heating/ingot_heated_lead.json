@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.5,
+  "ingredient": {
+    "tag": "forge:ingots/lead"
+  },
+  "result": "staticpower:ingot_lead_heated"
+}

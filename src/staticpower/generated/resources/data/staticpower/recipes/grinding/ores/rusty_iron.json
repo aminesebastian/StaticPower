@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:grinder",
+  "input": {
+    "ingredient": {
+      "item": "staticpower:ore_rusty_iron"
+    }
+  },
+  "outputs": [
+    {
+      "additionalBonus": 1,
+      "bonusChance": 0.25,
+      "item": {
+        "count": 4,
+        "id": "staticpower:rusty_iron_scrap"
+      }
+    }
+  ],
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

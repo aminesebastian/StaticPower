@@ -1,0 +1,13 @@
+{
+  "type": "staticpower:fluid_generator",
+  "input_fluid": {
+    "amount": 1,
+    "fluids": {
+      "tag": "staticpower:oil_crude"
+    }
+  },
+  "processing": {
+    "power": 12.0,
+    "processing_time": 1
+  }
+}

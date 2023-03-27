@@ -1,0 +1,21 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"cable_texture": "staticpower:blocks/cables/redstone/cable_basic_redstone_naked"
+	},
+	"elements": [
+		{
+			"name": "FirstSection",
+			"from": [7.25, 7.25, 0],
+			"to": [8.75, 8.75, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 1.5, 16], "rotation": 90, "texture": "#cable_texture"},
+				"west": {"uv": [0, 0, 1.5, 16], "rotation": 90, "texture": "#cable_texture"},
+				"up": {"uv": [0, 0, 1.5, 16], "rotation": 180, "texture": "#cable_texture"},
+				"down": {"uv": [0, 0, 1.5, 16], "rotation": 180, "texture": "#cable_texture"}
+			}
+		}
+	]
+}

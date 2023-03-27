@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "staticpower:gears/brass"
+    },
+    "i": {
+      "tag": "forge:ingots/brass"
+    }
+  },
+  "pattern": [
+    "g  ",
+    " ig",
+    "g  "
+  ],
+  "result": {
+    "item": "staticpower:gear_box_brass"
+  }
+}

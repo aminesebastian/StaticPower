@@ -1,0 +1,14 @@
+{
+  "values": [
+    "#forge:eggs",
+    "#forge:leather",
+    "#forge:feathers",
+    "#minecraft:wool",
+    "minecraft:beef",
+    "minecraft:chicken",
+    "minecraft:porkchop",
+    "staticpower:smutton_raw",
+    "staticpower:eeef_raw",
+    "minecraft:rotten_flesh"
+  ]
+}

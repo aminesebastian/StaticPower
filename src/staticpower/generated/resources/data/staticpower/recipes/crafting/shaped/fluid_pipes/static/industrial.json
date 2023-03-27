@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "forge:glass"
+    },
+    "p": {
+      "item": "staticpower:cable_fluid_static"
+    },
+    "r": {
+      "tag": "forge:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "prp",
+    "rgr",
+    "prp"
+  ],
+  "result": {
+    "count": 4,
+    "item": "staticpower:cable_industrial_fluid_static"
+  }
+}

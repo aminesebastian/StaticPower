@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "staticpower:cable_power_static"
+    },
+    {
+      "tag": "forge:rubber"
+    }
+  ],
+  "result": {
+    "item": "staticpower:cable_insulated_power_static"
+  }
+}

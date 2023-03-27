@@ -1,0 +1,31 @@
+{
+    "java.compile.nullAnalysis.mode": "disabled",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        ".gradle": true,
+        ".metadata": true,
+        ".settings": true,
+        ".vscode": true,
+        "bin": true,
+        "build": true,
+        "gradle": true,
+        "run": true,
+        "*.launch": true,
+        "*.bat": true,
+        "*.md": true,
+        "LICENSE.txt": true,
+        "changelog.txt": true,
+        "CREDITS.txt": true,
+        ".project": true,
+        ".gitattributes": true
+    },
+    "explorerExclude.backup": {},
+    "cSpell.words": [
+        "DIGISTORE"
+    ]
+}

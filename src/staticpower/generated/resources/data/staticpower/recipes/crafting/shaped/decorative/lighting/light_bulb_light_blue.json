@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "tag": "forge:ingots/copper"
+    },
+    "g": {
+      "tag": "forge:glass_panes/light_blue"
+    },
+    "w": {
+      "tag": "forge:wires/copper"
+    }
+  },
+  "pattern": [
+    "ggg",
+    "gwg",
+    " c "
+  ],
+  "result": {
+    "item": "staticpower:light_bulb_light_blue"
+  }
+}

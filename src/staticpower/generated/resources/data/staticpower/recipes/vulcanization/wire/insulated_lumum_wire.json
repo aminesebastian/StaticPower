@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:vulcanizer",
+  "input_fluid": {
+    "amount": 125,
+    "fluids": {
+      "tag": "staticpower:latex"
+    }
+  },
+  "input_item": {
+    "ingredient": {
+      "tag": "staticpower:wires/lumum_metal"
+    }
+  },
+  "output_item": {
+    "item": {
+      "id": "staticpower:wire_insulated_lumum_metal"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

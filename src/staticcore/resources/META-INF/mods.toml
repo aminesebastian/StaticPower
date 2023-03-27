@@ -1,0 +1,14 @@
+modLoader="javafml"
+loaderVersion="[32,)"
+issueTrackerURL="https://github.com/Theking5301/StaticPower/issues"
+license="All Rights Reserved"
+
+[[mods]]
+	modId="staticcore"
+	version="1.0.0"
+	displayName="Static Core"
+	# The description text for the mod (multi line!) (#mandatory)
+	description='''
+	In your adventures, you've discovered the seeds of an ancient alien plant - the crops of which radiate energy! 
+	Perhaps by studying these crops, you can unlock the secrets of this long extinct species and rediscover some of their impressive technology.
+	'''

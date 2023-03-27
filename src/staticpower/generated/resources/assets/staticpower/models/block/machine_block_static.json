@@ -1,0 +1,9 @@
+{
+  "parent": "staticpower:block/base_models/machine_block",
+  "textures": {
+    "front": "staticpower:blocks/machines/sides/static_machine_front",
+    "particle": "staticpower:blocks/machines/sides/static_machine_side",
+    "side": "staticpower:blocks/machines/sides/static_machine_side",
+    "top": "staticpower:blocks/machines/sides/static_machine_top"
+  }
+}

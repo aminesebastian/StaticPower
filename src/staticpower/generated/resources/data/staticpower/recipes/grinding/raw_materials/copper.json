@@ -1,0 +1,26 @@
+{
+  "type": "staticpower:grinder",
+  "input": {
+    "ingredient": {
+      "tag": "forge:raw_materials/copper"
+    }
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 2,
+        "id": "staticpower:dust_copper"
+      }
+    },
+    {
+      "chance": 0.05,
+      "item": {
+        "id": "staticpower:dust_gold"
+      }
+    }
+  ],
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

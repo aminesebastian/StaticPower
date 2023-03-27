@@ -1,0 +1,28 @@
+{
+	"name": "Industrial Power",
+	"icon": "staticpower:cable_industrial_power_basic",
+	"category": "staticpower:transport",
+	"pages": [
+		{
+			"type": "text",
+			"text": "The $(bold)Industrial Power Cable $(reset)is a marvel of modern engineering! Capable of transporting incredible amounts of energy, these cables are suited for the most advanced of applications. $(br2)$(italic)Note: Due to their immense size (and definitely $(bold)not $(reset)because we skimped on manufacturing materials), they cannot supply power directly to machines."
+		},
+		{
+			"type": "crafting",
+			"title": "Basic & Advanced",
+			"recipe": "staticpower:crafting/cables/power/industrial/power_cable_basic_industrial",
+			"recipe2": "staticpower:crafting/cables/power/industrial/power_cable_advanced_industrial"
+		},
+		{
+			"type": "crafting",
+			"title": "Static & Energized",
+			"recipe": "staticpower:crafting/cables/power/industrial/power_cable_static_industrial",
+			"recipe2": "staticpower:crafting/cables/power/industrial/power_cable_energized_industrial"
+		},
+		{
+			"type": "crafting",
+			"title": "Lumum",
+			"recipe": "staticpower:crafting/cables/power/industrial/power_cable_lumum_industrial"
+		}
+	]
+}

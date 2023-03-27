@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "staticpower:block/crop_energized"
+    },
+    "age=1": {
+      "model": "staticpower:block/crop_energized"
+    },
+    "age=2": {
+      "model": "staticpower:block/crop_energized"
+    },
+    "age=3": {
+      "model": "staticpower:block/crop_energized"
+    },
+    "age=4": {
+      "model": "staticpower:block/crop_energized"
+    },
+    "age=5": {
+      "model": "staticpower:block/crop_energized"
+    },
+    "age=6": {
+      "model": "staticpower:block/crop_energized"
+    },
+    "age=7": {
+      "model": "staticpower:block/crop_energized"
+    }
+  }
+}

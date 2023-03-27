@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "w": {
+      "item": "staticpower:rubber_tree_stripped_log"
+    }
+  },
+  "pattern": [
+    "ww ",
+    "ww ",
+    "   "
+  ],
+  "result": {
+    "item": "staticpower:rubber_tree_stripped_wood"
+  }
+}

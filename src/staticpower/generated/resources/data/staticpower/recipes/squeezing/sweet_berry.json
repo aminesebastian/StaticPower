@@ -1,0 +1,16 @@
+{
+  "type": "staticpower:squeezer",
+  "input": {
+    "ingredient": {
+      "item": "minecraft:sweet_berries"
+    }
+  },
+  "output_fluid": {
+    "amount": 25,
+    "fluid": "staticpower:juice_berry"
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 40
+  }
+}

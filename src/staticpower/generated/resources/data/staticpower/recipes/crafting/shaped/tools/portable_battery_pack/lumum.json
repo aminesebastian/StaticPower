@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_lumum"
+    },
+    "p": {
+      "item": "staticpower:processor_lumum"
+    },
+    "w": {
+      "tag": "staticpower:wires/lumum_metal"
+    }
+  },
+  "pattern": [
+    "wpw",
+    "bbb",
+    "www"
+  ],
+  "result": {
+    "item": "staticpower:battery_pack_lumum"
+  }
+}

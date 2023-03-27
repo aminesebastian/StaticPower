@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,is_on=false": {
+      "model": "staticpower:block/transformer_energized",
+      "y": 90
+    },
+    "facing=east,is_on=true": {
+      "model": "staticpower:block/transformer_energized",
+      "y": 90
+    },
+    "facing=north,is_on=false": {
+      "model": "staticpower:block/transformer_energized"
+    },
+    "facing=north,is_on=true": {
+      "model": "staticpower:block/transformer_energized"
+    },
+    "facing=south,is_on=false": {
+      "model": "staticpower:block/transformer_energized",
+      "y": 180
+    },
+    "facing=south,is_on=true": {
+      "model": "staticpower:block/transformer_energized",
+      "y": 180
+    },
+    "facing=west,is_on=false": {
+      "model": "staticpower:block/transformer_energized",
+      "y": 270
+    },
+    "facing=west,is_on=true": {
+      "model": "staticpower:block/transformer_energized",
+      "y": 270
+    }
+  }
+}

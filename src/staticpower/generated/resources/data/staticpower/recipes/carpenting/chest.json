@@ -1,0 +1,36 @@
+{
+  "type": "staticpower:carpenter",
+  "input_items": {
+    "key": {
+      "w": {
+        "ingredient": {
+          "tag": "minecraft:planks"
+        }
+      }
+    },
+    "pattern": [
+      "www",
+      "w w",
+      "www"
+    ]
+  },
+  "output_fluid": {
+    "amount": 40,
+    "fluid": "staticpower:oil_tree"
+  },
+  "primary_output_item": {
+    "item": {
+      "id": "minecraft:chest"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output_item": {
+    "item": {
+      "count": 16,
+      "id": "staticpower:dust_wood"
+    }
+  }
+}

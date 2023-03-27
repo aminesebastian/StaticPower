@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "item": "staticpower:gear_box_tin"
+    },
+    "i": {
+      "tag": "forge:ingots/tin"
+    }
+  },
+  "pattern": [
+    "i i",
+    " g ",
+    "i i"
+  ],
+  "result": {
+    "item": "staticpower:turbine_blades_basic"
+  }
+}

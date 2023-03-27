@@ -1,0 +1,45 @@
+{
+  "type": "staticpower:soldering",
+  "input_items": {
+    "key": {
+      "g": {
+        "ingredient": {
+          "tag": "forge:gems/diamond"
+        }
+      },
+      "i": {
+        "ingredient": {
+          "tag": "forge:ingots/iron"
+        }
+      },
+      "l": {
+        "ingredient": {
+          "tag": "forge:plates/gold"
+        }
+      },
+      "p": {
+        "ingredient": {
+          "item": "staticpower:processor_advanced"
+        }
+      },
+      "w": {
+        "ingredient": {
+          "tag": "forge:ingots/tin"
+        }
+      }
+    },
+    "pattern": [
+      "lwl",
+      "gpg",
+      "iii"
+    ]
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:card_advanced"
+    }
+  },
+  "soldering_iron": {
+    "tag": "staticpower:tools/soldering_iron"
+  }
+}

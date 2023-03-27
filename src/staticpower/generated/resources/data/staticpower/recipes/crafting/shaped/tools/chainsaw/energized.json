@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_energized"
+    },
+    "g": {
+      "tag": "staticpower:gears/energized_metal"
+    },
+    "i": {
+      "tag": "staticpower:plates/energized_metal"
+    },
+    "l": {
+      "item": "minecraft:lever"
+    },
+    "m": {
+      "item": "staticpower:motor"
+    },
+    "p": {
+      "item": "staticpower:processor_energized"
+    }
+  },
+  "pattern": [
+    "ipg",
+    "bmb",
+    "il "
+  ],
+  "result": {
+    "item": "staticpower:chainsaw_energized"
+  }
+}

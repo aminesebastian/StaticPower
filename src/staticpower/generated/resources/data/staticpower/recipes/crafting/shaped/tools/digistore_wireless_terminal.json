@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_energized"
+    },
+    "e": {
+      "tag": "forge:ender_pearls"
+    },
+    "g": {
+      "tag": "forge:glass_panes"
+    },
+    "p": {
+      "item": "staticpower:processor_energized"
+    },
+    "t": {
+      "tag": "forge:plates/tin"
+    }
+  },
+  "pattern": [
+    "ete",
+    "tgt",
+    "pbp"
+  ],
+  "result": {
+    "item": "staticpower:digistore_wireless_terminal"
+  }
+}

@@ -1,0 +1,23 @@
+{
+	"name": "Processing Speed",
+	"icon": "staticpower:upgrade_speed_basic",
+	"category": "staticpower:upgrades",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/speed/basic_speed",
+			"recipe2": "staticpower:crafting/upgrades/speed/static_speed",
+			"title": "Basic & Static"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/speed/energized_speed",
+			"recipe2": "staticpower:crafting/upgrades/speed/lumum_speed",
+			"title": "Energized & Lumum"
+		}
+	]
+}

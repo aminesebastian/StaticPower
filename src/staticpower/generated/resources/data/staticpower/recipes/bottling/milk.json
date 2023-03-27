@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:bottler",
+  "empty_bottle": {
+    "ingredient": {
+      "tag": "staticpower:glass_bottles"
+    }
+  },
+  "filled_bottle": {
+    "item": {
+      "id": "staticpower:bottle_milk"
+    }
+  },
+  "fluid": {
+    "amount": 1000,
+    "fluids": {
+      "tag": "forge:milk"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 100
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "dirt": "staticpower:blocks/decorative/farmland_energized_side",
+    "particle": "staticpower:blocks/decorative/farmland_energized_top",
+    "top": "staticpower:blocks/decorative/farmland_energized_top"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "staticpower:storage_blocks/lumum_metal"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "staticpower:raw_lumum_metal"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "values": [
+    "staticpower:ore_deepslate_aluminum",
+    "minecraft:deepslate_gold_ore",
+    "staticpower:ore_deepslate_platinum",
+    "staticpower:ore_deepslate_tungsten",
+    "staticpower:ore_deepslate_tin",
+    "minecraft:deepslate_copper_ore",
+    "minecraft:deepslate_lapis_ore",
+    "staticpower:ore_deepslate_zinc",
+    "staticpower:ore_deepslate_sapphire",
+    "staticpower:ore_deepslate_magnesium",
+    "staticpower:ore_deepslate_lead",
+    "staticpower:ore_deepslate_ruby",
+    "minecraft:deepslate_diamond_ore",
+    "minecraft:deepslate_iron_ore",
+    "minecraft:deepslate_coal_ore",
+    "staticpower:ore_deepslate_silver",
+    "staticpower:ore_deepslate_uranium",
+    "minecraft:deepslate_emerald_ore",
+    "minecraft:deepslate_redstone_ore"
+  ]
+}

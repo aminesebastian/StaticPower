@@ -1,0 +1,9 @@
+{
+  "values": [
+    "#forge:tools/pickaxes",
+    "#forge:tools/shovels",
+    "#forge:tools/axes",
+    "#forge:tools/hoes",
+    "#staticpower:tools"
+  ]
+}

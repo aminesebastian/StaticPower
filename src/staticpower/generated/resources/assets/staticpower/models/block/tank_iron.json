@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/base_models/tank_block",
+  "textures": {
+    "particle": "staticpower:blocks/machines/tanks/tank_iron",
+    "tank": "staticpower:blocks/machines/tanks/tank_iron"
+  }
+}

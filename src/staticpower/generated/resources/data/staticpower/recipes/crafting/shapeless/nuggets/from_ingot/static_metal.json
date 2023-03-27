@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "staticpower:ingots/static_metal"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "staticpower:nugget_static_metal"
+  }
+}

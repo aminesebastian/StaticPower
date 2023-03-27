@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "staticpower:ingots/redstone_alloy"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "staticpower:nugget_redstone_alloy"
+  }
+}

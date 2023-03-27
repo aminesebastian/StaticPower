@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "s": {
+      "tag": "forge:rods/wooden"
+    },
+    "w": {
+      "tag": "staticpower:wires/lumum_metal"
+    }
+  },
+  "pattern": [
+    "www",
+    "wsw",
+    "www"
+  ],
+  "result": {
+    "count": 4,
+    "item": "staticpower:wire_coil_lumum_metal"
+  }
+}
