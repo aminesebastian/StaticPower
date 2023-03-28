@@ -97,7 +97,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			// applied.
 			boolean appliedModifierIfRequested = false;
 			if (hasModifiers()) {
-				IAttributable attributable = matchParams.getItems()[0].getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+				IAttributable attributable = matchParams.getItems()[0].getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
 				if (attributable == null) {
 					return false;
 				}
@@ -188,7 +188,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	}
 
 	public boolean canApplyToItemStack(ItemStack stack) {
-		IAttributable attributable = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+		IAttributable attributable = stack.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
 		if (attributable == null) {
 			return false;
 		}
@@ -199,7 +199,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	public boolean applyToItemStack(ItemStack stack) {
 		// Try to get the attributable. If the input has no attributable AND it does not
 		// perform a repair, return false.
-		IAttributable attributable = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+		IAttributable attributable = stack.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
 		if (attributable == null && !performsRepair()) {
 			return false;
 		}

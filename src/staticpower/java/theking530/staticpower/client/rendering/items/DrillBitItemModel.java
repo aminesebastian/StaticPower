@@ -101,7 +101,7 @@ public class DrillBitItemModel implements BakedModel {
 			output.addAll(BaseModel.getQuads(state, side, rand, data, renderLayer));
 
 			// Attempt to get the attributable capability. Return early if it fails.
-			IAttributable attributable = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+			IAttributable attributable = stack.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
 			if (attributable == null) {
 				return output;
 			}

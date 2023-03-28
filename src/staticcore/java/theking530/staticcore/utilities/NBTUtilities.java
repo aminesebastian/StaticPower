@@ -29,9 +29,16 @@ public class NBTUtilities {
 	}
 
 	public static <T> List<T> deserialize(ListTag tagList, Function<Tag, T> callback) {
+		return deserialize(tagList, false, callback);
+	}
+	public static <T> List<T> deserialize(ListTag tagList,  boolean skipNull, Function<Tag, T> callback) {
 		List<T> output = new ArrayList<T>();
 		for (Tag tag : tagList) {
-			output.add(callback.apply(tag));
+			T result = callback.apply(tag);
+			if(result == null && skipNull) {
+				continue;
+			}
+			output.add(result);
 		}
 
 		return output;

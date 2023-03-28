@@ -49,7 +49,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		int slots = !StaticPowerConfig.SERVER_SPEC.isLoaded() ? 0 : StaticPowerConfig.SERVER.digistoreCraftingInterfaceSlots.get();
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots), (Direction) null)
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots))
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 9));
 	}
 
@@ -85,7 +85,8 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	}
 
 	@Override
-	public @Nullable AbstractCableAttachmentContainerProvider getUIContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
+	public @Nullable AbstractCableAttachmentContainerProvider getUIContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable,
+			Direction attachmentSide) {
 		return new CraftingInterfaceContainerProvider(attachment, cable, attachmentSide);
 	}
 
@@ -96,7 +97,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (cable.getLevel().isClientSide) {
+		if (cable.getLevel().isClientSide()) {
 			return;
 		}
 

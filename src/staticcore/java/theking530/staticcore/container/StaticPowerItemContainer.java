@@ -2,6 +2,8 @@ package theking530.staticcore.container;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -34,5 +36,14 @@ public abstract class StaticPowerItemContainer<T extends Item> extends StaticCor
 	 */
 	protected static ItemStack getHeldItemstack(Inventory inv, FriendlyByteBuf data) {
 		return inv.getItem(data.readInt());
+	}
+
+	@Override
+	public void clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
+		// Prevent us from moving the item that we're currnetly looking at.
+		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getItem() == player.getMainHandItem()) {
+			return;
+		}
+		super.clicked(slot, dragType, clickTypeIn, player);
 	}
 }

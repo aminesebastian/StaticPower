@@ -113,8 +113,8 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 
 		// Get the attributable of the copy and apply the recipe. Then, list the new
 		// values.
-		IAttributable originalAttributable = recipe.getInputItem().getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
-		IAttributable copyAttributable = copy.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+		IAttributable originalAttributable = recipe.getInputItem().getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
+		IAttributable copyAttributable = copy.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
 		if (originalAttributable != null && copyAttributable != null) {
 			// Apply the recipe to the copy.
 			recipe.getRecipe().applyToItemStack(copy);

@@ -42,7 +42,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.IdMappingEvent;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.attributes.ItemAttributeRegistry;
-import theking530.api.attributes.capability.AttributeableHandler;
+import theking530.api.attributes.capability.AttributableCapabilityProvider;
 import theking530.api.attributes.rendering.ItemAttributeRegistration;
 import theking530.api.attributes.type.AttributeType;
 import theking530.api.heat.HeatTooltipUtilities;
@@ -152,7 +152,7 @@ public class StaticCoreForgeEventsCommon {
 			}
 
 			// Add all the attributes to the item stack.
-			AttributeableHandler handler = new AttributeableHandler();
+			AttributableCapabilityProvider handler = new AttributableCapabilityProvider();
 			for (AttributeType<?> attribute : registration.getAttributes()) {
 				handler.addAttribute(registration.getAttribute(attribute));
 			}

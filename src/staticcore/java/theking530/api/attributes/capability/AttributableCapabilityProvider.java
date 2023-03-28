@@ -20,10 +20,10 @@ import theking530.api.attributes.rendering.ItemAttributeRegistration.AttributeRe
 import theking530.api.attributes.type.AttributeType;
 import theking530.staticcore.utilities.NBTUtilities;
 
-public class AttributeableHandler implements IAttributable, INBTSerializable<CompoundTag>, ICapabilityProvider {
+public class AttributableCapabilityProvider implements IAttributable, INBTSerializable<CompoundTag>, ICapabilityProvider {
 	private final HashMap<AttributeType<?>, AttributeInstance<?>> attributes;
 
-	public AttributeableHandler() {
+	public AttributableCapabilityProvider() {
 		attributes = new HashMap<>();
 	}
 
@@ -76,7 +76,7 @@ public class AttributeableHandler implements IAttributable, INBTSerializable<Com
 
 	@Override
 	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (cap == CapabilityAttributable.ATTRIBUTABLE_CAPABILITY) {
+		if (cap == CapabilityAttributable.CAPABILITY_ATTRIBUTABLE) {
 			return LazyOptional.of(() -> this).cast();
 		}
 		return LazyOptional.empty();

@@ -50,7 +50,7 @@ public class DigistoreExporterAttachment extends AbstractDigistoreCableAttachmen
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		int slots = !StaticPowerConfig.SERVER_SPEC.isLoaded() ? 0 : StaticPowerConfig.SERVER.digistoreExporterSlots.get();
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots), (Direction) null)
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots))
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 3));
 	}
 

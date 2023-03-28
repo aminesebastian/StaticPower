@@ -6,7 +6,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -108,13 +107,5 @@ public class ContainerBackpack extends StaticPowerItemContainer<Backpack> {
 			return remaining.getCount() != initialCount;
 		}
 		return false;
-	}
-
-	@Override
-	public void clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
-		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getItem() == player.getMainHandItem()) {
-			return;
-		}
-		super.clicked(slot, dragType, clickTypeIn, player);
 	}
 }

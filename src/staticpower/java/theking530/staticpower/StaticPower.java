@@ -41,6 +41,7 @@ import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFeatures;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItemAttributes;
+import theking530.staticpower.init.ModItemSlots;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModLootSerializers;
 import theking530.staticpower.init.ModMaterials;
@@ -108,6 +109,7 @@ public class StaticPower {
 		ModFluids.init(eventBus);
 		ModNetworkMessages.init();
 		ModEntities.init(eventBus);
+		ModItemSlots.init(eventBus);
 
 		ModCableDestinations.init(eventBus);
 		ModCableModules.init(eventBus);

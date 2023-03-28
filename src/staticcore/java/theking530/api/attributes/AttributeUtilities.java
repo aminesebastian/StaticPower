@@ -12,7 +12,7 @@ import theking530.api.attributes.type.AttributeType;
 public class AttributeUtilities {
 	public static void addTooltipsForAttribute(ItemStack stack, List<Component> tooltip, boolean showAdvanced) {
 		// Add the tooltips for all attributes.
-		stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
+		stack.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).ifPresent(attributable -> {
 			// Allocate the tooltip container.
 			List<Component> attributeTooltips = new ArrayList<Component>();
 

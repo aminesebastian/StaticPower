@@ -9,6 +9,7 @@ import theking530.api.attributes.modifiers.AttributeModifierType;
 import theking530.api.attributes.rendering.ItemAttributeType;
 import theking530.api.attributes.type.AttributeType;
 import theking530.api.attributes.values.AttributeValueType;
+import theking530.api.item.compound.slot.CompoundItemSlot;
 import theking530.api.upgrades.UpgradeType;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
@@ -28,6 +29,8 @@ public class StaticCoreRegistries {
 	public static final ResourceKey<Registry<AttributeModifierType<?>>> ATTRIBUTE_MODIFIER_REGISTRY_KEY = key("attribute_modifier");
 	public static final ResourceKey<Registry<AttributeValueType<?>>> ATTRIBUTE_VALUE_REGISTRY_KEY = key("attribute_value");
 	public static final ResourceKey<Registry<ItemAttributeType>> ITEM_ATTRIBUTE_REGISTRY_KEY = key("item_attribute_registry");
+
+	public static final ResourceKey<Registry<CompoundItemSlot>> ITEM_SLOT_KEY = key("item_slot");
 
 	public static final ForgeRegistry<UpgradeType<?>> UpgradeTypes() {
 		return RegistryManager.ACTIVE.getRegistry(UPGRADE_TYPES_REGISTRY_KEY);
@@ -63,6 +66,10 @@ public class StaticCoreRegistries {
 
 	public static final ForgeRegistry<ItemAttributeType> ItemAttribute() {
 		return RegistryManager.ACTIVE.getRegistry(ITEM_ATTRIBUTE_REGISTRY_KEY);
+	}
+
+	public static final ForgeRegistry<CompoundItemSlot> ItemSlot() {
+		return RegistryManager.ACTIVE.getRegistry(ITEM_SLOT_KEY);
 	}
 
 	private static <T> ResourceKey<Registry<T>> key(String name) {

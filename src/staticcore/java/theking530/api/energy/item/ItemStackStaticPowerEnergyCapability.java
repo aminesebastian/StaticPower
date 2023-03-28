@@ -1,16 +1,21 @@
 package theking530.api.energy.item;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.StaticPowerStorage;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
-import theking530.staticcore.item.IItemMultiCapability;
+import theking530.staticcore.item.ISPItemCapabilityProvider;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 
-public class ItemStackStaticPowerEnergyCapability extends StaticPowerStorage implements IItemMultiCapability {
+public class ItemStackStaticPowerEnergyCapability extends StaticPowerStorage implements ISPItemCapabilityProvider {
 	protected static final String ITEM_ENERGY_TAG = "static_power_energy";
 	protected final String name;
 	protected final ItemStack container;
@@ -23,8 +28,8 @@ public class ItemStackStaticPowerEnergyCapability extends StaticPowerStorage imp
 	}
 
 	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputVoltageRange, double maximumInputPower,
-			CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage, double maximumOutputPower, CurrentType outputCurrentType, boolean canAcceptExternalPower,
-			boolean canOutputExternalPower) {
+			CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage, double maximumOutputPower, CurrentType outputCurrentType,
+			boolean canAcceptExternalPower, boolean canOutputExternalPower) {
 		super(capacity, inputVoltageRange, maximumInputPower, acceptableCurrentTypes, outputVoltage, maximumOutputPower, outputCurrentType, canAcceptExternalPower,
 				canOutputExternalPower, false);
 		this.name = name;
@@ -45,17 +50,10 @@ public class ItemStackStaticPowerEnergyCapability extends StaticPowerStorage imp
 	}
 
 	@Override
-	public Capability<?>[] getCapabilityTypes() {
-		return new Capability<?>[] { CapabilityStaticPower.STATIC_VOLT_CAPABILITY };
-	}
-
-	@Override
-	public ItemStackMultiCapabilityProvider getOwningProvider() {
-		return owningProvider;
-	}
-
-	@Override
-	public void setOwningProvider(ItemStackMultiCapabilityProvider owningProvider) {
-		this.owningProvider = owningProvider;
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (cap == CapabilityStaticPower.STATIC_VOLT_CAPABILITY) {
+			return LazyOptional.of(() -> this).cast();
+		}
+		return LazyOptional.empty();
 	}
 }

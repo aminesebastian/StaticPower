@@ -5,7 +5,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 
 public class CapabilityAttributable {
-	public static final Capability<IAttributable> ATTRIBUTABLE_CAPABILITY = CapabilityManager
+	public static final Capability<IAttributable> CAPABILITY_ATTRIBUTABLE = CapabilityManager
 			.get(new CapabilityToken<>() {
 			});
 }

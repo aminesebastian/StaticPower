@@ -17,12 +17,18 @@ public abstract class AttributeType<T> {
 	protected final String unlocalizedName;
 	protected final ChatFormatting color;
 	protected final RegistryObject<AttributeValueType<T>> valueType;
+	protected final int priority;
 
 	@SuppressWarnings("unchecked")
-	public AttributeType(String unlocalizedName, ChatFormatting color, RegistryObject<? extends AttributeValueType<T>> valueType) {
+	public AttributeType(String unlocalizedName, ChatFormatting color, RegistryObject<? extends AttributeValueType<T>> valueType, int priority) {
 		this.unlocalizedName = unlocalizedName;
 		this.color = color;
 		this.valueType = (RegistryObject<AttributeValueType<T>>) valueType;
+		this.priority = priority;
+	}
+
+	public AttributeType(String unlocalizedName, ChatFormatting color, RegistryObject<? extends AttributeValueType<T>> valueType) {
+		this(unlocalizedName, color, valueType, 0);
 	}
 
 	/**
@@ -38,6 +44,10 @@ public abstract class AttributeType<T> {
 
 	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<T> instance, AttributeModifierInstance<T> modifier) {
 		return true;
+	}
+
+	public int getPriority() {
+		return priority;
 	}
 
 	public MutableComponent getAttributeTitle(AttributeInstance<T> instance, boolean showAdvanced) {

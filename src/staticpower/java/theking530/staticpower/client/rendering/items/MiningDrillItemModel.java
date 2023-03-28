@@ -3,7 +3,6 @@ package theking530.staticpower.client.rendering.items;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
@@ -30,6 +29,8 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
+import theking530.api.item.compound.capability.CapabilityCompoundItem;
+import theking530.api.item.compound.capability.ICompoundItem;
 import theking530.staticcore.client.models.AbstractBakedModel;
 import theking530.staticcore.utilities.math.Vector2D;
 import theking530.staticpower.client.utilities.BakedModelRenderingUtilities;
@@ -101,24 +102,21 @@ public class MiningDrillItemModel implements BakedModel {
 			}
 
 			List<BakedQuad> output = new ArrayList<BakedQuad>();
-			AtomicBoolean drillBitEquipped = new AtomicBoolean(false);
+			boolean hasDrillBit = false;
 
 			// Attempt to get the drill inventory.
-			stack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent((handler) -> {
-				if (!handler.getStackInSlot(0).isEmpty()) {
-					drillBitEquipped.set(true);
-					BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(handler.getStackInSlot(0), Minecraft.getInstance().level, null, 0);
-					List<BakedQuad> drillBitQuads = itemModel.getQuads(state, side, rand, data, renderLayer);
-					output.addAll(transformQuads(drillBitQuads, new Vector3f(0.3f, 0.3f, -0.001f), new Vector3f(0.55f, 0.55f, 1.1f), new Quaternion(0, 0, 135, true)));
-				}
-			});
+			ICompoundItem compoundItem = stack.getCapability(CapabilityCompoundItem.CAPABILITY_COMPOUND_ITEM).orElse(null);
+			if (compoundItem != null && !compoundItem.getPartInSlot(0).isEmpty()) {
+				hasDrillBit = true;
+				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(compoundItem.getPartInSlot(0), Minecraft.getInstance().level, null, 0);
+				List<BakedQuad> drillBitQuads = itemModel.getQuads(state, side, rand, data, renderLayer);
+				output.addAll(transformQuads(drillBitQuads, new Vector3f(0.3f, 0.3f, -0.001f), new Vector3f(0.55f, 0.55f, 1.1f), new Quaternion(0, 0, 135, true)));
+			}
 
-			if (drillBitEquipped.get()) {
-				// Add a mini drill.
+			if (hasDrillBit) {
 				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data, renderLayer);
 				output.addAll(transformQuads(baseQuads, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 1.0f), new Quaternion(0, 0, 0, true)));
 			} else {
-				// Add the full drill.
 				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data, renderLayer);
 				output.addAll(transformQuads(baseQuads, new Vector3f(0.15f, 0.15f, 0.0f), new Vector3f(1.3f, 1.3f, 1.0f), new Quaternion(0, 0, 0, true)));
 			}
@@ -126,22 +124,22 @@ public class MiningDrillItemModel implements BakedModel {
 			// Draw the power bar.
 			float storedPower = (float) (EnergyHandlerItemStackUtilities.getStoredPower(stack) / EnergyHandlerItemStackUtilities.getCapacity(stack));
 			if (!inWorld) {
-				if (drillBitEquipped.get()) {
-					output.addAll(
-							BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(2f, 4), new Vector2D(15, 5f), 0.0f, true));
+				if (hasDrillBit) {
+					output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(2f, 4),
+							new Vector2D(15, 5f), 0.0f, true));
 				} else {
-					output.addAll(
-							BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(2f, 2), new Vector2D(15, 3f), 0.0f, true));
+					output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(2f, 2),
+							new Vector2D(15, 3f), 0.0f, true));
 				}
 			}
 
 			// Draw the on-item power bar.
-			if (drillBitEquipped.get()) {
-				output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(.75f, 3f), new Vector2D(4.75f, 4.5f),
-						-45.0f, false));
+			if (hasDrillBit) {
+				output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(.75f, 3f),
+						new Vector2D(4.75f, 4.5f), -45.0f, false));
 			} else {
-				output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(.5f, 5.75f), new Vector2D(5.0f, 7.5f),
-						-45.0f, false));
+				output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(.5f, 5.75f),
+						new Vector2D(5.0f, 7.5f), -45.0f, false));
 			}
 
 			return output;

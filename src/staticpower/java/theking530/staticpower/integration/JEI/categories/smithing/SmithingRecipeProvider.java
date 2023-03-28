@@ -110,7 +110,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	}
 
 	private static boolean isValidSmithingOutput(ItemStack stack) {
-		if (stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent()) {
+		if (stack.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).isPresent()) {
 			return true;
 		}
 
@@ -128,7 +128,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 	private static boolean isValidSmithingInput(ItemStack stack) {
 		// Test to see if the item has the capability.
-		if (stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent()) {
+		if (stack.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).isPresent()) {
 			return true;
 		}
 

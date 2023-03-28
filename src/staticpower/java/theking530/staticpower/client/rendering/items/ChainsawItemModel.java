@@ -3,7 +3,6 @@ package theking530.staticpower.client.rendering.items;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
@@ -30,6 +29,8 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
+import theking530.api.item.compound.capability.CapabilityCompoundItem;
+import theking530.api.item.compound.capability.ICompoundItem;
 import theking530.staticcore.client.models.AbstractBakedModel;
 import theking530.staticcore.utilities.math.Vector2D;
 import theking530.staticpower.client.utilities.BakedModelRenderingUtilities;
@@ -93,6 +94,7 @@ public class ChainsawItemModel implements BakedModel {
 			this.inWorld = inWorld;
 		}
 
+		@SuppressWarnings("resource")
 		@Override
 		protected List<BakedQuad> getBakedQuadsFromModelData(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderLayer) {
 			if (side != null) {
@@ -100,20 +102,18 @@ public class ChainsawItemModel implements BakedModel {
 			}
 
 			List<BakedQuad> output = new ArrayList<BakedQuad>();
-			AtomicBoolean bladeEquipped = new AtomicBoolean(false);
+			boolean hasBladeEquipped = false;
 
-			// Attempt to get the chainsaw inventory.
-			stack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent((handler) -> {
-				if (!handler.getStackInSlot(0).isEmpty()) {
-					bladeEquipped.set(true);
-					@SuppressWarnings("resource")
-					BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(handler.getStackInSlot(0), Minecraft.getInstance().level, null, 0);
-					List<BakedQuad> chainsawBladeQuads = itemModel.getQuads(state, side, rand, data, renderLayer);
-					output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(0.25f, 0.28f, 0f), new Vector3f(0.5f, 0.5f, 0.5f), new Quaternion(0, 0, 0, true)));
-				}
-			});
+			// Attempt to get the drill inventory.
+			ICompoundItem compoundItem = stack.getCapability(CapabilityCompoundItem.CAPABILITY_COMPOUND_ITEM).orElse(null);
+			if (compoundItem != null && !compoundItem.getPartInSlot(0).isEmpty()) {
+				hasBladeEquipped = true;
+				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(compoundItem.getPartInSlot(0), Minecraft.getInstance().level, null, 0);
+				List<BakedQuad> chainsawBladeQuads = itemModel.getQuads(state, side, rand, data, renderLayer);
+				output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(0.25f, 0.28f, 0f), new Vector3f(0.5f, 0.5f, 0.5f), new Quaternion(0, 0, 0, true)));
+			}
 
-			if (bladeEquipped.get()) {
+			if (hasBladeEquipped) {
 				// Add a mini chainsaw.
 				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data, renderLayer);
 				output.addAll(transformQuads(baseQuads, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 1.0f), new Quaternion(0, 0, 0, true)));
@@ -126,22 +126,22 @@ public class ChainsawItemModel implements BakedModel {
 			// Draw the power bar.
 			float storedPower = (float) (EnergyHandlerItemStackUtilities.getStoredPower(stack) / EnergyHandlerItemStackUtilities.getCapacity(stack));
 			if (!inWorld) {
-				if (bladeEquipped.get()) {
-					output.addAll(
-							BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(2f, 4), new Vector2D(15, 5f), 0.0f, true));
+				if (hasBladeEquipped) {
+					output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(2f, 4),
+							new Vector2D(15, 5f), 0.0f, true));
 				} else {
-					output.addAll(
-							BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(2f, 2), new Vector2D(15, 3f), 0.0f, true));
+					output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(2f, 2),
+							new Vector2D(15, 3f), 0.0f, true));
 				}
 			}
 
 			// Draw the on-item power bar.
-			if (bladeEquipped.get()) {
-				output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(.75f, 3f), new Vector2D(4.75f, 4.5f),
-						-45.0f, false));
+			if (hasBladeEquipped) {
+				output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(.75f, 3f),
+						new Vector2D(4.75f, 4.5f), -45.0f, false));
 			} else {
-				output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(.5f, 5.75f), new Vector2D(5.0f, 7.5f),
-						-45.0f, false));
+				output.addAll(BakedModelRenderingUtilities.getBakedQuadsForToolPowerBar(state, side, rand, data, storedPower, new Vector2D(.5f, 5.75f),
+						new Vector2D(5.0f, 7.5f), -45.0f, false));
 			}
 			return output;
 		}

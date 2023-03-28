@@ -45,7 +45,6 @@ import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.IItemHandler;
 import theking530.api.attributes.AttributeInstance;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.attributes.capability.CapabilityAttributable;
@@ -55,6 +54,7 @@ import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
+import theking530.api.item.compound.capability.CompoundItemHandlerCapabilityProvider.CompoundItemHandlerCapabilityBuilder;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.crafting.RecipeMatchParameters;
@@ -62,25 +62,28 @@ import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
-import theking530.staticcore.item.multipartitem.slot.AbstractMultiPartSlot;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.world.WorldUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.ChainsawItemModel;
 import theking530.staticpower.init.ModAttributes;
-import theking530.staticpower.init.ModMultiPartSlots;
+import theking530.staticpower.init.ModItemSlots;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
 
 public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelProvider {
-	private static final List<AbstractMultiPartSlot> PARTS = new ArrayList<AbstractMultiPartSlot>();
+	private static final int CHAINSAW_BLADE_SLOT = 0;
 	private static final int MAX_RECURSION = 100;
 	public final ResourceLocation tier;
 
 	public Chainsaw(float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
 		super(new Item.Properties().setNoRepair(), attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_AXE));
 		this.tier = tier;
-		PARTS.add(ModMultiPartSlots.CHAINSAW_BLADE);
+	}
+
+	@Override
+	protected void addSlots(CompoundItemHandlerCapabilityBuilder builder, ItemStack stack) {
+		builder.addSlot(ModItemSlots.CHAINSAW_BLADE.get(), false);
 	}
 
 	public double getCapacity() {
@@ -113,7 +116,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 
 	@Override
 	public Tier getMiningTier(ItemStack stack) {
-		ItemStack bitStack = getPartInSlot(stack, ModMultiPartSlots.DRILL_BIT);
+		ItemStack bitStack = getCompoundItemCapability(stack).getPartInSlot(CHAINSAW_BLADE_SLOT);
 		if (bitStack.getItem() instanceof DrillBit) {
 			DrillBit bit = (DrillBit) bitStack.getItem();
 			return bit.getMiningTier(bitStack);
@@ -130,35 +133,19 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 	}
 
 	@Override
-	public List<AbstractMultiPartSlot> getSlots(ItemStack stack) {
-		return PARTS;
-	}
-
-	@Override
-	public ItemStack getPartInSlot(ItemStack stack, AbstractMultiPartSlot slot) {
-		if (slot == ModMultiPartSlots.CHAINSAW_BLADE) {
-			IItemHandler inventory = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-			if (inventory != null) {
-				return inventory.getStackInSlot(0);
-			}
-		}
-		return ItemStack.EMPTY;
-	}
-
-	@Override
 	public boolean isReadyToMine(ItemStack itemstack) {
-		return isComplete(itemstack) && EnergyHandlerItemStackUtilities.getStoredPower(itemstack) > 0;
+		return getCompoundItemCapability(itemstack).isComplete() && EnergyHandlerItemStackUtilities.getStoredPower(itemstack) > 0;
 	}
 
 	@Override
 	protected float getEfficiency(ItemStack itemstack) {
 		AtomicReference<Float> efficiency = new AtomicReference<Float>(5.0f);
 
-		if (isSlotPopulated(itemstack, ModMultiPartSlots.CHAINSAW_BLADE)) {
-			ItemStack blade = getPartInSlot(itemstack, ModMultiPartSlots.CHAINSAW_BLADE);
+		if (getCompoundItemCapability(itemstack).isSlotPopulated(CHAINSAW_BLADE_SLOT)) {
+			ItemStack blade = getCompoundItemCapability(itemstack).getPartInSlot(CHAINSAW_BLADE_SLOT);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
 			efficiency.set(bladeItem.getMiningTier(blade).getSpeed() * 0.5f);
-			blade.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
+			blade.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).ifPresent(attributable -> {
 				if (attributable.hasAttribute(ModAttributes.Haste.get())) {
 					AttributeInstance<Number> hasteDefenition = attributable.getAttribute(ModAttributes.Haste.get());
 					efficiency.set(efficiency.get() * (((hasteDefenition.getValue().floatValue() * 10.0f) / 300.0f) + 1.0f));
@@ -193,7 +180,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		List<ItemStack> droppableItems = Block.getDrops(state, player.getLevel(), pos, tileEntity, player, heldItem);
 
 		// Get the drill bit attributes.
-		IAttributable drillBitAttributes = getPartInSlot(heldItem, ModMultiPartSlots.CHAINSAW_BLADE).getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+		IAttributable drillBitAttributes = getCompoundItemCapability(heldItem).getPartInSlot(CHAINSAW_BLADE_SLOT)
+				.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
 
 		// If we have attributes.
 		if (drillBitAttributes != null) {
@@ -232,8 +220,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 				// Get the droppable stack and get the furnace recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
 				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
-				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]),
-						player.getLevel());
+				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING,
+						new SimpleContainer(matchParameters.getItems()[0]), player.getLevel());
 
 				// Replace the spot the droppable list with the smelting output if it exists.
 				if (recipe.isPresent()) {
@@ -277,11 +265,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		double capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(PowerTextFormatting.formatPowerToString(remainingCharge, capacity));
 
-		if (isSlotPopulated(stack, ModMultiPartSlots.CHAINSAW_BLADE)) {
-			ItemStack blade = getPartInSlot(stack, ModMultiPartSlots.CHAINSAW_BLADE);
+		if (getCompoundItemCapability(stack).isSlotPopulated(CHAINSAW_BLADE_SLOT)) {
+			ItemStack blade = getCompoundItemCapability(stack).getPartInSlot(CHAINSAW_BLADE_SLOT);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
 			bladeItem.getTooltip(blade, worldIn, tooltip, isShowingAdvanced);
-			tooltip.add(Component.translatable("gui.staticpower.mining_speed").append(" ").append(String.valueOf(getEfficiency(stack))));
+			tooltip.add(Component.translatable("gui.staticcore.mining_speed").append(" ").append(String.valueOf(getEfficiency(stack))));
 			AttributeUtilities.addTooltipsForAttribute(blade, tooltip, isShowingAdvanced);
 		}
 	}
@@ -289,8 +277,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		if (isSlotPopulated(stack, ModMultiPartSlots.CHAINSAW_BLADE)) {
-			ItemStack blade = getPartInSlot(stack, ModMultiPartSlots.CHAINSAW_BLADE);
+		if (getCompoundItemCapability(stack).isSlotPopulated(CHAINSAW_BLADE_SLOT)) {
+			ItemStack blade = getCompoundItemCapability(stack).getPartInSlot(CHAINSAW_BLADE_SLOT);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
 			bladeItem.getAdvancedTooltip(blade, worldIn, tooltip);
 		}
@@ -303,9 +291,10 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
-			return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
-					.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getCapacity(), getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(),
-							getMaximumOutputPower(), true, false));
+			return new ItemStackMultiCapabilityProvider(stack, nbt)
+					.addCapability(new ItemStackCapabilityInventory("default", stack, 5)).addCapability(new ItemStackStaticPowerEnergyCapability("default", stack,
+							getCapacity(), getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower(), true, false))
+					.addCapability(createCompoundItemCapability(stack, nbt));
 		}
 		return null;
 	}

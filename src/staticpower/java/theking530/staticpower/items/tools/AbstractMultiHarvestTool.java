@@ -34,11 +34,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import theking530.staticcore.item.multipartitem.AbstractMultiPartItem;
+import theking530.staticcore.item.compound.AbstractCompoundItem;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.init.ModCreativeTabs;
 
-public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
+public abstract class AbstractMultiHarvestTool extends AbstractCompoundItem {
 	protected float attackDamage;
 	protected Multimap<Attribute, AttributeModifier> toolAttributes;
 	protected List<TagKey<Block>> mineableTags;

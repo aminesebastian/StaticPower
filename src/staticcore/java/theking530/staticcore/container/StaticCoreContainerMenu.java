@@ -20,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.PacketLockInventorySlot;
-import theking530.staticcore.container.slots.DummySlot;
 import theking530.staticcore.container.slots.PhantomSlot;
 import theking530.staticcore.container.slots.StaticPowerContainerSlot;
 import theking530.staticcore.init.StaticCoreKeyBindings;
@@ -197,7 +196,7 @@ public abstract class StaticCoreContainerMenu extends AbstractContainerMenu {
 		return false;
 	}
 
-	protected boolean containerSlotShiftClicked(ItemStack stack, Player player, StaticPowerContainerSlot slot, int slotIndex) {
+	protected boolean transferItemToPlayerInventory(ItemStack stack) {
 		if (moveItemStackTo(stack, playerHotbarStart, playerHotbarEnd + 1, false)) {
 			return true;
 		} else if (!moveItemStackTo(stack, playerInventoryStart, playerInventoryEnd + 1, false)) {
@@ -206,7 +205,8 @@ public abstract class StaticCoreContainerMenu extends AbstractContainerMenu {
 		return false;
 	}
 
-	protected List<Slot> addSlotsInGrid(Container inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(Container inventory, int startingIndex, int xPos, int yPos, int maxPerRow,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		return addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, 16, slotFactory);
 	}
 
@@ -215,7 +215,8 @@ public abstract class StaticCoreContainerMenu extends AbstractContainerMenu {
 		return addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, slotSize, slotFactory);
 	}
 
-	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		return addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, 16, slotFactory);
 	}
 
@@ -247,26 +248,6 @@ public abstract class StaticCoreContainerMenu extends AbstractContainerMenu {
 		return outputs;
 	}
 
-	protected void addSlotsInPerfectSquare(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
-			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
-		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, slotSize, slotFactory);
-		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
-		int adjustedSlotSize = slotSize + 2;
-		int offset = (maxPerRow * adjustedSlotSize) / 2;
-		int lastValidSlotIndex = inventory.getSlots() - 1;
-		int row = lastValidSlotIndex / maxPerRow;
-
-		int missingSlots = maxPerRow - Math.floorMod(inventory.getSlots(), maxPerRow);
-
-		if (missingSlots % maxPerRow != 0) {
-			for (int i = 0; i < missingSlots; i++) {
-				int index = inventory.getSlots() - 1 + i;
-				Slot output = new DummySlot(index, xPos + (((i + missingSlots) % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));
-				addSlot(output);
-			}
-		}
-	}
-
 	protected boolean isInventorySlot(int slot) {
 		return slot >= playerInventoryStart && slot <= playerInventoryEnd;
 	}
@@ -288,13 +269,15 @@ public abstract class StaticCoreContainerMenu extends AbstractContainerMenu {
 			ItemStack itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 			if (slot instanceof StaticPowerContainerSlot) {
-				containerSlotShiftClicked(itemstack1, player, (StaticPowerContainerSlot) this.slots.get(invSlot), invSlot);
+				transferItemToPlayerInventory(itemstack1);
 				slot.onQuickCraft(itemstack1, itemstack);
 			} else {
 				if (!playerItemShiftClicked(itemstack1, player, slot, invSlot)) {
 					if (isInventorySlot(invSlot) && !moveItemStackTo(itemstack1, playerHotbarStart, playerHotbarEnd + 1, false)) {
 						return ItemStack.EMPTY;
 					} else if (isHotbarSlot(invSlot) && !moveItemStackTo(itemstack1, playerInventoryStart, playerInventoryEnd + 1, false)) {
+						return ItemStack.EMPTY;
+					} else if (!transferItemToPlayerInventory(itemstack1)) {
 						return ItemStack.EMPTY;
 					}
 				}

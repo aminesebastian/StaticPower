@@ -1,11 +1,16 @@
 package theking530.staticcore.item;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class ItemStackCapabilityInventory extends ItemStackHandler implements IItemMultiCapability {
+public class ItemStackCapabilityInventory extends ItemStackHandler implements ISPItemCapabilityProvider {
 	protected static final String ITEM_INVENTORY_TAG = "static_power_inventory";
 	protected final ItemStack container;
 	protected final String name;
@@ -27,17 +32,10 @@ public class ItemStackCapabilityInventory extends ItemStackHandler implements II
 	}
 
 	@Override
-	public Capability<?>[] getCapabilityTypes() {
-		return new Capability<?>[] { ForgeCapabilities.ITEM_HANDLER };
-	}
-
-	@Override
-	public ItemStackMultiCapabilityProvider getOwningProvider() {
-		return owningProvider;
-	}
-
-	@Override
-	public void setOwningProvider(ItemStackMultiCapabilityProvider owningProvider) {
-		this.owningProvider = owningProvider;
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (cap == ForgeCapabilities.ITEM_HANDLER) {
+			return LazyOptional.of(() -> this).cast();
+		}
+		return LazyOptional.empty();
 	}
 }

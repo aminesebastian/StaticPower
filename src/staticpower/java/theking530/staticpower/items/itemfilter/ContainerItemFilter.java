@@ -24,8 +24,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 	public static final Logger LOGGER = LogManager.getLogger(ContainerItemFilter.class);
 
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerItemFilter, GuiItemFilter> TYPE = new ContainerTypeAllocator<>(
-			"filter_item", ContainerItemFilter::new);
+	public static final ContainerTypeAllocator<ContainerItemFilter, GuiItemFilter> TYPE = new ContainerTypeAllocator<>("filter_item", ContainerItemFilter::new);
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE.setScreenFactory(GuiItemFilter::new);
@@ -51,9 +50,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
-			LOGGER.error(String.format(
-					"Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.",
-					getItemStack().getHoverName()));
+			LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getHoverName()));
 			return;
 		}
 
@@ -98,13 +95,5 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 	@Override
 	public boolean stillValid(Player player) {
 		return true;
-	}
-
-	@Override
-	public void clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
-		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getItem() == player.getMainHandItem()) {
-			return;
-		}
-		super.clicked(slot, dragType, clickTypeIn, player);
 	}
 }

@@ -20,6 +20,8 @@ import theking530.api.digistore.IDigistoreInventory;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.fluid.IStaticPowerFluidHandler;
 import theking530.api.heat.IHeatStorage;
+import theking530.api.item.compound.capability.ICompoundItem;
+import theking530.api.item.compound.slot.CompoundItemSlot;
 import theking530.api.upgrades.UpgradeType;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.StaticCoreRegistries;
@@ -60,6 +62,8 @@ public class StaticCoreModCommonEvents {
 		event.create(new RegistryBuilder<AttributeModifierType<?>>().setName(StaticCoreRegistries.ATTRIBUTE_MODIFIER_REGISTRY_KEY.location()).setIDRange(0, Integer.MAX_VALUE - 1));
 		event.create(new RegistryBuilder<AttributeValueType<?>>().setName(StaticCoreRegistries.ATTRIBUTE_VALUE_REGISTRY_KEY.location()).setIDRange(0, Integer.MAX_VALUE - 1));
 		event.create(new RegistryBuilder<ItemAttributeType>().setName(StaticCoreRegistries.ITEM_ATTRIBUTE_REGISTRY_KEY.location()).setIDRange(0, Integer.MAX_VALUE - 1));
+		
+		event.create(new RegistryBuilder<CompoundItemSlot>().setName(StaticCoreRegistries.ITEM_SLOT_KEY.location()).setIDRange(0, Integer.MAX_VALUE - 1));
 	}
 
 	@SubscribeEvent
@@ -69,5 +73,6 @@ public class StaticCoreModCommonEvents {
 		event.register(IAttributable.class);
 		event.register(IStaticPowerStorage.class);
 		event.register(IStaticPowerFluidHandler.class);
+		event.register(ICompoundItem.class);
 	}
 }

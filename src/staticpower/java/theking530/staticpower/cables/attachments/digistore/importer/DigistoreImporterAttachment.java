@@ -49,7 +49,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		int slots = !StaticPowerConfig.SERVER_SPEC.isLoaded() ? 0 : StaticPowerConfig.SERVER.digistoreImporterSlots.get();
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots), (Direction) null)
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots))
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 3));
 	}
 
@@ -61,7 +61,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (cable.getLevel().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+		if (cable.getLevel().isClientSide() || !cable.doesAttachmentPassRedstoneTest(attachment)) {
 			return;
 		}
 
@@ -109,7 +109,8 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 	}
 
 	@Override
-	public @Nullable AbstractCableAttachmentContainerProvider getUIContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
+	public @Nullable AbstractCableAttachmentContainerProvider getUIContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable,
+			Direction attachmentSide) {
 		return new ImporterContainerProvider(attachment, cable, attachmentSide);
 	}
 
@@ -189,7 +190,8 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 	protected int getImportRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModItems.AcceleratorUpgrade.get().getMaxStackSize());
+			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get()
+					* (acceleratorCardCount / ModItems.AcceleratorUpgrade.get().getMaxStackSize());
 			return (int) (StaticPowerConfig.SERVER.digistoreImporterRate.get() / accelerationAmount);
 		} else {
 			return StaticPowerConfig.SERVER.digistoreImporterRate.get();

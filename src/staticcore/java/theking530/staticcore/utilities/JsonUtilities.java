@@ -52,18 +52,22 @@ public class JsonUtilities {
 		}), CompoundTag.CODEC.optionalFieldOf("tag").forGetter((stack) -> {
 			return Optional.ofNullable(stack.getTag());
 		})).apply(instance, (item, count, tag) -> {
-			return new ItemStack(item, count, tag.orElse(null));
+			ItemStack stack = new ItemStack(item, count);
+			if (tag.isPresent()) {
+				stack.setTag(tag.get());
+			}
+			return stack;
 		});
 	});
 
-	public static final Codec<FluidStack> FLUIDSTACK_CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(ForgeRegistries.FLUIDS.getCodec().fieldOf("fluid").forGetter(FluidStack::getFluid),
-					Codec.INT.fieldOf("amount").forGetter(FluidStack::getAmount), CompoundTag.CODEC.optionalFieldOf("tag").forGetter(stack -> Optional.ofNullable(stack.getTag())))
-					.apply(instance, (fluid, amount, tag) -> {
-						FluidStack stack = new FluidStack(fluid, amount);
-						tag.ifPresent(stack::setTag);
-						return stack;
-					}));
+	public static final Codec<FluidStack> FLUIDSTACK_CODEC = RecordCodecBuilder.create(instance -> instance
+			.group(ForgeRegistries.FLUIDS.getCodec().fieldOf("fluid").forGetter(FluidStack::getFluid), Codec.INT.fieldOf("amount").forGetter(FluidStack::getAmount),
+					CompoundTag.CODEC.optionalFieldOf("tag").forGetter(stack -> Optional.ofNullable(stack.getTag())))
+			.apply(instance, (fluid, amount, tag) -> {
+				FluidStack stack = new FluidStack(fluid, amount);
+				tag.ifPresent(stack::setTag);
+				return stack;
+			}));
 
 	public static final PrimitiveCodec<Character> CHAR = new PrimitiveCodec<Character>() {
 		@Override

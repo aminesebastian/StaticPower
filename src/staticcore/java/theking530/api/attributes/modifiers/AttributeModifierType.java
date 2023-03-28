@@ -11,6 +11,7 @@ public abstract class AttributeModifierType<T> {
 		this.valueType = (RegistryObject<AttributeValueType<T>>) valueType;
 	}
 
+
 	public AttributeValueType<T> getValueType() {
 		return valueType.get();
 	}
