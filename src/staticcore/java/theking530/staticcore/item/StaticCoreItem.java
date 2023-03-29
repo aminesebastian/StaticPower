@@ -181,6 +181,10 @@ public class StaticCoreItem extends Item implements ITooltipProvider {
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
+	}
+
 	@Override
 	public int getBarWidth(ItemStack stack) {
 		return Math.round(13.0F - (float) stack.getDamageValue() * 13.0F / (float) stack.getMaxDamage());
@@ -190,10 +194,6 @@ public class StaticCoreItem extends Item implements ITooltipProvider {
 	public int getBarColor(ItemStack stack) {
 		float f = Math.max(0.0F, ((float) stack.getMaxDamage() - (float) stack.getDamageValue()) / (float) stack.getMaxDamage());
 		return Mth.hsvToRgb(f / 3.0F, 1.0F, 1.0F);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 	}
 
 	@SuppressWarnings("deprecation")

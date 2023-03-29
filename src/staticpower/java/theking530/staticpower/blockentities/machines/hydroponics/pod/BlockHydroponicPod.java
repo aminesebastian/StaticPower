@@ -15,8 +15,8 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockHydroponicPod extends StaticPowerMachineBlock {
 	public static final VoxelShape SHAPE;
@@ -28,7 +28,7 @@ public class BlockHydroponicPod extends StaticPowerMachineBlock {
 	}
 
 	public BlockHydroponicPod() {
-		super(StaticCoreTiers.ADVANCED, Properties.of(Material.GLASS, MaterialColor.TERRACOTTA_WHITE).noOcclusion());
+		super(StaticPowerTiers.ADVANCED, Properties.of(Material.GLASS, MaterialColor.TERRACOTTA_WHITE).noOcclusion());
 	}
 
 	@Override

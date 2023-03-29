@@ -13,10 +13,10 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.InventoryMenu;
 import theking530.staticcore.client.StaticPowerBlockEntitySpecialRenderer;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.blockentities.nonpowered.chest.BlockEntityStaticChest;
 import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockEntityRenderStaticChest extends StaticPowerBlockEntitySpecialRenderer<BlockEntityStaticChest> {
 	private static final Material BASIC_MATERIAL = new Material(InventoryMenu.BLOCK_ATLAS, StaticPowerSprites.BASIC_CHEST);
@@ -52,13 +52,13 @@ public class BlockEntityRenderStaticChest extends StaticPowerBlockEntitySpecialR
 		interpretedOpenAlpha = 1.0F - interpretedOpenAlpha * interpretedOpenAlpha * interpretedOpenAlpha;
 
 		Material material = BASIC_MATERIAL;
-		if (te.getTier() == StaticCoreTiers.ADVANCED) {
+		if (te.getTier() == StaticPowerTiers.ADVANCED) {
 			material = ADVANCED_MATERIAL;
-		} else if (te.getTier() == StaticCoreTiers.STATIC) {
+		} else if (te.getTier() == StaticPowerTiers.STATIC) {
 			material = STATIC_MATERIAL;
-		} else if (te.getTier() == StaticCoreTiers.ENERGIZED) {
+		} else if (te.getTier() == StaticPowerTiers.ENERGIZED) {
 			material = ENERGIZED_MATERIAL;
-		} else if (te.getTier() == StaticCoreTiers.LUMUM) {
+		} else if (te.getTier() == StaticPowerTiers.LUMUM) {
 			material = LUMUM_MATERIAL;
 		}
 

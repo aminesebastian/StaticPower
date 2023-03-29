@@ -31,9 +31,9 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.data.StaticCoreTier;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockWireConnector extends StaticPowerRotateableBlockEntityBlock {
 	public static final Map<Direction, VoxelShape> SHAPES = new HashMap<>();
@@ -106,15 +106,15 @@ public class BlockWireConnector extends StaticPowerRotateableBlockEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (getTier() == StaticCoreTiers.BASIC) {
+		if (getTier() == StaticPowerTiers.BASIC) {
 			return BlockEntityWireConnector.TYPE_BASIC.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.ADVANCED) {
+		} else if (getTier() == StaticPowerTiers.ADVANCED) {
 			return BlockEntityWireConnector.TYPE_ADVANCED.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.STATIC) {
+		} else if (getTier() == StaticPowerTiers.STATIC) {
 			return BlockEntityWireConnector.TYPE_STATIC.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
+		} else if (getTier() == StaticPowerTiers.ENERGIZED) {
 			return BlockEntityWireConnector.TYPE_ENERGIZED.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.LUMUM) {
+		} else if (getTier() == StaticPowerTiers.LUMUM) {
 			return BlockEntityWireConnector.TYPE_LUMUM.create(pos, state);
 		}
 		return null;

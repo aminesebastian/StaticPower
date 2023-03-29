@@ -7,13 +7,13 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public abstract class BaseDigistoreBlock extends StaticPowerMachineBlock {
 
 	public BaseDigistoreBlock() {
-		super(StaticCoreTiers.ENERGIZED);
+		super(StaticPowerTiers.ENERGIZED);
 	}
 
 	// TODO: Is this still needed??

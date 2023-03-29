@@ -16,13 +16,13 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Ma
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidInputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.fluid.StaticPowerFluidTank;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
 import theking530.staticpower.blockentities.machines.refinery.fluidio.input.ContainerRefineryFluidInput;
 import theking530.staticpower.blockentities.machines.refinery.fluidio.output.ContainerRefineryFluidOutput;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implements IFluidHandler {
@@ -40,7 +40,7 @@ public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implemen
 	private final boolean outputMode;
 
 	public BlockEntityRefineryFluidIO(BlockEntityTypeAllocator<BlockEntityRefineryFluidIO> type, BlockPos pos, BlockState state, boolean outputMode) {
-		super(type, pos, state, StaticCoreTiers.ADVANCED);
+		super(type, pos, state, StaticPowerTiers.ADVANCED);
 		this.outputMode = outputMode;
 
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",

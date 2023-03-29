@@ -15,9 +15,9 @@ import theking530.api.attributes.type.AttributeType;
 import theking530.api.item.compound.part.ICompoundItemPart;
 import theking530.api.item.compound.slot.CompoundItemSlot;
 import theking530.staticcore.client.ICustomModelProvider;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.item.StaticCoreItem;
 import theking530.staticpower.attributes.AbstractHardenedAttributeType;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public abstract class AbstractToolPart extends StaticCoreItem implements ICustomModelProvider, ICompoundItemPart {
 	protected final ResourceLocation tier;
@@ -78,7 +78,7 @@ public abstract class AbstractToolPart extends StaticCoreItem implements ICustom
 
 	@Override
 	public boolean isFoil(ItemStack stack) {
-		return this.tier == StaticCoreTiers.CREATIVE;
+		return this.tier == StaticPowerTiers.CREATIVE;
 	}
 
 	@Override

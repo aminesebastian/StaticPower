@@ -12,7 +12,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockDigistore;
@@ -120,6 +119,7 @@ import theking530.staticpower.cables.redstone.basic.BlockRedstoneCable;
 import theking530.staticpower.cables.redstone.bundled.BlockBundledRedstoneCable;
 import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
 import theking530.staticpower.data.Tiers.ResistorTier;
@@ -183,34 +183,34 @@ public class ModBlocks {
 	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockLumum = registerBlock("machine_block_lumum",
 			() -> new StaticPowerCutoutBlock(Properties.copy(Blocks.IRON_DOOR)));
 
-	public static final RegistryObject<BlockTank> IronTank = registerBlock("tank_iron", () -> new BlockTank(StaticCoreTiers.IRON));
-	public static final RegistryObject<BlockTank> BasicTank = registerBlock("tank_basic", () -> new BlockTank(StaticCoreTiers.BASIC));
-	public static final RegistryObject<BlockTank> AdvancedTank = registerBlock("tank_advanced", () -> new BlockTank(StaticCoreTiers.ADVANCED));
-	public static final RegistryObject<BlockTank> StaticTank = registerBlock("tank_static", () -> new BlockTank(StaticCoreTiers.STATIC));
-	public static final RegistryObject<BlockTank> EnergizedTank = registerBlock("tank_energized", () -> new BlockTank(StaticCoreTiers.ENERGIZED));
-	public static final RegistryObject<BlockTank> LumumTank = registerBlock("tank_lumum", () -> new BlockTank(StaticCoreTiers.LUMUM));
-	public static final RegistryObject<BlockTank> CreativeTank = registerBlock("tank_creative", () -> new BlockTank(StaticCoreTiers.CREATIVE));
+	public static final RegistryObject<BlockTank> IronTank = registerBlock("tank_iron", () -> new BlockTank(StaticPowerTiers.IRON));
+	public static final RegistryObject<BlockTank> BasicTank = registerBlock("tank_basic", () -> new BlockTank(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockTank> AdvancedTank = registerBlock("tank_advanced", () -> new BlockTank(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockTank> StaticTank = registerBlock("tank_static", () -> new BlockTank(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockTank> EnergizedTank = registerBlock("tank_energized", () -> new BlockTank(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockTank> LumumTank = registerBlock("tank_lumum", () -> new BlockTank(StaticPowerTiers.LUMUM));
+	public static final RegistryObject<BlockTank> CreativeTank = registerBlock("tank_creative", () -> new BlockTank(StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<BlockPumpTube> PumpTube = registerBlock("pump_tube", () -> new BlockPumpTube());
 	public static final RegistryObject<BlockPump> BasicPump = registerBlock("pump_basic",
-			() -> new BlockPump(StaticCoreTiers.BASIC, StaticPowerAdditionalModels.PUMP_CONNECTOR_BASIC));
+			() -> new BlockPump(StaticPowerTiers.BASIC, StaticPowerAdditionalModels.PUMP_CONNECTOR_BASIC));
 	public static final RegistryObject<BlockPump> AdvancedPump = registerBlock("pump_advanced",
-			() -> new BlockPump(StaticCoreTiers.ADVANCED, StaticPowerAdditionalModels.PUMP_CONNECTOR_ADVANCED));
+			() -> new BlockPump(StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.PUMP_CONNECTOR_ADVANCED));
 	public static final RegistryObject<BlockPump> StaticPump = registerBlock("pump_static",
-			() -> new BlockPump(StaticCoreTiers.STATIC, StaticPowerAdditionalModels.PUMP_CONNECTOR_STATIC));
+			() -> new BlockPump(StaticPowerTiers.STATIC, StaticPowerAdditionalModels.PUMP_CONNECTOR_STATIC));
 	public static final RegistryObject<BlockPump> EnergizedPump = registerBlock("pump_energized",
-			() -> new BlockPump(StaticCoreTiers.ENERGIZED, StaticPowerAdditionalModels.PUMP_CONNECTOR_ENERGIZED));
+			() -> new BlockPump(StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.PUMP_CONNECTOR_ENERGIZED));
 	public static final RegistryObject<BlockPump> LumumPump = registerBlock("pump_lumum",
-			() -> new BlockPump(StaticCoreTiers.LUMUM, StaticPowerAdditionalModels.PUMP_CONNECTOR_LUMUM));
+			() -> new BlockPump(StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.PUMP_CONNECTOR_LUMUM));
 	public static final RegistryObject<BlockPump> CreativePump = registerBlock("pump_creative",
-			() -> new BlockPump(StaticCoreTiers.CREATIVE, StaticPowerAdditionalModels.PUMP_CONNECTOR_CREATIVE));
+			() -> new BlockPump(StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.PUMP_CONNECTOR_CREATIVE));
 
 	public static final RegistryObject<BlockVacuumChest> VacuumChest = registerBlock("chest_vacuum", () -> new BlockVacuumChest());
-	public static final RegistryObject<BlockStaticChest> BasicChest = registerBlock("chest_basic", () -> new BlockStaticChest(StaticCoreTiers.BASIC));
-	public static final RegistryObject<BlockStaticChest> AdvancedChest = registerBlock("chest_advanced", () -> new BlockStaticChest(StaticCoreTiers.ADVANCED));
-	public static final RegistryObject<BlockStaticChest> StaticChest = registerBlock("chest_static", () -> new BlockStaticChest(StaticCoreTiers.STATIC));
-	public static final RegistryObject<BlockStaticChest> EnergizedChest = registerBlock("chest_energized", () -> new BlockStaticChest(StaticCoreTiers.ENERGIZED));
-	public static final RegistryObject<BlockStaticChest> LumumChest = registerBlock("chest_lumum", () -> new BlockStaticChest(StaticCoreTiers.LUMUM));
+	public static final RegistryObject<BlockStaticChest> BasicChest = registerBlock("chest_basic", () -> new BlockStaticChest(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockStaticChest> AdvancedChest = registerBlock("chest_advanced", () -> new BlockStaticChest(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockStaticChest> StaticChest = registerBlock("chest_static", () -> new BlockStaticChest(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockStaticChest> EnergizedChest = registerBlock("chest_energized", () -> new BlockStaticChest(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockStaticChest> LumumChest = registerBlock("chest_lumum", () -> new BlockStaticChest(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BlockChargingStation> ChargingStation = registerBlock("machine_charging_station", () -> new BlockChargingStation());
 	public static final RegistryObject<BlockPoweredFurnace> PoweredFurnace = registerBlock("machine_powered_furnace", () -> new BlockPoweredFurnace());
@@ -294,16 +294,16 @@ public class ModBlocks {
 		}
 	}
 
-	public static final RegistryObject<BlockHeatSink> AluminumHeatSink = registerBlock("heat_sink_aluminum", () -> new BlockHeatSink(StaticCoreTiers.ALUMINUM));
-	public static final RegistryObject<BlockHeatSink> CopperHeatSink = registerBlock("heat_sink_copper", () -> new BlockHeatSink(StaticCoreTiers.COPPER));
-	public static final RegistryObject<BlockHeatSink> GoldHeatSink = registerBlock("heat_sink_gold", () -> new BlockHeatSink(StaticCoreTiers.GOLD));
+	public static final RegistryObject<BlockHeatSink> AluminumHeatSink = registerBlock("heat_sink_aluminum", () -> new BlockHeatSink(StaticPowerTiers.ALUMINUM));
+	public static final RegistryObject<BlockHeatSink> CopperHeatSink = registerBlock("heat_sink_copper", () -> new BlockHeatSink(StaticPowerTiers.COPPER));
+	public static final RegistryObject<BlockHeatSink> GoldHeatSink = registerBlock("heat_sink_gold", () -> new BlockHeatSink(StaticPowerTiers.GOLD));
 
-	public static final RegistryObject<BlockSolarPanel> SolarPanelBasic = registerBlock("solar_panel_basic", () -> new BlockSolarPanel(StaticCoreTiers.BASIC));
-	public static final RegistryObject<BlockSolarPanel> SolarPanelAdvanced = registerBlock("solar_panel_advanced", () -> new BlockSolarPanel(StaticCoreTiers.ADVANCED));
-	public static final RegistryObject<BlockSolarPanel> SolarPanelStatic = registerBlock("solar_panel_static", () -> new BlockSolarPanel(StaticCoreTiers.STATIC));
-	public static final RegistryObject<BlockSolarPanel> SolarPanelEnergized = registerBlock("solar_panel_energized", () -> new BlockSolarPanel(StaticCoreTiers.ENERGIZED));
-	public static final RegistryObject<BlockSolarPanel> SolarPanelLumum = registerBlock("solar_panel_lumum", () -> new BlockSolarPanel(StaticCoreTiers.LUMUM));
-	public static final RegistryObject<BlockSolarPanel> SolarPanelCreative = registerBlock("solar_panel_creative", () -> new BlockSolarPanel(StaticCoreTiers.CREATIVE));
+	public static final RegistryObject<BlockSolarPanel> SolarPanelBasic = registerBlock("solar_panel_basic", () -> new BlockSolarPanel(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockSolarPanel> SolarPanelAdvanced = registerBlock("solar_panel_advanced", () -> new BlockSolarPanel(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockSolarPanel> SolarPanelStatic = registerBlock("solar_panel_static", () -> new BlockSolarPanel(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockSolarPanel> SolarPanelEnergized = registerBlock("solar_panel_energized", () -> new BlockSolarPanel(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockSolarPanel> SolarPanelLumum = registerBlock("solar_panel_lumum", () -> new BlockSolarPanel(StaticPowerTiers.LUMUM));
+	public static final RegistryObject<BlockSolarPanel> SolarPanelCreative = registerBlock("solar_panel_creative", () -> new BlockSolarPanel(StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<BlockDigistoreManager> DigistoreManager = registerBlock("digistore_manager", () -> new BlockDigistoreManager());
 	public static final RegistryObject<BlockDigistoreIOPort> DigistoreIOPort = registerBlock("digistore_io_port", () -> new BlockDigistoreIOPort());
@@ -349,25 +349,25 @@ public class ModBlocks {
 	public static final RegistryObject<BlockBundledRedstoneCable> BundledRedstoneCable = registerBlock("cable_bundled_redstone", () -> new BlockBundledRedstoneCable());
 
 	// Batteries
-	public static final RegistryObject<BlockBattery> BatteryBasic = registerBlock("battery_block_basic", () -> new BlockBattery(StaticCoreTiers.BASIC));
-	public static final RegistryObject<BlockBattery> BatteryAdvanced = registerBlock("battery_block_advanced", () -> new BlockBattery(StaticCoreTiers.ADVANCED));
-	public static final RegistryObject<BlockBattery> BatteryStatic = registerBlock("battery_block_static", () -> new BlockBattery(StaticCoreTiers.STATIC));
-	public static final RegistryObject<BlockBattery> BatteryEnergized = registerBlock("battery_block_energized", () -> new BlockBattery(StaticCoreTiers.ENERGIZED));
-	public static final RegistryObject<BlockBattery> BatteryLumum = registerBlock("battery_block_lumum", () -> new BlockBattery(StaticCoreTiers.LUMUM));
-	public static final RegistryObject<BlockBattery> BatteryCreative = registerBlock("battery_block_creative", () -> new BlockBattery(StaticCoreTiers.CREATIVE));
+	public static final RegistryObject<BlockBattery> BatteryBasic = registerBlock("battery_block_basic", () -> new BlockBattery(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockBattery> BatteryAdvanced = registerBlock("battery_block_advanced", () -> new BlockBattery(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockBattery> BatteryStatic = registerBlock("battery_block_static", () -> new BlockBattery(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockBattery> BatteryEnergized = registerBlock("battery_block_energized", () -> new BlockBattery(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockBattery> BatteryLumum = registerBlock("battery_block_lumum", () -> new BlockBattery(StaticPowerTiers.LUMUM));
+	public static final RegistryObject<BlockBattery> BatteryCreative = registerBlock("battery_block_creative", () -> new BlockBattery(StaticPowerTiers.CREATIVE));
 
 	// Transformers
-	public static final RegistryObject<BlockTransformer> TransformerBasic = registerBlock("transformer_basic", () -> new BlockTransformer(StaticCoreTiers.BASIC));
-	public static final RegistryObject<BlockTransformer> TransformerAdvanced = registerBlock("transformer_advanced", () -> new BlockTransformer(StaticCoreTiers.ADVANCED));
-	public static final RegistryObject<BlockTransformer> TransformerStatic = registerBlock("transformer_static", () -> new BlockTransformer(StaticCoreTiers.STATIC));
-	public static final RegistryObject<BlockTransformer> TransformerEnergized = registerBlock("transformer_energized", () -> new BlockTransformer(StaticCoreTiers.ENERGIZED));
-	public static final RegistryObject<BlockTransformer> TransformerLumum = registerBlock("transformer_lumum", () -> new BlockTransformer(StaticCoreTiers.LUMUM));
+	public static final RegistryObject<BlockTransformer> TransformerBasic = registerBlock("transformer_basic", () -> new BlockTransformer(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockTransformer> TransformerAdvanced = registerBlock("transformer_advanced", () -> new BlockTransformer(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockTransformer> TransformerStatic = registerBlock("transformer_static", () -> new BlockTransformer(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockTransformer> TransformerEnergized = registerBlock("transformer_energized", () -> new BlockTransformer(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockTransformer> TransformerLumum = registerBlock("transformer_lumum", () -> new BlockTransformer(StaticPowerTiers.LUMUM));
 
 	// Inverters
-	public static final RegistryObject<BlockInverter> Inverter = registerBlock("inverter", () -> new BlockInverter(StaticCoreTiers.BASIC));
+	public static final RegistryObject<BlockInverter> Inverter = registerBlock("inverter", () -> new BlockInverter(StaticPowerTiers.BASIC));
 
 	// Rectifiers
-	public static final RegistryObject<BlockRectifier> Rectifier = registerBlock("rectifier", () -> new BlockRectifier(StaticCoreTiers.BASIC));
+	public static final RegistryObject<BlockRectifier> Rectifier = registerBlock("rectifier", () -> new BlockRectifier(StaticPowerTiers.BASIC));
 
 	// Circuit Breakers
 	public static final Map<Integer, RegistryObject<BlockCircuitBreaker>> CircuitBreakers = new HashMap<>();
@@ -386,11 +386,11 @@ public class ModBlocks {
 	}
 
 	// Wire Terminals
-	public static final RegistryObject<BlockWireConnector> WireConnectorLV = registerBlock("wire_terminal_lv", () -> new BlockWireConnector(StaticCoreTiers.BASIC));
-	public static final RegistryObject<BlockWireConnector> WireConnectorMV = registerBlock("wire_terminal_mv", () -> new BlockWireConnector(StaticCoreTiers.ADVANCED));
-	public static final RegistryObject<BlockWireConnector> WireConnectorHV = registerBlock("wire_terminal_hv", () -> new BlockWireConnector(StaticCoreTiers.STATIC));
-	public static final RegistryObject<BlockWireConnector> WireConnectorEV = registerBlock("wire_terminal_ev", () -> new BlockWireConnector(StaticCoreTiers.ENERGIZED));
-	public static final RegistryObject<BlockWireConnector> WireConnectorBV = registerBlock("wire_terminal_bv", () -> new BlockWireConnector(StaticCoreTiers.LUMUM));
+	public static final RegistryObject<BlockWireConnector> WireConnectorLV = registerBlock("wire_terminal_lv", () -> new BlockWireConnector(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockWireConnector> WireConnectorMV = registerBlock("wire_terminal_mv", () -> new BlockWireConnector(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockWireConnector> WireConnectorHV = registerBlock("wire_terminal_hv", () -> new BlockWireConnector(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockWireConnector> WireConnectorEV = registerBlock("wire_terminal_ev", () -> new BlockWireConnector(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockWireConnector> WireConnectorBV = registerBlock("wire_terminal_bv", () -> new BlockWireConnector(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BlockDigistoreWireConnector> WireConnectorDigistore = registerBlock("wire_terminal_digistore", () -> new BlockDigistoreWireConnector());
 
 	// Lights

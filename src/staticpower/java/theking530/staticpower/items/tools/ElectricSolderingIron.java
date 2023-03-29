@@ -15,8 +15,8 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTextFormatting;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 
@@ -53,26 +53,26 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 
 	@Override
 	public double getCapacity() {
-		return StaticCoreConfig.getTier(StaticCoreTiers.ADVANCED).powerConfiguration.portableBatteryCapacity.get();
+		return StaticCoreConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryCapacity.get();
 	}
 
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
-		return StaticCoreConfig.getTier(StaticCoreTiers.ADVANCED).powerConfiguration.getPortableBatteryChargingVoltage();
+		return StaticCoreConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.getPortableBatteryChargingVoltage();
 	}
 
 	@Override
 	public double getMaximumInputPower() {
-		return StaticCoreConfig.getTier(StaticCoreTiers.ADVANCED).powerConfiguration.portableBatteryMaximumPowerInput.get();
+		return StaticCoreConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryMaximumPowerInput.get();
 	}
 
 	@Override
 	public StaticPowerVoltage getOutputVoltage() {
-		return StaticCoreConfig.getTier(StaticCoreTiers.ADVANCED).powerConfiguration.portableBatteryOutputVoltage.get();
+		return StaticCoreConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryOutputVoltage.get();
 	}
 
 	@Override
 	public double getMaximumOutputPower() {
-		return StaticCoreConfig.getTier(StaticCoreTiers.ADVANCED).powerConfiguration.portableBatteryMaximumPowerOutput.get();
+		return StaticCoreConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
 }

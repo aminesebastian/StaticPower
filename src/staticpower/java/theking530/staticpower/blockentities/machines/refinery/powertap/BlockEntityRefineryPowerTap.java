@@ -17,10 +17,10 @@ import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.presets.AllSidesInput;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity implements IStaticPowerStorage {
@@ -31,7 +31,7 @@ public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity impleme
 	public final SideConfigurationComponent ioSideConfiguration;
 
 	public BlockEntityRefineryPowerTap(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, StaticCoreTiers.ADVANCED);
+		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AllSidesInput.INSTANCE));
 	}
 

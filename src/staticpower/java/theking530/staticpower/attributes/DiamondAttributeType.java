@@ -3,7 +3,7 @@ package theking530.staticpower.attributes;
 import net.minecraft.ChatFormatting;
 import theking530.api.attributes.AttributeInstance;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.data.StaticCoreTiers;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class DiamondAttributeType extends AbstractHardenedAttributeType {
 
@@ -18,7 +18,7 @@ public class DiamondAttributeType extends AbstractHardenedAttributeType {
 		}
 
 		// Get the modifier amount.
-		double modifier = StaticCoreConfig.getTier(StaticCoreTiers.DIAMOND).toolConfiguration.hardenedDurabilityBoost.get();
+		double modifier = StaticCoreConfig.getTier(StaticPowerTiers.DIAMOND).toolConfiguration.hardenedDurabilityBoost.get();
 		value *= modifier;
 
 		// Return the modified value.

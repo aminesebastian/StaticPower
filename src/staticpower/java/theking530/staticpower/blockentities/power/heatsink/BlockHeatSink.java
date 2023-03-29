@@ -22,9 +22,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.data.StaticCoreTier;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 	protected final ResourceLocation heatSinkTier;
@@ -32,7 +32,7 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 	public BlockHeatSink(ResourceLocation heatSinkTier) {
 		// NOTE: This tier is the tier that provides the machine properties of this
 		// heatsink, not the heat properties.
-		super(StaticCoreTiers.BASIC, Block.Properties.of(Material.METAL).strength(3.5f));
+		super(StaticPowerTiers.BASIC, Block.Properties.of(Material.METAL).strength(3.5f));
 		this.heatSinkTier = heatSinkTier;
 	}
 
@@ -63,11 +63,11 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (getTier() == StaticCoreTiers.COPPER) {
+		if (getTier() == StaticPowerTiers.COPPER) {
 			return BlockEntityHeatSink.TYPE_COPPER.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.GOLD) {
+		} else if (getTier() == StaticPowerTiers.GOLD) {
 			return BlockEntityHeatSink.TYPE_GOLD.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.ALUMINUM) {
+		} else if (getTier() == StaticPowerTiers.ALUMINUM) {
 			return BlockEntityHeatSink.TYPE_ALUMINUM.create(pos, state);
 		}
 		return null;

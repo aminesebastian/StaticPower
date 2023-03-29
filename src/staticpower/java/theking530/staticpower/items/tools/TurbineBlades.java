@@ -14,8 +14,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.data.StaticCoreTier;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.utilities.SDTime;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
@@ -44,7 +44,7 @@ public class TurbineBlades extends StaticPowerItem {
 
 	@Override
 	public boolean isFoil(ItemStack stack) {
-		return this.tier == StaticCoreTiers.CREATIVE;
+		return this.tier == StaticPowerTiers.CREATIVE;
 	}
 
 	@Override

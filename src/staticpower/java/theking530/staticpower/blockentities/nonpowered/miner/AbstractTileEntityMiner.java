@@ -35,7 +35,6 @@ import theking530.staticcore.blockentity.components.items.OutputServoComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
 import theking530.staticcore.data.StaticCoreTier;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.utilities.SDColor;
@@ -44,6 +43,7 @@ import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
 
 public abstract class AbstractTileEntityMiner extends BlockEntityBase {
@@ -68,7 +68,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 		blocks = new ArrayList<BlockPos>();
 
 		// Get the tier.
-		StaticCoreTier tierObject = StaticCoreConfig.getTier(StaticCoreTiers.STATIC);
+		StaticCoreTier tierObject = StaticCoreConfig.getTier(StaticPowerTiers.STATIC);
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachineNoFacePreset.INSTANCE));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 

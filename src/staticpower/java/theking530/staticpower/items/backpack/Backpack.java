@@ -1,7 +1,13 @@
 package theking530.staticpower.items.backpack;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import javax.annotation.Nullable;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,6 +40,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.client.ICustomModelProvider;
+import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
@@ -112,7 +119,7 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 			// Don't do anything if we didn't find the item OR if we did but it's already at
 			// a full stack.
 			if (playerSlot == -1 || playerItem.getCount() >= playerItem.getMaxStackSize()) {
-				break;
+				continue;
 			}
 
 			// If after adding, the count of the backpack stack has changed, then we extract
@@ -121,6 +128,7 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 			if (player.getInventory().add(playerSlot, backpackItem)) {
 				int inserted = initialCount - backpackItem.getCount();
 				backpackInventory.extractItem(backpackSlot, inserted, false);
+				break;
 			}
 		}
 	}
@@ -298,6 +306,58 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		// TODO: Implement open model format.
 		return new BackpackItemModel(existingModel, null);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		IItemHandler backpackInventory = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+		if (backpackInventory == null) {
+			return;
+		}
+
+		float occupied = 0;
+		float max = 0;
+		for (int slot = 0; slot < backpackInventory.getSlots(); slot++) {
+			occupied += backpackInventory.getStackInSlot(slot).getCount();
+			max += backpackInventory.getSlotLimit(slot);
+		}
+		if (max == 0) {
+			return;
+		}
+
+		tooltip.add(Component.translatable(String.format("%1$s Filled", GuiTextUtilities.formatNumberAsPercentStringNoDecimal(occupied / max).getString()))
+				.withStyle(ChatFormatting.GRAY));
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
+		IItemHandler backpackInventory = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+		if (backpackInventory == null) {
+			return;
+		}
+
+		Map<Item, Integer> itemMap = new HashMap<>();
+
+		for (int slot = 0; slot < backpackInventory.getSlots(); slot++) {
+			ItemStack stackInSlot = backpackInventory.getStackInSlot(slot);
+			if (stackInSlot.isEmpty()) {
+				continue;
+			}
+
+			Item itemInSlot = stackInSlot.getItem();
+			if (!itemMap.containsKey(itemInSlot)) {
+				itemMap.put(itemInSlot, stackInSlot.getCount());
+			} else {
+				itemMap.put(itemInSlot, itemMap.get(itemInSlot) + stackInSlot.getCount());
+			}
+		}
+
+		for (Entry<Item, Integer> entry : itemMap.entrySet()) {
+			tooltip.add(Component.literal("  - ").append(entry.getKey().getDescription()).append(Component.literal(String.format(" x%1$d", entry.getValue())))
+					.withStyle(ChatFormatting.GRAY));
+		}
 	}
 
 	public class BackPackContainerProvider implements MenuProvider {

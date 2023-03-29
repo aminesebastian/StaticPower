@@ -36,9 +36,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.staticcore.client.models.AbstractBakedModel;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.utilities.ModelUtilities;
 import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.BatteryPack;
 
 @SuppressWarnings("deprecation")
@@ -77,7 +77,7 @@ public class BatteryPackItemModel implements BakedModel {
 				// Check to see if we need to cache this model, if we do, do it.
 				PortableBatteryModel model = BatteryPackItemModel.this.cache.get(hash);
 				if (model == null) {
-					model = new PortableBatteryModel(baseModel, ratio, ((BatteryPack) stack.getItem()).tier == StaticCoreTiers.CREATIVE);
+					model = new PortableBatteryModel(baseModel, ratio, ((BatteryPack) stack.getItem()).tier == StaticPowerTiers.CREATIVE);
 					BatteryPackItemModel.this.cache.put(hash, model);
 				}
 				return model;

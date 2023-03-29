@@ -15,13 +15,13 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Si
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticcore.blockentity.components.energy.PowerDistributionComponent;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.product.power.PowerProductionStack;
 import theking530.staticpower.blockentities.components.TieredPowerStorageComponent;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntitySolarPanel extends BlockEntityBase {
@@ -60,7 +60,7 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 	public BlockEntitySolarPanel(BlockEntityTypeAllocator<BlockEntitySolarPanel> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		// Set the values based on the tier.
-		isCreative = getTier() == StaticCoreTiers.CREATIVE;
+		isCreative = getTier() == StaticPowerTiers.CREATIVE;
 		generationPerTick = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
 
 		// Set the energy storage.

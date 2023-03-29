@@ -26,11 +26,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.gui.text.TooltipUtilities;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockTransformer extends StaticPowerMachineBlock {
 	private static final HashMap<Direction, VoxelShape> SHAPES = new HashMap<>();
@@ -84,7 +84,7 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (this.getTier() == StaticCoreTiers.LUMUM || this.getTier() == StaticCoreTiers.CREATIVE) {
+		if (this.getTier() == StaticPowerTiers.LUMUM || this.getTier() == StaticPowerTiers.CREATIVE) {
 			return HasGuiType.ALWAYS;
 		}
 		return HasGuiType.NEVER;
@@ -95,7 +95,7 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
 
-		if (getTier() == StaticCoreTiers.LUMUM) {
+		if (getTier() == StaticPowerTiers.LUMUM) {
 			TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.transfomer_ratio", ChatFormatting.GREEN, Component.translatable("gui.staticpower.variable"));
 		} else {
 			int transformerRatio = StaticCoreConfig.getTier(getTier()).powerConfiguration.transfomerRatio.get();
@@ -112,15 +112,15 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (getTier() == StaticCoreTiers.BASIC) {
+		if (getTier() == StaticPowerTiers.BASIC) {
 			return BlockEntityTransformer.BASIC_TRANSFORMER.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.ADVANCED) {
+		} else if (getTier() == StaticPowerTiers.ADVANCED) {
 			return BlockEntityTransformer.ADVANCED_TRANSFORMER.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.STATIC) {
+		} else if (getTier() == StaticPowerTiers.STATIC) {
 			return BlockEntityTransformer.STATIC_TRANSFORMER.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
+		} else if (getTier() == StaticPowerTiers.ENERGIZED) {
 			return BlockEntityTransformer.ENERGIZED_TRANSFORMER.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.LUMUM) {
+		} else if (getTier() == StaticPowerTiers.LUMUM) {
 			return BlockEntityTransformer.LUMUM_TRANSFORMER.create(pos, state);
 		}
 		return null;

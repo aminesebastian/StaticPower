@@ -25,13 +25,13 @@ import theking530.staticcore.blockentity.components.heat.HeatStorageComponent.He
 import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.data.StaticCoreTier;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.FluidUtilities;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.utilities.math.Vector2D;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderCauldron;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntity;
 import theking530.staticpower.init.ModBlocks;
@@ -58,7 +58,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 
 	public BlockEntityCauldron(BlockEntityTypeAllocator<BlockEntityCauldron> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
-		StaticCoreTier tier = StaticCoreConfig.getTier(StaticCoreTiers.BASIC);
+		StaticCoreTier tier = StaticCoreConfig.getTier(StaticPowerTiers.BASIC);
 
 		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 1000).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
 

@@ -25,17 +25,17 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockPowerMonitor extends StaticPowerMachineBlock {
 	protected static final VoxelShape Z_AXIS_SHAPE = Block.box(0.0D, 3D, 3.5D, 16.0D, 13.0D, 12.5D);
 	protected static final VoxelShape X_AXIS_SHAPE = Block.box(3.5D, 3D, 0.0D, 12.5D, 13.0D, 16.0D);
 
 	public BlockPowerMonitor() {
-		super(StaticCoreTiers.LUMUM);
+		super(StaticPowerTiers.LUMUM);
 	}
 
 	@Override

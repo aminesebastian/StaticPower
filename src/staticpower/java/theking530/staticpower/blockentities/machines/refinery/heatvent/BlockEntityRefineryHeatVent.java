@@ -11,10 +11,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity implements IHeatStorage {
@@ -23,7 +23,7 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 			(type, pos, state) -> new BlockEntityRefineryHeatVent(pos, state), ModBlocks.RefineryHeatVent);
 
 	public BlockEntityRefineryHeatVent(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, StaticCoreTiers.ADVANCED);
+		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
 	}
 
 	@Override

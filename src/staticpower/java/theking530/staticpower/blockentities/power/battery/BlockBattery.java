@@ -24,13 +24,13 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.data.StaticCoreTier;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.gui.text.TooltipUtilities;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerItemBlockCustomModel;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockBattery extends StaticPowerMachineBlock {
 
@@ -84,17 +84,17 @@ public class BlockBattery extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (getTier() == StaticCoreTiers.BASIC) {
+		if (getTier() == StaticPowerTiers.BASIC) {
 			return BlockEntityBattery.TYPE_BASIC.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.ADVANCED) {
+		} else if (getTier() == StaticPowerTiers.ADVANCED) {
 			return BlockEntityBattery.TYPE_ADVANCED.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.STATIC) {
+		} else if (getTier() == StaticPowerTiers.STATIC) {
 			return BlockEntityBattery.TYPE_STATIC.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
+		} else if (getTier() == StaticPowerTiers.ENERGIZED) {
 			return BlockEntityBattery.TYPE_ENERGIZED.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.LUMUM) {
+		} else if (getTier() == StaticPowerTiers.LUMUM) {
 			return BlockEntityBattery.TYPE_LUMUM.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.CREATIVE) {
+		} else if (getTier() == StaticPowerTiers.CREATIVE) {
 			return BlockEntityBattery.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;

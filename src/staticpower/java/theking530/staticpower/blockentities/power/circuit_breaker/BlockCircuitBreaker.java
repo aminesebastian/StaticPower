@@ -28,9 +28,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.wrench.RegularWrenchMode;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockCircuitBreaker extends StaticPowerRotateableBlockEntityBlock {
 	public static final VoxelShape X_AXIS_SHAPE;
@@ -51,7 +51,7 @@ public class BlockCircuitBreaker extends StaticPowerRotateableBlockEntityBlock {
 	private final double tripCurrent;
 
 	public BlockCircuitBreaker(double tripCurrent) {
-		super(StaticCoreTiers.BASIC);
+		super(StaticPowerTiers.BASIC);
 		this.tripCurrent = tripCurrent;
 	}
 

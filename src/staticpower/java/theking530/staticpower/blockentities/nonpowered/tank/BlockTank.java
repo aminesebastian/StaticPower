@@ -34,13 +34,13 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.client.ICustomModelProvider;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerItemBlockCustomModel;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements ICustomModelProvider {
 
@@ -155,19 +155,19 @@ public class BlockTank extends StaticPowerRotateableBlockEntityBlock implements 
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (getTier() == StaticCoreTiers.IRON) {
+		if (getTier() == StaticPowerTiers.IRON) {
 			return BlockEntityTank.TYPE_IRON.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.BASIC) {
+		} else if (getTier() == StaticPowerTiers.BASIC) {
 			return BlockEntityTank.TYPE_BASIC.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.ADVANCED) {
+		} else if (getTier() == StaticPowerTiers.ADVANCED) {
 			return BlockEntityTank.TYPE_ADVANCED.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.STATIC) {
+		} else if (getTier() == StaticPowerTiers.STATIC) {
 			return BlockEntityTank.TYPE_STATIC.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
+		} else if (getTier() == StaticPowerTiers.ENERGIZED) {
 			return BlockEntityTank.TYPE_ENERGIZED.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.LUMUM) {
+		} else if (getTier() == StaticPowerTiers.LUMUM) {
 			return BlockEntityTank.TYPE_LUMUM.create(pos, state);
-		} else if (getTier() == StaticCoreTiers.CREATIVE) {
+		} else if (getTier() == StaticPowerTiers.CREATIVE) {
 			return BlockEntityTank.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;

@@ -4,7 +4,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.data.StaticCoreTiers;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class StaticPowerCableItemGroup extends CreativeModeTab {
@@ -14,6 +14,6 @@ public class StaticPowerCableItemGroup extends CreativeModeTab {
 
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack makeIcon() {
-		return new ItemStack(ModBlocks.IndustrialPowerCables.get(StaticCoreTiers.BASIC).get());
+		return new ItemStack(ModBlocks.IndustrialPowerCables.get(StaticPowerTiers.BASIC).get());
 	}
 }

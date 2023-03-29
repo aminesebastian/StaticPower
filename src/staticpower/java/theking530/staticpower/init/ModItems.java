@@ -13,7 +13,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.cablenetwork.attachment.CableCover;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
@@ -33,6 +32,7 @@ import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
 import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.cables.ModCableModules;
@@ -220,20 +220,20 @@ public class ModItems {
 	}
 
 	public static final RegistryObject<TurbineBlades> WoodTurbineBlades = ITEMS.register("turbine_blades_wood",
-			() -> new TurbineBlades(StaticCoreTiers.WOOD, StaticPowerAdditionalModels.TURBINE_BLADES_WOOD));
+			() -> new TurbineBlades(StaticPowerTiers.WOOD, StaticPowerAdditionalModels.TURBINE_BLADES_WOOD));
 	public static final RegistryObject<TurbineBlades> BasicTurbineBlades = ITEMS.register("turbine_blades_basic",
-			() -> new TurbineBlades(StaticCoreTiers.BASIC, StaticPowerAdditionalModels.TURBINE_BLADES_BASIC));
+			() -> new TurbineBlades(StaticPowerTiers.BASIC, StaticPowerAdditionalModels.TURBINE_BLADES_BASIC));
 	public static final RegistryObject<TurbineBlades> AdvancedTurbineBlades = ITEMS.register("turbine_blades_advanced",
-			() -> new TurbineBlades(StaticCoreTiers.ADVANCED, StaticPowerAdditionalModels.TURBINE_BLADES_ADVANCED));
+			() -> new TurbineBlades(StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.TURBINE_BLADES_ADVANCED));
 	public static final RegistryObject<TurbineBlades> StaticTurbineBlades = ITEMS.register("turbine_blades_static",
-			() -> new TurbineBlades(StaticCoreTiers.STATIC, StaticPowerAdditionalModels.TURBINE_BLADES_STATIC));
+			() -> new TurbineBlades(StaticPowerTiers.STATIC, StaticPowerAdditionalModels.TURBINE_BLADES_STATIC));
 	public static final RegistryObject<TurbineBlades> EnergizedTurbineBlades = ITEMS.register(
 			"turbine_blades_energized",
-			() -> new TurbineBlades(StaticCoreTiers.ENERGIZED, StaticPowerAdditionalModels.TURBINE_BLADES_ENERGIZED));
+			() -> new TurbineBlades(StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.TURBINE_BLADES_ENERGIZED));
 	public static final RegistryObject<TurbineBlades> LumumTurbineBlades = ITEMS.register("turbine_blades_lumum",
-			() -> new TurbineBlades(StaticCoreTiers.LUMUM, StaticPowerAdditionalModels.TURBINE_BLADES_LUMUM));
+			() -> new TurbineBlades(StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.TURBINE_BLADES_LUMUM));
 	public static final RegistryObject<TurbineBlades> CreativeTurbineBlades = ITEMS.register("turbine_blades_creative",
-			() -> new TurbineBlades(StaticCoreTiers.CREATIVE, StaticPowerAdditionalModels.TURBINE_BLADES_CREATIVE));
+			() -> new TurbineBlades(StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.TURBINE_BLADES_CREATIVE));
 
 	public static final RegistryObject<StaticPowerItem> BasicProcessor = ITEMS.register("processor_basic",
 			() -> new StaticPowerItem());
@@ -252,74 +252,74 @@ public class ModItems {
 			() -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> WireCoilDigistore = ITEMS.register("wire_coil_digistore",
-			() -> new DigistoreWireCoil(new SDColor(0.205f, 0.347f, 0.617f), 0.02f, false, StaticCoreTiers.ADVANCED,
+			() -> new DigistoreWireCoil(new SDColor(0.205f, 0.347f, 0.617f), 0.02f, false, StaticPowerTiers.ADVANCED,
 					ModCableModules.Digistore));
 
 	public static final RegistryObject<DrillBit> IronDrillBit = ITEMS.register("drill_bit_iron",
-			() -> new DrillBit(Tiers.IRON, StaticCoreTiers.IRON));
+			() -> new DrillBit(Tiers.IRON, StaticPowerTiers.IRON));
 	public static final RegistryObject<DrillBit> BronzeDrillBit = ITEMS.register("drill_bit_bronze",
-			() -> new DrillBit(Tiers.IRON, StaticCoreTiers.BRONZE));
+			() -> new DrillBit(Tiers.IRON, StaticPowerTiers.BRONZE));
 	public static final RegistryObject<DrillBit> AdvancedDrillBit = ITEMS.register("drill_bit_advanced",
-			() -> new DrillBit(Tiers.IRON, StaticCoreTiers.ADVANCED));
+			() -> new DrillBit(Tiers.IRON, StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<DrillBit> TungstenDrillBit = ITEMS.register("drill_bit_tungsten",
-			() -> new DrillBit(Tiers.NETHERITE, StaticCoreTiers.TUNGSTEN));
+			() -> new DrillBit(Tiers.NETHERITE, StaticPowerTiers.TUNGSTEN));
 	public static final RegistryObject<DrillBit> StaticDrillBit = ITEMS.register("drill_bit_static",
-			() -> new DrillBit(Tiers.DIAMOND, StaticCoreTiers.STATIC));
+			() -> new DrillBit(Tiers.DIAMOND, StaticPowerTiers.STATIC));
 	public static final RegistryObject<DrillBit> EnergizedDrillBit = ITEMS.register("drill_bit_energized",
-			() -> new DrillBit(Tiers.DIAMOND, StaticCoreTiers.ENERGIZED));
+			() -> new DrillBit(Tiers.DIAMOND, StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<DrillBit> LumumDrillBit = ITEMS.register("drill_bit_lumum",
-			() -> new DrillBit(Tiers.NETHERITE, StaticCoreTiers.LUMUM));
+			() -> new DrillBit(Tiers.NETHERITE, StaticPowerTiers.LUMUM));
 	public static final RegistryObject<DrillBit> CreativeDrillBit = ITEMS.register("drill_bit_creative",
-			() -> new DrillBit(Tiers.NETHERITE, StaticCoreTiers.CREATIVE));
+			() -> new DrillBit(Tiers.NETHERITE, StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<Blade> IronBlade = ITEMS.register("blade_iron",
-			() -> new Blade(Tiers.IRON, StaticCoreTiers.IRON));
+			() -> new Blade(Tiers.IRON, StaticPowerTiers.IRON));
 	public static final RegistryObject<Blade> BronzeBlade = ITEMS.register("blade_bronze",
-			() -> new Blade(Tiers.IRON, StaticCoreTiers.BRONZE));
+			() -> new Blade(Tiers.IRON, StaticPowerTiers.BRONZE));
 	public static final RegistryObject<Blade> AdvancedBlade = ITEMS.register("blade_advanced",
-			() -> new Blade(Tiers.IRON, StaticCoreTiers.ADVANCED));
+			() -> new Blade(Tiers.IRON, StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<Blade> TungstenBlade = ITEMS.register("blade_tungsten",
-			() -> new Blade(Tiers.NETHERITE, StaticCoreTiers.TUNGSTEN));
+			() -> new Blade(Tiers.NETHERITE, StaticPowerTiers.TUNGSTEN));
 	public static final RegistryObject<Blade> StaticBlade = ITEMS.register("blade_static",
-			() -> new Blade(Tiers.DIAMOND, StaticCoreTiers.STATIC));
+			() -> new Blade(Tiers.DIAMOND, StaticPowerTiers.STATIC));
 	public static final RegistryObject<Blade> EnergizedBlade = ITEMS.register("blade_energized",
-			() -> new Blade(Tiers.DIAMOND, StaticCoreTiers.ENERGIZED));
+			() -> new Blade(Tiers.DIAMOND, StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<Blade> LumumBlade = ITEMS.register("blade_lumum",
-			() -> new Blade(Tiers.NETHERITE, StaticCoreTiers.LUMUM));
+			() -> new Blade(Tiers.NETHERITE, StaticPowerTiers.LUMUM));
 	public static final RegistryObject<Blade> CreativeBlade = ITEMS.register("blade_creative",
-			() -> new Blade(Tiers.NETHERITE, StaticCoreTiers.CREATIVE));
+			() -> new Blade(Tiers.NETHERITE, StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<ChainsawBlade> IronChainsawBlade = ITEMS.register("chainsaw_blade_iron",
-			() -> new ChainsawBlade(Tiers.IRON, StaticCoreTiers.IRON));
+			() -> new ChainsawBlade(Tiers.IRON, StaticPowerTiers.IRON));
 	public static final RegistryObject<ChainsawBlade> BronzeChainsawBlade = ITEMS.register("chainsaw_blade_bronze",
-			() -> new ChainsawBlade(Tiers.IRON, StaticCoreTiers.BRONZE));
+			() -> new ChainsawBlade(Tiers.IRON, StaticPowerTiers.BRONZE));
 	public static final RegistryObject<ChainsawBlade> AdvancedChainsawBlade = ITEMS.register("chainsaw_blade_advanced",
-			() -> new ChainsawBlade(Tiers.IRON, StaticCoreTiers.ADVANCED));
+			() -> new ChainsawBlade(Tiers.IRON, StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<ChainsawBlade> TungstenChainsawBlade = ITEMS.register("chainsaw_blade_tungsten",
-			() -> new ChainsawBlade(Tiers.NETHERITE, StaticCoreTiers.TUNGSTEN));
+			() -> new ChainsawBlade(Tiers.NETHERITE, StaticPowerTiers.TUNGSTEN));
 	public static final RegistryObject<ChainsawBlade> StaticChainsawBlade = ITEMS.register("chainsaw_blade_static",
-			() -> new ChainsawBlade(Tiers.DIAMOND, StaticCoreTiers.STATIC));
+			() -> new ChainsawBlade(Tiers.DIAMOND, StaticPowerTiers.STATIC));
 	public static final RegistryObject<ChainsawBlade> EnergizedChainsawBlade = ITEMS
-			.register("chainsaw_blade_energized", () -> new ChainsawBlade(Tiers.DIAMOND, StaticCoreTiers.ENERGIZED));
+			.register("chainsaw_blade_energized", () -> new ChainsawBlade(Tiers.DIAMOND, StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<ChainsawBlade> LumumChainsawBlade = ITEMS.register("chainsaw_blade_lumum",
-			() -> new ChainsawBlade(Tiers.NETHERITE, StaticCoreTiers.LUMUM));
+			() -> new ChainsawBlade(Tiers.NETHERITE, StaticPowerTiers.LUMUM));
 	public static final RegistryObject<ChainsawBlade> CreativeChainsawBlade = ITEMS.register("chainsaw_blade_creative",
-			() -> new ChainsawBlade(Tiers.NETHERITE, StaticCoreTiers.CREATIVE));
+			() -> new ChainsawBlade(Tiers.NETHERITE, StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<FluidCapsule> IronFluidCapsule = ITEMS.register("fluid_capsule_iron",
-			() -> new FluidCapsule(StaticCoreTiers.IRON));
+			() -> new FluidCapsule(StaticPowerTiers.IRON));
 	public static final RegistryObject<FluidCapsule> BasicFluidCapsule = ITEMS.register("fluid_capsule_basic",
-			() -> new FluidCapsule(StaticCoreTiers.BASIC));
+			() -> new FluidCapsule(StaticPowerTiers.BASIC));
 	public static final RegistryObject<FluidCapsule> AdvancedFluidCapsule = ITEMS.register("fluid_capsule_advanced",
-			() -> new FluidCapsule(StaticCoreTiers.ADVANCED));
+			() -> new FluidCapsule(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<FluidCapsule> StaticFluidCapsule = ITEMS.register("fluid_capsule_static",
-			() -> new FluidCapsule(StaticCoreTiers.STATIC));
+			() -> new FluidCapsule(StaticPowerTiers.STATIC));
 	public static final RegistryObject<FluidCapsule> EnergizedFluidCapsule = ITEMS.register("fluid_capsule_energized",
-			() -> new FluidCapsule(StaticCoreTiers.ENERGIZED));
+			() -> new FluidCapsule(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<FluidCapsule> LumumFluidCapsule = ITEMS.register("fluid_capsule_lumum",
-			() -> new FluidCapsule(StaticCoreTiers.LUMUM));
+			() -> new FluidCapsule(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<FluidCapsule> CreativeFluidCapsule = ITEMS.register("fluid_capsule_creative",
-			() -> new FluidCapsule(StaticCoreTiers.IRON));
+			() -> new FluidCapsule(StaticPowerTiers.IRON));
 
 	public static final RegistryObject<StaticPowerItem> BasicUpgradePlate = ITEMS.register("upgrade_plate_basic",
 			() -> new StaticPowerItem());
@@ -333,17 +333,17 @@ public class ModItems {
 			() -> new StaticPowerItem());
 
 	public static final RegistryObject<PortableBattery> BasicPortableBattery = ITEMS.register("portable_battery_basic",
-			() -> new PortableBattery(StaticCoreTiers.BASIC));
+			() -> new PortableBattery(StaticPowerTiers.BASIC));
 	public static final RegistryObject<PortableBattery> AdvancedPortableBattery = ITEMS
-			.register("portable_battery_advanced", () -> new PortableBattery(StaticCoreTiers.ADVANCED));
+			.register("portable_battery_advanced", () -> new PortableBattery(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<PortableBattery> StaticPortableBattery = ITEMS
-			.register("portable_battery_static", () -> new PortableBattery(StaticCoreTiers.STATIC));
+			.register("portable_battery_static", () -> new PortableBattery(StaticPowerTiers.STATIC));
 	public static final RegistryObject<PortableBattery> EnergizedPortableBattery = ITEMS
-			.register("portable_battery_energized", () -> new PortableBattery(StaticCoreTiers.ENERGIZED));
+			.register("portable_battery_energized", () -> new PortableBattery(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<PortableBattery> LumumPortableBattery = ITEMS.register("portable_battery_lumum",
-			() -> new PortableBattery(StaticCoreTiers.LUMUM));
+			() -> new PortableBattery(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<PortableBattery> CreativePortableBattery = ITEMS
-			.register("portable_battery_creative", () -> new PortableBattery(StaticCoreTiers.CREATIVE));
+			.register("portable_battery_creative", () -> new PortableBattery(StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<Backpack> Backpack = ITEMS.register("backpack", () -> new Backpack(12));
 
@@ -365,17 +365,17 @@ public class ModItems {
 			() -> new Backpack(12, ModItemTags.TOOL_BACKPACK));
 
 	public static final RegistryObject<BatteryPack> BasicBatteryPack = ITEMS.register("battery_pack_basic",
-			() -> new BatteryPack(StaticCoreTiers.BASIC));
+			() -> new BatteryPack(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BatteryPack> AdvancedBatteryPack = ITEMS.register("battery_pack_advanced",
-			() -> new BatteryPack(StaticCoreTiers.ADVANCED));
+			() -> new BatteryPack(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<BatteryPack> StaticBatteryPack = ITEMS.register("battery_pack_static",
-			() -> new BatteryPack(StaticCoreTiers.STATIC));
+			() -> new BatteryPack(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BatteryPack> EnergizedBatteryPack = ITEMS.register("battery_pack_energized",
-			() -> new BatteryPack(StaticCoreTiers.ENERGIZED));
+			() -> new BatteryPack(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BatteryPack> LumumBatteryPack = ITEMS.register("battery_pack_lumum",
-			() -> new BatteryPack(StaticCoreTiers.LUMUM));
+			() -> new BatteryPack(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BatteryPack> CreativeBatteryPack = ITEMS.register("battery_pack_creative",
-			() -> new BatteryPack(StaticCoreTiers.CREATIVE));
+			() -> new BatteryPack(StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<StaticPlantSeeds> StaticSeeds = ITEMS.register("seed_static",
 			() -> new StaticPlantSeeds(ModBlocks.StaticCrop.get()));
@@ -394,31 +394,31 @@ public class ModItems {
 			() -> new DepletedFruit());
 
 	public static final RegistryObject<Hammer> IronMetalHammer = ITEMS.register("hammer_iron",
-			() -> new Hammer(StaticCoreTiers.IRON, () -> Items.IRON_INGOT));
+			() -> new Hammer(StaticPowerTiers.IRON, () -> Items.IRON_INGOT));
 	public static final RegistryObject<Hammer> ZincMetalHammer = ITEMS.register("hammer_zinc",
-			() -> new Hammer(StaticCoreTiers.ZINC, () -> ModMaterials.ZINC.get(MaterialTypes.INGOT).get()));
+			() -> new Hammer(StaticPowerTiers.ZINC, () -> ModMaterials.ZINC.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<Hammer> CopperMetalHammer = ITEMS.register("hammer_copper",
-			() -> new Hammer(StaticCoreTiers.COPPER, () -> Items.COPPER_INGOT));
+			() -> new Hammer(StaticPowerTiers.COPPER, () -> Items.COPPER_INGOT));
 	public static final RegistryObject<Hammer> TinMetalHammer = ITEMS.register("hammer_tin",
-			() -> new Hammer(StaticCoreTiers.TIN, ModMaterials.TIN.get(MaterialTypes.INGOT).getSupplier()));
+			() -> new Hammer(StaticPowerTiers.TIN, ModMaterials.TIN.get(MaterialTypes.INGOT).getSupplier()));
 	public static final RegistryObject<Hammer> BronzeMetalHammer = ITEMS.register("hammer_bronze",
-			() -> new Hammer(StaticCoreTiers.BRONZE, () -> ModMaterials.BRONZE.get(MaterialTypes.INGOT).get()));
+			() -> new Hammer(StaticPowerTiers.BRONZE, () -> ModMaterials.BRONZE.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<Hammer> TungstenMetalHammer = ITEMS.register("hammer_tungsten",
-			() -> new Hammer(StaticCoreTiers.TUNGSTEN, () -> ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).get()));
+			() -> new Hammer(StaticPowerTiers.TUNGSTEN, () -> ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<Hammer> CreativeMetalHammer = ITEMS.register("hammer_creative",
-			() -> new Hammer(StaticCoreTiers.CREATIVE, () -> Items.AIR));
+			() -> new Hammer(StaticPowerTiers.CREATIVE, () -> Items.AIR));
 
 	public static final RegistryObject<WireCutters> IronWireCutters = ITEMS.register("wire_cutters_iron",
-			() -> new WireCutters(StaticCoreTiers.IRON, () -> Items.IRON_INGOT));
+			() -> new WireCutters(StaticPowerTiers.IRON, () -> Items.IRON_INGOT));
 	public static final RegistryObject<WireCutters> ZincWireCutters = ITEMS.register("wire_cutters_zinc",
-			() -> new WireCutters(StaticCoreTiers.ZINC, () -> ModMaterials.ZINC.get(MaterialTypes.INGOT).get()));
+			() -> new WireCutters(StaticPowerTiers.ZINC, () -> ModMaterials.ZINC.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<WireCutters> BronzeWireCutters = ITEMS.register("wire_cutters_bronze",
-			() -> new WireCutters(StaticCoreTiers.BRONZE, () -> ModMaterials.BRONZE.get(MaterialTypes.INGOT).get()));
+			() -> new WireCutters(StaticPowerTiers.BRONZE, () -> ModMaterials.BRONZE.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<WireCutters> TungstenWireCutters = ITEMS.register("wire_cutters_tungsten",
-			() -> new WireCutters(StaticCoreTiers.TUNGSTEN,
+			() -> new WireCutters(StaticPowerTiers.TUNGSTEN,
 					() -> ModMaterials.TUNGSTEN.get(MaterialTypes.INGOT).get()));
 	public static final RegistryObject<WireCutters> CreativeWireCutters = ITEMS.register("wire_cutters_creative",
-			() -> new WireCutters(StaticCoreTiers.CREATIVE, () -> Items.AIR));
+			() -> new WireCutters(StaticPowerTiers.CREATIVE, () -> Items.AIR));
 
 	public static final RegistryObject<SolderingIron> SolderingIron = ITEMS.register("soldering_iron",
 			() -> new SolderingIron(100));
@@ -426,26 +426,26 @@ public class ModItems {
 			.register("soldering_iron_electric", () -> new ElectricSolderingIron());
 
 	public static final RegistryObject<MiningDrill> BasicMiningDrill = ITEMS.register("mining_drill_basic",
-			() -> new MiningDrill(5.0f, 5.0f, StaticCoreTiers.BASIC));
+			() -> new MiningDrill(5.0f, 5.0f, StaticPowerTiers.BASIC));
 	public static final RegistryObject<MiningDrill> AdvancedMiningDrill = ITEMS.register("mining_drill_advanced",
-			() -> new MiningDrill(5.0f, 5.0f, StaticCoreTiers.ADVANCED));
+			() -> new MiningDrill(5.0f, 5.0f, StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<MiningDrill> StaticMiningDrill = ITEMS.register("mining_drill_static",
-			() -> new MiningDrill(5.0f, 5.0f, StaticCoreTiers.STATIC));
+			() -> new MiningDrill(5.0f, 5.0f, StaticPowerTiers.STATIC));
 	public static final RegistryObject<MiningDrill> EnergizedMiningDrill = ITEMS.register("mining_drill_energized",
-			() -> new MiningDrill(5.0f, 5.0f, StaticCoreTiers.ENERGIZED));
+			() -> new MiningDrill(5.0f, 5.0f, StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<MiningDrill> LumumMiningDrill = ITEMS.register("mining_drill_lumum",
-			() -> new MiningDrill(5.0f, 5.0f, StaticCoreTiers.LUMUM));
+			() -> new MiningDrill(5.0f, 5.0f, StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<Chainsaw> BasicChainsaw = ITEMS.register("chainsaw_basic",
-			() -> new Chainsaw(5.0f, 5.0f, StaticCoreTiers.BASIC));
+			() -> new Chainsaw(5.0f, 5.0f, StaticPowerTiers.BASIC));
 	public static final RegistryObject<Chainsaw> AdvancedChainsaw = ITEMS.register("chainsaw_advanced",
-			() -> new Chainsaw(5.0f, 5.0f, StaticCoreTiers.ADVANCED));
+			() -> new Chainsaw(5.0f, 5.0f, StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<Chainsaw> StaticChainsaw = ITEMS.register("chainsaw_static",
-			() -> new Chainsaw(5.0f, 5.0f, StaticCoreTiers.STATIC));
+			() -> new Chainsaw(5.0f, 5.0f, StaticPowerTiers.STATIC));
 	public static final RegistryObject<Chainsaw> EnergizedChainsaw = ITEMS.register("chainsaw_energized",
-			() -> new Chainsaw(5.0f, 5.0f, StaticCoreTiers.ENERGIZED));
+			() -> new Chainsaw(5.0f, 5.0f, StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<Chainsaw> LumumChainsaw = ITEMS.register("chainsaw_lumum",
-			() -> new Chainsaw(5.0f, 5.0f, StaticCoreTiers.LUMUM));
+			() -> new Chainsaw(5.0f, 5.0f, StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<StaticWrench> Wrench = ITEMS.register("wrench", () -> new StaticWrench());
 	public static final RegistryObject<StaticWrench> StaticWrench = ITEMS.register("wrench_static",
@@ -460,15 +460,15 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> WeakMagnet = ITEMS.register("magnet_weak",
 			() -> new StaticPowerItem());
 	public static final RegistryObject<Magnet> BasicMagnet = ITEMS.register("magnet_basic",
-			() -> new Magnet(StaticCoreTiers.BASIC));
+			() -> new Magnet(StaticPowerTiers.BASIC));
 	public static final RegistryObject<Magnet> AdvancedMagnet = ITEMS.register("magnet_advanced",
-			() -> new Magnet(StaticCoreTiers.ADVANCED));
+			() -> new Magnet(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<Magnet> StaticMagnet = ITEMS.register("magnet_static",
-			() -> new Magnet(StaticCoreTiers.STATIC));
+			() -> new Magnet(StaticPowerTiers.STATIC));
 	public static final RegistryObject<Magnet> EnergizedMagnet = ITEMS.register("magnet_energized",
-			() -> new Magnet(StaticCoreTiers.ENERGIZED));
+			() -> new Magnet(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<Magnet> LumumMagnet = ITEMS.register("magnet_lumum",
-			() -> new Magnet(StaticCoreTiers.LUMUM));
+			() -> new Magnet(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<CableNetworkAnalyzer> CableNetworkAnalyzer = ITEMS
 			.register("cable_network_analyzer", () -> new CableNetworkAnalyzer());
@@ -484,62 +484,62 @@ public class ModItems {
 			() -> new CoverSaw(1000));
 
 	public static final RegistryObject<ItemFilter> BasicFilter = ITEMS.register("filter_item_basic",
-			() -> new ItemFilter(StaticCoreTiers.BASIC));
+			() -> new ItemFilter(StaticPowerTiers.BASIC));
 	public static final RegistryObject<ItemFilter> AdvancedFilter = ITEMS.register("filter_item_advanced",
-			() -> new ItemFilter(StaticCoreTiers.ADVANCED));
+			() -> new ItemFilter(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<ItemFilter> StaticFilter = ITEMS.register("filter_item_static",
-			() -> new ItemFilter(StaticCoreTiers.STATIC));
+			() -> new ItemFilter(StaticPowerTiers.STATIC));
 	public static final RegistryObject<ItemFilter> EnergizedFilter = ITEMS.register("filter_item_energized",
-			() -> new ItemFilter(StaticCoreTiers.ENERGIZED));
+			() -> new ItemFilter(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<ItemFilter> LumumFilter = ITEMS.register("filter_item_lumum",
-			() -> new ItemFilter(StaticCoreTiers.LUMUM));
+			() -> new ItemFilter(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<ExtractorAttachment> BasicExtractorAttachment = ITEMS
-			.register("cable_attachment_basic_extractor", () -> new ExtractorAttachment(StaticCoreTiers.BASIC,
+			.register("cable_attachment_basic_extractor", () -> new ExtractorAttachment(StaticPowerTiers.BASIC,
 					StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));
 	public static final RegistryObject<ExtractorAttachment> AdvancedExtractorAttachment = ITEMS
-			.register("cable_attachment_advanced_extractor", () -> new ExtractorAttachment(StaticCoreTiers.ADVANCED,
+			.register("cable_attachment_advanced_extractor", () -> new ExtractorAttachment(StaticPowerTiers.ADVANCED,
 					StaticPowerAdditionalModels.CABLE_ADVANCED_EXTRACTOR_ATTACHMENT));
 	public static final RegistryObject<ExtractorAttachment> StaticExtractorAttachment = ITEMS
-			.register("cable_attachment_static_extractor", () -> new ExtractorAttachment(StaticCoreTiers.STATIC,
+			.register("cable_attachment_static_extractor", () -> new ExtractorAttachment(StaticPowerTiers.STATIC,
 					StaticPowerAdditionalModels.CABLE_STATIC_EXTRACTOR_ATTACHMENT));
 	public static final RegistryObject<ExtractorAttachment> EnergizedExtractorAttachment = ITEMS
-			.register("cable_attachment_energized_extractor", () -> new ExtractorAttachment(StaticCoreTiers.ENERGIZED,
+			.register("cable_attachment_energized_extractor", () -> new ExtractorAttachment(StaticPowerTiers.ENERGIZED,
 					StaticPowerAdditionalModels.CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT));
 	public static final RegistryObject<ExtractorAttachment> LumumExtractorAttachment = ITEMS
-			.register("cable_attachment_lumum_extractor", () -> new ExtractorAttachment(StaticCoreTiers.LUMUM,
+			.register("cable_attachment_lumum_extractor", () -> new ExtractorAttachment(StaticPowerTiers.LUMUM,
 					StaticPowerAdditionalModels.CABLE_LUMUM_EXTRACTOR_ATTACHMENT));
 
 	public static final RegistryObject<FilterAttachment> BasicFilterAttachment = ITEMS
-			.register("cable_attachment_basic_filter", () -> new FilterAttachment(StaticCoreTiers.BASIC,
+			.register("cable_attachment_basic_filter", () -> new FilterAttachment(StaticPowerTiers.BASIC,
 					StaticPowerAdditionalModels.CABLE_BASIC_FILTER_ATTACHMENT));
 	public static final RegistryObject<FilterAttachment> AdvancedFilterAttachment = ITEMS
-			.register("cable_attachment_advanced_filter", () -> new FilterAttachment(StaticCoreTiers.ADVANCED,
+			.register("cable_attachment_advanced_filter", () -> new FilterAttachment(StaticPowerTiers.ADVANCED,
 					StaticPowerAdditionalModels.CABLE_ADVANCED_FILTER_ATTACHMENT));
 	public static final RegistryObject<FilterAttachment> StaticFilterAttachment = ITEMS
-			.register("cable_attachment_static_filter", () -> new FilterAttachment(StaticCoreTiers.STATIC,
+			.register("cable_attachment_static_filter", () -> new FilterAttachment(StaticPowerTiers.STATIC,
 					StaticPowerAdditionalModels.CABLE_STATIC_FILTER_ATTACHMENT));
 	public static final RegistryObject<FilterAttachment> EnergizedFilterAttachment = ITEMS
-			.register("cable_attachment_energized_filter", () -> new FilterAttachment(StaticCoreTiers.ENERGIZED,
+			.register("cable_attachment_energized_filter", () -> new FilterAttachment(StaticPowerTiers.ENERGIZED,
 					StaticPowerAdditionalModels.CABLE_ENERGIZED_FILTER_ATTACHMENT));
 	public static final RegistryObject<FilterAttachment> LumumFilterAttachment = ITEMS
-			.register("cable_attachment_lumum_filter", () -> new FilterAttachment(StaticCoreTiers.LUMUM,
+			.register("cable_attachment_lumum_filter", () -> new FilterAttachment(StaticPowerTiers.LUMUM,
 					StaticPowerAdditionalModels.CABLE_LUMUM_FILTER_ATTACHMENT));
 
 	public static final RegistryObject<RetrieverAttachment> BasicRetrieverAttachment = ITEMS
-			.register("cable_attachment_basic_retriever", () -> new RetrieverAttachment(StaticCoreTiers.BASIC,
+			.register("cable_attachment_basic_retriever", () -> new RetrieverAttachment(StaticPowerTiers.BASIC,
 					StaticPowerAdditionalModels.CABLE_BASIC_RETRIEVER_ATTACHMENT));
 	public static final RegistryObject<RetrieverAttachment> AdvancedRetrieverAttachment = ITEMS
-			.register("cable_attachment_advanced_retriever", () -> new RetrieverAttachment(StaticCoreTiers.ADVANCED,
+			.register("cable_attachment_advanced_retriever", () -> new RetrieverAttachment(StaticPowerTiers.ADVANCED,
 					StaticPowerAdditionalModels.CABLE_ADVANCED_RETRIEVER_ATTACHMENT));
 	public static final RegistryObject<RetrieverAttachment> StaticRetrieverAttachment = ITEMS
-			.register("cable_attachment_static_retriever", () -> new RetrieverAttachment(StaticCoreTiers.STATIC,
+			.register("cable_attachment_static_retriever", () -> new RetrieverAttachment(StaticPowerTiers.STATIC,
 					StaticPowerAdditionalModels.CABLE_STATIC_RETRIEVER_ATTACHMENT));
 	public static final RegistryObject<RetrieverAttachment> EnergizedRetrieverAttachment = ITEMS
-			.register("cable_attachment_energized_retriever", () -> new RetrieverAttachment(StaticCoreTiers.ENERGIZED,
+			.register("cable_attachment_energized_retriever", () -> new RetrieverAttachment(StaticPowerTiers.ENERGIZED,
 					StaticPowerAdditionalModels.CABLE_ENERGIZED_RETRIEVER_ATTACHMENT));
 	public static final RegistryObject<RetrieverAttachment> LumumRetrieverAttachment = ITEMS
-			.register("cable_attachment_lumum_retriever", () -> new RetrieverAttachment(StaticCoreTiers.LUMUM,
+			.register("cable_attachment_lumum_retriever", () -> new RetrieverAttachment(StaticPowerTiers.LUMUM,
 					StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
 
 	public static final RegistryObject<DigistoreExporterAttachment> ExporterAttachment = ITEMS
@@ -566,9 +566,9 @@ public class ModItems {
 
 	public static final RegistryObject<SprinklerAttachment> SprinklerAttachment = ITEMS.register(
 			"cable_attachment_sprinkler",
-			() -> new SprinklerAttachment(StaticCoreTiers.BASIC, StaticPowerAdditionalModels.SPRINKLER));
+			() -> new SprinklerAttachment(StaticPowerTiers.BASIC, StaticPowerAdditionalModels.SPRINKLER));
 	public static final RegistryObject<DrainAttachment> DrainAttachment = ITEMS.register("cable_attachment_drain",
-			() -> new DrainAttachment(StaticCoreTiers.BASIC, StaticPowerAdditionalModels.DRAIN));
+			() -> new DrainAttachment(StaticPowerTiers.BASIC, StaticPowerAdditionalModels.DRAIN));
 
 	public static final RegistryObject<DigistorePatternCard> PatternCard = ITEMS.register("digistore_pattern_card",
 			() -> new DigistorePatternCard());
@@ -593,56 +593,56 @@ public class ModItems {
 			() -> new JuiceBottleItem(40, 8, 10.0f));
 
 	public static final RegistryObject<DigistoreCard> BasicDigistoreCard = ITEMS.register("digistore_card_basic",
-			() -> new DigistoreCard(StaticCoreTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
+			() -> new DigistoreCard(StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreCard> AdvancedDigistoreCard = ITEMS.register("digistore_card_advanced",
-			() -> new DigistoreCard(StaticCoreTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
+			() -> new DigistoreCard(StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreCard> StaticDigistoreCard = ITEMS.register("digistore_card_static",
-			() -> new DigistoreCard(StaticCoreTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
+			() -> new DigistoreCard(StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreCard> EnergizedDigistoreCard = ITEMS.register(
 			"digistore_card_energized",
-			() -> new DigistoreCard(StaticCoreTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
+			() -> new DigistoreCard(StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreCard> LumumDigistoreCard = ITEMS.register("digistore_card_lumum",
-			() -> new DigistoreCard(StaticCoreTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
+			() -> new DigistoreCard(StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreCard> CreativeDigistoreCard = ITEMS.register("digistore_card_creative",
-			() -> new DigistoreCard(StaticCoreTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD,
+			() -> new DigistoreCard(StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD,
 					true));
 
 	public static final RegistryObject<DigistoreStackedCard> BasicStackedDigistoreCard = ITEMS.register(
 			"digistore_card_stacked_basic",
-			() -> new DigistoreStackedCard(StaticCoreTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
+			() -> new DigistoreStackedCard(StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreStackedCard> AdvancedStackedDigistoreCard = ITEMS
-			.register("digistore_card_stacked_advanced", () -> new DigistoreStackedCard(StaticCoreTiers.ADVANCED,
+			.register("digistore_card_stacked_advanced", () -> new DigistoreStackedCard(StaticPowerTiers.ADVANCED,
 					StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreStackedCard> StaticStackedDigistoreCard = ITEMS.register(
 			"digistore_card_stacked_static",
-			() -> new DigistoreStackedCard(StaticCoreTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
+			() -> new DigistoreStackedCard(StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreStackedCard> EnergizedStackedDigistoreCard = ITEMS
-			.register("digistore_card_stacked_energized", () -> new DigistoreStackedCard(StaticCoreTiers.ENERGIZED,
+			.register("digistore_card_stacked_energized", () -> new DigistoreStackedCard(StaticPowerTiers.ENERGIZED,
 					StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreStackedCard> LumumStackedDigistoreCard = ITEMS.register(
 			"digistore_card_stacked_lumum",
-			() -> new DigistoreStackedCard(StaticCoreTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
+			() -> new DigistoreStackedCard(StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
 	public static final RegistryObject<DigistoreStackedCard> CreativeStackedDigistoreCard = ITEMS
-			.register("digistore_card_stacked_creative", () -> new DigistoreStackedCard(StaticCoreTiers.CREATIVE,
+			.register("digistore_card_stacked_creative", () -> new DigistoreStackedCard(StaticPowerTiers.CREATIVE,
 					StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
 
 	public static final RegistryObject<DigistoreMonoCard> BasicSingularDigistoreCard = ITEMS
-			.register("digistore_card_singular_basic", () -> new DigistoreMonoCard(StaticCoreTiers.BASIC,
+			.register("digistore_card_singular_basic", () -> new DigistoreMonoCard(StaticPowerTiers.BASIC,
 					StaticPowerAdditionalModels.BASIC_DIGISTORE_SINGULAR_CARD));
 	public static final RegistryObject<DigistoreMonoCard> AdvancedSingularDigistoreCard = ITEMS
-			.register("digistore_card_singular_advanced", () -> new DigistoreMonoCard(StaticCoreTiers.ADVANCED,
+			.register("digistore_card_singular_advanced", () -> new DigistoreMonoCard(StaticPowerTiers.ADVANCED,
 					StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_SINGULAR_CARD));
 	public static final RegistryObject<DigistoreMonoCard> StaticSingularDigistoreCard = ITEMS
-			.register("digistore_card_singular_static", () -> new DigistoreMonoCard(StaticCoreTiers.STATIC,
+			.register("digistore_card_singular_static", () -> new DigistoreMonoCard(StaticPowerTiers.STATIC,
 					StaticPowerAdditionalModels.STATIC_DIGISTORE_SINGULAR_CARD));
 	public static final RegistryObject<DigistoreMonoCard> EnergizedSingularDigistoreCard = ITEMS
-			.register("digistore_card_singular_energized", () -> new DigistoreMonoCard(StaticCoreTiers.ENERGIZED,
+			.register("digistore_card_singular_energized", () -> new DigistoreMonoCard(StaticPowerTiers.ENERGIZED,
 					StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_SINGULAR_CARD));
 	public static final RegistryObject<DigistoreMonoCard> LumumSingularDigistoreCard = ITEMS
-			.register("digistore_card_singular_lumum", () -> new DigistoreMonoCard(StaticCoreTiers.LUMUM,
+			.register("digistore_card_singular_lumum", () -> new DigistoreMonoCard(StaticPowerTiers.LUMUM,
 					StaticPowerAdditionalModels.LUMUM_DIGISTORE_SINGULAR_CARD));
 	public static final RegistryObject<DigistoreMonoCard> CreativeSingularDigistoreCard = ITEMS
-			.register("digistore_card_singular_creative", () -> new DigistoreMonoCard(StaticCoreTiers.CREATIVE,
+			.register("digistore_card_singular_creative", () -> new DigistoreMonoCard(StaticPowerTiers.CREATIVE,
 					StaticPowerAdditionalModels.CREATIVE_DIGISTORE_SINGULAR_CARD, true));
 
 	// Upgrades
@@ -660,85 +660,85 @@ public class ModItems {
 			() -> new CraftingUpgrade());
 
 	public static final RegistryObject<BaseTransformerUpgrade> TransformerUpgradeMV = ITEMS
-			.register("upgrade_transformer_advanced", () -> new BaseTransformerUpgrade(StaticCoreTiers.ADVANCED));
+			.register("upgrade_transformer_advanced", () -> new BaseTransformerUpgrade(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<BaseTransformerUpgrade> TransformerUpgradeHV = ITEMS
-			.register("upgrade_transformer_static", () -> new BaseTransformerUpgrade(StaticCoreTiers.STATIC));
+			.register("upgrade_transformer_static", () -> new BaseTransformerUpgrade(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BaseTransformerUpgrade> TransformerUpgradeVHV = ITEMS
-			.register("upgrade_transformer_energized", () -> new BaseTransformerUpgrade(StaticCoreTiers.ENERGIZED));
+			.register("upgrade_transformer_energized", () -> new BaseTransformerUpgrade(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BaseTransformerUpgrade> TransformerUpgradeEV = ITEMS
-			.register("upgrade_transformer_lumum", () -> new BaseTransformerUpgrade(StaticCoreTiers.LUMUM));
+			.register("upgrade_transformer_lumum", () -> new BaseTransformerUpgrade(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BasePowerUpgrade> BasicPowerUpgrade = ITEMS.register("upgrade_power_basic",
-			() -> new BasePowerUpgrade(StaticCoreTiers.BASIC));
+			() -> new BasePowerUpgrade(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BasePowerUpgrade> StaticPowerUpgrade = ITEMS.register("upgrade_power_static",
-			() -> new BasePowerUpgrade(StaticCoreTiers.STATIC));
+			() -> new BasePowerUpgrade(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BasePowerUpgrade> EnergizedPowerUpgrade = ITEMS
-			.register("upgrade_power_energized", () -> new BasePowerUpgrade(StaticCoreTiers.ENERGIZED));
+			.register("upgrade_power_energized", () -> new BasePowerUpgrade(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BasePowerUpgrade> LumumPowerUpgrade = ITEMS.register("upgrade_power_lumum",
-			() -> new BasePowerUpgrade(StaticCoreTiers.LUMUM));
+			() -> new BasePowerUpgrade(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BaseOutputMultiplierUpgrade> BasicOutputMultiplierUpgrade = ITEMS
-			.register("upgrade_output_multiplier_basic", () -> new BaseOutputMultiplierUpgrade(StaticCoreTiers.BASIC));
+			.register("upgrade_output_multiplier_basic", () -> new BaseOutputMultiplierUpgrade(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BaseOutputMultiplierUpgrade> StaticOutputMultiplierUpgrade = ITEMS.register(
-			"upgrade_output_multiplier_static", () -> new BaseOutputMultiplierUpgrade(StaticCoreTiers.STATIC));
+			"upgrade_output_multiplier_static", () -> new BaseOutputMultiplierUpgrade(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BaseOutputMultiplierUpgrade> EnergizedOutputMultiplierUpgrade = ITEMS.register(
-			"upgrade_output_multiplier_energized", () -> new BaseOutputMultiplierUpgrade(StaticCoreTiers.ENERGIZED));
+			"upgrade_output_multiplier_energized", () -> new BaseOutputMultiplierUpgrade(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BaseOutputMultiplierUpgrade> LumumOutputMultiplierUpgrade = ITEMS
-			.register("upgrade_output_multiplier_lumum", () -> new BaseOutputMultiplierUpgrade(StaticCoreTiers.LUMUM));
+			.register("upgrade_output_multiplier_lumum", () -> new BaseOutputMultiplierUpgrade(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BaseSpeedUpgrade> BasicSpeedUpgrade = ITEMS.register("upgrade_speed_basic",
-			() -> new BaseSpeedUpgrade(StaticCoreTiers.BASIC));
+			() -> new BaseSpeedUpgrade(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BaseSpeedUpgrade> StaticSpeedUpgrade = ITEMS.register("upgrade_speed_static",
-			() -> new BaseSpeedUpgrade(StaticCoreTiers.STATIC));
+			() -> new BaseSpeedUpgrade(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BaseSpeedUpgrade> EnergizedSpeedUpgrade = ITEMS
-			.register("upgrade_speed_energized", () -> new BaseSpeedUpgrade(StaticCoreTiers.ENERGIZED));
+			.register("upgrade_speed_energized", () -> new BaseSpeedUpgrade(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BaseSpeedUpgrade> LumumSpeedUpgrade = ITEMS.register("upgrade_speed_lumum",
-			() -> new BaseSpeedUpgrade(StaticCoreTiers.LUMUM));
+			() -> new BaseSpeedUpgrade(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BaseRangeUpgrade> BasicRangeUpgrade = ITEMS.register("upgrade_range_basic",
-			() -> new BaseRangeUpgrade(StaticCoreTiers.BASIC));
+			() -> new BaseRangeUpgrade(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BaseRangeUpgrade> StaticRangeUpgrade = ITEMS.register("upgrade_range_static",
-			() -> new BaseRangeUpgrade(StaticCoreTiers.STATIC));
+			() -> new BaseRangeUpgrade(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BaseRangeUpgrade> EnergizedRangeUpgrade = ITEMS
-			.register("upgrade_range_energized", () -> new BaseRangeUpgrade(StaticCoreTiers.ENERGIZED));
+			.register("upgrade_range_energized", () -> new BaseRangeUpgrade(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BaseRangeUpgrade> LumumRangeUpgrade = ITEMS.register("upgrade_range_lumum",
-			() -> new BaseRangeUpgrade(StaticCoreTiers.LUMUM));
+			() -> new BaseRangeUpgrade(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BaseTankUpgrade> BasicTankUpgrade = ITEMS.register("upgrade_tank_basic",
-			() -> new BaseTankUpgrade(StaticCoreTiers.BASIC));
+			() -> new BaseTankUpgrade(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BaseTankUpgrade> StaticTankUpgrade = ITEMS.register("upgrade_tank_static",
-			() -> new BaseTankUpgrade(StaticCoreTiers.STATIC));
+			() -> new BaseTankUpgrade(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BaseTankUpgrade> EnergizedTankUpgrade = ITEMS.register("upgrade_tank_energized",
-			() -> new BaseTankUpgrade(StaticCoreTiers.ENERGIZED));
+			() -> new BaseTankUpgrade(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BaseTankUpgrade> LumumTankUpgrade = ITEMS.register("upgrade_tank_lumum",
-			() -> new BaseTankUpgrade(StaticCoreTiers.LUMUM));
+			() -> new BaseTankUpgrade(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BaseCentrifugeUpgrade> BasicCentrifugeUpgrade = ITEMS
-			.register("upgrade_centrifuge_basic", () -> new BaseCentrifugeUpgrade(StaticCoreTiers.BASIC));
+			.register("upgrade_centrifuge_basic", () -> new BaseCentrifugeUpgrade(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BaseCentrifugeUpgrade> StaticCentrifugeUpgrade = ITEMS
-			.register("upgrade_centrifuge_static", () -> new BaseCentrifugeUpgrade(StaticCoreTiers.STATIC));
+			.register("upgrade_centrifuge_static", () -> new BaseCentrifugeUpgrade(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BaseCentrifugeUpgrade> EnergizedCentrifugeUpgrade = ITEMS
-			.register("upgrade_centrifuge_energized", () -> new BaseCentrifugeUpgrade(StaticCoreTiers.ENERGIZED));
+			.register("upgrade_centrifuge_energized", () -> new BaseCentrifugeUpgrade(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BaseCentrifugeUpgrade> LumumCentrifugeUpgrade = ITEMS
-			.register("upgrade_centrifuge_lumum", () -> new BaseCentrifugeUpgrade(StaticCoreTiers.LUMUM));
+			.register("upgrade_centrifuge_lumum", () -> new BaseCentrifugeUpgrade(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BaseHeatCapacityUpgrade> BasicHeatCapacityUpgrade = ITEMS
-			.register("upgrade_heat_capacity_basic", () -> new BaseHeatCapacityUpgrade(StaticCoreTiers.BASIC));
+			.register("upgrade_heat_capacity_basic", () -> new BaseHeatCapacityUpgrade(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BaseHeatCapacityUpgrade> StaticHeatCapacityUpgrade = ITEMS
-			.register("upgrade_heat_capacity_static", () -> new BaseHeatCapacityUpgrade(StaticCoreTiers.STATIC));
+			.register("upgrade_heat_capacity_static", () -> new BaseHeatCapacityUpgrade(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BaseHeatCapacityUpgrade> EnergizedHeatCapacityUpgrade = ITEMS
-			.register("upgrade_heat_capacity_energized", () -> new BaseHeatCapacityUpgrade(StaticCoreTiers.ENERGIZED));
+			.register("upgrade_heat_capacity_energized", () -> new BaseHeatCapacityUpgrade(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BaseHeatCapacityUpgrade> LumumHeatCapacityUpgrade = ITEMS
-			.register("upgrade_heat_capacity_lumum", () -> new BaseHeatCapacityUpgrade(StaticCoreTiers.LUMUM));
+			.register("upgrade_heat_capacity_lumum", () -> new BaseHeatCapacityUpgrade(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BaseHeatUpgrade> BasicHeatUpgrade = ITEMS.register("upgrade_heat_basic",
-			() -> new BaseHeatUpgrade(StaticCoreTiers.BASIC));
+			() -> new BaseHeatUpgrade(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BaseHeatUpgrade> StaticHeatUpgrade = ITEMS.register("upgrade_heat_static",
-			() -> new BaseHeatUpgrade(StaticCoreTiers.STATIC));
+			() -> new BaseHeatUpgrade(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BaseHeatUpgrade> EnergizedHeatUpgrade = ITEMS.register("upgrade_heat_energized",
-			() -> new BaseHeatUpgrade(StaticCoreTiers.ENERGIZED));
+			() -> new BaseHeatUpgrade(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BaseHeatUpgrade> LumumHeatUpgrade = ITEMS.register("upgrade_heat_lumum",
-			() -> new BaseHeatUpgrade(StaticCoreTiers.LUMUM));;
+			() -> new BaseHeatUpgrade(StaticPowerTiers.LUMUM));;
 
 	public static void init(IEventBus eventBus) {
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {

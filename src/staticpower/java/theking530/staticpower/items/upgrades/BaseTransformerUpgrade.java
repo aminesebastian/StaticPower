@@ -11,8 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.energy.StaticPowerVoltage;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.init.StaticCoreUpgradeTypes;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BaseTransformerUpgrade extends BaseUpgrade {
 
@@ -33,11 +33,11 @@ public class BaseTransformerUpgrade extends BaseUpgrade {
 	}
 
 	public StaticPowerVoltage getTargetVoltage() {
-		if (getTier() == StaticCoreTiers.STATIC) {
+		if (getTier() == StaticPowerTiers.STATIC) {
 			return StaticPowerVoltage.HIGH;
-		} else if (getTier() == StaticCoreTiers.ENERGIZED) {
+		} else if (getTier() == StaticPowerTiers.ENERGIZED) {
 			return StaticPowerVoltage.EXTREME;
-		} else if (getTier() == StaticCoreTiers.LUMUM) {
+		} else if (getTier() == StaticPowerTiers.LUMUM) {
 			return StaticPowerVoltage.BONKERS;
 		}
 		return StaticPowerVoltage.MEDIUM;

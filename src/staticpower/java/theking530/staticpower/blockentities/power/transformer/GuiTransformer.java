@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.screens.StaticCoreBlockEntityScreen;
 import theking530.staticcore.gui.text.PowerTextFormatting;
@@ -20,6 +19,7 @@ import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedst
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.math.SDMath;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class GuiTransformer extends StaticCoreBlockEntityScreen<ContainerTransformer, BlockEntityTransformer> {
@@ -87,7 +87,7 @@ public class GuiTransformer extends StaticCoreBlockEntityScreen<ContainerTransfo
 	}
 
 	private void updateButtons() {
-		if (getTileEntity().getTier() != StaticCoreTiers.LUMUM) {
+		if (getTileEntity().getTier() != StaticPowerTiers.LUMUM) {
 			voltageUp.setVisible(false);
 			voltageDown.setVisible(false);
 			return;

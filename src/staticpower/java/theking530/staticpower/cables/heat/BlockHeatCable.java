@@ -20,12 +20,12 @@ import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.cablenetwork.AbstractCableBlock;
 import theking530.staticcore.cablenetwork.CableBoundsCache;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.utilities.math.Vector3D;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerAdditionalModels.CableModelSet;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModCreativeTabs;
 
 public class BlockHeatCable extends AbstractCableBlock {
@@ -46,11 +46,11 @@ public class BlockHeatCable extends AbstractCableBlock {
 	public BakedModel getBlockModeOverride(BlockState state, @Nullable BakedModel existingModel, ModelEvent.BakingCompleted event) {
 		CableModelSet model = null;
 
-		if (getTier() == StaticCoreTiers.COPPER) {
+		if (getTier() == StaticPowerTiers.COPPER) {
 			model = StaticPowerAdditionalModels.CABLE_HEAT_COPPER;
-		} else if (getTier() == StaticCoreTiers.GOLD) {
+		} else if (getTier() == StaticPowerTiers.GOLD) {
 			model = StaticPowerAdditionalModels.CABLE_HEAT_GOLD;
-		} else if (getTier() == StaticCoreTiers.ALUMINUM) {
+		} else if (getTier() == StaticPowerTiers.ALUMINUM) {
 			model = StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM;
 		}
 		return new CableBakedModel(existingModel, model);

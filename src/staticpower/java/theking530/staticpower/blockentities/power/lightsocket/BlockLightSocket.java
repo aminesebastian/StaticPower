@@ -42,12 +42,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import theking530.staticcore.client.ICustomModelProvider;
-import theking530.staticcore.data.StaticCoreTiers;
 import theking530.staticcore.utilities.RaytracingUtilities;
 import theking530.staticcore.utilities.RaytracingUtilities.AdvancedRayTraceResult;
 import theking530.staticcore.world.WorldUtilities;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.LightSocketModel;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.tags.ModItemTags;
 
 public class BlockLightSocket extends StaticPowerRotateableBlockEntityBlock implements ICustomModelProvider {
@@ -82,7 +82,7 @@ public class BlockLightSocket extends StaticPowerRotateableBlockEntityBlock impl
 	}
 
 	public BlockLightSocket() {
-		super(StaticCoreTiers.BASIC);
+		super(StaticPowerTiers.BASIC);
 	}
 
 	@Override
