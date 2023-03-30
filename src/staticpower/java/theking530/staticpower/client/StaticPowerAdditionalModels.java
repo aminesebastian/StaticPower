@@ -151,6 +151,16 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation PUMP_CONNECTOR_LUMUM = registerModel("models/pump_connector_lumum");
 	public static final ResourceLocation PUMP_CONNECTOR_CREATIVE = registerModel("models/pump_connector_creative");
 
+	public static final ResourceLocation BACKPACK_OPEN = registerModel("item/backpack_open");
+	public static final ResourceLocation BUILDERS_BACKPACK_OPEN = registerModel("item/backpack_builder_open");
+	public static final ResourceLocation DIGGERS_BACKPACK_OPEN = registerModel("item/backpack_digger_open");
+	public static final ResourceLocation HUNTERS_BACKPACK_OPEN = registerModel("item/backpack_hunter_open");
+	public static final ResourceLocation LUMBERJACK_BACKPACK_OPEN = registerModel("item/backpack_lumberjack_open");
+	public static final ResourceLocation MINERS_BACKPACK_OPEN = registerModel("item/backpack_miner_open");
+	public static final ResourceLocation FARMERS_BACKPACK_OPEN = registerModel("item/backpack_farmer_open");
+	public static final ResourceLocation ENGINEERS_BACKPACK_OPEN = registerModel("item/backpack_engineer_open");
+	public static final ResourceLocation TOOLS_BACKPACK_OPEN = registerModel("item/backpack_tool_open");
+
 	public static final Map<MinecraftColor, ResourceLocation[]> CABLE_REDSTONE_BASIC;
 
 	static {

@@ -18,6 +18,8 @@
 	"gui.staticcore.usage": "Usage",
 	"gui.staticcore.per_tick": "Per Tick",
 	"gui.staticcore.generation": "Generation",
+	
+	"gui.staticcore.filled_amount": "%1$s Filled",
 		
 	"gui.staticcore.invalid_multimeter_second_location": "Invalid second location for multimeter!",
 	"gui.staticcore.multimeter_cleared": "Multimeter cleared!",

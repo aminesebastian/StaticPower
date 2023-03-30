@@ -1,6 +1,7 @@
 package theking530.staticcore.gui.text;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.ChatFormatting;
@@ -218,5 +219,43 @@ public class GuiTextUtilities {
 	public static void addColoredBulletTooltip(List<Component> tooltip, String key, Style keyStyle, String value, Style valueStyle) {
 		tooltip.add(Component.translatable(key).setStyle(keyStyle));
 		tooltip.add(Component.literal("• ").append(Component.translatable(value).setStyle(valueStyle)));
+	}
+
+	public static void addColoredBulletTooltip(List<Component> tooltip, String value) {
+		addColoredBulletTooltip(tooltip, value, Style.EMPTY.withColor(ChatFormatting.WHITE));
+	}
+
+	public static void addColoredBulletTooltip(List<Component> tooltip, String value, ChatFormatting valueColor) {
+		addColoredBulletTooltip(tooltip, value, Style.EMPTY.withColor(valueColor));
+	}
+
+	public static void addColoredBulletTooltip(List<Component> tooltip, String value, Style valueStyle) {
+		tooltip.add(createColoredBulletTooltip(value, valueStyle));
+	}
+
+	public static List<Component> createColoredBulletTooltip(String key, ChatFormatting keyColor, String value) {
+		return createColoredBulletTooltip(key, Style.EMPTY.withColor(keyColor), value, Style.EMPTY.withColor(ChatFormatting.WHITE));
+	}
+
+	public static List<Component> createColoredBulletTooltip(String key, ChatFormatting keyColor, String value, ChatFormatting valueColor) {
+		return createColoredBulletTooltip(key, Style.EMPTY.withColor(keyColor), value, Style.EMPTY.withColor(valueColor));
+	}
+
+	public static List<Component> createColoredBulletTooltip(String key, Style keyStyle, String value, Style valueStyle) {
+		List<Component> output = new ArrayList<Component>();
+		addColoredBulletTooltip(output, key, keyStyle, value, valueStyle);
+		return output;
+	}
+
+	public static Component createColoredBulletTooltip(String value) {
+		return createColoredBulletTooltip(value, Style.EMPTY.withColor(ChatFormatting.WHITE));
+	}
+
+	public static Component createColoredBulletTooltip(String value, ChatFormatting valueColor) {
+		return createColoredBulletTooltip(value, Style.EMPTY.withColor(valueColor));
+	}
+
+	public static Component createColoredBulletTooltip(String value, Style valueStyle) {
+		return Component.literal("• ").append(Component.translatable(value)).setStyle(valueStyle);
 	}
 }

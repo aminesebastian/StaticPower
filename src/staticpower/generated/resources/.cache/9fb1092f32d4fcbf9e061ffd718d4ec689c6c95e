@@ -1,23 +1,3 @@
-// 1.19.2	2023-03-27T14:00:51.1130928	Recipes
-7ca9385fd477adf5a7bb45a7b65bdc8e8f38e095 data/staticpower/recipes/hammering/charcoal_dust.json
-162a3bd3059016825ef2d63ec5b7653bb3555cc4 data/staticpower/recipes/hammering/coal_dust.json
-28a61c0ace1547552ea55f97efe71770526dc896 data/staticpower/recipes/hammering/plates/aluminum.json
-baf0ebad117dbc133d6374fc4c59da3097ddb8c5 data/staticpower/recipes/hammering/plates/brass.json
-f01dd98ba3f4cd65bcdb1f952285f90ddaaed325 data/staticpower/recipes/hammering/plates/bronze.json
-3216bb55424218451a26f6b872b78d1fb9c5dca6 data/staticpower/recipes/hammering/plates/copper.json
-d9e2d185d493421b0fbc46f4dbd7a3e523bd5fe5 data/staticpower/recipes/hammering/plates/energized_metal.json
-c5139235a47286b8770283474f4bcd6c5e83cdfa data/staticpower/recipes/hammering/plates/gold.json
-1ea14b07a4b26b9b04b1e63b80b4765082a77cee data/staticpower/recipes/hammering/plates/inert_infusion_alloy.json
-4116dcb297e4d772a8b51480634ad7c617df695a data/staticpower/recipes/hammering/plates/iron.json
-d60bfe77ee61e4135f57d14c4d22866fc040cdaf data/staticpower/recipes/hammering/plates/lead.json
-64881b7ff7c19abcf0cb48e5c2c67bacd07447fd data/staticpower/recipes/hammering/plates/lumum_metal.json
-71166864c46e6ac323c9014cf45002473d786b59 data/staticpower/recipes/hammering/plates/magnesium.json
-af26bd9bdba1b38454abc35054b1dd54b74f9991 data/staticpower/recipes/hammering/plates/platinum.json
-85ffb7e39ca9545780d2e0ee68fa30f3a724bba5 data/staticpower/recipes/hammering/plates/redstone_alloy.json
-3b93f7bed6013ceac0efa59a8f94d7c9490b18dc data/staticpower/recipes/hammering/plates/silver.json
-eac651f59060e03d8a815a5d0374221f5ec2b0d5 data/staticpower/recipes/hammering/plates/static_metal.json
-8da571b45bf03f86e22e3d72a781516dd066e8eb data/staticpower/recipes/hammering/plates/tin.json
-387e1ed56065dbf0261bf7b4d560c1fd13e7e5e4 data/staticpower/recipes/hammering/plates/tungsten.json
-4e1eafdd324b85d87881309a37466720e4fe31f5 data/staticpower/recipes/hammering/plates/zinc.json
-c6855658a66be07752b5512508b9fb38568bdd8b data/staticpower/recipes/hammering/rubber_sheet.json
-77773f996cac7c125d9ac03a05f0265ee81e242e data/staticpower/recipes/hammering/sand_to_silicon.json
+// 1.19.2	2023-03-30T01:50:08.3469281	Recipes
+e40c65e2ac9e9bd39b1a002641ca0c9ad4073ae1 data/staticpower/recipes/condensation/ethanol.json
+60286db202bfd06fde21f0e0397c66d803aea53b data/staticpower/recipes/condensation/water_from_steam.json

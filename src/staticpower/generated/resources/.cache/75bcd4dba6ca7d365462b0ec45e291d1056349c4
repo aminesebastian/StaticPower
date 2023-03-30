@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-27T14:00:51.0900179	Tags for minecraft:block
+// 1.19.2	2023-03-30T01:50:08.3223915	Tags for minecraft:block
 1ed8c6375235d71cbedaa412167804ea4fb8fc97 data/forge/tags/blocks/ores.json
 a2bda67c5d909a46c468ef0fe160e60f0bf49f1e data/forge/tags/blocks/ores/aluminum.json
 1158fcf06bd78d5574c197da71006072cc599cde data/forge/tags/blocks/ores/coal.json
@@ -77,11 +77,11 @@ e25b8177099abfb7913bfd76e117615d73961da1 data/minecraft/tags/blocks/logs_that_bu
 2854b0c44d42894cee771fdc9e4c69ee0c0c349f data/minecraft/tags/blocks/saplings.json
 61795f7992e72665022f26a055dcb33fc6206602 data/minecraft/tags/blocks/wool.json
 2c27d0cdc0e8417ef4b40e36ba76cf4c75b426b9 data/staticpower/tags/blocks/battery_blocks.json
-83d88cb7744c2ff09e6282094be79d2a7c1d4ff7 data/staticpower/tags/blocks/cables.json
+791c2766c6a5c516034d3b4ec9a9cc72a0090b72 data/staticpower/tags/blocks/cables.json
 f3496554445a0ae3e4bf0d14007db874293a2aa1 data/staticpower/tags/blocks/cauldrons.json
 b5528cd01649a1309202d569b50e24035689575d data/staticpower/tags/blocks/chests.json
 be555cbc5abd8b3fe4b58955a78d28fa6945a6ee data/staticpower/tags/blocks/circuit_breakers.json
-e1299f686c4681e6d0b7052e7d72b67b2c88a820 data/staticpower/tags/blocks/conveyors.json
+2fffdb63683f8a6653f815eec7ebc8e7db031f8c data/staticpower/tags/blocks/conveyors.json
 8d9dedb8749238a5f9ce282961cbf7962727cfac data/staticpower/tags/blocks/farmland.json
 cf4f3fd377f7504c8d19ecfeeab4477187e0e095 data/staticpower/tags/blocks/heatsinks.json
 a69680e41844ef84fad37036549c67565cabe5db data/staticpower/tags/blocks/machines.json

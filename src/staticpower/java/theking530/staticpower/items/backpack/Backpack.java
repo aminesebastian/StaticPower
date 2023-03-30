@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -61,18 +62,21 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 		}
 	}
 
+	public static final String OPEN_STATE_KEY = "is_open";
+	private final ResourceLocation openModel;
 	private final int slots;
 	private final TagKey<Item> inputTag;
 	private Ingredient lazyLoadedIngredient;
 
-	public Backpack(int slots, TagKey<Item> tag) {
+	public Backpack(int slots, ResourceLocation openModel, TagKey<Item> tag) {
 		super(new Properties().stacksTo(1).setNoRepair().fireResistant());
+		this.openModel = openModel;
 		this.slots = slots;
 		this.inputTag = tag;
 	}
 
-	public Backpack(int slots) {
-		this(slots, null);
+	public Backpack(int slots, ResourceLocation openModel) {
+		this(slots, openModel, null);
 	}
 
 	/**
@@ -301,11 +305,14 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 		return true;
 	}
 
+	public boolean isOpened(ItemStack backpack) {
+		return backpack.getTag().contains(OPEN_STATE_KEY) ? backpack.getTag().getBoolean(OPEN_STATE_KEY) : false;
+	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
-		// TODO: Implement open model format.
-		return new BackpackItemModel(existingModel, null);
+		return new BackpackItemModel(existingModel, event.getModels().get(openModel));
 	}
 
 	@Override
@@ -326,8 +333,12 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 			return;
 		}
 
-		tooltip.add(Component.translatable(String.format("%1$s Filled", GuiTextUtilities.formatNumberAsPercentStringNoDecimal(occupied / max).getString()))
-				.withStyle(ChatFormatting.GRAY));
+		if (occupied == 0) {
+			tooltip.add(Component.translatable("gui.staticcore.empty").withStyle(ChatFormatting.GRAY));
+		} else {
+			tooltip.add(Component.translatable("gui.staticcore.filled_amount", GuiTextUtilities.formatNumberAsPercentStringNoDecimal(occupied / max))
+					.withStyle(ChatFormatting.GRAY));
+		}
 	}
 
 	@Override
@@ -355,8 +366,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 		}
 
 		for (Entry<Item, Integer> entry : itemMap.entrySet()) {
-			tooltip.add(Component.literal("  - ").append(entry.getKey().getDescription()).append(Component.literal(String.format(" x%1$d", entry.getValue())))
-					.withStyle(ChatFormatting.GRAY));
+			Component component = GuiTextUtilities.createColoredBulletTooltip(entry.getKey().getDescription().getString(), ChatFormatting.GRAY);
+			tooltip.add(Component.literal("  ").append(component).append(Component.literal(String.format(" x%1$d", entry.getValue()))).withStyle(component.getStyle()));
 		}
 	}
 

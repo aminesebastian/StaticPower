@@ -260,6 +260,10 @@ public abstract class StaticCoreContainerMenu extends AbstractContainerMenu {
 		return moveItemStackTo(stack, index, index + 1, false);
 	}
 
+	protected void onClosed(Player player) {
+
+	}
+
 	@Override
 	public ItemStack quickMoveStack(Player player, int invSlot) {
 		ItemStack itemstack = ItemStack.EMPTY;
@@ -357,5 +361,10 @@ public abstract class StaticCoreContainerMenu extends AbstractContainerMenu {
 	@Override
 	public boolean stillValid(Player playerIn) {
 		return true;
+	}
+
+	public void removed(Player player) {
+		onClosed(player);
+		super.removed(player);
 	}
 }

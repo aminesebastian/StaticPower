@@ -79,7 +79,8 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.hasGeneratedMaterial(MaterialTypes.RAW_MATERIAL)) {
-				simpleItem(bundle.get(MaterialTypes.RAW_MATERIAL).get(), "materials/raw_ores/" + bundle.get(MaterialTypes.RAW_MATERIAL).getFormattedName(bundle.getName()));
+				simpleItem(bundle.get(MaterialTypes.RAW_MATERIAL).get(),
+						"materials/raw_ores/" + bundle.get(MaterialTypes.RAW_MATERIAL).getFormattedName(bundle.getName()));
 			}
 
 			if (bundle.hasGeneratedMaterial(MaterialTypes.INGOT)) {
@@ -253,6 +254,26 @@ public class ModItemModelProvider extends ItemModelProvider {
 		simpleItem(ModItems.EnergizedPortableBattery.get(), "tools/batteries/portable_battery_energized");
 		simpleItem(ModItems.LumumPortableBattery.get(), "tools/batteries/portable_battery_lumum");
 		simpleItem(ModItems.CreativePortableBattery.get(), "tools/batteries/portable_battery_creative");
+
+		handheldItem(ModItems.Backpack.get(), "backpacks/generic");
+		handheldItem(ModItems.BuildersBackPack.get(), "backpacks/builder");
+		handheldItem(ModItems.DiggersBackPack.get(), "backpacks/digger");
+		handheldItem(ModItems.HuntersPack.get(), "backpacks/hunter");
+		handheldItem(ModItems.LumberjacksBackPack.get(), "backpacks/lumberjack");
+		handheldItem(ModItems.MinersBackpack.get(), "backpacks/miner");
+		handheldItem(ModItems.FarmersBackpack.get(), "backpacks/farmer");
+		handheldItem(ModItems.EngineersBackpack.get(), "backpacks/engineer");
+		handheldItem(ModItems.ToolsBackpack.get(), "backpacks/tool");
+
+		handheldItem(name(ModItems.Backpack.get()) + "_open", "backpacks/generic_open");
+		handheldItem(name(ModItems.BuildersBackPack.get()) + "_open", "backpacks/builder_open");
+		handheldItem(name(ModItems.DiggersBackPack.get()) + "_open", "backpacks/digger_open");
+		handheldItem(name(ModItems.HuntersPack.get()) + "_open", "backpacks/hunter_open");
+		handheldItem(name(ModItems.LumberjacksBackPack.get()) + "_open", "backpacks/lumberjack_open");
+		handheldItem(name(ModItems.MinersBackpack.get()) + "_open", "backpacks/miner_open");
+		handheldItem(name(ModItems.FarmersBackpack.get()) + "_open", "backpacks/farmer_open");
+		handheldItem(name(ModItems.EngineersBackpack.get()) + "_open", "backpacks/engineer_open");
+		handheldItem(name(ModItems.ToolsBackpack.get()) + "_open", "backpacks/tool_open");
 
 		simpleItem(ModItems.Backpack.get(), "backpacks/generic");
 		simpleItem(ModItems.BuildersBackPack.get(), "backpacks/builder");
@@ -519,6 +540,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 		return withExistingParent(name(item), new ResourceLocation("item/generated")).texture("layer0", new ResourceLocation(StaticPower.MOD_ID, "items/" + texturePath));
 	}
 
+	private ItemModelBuilder handheldItem(String name, String texturePath) {
+		return withExistingParent(name, new ResourceLocation("item/handheld")).texture("layer0", new ResourceLocation(StaticPower.MOD_ID, "items/" + texturePath));
+	}
+
 	private ItemModelBuilder handheldItem(Item item, String texturePath) {
 		return withExistingParent(name(item), new ResourceLocation("item/handheld")).texture("layer0", new ResourceLocation(StaticPower.MOD_ID, "items/" + texturePath));
 	}
@@ -530,8 +555,9 @@ public class ModItemModelProvider extends ItemModelProvider {
 	}
 
 	private ItemModelBuilder upgrade(Item item, String upgradeTexturePath, String plateTexturePath) {
-		return withExistingParent(name(item), new ResourceLocation("item/generated")).texture("layer0", new ResourceLocation(StaticPower.MOD_ID, "items/" + upgradeTexturePath)).texture("layer1",
-				new ResourceLocation(StaticPower.MOD_ID, "items/upgrades/" + plateTexturePath));
+		return withExistingParent(name(item), new ResourceLocation("item/generated"))
+				.texture("layer0", new ResourceLocation(StaticPower.MOD_ID, "items/" + upgradeTexturePath))
+				.texture("layer1", new ResourceLocation(StaticPower.MOD_ID, "items/upgrades/" + plateTexturePath));
 	}
 
 	private ItemModelBuilder simpleItemVanillaTexture(Item item, String texturePath) {

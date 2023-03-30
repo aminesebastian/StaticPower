@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
@@ -35,15 +37,20 @@ import theking530.staticpower.items.backpack.Backpack.BackpackMode;
 
 public class BackpackItemModel implements BakedModel {
 	private final BakedModel backpackModel;
-	private final Map<BackpackMode, BakedModel> models;
-	@SuppressWarnings("unused")
 	private final BakedModel openModel;
+
+	private final Map<BackpackMode, BakedModel> openModels;
+	private final Map<BackpackMode, BakedModel> closedModels;
 
 	public BackpackItemModel(BakedModel backpackModel, BakedModel openModel) {
 		this.backpackModel = backpackModel;
 		this.openModel = openModel;
-		models = new HashMap<>();
-		models.put(BackpackMode.DEFAULT, backpackModel);
+
+		openModels = new HashMap<>();
+		openModels.put(BackpackMode.DEFAULT, openModel);
+
+		closedModels = new HashMap<>();
+		closedModels.put(BackpackMode.DEFAULT, backpackModel);
 	}
 
 	@Override
@@ -51,12 +58,21 @@ public class BackpackItemModel implements BakedModel {
 		return new ItemOverrides() {
 			@Override
 			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity, int x) {
-				BackpackMode mode = ((Backpack) stack.getItem()).getMode(stack);
-				if (!models.containsKey(mode)) {
-					BackpackModeItemModel newModel = new BackpackModeItemModel(backpackModel, mode);
-					models.put(mode, newModel);
+				Backpack backpack = ((Backpack) stack.getItem());
+				BackpackMode mode = backpack.getMode(stack);
+				boolean isOpen = backpack.isOpened(stack);
+
+				if (isOpen) {
+					if (!openModels.containsKey(mode)) {
+						openModels.put(mode, new BackpackModeItemModel(openModel, mode));
+					}
+					return openModels.get(mode);
+				} else {
+					if (!closedModels.containsKey(mode)) {
+						closedModels.put(mode, new BackpackModeItemModel(backpackModel, mode));
+					}
+					return closedModels.get(mode);
 				}
-				return models.get(mode);
 			}
 		};
 	}
@@ -100,6 +116,13 @@ public class BackpackItemModel implements BakedModel {
 		protected BackpackModeItemModel(BakedModel baseModel, BackpackMode mode) {
 			super(baseModel);
 			this.mode = mode;
+		}
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public BakedModel applyTransform(ItemTransforms.TransformType transformType, PoseStack poseStack, boolean applyLeftHandTransform) {
+			BaseModel.getTransforms().getTransform(transformType).apply(applyLeftHandTransform, poseStack);
+			return this;
 		}
 
 		@Override

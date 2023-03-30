@@ -35,6 +35,7 @@ public class ContainerBackpack extends StaticPowerItemContainer<Backpack> {
 
 	public ContainerBackpack(int windowId, Inventory playerInventory, ItemStack owner) {
 		super(TYPE, windowId, playerInventory, owner);
+		getItemStack().getTag().putBoolean(Backpack.OPEN_STATE_KEY, true);
 	}
 
 	@Override
@@ -108,4 +109,11 @@ public class ContainerBackpack extends StaticPowerItemContainer<Backpack> {
 		}
 		return false;
 	}
+
+	@Override
+	public void onClosed(Player player) {
+		super.onClosed(player);
+		getItemStack().getTag().putBoolean(Backpack.OPEN_STATE_KEY, false);
+	}
+
 }

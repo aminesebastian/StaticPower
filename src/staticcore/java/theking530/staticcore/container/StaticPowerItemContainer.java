@@ -31,7 +31,7 @@ public abstract class StaticPowerItemContainer<T extends Item> extends StaticCor
 	 * 
 	 * @param inv  The player's inventory.
 	 * @param data The buffer including the index of the itemstack in the player's
-	 *             inventory.
+	 *             inventory as the first value.
 	 * @return The {@link ItemStack} that triggered the opening of this container.
 	 */
 	protected static ItemStack getHeldItemstack(Inventory inv, FriendlyByteBuf data) {
