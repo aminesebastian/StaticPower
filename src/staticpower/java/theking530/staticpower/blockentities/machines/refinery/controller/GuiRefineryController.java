@@ -10,6 +10,7 @@ import theking530.staticcore.blockentity.components.control.RedstoneControlCompo
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.gui.screens.StaticCoreBlockEntityScreen;
 import theking530.staticcore.gui.text.GuiTextUtilities;
+import theking530.staticcore.gui.widgets.NotificationWidget;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -28,9 +29,12 @@ public class GuiRefineryController extends StaticCoreBlockEntityScreen<Container
 	private FluidProgressBar fluidBar2;
 	private FluidProgressBar fluidBar3;
 	private GuiInfoTab infoTab;
+	private NotificationWidget multiblockStatusWidget;
 
 	public GuiRefineryController(ContainerRefineryController container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 178);
+		registerWidget(multiblockStatusWidget = new NotificationWidget(4, 4, 12, 12));
+		updateNotificationWidget();
 	}
 
 	@Override
@@ -90,5 +94,12 @@ public class GuiRefineryController extends StaticCoreBlockEntityScreen<Container
 				ChatFormatting.GREEN);
 		infoTab.addKeyValueTwoLiner("heat_gen", Component.literal("Heat Generation"), GuiTextUtilities.formatHeatRateToString(getTileEntity().getHeatGeneration()),
 				ChatFormatting.RED);
+
+		updateNotificationWidget();
+	}
+
+	private void updateNotificationWidget() {
+		multiblockStatusWidget.setVisible(!getTileEntity().getMultiBlockStatus().isSuccessful());
+		multiblockStatusWidget.setMessage(getTileEntity().getMultiBlockStatus().getUnlocalizedStatus());
 	}
 }

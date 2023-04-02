@@ -4,13 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class MultiBlockToken<T extends BlockEntity> {
+public class MultiBlockEntry<T extends BlockEntity> {
 	private final MultiBlockCache<T> owningCache;
 	private final BlockState state;
 	private final BlockPos position;
 	private boolean valid;
 
-	public MultiBlockToken(MultiBlockCache<T> owningCache, BlockState state, BlockPos position) {
+	public MultiBlockEntry(MultiBlockCache<T> owningCache, BlockState state, BlockPos position) {
 		super();
 		this.owningCache = owningCache;
 		this.state = state;

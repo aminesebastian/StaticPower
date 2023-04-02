@@ -9,7 +9,7 @@
 		{
 			"name": "Tube",
 			"from": [3, 0, 3],
-			"to": [13, 16, 13],
+			"to": [13, 15.9, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [11, 0, 16, 8], "texture": "#0"},
@@ -22,8 +22,8 @@
 		},
 		{
 			"name": "Top",
-			"from": [2, 8.01, 2],
-			"to": [14, 16.01, 14],
+			"from": [2, 8, 2],
+			"to": [14, 16, 14],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 6, 6, 10], "texture": "#0"},

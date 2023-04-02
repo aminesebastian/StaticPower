@@ -1,7 +1,13 @@
 package theking530.staticcore.world;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -34,6 +40,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import theking530.staticcore.utilities.TriFunction;
 import theking530.staticcore.utilities.math.Vector3D;
 import theking530.staticcore.utilities.tags.TagUtilities;
 
@@ -252,7 +259,8 @@ public class WorldUtilities {
 		Block block = blockstate.getBlock();
 		Material material = blockstate.getMaterial();
 		boolean flag = blockstate.canBeReplaced(content);
-		boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(world, pos, blockstate, content);
+		boolean flag1 = blockstate.isAir() || flag
+				|| block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(world, pos, blockstate, content);
 		if (!flag1) {
 			return hitResult != null && tryPlaceFluid(fluid, player, world, hitResult.getBlockPos().relative(hitResult.getDirection()), (BlockHitResult) null);
 		} else if (world.dimensionType().ultraWarm() && TagUtilities.matches(FluidTags.WATER, content)) {
@@ -304,7 +312,39 @@ public class WorldUtilities {
 
 	public static boolean canBlockContainFluid(IFluidHandler fluidHandler, Level worldIn, BlockPos posIn, BlockState blockstate) {
 		Fluid content = fluidHandler.getFluidInTank(0).getFluid();
-		return blockstate.getBlock() instanceof LiquidBlockContainer && ((LiquidBlockContainer) blockstate.getBlock()).canPlaceLiquid(worldIn, posIn, blockstate, content);
+		return blockstate.getBlock() instanceof LiquidBlockContainer
+				&& ((LiquidBlockContainer) blockstate.getBlock()).canPlaceLiquid(worldIn, posIn, blockstate, content);
 	}
 
+	public static <T> Map<BlockPos, T> bfsTraverseWorld(Level level, BlockPos startingPos, TriFunction<BlockPos, BlockState, BlockEntity, T> shouldCapture) {
+		Map<BlockPos, T> output = new HashMap<BlockPos, T>();
+
+		Set<BlockPos> visited = new HashSet<>();
+		visited.add(startingPos);
+
+		Queue<BlockPos> toCheck = new LinkedList<>();
+		for (Direction dir : Direction.values()) {
+			toCheck.add(startingPos.relative(dir));
+		}
+
+		while (!toCheck.isEmpty()) {
+			BlockPos target = toCheck.remove();
+			BlockState state = level.getBlockState(target);
+			BlockEntity be = level.getBlockEntity(target);
+			visited.add(target);
+
+			T captured = shouldCapture.apply(target, state, be);
+			if (captured != null) {
+				output.put(target, captured);
+				for (Direction dir : Direction.values()) {
+					BlockPos newTarget = target.relative(dir);
+					if (!visited.contains(newTarget)) {
+						toCheck.add(newTarget);
+					}
+				}
+			}
+		}
+
+		return output;
+	}
 }

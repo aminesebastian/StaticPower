@@ -57,8 +57,8 @@ import theking530.staticcore.utilities.ITooltipProvider;
  * @author Amine Sebastian
  *
  */
-public abstract class StaticCoreBlock extends Block
-		implements IItemBlockProvider, IBlockLootTableProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider, SimpleWaterloggedBlock, IBlockItemCreativeTabProvider {
+public abstract class StaticCoreBlock extends Block implements IItemBlockProvider, IBlockLootTableProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider,
+		SimpleWaterloggedBlock, IBlockItemCreativeTabProvider {
 	/**
 	 * Rotation property used by blocks who don't use {@link #HORIZONTAL_FACING} but
 	 * still need the option to rotate to either face X, Y, or Z.
@@ -185,7 +185,7 @@ public abstract class StaticCoreBlock extends Block
 	 * @param te     The {@link TileEntity} of the block (if one existed).
 	 * @param stack  The {@link ItemStack} that the block was harvested by.
 	 */
-	public void onStaticPowerBlockHarvested(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
+	public void onStaticCoreBlockHarvested(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
 
 	}
 
@@ -210,11 +210,11 @@ public abstract class StaticCoreBlock extends Block
 		return InteractionResult.PASS;
 	}
 
-	public void onStaticPowerBlockPlaced(BlockPlaceContext context, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void onStaticCoreBlockClicked(BlockState state, Level world, BlockPos pos, Player player) {
 
 	}
 
-	public void onStaticPowerBlockClicked(BlockState state, Level world, BlockPos pos, Player player) {
+	public void onStaticCoreBlockPlaced(BlockPlaceContext context, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 
 	}
 
@@ -222,7 +222,7 @@ public abstract class StaticCoreBlock extends Block
 
 	}
 
-	public void onStaticPowerBlockReplaced(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving, boolean newBlock) {
+	public void onStaticCoreBlockRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving, boolean newBlock) {
 
 	}
 
@@ -272,7 +272,7 @@ public abstract class StaticCoreBlock extends Block
 	@Override
 	public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
 		// Raise the inheritor's method.
-		onStaticPowerBlockHarvested(world, player, pos, state, te, stack);
+		onStaticCoreBlockHarvested(world, player, pos, state, te, stack);
 
 		// Super call.
 		super.playerDestroy(world, player, pos, state, te, stack);
@@ -295,7 +295,7 @@ public abstract class StaticCoreBlock extends Block
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		// Raise the inheritor's method.
-		onStaticPowerBlockReplaced(state, world, pos, newState, isMoving, state.getBlock() != newState.getBlock());
+		onStaticCoreBlockRemove(state, world, pos, newState, isMoving, state.getBlock() != newState.getBlock());
 
 		if (!isMoving && !state.is(newState.getBlock())) {
 			// Raise the tile entity's broken method.
@@ -314,7 +314,8 @@ public abstract class StaticCoreBlock extends Block
 	}
 
 	@Override
-	public InteractionResult use(final BlockState state, final Level world, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hit) {
+	public InteractionResult use(final BlockState state, final Level world, final BlockPos pos, final Player player, final InteractionHand hand,
+			final BlockHitResult hit) {
 		// Return the super call if needed.
 		@SuppressWarnings("deprecation")
 		InteractionResult superResult = super.use(state, world, pos, player, hand, hit);
@@ -350,7 +351,7 @@ public abstract class StaticCoreBlock extends Block
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
 			((BlockEntityBase) world.getBlockEntity(pos)).onPlaced(context, state, placer, stack);
 		}
-		onStaticPowerBlockPlaced(context, world, pos, state, placer, stack);
+		onStaticCoreBlockPlaced(context, world, pos, state, placer, stack);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -360,7 +361,7 @@ public abstract class StaticCoreBlock extends Block
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
 			((BlockEntityBase) world.getBlockEntity(pos)).onBlockLeftClicked(state, player);
 		}
-		onStaticPowerBlockClicked(state, world, pos, player);
+		onStaticCoreBlockClicked(state, world, pos, player);
 	}
 
 	@SuppressWarnings("deprecation")

@@ -31,7 +31,8 @@ import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
 import theking530.staticcore.blockentity.multiblock.MultiBlockCache;
-import theking530.staticcore.blockentity.multiblock.MultiBlockToken;
+import theking530.staticcore.blockentity.multiblock.MultiBlockEntry;
+import theking530.staticcore.blockentity.multiblock.MultiBlockFormationStatus;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.gui.text.GuiTextUtilities;
@@ -59,6 +60,9 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 			(type, pos, state) -> new BlockEntityRefineryController(pos, state), ModBlocks.RefineryController);
 	public static final int MAX_EFFICIENCY_TOWER_HEIGHT = 4;
 
+	public static final MultiBlockFormationStatus MULTIPLE_CONTROLLERS = MultiBlockFormationStatus.failed("gui.staticpower.refinery_status_multiple_controllers");
+	public static final MultiBlockFormationStatus MISSING_BOILER = MultiBlockFormationStatus.failed("gui.staticpower.refinery_missing_boiler");
+
 	public final InventoryComponent catalystInventory;
 	public final LoopingSoundComponent generatingSoundComponent;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -71,7 +75,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 
 	public BlockEntityRefineryController(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		multiBlockCache = new MultiBlockCache<>(this, this::isValidForMultiBlock);
+		multiBlockCache = new MultiBlockCache<>(this, this::isValidForMultiBlock, this::isWellFormed);
 
 		// Get the tier object.
 		StaticCoreTier tier = getTierObject();
@@ -163,8 +167,12 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		}
 	}
 
+	public MultiBlockFormationStatus getMultiBlockStatus() {
+		return this.multiBlockCache.getStatus();
+	}
+
 	private void updateMultiblockBlockStates(boolean isOn) {
-		for (MultiBlockToken<BlockEntityRefineryController> wrapper : multiBlockCache) {
+		for (MultiBlockEntry<BlockEntityRefineryController> wrapper : multiBlockCache) {
 			BlockState multiBlockState = wrapper.getBlockState();
 			if (multiBlockState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				boolean onState = multiBlockState.getValue(StaticPowerMachineBlock.IS_ON);
@@ -177,7 +185,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 
 	private void renderParticleEffects() {
 		Vector4D randomVector = SDMath.getRandomVectorOffset();
-		for (MultiBlockToken<BlockEntityRefineryController> wrapper : multiBlockCache) {
+		for (MultiBlockEntry<BlockEntityRefineryController> wrapper : multiBlockCache) {
 			BlockState multiBlockState = wrapper.getBlockState();
 
 			if (multiBlockState.getBlock() instanceof BlockRefineryTower && multiBlockState.hasProperty(StaticPowerBlockProperties.TOWER_POSITION)) {
@@ -203,6 +211,25 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 
 	private boolean isValidForMultiBlock(BlockPos pos, BlockState state, BlockEntity be) {
 		return state.is(ModBlockTags.REFINERY_BLOCK);
+	}
+
+	private MultiBlockFormationStatus isWellFormed(Map<BlockPos, MultiBlockEntry<BlockEntityRefineryController>> map) {
+		int boilerCount = 0;
+		for (BlockPos pos : map.keySet()) {
+			if (getLevel().getBlockEntity(pos) instanceof BlockEntityRefineryController) {
+				return MULTIPLE_CONTROLLERS;
+			}
+
+			if (getLevel().getBlockState(pos).getBlock() instanceof BlockRefineryBoiler) {
+				boilerCount++;
+			}
+		}
+
+		if (boilerCount == 0) {
+			return MISSING_BOILER;
+		}
+
+		return MultiBlockFormationStatus.OK;
 	}
 
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
@@ -256,7 +283,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public Map<BlockPos, Integer> getBoilers() {
 		HashMap<BlockPos, Integer> output = new HashMap<>();
 
-		for (MultiBlockToken<BlockEntityRefineryController> wrapper : multiBlockCache) {
+		for (MultiBlockEntry<BlockEntityRefineryController> wrapper : multiBlockCache) {
 			if (wrapper.getBlockState().getBlock() instanceof BlockRefineryBoiler) {
 				int count = 0;
 				for (int i = 1; i < 6; i++) {

@@ -5,12 +5,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.multiblock.IMultiBlockComponent;
-import theking530.staticcore.blockentity.multiblock.MultiBlockToken;
+import theking530.staticcore.blockentity.multiblock.MultiBlockEntry;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockEntityRefineryController;
 
 public class BaseRefineryBlockEntity extends BlockEntityBase implements IMultiBlockComponent<BlockEntityRefineryController> {
-	private MultiBlockToken<BlockEntityRefineryController> token;
+	private MultiBlockEntry<BlockEntityRefineryController> token;
 	private final ResourceLocation tier;
 
 	public BaseRefineryBlockEntity(BlockEntityTypeAllocator<? extends BaseRefineryBlockEntity> allocator, BlockPos pos, BlockState state, ResourceLocation tier) {
@@ -21,7 +21,9 @@ public class BaseRefineryBlockEntity extends BlockEntityBase implements IMultiBl
 	@Override
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
 		super.onNeighborChanged(currentState, neighborPos, isMoving);
-		token.update();
+		if (hasToken()) {
+			getToken().remove();
+		}
 	}
 
 	@Override
@@ -38,7 +40,7 @@ public class BaseRefineryBlockEntity extends BlockEntityBase implements IMultiBl
 	}
 
 	@Override
-	public void setToken(MultiBlockToken<BlockEntityRefineryController> token) {
+	public void setToken(MultiBlockEntry<BlockEntityRefineryController> token) {
 		this.token = token;
 	}
 
@@ -48,7 +50,7 @@ public class BaseRefineryBlockEntity extends BlockEntityBase implements IMultiBl
 	}
 
 	@Override
-	public MultiBlockToken<BlockEntityRefineryController> getToken() {
+	public MultiBlockEntry<BlockEntityRefineryController> getToken() {
 		return token;
 	}
 
