@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.CableRenderingState;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;

@@ -27,7 +27,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.attachment.AbstractCableAttachment;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.item.ItemStackCapabilityInventory;

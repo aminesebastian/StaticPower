@@ -20,7 +20,7 @@ import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.sided.ISidedStaticPowerStorage;
 import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;

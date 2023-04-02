@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.api.fluid.CapabilityStaticFluid;
 import theking530.api.fluid.IStaticPowerFluidHandler;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.fluid.ISidedFluidHandler;

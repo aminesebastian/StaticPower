@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 

@@ -15,7 +15,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.attachment.AbstractCableAttachmentContainer;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;

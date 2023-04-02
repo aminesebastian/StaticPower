@@ -2,8 +2,10 @@ package theking530.staticpower.events;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -76,16 +78,40 @@ public class StaticPowerForgeEventsCommon {
 
 	@SubscribeEvent
 	public static void onItemPickedUp(EntityItemPickupEvent event) {
+		handleBackpackPickups(event);
+	}
+
+	private static void handleBackpackPickups(EntityItemPickupEvent event) {
+		ItemStack remaining = event.getItem().getItem().copy();
+		ItemStack originalItem = remaining.copy();
+
 		for (int i = 0; i < event.getEntity().getInventory().getContainerSize(); i++) {
 			if (event.getEntity().getInventory().getItem(i).getItem() instanceof Backpack) {
 				Backpack backpackItem = (Backpack) event.getEntity().getInventory().getItem(i).getItem();
-				backpackItem.playerPickedUpItem(event.getEntity().getInventory().getItem(i), event.getItem(), event.getEntity());
+				remaining = backpackItem.playerPickedUpItem(event.getEntity().getInventory().getItem(i), remaining, event.getEntity());
 
 				// If there is no more item to insert, just break.
-				if (event.getItem().getItem().isEmpty()) {
+				if (remaining.isEmpty()) {
 					break;
 				}
 			}
+		}
+
+		// Note, we do NOT discard the item or block the event here, there is logic in
+		// the item that does
+		// so on tick anyway.
+		// I'd rather not emulate vanilla code here in case that behaviour changes in
+		// the future.
+		// We do fire the events here however.
+		if (originalItem.getCount() != remaining.getCount()) {
+			event.getItem().setItem(remaining);
+
+			ItemStack pickedUpItem = originalItem.copy();
+			pickedUpItem.setCount(originalItem.getCount() - remaining.getCount());
+
+			event.getEntity().awardStat(Stats.ITEM_PICKED_UP.get(pickedUpItem.getItem()), pickedUpItem.getCount());
+			net.minecraftforge.event.ForgeEventFactory.firePlayerItemPickupEvent(event.getEntity(), event.getItem(), pickedUpItem.copy());
+			event.getEntity().onItemPickup(event.getItem());
 		}
 	}
 

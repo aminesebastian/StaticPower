@@ -22,7 +22,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.attachment.AbstractCableAttachment;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.item.ItemStackCapabilityInventory;

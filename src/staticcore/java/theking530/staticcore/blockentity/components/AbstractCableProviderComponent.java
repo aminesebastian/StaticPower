@@ -1,4 +1,4 @@
-package theking530.staticcore.cablenetwork;
+package theking530.staticcore.blockentity.components;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,8 +26,15 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.blockentity.BlockEntityUpdateRequest;
-import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
 import theking530.staticcore.blockentity.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticcore.cablenetwork.AbstractCableBlock;
+import theking530.staticcore.cablenetwork.Cable;
+import theking530.staticcore.cablenetwork.CableNetwork;
+import theking530.staticcore.cablenetwork.CableRenderingState;
+import theking530.staticcore.cablenetwork.CableStateSyncRequestPacket;
+import theking530.staticcore.cablenetwork.CableUtilities;
+import theking530.staticcore.cablenetwork.ICableStateSyncTarget;
+import theking530.staticcore.cablenetwork.SparseCableLink;
 import theking530.staticcore.cablenetwork.attachment.AbstractCableAttachment;
 import theking530.staticcore.cablenetwork.data.CableConnectionState;
 import theking530.staticcore.cablenetwork.data.CableConnectionState.CableConnectionType;
@@ -40,7 +47,7 @@ import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.world.WorldUtilities;
 
-public abstract class AbstractCableProviderComponent extends AbstractBlockEntityComponent {
+public abstract class AbstractCableProviderComponent extends AbstractBlockEntityComponent implements ICableStateSyncTarget {
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<CableRenderingState> CABLE_RENDERING_STATE = new ModelProperty<>();
 	/** The type of this cable. */
@@ -332,7 +339,8 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 			}
 			StaticCore.LOGGER.debug(String.format("Performing cable rendering state update at position: %1$s and all adjacent cables.", getPos().toString()));
 		} else {
-			StaticCore.LOGGER.warn(String.format("Calling #updateRenderingStateOnAllAdjacent() on the server is a no-op. Called at position: %1$s.", getPos().toString()));
+			StaticCore.LOGGER
+					.warn(String.format("Calling #updateRenderingStateOnAllAdjacent() on the server is a no-op. Called at position: %1$s.", getPos().toString()));
 		}
 	}
 
@@ -633,8 +641,8 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		if (!isClientSide()) {
 			Cable cable = this.getCable().orElse(null);
 			if (cable == null) {
-				StaticCore.LOGGER
-						.error(String.format("Encountered null cable when attempting to check for an attachment of type: %1$s at %2$s.", attachmentClass.toString(), getPos()));
+				StaticCore.LOGGER.error(
+						String.format("Encountered null cable when attempting to check for an attachment of type: %1$s at %2$s.", attachmentClass.toString(), getPos()));
 				return false;
 			}
 			for (Direction dir : Direction.values()) {
@@ -701,7 +709,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		return false;
 	}
 
-	public void syncCableStateFromServer(CompoundTag tag) {
+	public void recieveCableSyncState(CompoundTag tag) {
 		// Capture the existing ids.
 		Set<Long> changeDetection = new HashSet<Long>();
 		changeDetection.addAll(clientSparseLinks.values().stream().map(x -> x.linkId()).toList());
@@ -738,7 +746,8 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		if (isClientSide()) {
 			StaticCoreMessageHandler.sendToServer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, new CableStateSyncRequestPacket(getPos()));
 		} else {
-			StaticCore.LOGGER.error(String.format("Attempted to request cable state synchronization from the server at position: %1$s. This is a no-op.", getPos().toString()));
+			StaticCore.LOGGER
+					.error(String.format("Attempted to request cable state synchronization from the server at position: %1$s. This is a no-op.", getPos().toString()));
 		}
 	}
 

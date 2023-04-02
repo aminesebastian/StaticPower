@@ -37,6 +37,7 @@ import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.block.StaticCoreBlockEntityBlock;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticcore.cablenetwork.attachment.AbstractCableAttachment;

@@ -24,6 +24,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticcore.cablenetwork.attachment.AbstractCableAttachment;
 import theking530.staticcore.cablenetwork.attachment.CableCover;

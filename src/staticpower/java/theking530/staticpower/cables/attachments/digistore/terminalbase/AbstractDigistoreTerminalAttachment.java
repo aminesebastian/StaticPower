@@ -5,7 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.utilities.math.Vector3D;
 import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;

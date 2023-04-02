@@ -64,7 +64,6 @@ import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.serialization.SerializationUtilities;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.blockentity.components.team.TeamComponent;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.ICableStateSyncTarget;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
@@ -830,9 +829,9 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		}
 
 		for (AbstractBlockEntityComponent component : components.values()) {
-			if (component instanceof AbstractCableProviderComponent) {
-				AbstractCableProviderComponent cableComp = (AbstractCableProviderComponent) component;
-				cableComp.syncCableStateFromServer(tag);
+			if (component instanceof ICableStateSyncTarget) {
+				ICableStateSyncTarget cableComp = (ICableStateSyncTarget) component;
+				cableComp.recieveCableSyncState(tag);
 			}
 		}
 	}

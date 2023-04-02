@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.blockentity.BlockEntityBase;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.CableRenderingState;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.client.StaticPowerBlockEntitySpecialRenderer;

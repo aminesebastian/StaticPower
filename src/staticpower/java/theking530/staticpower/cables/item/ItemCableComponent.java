@@ -21,7 +21,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.PacketDistributor;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.cablenetwork.AbstractCableProviderComponent;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;

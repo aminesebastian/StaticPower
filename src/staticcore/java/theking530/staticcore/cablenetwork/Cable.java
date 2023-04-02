@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.blockentity.BlockEntityBase;
+import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.cablenetwork.SparseCableLink.SparseCableConnectionType;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapability;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;

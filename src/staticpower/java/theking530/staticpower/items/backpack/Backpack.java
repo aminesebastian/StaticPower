@@ -23,7 +23,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -273,31 +272,29 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 		return lazyLoadedIngredient.test(item);
 	}
 
-	public boolean playerPickedUpItem(ItemStack backpack, ItemEntity item, Player player) {
+	public ItemStack playerPickedUpItem(ItemStack backpack, ItemStack item, Player player) {
 		// When in locked mode, accept nothing.
 		if (this.getMode(backpack) == BackpackMode.LOCKED) {
-			return false;
+			return item;
 		}
+		
 		// Test to see if any of the lazy loaded ingredients support the picked up item.
-		if (canAcceptItem(backpack, item.getItem())) {
+		if (canAcceptItem(backpack, item)) {
 			// If we have nothing to match against, don't auto pickup anything.
 			if (lazyLoadedIngredient == null || lazyLoadedIngredient.isEmpty()) {
-				return false;
+				return item;
 			}
 
 			IItemHandler backpackInventory = backpack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 
-			ItemStack pickedUpStack = item.getItem().copy();
+			ItemStack pickedUpStack = item.copy();
 
 			ItemStack remaining = InventoryUtilities.insertItemIntoInventory(backpackInventory, pickedUpStack, false);
 			pickedUpStack.setCount(pickedUpStack.getCount() - remaining.getCount());
-
-			// Raise the item pickup event.
-			net.minecraftforge.event.ForgeEventFactory.firePlayerItemPickupEvent(player, item, pickedUpStack);
-			item.getItem().setCount(remaining.getCount());
-			return true;
+			item.setCount(remaining.getCount());
+			return item;
 		}
-		return false;
+		return item;
 	}
 
 	@Override

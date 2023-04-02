@@ -30,6 +30,8 @@ import theking530.staticcore.blockentity.components.heat.HeatStorageComponent.He
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
+import theking530.staticcore.blockentity.multiblock.MultiBlockCache;
+import theking530.staticcore.blockentity.multiblock.MultiBlockToken;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.gui.text.GuiTextUtilities;
@@ -39,12 +41,9 @@ import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.utilities.math.Vector4D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.machines.refinery.IRefineryBlockEntity;
 import theking530.staticpower.blockentities.machines.refinery.boiler.BlockRefineryBoiler;
 import theking530.staticpower.blockentities.machines.refinery.heatvent.BlockEntityRefineryHeatVent;
 import theking530.staticpower.blockentities.machines.refinery.tower.BlockRefineryTower;
-import theking530.staticpower.blockentities.utilities.MultiBlockCache;
-import theking530.staticpower.blockentities.utilities.MultiBlockWrapper;
 import theking530.staticpower.blocks.StaticPowerBlockProperties;
 import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
@@ -68,19 +67,19 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public final FluidTankComponent[] fluidTanks;
 	private float currentProcessingProductivity;
 
-	private final MultiBlockCache<IRefineryBlockEntity> multiBlockCache;
-	private boolean refreshMultiBlock;
+	private final MultiBlockCache<BlockEntityRefineryController> multiBlockCache;
 
 	public BlockEntityRefineryController(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		multiBlockCache = new MultiBlockCache<>(this::isValidForMultiBlock, IRefineryBlockEntity.class);
+		multiBlockCache = new MultiBlockCache<>(this, this::isValidForMultiBlock);
 
 		// Get the tier object.
 		StaticCoreTier tier = getTierObject();
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		// Setup the inventories.
-		registerComponent(catalystInventory = new InventoryComponent("CatalystInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setExposedAsCapability(false));
+		registerComponent(
+				catalystInventory = new InventoryComponent("CatalystInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setExposedAsCapability(false));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Create the energy storage and and set the energy storage upgrade inventory.
@@ -129,25 +128,15 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		fluidTanks[4].setAutoSyncPacketsEnabled(true);
 
 		// Add the heat storage and the upgrade inventory to the heat component.
-		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", 0, tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1)
-						.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL).setExposedAsCapability(false)
-						.setEnableAutomaticHeatTransfer(false).setMeltdownRecoveryTicks(100));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 0, tier.defaultMachineOverheatTemperature.get(),
+				tier.defaultMachineMaximumTemperature.get(), 1).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL)
+				.setExposedAsCapability(false).setEnableAutomaticHeatTransfer(false).setMeltdownRecoveryTicks(100));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	@Override
 	public void process() {
-		if (refreshMultiBlock) {
-			multiBlockCache.refresh(getLevel(), getBlockPos());
-			for (MultiBlockWrapper<IRefineryBlockEntity> wrapper : multiBlockCache) {
-				if (wrapper.hasBlockEntity()) {
-					wrapper.entity.setController(this);
-				}
-			}
-			refreshMultiBlock = false;
-		}
-		refreshMultiBlock = true;
+		multiBlockCache.update();
 
 		if (!getLevel().isClientSide()) {
 			if (redstoneControlComponent.passesRedstoneCheck() && getProductivity() > 0 && processingComponent.getCurrentOrPendingRecipe().isPresent()) {
@@ -175,12 +164,12 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	private void updateMultiblockBlockStates(boolean isOn) {
-		for (MultiBlockWrapper<IRefineryBlockEntity> wrapper : multiBlockCache) {
-			BlockState multiBlockState = wrapper.getBlockState(getLevel());
+		for (MultiBlockToken<BlockEntityRefineryController> wrapper : multiBlockCache) {
+			BlockState multiBlockState = wrapper.getBlockState();
 			if (multiBlockState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				boolean onState = multiBlockState.getValue(StaticPowerMachineBlock.IS_ON);
 				if (onState != isOn) {
-					getLevel().setBlock(wrapper.position, multiBlockState.setValue(StaticPowerMachineBlock.IS_ON, isOn), 2);
+					getLevel().setBlock(wrapper.getPosition(), multiBlockState.setValue(StaticPowerMachineBlock.IS_ON, isOn), 2);
 				}
 			}
 		}
@@ -188,25 +177,25 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 
 	private void renderParticleEffects() {
 		Vector4D randomVector = SDMath.getRandomVectorOffset();
-		for (MultiBlockWrapper<IRefineryBlockEntity> wrapper : multiBlockCache) {
-			BlockState multiBlockState = wrapper.getBlockState(getLevel());
+		for (MultiBlockToken<BlockEntityRefineryController> wrapper : multiBlockCache) {
+			BlockState multiBlockState = wrapper.getBlockState();
 
 			if (multiBlockState.getBlock() instanceof BlockRefineryTower && multiBlockState.hasProperty(StaticPowerBlockProperties.TOWER_POSITION)) {
 				TowerPiece position = multiBlockState.getValue(StaticPowerBlockProperties.TOWER_POSITION);
 				if (position == TowerPiece.TOP || position == TowerPiece.FULL) {
-					getLevel().addParticle(ParticleTypes.LARGE_SMOKE, wrapper.position.getX() + 0.5f + (randomVector.getX() * 0.15f), wrapper.position.getY() + 1f,
-							wrapper.position.getZ() + 0.5f + (randomVector.getZ() * 0.15f), 0.0f, 0.005f, 0.0f);
+					getLevel().addParticle(ParticleTypes.LARGE_SMOKE, wrapper.getPosition().getX() + 0.5f + (randomVector.getX() * 0.15f),
+							wrapper.getPosition().getY() + 1f, wrapper.getPosition().getZ() + 0.5f + (randomVector.getZ() * 0.15f), 0.0f, 0.005f, 0.0f);
 					if (SDMath.diceRoll(0.5f)) {
-						getLevel().addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, wrapper.position.getX() + 0.5f + (randomVector.getX() * 0.15f), wrapper.position.getY() + 1f,
-								wrapper.position.getZ() + 0.5f + (randomVector.getZ() * 0.15f), 0.0f, 0.05f, 0.0f);
+						getLevel().addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, wrapper.getPosition().getX() + 0.5f + (randomVector.getX() * 0.15f),
+								wrapper.getPosition().getY() + 1f, wrapper.getPosition().getZ() + 0.5f + (randomVector.getZ() * 0.15f), 0.0f, 0.05f, 0.0f);
 					}
 				}
-			} else if (wrapper.entity instanceof BlockEntityRefineryHeatVent) {
+			} else if (getLevel().getBlockEntity(wrapper.getPosition()) instanceof BlockEntityRefineryHeatVent) {
 				if (SDMath.diceRoll(0.1f)) {
 					randomVector.setX(randomVector.getX() * 0.55f);
 					randomVector.setZ(randomVector.getZ() * 0.55f);
-					getLevel().addParticle(ParticleTypes.SMOKE, wrapper.position.getX() + 0.5f + randomVector.getX(), wrapper.position.getY() + 0.5f + randomVector.getY() / 2,
-							wrapper.position.getZ() + 0.5f + randomVector.getZ(), 0.0f, 0.0f, 0.0f);
+					getLevel().addParticle(ParticleTypes.SMOKE, wrapper.getPosition().getX() + 0.5f + randomVector.getX(),
+							wrapper.getPosition().getY() + 0.5f + randomVector.getY() / 2, wrapper.getPosition().getZ() + 0.5f + randomVector.getZ(), 0.0f, 0.0f, 0.0f);
 				}
 			}
 		}
@@ -216,8 +205,9 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		return state.is(ModBlockTags.REFINERY_BLOCK);
 	}
 
-	public void requestMultiBlockRefresh() {
-		this.refreshMultiBlock = true;
+	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
+		super.onNeighborChanged(currentState, neighborPos, isMoving);
+		this.multiBlockCache.update();
 	}
 
 	public int getHeatUsage() {
@@ -266,18 +256,18 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public Map<BlockPos, Integer> getBoilers() {
 		HashMap<BlockPos, Integer> output = new HashMap<>();
 
-		for (MultiBlockWrapper<IRefineryBlockEntity> wrapper : multiBlockCache) {
-			if (wrapper.getBlockState(getLevel()).getBlock() instanceof BlockRefineryBoiler) {
+		for (MultiBlockToken<BlockEntityRefineryController> wrapper : multiBlockCache) {
+			if (wrapper.getBlockState().getBlock() instanceof BlockRefineryBoiler) {
 				int count = 0;
 				for (int i = 1; i < 6; i++) {
-					BlockPos toCheck = wrapper.position.above(i);
+					BlockPos toCheck = wrapper.getPosition().above(i);
 					if (getLevel().getBlockState(toCheck).getBlock() instanceof BlockRefineryTower) {
 						count++;
 					} else {
 						break;
 					}
 				}
-				output.put(wrapper.position, count);
+				output.put(wrapper.getPosition(), count);
 			}
 		}
 
@@ -308,8 +298,8 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 
 	protected ProcessingCheckState checkHeatStorageReady() {
 		if (heatStorage.isRecoveringFromMeltdown()) {
-			return ProcessingCheckState
-					.error("Machine recovering from overheat! (" + GuiTextUtilities.formatTicksToTimeUnit(this.heatStorage.getMeltdownRecoveryTicksRemaining()).getString() + ")");
+			return ProcessingCheckState.error("Machine recovering from overheat! ("
+					+ GuiTextUtilities.formatTicksToTimeUnit(this.heatStorage.getMeltdownRecoveryTicksRemaining()).getString() + ")");
 		}
 		if (heatStorage.isOverheated()) {
 			return ProcessingCheckState.error("Machine overheating!");
@@ -379,12 +369,12 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		}
 
 		if (recipe.hasPrimaryFluidInput()) {
-			outputContainer.addInputFluid(getInputTank(0).drain(recipe.getPrimaryFluidInput().getAmount(), FluidAction.SIMULATE), recipe.getPrimaryFluidInput().getAmount(),
-					CaptureType.BOTH);
+			outputContainer.addInputFluid(getInputTank(0).drain(recipe.getPrimaryFluidInput().getAmount(), FluidAction.SIMULATE),
+					recipe.getPrimaryFluidInput().getAmount(), CaptureType.BOTH);
 		}
 		if (recipe.hasSecondaryFluidInput()) {
-			outputContainer.addInputFluid(getInputTank(1).drain(recipe.getSecondaryFluidInput().getAmount(), FluidAction.SIMULATE), recipe.getSecondaryFluidInput().getAmount(),
-					CaptureType.BOTH);
+			outputContainer.addInputFluid(getInputTank(1).drain(recipe.getSecondaryFluidInput().getAmount(), FluidAction.SIMULATE),
+					recipe.getSecondaryFluidInput().getAmount(), CaptureType.BOTH);
 		}
 
 		if (!recipe.getFluidOutput1().isEmpty()) {
@@ -417,7 +407,8 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
 		ProcessingCheckState multiBlockCheck = checkMultiBlockReady();
 		if (!multiBlockCheck.isOk()) {
 			return multiBlockCheck;
