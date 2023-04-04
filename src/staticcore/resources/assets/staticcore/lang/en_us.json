@@ -90,6 +90,8 @@
 	
 	"gui.staticcore.variable": "Variable",
 	
+	"gui.staticcore.multiblock_ok": "Wellformed!",
+	
 	"gui.staticcore.length": "Length",
 	"gui.staticcore.heat_transfer": "Heat Transfer",
 	"gui.staticcore.heat": "Heat",

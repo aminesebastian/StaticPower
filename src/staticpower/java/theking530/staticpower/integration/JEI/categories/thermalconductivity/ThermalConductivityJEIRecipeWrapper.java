@@ -11,9 +11,9 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
 import theking530.staticcore.crafting.StaticPowerRecipeType;
 import theking530.staticcore.crafting.thermal.ThermalConductivityRecipe;
@@ -44,9 +44,10 @@ public class ThermalConductivityJEIRecipeWrapper implements Recipe<Container> {
 		this.rawInputs = new ArrayList<ItemStack>();
 		this.fluid = FluidStack.EMPTY;
 
-		if (recipe.hasOverheatedBlock()) {
-			if (recipe.getOverheatedBlock().getFluidState().getType() != Fluids.EMPTY) {
-				fluidOutput = new FluidStack(recipe.getOverheatedBlock().getFluidState().getType(), 1000);
+		if (recipe.hasOverheatingBehaviour() && recipe.getOverheatingBehaviour().hasBlock()) {
+			if (recipe.getOverheatingBehaviour().getBlockState().getFluidState().getType() != Fluids.EMPTY) {
+				fluidOutput = new FluidStack(recipe.getOverheatingBehaviour().getBlockState().getFluidState().getType(),
+						1000);
 			} else {
 				fluidOutput = FluidStack.EMPTY;
 			}
@@ -54,7 +55,8 @@ public class ThermalConductivityJEIRecipeWrapper implements Recipe<Container> {
 			fluidOutput = FluidStack.EMPTY;
 		}
 
-		this.hasFireOutput = recipe.getOverheatedBlock() != null ? ForgeRegistries.BLOCKS.getKey(recipe.getOverheatedBlock().getBlock()).toString().equals("minecraft:fire")
+		this.hasFireOutput = recipe.getOverheatingBehaviour().hasBlock()
+				? recipe.getOverheatingBehaviour().getBlockState().getBlock() == Blocks.FIRE
 				: false;
 	}
 
@@ -88,8 +90,8 @@ public class ThermalConductivityJEIRecipeWrapper implements Recipe<Container> {
 	}
 
 	private ItemStack generateOutputIngredient(ThermalConductivityRecipe recipe) {
-		if (recipe.hasOverheatedBlock()) {
-			return new ItemStack(recipe.getOverheatedBlock().getBlock());
+		if (recipe.getOverheatingBehaviour().hasBlock()) {
+			return new ItemStack(recipe.getOverheatingBehaviour().getBlockState().getBlock());
 		} else {
 			return ItemStack.EMPTY;
 		}
@@ -109,7 +111,7 @@ public class ThermalConductivityJEIRecipeWrapper implements Recipe<Container> {
 	}
 
 	public StaticPowerOutputItem getOutputItem() {
-		return recipe.getOverheatedItem();
+		return recipe.getOverheatingBehaviour().getItem();
 	}
 
 	public Ingredient getInput() {

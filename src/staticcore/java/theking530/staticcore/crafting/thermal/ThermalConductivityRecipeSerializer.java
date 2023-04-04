@@ -1,16 +1,14 @@
 package theking530.staticcore.crafting.thermal;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.serialization.Codec;
 
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.crafting.StaticPowerOutputItem;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticcore.crafting.StaticPowerRecipeSerializer;
+import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.FreezingBehaviour;
+import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.OverheatingBehaviour;
+import theking530.staticcore.fluid.FluidIngredient;
 
 public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerializer<ThermalConductivityRecipe> {
 	@Override
@@ -20,71 +18,52 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 
 	@Override
 	public ThermalConductivityRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		// Read the int values.
-		int temperature = buffer.readInt();
-		boolean hasActiveTemperature = buffer.readBoolean();
+		Ingredient blocks = Ingredient.fromNetwork(buffer);
+		FluidIngredient fluids = FluidIngredient.readFromBuffer(buffer);
 
-		// Read the float values.
+		// Read the int values.
+		float temperature = buffer.readFloat();
+		boolean hasActiveTemperature = buffer.readBoolean();
 		float conductivity = buffer.readFloat();
 
 		// Read the over heat values.
-		int overheatTemperature = buffer.readInt();
-		BlockState overheatedBlock = NbtUtils.readBlockState(buffer.readNbt());
-		StaticPowerOutputItem overheatedItemStack = StaticPowerOutputItem.readFromBuffer(buffer);
+		boolean hasOverheat = buffer.readBoolean();
+		OverheatingBehaviour overheatBehaviour = null;
+		if (hasOverheat) {
+			overheatBehaviour = OverheatingBehaviour.fromNetwork(buffer);
+		}
 
 		// Read the freeze values.
-		int freezingTemperature = buffer.readInt();
-		BlockState freezingBlock = NbtUtils.readBlockState(buffer.readNbt());
-		StaticPowerOutputItem freezingItemStack = StaticPowerOutputItem.readFromBuffer(buffer);
-
-		// Read Blocks
-		byte blockTagCount = buffer.readByte();
-		List<ResourceLocation> blocks = new ArrayList<ResourceLocation>();
-
-		for (int i = 0; i < blockTagCount; i++) {
-			blocks.add(new ResourceLocation(buffer.readUtf()));
+		boolean hasFreezing = buffer.readBoolean();
+		FreezingBehaviour freezingBehaviour = null;
+		if (hasFreezing) {
+			freezingBehaviour = FreezingBehaviour.fromNetwork(buffer);
 		}
 
-		// Read Fluids
-		byte fluidTagCount = buffer.readByte();
-		List<ResourceLocation> fluids = new ArrayList<ResourceLocation>();
-		for (int i = 0; i < fluidTagCount; i++) {
-			fluids.add(new ResourceLocation(buffer.readUtf()));
-		}
-
-		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatTemperature, overheatedBlock, overheatedItemStack, freezingTemperature, freezingBlock,
-				freezingItemStack, temperature, hasActiveTemperature, conductivity);
+		return new ThermalConductivityRecipe(recipeId, blocks, fluids, hasActiveTemperature, temperature, conductivity,
+				overheatBehaviour, freezingBehaviour);
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, ThermalConductivityRecipe recipe) {
-		// Write the int values.
-		buffer.writeInt(recipe.getTemperature());
-		buffer.writeBoolean(recipe.hasActiveTemperature());
+		recipe.getBlocks().toNetwork(buffer);
+		recipe.getFluids().writeToBuffer(buffer);
 
-		// Write the float values.
+		// Write the int values.
+		buffer.writeFloat(recipe.getTemperature());
+		buffer.writeBoolean(recipe.hasActiveTemperature());
 		buffer.writeFloat(recipe.getConductivity());
 
 		// Write the over heat values.
-		buffer.writeInt(recipe.getOverheatedTemperature());
-		buffer.writeNbt(NbtUtils.writeBlockState(recipe.getOverheatedBlock()));
-		recipe.getOverheatedItem().writeToBuffer(buffer);
-
-		// Write the freeze values.
-		buffer.writeInt(recipe.getFreezingTemperature());
-		buffer.writeNbt(NbtUtils.writeBlockState(recipe.getFreezingBlock()));
-		recipe.getFreezingItem().writeToBuffer(buffer);
-
-		// Write Blocks
-		buffer.writeByte(recipe.getBlockTags().size());
-		for (ResourceLocation tag : recipe.getBlockTags()) {
-			buffer.writeUtf(tag.toString());
+		buffer.writeBoolean(recipe.hasOverheatingBehaviour());
+		if (recipe.hasOverheatingBehaviour()) {
+			recipe.getOverheatingBehaviour().toNetwork(buffer);
 		}
 
-		// Write Fluids
-		buffer.writeByte(recipe.getFluidTags().size());
-		for (ResourceLocation tag : recipe.getFluidTags()) {
-			buffer.writeUtf(tag.toString());
+		// Write the freeze values.
+		buffer.writeBoolean(recipe.hasFreezeBehaviour());
+		if (recipe.hasFreezeBehaviour()) {
+			recipe.getFreezingBehaviour().toNetwork(buffer);
 		}
 	}
 }

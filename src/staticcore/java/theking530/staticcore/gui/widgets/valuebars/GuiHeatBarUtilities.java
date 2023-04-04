@@ -15,7 +15,7 @@ import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.utilities.SDColor;
 
 public class GuiHeatBarUtilities {
-	public static List<Component> getTooltip(int currentTemp, int minimumTemp, int overheatTemp, int maximumTemp, double heatPerTick) {
+	public static List<Component> getTooltip(float currentTemp, float minimumTemp, float overheatTemp, float maximumTemp, double heatPerTick) {
 		List<Component> tooltip = new ArrayList<Component>();
 
 		// Show the total amount of energy remaining / total energy capacity.
@@ -25,16 +25,16 @@ public class GuiHeatBarUtilities {
 		return tooltip;
 	}
 
-	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, int currentTemp, int maximumTemp) {
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, float currentTemp, float maximumTemp) {
 		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.MINIMUM_TEMPERATURE, maximumTemp, maximumTemp);
 	}
 
-	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, int currentTemp, int overheatTemp, int maximumTemp) {
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, float currentTemp, float overheatTemp, float maximumTemp) {
 		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.MINIMUM_TEMPERATURE, overheatTemp, maximumTemp);
 	}
 
-	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, int currentTemp, int minimumTemp, int overheatTemp,
-			int maximumTemp) {
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, float currentTemp, float minimumTemp, float overheatTemp,
+			float maximumTemp) {
 		float totalHeight = maximumTemp - IHeatStorage.MINIMUM_TEMPERATURE;
 		float percentFilled = (currentTemp - IHeatStorage.MINIMUM_TEMPERATURE) / totalHeight;
 		float filledHeight = percentFilled * height;

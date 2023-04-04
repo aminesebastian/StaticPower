@@ -51,7 +51,7 @@ public class Themometer extends StaticPowerItem implements ICustomModelProvider 
 	@Override
 	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
 		if (!world.isClientSide()) {
-			int temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos());
+			float temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos());
 
 			BlockHitResult traceResult = RaytracingUtilities.findPlayerRayTrace(world, player, ClipContext.Fluid.ANY);
 			if (traceResult.getType() == HitResult.Type.MISS) {
@@ -66,7 +66,7 @@ public class Themometer extends StaticPowerItem implements ICustomModelProvider 
 	@Override
 	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		if (!world.isClientSide()) {
-			int temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos());
+			float temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos());
 			MutableComponent chatComponent = Component.literal("Temperature (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString()).append(")");
 
 			boolean found = false;

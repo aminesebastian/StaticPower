@@ -5,16 +5,16 @@ import net.minecraftforge.common.Tags;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class FormerRecipeGenerator extends SPRecipeProvider<FormerRecipe> {
+public class FormerRecipeGenerator extends SCRecipeProvider<FormerRecipe> {
 
 	public FormerRecipeGenerator(DataGenerator dataGenerator) {
 		super("forming", dataGenerator);
@@ -97,6 +97,6 @@ public class FormerRecipeGenerator extends SPRecipeProvider<FormerRecipe> {
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient mold, StaticPowerIngredient input, StaticPowerOutputItem output,
 			MachineRecipeProcessingSection processing) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new FormerRecipe(null, input, mold, output, processing)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new FormerRecipe(null, input, mold, output, processing)));
 	}
 }

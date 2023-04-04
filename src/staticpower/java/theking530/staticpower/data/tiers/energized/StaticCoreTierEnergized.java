@@ -3,7 +3,6 @@ package theking530.staticpower.data.tiers.energized;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.data.tier.cables.TierCableAttachmentConfiguration;
 import theking530.staticcore.data.tier.cables.TierFluidCableConfiguration;
@@ -46,13 +45,13 @@ public class StaticCoreTierEnergized extends StaticCoreTier {
 	}
 
 	@Override
-	protected int getDefaultMachineOverheatTemperature() {
-		return CapabilityHeatable.convertHeatToMilliHeat(1400);
+	protected float getDefaultMachineOverheatTemperature() {
+		return 1400.0f;
 	}
 
 	@Override
-	protected int getDefaultMachineMaximumTemperature() {
-		return CapabilityHeatable.convertHeatToMilliHeat(2000);
+	protected float getDefaultMachineMaximumTemperature() {
+		return 2000.0f;
 	}
 
 	@Override

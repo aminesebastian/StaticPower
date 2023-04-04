@@ -1,4 +1,4 @@
-package theking530.staticpower.data.generators.helpers;
+package theking530.staticcore.data.generators.helpers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,11 +20,11 @@ import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import theking530.staticcore.crafting.RecipeItem;
 import theking530.staticpower.StaticPower;
 
-public abstract class SPRecipeProvider<T extends Recipe<?>> extends RecipeProvider implements IConditionBuilder {
+public abstract class SCRecipeProvider<T extends Recipe<?>> extends RecipeProvider implements IConditionBuilder {
 	private Map<String, RecipeBuilder> builders;
 	private final String folder;
 
-	public SPRecipeProvider(String folder, DataGenerator dataGenerator) {
+	public SCRecipeProvider(String folder, DataGenerator dataGenerator) {
 		super(dataGenerator);
 		this.folder = folder;
 		builders = new HashMap<>();

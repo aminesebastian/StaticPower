@@ -1,3 +1,5 @@
-// 1.19.2	2023-03-30T01:50:08.3469281	Recipes
-e40c65e2ac9e9bd39b1a002641ca0c9ad4073ae1 data/staticpower/recipes/condensation/ethanol.json
-60286db202bfd06fde21f0e0397c66d803aea53b data/staticpower/recipes/condensation/water_from_steam.json
+// 1.19.2	2023-04-02T23:48:22.8178498	Recipes
+575b3d1e0200bf9255dd2dca6a1d6b1ffd89c8f6 data/staticpower/recipes/cauldron/fruit_energized.json
+4c2dc99852f84501000b667467fa61843629bf3c data/staticpower/recipes/cauldron/fruit_lumum.json
+9a2050866ae87867ada586bd6f98e21e01717886 data/staticpower/recipes/cauldron/fruit_static.json
+79f2f763acbf5bf2e2c9086fe02cbbeb56ae813d data/staticpower/recipes/cauldron/rubber_wood_bark.json

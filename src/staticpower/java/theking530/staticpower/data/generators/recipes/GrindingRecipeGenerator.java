@@ -13,9 +13,9 @@ import net.minecraftforge.common.Tags;
 import theking530.staticcore.crafting.RecipeItem;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialBundle.MaterialBundleType;
 import theking530.staticpower.data.materials.MaterialTypes;
@@ -23,7 +23,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 
-public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
+public class GrindingRecipeGenerator extends SCRecipeProvider<GrinderRecipe> {
 
 	public GrindingRecipeGenerator(DataGenerator dataGenerator) {
 		super("grinding", dataGenerator);
@@ -131,6 +131,6 @@ public class GrindingRecipeGenerator extends SPRecipeProvider<GrinderRecipe> {
 			outputsList.add(item);
 		}
 		GrinderRecipe recipe = new GrinderRecipe(null, input, null, outputsList);
-		addRecipe(nameOverride, SPRecipeBuilder.create(recipe), replace);
+		addRecipe(nameOverride, SCRecipeBuilder.create(recipe), replace);
 	}
 }

@@ -6,15 +6,15 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags.Fluids;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class BottlerRecipeGenerator extends SPRecipeProvider<BottleRecipe> {
+public class BottlerRecipeGenerator extends SCRecipeProvider<BottleRecipe> {
 
 	public BottlerRecipeGenerator(DataGenerator dataGenerator) {
 		super("bottling", dataGenerator);
@@ -41,7 +41,7 @@ public class BottlerRecipeGenerator extends SPRecipeProvider<BottleRecipe> {
 				create(StaticPowerIngredient.of(ModItemTags.GLASS_BOTTLES), StaticPowerOutputItem.of(Items.GLASS_BOTTLE), FluidIngredient.of(FluidTags.WATER, 1000)));
 	}
 
-	protected SPRecipeBuilder<BottleRecipe> create(StaticPowerIngredient emptyBottle, StaticPowerOutputItem filledBottle, FluidIngredient fluid) {
-		return SPRecipeBuilder.create(new BottleRecipe(null, emptyBottle, filledBottle, fluid, null));
+	protected SCRecipeBuilder<BottleRecipe> create(StaticPowerIngredient emptyBottle, StaticPowerOutputItem filledBottle, FluidIngredient fluid) {
+		return SCRecipeBuilder.create(new BottleRecipe(null, emptyBottle, filledBottle, fluid, null));
 	}
 }

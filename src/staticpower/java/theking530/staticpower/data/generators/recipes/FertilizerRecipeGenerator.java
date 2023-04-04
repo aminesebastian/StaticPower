@@ -2,13 +2,13 @@ package theking530.staticpower.data.generators.recipes;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.FluidTags;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.init.ModFluids;
 
-public class FertilizerRecipeGenerator extends SPRecipeProvider<FertalizerRecipe> {
+public class FertilizerRecipeGenerator extends SCRecipeProvider<FertalizerRecipe> {
 
 	public FertilizerRecipeGenerator(DataGenerator dataGenerator) {
 		super("fertilizer", dataGenerator);
@@ -27,6 +27,6 @@ public class FertilizerRecipeGenerator extends SPRecipeProvider<FertalizerRecipe
 
 	protected void addRecipe(String nameOverride, FluidIngredient inputFluid, float fertalizationAmount) {
 		FertalizerRecipe recipe = new FertalizerRecipe(null, inputFluid, fertalizationAmount);
-		addRecipe(nameOverride, SPRecipeBuilder.create(recipe));
+		addRecipe(nameOverride, SCRecipeBuilder.create(recipe));
 	}
 }

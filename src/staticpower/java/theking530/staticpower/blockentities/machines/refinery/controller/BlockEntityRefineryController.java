@@ -238,7 +238,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	public int getHeatUsage() {
-		int heatUse = StaticPowerConfig.SERVER.refineryHeatUse.get();
+		float heatUse = StaticPowerConfig.SERVER.refineryHeatUse.get();
 		Optional<RefineryRecipe> recipe = processingComponent.getCurrentOrPendingRecipe();
 		if (recipe.isPresent()) {
 			heatUse = recipe.get().getProcessingSection().getHeat();
@@ -246,7 +246,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		return (int) (heatUse * processingComponent.getCalculatedHeatGenerationMultiplier());
 	}
 
-	public int getMinimumHeat() {
+	public float getMinimumHeat() {
 		Optional<RefineryRecipe> recipe = processingComponent.getCurrentOrPendingRecipe();
 		if (recipe.isPresent()) {
 			return recipe.get().getProcessingSection().getHeat();
@@ -254,7 +254,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		return StaticPowerConfig.SERVER.refineryMinimumHeat.get();
 	}
 
-	public int getHeatGeneration() {
+	public float getHeatGeneration() {
 		return StaticPowerConfig.SERVER.refineryPerBoilerHeatGeneration.get() * getBoilers().size();
 	}
 

@@ -5,11 +5,11 @@ import net.minecraft.world.level.block.Blocks;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
@@ -17,7 +17,7 @@ import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 
-public class CasterRecipeGenerator extends SPRecipeProvider<CastingRecipe> {
+public class CasterRecipeGenerator extends SCRecipeProvider<CastingRecipe> {
 
 	public CasterRecipeGenerator(DataGenerator dataGenerator) {
 		super("casting", dataGenerator);
@@ -84,16 +84,16 @@ public class CasterRecipeGenerator extends SPRecipeProvider<CastingRecipe> {
 				FluidIngredient.of(ModFluids.Latex.getTag(), 1000)));
 	}
 
-	protected SPRecipeBuilder<CastingRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem output, FluidIngredient inputFluid) {
+	protected SCRecipeBuilder<CastingRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem output, FluidIngredient inputFluid) {
 		return create(mold, output, inputFluid, null);
 	}
 
-	protected SPRecipeBuilder<CastingRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem output, FluidIngredient inputFluid, int processingTime) {
+	protected SCRecipeBuilder<CastingRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem output, FluidIngredient inputFluid, int processingTime) {
 		return create(mold, output, inputFluid, MachineRecipeProcessingSection.hardcoded(processingTime, CastingRecipe.DEFAULT_POWER_COST, 0, 0));
 	}
 
-	protected SPRecipeBuilder<CastingRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem output, FluidIngredient inputFluid,
+	protected SCRecipeBuilder<CastingRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem output, FluidIngredient inputFluid,
 			MachineRecipeProcessingSection processing) {
-		return SPRecipeBuilder.create(new CastingRecipe(null, mold, output, inputFluid, processing));
+		return SCRecipeBuilder.create(new CastingRecipe(null, mold, output, inputFluid, processing));
 	}
 }

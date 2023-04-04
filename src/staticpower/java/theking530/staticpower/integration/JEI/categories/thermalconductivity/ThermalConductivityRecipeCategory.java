@@ -37,7 +37,8 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<ThermalConductivityJEIRecipeWrapper> {
-	public static final RecipeType<ThermalConductivityJEIRecipeWrapper> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "thermal_conductivity"),
+	public static final RecipeType<ThermalConductivityJEIRecipeWrapper> TYPE = new RecipeType<>(
+			new ResourceLocation(StaticPower.MOD_ID, "thermal_conductivity"),
 			ThermalConductivityJEIRecipeWrapper.class);
 
 	private final MutableComponent locTitle;
@@ -48,7 +49,8 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		super(guiHelper);
 		locTitle = Component.translatable("gui.staticpower.heat");
 		background = guiHelper.createBlankDrawable(170, 45);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.CopperHeatSink.get()));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK,
+				new ItemStack(ModBlocks.CopperHeatSink.get()));
 	}
 
 	@Override
@@ -75,7 +77,8 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void draw(ThermalConductivityJEIRecipeWrapper recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(ThermalConductivityJEIRecipeWrapper recipe, IRecipeSlotsView recipeSlotsView,
+			PoseStack matrixStack, double mouseX, double mouseY) {
 		// TODO: Clean this up to support the new thermal system.
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 5, 5, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 135, 35, 30, 5, 0);
@@ -86,7 +89,8 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		if (recipe.getRecipe().hasActiveTemperature()) {
 			String temperature = Component.literal("Temperature: ").append(ChatFormatting.GOLD.toString())
 					.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getTemperature())).getString();
-			GuiDrawUtilities.drawString(matrixStack, temperature, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, temperature, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE,
+					true);
 			yPos += 11;
 		}
 
@@ -97,32 +101,42 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 
 		if (recipe.getRecipe().hasOverheatingBehaviour()) {
 			String overheatTemp = Component.literal("<- Overheat: ").append(ChatFormatting.RED.toString())
-					.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getOverheatedTemperature())).getString();
+					.append(GuiTextUtilities
+							.formatHeatToString(recipe.getRecipe().getOverheatingBehaviour().getTemperature()))
+					.getString();
 			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 16, 0);
-			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE,
+					true);
 			yPos += 11;
 		}
 
 		if (recipe.getRecipe().hasFreezeBehaviour()) {
 			String overheatTemp = Component.literal("<- Freeze: ").append(ChatFormatting.RED.toString())
-					.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getFreezingTemperature())).getString();
+					.append(GuiTextUtilities
+							.formatHeatToString(recipe.getRecipe().getFreezingBehaviour().getTemperature()))
+					.getString();
 			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 16, 0);
-			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE,
+					true);
 		}
 
 		if (!recipe.getFluidInput().isEmpty()) {
 			if (ForgeRegistries.FLUIDS.getKey(recipe.getFluidInput().getFluid()).toString().contains("flowing")) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 26f, 31, 0.0f, 0.5f, ChatFormatting.BLUE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 26f, 31, 0.0f, 0.5f, ChatFormatting.BLUE,
+						false);
 			} else {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 21.5f, 31, 0.0f, 0.5f, ChatFormatting.BLUE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 21.5f, 31, 0.0f, 0.5f, ChatFormatting.BLUE,
+						false);
 			}
 		}
 
 		if (!recipe.getOutputFluid().isEmpty()) {
 			if (ForgeRegistries.FLUIDS.getKey(recipe.getOutputFluid().getFluid()).toString().contains("flowing")) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 13, 0.0f, 0.5f, ChatFormatting.WHITE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 13, 0.0f, 0.5f, ChatFormatting.WHITE,
+						false);
 			} else {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 13, 0.0f, 0.5f, ChatFormatting.WHITE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 13, 0.0f, 0.5f, ChatFormatting.WHITE,
+						false);
 			}
 		}
 
@@ -141,19 +155,22 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 			blockStack.scale(0.7f, 0.7f, 0.7f);
 			blockStack.mulPose(new Quaternion(32, 45, 0, true));
 			BlockState fireState = Blocks.FIRE.defaultBlockState();
-			blockRenderer.renderSingleBlock(fireState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
+			blockRenderer.renderSingleBlock(fireState, blockStack, mc.renderBuffers().bufferSource(), 15728880,
+					OverlayTexture.NO_OVERLAY);
 			blockStack.popPose();
 		}
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(ThermalConductivityJEIRecipeWrapper recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(ThermalConductivityJEIRecipeWrapper recipe,
+			IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		return output;
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, ThermalConductivityJEIRecipeWrapper recipe, IFocusGroup ingredients) {
+	public void setRecipe(IRecipeLayoutBuilder builder, ThermalConductivityJEIRecipeWrapper recipe,
+			IFocusGroup ingredients) {
 		// Set the input.
 		if (!recipe.getRecipe().isAirRecipe()) {
 			builder.addSlot(RecipeIngredientRole.INPUT, 6, 6).addIngredients(recipe.getInput());
@@ -161,23 +178,27 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 
 		// Set the input fluid.
 		if (!recipe.getFluidInput().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.INPUT, 5, 5).addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluidInput())
+			builder.addSlot(RecipeIngredientRole.INPUT, 5, 5)
+					.addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluidInput())
 					.setFluidRenderer(getFluidTankDisplaySize(recipe.getFluidInput()), false, 20, 20);
 		}
 
 		// Set the overheated block output.
 		if (!recipe.getOutputBlock().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 20).addIngredient(VanillaTypes.ITEM_STACK, recipe.getOutputBlock());
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 20).addIngredient(VanillaTypes.ITEM_STACK,
+					recipe.getOutputBlock());
 		}
 
 		// Set the overheated item output.
 		if (!recipe.getOutputItem().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 18).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutputItem());
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 18).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK,
+					recipe.getOutputItem());
 		}
 
 		// Add the fluid.
 		if (!recipe.getOutputFluid().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 35, 16).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid())
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 35, 16)
+					.addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid())
 					.setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false, 16, 48);
 		}
 	}

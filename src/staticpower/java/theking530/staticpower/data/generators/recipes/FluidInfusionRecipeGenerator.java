@@ -16,10 +16,10 @@ import net.minecraftforge.common.Tags;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.IMaterialType;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
@@ -29,7 +29,7 @@ import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class FluidInfusionRecipeGenerator extends SPRecipeProvider<FluidInfusionRecipe> {
+public class FluidInfusionRecipeGenerator extends SCRecipeProvider<FluidInfusionRecipe> {
 
 	public FluidInfusionRecipeGenerator(DataGenerator dataGenerator) {
 		super("fluid_infusion", dataGenerator);
@@ -145,6 +145,6 @@ public class FluidInfusionRecipeGenerator extends SPRecipeProvider<FluidInfusion
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input, FluidIngredient inputFluid, StaticPowerOutputItem output,
 			MachineRecipeProcessingSection processing) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new FluidInfusionRecipe(null, input, inputFluid, output, processing)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new FluidInfusionRecipe(null, input, inputFluid, output, processing)));
 	}
 }

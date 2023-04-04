@@ -3,7 +3,6 @@ package theking530.staticpower.data.tiers.aluminum;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.data.tier.cables.TierHeatCableConfiguration;
 import theking530.staticpower.StaticPower;
@@ -25,13 +24,13 @@ public class StaticCoreTierAluminum extends StaticCoreTier {
 	}
 
 	@Override
-	protected int getHeatsinkOverheatTemperature() {
-		return CapabilityHeatable.convertHeatToMilliHeat(256);
+	protected float getHeatsinkOverheatTemperature() {
+		return 256.0f;
 	}
 
 	@Override
-	protected int getHeatsinkMaximumTemperature() {
-		return CapabilityHeatable.convertHeatToMilliHeat(512);
+	protected float getHeatsinkMaximumTemperature() {
+		return 512.0f;
 	}
 
 	@Override
@@ -39,15 +38,6 @@ public class StaticCoreTierAluminum extends StaticCoreTier {
 		return 3f;
 	}
 
-	@Override
-	protected int getHeatSinkElectricHeatGeneration() {
-		return 1000;
-	}
-
-	@Override
-	protected int getHeatSinkElectricHeatPowerUsage() {
-		return 1000;
-	}
 
 	public static class HeatCableConfiguration extends TierHeatCableConfiguration {
 		public HeatCableConfiguration(Builder builder, String modId) {
@@ -55,8 +45,8 @@ public class StaticCoreTierAluminum extends StaticCoreTier {
 		}
 
 		@Override
-		protected int getHeatCableCapacity() {
-			return CapabilityHeatable.convertHeatToMilliHeat(256);
+		protected float getHeatCableCapacity() {
+			return 256.0f;
 		}
 
 		@Override

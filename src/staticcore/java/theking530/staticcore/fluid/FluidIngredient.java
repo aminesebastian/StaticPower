@@ -28,9 +28,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
-import theking530.staticcore.utilities.JsonUtilities;
 
 public class FluidIngredient implements Predicate<FluidStack> {
 	public static final Codec<FluidIngredient> CODEC = Codec.PASSTHROUGH.comapFlatMap(dynamic -> {
@@ -78,7 +78,7 @@ public class FluidIngredient implements Predicate<FluidStack> {
 	public static FluidIngredient of(Stream<FluidStack> fluids, int amount) {
 		return fromValues(fluids.filter((p_43944_) -> {
 			return !p_43944_.isEmpty();
-		}).map(FluidIngredient.FluidValue::new), amount);
+		}).map((fluidstack) -> new FluidIngredient.FluidValue(fluidstack.getFluid())), amount);
 	}
 
 	public static FluidIngredient of(TagKey<Fluid> fluidTag, int amount) {
@@ -135,40 +135,45 @@ public class FluidIngredient implements Predicate<FluidStack> {
 
 	private void dissolve() {
 		if (this.fluidStacks == null) {
-			this.fluidStacks = Arrays.stream(this.values).flatMap((p_43916_) -> {
-				return p_43916_.getFluids().stream();
-			}).distinct().toArray((p_43910_) -> {
-				return new FluidStack[p_43910_];
+			this.fluidStacks = Arrays.stream(values).flatMap((value) -> {
+				return value.getFluids().stream();
+			}).distinct().map((fluid) -> new FluidStack(fluid, fluidAmount)).toArray((size) -> {
+				return new FluidStack[size];
 			});
 		}
 
 	}
 
 	public static class FluidValue implements FluidIngredient.Value {
-		private final FluidStack fluid;
+		private final Fluid fluid;
 
-		public FluidValue(FluidStack fluid) {
+		public FluidValue(Fluid fluid) {
 			this.fluid = fluid;
 		}
 
-		public Collection<FluidStack> getFluids() {
-			return Collections.singleton(this.fluid);
+		public Collection<Fluid> getFluids() {
+			return Collections.singleton(fluid);
 		}
 
 		public JsonObject serialize() {
 			JsonObject jsonobject = new JsonObject();
-			jsonobject.addProperty("fluid", ForgeRegistries.FLUIDS.getKey(this.fluid.getFluid()).toString());
+			jsonobject.addProperty("fluid", ForgeRegistries.FLUIDS.getKey(fluid).toString());
 			return jsonobject;
 		}
 
 		public static FluidValue fromBuffer(FriendlyByteBuf buffer) {
-			FluidStack fluid = buffer.readFluidStack();
-			return new FluidValue(fluid);
+			ResourceLocation fluidId = new ResourceLocation(buffer.readUtf());
+			Fluid foundFluid = Fluids.EMPTY;
+			if (ForgeRegistries.FLUIDS.containsKey(fluidId)) {
+				foundFluid = ForgeRegistries.FLUIDS.getValue(fluidId);
+			}
+
+			return new FluidValue(foundFluid);
 		}
 
 		@Override
 		public void toBuffer(FriendlyByteBuf buffer) {
-			buffer.writeFluidStack(fluid);
+			buffer.writeUtf(ForgeRegistries.FLUIDS.getKey(fluid).toString());
 		}
 	}
 
@@ -179,15 +184,15 @@ public class FluidIngredient implements Predicate<FluidStack> {
 			this.tag = fluidTag;
 		}
 
-		public Collection<FluidStack> getFluids() {
-			List<FluidStack> list = Lists.newArrayList();
+		public Collection<Fluid> getFluids() {
+			List<Fluid> list = Lists.newArrayList();
 
 			for (Fluid holder : ForgeRegistries.FLUIDS.tags().getTag(tag).stream().toList()) {
-				list.add(new FluidStack(holder, 1000));
+				list.add(holder);
 			}
 
 			if (list.size() == 0) {
-				list.add(FluidStack.EMPTY);
+				list.add(Fluids.EMPTY);
 			}
 
 			return list;
@@ -262,7 +267,8 @@ public class FluidIngredient implements Predicate<FluidStack> {
 
 	public static FluidIngredient fromJson(JsonElement jsonElement) {
 		if (!jsonElement.isJsonObject()) {
-			throw new RuntimeException(String.format("FluidIngredient cannot be deserialized from non-object json: %1$s.", jsonElement));
+			throw new RuntimeException(
+					String.format("FluidIngredient cannot be deserialized from non-object json: %1$s.", jsonElement));
 		}
 
 		JsonObject json = jsonElement.getAsJsonObject();
@@ -274,7 +280,8 @@ public class FluidIngredient implements Predicate<FluidStack> {
 			} else if (fluidJson.isJsonArray()) {
 				JsonArray jsonarray = fluidJson.getAsJsonArray();
 				if (jsonarray.size() == 0) {
-					throw new JsonSyntaxException("Fluidstack array cannot be empty, at least one item must be defined");
+					throw new JsonSyntaxException(
+							"Fluidstack array cannot be empty, at least one item must be defined");
 				} else {
 					return fromValues(StreamSupport.stream(jsonarray.spliterator(), false).map((p_151264_) -> {
 						return valueFromJson(GsonHelper.convertToJsonObject(p_151264_, "item"));
@@ -289,10 +296,12 @@ public class FluidIngredient implements Predicate<FluidStack> {
 	}
 
 	public static FluidIngredient.Value valueFromJson(JsonObject json) {
-		if (json.has("item") && json.has("tag")) {
+		if (json.has("fluid") && json.has("tag")) {
 			throw new JsonParseException("An ingredient entry is either a tag or a fluid, not both");
-		} else if (json.has("item")) {
-			return new FluidIngredient.FluidValue(JsonUtilities.fluidStackFromJson(json));
+		} else if (json.has("fluid")) {
+			ResourceLocation fluidName = new ResourceLocation(json.get("fluid").getAsString());
+			Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidName);
+			return new FluidIngredient.FluidValue(fluid);
 		} else if (json.has("tag")) {
 			ResourceLocation resourcelocation = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
 			TagKey<Fluid> tagkey = TagKey.create(Registry.FLUID_REGISTRY, resourcelocation);
@@ -303,7 +312,7 @@ public class FluidIngredient implements Predicate<FluidStack> {
 	}
 
 	public interface Value {
-		Collection<FluidStack> getFluids();
+		Collection<Fluid> getFluids();
 
 		JsonObject serialize();
 

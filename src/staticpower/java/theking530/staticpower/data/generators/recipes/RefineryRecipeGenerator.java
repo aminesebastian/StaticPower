@@ -5,14 +5,14 @@ import net.minecraft.tags.FluidTags;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 
-public class RefineryRecipeGenerator extends SPRecipeProvider<RefineryRecipe> {
+public class RefineryRecipeGenerator extends SCRecipeProvider<RefineryRecipe> {
 
 	public RefineryRecipeGenerator(DataGenerator dataGenerator) {
 		super("refining", dataGenerator);
@@ -55,6 +55,6 @@ public class RefineryRecipeGenerator extends SPRecipeProvider<RefineryRecipe> {
 	protected void addRecipe(String nameOverride, FluidIngredient inputFluid1, FluidIngredient inputFluid2, StaticPowerIngredient catalyst, FluidStack output1, FluidStack output2,
 			FluidStack output3, MachineRecipeProcessingSection processing) {
 		RefineryRecipe recipe = new RefineryRecipe(null, inputFluid1, inputFluid2, catalyst, output1, output2, output3, processing);
-		addRecipe(nameOverride, SPRecipeBuilder.create(recipe));
+		addRecipe(nameOverride, SCRecipeBuilder.create(recipe));
 	}
 }

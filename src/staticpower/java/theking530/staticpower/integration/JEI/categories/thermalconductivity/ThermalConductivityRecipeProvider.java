@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -36,7 +37,8 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 
 		// Get all thermal conductivity recipes.
 		@SuppressWarnings("resource")
-		List<ThermalConductivityRecipe> originalRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get());
+		List<ThermalConductivityRecipe> originalRecipes = Minecraft.getInstance().level.getRecipeManager()
+				.getAllRecipesFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get());
 
 		// Iterate through all the recipes.
 		for (ThermalConductivityRecipe recipe : originalRecipes) {
@@ -50,7 +52,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 				ThermalConductivityJEIRecipeWrapper jeiRecipe;
 
 				// If this is a fire input recipe, mark it.
-				if (recipe.getBlockTags().size() > 0 && recipe.getBlockTags().get(0).toString().equals("minecraft:fire")) {
+				if (!recipe.getBlocks().isEmpty() && recipe.getBlocks().test(new ItemStack(Blocks.FIRE, 1))) {
 					jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe, true);
 				} else {
 					try {
@@ -63,23 +65,27 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 				}
 
 				// Add blocks.
-				if (recipe.getBlockTags().size() > 0) {
+				if (!recipe.getBlocks().isEmpty()) {
 					RECIPES.add(jeiRecipe);
 
 					// Add all the potential inputs.
 					for (Entry<ResourceKey<Block>, Block> block : ForgeRegistries.BLOCKS.getEntries()) {
-						RecipeMatchParameters matchParams = new RecipeMatchParameters(block.getValue().defaultBlockState());
+						RecipeMatchParameters matchParams = new RecipeMatchParameters(
+								block.getValue().defaultBlockState());
 						if (recipe.matches(matchParams, null)) {
 							jeiRecipe.addInput(new ItemStack(block.getValue()));
 						}
 					}
 					// Finalize the recipe.
 					jeiRecipe.finalize();
-				} else if (recipe.getFluidTags().size() > 0) {
+				}
+
+				if (!recipe.getFluids().isEmpty()) {
 					RECIPES.add(jeiRecipe);
 					// Add all the potential inputs.
 					for (Entry<ResourceKey<Fluid>, Fluid> fluid : ForgeRegistries.FLUIDS.getEntries()) {
-						RecipeMatchParameters matchParams = new RecipeMatchParameters(new FluidStack(fluid.getValue(), 1));
+						RecipeMatchParameters matchParams = new RecipeMatchParameters(
+								new FluidStack(fluid.getValue(), 1));
 						if (recipe.matches(matchParams, null)) {
 							jeiRecipe.setFluidStack(new FluidStack(fluid.getValue(), 1000));
 						}
@@ -168,7 +174,8 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 	private static boolean isValidOverheatingOutput(ItemStack stack) {
 		// Iterate through all the recipes and add the applicable ones.
 		for (ThermalConductivityJEIRecipeWrapper recipe : RECIPES) {
-			if (ItemUtilities.areItemStacksStackable(recipe.getOutputBlock(), stack) || ItemUtilities.areItemStacksStackable(recipe.getOutputItem().getItemStack(), stack)) {
+			if (ItemUtilities.areItemStacksStackable(recipe.getOutputBlock(), stack)
+					|| ItemUtilities.areItemStacksStackable(recipe.getOutputItem().getItemStack(), stack)) {
 				return true;
 			}
 		}

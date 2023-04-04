@@ -33,6 +33,7 @@ import theking530.staticpower.data.generators.recipes.SmithingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmokingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SolderingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SqueezerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.ThermalConductivityRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.TumblerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.TurbineRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.VulcanizerRecipeGenerator;
@@ -78,6 +79,7 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new CarpenterRecipeGenerator(generator));
 		generator.addProvider(true, new LumberMillRecipeGenerator(generator));
 		generator.addProvider(true, new SmithingRecipeGenerator(generator));
+		generator.addProvider(true, new ThermalConductivityRecipeGenerator(generator));
 		
 		generator.addProvider(true, new ModLootTableProvider(generator));
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));

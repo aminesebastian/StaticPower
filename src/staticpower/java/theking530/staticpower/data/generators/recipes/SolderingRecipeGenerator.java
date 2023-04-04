@@ -9,16 +9,16 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 import theking530.staticcore.crafting.RecipeItem;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
+import theking530.staticcore.data.generators.helpers.ShapedRecipePatternBuilder;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
-import theking530.staticpower.data.generators.helpers.ShapedRecipePatternBuilder;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> {
+public class SolderingRecipeGenerator extends SCRecipeProvider<SolderingRecipe> {
 
 	public SolderingRecipeGenerator(DataGenerator dataGenerator) {
 		super("soldering", dataGenerator);
@@ -140,6 +140,6 @@ public class SolderingRecipeGenerator extends SPRecipeProvider<SolderingRecipe> 
 	}
 
 	protected void addRecipe(String nameOverride, StaticPowerOutputItem output, ShapedRecipePatternBuilder builder, Ingredient solderingIron) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new SolderingRecipe(null, builder.build(), Optional.ofNullable(solderingIron), output)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new SolderingRecipe(null, builder.build(), Optional.ofNullable(solderingIron), output)));
 	}
 }

@@ -1,89 +1,81 @@
 package theking530.staticcore.crafting.thermal;
 
-import java.util.List;
+import java.util.Optional;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.crafting.AbstractStaticPowerRecipe;
 import theking530.staticcore.crafting.RecipeMatchParameters;
-import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.FreezingBehaviour;
+import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.OverheatingBehaviour;
+import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.init.StaticCoreRecipeSerializers;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
-import theking530.staticcore.utilities.tags.TagUtilities;
+import theking530.staticcore.utilities.JsonUtilities;
 
 public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
+
 	public static final String ID = "thermal_conducitity";
 
-	public static final Codec<ThermalConductivityRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()), ResourceLocation.CODEC.listOf().fieldOf("blocks").forGetter(recipe -> recipe.getBlockTags()),
-			ResourceLocation.CODEC.listOf().fieldOf("fluids").forGetter(recipe -> recipe.getFluidTags()),
+	public static final Codec<ThermalConductivityRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
+			.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					JsonUtilities.INGREDIENT_CODEC.optionalFieldOf("blocks", Ingredient.EMPTY)
+							.forGetter(recipe -> recipe.getBlocks()),
+					FluidIngredient.CODEC.optionalFieldOf("fluids", FluidIngredient.EMPTY)
+							.forGetter(recipe -> recipe.getFluids()),
 
-			Codec.INT.fieldOf("overheat_temperature").forGetter(recipe -> recipe.getOverheatedTemperature()),
-			BlockState.CODEC.fieldOf("overheated_block").forGetter(recipe -> recipe.getOverheatedBlock()),
-			StaticPowerOutputItem.CODEC.fieldOf("overheated_item").forGetter(recipe -> recipe.getOverheatedItem()),
+					Codec.BOOL.optionalFieldOf("has_active_temperature", false)
+							.forGetter(recipe -> recipe.hasActiveTemperature()),
+					Codec.FLOAT.optionalFieldOf("temperature", 0.0f).forGetter(recipe -> recipe.getTemperature()),
+					Codec.FLOAT.fieldOf("conductivity").forGetter(recipe -> recipe.getConductivity()),
 
-			Codec.INT.fieldOf("freezing_temperature").forGetter(recipe -> recipe.getFreezingTemperature()), BlockState.CODEC.fieldOf("frozen_block").forGetter(recipe -> recipe.getFreezingBlock()),
-			StaticPowerOutputItem.CODEC.fieldOf("frozen_item").forGetter(recipe -> recipe.getFreezingItem()),
+					OverheatingBehaviour.CODEC.optionalFieldOf("overheating_behaviour")
+							.forGetter(recipe -> Optional.ofNullable(recipe.getOverheatingBehaviour())),
+					FreezingBehaviour.CODEC.optionalFieldOf("freezing_behaviour")
+							.forGetter(recipe -> Optional.ofNullable(recipe.getFreezingBehaviour())))
+			.apply(instance, (id, blocks, fluids, hasActiveTemp, temp, conductivity, overheatingBehaviour,
+					freezingBehaviour) -> {
+				return new ThermalConductivityRecipe(id, blocks, fluids, hasActiveTemp, temp, conductivity,
+						overheatingBehaviour.isPresent() ? overheatingBehaviour.get() : null,
+						freezingBehaviour.isPresent() ? freezingBehaviour.get() : null);
+			}));
 
-			Codec.INT.fieldOf("temperature").forGetter(recipe -> recipe.getTemperature()), Codec.BOOL.fieldOf("has_active_temperature").forGetter(recipe -> recipe.hasActiveTemperature()),
+	private final Ingredient blocks;
+	private final FluidIngredient fluids;
 
-			Codec.FLOAT.fieldOf("conductivity").forGetter(recipe -> recipe.getConductivity())).apply(instance, ThermalConductivityRecipe::new));
-
-	private final List<ResourceLocation> blocks;
-	private final List<ResourceLocation> fluids;
-
-	private final int overheatTemperature;
-	private final BlockState overheatedBlock;
-	private final StaticPowerOutputItem overheatedItemStack;
-
-	private final int freezingTemperature;
-	private final BlockState freezingBlock;
-	private final StaticPowerOutputItem freezingItemStack;
-
-	private final int temperature;
+	private final float temperature;
 	private final boolean hasActiveTemperature;
-
 	private final float conductivity;
 	private final boolean isAirRecipe;
 
-	public ThermalConductivityRecipe(ResourceLocation name, List<ResourceLocation> blocks, List<ResourceLocation> fluids, int overheatTemperature, BlockState overheatedBlock,
-			StaticPowerOutputItem overheatedItemStack, int freezingTemperature, BlockState freezingBlock, StaticPowerOutputItem freezingItemStack, int temperature, boolean hasActiveTemperature,
-			float conductivity) {
-		super(name);
+	private final OverheatingBehaviour overheatingBehaviour;
+	private final FreezingBehaviour freezingBehaviour;
+
+	public ThermalConductivityRecipe(ResourceLocation id, Ingredient blocks, FluidIngredient fluids,
+			boolean hasActiveTemperature, float temperature, float conductivity,
+			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
+		super(id);
 		this.blocks = blocks;
 		this.fluids = fluids;
-		this.overheatTemperature = overheatTemperature;
-		this.overheatedBlock = overheatedBlock;
-		this.overheatedItemStack = overheatedItemStack;
-		this.freezingTemperature = freezingTemperature;
-		this.freezingBlock = freezingBlock;
-		this.freezingItemStack = freezingItemStack;
 		this.temperature = temperature;
 		this.hasActiveTemperature = hasActiveTemperature;
 		this.conductivity = conductivity;
-
-		boolean flagIsAirRecipe = false;
-		for (ResourceLocation loc : blocks) {
-			if (loc.toString().equals("minecraft:air")) {
-				flagIsAirRecipe = true;
-				break;
-			}
-		}
-		this.isAirRecipe = flagIsAirRecipe;
+		this.overheatingBehaviour = overheatingBehaviour;
+		this.freezingBehaviour = freezingBehaviour;
+		this.isAirRecipe = fluids.isEmpty() && blocks.isEmpty();
 	}
 
-	public int getTemperature() {
+	public float getTemperature() {
 		return temperature;
 	}
 
@@ -99,66 +91,34 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		return isAirRecipe;
 	}
 
-	public List<ResourceLocation> getBlockTags() {
+	public Ingredient getBlocks() {
 		return blocks;
 	}
 
-	public List<ResourceLocation> getFluidTags() {
+	public FluidIngredient getFluids() {
 		return fluids;
 	}
 
-	public BlockState getOverheatedBlock() {
-		return overheatedBlock;
-	}
-
-	public boolean hasOverheatedBlock() {
-		return overheatedBlock != Blocks.VOID_AIR.defaultBlockState();
-	}
-
-	public StaticPowerOutputItem getOverheatedItem() {
-		return overheatedItemStack;
-	}
-
-	public boolean hasOverheatedItem() {
-		return !overheatedItemStack.isEmpty();
-	}
-
-	public int getOverheatedTemperature() {
-		return overheatTemperature;
+	public OverheatingBehaviour getOverheatingBehaviour() {
+		return overheatingBehaviour;
 	}
 
 	public boolean hasOverheatingBehaviour() {
-		return hasOverheatedBlock() || hasOverheatedItem();
+		return overheatingBehaviour != null;
 	}
 
-	public BlockState getFreezingBlock() {
-		return freezingBlock;
-	}
-
-	public boolean hasFreezingBlock() {
-		return freezingBlock != Blocks.VOID_AIR.defaultBlockState();
-	}
-
-	public StaticPowerOutputItem getFreezingItem() {
-		return freezingItemStack;
-	}
-
-	public boolean hasFreezingItem() {
-		return !freezingItemStack.isEmpty();
-	}
-
-	public int getFreezingTemperature() {
-		return freezingTemperature;
+	public FreezingBehaviour getFreezingBehaviour() {
+		return freezingBehaviour;
 	}
 
 	public boolean hasFreezeBehaviour() {
-		return hasFreezingBlock() || hasFreezingItem();
+		return freezingBehaviour != null;
 	}
 
 	@Override
 	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
 		// Check for fluid match.
-		if (fluids != null && fluids.size() > 0) {
+		if (!fluids.isEmpty()) {
 			// Allocate the fluid.
 			Fluid fluid = null;
 
@@ -171,22 +131,17 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 
 			// Check the fluid.
 			if (fluid != null) {
-				for (ResourceLocation fluidTag : fluids) {
-					if (ForgeRegistries.FLUIDS.getKey(fluid).equals(fluidTag)) {
-						return true;
-					}
+				if (fluids.test(new FluidStack(fluid, 1))) {
+					return true;
 				}
 			}
 		}
 
 		// Check for block match.
-		if (blocks != null && blocks.size() > 0 && matchParams.hasBlocks()) {
+		if (blocks != null && !blocks.isEmpty() && matchParams.hasBlocks()) {
 			Block block = matchParams.getBlocks()[0].getBlock();
-			for (ResourceLocation blockTag : blocks) {
-				TagKey<Block> tag = ForgeRegistries.BLOCKS.tags().createTagKey(blockTag);
-				if (ForgeRegistries.BLOCKS.getKey(block).equals(blockTag) || TagUtilities.matches(tag, block)) {
-					return true;
-				}
+			if (blocks.test(new ItemStack(block, 1))) {
+				return true;
 			}
 		}
 

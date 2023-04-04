@@ -21,6 +21,7 @@ public class StaticCoreSprites {
 	public static final ResourceLocation RANGE_ICON = registerSprite("gui/show_range_icon");
 	public static final ResourceLocation ERROR = registerSprite("gui/error");
 	public static final ResourceLocation NOTIFICATION = registerSprite("gui/notification");
+	public static final ResourceLocation NOTIFICATION_GOOD = registerSprite("gui/notification_good");
 	public static final ResourceLocation IMPORT = registerSprite("gui/import_icon");
 	public static final ResourceLocation EXPORT = registerSprite("gui/export_icon");
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");

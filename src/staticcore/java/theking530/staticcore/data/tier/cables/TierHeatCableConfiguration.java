@@ -7,7 +7,7 @@ public abstract class TierHeatCableConfiguration {
 	/********************
 	 * Heat Configuration
 	 ********************/
-	public final ConfigValue<Integer> heatCableCapacity;
+	public final ConfigValue<Float> heatCableCapacity;
 	public final ConfigValue<Float> heatCableConductivity;
 
 	public TierHeatCableConfiguration(ForgeConfigSpec.Builder builder, String modId) {
@@ -21,7 +21,7 @@ public abstract class TierHeatCableConfiguration {
 		builder.pop();
 	}
 
-	protected abstract int getHeatCableCapacity();
+	protected abstract float getHeatCableCapacity();
 
 	protected abstract float getHeatCableConductivity();
 }

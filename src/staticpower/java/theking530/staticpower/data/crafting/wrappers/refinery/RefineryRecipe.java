@@ -23,15 +23,21 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 	public static final int DEFAULT_PROCESSING_TIME = 200;
 	public static final double DEFAULT_POWER_COST = 5.0;
 
-	public static final Codec<RefineryRecipe> CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-					FluidIngredient.CODEC.fieldOf("input_fluid_1").forGetter(recipe -> recipe.getPrimaryFluidInput()),
-					FluidIngredient.CODEC.optionalFieldOf("input_fluid_2", FluidIngredient.EMPTY).forGetter(recipe -> recipe.getSecondaryFluidInput()),
-					StaticPowerIngredient.CODEC.optionalFieldOf("catalyst", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getCatalyst()),
-					JsonUtilities.FLUIDSTACK_CODEC.fieldOf("output_fluid_1").forGetter(recipe -> recipe.getFluidOutput1()),
-					JsonUtilities.FLUIDSTACK_CODEC.optionalFieldOf("output_fluid_2", FluidStack.EMPTY).forGetter(recipe -> recipe.getFluidOutput2()),
-					JsonUtilities.FLUIDSTACK_CODEC.optionalFieldOf("output_fluid_3", FluidStack.EMPTY).forGetter(recipe -> recipe.getFluidOutput3()),
-					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, RefineryRecipe::new));
+	public static final Codec<RefineryRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+			FluidIngredient.CODEC.fieldOf("input_fluid_1").forGetter(recipe -> recipe.getPrimaryFluidInput()),
+			FluidIngredient.CODEC.optionalFieldOf("input_fluid_2", FluidIngredient.EMPTY)
+					.forGetter(recipe -> recipe.getSecondaryFluidInput()),
+			StaticPowerIngredient.CODEC.optionalFieldOf("catalyst", StaticPowerIngredient.EMPTY)
+					.forGetter(recipe -> recipe.getCatalyst()),
+			JsonUtilities.FLUIDSTACK_CODEC.fieldOf("output_fluid_1").forGetter(recipe -> recipe.getFluidOutput1()),
+			JsonUtilities.FLUIDSTACK_CODEC.optionalFieldOf("output_fluid_2", FluidStack.EMPTY)
+					.forGetter(recipe -> recipe.getFluidOutput2()),
+			JsonUtilities.FLUIDSTACK_CODEC.optionalFieldOf("output_fluid_3", FluidStack.EMPTY)
+					.forGetter(recipe -> recipe.getFluidOutput3()),
+			MachineRecipeProcessingSection.CODEC.fieldOf("processing")
+					.forGetter(recipe -> recipe.getProcessingSection()))
+			.apply(instance, RefineryRecipe::new));
 
 	private final StaticPowerIngredient catalyst;
 	private final FluidIngredient inputFluid1;
@@ -40,8 +46,9 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 	private final FluidStack output2;
 	private final FluidStack output3;
 
-	public RefineryRecipe(ResourceLocation name, FluidIngredient inputFluid1, FluidIngredient inputFluid2, StaticPowerIngredient catalyst, FluidStack output1, FluidStack output2,
-			FluidStack output3, MachineRecipeProcessingSection processing) {
+	public RefineryRecipe(ResourceLocation name, FluidIngredient inputFluid1, FluidIngredient inputFluid2,
+			StaticPowerIngredient catalyst, FluidStack output1, FluidStack output2, FluidStack output3,
+			MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.catalyst = catalyst;
 		this.inputFluid1 = inputFluid1;
@@ -104,8 +111,16 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 			}
 
 			// Check fluids either way.
-			matched &= inputFluid1.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts()) || matchParams.getFluids()[0] == ModFluids.WILDCARD;
-			matched &= inputFluid2.test(matchParams.getFluids()[1], matchParams.shouldVerifyFluidAmounts()) || matchParams.getFluids()[1] == ModFluids.WILDCARD;
+			if (!inputFluid1.isEmpty()) {
+				matched &= inputFluid1.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts())
+						|| matchParams.getFluids()[0] == ModFluids.WILDCARD;
+			}
+
+			if (!inputFluid2.isEmpty()) {
+				matched &= inputFluid2.test(matchParams.getFluids()[1], matchParams.shouldVerifyFluidAmounts())
+						|| matchParams.getFluids()[1] == ModFluids.WILDCARD;
+			}
+
 			if (!matched) {
 				return false;
 			}
@@ -114,7 +129,8 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 		// Check items.
 		if (matchParams.shouldVerifyItems() && !catalyst.isEmpty()) {
 			// Check items either way.
-			if (!matchParams.hasItems() || !catalyst.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
+			if (!matchParams.hasItems()
+					|| !catalyst.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
 				return false;
 			}
 		}

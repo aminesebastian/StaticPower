@@ -10,15 +10,15 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class LumberMillRecipeGenerator extends SPRecipeProvider<LumberMillRecipe> {
+public class LumberMillRecipeGenerator extends SCRecipeProvider<LumberMillRecipe> {
 
 	public LumberMillRecipeGenerator(DataGenerator dataGenerator) {
 		super("lumber_mill", dataGenerator);
@@ -101,6 +101,6 @@ public class LumberMillRecipeGenerator extends SPRecipeProvider<LumberMillRecipe
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input, StaticPowerOutputItem primaryOutput, StaticPowerOutputItem secondaryOutput, FluidStack outputFluid,
 			MachineRecipeProcessingSection processing) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new LumberMillRecipe(null, input, primaryOutput, secondaryOutput, outputFluid, processing)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new LumberMillRecipe(null, input, primaryOutput, secondaryOutput, outputFluid, processing)));
 	}
 }

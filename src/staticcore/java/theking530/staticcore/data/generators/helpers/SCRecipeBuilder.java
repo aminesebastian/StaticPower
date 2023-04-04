@@ -1,4 +1,4 @@
-package theking530.staticpower.data.generators.helpers;
+package theking530.staticcore.data.generators.helpers;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -12,22 +12,22 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
 
-public class SPRecipeBuilder<T extends Recipe<?>> implements RecipeBuilder {
+public class SCRecipeBuilder<T extends Recipe<?>> implements RecipeBuilder {
 	private final T recipe;
 	private final Function<T, JsonObject> optionalConverter;
 
-	private SPRecipeBuilder(T recipe, Function<T, JsonObject> optionalConverter) {
+	private SCRecipeBuilder(T recipe, Function<T, JsonObject> optionalConverter) {
 		this.recipe = recipe;
 		this.optionalConverter = optionalConverter;
 	}
 
-	public static <T extends Recipe<?>> SPRecipeBuilder<T> create(T recipe, Function<T, JsonObject> optionalConverter) {
-		return new SPRecipeBuilder<T>(recipe, optionalConverter);
+	public static <T extends Recipe<?>> SCRecipeBuilder<T> create(T recipe, Function<T, JsonObject> optionalConverter) {
+		return new SCRecipeBuilder<T>(recipe, optionalConverter);
 
 	}
 
-	public static <T extends Recipe<?>> SPRecipeBuilder<T> create(T recipe) {
-		return new SPRecipeBuilder<T>(recipe, null);
+	public static <T extends Recipe<?>> SCRecipeBuilder<T> create(T recipe) {
+		return new SCRecipeBuilder<T>(recipe, null);
 	}
 
 	@Override
@@ -42,15 +42,15 @@ public class SPRecipeBuilder<T extends Recipe<?>> implements RecipeBuilder {
 
 	@Override
 	public void save(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
-		SPFinalizedRecipe<T> finishedRecipe = null;
+		SCFinalizedRecipe<T> finishedRecipe = null;
 		if (optionalConverter != null) {
-			finishedRecipe = new SPFinalizedRecipe<T>(id, recipe) {
+			finishedRecipe = new SCFinalizedRecipe<T>(id, recipe) {
 				protected JsonObject convert(T recipe) {
 					return optionalConverter.apply(recipe);
 				}
 			};
 		} else {
-			finishedRecipe = new SPFinalizedRecipe<T>(id, recipe);
+			finishedRecipe = new SCFinalizedRecipe<T>(id, recipe);
 		}
 		consumer.accept(finishedRecipe);
 	}

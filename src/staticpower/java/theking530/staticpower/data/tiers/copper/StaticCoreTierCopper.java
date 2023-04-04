@@ -3,7 +3,6 @@ package theking530.staticpower.data.tiers.copper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.data.tier.cables.TierHeatCableConfiguration;
 import theking530.staticcore.data.tier.categories.TierToolConfiguration;
@@ -26,28 +25,18 @@ public class StaticCoreTierCopper extends StaticCoreTier {
 	}
 
 	@Override
-	protected int getHeatsinkOverheatTemperature() {
-		return CapabilityHeatable.convertHeatToMilliHeat(512);
+	protected float getHeatsinkOverheatTemperature() {
+		return 512.0f;
 	}
 
 	@Override
-	protected int getHeatsinkMaximumTemperature() {
-		return CapabilityHeatable.convertHeatToMilliHeat(1024);
+	protected float getHeatsinkMaximumTemperature() {
+		return 1024.0f;
 	}
 
 	@Override
 	protected float getHeatSinkConductivity() {
 		return 6f;
-	}
-
-	@Override
-	protected int getHeatSinkElectricHeatGeneration() {
-		return 8000;
-	}
-
-	@Override
-	protected int getHeatSinkElectricHeatPowerUsage() {
-		return 4000;
 	}
 
 	public static class HeatCableConfiguration extends TierHeatCableConfiguration {
@@ -56,8 +45,8 @@ public class StaticCoreTierCopper extends StaticCoreTier {
 		}
 
 		@Override
-		protected int getHeatCableCapacity() {
-			return CapabilityHeatable.convertHeatToMilliHeat(512);
+		protected float getHeatCableCapacity() {
+			return 512.0f;
 		}
 
 		@Override

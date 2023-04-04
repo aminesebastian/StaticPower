@@ -5,14 +5,14 @@ import net.minecraft.tags.FluidTags;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 
-public class CauldronRecipeGenerator extends SPRecipeProvider<CauldronRecipe> {
+public class CauldronRecipeGenerator extends SCRecipeProvider<CauldronRecipe> {
 
 	public CauldronRecipeGenerator(DataGenerator dataGenerator) {
 		super("cauldron", dataGenerator);
@@ -32,13 +32,13 @@ public class CauldronRecipeGenerator extends SPRecipeProvider<CauldronRecipe> {
 
 	}
 
-	protected SPRecipeBuilder<CauldronRecipe> create(StaticPowerIngredient input, StaticPowerOutputItem output, FluidIngredient fluid, boolean drainAfterCraft,
+	protected SCRecipeBuilder<CauldronRecipe> create(StaticPowerIngredient input, StaticPowerOutputItem output, FluidIngredient fluid, boolean drainAfterCraft,
 			int timeInCauldron) {
 		return create(input, output, fluid, FluidStack.EMPTY, drainAfterCraft, timeInCauldron);
 	}
 
-	protected SPRecipeBuilder<CauldronRecipe> create(StaticPowerIngredient input, StaticPowerOutputItem output, FluidIngredient fluid, FluidStack outputFluid,
+	protected SCRecipeBuilder<CauldronRecipe> create(StaticPowerIngredient input, StaticPowerOutputItem output, FluidIngredient fluid, FluidStack outputFluid,
 			boolean drainAfterCraft, int timeInCauldron) {
-		return SPRecipeBuilder.create(new CauldronRecipe(null, input, output, fluid, outputFluid, drainAfterCraft, timeInCauldron));
+		return SCRecipeBuilder.create(new CauldronRecipe(null, input, output, fluid, outputFluid, drainAfterCraft, timeInCauldron));
 	}
 }

@@ -1,4 +1,4 @@
-package theking530.staticpower.data.generators.helpers;
+package theking530.staticcore.data.generators.helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;

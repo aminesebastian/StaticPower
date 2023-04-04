@@ -17,7 +17,8 @@ public class StaticCoreDataGenerator {
 
 		StaticCoreBlockTagProvider blockTags = new StaticCoreBlockTagProvider(generator, existingFileHelper);
 		generator.addProvider(true, blockTags);
-		generator.addProvider(true, new StaticCoreItemModelProvider(generator, existingFileHelper));	
+		generator.addProvider(true, new StaticCoreItemModelProvider(generator, existingFileHelper));
 		generator.addProvider(true, new StaticCoreItemTagProvider(generator, blockTags, existingFileHelper));
+
 	}
 }

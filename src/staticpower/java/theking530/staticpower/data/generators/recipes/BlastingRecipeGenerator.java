@@ -4,12 +4,12 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModMaterials;
 
-public class BlastingRecipeGenerator extends SPRecipeProvider<BlastingRecipe> {
+public class BlastingRecipeGenerator extends SCRecipeProvider<BlastingRecipe> {
 
 	public BlastingRecipeGenerator(DataGenerator dataGenerator) {
 		super("blasting", dataGenerator);

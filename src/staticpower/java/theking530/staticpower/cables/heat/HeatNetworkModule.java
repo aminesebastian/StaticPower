@@ -40,7 +40,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 	public void getReaderOutput(List<Component> components, BlockPos pos) {
 		float averageThermalConductivity = 0.0f;
 		for (Cable cable : Network.getGraph().getCables().values()) {
-			averageThermalConductivity += cable.getDataTag().getDouble(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
+			averageThermalConductivity += cable.getDataTag().getFloat(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 		}
 		averageThermalConductivity /= Network.getGraph().getCables().size();
 
@@ -101,19 +101,19 @@ public class HeatNetworkModule extends CableNetworkModule {
 				// Continue if we found some valid destinations.
 				if (destinations.size() > 0) {
 					// Calculate how we should split the output amount.
-					double outputPerDestination = Math.max(1, heatStorage.getCurrentHeat() / destinations.size());
+					float outputPerDestination = Math.max(1, heatStorage.getCurrentHeat() / destinations.size());
 
 					// Distribute the heat to the destinations.
 					for (IHeatStorage wrapper : destinations.keySet()) {
 						// Get the thermal conductivity of the cable connected to this destination.
-						double cableConductivity = CableNetworkAccessor.get(world).getCable(destinations.get(wrapper).getFirstConnectedCable()).getDataTag()
-								.getDouble(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
+						float cableConductivity = CableNetworkAccessor.get(world).getCable(destinations.get(wrapper).getFirstConnectedCable()).getDataTag()
+								.getFloat(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 
 						// Get the thermal conductivity of the attached cable.
-						int toSupply = (int) Math.min(cableConductivity * wrapper.getConductivity(), outputPerDestination);
+						float toSupply = Math.min(cableConductivity * wrapper.getConductivity(), outputPerDestination);
 
 						// Limit that to the max amount we currently have.
-						int supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()), HeatTransferAction.EXECUTE);
+						float supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()), HeatTransferAction.EXECUTE);
 
 						// If the supplied amount is > 0, supply it.
 						if (supplied > 0) {
@@ -139,7 +139,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 		}
 
 		// Set the capacity of the heat storage to the average of the network.
-		float average = (float) total / Math.max(total, 1);
+		float average = (float) total / Math.max(mapper.getDiscoveredCables().size(), 1);
 		heatStorage.setMaximumHeat((int) average);
 	}
 

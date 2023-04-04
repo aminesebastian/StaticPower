@@ -15,7 +15,7 @@ import theking530.staticcore.utilities.math.Vector2D;
 public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget<GuiHeatBarFromHeatStorage> {
 
 	private IHeatStorage heatStorage;
-	private int interpolatedHeat;
+	private float interpolatedHeat;
 
 	public GuiHeatBarFromHeatStorage(IHeatStorage heatStorage, int xPosition, int yPosition, int xSize, int ySize) {
 		super(xPosition, yPosition, xSize, ySize);
@@ -26,7 +26,7 @@ public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget<GuiHeatBarFromH
 	@Override
 	public void tick() {
 		super.tick();
-		int delta = heatStorage.getCurrentHeat() - interpolatedHeat;
+		float delta = heatStorage.getCurrentHeat() - interpolatedHeat;
 		float distance = interpolatedHeat - heatStorage.getCurrentHeat();
 		float distanceRatio = distance / heatStorage.getCurrentHeat();
 		int maxMovement = (int) (Math.abs(distanceRatio / 2) * distance);

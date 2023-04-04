@@ -13,13 +13,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.crafting.RecipeItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
+import theking530.staticcore.data.generators.helpers.SCShapedRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCShapelessRecipeBuilder;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.Tiers;
 import theking530.staticpower.data.Tiers.RedstoneCableTier;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
-import theking530.staticpower.data.generators.helpers.SPShapedRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPShapelessRecipeBuilder;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
@@ -27,7 +27,7 @@ import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
+public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 
 	public CraftingRecipeGenerator(DataGenerator generator) {
 		super("crafting", generator);
@@ -1064,15 +1064,15 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 	}
 
-	protected SPShapedRecipeBuilder beginShapedRecipe(ItemLike result) {
+	protected SCShapedRecipeBuilder beginShapedRecipe(ItemLike result) {
 		return beginShapedRecipe(result, 1, ForgeRegistries.ITEMS.getKey(result.asItem()).getPath());
 	}
 
-	protected SPShapedRecipeBuilder beginShapedRecipe(ItemLike result, int count) {
+	protected SCShapedRecipeBuilder beginShapedRecipe(ItemLike result, int count) {
 		return beginShapedRecipe(result, count, ForgeRegistries.ITEMS.getKey(result.asItem()).getPath());
 	}
 
-	protected SPShapedRecipeBuilder beginShapedRecipe(ItemLike result, String nameOverride) {
+	protected SCShapedRecipeBuilder beginShapedRecipe(ItemLike result, String nameOverride) {
 		return beginShapedRecipe(result, 1, nameOverride);
 	}
 
@@ -1693,27 +1693,27 @@ public class CraftingRecipeGenerator extends SPRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 	}
 
-	protected SPShapedRecipeBuilder beginShapedRecipe(ItemLike result, int count, String nameOverride) {
-		SPShapedRecipeBuilder builder = SPShapedRecipeBuilder.shaped(result, count);
+	protected SCShapedRecipeBuilder beginShapedRecipe(ItemLike result, int count, String nameOverride) {
+		SCShapedRecipeBuilder builder = SCShapedRecipeBuilder.shaped(result, count);
 		String name = "shaped/" + nameOverride;
 		addRecipe(name, builder);
 		return builder;
 	}
 
-	protected SPShapelessRecipeBuilder beginShapelessRecipe(ItemLike result) {
+	protected SCShapelessRecipeBuilder beginShapelessRecipe(ItemLike result) {
 		return beginShapelessRecipe(result, 1, ForgeRegistries.ITEMS.getKey(result.asItem()).getPath());
 	}
 
-	protected SPShapelessRecipeBuilder beginShapelessRecipe(ItemLike result, int count) {
+	protected SCShapelessRecipeBuilder beginShapelessRecipe(ItemLike result, int count) {
 		return beginShapelessRecipe(result, count, ForgeRegistries.ITEMS.getKey(result.asItem()).getPath());
 	}
 
-	protected SPShapelessRecipeBuilder beginShapelessRecipe(ItemLike result, String nameOverride) {
+	protected SCShapelessRecipeBuilder beginShapelessRecipe(ItemLike result, String nameOverride) {
 		return beginShapelessRecipe(result, 1, nameOverride);
 	}
 
-	protected SPShapelessRecipeBuilder beginShapelessRecipe(ItemLike result, int count, String nameOverride) {
-		SPShapelessRecipeBuilder builder = SPShapelessRecipeBuilder.shapeless(result, count);
+	protected SCShapelessRecipeBuilder beginShapelessRecipe(ItemLike result, int count, String nameOverride) {
+		SCShapelessRecipeBuilder builder = SCShapelessRecipeBuilder.shapeless(result, count);
 		String name = "shapeless/" + nameOverride;
 		addRecipe(name, builder);
 		return builder;

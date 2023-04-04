@@ -4,12 +4,12 @@ import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.Tags;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.data.crafting.wrappers.hydroponicfarming.HydroponicFarmingRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.init.ModItems;
 
-public class HydroponicFarmerRecipeGenerator extends SPRecipeProvider<HydroponicFarmingRecipe> {
+public class HydroponicFarmerRecipeGenerator extends SCRecipeProvider<HydroponicFarmingRecipe> {
 
 	public HydroponicFarmerRecipeGenerator(DataGenerator dataGenerator) {
 		super("hydroponic_farmer", dataGenerator);
@@ -36,6 +36,6 @@ public class HydroponicFarmerRecipeGenerator extends SPRecipeProvider<Hydroponic
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input, MachineRecipeProcessingSection processing) {
 		HydroponicFarmingRecipe recipe = new HydroponicFarmingRecipe(null, input, processing);
-		addRecipe(nameOverride, SPRecipeBuilder.create(recipe));
+		addRecipe(nameOverride, SCRecipeBuilder.create(recipe));
 	}
 }

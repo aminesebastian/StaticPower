@@ -106,6 +106,7 @@ minecraft {
 				}
 			}
 		}
+		
 		data_core {
 			workingDirectory project.file('run')
 

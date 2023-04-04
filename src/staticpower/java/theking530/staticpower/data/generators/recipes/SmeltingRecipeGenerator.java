@@ -6,7 +6,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialBundle.MaterialBundleType;
 import theking530.staticpower.data.materials.MaterialTypes;
@@ -14,7 +14,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 
-public class SmeltingRecipeGenerator extends SPRecipeProvider<SmeltingRecipe> {
+public class SmeltingRecipeGenerator extends SCRecipeProvider<SmeltingRecipe> {
 
 	public SmeltingRecipeGenerator(DataGenerator dataGenerator) {
 		super("smelting", dataGenerator);

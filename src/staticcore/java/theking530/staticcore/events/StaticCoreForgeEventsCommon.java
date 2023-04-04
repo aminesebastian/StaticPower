@@ -175,7 +175,8 @@ public class StaticCoreForgeEventsCommon {
 			if (event.getItemStack().getItem() instanceof ITooltipProvider) {
 				ITooltipProvider spItem = (ITooltipProvider) event.getItemStack().getItem();
 				if (spItem != null && event.getEntity() != null && event.getEntity().getCommandSenderWorld() != null) {
-					spItem.getTooltip(event.getItemStack(), event.getEntity().getCommandSenderWorld(), basicTooltips, Screen.hasShiftDown());
+					spItem.getTooltip(event.getItemStack(), event.getEntity().getCommandSenderWorld(), basicTooltips,
+							Screen.hasShiftDown());
 					spItem.getAdvancedTooltip(event.getItemStack(), event.getEntity().level, advancedToolTips);
 				}
 			}
@@ -213,29 +214,34 @@ public class StaticCoreForgeEventsCommon {
 				@SuppressWarnings("resource")
 				Level level = Minecraft.getInstance().level;
 				RecipeManager recipeManager = level.getRecipeManager();
-				Optional<ThermalConductivityRecipe> thermalRecipe = recipeManager.getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(), matchParameters, level);
+				Optional<ThermalConductivityRecipe> thermalRecipe = recipeManager.getRecipeFor(
+						StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(), matchParameters, level);
 				thermalRecipe.ifPresent(recipe -> {
 					// Add heat conductivity tooltip.
 					event.getToolTip().add(HeatTooltipUtilities.getHeatConductivityTooltip(recipe.getConductivity()));
 
 					// Add temperature tooltip.
 					if (recipe.hasActiveTemperature()) {
-						event.getToolTip().add(HeatTooltipUtilities.getActiveTemperatureTooltip(recipe.getTemperature()));
+						event.getToolTip()
+								.add(HeatTooltipUtilities.getActiveTemperatureTooltip(recipe.getTemperature()));
 					}
 
 					// Add overheating tooltip.
 					if (recipe.hasOverheatingBehaviour()) {
-						event.getToolTip().add(HeatTooltipUtilities.getOverheatingTooltip(recipe.getOverheatedTemperature()));
+						event.getToolTip().add(HeatTooltipUtilities
+								.getOverheatingTooltip(recipe.getOverheatingBehaviour().getTemperature()));
 					}
 
 					// Add freezing tooltip.
 					if (recipe.hasFreezeBehaviour()) {
-						event.getToolTip().add(HeatTooltipUtilities.getFreezingTooltip(recipe.getFreezingTemperature()));
+						event.getToolTip().add(HeatTooltipUtilities
+								.getFreezingTooltip(recipe.getFreezingBehaviour().getTemperature()));
 					}
 				});
 
 				// Add attributable tooltips.
-				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasShiftDown());
+				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(),
+						Screen.hasShiftDown());
 			} else {
 				// Add the basic tooltips if any are presented.
 				for (Component original : basicTooltips) {
@@ -246,11 +252,13 @@ public class StaticCoreForgeEventsCommon {
 				}
 
 				// Add attributable tooltips.
-				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasShiftDown());
+				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(),
+						Screen.hasShiftDown());
 
 				// Add the "Hold Shift" indentifier.
 				if (advancedToolTips.size() > 0) {
-					event.getToolTip().add(Component.translatable("gui.staticcore.hold_shift").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+					event.getToolTip().add(Component.translatable("gui.staticcore.hold_shift")
+							.withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
 				}
 			}
 		}

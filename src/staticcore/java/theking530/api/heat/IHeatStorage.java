@@ -5,18 +5,17 @@ public interface IHeatStorage {
 		EXECUTE, SIMULATE, SIMULATE_MAX_EFFICIENCY
 	}
 
-	public static final int STONE_MELTING_TEMPERATURE = CapabilityHeatable.convertHeatToMilliHeat(1000);
-	public static final int WATER_BOILING_TEMPERATURE = CapabilityHeatable.convertHeatToMilliHeat(100);
-	public static final int ROOM_TEMPERATURE = CapabilityHeatable.convertHeatToMilliHeat(20);
-	public static final int WATER_FREEZING_TEMPERATURE = CapabilityHeatable.convertHeatToMilliHeat(0);
-	public static final int MINIMUM_TEMPERATURE = CapabilityHeatable.convertHeatToMilliHeat(-273);
+	public static final float WATER_BOILING_TEMPERATURE = 100;
+	public static final float ROOM_TEMPERATURE = 20;
+	public static final float WATER_FREEZING_TEMPERATURE = 0;
+	public static final float MINIMUM_TEMPERATURE = -273;
 
 	/**
 	 * Returns the amount of heat currently stored in this heatable entity.
 	 * 
 	 * @return
 	 */
-	public int getCurrentHeat();
+	public float getCurrentHeat();
 
 	/**
 	 * Returns the maximum amount of heat that *should* be stored in this heatable
@@ -27,7 +26,7 @@ public interface IHeatStorage {
 	 * 
 	 * @return
 	 */
-	public default int getOverheatThreshold() {
+	public default float getOverheatThreshold() {
 		return getMaximumHeat();
 	}
 
@@ -38,7 +37,7 @@ public interface IHeatStorage {
 	 * 
 	 * @return
 	 */
-	public default int getMinimumHeatThreshold() {
+	public default float getMinimumHeatThreshold() {
 		return MINIMUM_TEMPERATURE;
 	}
 
@@ -51,7 +50,7 @@ public interface IHeatStorage {
 	 * 
 	 * @return
 	 */
-	public int getMaximumHeat();
+	public float getMaximumHeat();
 
 	/**
 	 * Gets the maximum rate that this heatable entity can transfer thermal energy.
@@ -69,7 +68,7 @@ public interface IHeatStorage {
 	 * @param simulate
 	 * @return
 	 */
-	public int heat(int amountToHeat, HeatTransferAction action);
+	public float heat(float amountToHeat, HeatTransferAction action);
 
 	/**
 	 * Cools down this heatable entity.
@@ -78,5 +77,5 @@ public interface IHeatStorage {
 	 * @param simulate
 	 * @return
 	 */
-	public int cool(int amountToCool, HeatTransferAction action);
+	public float cool(float amountToCool, HeatTransferAction action);
 }

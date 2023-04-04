@@ -6,16 +6,16 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> {
+public class HammerRecipeGenerator extends SCRecipeProvider<HammerRecipe> {
 
 	public HammerRecipeGenerator(DataGenerator dataGenerator) {
 		super("hammering", dataGenerator);
@@ -48,6 +48,6 @@ public class HammerRecipeGenerator extends SPRecipeProvider<HammerRecipe> {
 
 	protected void addRecipe(String nameOverride, TagKey<Block> block, StaticPowerIngredient inputItem, StaticPowerOutputItem output, boolean requiresAnvil) {
 		HammerRecipe recipe = new HammerRecipe(null, 1, HammerRecipe.DEFAULT_HAMMERS, inputItem, block, output, requiresAnvil);
-		addRecipe(nameOverride, SPRecipeBuilder.create(recipe));
+		addRecipe(nameOverride, SCRecipeBuilder.create(recipe));
 	}
 }

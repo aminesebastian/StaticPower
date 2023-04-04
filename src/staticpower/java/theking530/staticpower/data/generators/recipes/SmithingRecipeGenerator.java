@@ -13,17 +13,17 @@ import net.minecraftforge.common.Tags;
 import theking530.staticcore.attributes.AttributeModifiers;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeAttributeWrapper;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModAttributes;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 
-public class SmithingRecipeGenerator extends SPRecipeProvider<AutoSmithRecipe> {
+public class SmithingRecipeGenerator extends SCRecipeProvider<AutoSmithRecipe> {
 	public SmithingRecipeGenerator(DataGenerator dataGenerator) {
 		super("smithing", dataGenerator);
 	}
@@ -73,7 +73,7 @@ public class SmithingRecipeGenerator extends SPRecipeProvider<AutoSmithRecipe> {
 
 	protected void addRecipe(String nameOverride, @Nullable StaticPowerIngredient smithTarget, StaticPowerIngredient modifierMaterial, FluidIngredient modifierFluid,
 			List<RecipeAttributeWrapper<?>> modifiers, int repairAmount, MachineRecipeProcessingSection processing) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new AutoSmithRecipe(null, smithTarget, modifierMaterial, modifierFluid, modifiers, repairAmount, processing)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new AutoSmithRecipe(null, smithTarget, modifierMaterial, modifierFluid, modifiers, repairAmount, processing)));
 	}
 
 }

@@ -61,7 +61,7 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	public int getCurrentHeat() {
+	public float getCurrentHeat() {
 		if (hasController()) {
 			return getController().heatStorage.getCurrentHeat();
 		}
@@ -69,7 +69,7 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	public int getOverheatThreshold() {
+	public float getOverheatThreshold() {
 		if (hasController()) {
 			return getController().heatStorage.getOverheatThreshold();
 		}
@@ -77,7 +77,7 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	public int getMaximumHeat() {
+	public float getMaximumHeat() {
 		if (hasController()) {
 			return getController().heatStorage.getMaximumHeat();
 		}
@@ -93,13 +93,13 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	public int heat(int amountToHeat, HeatTransferAction action) {
+	public float heat(float amountToHeat, HeatTransferAction action) {
 		// Cannot heat directly through this.
 		return 0;
 	}
 
 	@Override
-	public int cool(int amountToCool, HeatTransferAction action) {
+	public float cool(float amountToCool, HeatTransferAction action) {
 		// Cannot cool directly through this.
 		return 0;
 	}

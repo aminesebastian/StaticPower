@@ -1,0 +1,12 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "conductivity": 5.0,
+  "fluids": {
+    "amount": 1,
+    "fluids": {
+      "fluid": "minecraft:flowing_lava"
+    }
+  },
+  "has_active_temperature": true,
+  "temperature": 10000000
+}

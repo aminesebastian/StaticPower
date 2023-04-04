@@ -7,16 +7,16 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.tags.ModItemTags;
 
-public class SqueezerRecipeGenerator extends SPRecipeProvider<SqueezerRecipe> {
+public class SqueezerRecipeGenerator extends SCRecipeProvider<SqueezerRecipe> {
 
 	public SqueezerRecipeGenerator(DataGenerator dataGenerator) {
 		super("squeezing", dataGenerator);
@@ -113,6 +113,6 @@ public class SqueezerRecipeGenerator extends SPRecipeProvider<SqueezerRecipe> {
 	}
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input, StaticPowerOutputItem output, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new SqueezerRecipe(null, input, output, outputFluid, processing)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new SqueezerRecipe(null, input, output, outputFluid, processing)));
 	}
 }

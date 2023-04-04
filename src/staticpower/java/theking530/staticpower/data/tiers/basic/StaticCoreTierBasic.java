@@ -3,7 +3,6 @@ package theking530.staticpower.data.tiers.basic;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.data.tier.cables.TierCableAttachmentConfiguration;
 import theking530.staticcore.data.tier.cables.TierFluidCableConfiguration;
@@ -46,13 +45,13 @@ public class StaticCoreTierBasic extends StaticCoreTier {
 	}
 
 	@Override
-	protected int getDefaultMachineOverheatTemperature() {
-		return CapabilityHeatable.convertHeatToMilliHeat(125);
+	protected float getDefaultMachineOverheatTemperature() {
+		return 125.0f;
 	}
 
 	@Override
-	protected int getDefaultMachineMaximumTemperature() {
-		return CapabilityHeatable.convertHeatToMilliHeat(250);
+	protected float getDefaultMachineMaximumTemperature() {
+		return 250.0f;
 	}
 
 	@Override
@@ -96,7 +95,8 @@ public class StaticCoreTierBasic extends StaticCoreTier {
 	}
 
 	@Override
-	protected TierCableAttachmentConfiguration createCableAttachmentConfiguration(ForgeConfigSpec.Builder builder, String modId) {
+	protected TierCableAttachmentConfiguration createCableAttachmentConfiguration(ForgeConfigSpec.Builder builder,
+			String modId) {
 		return new BasicCableConfiguration.CableAttachmentConfiguration(builder, modId);
 	}
 

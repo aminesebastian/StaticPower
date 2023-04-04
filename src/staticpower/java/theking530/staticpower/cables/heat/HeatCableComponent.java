@@ -2,7 +2,6 @@ package theking530.staticpower.cables.heat;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,14 +24,14 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public class HeatCableComponent extends AbstractCableProviderComponent implements IHeatStorage {
 	public static final String HEAT_CAPACITY_DATA_TAG_KEY = "heat_capacity";
 	public static final String HEAT_CONDUCTIVITY_TAG_KEY = "heat_transfer_rate";
-	private final double capacity;
+	private final float capacity;
 	private final float transferRate;
 	@UpdateSerialize
-	private int clientSideHeat;
+	private float clientSideHeat;
 	@UpdateSerialize
-	private int clientSideHeatCapacity;
+	private float clientSideHeatCapacity;
 
-	public HeatCableComponent(String name, int capacity, float conductivity) {
+	public HeatCableComponent(String name, float capacity, float conductivity) {
 		super(name, ModCableModules.Heat.get());
 		this.capacity = capacity;
 		this.transferRate = conductivity;
@@ -74,20 +73,16 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public int getCurrentHeat() {
+	public float getCurrentHeat() {
 		if (!getBlockEntity().getLevel().isClientSide) {
-			AtomicInteger recieve = new AtomicInteger(0);
-			getHeatNetworkModule().ifPresent(module -> {
-				recieve.set(module.getHeatStorage().getCurrentHeat());
-			});
-			return recieve.get();
+			return getHeatNetworkModule().isPresent() ? getHeatNetworkModule().get().getHeatStorage().getCurrentHeat() : 0.0f;
 		} else {
 			return clientSideHeat;
 		}
 	}
 
 	@Override
-	public int getMaximumHeat() {
+	public float getMaximumHeat() {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
 			return module != null ? module.getHeatStorage().getMaximumHeat() : 0;
@@ -97,7 +92,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public int getOverheatThreshold() {
+	public float getOverheatThreshold() {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
 			return module != null ? module.getHeatStorage().getOverheatThreshold() : 0;
@@ -112,7 +107,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public int heat(int amountToHeat, HeatTransferAction action) {
+	public float heat(float amountToHeat, HeatTransferAction action) {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
 			return module != null ? module.getHeatStorage().heat(amountToHeat, action) : 0;
@@ -122,7 +117,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public int cool(int amountToCool, HeatTransferAction action) {
+	public float cool(float amountToCool, HeatTransferAction action) {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
 			return module != null ? module.getHeatStorage().cool(amountToCool, action) : 0;
@@ -131,7 +126,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		}
 	}
 
-	public void updateFromNetworkUpdatePacket(int clientHeat, int clientCapacity) {
+	public void updateFromNetworkUpdatePacket(float clientHeat, float clientCapacity) {
 		this.clientSideHeat = clientHeat;
 		this.clientSideHeatCapacity = clientCapacity;
 	}
@@ -152,8 +147,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	@Override
 	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
-		cable.getDataTag().putDouble(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
-		cable.getDataTag().putDouble(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
+		cable.getDataTag().putFloat(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
+		cable.getDataTag().putFloat(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
 	}
 
 	@Override

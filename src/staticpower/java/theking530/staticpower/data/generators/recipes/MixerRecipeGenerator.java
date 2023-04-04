@@ -7,18 +7,18 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 import theking530.staticpower.init.tags.ModFluidTags;
 
-public class MixerRecipeGenerator extends SPRecipeProvider<MixerRecipe> {
+public class MixerRecipeGenerator extends SCRecipeProvider<MixerRecipe> {
 
 	public MixerRecipeGenerator(DataGenerator dataGenerator) {
 		super("mixing", dataGenerator);
@@ -47,21 +47,21 @@ public class MixerRecipeGenerator extends SPRecipeProvider<MixerRecipe> {
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient inputFluid1, FluidIngredient inputFluid2, FluidStack output) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new MixerRecipe(null, StaticPowerIngredient.EMPTY, StaticPowerIngredient.EMPTY, inputFluid1, inputFluid2, output, null)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new MixerRecipe(null, StaticPowerIngredient.EMPTY, StaticPowerIngredient.EMPTY, inputFluid1, inputFluid2, output, null)));
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient inputFluid1, FluidIngredient inputFluid2, FluidStack output, MachineRecipeProcessingSection processing) {
 		addRecipe(nameOverride,
-				SPRecipeBuilder.create(new MixerRecipe(null, StaticPowerIngredient.EMPTY, StaticPowerIngredient.EMPTY, inputFluid1, inputFluid2, output, processing)));
+				SCRecipeBuilder.create(new MixerRecipe(null, StaticPowerIngredient.EMPTY, StaticPowerIngredient.EMPTY, inputFluid1, inputFluid2, output, processing)));
 	}
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input1, StaticPowerIngredient input2, FluidIngredient inputFluid1, FluidIngredient inputFluid2,
 			FluidStack output) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new MixerRecipe(null, input1, input2, inputFluid1, inputFluid2, output, null)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new MixerRecipe(null, input1, input2, inputFluid1, inputFluid2, output, null)));
 	}
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input1, StaticPowerIngredient input2, FluidIngredient inputFluid1, FluidIngredient inputFluid2,
 			FluidStack output, MachineRecipeProcessingSection processing) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new MixerRecipe(null, input1, input2, inputFluid1, inputFluid2, output, processing)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new MixerRecipe(null, input1, input2, inputFluid1, inputFluid2, output, processing)));
 	}
 }

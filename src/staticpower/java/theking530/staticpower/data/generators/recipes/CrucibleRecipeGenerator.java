@@ -5,16 +5,16 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModMaterials;
 
-public class CrucibleRecipeGenerator extends SPRecipeProvider<CrucibleRecipe> {
+public class CrucibleRecipeGenerator extends SCRecipeProvider<CrucibleRecipe> {
 
 	public CrucibleRecipeGenerator(DataGenerator dataGenerator) {
 		super("crucible", dataGenerator);
@@ -69,15 +69,15 @@ public class CrucibleRecipeGenerator extends SPRecipeProvider<CrucibleRecipe> {
 		}
 	}
 
-	protected SPRecipeBuilder<CrucibleRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem slag, FluidStack outputFluid) {
+	protected SCRecipeBuilder<CrucibleRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem slag, FluidStack outputFluid) {
 		return create(mold, slag, outputFluid, null);
 	}
 
-	protected SPRecipeBuilder<CrucibleRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem slag, FluidStack outputFluid, int processingTime) {
+	protected SCRecipeBuilder<CrucibleRecipe> create(StaticPowerIngredient mold, StaticPowerOutputItem slag, FluidStack outputFluid, int processingTime) {
 		return create(mold, slag, outputFluid, MachineRecipeProcessingSection.hardcoded(processingTime, CastingRecipe.DEFAULT_POWER_COST, 0, 0));
 	}
 
-	protected SPRecipeBuilder<CrucibleRecipe> create(StaticPowerIngredient input, StaticPowerOutputItem slag, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
-		return SPRecipeBuilder.create(new CrucibleRecipe(null, input, slag, outputFluid, processing));
+	protected SCRecipeBuilder<CrucibleRecipe> create(StaticPowerIngredient input, StaticPowerOutputItem slag, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
+		return SCRecipeBuilder.create(new CrucibleRecipe(null, input, slag, outputFluid, processing));
 	}
 }

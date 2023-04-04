@@ -28,13 +28,13 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		COOL, HEAT
 	}
 
-	public static final float HEAT_SYNC_MAX_DELTA = CapabilityHeatable.convertHeatToMilliHeat(1);
+	public static final float HEAT_SYNC_MAX_DELTA = 1;
 	public static final int HEAT_SYNC_MAX_TICKS = 10;
 
 	@UpdateSerialize
 	private final HeatStorage heatStorage;
 	@UpdateSerialize
-	private int defaultCapacity;
+	private float defaultCapacity;
 	@UpdateSerialize
 	private float defaultConductivity;
 	@UpdateSerialize
@@ -54,7 +54,7 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	@UpdateSerialize
 	private boolean enteredMeltdownState;
 
-	protected TriFunction<Integer, Direction, HeatManipulationAction, Boolean> filter;
+	protected TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter;
 
 	private UpgradeInventoryComponent upgradeInventory;
 	private final Map<Direction, HeatComponentCapabilityAccess> accessors;
@@ -63,15 +63,15 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	private boolean issueSyncPackets;
 	private int timeSinceLastSync;
 
-	public HeatStorageComponent(String name, int maxHeat, float conductivity) {
+	public HeatStorageComponent(String name, float maxHeat, float conductivity) {
 		this(name, IHeatStorage.MINIMUM_TEMPERATURE, maxHeat, maxHeat, conductivity);
 	}
 
-	public HeatStorageComponent(String name, int overheatThreshold, int maxHeat, float conductivity) {
+	public HeatStorageComponent(String name, float overheatThreshold, float maxHeat, float conductivity) {
 		this(name, IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maxHeat, conductivity);
 	}
 
-	public HeatStorageComponent(String name, int minHeat, int overheatThreshold, int maxHeat, float conductivity) {
+	public HeatStorageComponent(String name, float minHeat, float overheatThreshold, float maxHeat, float conductivity) {
 		super(name);
 		defaultCapacity = maxHeat;
 		defaultConductivity = conductivity;
@@ -120,7 +120,8 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 					shouldSync = heatStorage.getCurrentHeat() == 0 && lastSyncHeat != 0;
 				}
 				if (!shouldSync) {
-					shouldSync = heatStorage.getCurrentHeat() == heatStorage.getMaximumHeat() && lastSyncHeat != heatStorage.getMaximumHeat();
+					shouldSync = heatStorage.getCurrentHeat() == heatStorage.getMaximumHeat()
+							&& lastSyncHeat != heatStorage.getMaximumHeat();
 				}
 				if (!shouldSync) {
 					shouldSync = timeSinceLastSync >= HEAT_SYNC_MAX_TICKS;
@@ -144,8 +145,10 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 				// Only do the following ONCE after we started the meltdown.
 				if (!enteredMeltdownState) {
 					enteredMeltdownState = true;
-					getLevel().playSound(null, getPos(), SoundEvents.SHULKER_BULLET_HIT, SoundSource.BLOCKS, 1.0f, 0.75f);
-					getLevel().playSound(null, getPos(), SoundEvents.NOTE_BLOCK_BASEDRUM, SoundSource.BLOCKS, 0.5f, 1.5f);
+					getLevel().playSound(null, getPos(), SoundEvents.SHULKER_BULLET_HIT, SoundSource.BLOCKS, 1.0f,
+							0.75f);
+					getLevel().playSound(null, getPos(), SoundEvents.NOTE_BLOCK_BASEDRUM, SoundSource.BLOCKS, 0.5f,
+							1.5f);
 				}
 
 				// But allow the time to keep getting reset until we dip below the overheat
@@ -163,7 +166,8 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 			}
 
 			if (this.getEnableAutomaticHeatTransfer()) {
-				HeatStorageUtilities.transferHeatWithSurroundings(heatStorage, getLevel(), getPos(), HeatTransferAction.EXECUTE);
+				HeatStorageUtilities.transferHeatWithSurroundings(heatStorage, getLevel(), getPos(),
+						HeatTransferAction.EXECUTE);
 			}
 		}
 	}
@@ -225,8 +229,10 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	@SuppressWarnings("resource")
 	public void syncToClient() {
 		if (!getLevel().isClientSide) {
-			PacketHeatStorageComponent syncPacket = new PacketHeatStorageComponent(this, getPos(), this.getComponentName());
-			StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, syncPacket);
+			PacketHeatStorageComponent syncPacket = new PacketHeatStorageComponent(this, getPos(),
+					this.getComponentName());
+			StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(),
+					getPos(), 32, syncPacket);
 		} else {
 			throw new RuntimeException("This method should only be called on the server!");
 		}
@@ -243,7 +249,8 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	 * @param filter
 	 * @return
 	 */
-	public HeatStorageComponent setCapabiltiyFilter(TriFunction<Integer, Direction, HeatManipulationAction, Boolean> filter) {
+	public HeatStorageComponent setCapabiltiyFilter(
+			TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter) {
 		this.filter = filter;
 		return this;
 	}
@@ -311,16 +318,20 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 			return;
 		}
 
-		UpgradeItemWrapper<Double> heatCapacityUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_CAPACITY.get());
+		UpgradeItemWrapper<Double> heatCapacityUpgrade = upgradeInventory
+				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_CAPACITY.get());
 		if (!heatCapacityUpgrade.isEmpty()) {
-			heatCapacityUpgradeMultiplier = (float) (1.0f + (heatCapacityUpgrade.getUpgradeValue() * heatCapacityUpgrade.getUpgradeWeight()));
+			heatCapacityUpgradeMultiplier = (float) (1.0f
+					+ (heatCapacityUpgrade.getUpgradeValue() * heatCapacityUpgrade.getUpgradeWeight()));
 		} else {
 			heatCapacityUpgradeMultiplier = 1.0f;
 		}
 
-		UpgradeItemWrapper<Double> heatTransferUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_TRANSFER.get());
+		UpgradeItemWrapper<Double> heatTransferUpgrade = upgradeInventory
+				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_TRANSFER.get());
 		if (!heatTransferUpgrade.isEmpty()) {
-			heatConductivityMultiplier = (float) (1.0f + (heatTransferUpgrade.getUpgradeValue() * heatTransferUpgrade.getUpgradeWeight()));
+			heatConductivityMultiplier = (float) (1.0f
+					+ (heatTransferUpgrade.getUpgradeValue() * heatTransferUpgrade.getUpgradeWeight()));
 		} else {
 			heatConductivityMultiplier = 1.0f;
 		}
@@ -338,38 +349,40 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		}
 
 		@Override
-		public int getOverheatThreshold() {
+		public float getOverheatThreshold() {
 			return HeatStorageComponent.this.getOverheatThreshold();
 		}
 
 		@Override
-		public int getMinimumHeatThreshold() {
+		public float getMinimumHeatThreshold() {
 			return HeatStorageComponent.this.getMinimumHeatThreshold();
 		}
 
 		@Override
-		public int heat(int amountToHeat, HeatTransferAction action) {
-			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToHeat, side, HeatManipulationAction.HEAT)) {
+		public float heat(float amountToHeat, HeatTransferAction action) {
+			if (HeatStorageComponent.this.filter != null
+					&& !HeatStorageComponent.this.filter.apply(amountToHeat, side, HeatManipulationAction.HEAT)) {
 				return 0;
 			}
 			return HeatStorageComponent.this.heat(amountToHeat, action);
 		}
 
 		@Override
-		public int cool(int amountToCool, HeatTransferAction action) {
-			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToCool, side, HeatManipulationAction.COOL)) {
+		public float cool(float amountToCool, HeatTransferAction action) {
+			if (HeatStorageComponent.this.filter != null
+					&& !HeatStorageComponent.this.filter.apply(amountToCool, side, HeatManipulationAction.COOL)) {
 				return 0;
 			}
 			return HeatStorageComponent.this.cool(amountToCool, action);
 		}
 
 		@Override
-		public int getCurrentHeat() {
+		public float getCurrentHeat() {
 			return HeatStorageComponent.this.getCurrentHeat();
 		}
 
 		@Override
-		public int getMaximumHeat() {
+		public float getMaximumHeat() {
 			return HeatStorageComponent.this.getMaximumHeat();
 		}
 
@@ -380,22 +393,22 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	}
 
 	@Override
-	public int getCurrentHeat() {
+	public float getCurrentHeat() {
 		return heatStorage.getCurrentHeat();
 	}
 
 	@Override
-	public int getOverheatThreshold() {
+	public float getOverheatThreshold() {
 		return heatStorage.getOverheatThreshold();
 	}
 
 	@Override
-	public int getMinimumHeatThreshold() {
+	public float getMinimumHeatThreshold() {
 		return heatStorage.getMinimumHeatThreshold();
 	}
 
 	@Override
-	public int getMaximumHeat() {
+	public float getMaximumHeat() {
 		return heatStorage.getMaximumHeat();
 	}
 
@@ -405,12 +418,12 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	}
 
 	@Override
-	public int heat(int amountToHeat, HeatTransferAction action) {
+	public float heat(float amountToHeat, HeatTransferAction action) {
 		return heatStorage.heat(amountToHeat, action);
 	}
 
 	@Override
-	public int cool(int amountToCool, HeatTransferAction action) {
+	public float cool(float amountToCool, HeatTransferAction action) {
 		return heatStorage.cool(amountToCool, action);
 	}
 

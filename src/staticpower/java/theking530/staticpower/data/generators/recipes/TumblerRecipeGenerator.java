@@ -4,14 +4,14 @@ import net.minecraft.data.DataGenerator;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.data.crafting.wrappers.tumbler.TumblerRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
 import theking530.staticpower.data.materials.MaterialBundle;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModMaterials;
 
-public class TumblerRecipeGenerator extends SPRecipeProvider<TumblerRecipe> {
+public class TumblerRecipeGenerator extends SCRecipeProvider<TumblerRecipe> {
 
 	public TumblerRecipeGenerator(DataGenerator dataGenerator) {
 		super("tumbling", dataGenerator);
@@ -37,6 +37,6 @@ public class TumblerRecipeGenerator extends SPRecipeProvider<TumblerRecipe> {
 
 	protected void addRecipe(String nameOverride, StaticPowerIngredient input, StaticPowerOutputItem output, MachineRecipeProcessingSection processing) {
 		TumblerRecipe recipe = new TumblerRecipe(null, input, output, processing);
-		addRecipe(nameOverride, SPRecipeBuilder.create(recipe));
+		addRecipe(nameOverride, SCRecipeBuilder.create(recipe));
 	}
 }

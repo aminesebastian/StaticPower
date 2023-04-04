@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
-import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.client.models.AbstractBakedModel;
@@ -57,8 +56,8 @@ public class ThermometerItemModel implements BakedModel {
 			@Override
 			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity, int x) {
 				BlockPos playerPosition = Minecraft.getInstance().player.getOnPos();
-				int biomeTemperature = HeatStorageUtilities.getBiomeAmbientTemperature(Minecraft.getInstance().level, playerPosition);
-				biomeTemperature = CapabilityHeatable.convertMilliHeatToHeat(biomeTemperature - IHeatStorage.MINIMUM_TEMPERATURE);
+				float biomeTemperature = HeatStorageUtilities.getBiomeAmbientTemperature(Minecraft.getInstance().level, playerPosition);
+				biomeTemperature = biomeTemperature - IHeatStorage.MINIMUM_TEMPERATURE;
 				float ratio = SDMath.clamp((biomeTemperature) / 473.0f, 0, 1);
 				int mapEntry = (int) Math.floor(ratio * 200);
 				// Check to see if we need to cache this model, if we do, do it.

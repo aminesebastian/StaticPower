@@ -8,14 +8,14 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
+import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
+import theking530.staticcore.data.generators.helpers.ShapedRecipePatternBuilder;
 import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeBuilder;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
-import theking530.staticpower.data.generators.helpers.ShapedRecipePatternBuilder;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 
-public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> {
+public class CarpenterRecipeGenerator extends SCRecipeProvider<CarpenterRecipe> {
 
 	public CarpenterRecipeGenerator(DataGenerator dataGenerator) {
 		super("carpenting", dataGenerator);
@@ -157,6 +157,6 @@ public class CarpenterRecipeGenerator extends SPRecipeProvider<CarpenterRecipe> 
 
 	protected void addRecipe(String nameOverride, ShapedRecipePatternBuilder patternBuilder, StaticPowerOutputItem primaryOutput, StaticPowerOutputItem secondaryOutput,
 			FluidStack outputFluid, MachineRecipeProcessingSection processing) {
-		addRecipe(nameOverride, SPRecipeBuilder.create(new CarpenterRecipe(null, patternBuilder.build(), primaryOutput, secondaryOutput, outputFluid, processing)));
+		addRecipe(nameOverride, SCRecipeBuilder.create(new CarpenterRecipe(null, patternBuilder.build(), primaryOutput, secondaryOutput, outputFluid, processing)));
 	}
 }

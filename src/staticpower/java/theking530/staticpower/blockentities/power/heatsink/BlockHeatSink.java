@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +21,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.data.StaticCoreTier;
-import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -38,7 +36,8 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+			boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
 		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 		tooltip.add(HeatTooltipUtilities.getHeatConductivityTooltip(tierObject.heatSinkConductivity.get()));
@@ -50,14 +49,11 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		super.getAdvancedTooltip(stack, worldIn, tooltip);
-		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
-		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(tierObject.heatSinkElectricHeatGeneration.get()));
-		tooltip.add(Component.literal(ChatFormatting.GRAY + "Generation Usage: ")
-				.append(PowerTextFormatting.formatPowerRateToString(tierObject.heatSinkElectricHeatPowerUsage.get())).withStyle(ChatFormatting.RED));
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
+			InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;
 	}
 

@@ -163,11 +163,11 @@ public class JadePluginImplementation implements IWailaPlugin {
 			if (tile != null) {
 				IHeatStorage storage = tile.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY).orElse(null);
 				if (storage != null && (!accessor.isServerConnected() || accessor.getServerData().contains(JadeDataProviders.HEAT_TAG))) {
-					int stored, capacity;
+					float stored, capacity;
 					if (accessor.isServerConnected()) {
 						CompoundTag heatData = accessor.getServerData().getCompound(JadeDataProviders.HEAT_TAG);
-						stored = heatData.getInt("value");
-						capacity = heatData.getInt("max");
+						stored = heatData.getFloat("value");
+						capacity = heatData.getFloat("max");
 					} else {
 						stored = storage.getCurrentHeat();
 						capacity = storage.getOverheatThreshold();

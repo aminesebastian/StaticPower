@@ -12,10 +12,10 @@ import theking530.staticcore.network.NetworkMessage;
 
 public class HeatCableUpdatePacket extends NetworkMessage {
 	private BlockPos position;
-	private int currentHeat;
-	private int capacity;
+	private float currentHeat;
+	private float capacity;
 
-	public HeatCableUpdatePacket(BlockPos position, int currentHeat, int capacity) {
+	public HeatCableUpdatePacket(BlockPos position, float currentHeat, float capacity) {
 		this.position = position;
 		this.currentHeat = currentHeat;
 		this.capacity = capacity;
@@ -35,8 +35,8 @@ public class HeatCableUpdatePacket extends NetworkMessage {
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
 		position = buffer.readBlockPos();
-		currentHeat = buffer.readInt();
-		capacity = buffer.readInt();
+		currentHeat = buffer.readFloat();
+		capacity = buffer.readFloat();
 	}
 
 	@SuppressWarnings({ "resource", "deprecation" })

@@ -1,4 +1,4 @@
-package theking530.staticpower.data.generators.helpers;
+package theking530.staticcore.data.generators.helpers;
 
 import java.util.Map.Entry;
 
@@ -11,11 +11,11 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import theking530.staticcore.crafting.StaticPowerRecipeSerializer;
 
-public class SPFinalizedRecipe<T extends Recipe<?>> implements FinishedRecipe {
+public class SCFinalizedRecipe<T extends Recipe<?>> implements FinishedRecipe {
 	private final T recipe;
 	private final ResourceLocation id;
 
-	public SPFinalizedRecipe(ResourceLocation id, T recipe) {
+	public SCFinalizedRecipe(ResourceLocation id, T recipe) {
 		this.id = id;
 		this.recipe = recipe;
 	}

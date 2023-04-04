@@ -58,16 +58,16 @@ public class GuiTextUtilities {
 		return Component.translatable(NUMBER_FORMATTER_ONE_DECIMAL.format(ticks / 20)).append(Component.translatable("gui.staticcore.seconds.short"));
 	}
 
-	public static MutableComponent formatHeatToString(int currentHeat, int capacity) {
+	public static MutableComponent formatHeatToString(float currentHeat, float capacity) {
 		return formatHeatToString(currentHeat, false, true).append("/").append(formatHeatToString(capacity));
 
 	}
 
-	public static MutableComponent formatHeatToString(int heat) {
+	public static MutableComponent formatHeatToString(float heat) {
 		return formatHeatToString(heat, true, true);
 	}
 
-	public static MutableComponent formatHeatToString(int heat, boolean includeUnits, boolean includeMetricUnit) {
+	public static MutableComponent formatHeatToString(float heat, boolean includeUnits, boolean includeMetricUnit) {
 		// Allocate the text component.
 		MutableComponent output;
 
@@ -75,7 +75,7 @@ public class GuiTextUtilities {
 		if ((int) heat == Integer.MAX_VALUE) {
 			output = Component.literal("∞");
 		} else {
-			MetricConverter metricEnergy = new MetricConverter(heat, -1);
+			MetricConverter metricEnergy = new MetricConverter(heat);
 			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
 
 			if (includeMetricUnit) {
@@ -97,7 +97,7 @@ public class GuiTextUtilities {
 		if ((int) heatTransferRate == Integer.MAX_VALUE) {
 			output = Component.literal("∞");
 		} else {
-			MetricConverter metricRate = new MetricConverter(heatTransferRate, -1);
+			MetricConverter metricRate = new MetricConverter(heatTransferRate);
 			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).append(" ").append(metricRate.getSuffix());
 		}
 

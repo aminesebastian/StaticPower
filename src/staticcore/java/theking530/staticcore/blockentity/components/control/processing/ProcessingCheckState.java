@@ -5,7 +5,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class ProcessingCheckState {
 	public enum ProcessingState {
-		SKIP, ERROR, OK, CANCEL
+		IDLE, SKIP, ERROR, OK, CANCEL
 	}
 
 	private final ProcessingState state;
@@ -44,6 +44,10 @@ public class ProcessingCheckState {
 		return state == ProcessingState.CANCEL;
 	}
 
+	public boolean isIdle() {
+		return state == ProcessingState.IDLE;
+	}
+
 	public static ProcessingCheckState skip() {
 		return new ProcessingCheckState(ProcessingState.SKIP, "");
 	}
@@ -54,6 +58,10 @@ public class ProcessingCheckState {
 
 	public static ProcessingCheckState cancel() {
 		return new ProcessingCheckState(ProcessingState.CANCEL, "");
+	}
+
+	public static ProcessingCheckState idle() {
+		return new ProcessingCheckState(ProcessingState.IDLE, "");
 	}
 
 	public static ProcessingCheckState error(String errorMessage) {
@@ -73,15 +81,18 @@ public class ProcessingCheckState {
 	}
 
 	public static ProcessingCheckState notEnoughPower(double requiredPower) {
-		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticcore.alert.not_enough_power", requiredPower));
+		return new ProcessingCheckState(ProcessingState.ERROR,
+				Component.translatable("gui.staticcore.alert.not_enough_power", requiredPower));
 	}
 
 	public static ProcessingCheckState notEnoughHeatCapacity(double requiredHeatCapacity) {
-		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticcore.alert.not_enough_heat_capacity", requiredHeatCapacity));
+		return new ProcessingCheckState(ProcessingState.ERROR,
+				Component.translatable("gui.staticcore.alert.not_enough_heat_capacity", requiredHeatCapacity));
 	}
 
 	public static ProcessingCheckState heatStorageTooHot(double mininumHeat) {
-		return new ProcessingCheckState(ProcessingState.ERROR, Component.translatable("gui.staticcore.alert.heat_storage_too_hot", mininumHeat));
+		return new ProcessingCheckState(ProcessingState.ERROR,
+				Component.translatable("gui.staticcore.alert.heat_storage_too_hot", mininumHeat));
 	}
 
 	public static ProcessingCheckState powerOutputFull() {

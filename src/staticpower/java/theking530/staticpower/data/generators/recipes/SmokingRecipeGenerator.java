@@ -4,10 +4,10 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmokingRecipe;
-import theking530.staticpower.data.generators.helpers.SPRecipeProvider;
+import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticpower.init.ModItems;
 
-public class SmokingRecipeGenerator extends SPRecipeProvider<SmokingRecipe> {
+public class SmokingRecipeGenerator extends SCRecipeProvider<SmokingRecipe> {
 
 	public SmokingRecipeGenerator(DataGenerator dataGenerator) {
 		super("smoking", dataGenerator);
