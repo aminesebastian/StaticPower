@@ -7,11 +7,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
@@ -33,7 +33,7 @@ import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeProcessor<CarpenterRecipe> {
+public class BlockEntityCarpenter extends BlockEntityMachine implements IOldRecipeProcessor<CarpenterRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityCarpenter> TYPE = new BlockEntityTypeAllocator<>("carpenter", (type, pos, state) -> new BlockEntityCarpenter(pos, state),
 			ModBlocks.Carpenter);
@@ -45,7 +45,7 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeP
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final RecipeProcessingComponent<CarpenterRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<CarpenterRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	public BlockEntityCarpenter(BlockPos pos, BlockState state) {
@@ -64,7 +64,7 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeP
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CarpenterRecipe>("ProcessingComponent", ModRecipeTypes.LATHE_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<CarpenterRecipe>("ProcessingComponent", ModRecipeTypes.LATHE_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -92,14 +92,14 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CarpenterRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<CarpenterRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
 				inputInventory.getStackInSlot(4), inputInventory.getStackInSlot(5), inputInventory.getStackInSlot(6), inputInventory.getStackInSlot(7),
 				inputInventory.getStackInSlot(8));
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, OldProcessingContainer outputContainer) {
 		// Move the items.
 		for (int i = 0; i < 9; i++) {
 			outputContainer.addInputItem(inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), true), CaptureType.BOTH);
@@ -115,7 +115,7 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, OldProcessingContainer outputContainer) {
 		// Move the items.
 		for (int i = 0; i < 9; i++) {
 			inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), false);
@@ -123,7 +123,7 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, OldProcessingContainer outputContainer) {
 		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -142,7 +142,7 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, OldProcessingContainer outputContainer) {
 		mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 		if (outputContainer.getOutputItems().size() > 1) {
 			secondaryOutputInventory.insertItem(0, outputContainer.getOutputItem(1).item().copy(), false);

@@ -1,4 +1,4 @@
-package theking530.staticcore.blockentity.components.control.processing;
+package theking530.staticcore.blockentity.components.control.oldprocessing;
 
 import java.util.Optional;
 
@@ -7,10 +7,11 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.ProcessingFluidWrapper;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.ProcessingFluidWrapper;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.ProcessingItemWrapper;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.serialization.SaveSerialize;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.blockentity.components.team.TeamComponent;
@@ -22,14 +23,14 @@ import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
-public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProcesingComponent<RecipeProcessingComponent<T>> {
+public class OldRecipeProcessingComponent<T extends Recipe<?>> extends OldAbstractProcesingComponent<OldRecipeProcessingComponent<T>> {
 	public static final int MOVE_TIME = 8;
 
 	private final RecipeType<T> recipeType;
-	private final IRecipeProcessor<T> processor;
+	private final IOldRecipeProcessor<T> processor;
 
 	@UpdateSerialize
-	private final ProcessingOutputContainer outputContainer;
+	private final OldProcessingContainer outputContainer;
 	@UpdateSerialize
 	private int moveTimer;
 	@UpdateSerialize
@@ -37,17 +38,17 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 	@SaveSerialize
 	private float accumulatedExperience;
 
-	public RecipeProcessingComponent(String name, RecipeType<T> recipeType, IRecipeProcessor<T> processor) {
+	public OldRecipeProcessingComponent(String name, RecipeType<T> recipeType, IOldRecipeProcessor<T> processor) {
 		this(name, 0, recipeType, processor);
 	}
 
-	public RecipeProcessingComponent(String name, int processingTime, RecipeType<T> recipeType, IRecipeProcessor<T> processor) {
+	public OldRecipeProcessingComponent(String name, int processingTime, RecipeType<T> recipeType, IOldRecipeProcessor<T> processor) {
 		super(name, processingTime, true);
 		this.recipeType = recipeType;
 		this.processor = processor;
 		this.moveTime = MOVE_TIME;
 		moveTimer = 0;
-		outputContainer = new ProcessingOutputContainer();
+		outputContainer = new OldProcessingContainer();
 	}
 
 	@Override
@@ -127,7 +128,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		}
 	}
 
-	public ProcessingOutputContainer getProcessingMaterials() {
+	public OldProcessingContainer getProcessingMaterials() {
 		return this.outputContainer;
 	}
 
@@ -170,7 +171,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		}
 
 		// This is the ONLY time we should ever be opening this output container.
-		outputContainer.open(recipe.get().getId());
+		outputContainer.open();
 		processor.captureInputsAndProducts(this, recipe.get(), outputContainer);
 		outputContainer.close();
 		return processor.canStartProcessing(this, recipe.get(), outputContainer);

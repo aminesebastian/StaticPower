@@ -8,11 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -34,7 +34,7 @@ import theking530.staticpower.init.ModBlocks;
  * @author Amine Sebastian
  *
  */
-public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRecipeProcessor<SmeltingRecipe> {
+public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IOldRecipeProcessor<SmeltingRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>("powered_furnace",
 			(type, pos, state) -> new BlockEntityPoweredFurnace(pos, state), ModBlocks.PoweredFurnace);
@@ -49,7 +49,7 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRe
 	public final InventoryComponent outputInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final RecipeProcessingComponent<SmeltingRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<SmeltingRecipe> processingComponent;
 
 	public BlockEntityPoweredFurnace(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
@@ -67,7 +67,7 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRe
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", RecipeType.SMELTING, this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", RecipeType.SMELTING, this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -83,12 +83,12 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<SmeltingRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<SmeltingRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, OldProcessingContainer outputContainer) {
 		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItems().get(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -96,19 +96,19 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, OldProcessingContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, 1, true), CaptureType.BOTH);
 		outputContainer.addOutputItem(recipe.getResultItem().copy(), CaptureType.BOTH);
 		component.setMaxProcessingTime(getCookTime(recipe));
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, 1, false);
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, OldProcessingContainer outputContainer) {
 		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 	}
 

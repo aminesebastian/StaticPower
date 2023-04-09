@@ -8,11 +8,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidInputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
@@ -34,7 +34,7 @@ import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusion
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityFluidInfuser extends BlockEntityMachine implements IRecipeProcessor<FluidInfusionRecipe> {
+public class BlockEntityFluidInfuser extends BlockEntityMachine implements IOldRecipeProcessor<FluidInfusionRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityFluidInfuser> TYPE = new BlockEntityTypeAllocator<BlockEntityFluidInfuser>("fluid_infuser",
 			(type, pos, state) -> new BlockEntityFluidInfuser(pos, state), ModBlocks.FluidInfuser);
@@ -50,7 +50,7 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 	public final InventoryComponent batteryInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final RecipeProcessingComponent<FluidInfusionRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<FluidInfusionRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	public BlockEntityFluidInfuser(BlockPos pos, BlockState state) {
@@ -66,7 +66,7 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FluidInfusionRecipe>("ProcessingComponent", ModRecipeTypes.FLUID_INFUSION_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<FluidInfusionRecipe>("ProcessingComponent", ModRecipeTypes.FLUID_INFUSION_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -94,13 +94,13 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FluidInfusionRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<FluidInfusionRecipe> component) {
 
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, OldProcessingContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getRequiredFluid().getAmount(), CaptureType.BOTH);
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
@@ -111,13 +111,13 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe,
-			ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe,
+			OldProcessingContainer outputContainer) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -125,7 +125,7 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, OldProcessingContainer outputContainer) {
 		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 		fluidTankComponent.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
 	}

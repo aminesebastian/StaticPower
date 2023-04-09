@@ -1,4 +1,4 @@
-package theking530.staticcore.blockentity.components.control.processing;
+package theking530.staticcore.blockentity.components.control.oldprocessing;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -13,6 +13,7 @@ import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent
 import theking530.staticcore.blockentity.components.ProductionTrackingComponent;
 import theking530.staticcore.blockentity.components.control.ProcesingComponentSyncPacket;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
@@ -25,14 +26,14 @@ import theking530.staticcore.init.StaticCoreUpgradeTypes;
 import theking530.staticcore.init.StaticCoreUpgradeTypes.SpeedMultiplierUpgradeValue;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.productivity.ProductionTrackingToken;
-import theking530.staticcore.productivity.product.power.PowerProductionStack;
+import theking530.staticcore.productivity.product.power.PowerProductInterfaceId;
 
-public abstract class AbstractProcesingComponent<T extends AbstractProcesingComponent<?>> extends AbstractBlockEntityComponent {
+public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesingComponent<?>> extends AbstractBlockEntityComponent {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
 	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
 
 	private ProductionTrackingComponent productionTrackingComponent;
-	private PowerProductionStack powerProductionStack;
+	private PowerProductInterfaceId powerProductionStack;
 
 	private boolean shouldControlOnBlockState;
 	protected UpgradeInventoryComponent upgradeInventory;
@@ -86,7 +87,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 
 	private int lastSyncProcessingTime;
 
-	public AbstractProcesingComponent(String name, int processingTime, boolean serverOnly) {
+	public OldAbstractProcesingComponent(String name, int processingTime, boolean serverOnly) {
 		super(name);
 		this.fullSatisfactionProcessingTime = processingTime;
 		this.defaultProcessingTime = processingTime;
@@ -107,7 +108,7 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	@Override
 	public void onRegistered(BlockEntityBase owner) {
 		super.onRegistered(owner);
-		powerProductionStack = new PowerProductionStack(owner.getBlockState().getBlock());
+		powerProductionStack = new PowerProductInterfaceId(owner.getBlockState().getBlock());
 		if (getBlockEntity().hasComponentOfType(ProductionTrackingComponent.class)) {
 			productionTrackingComponent = getBlockEntity().getComponent(ProductionTrackingComponent.class);
 		} else {
@@ -683,11 +684,11 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		return getProductionTrackingComponent().getToken(StaticCoreProductTypes.Fluid.get());
 	}
 
-	public ProductionTrackingToken<PowerProductionStack> getPowerProductionToken() {
+	public ProductionTrackingToken<PowerProductInterfaceId> getPowerProductionToken() {
 		return getProductionTrackingComponent().getToken(StaticCoreProductTypes.Power.get());
 	}
 
-	public PowerProductionStack getPowerProductionStack() {
+	public PowerProductInterfaceId getPowerProductionStack() {
 		return powerProductionStack;
 	}
 

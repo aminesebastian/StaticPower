@@ -1,15 +1,19 @@
 package theking530.staticcore.blockentity.components.control.processing;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraftforge.common.util.INBTSerializable;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 
-public class ProcessingCheckState {
+public class ProcessingCheckState implements INBTSerializable<CompoundTag> {
 	public enum ProcessingState {
-		IDLE, SKIP, ERROR, OK, CANCEL
+		IDLE, PENDING, SKIP, ERROR, OK, CANCEL
 	}
 
-	private final ProcessingState state;
-	private final MutableComponent errorMessage;
+	private ProcessingState state;
+	private MutableComponent errorMessage;
 
 	private ProcessingCheckState(ProcessingState state, String errorMessage) {
 		this(state, Component.translatable(errorMessage));
@@ -26,6 +30,10 @@ public class ProcessingCheckState {
 
 	public MutableComponent getErrorMessage() {
 		return errorMessage;
+	}
+
+	public boolean isPending() {
+		return state == ProcessingState.PENDING;
 	}
 
 	public boolean isOk() {
@@ -46,6 +54,10 @@ public class ProcessingCheckState {
 
 	public boolean isIdle() {
 		return state == ProcessingState.IDLE;
+	}
+
+	public static ProcessingCheckState pending() {
+		return new ProcessingCheckState(ProcessingState.PENDING, "");
 	}
 
 	public static ProcessingCheckState skip() {
@@ -76,6 +88,10 @@ public class ProcessingCheckState {
 		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.requires_different_input_fluid");
 	}
 
+	public static ProcessingCheckState doesNotPassRedstoneControlCheck() {
+		return ProcessingCheckState.error(Component.literal("Redstone Control Mode Not Satisfied.").getString());
+	}
+
 	public static ProcessingCheckState notEnoughFluid() {
 		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.not_enough_fluid");
 	}
@@ -83,6 +99,12 @@ public class ProcessingCheckState {
 	public static ProcessingCheckState notEnoughPower(double requiredPower) {
 		return new ProcessingCheckState(ProcessingState.ERROR,
 				Component.translatable("gui.staticcore.alert.not_enough_power", requiredPower));
+	}
+
+	public static ProcessingCheckState powerUsageTooHigh(double requiredPower) {
+		return ProcessingCheckState.error(Component.literal("Recipe's power per tick requirement (")
+				.append(PowerTextFormatting.formatPowerRateToString(requiredPower))
+				.append(") is larger than the amount this machine can handle!").getString());
 	}
 
 	public static ProcessingCheckState notEnoughHeatCapacity(double requiredHeatCapacity) {
@@ -112,6 +134,31 @@ public class ProcessingCheckState {
 	}
 
 	public static ProcessingCheckState outputsCannotTakeRecipe() {
-		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.machine_ouput_cannot_fit_recipe");
+		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.machine_output_cannot_fit_recipe");
+	}
+
+	public void toNetwork(FriendlyByteBuf buffer) {
+		buffer.writeByte(state.ordinal());
+		buffer.writeUtf(errorMessage.getString());
+	}
+
+	public static ProcessingCheckState fromNetwork(FriendlyByteBuf buffer) {
+		ProcessingState state = ProcessingState.values()[buffer.readByte()];
+		MutableComponent errorMessage = Component.translatable(buffer.readUtf());
+		return new ProcessingCheckState(state, errorMessage);
+	}
+
+	@Override
+	public CompoundTag serializeNBT() {
+		CompoundTag output = new CompoundTag();
+		output.putByte("state", (byte) state.ordinal());
+		output.putString("error_message", errorMessage.getString());
+		return output;
+	}
+
+	@Override
+	public void deserializeNBT(CompoundTag nbt) {
+		state = ProcessingState.values()[nbt.getByte("state")];
+		errorMessage = Component.translatable(nbt.getString("error_message"));
 	}
 }

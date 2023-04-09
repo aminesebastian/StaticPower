@@ -10,7 +10,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import theking530.staticcore.attributes.AttributeModifiers;
 import theking530.staticcore.attributes.AttributeValues;
 import theking530.staticcore.init.StaticCoreItems;
-import theking530.staticcore.init.StaticCorePackets;
+import theking530.staticcore.init.StaticCoreNetworkMessages;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.init.StaticCoreRecipeSerializers;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
@@ -34,6 +34,6 @@ public class StaticCore {
 		StaticCoreRecipeSerializers.init(eventBus);
 		StaticCoreProductTypes.init(eventBus);
 		StaticCoreUpgradeTypes.init(eventBus);
-		StaticCorePackets.init();
+		StaticCoreNetworkMessages.init();
 	}
 }

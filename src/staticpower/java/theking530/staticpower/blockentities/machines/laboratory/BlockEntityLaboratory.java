@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.blockentity.components.control.processing.MachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
@@ -50,7 +50,7 @@ public class BlockEntityLaboratory extends BlockEntityMachine {
 	public final InventoryComponent inputInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final MachineProcessingComponent processingComponent;
+	public final OldMachineProcessingComponent processingComponent;
 
 	@UpdateSerialize
 	private String owningTeam;
@@ -87,7 +87,7 @@ public class BlockEntityLaboratory extends BlockEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 100, this::canStartProcessing, this::canContinueProcessing,
+		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", 100, this::canStartProcessing, this::canContinueProcessing,
 				this::processingCompleted, true));
 
 		// Initialize the processing component to work with the redstone control

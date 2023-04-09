@@ -13,11 +13,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.api.energy.PowerStack;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.energy.PowerDistributionComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -34,7 +34,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.init.ModBlocks;
 
-public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRecipeProcessor<SolidFuelRecipe> {
+public class BlockEntitySolidGenerator extends BlockEntityMachine implements IOldRecipeProcessor<SolidFuelRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>("solid_generator",
 			(type, pos, state) -> new BlockEntitySolidGenerator(pos, state), ModBlocks.SolidGenerator);
@@ -43,7 +43,7 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final LoopingSoundComponent generatingSoundComponent;
 
-	public final RecipeProcessingComponent<SolidFuelRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<SolidFuelRecipe> processingComponent;
 
 	public double powerGenerationPerTick;
 
@@ -63,7 +63,7 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<SolidFuelRecipe>("ProcessingComponent", SolidFuelRecipe.RECIPE_TYPE, this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<SolidFuelRecipe>("ProcessingComponent", SolidFuelRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -116,12 +116,12 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<SolidFuelRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<SolidFuelRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, OldProcessingContainer outputContainer) {
 		if (!powerStorage.canFullyAcceptPower(powerGenerationPerTick)) {
 			return ProcessingCheckState.powerOutputFull();
 		}
@@ -129,12 +129,12 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, OldProcessingContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 		outputContainer.setOutputPower(powerGenerationPerTick);
 		component.setMaxProcessingTime(recipe.getFuelAmount());

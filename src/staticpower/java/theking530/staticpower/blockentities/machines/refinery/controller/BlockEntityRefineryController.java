@@ -16,11 +16,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.presets.AllSidesNever;
@@ -54,7 +54,7 @@ import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.tags.ModBlockTags;
 
-public class BlockEntityRefineryController extends BlockEntityMachine implements IRecipeProcessor<RefineryRecipe> {
+public class BlockEntityRefineryController extends BlockEntityMachine implements IOldRecipeProcessor<RefineryRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityRefineryController> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryController>("refinery_controller",
 			(type, pos, state) -> new BlockEntityRefineryController(pos, state), ModBlocks.RefineryController);
@@ -66,7 +66,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public final InventoryComponent catalystInventory;
 	public final LoopingSoundComponent generatingSoundComponent;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final RecipeProcessingComponent<RefineryRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<RefineryRecipe> processingComponent;
 	public final HeatStorageComponent heatStorage;
 	public final FluidTankComponent[] fluidTanks;
 	private float currentProcessingProductivity;
@@ -91,7 +91,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", 1, ModRecipeTypes.REFINERY_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", 1, ModRecipeTypes.REFINERY_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -385,12 +385,12 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<RefineryRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<RefineryRecipe> component) {
 		return new RecipeMatchParameters().setItems(catalystInventory.getStackInSlot(0)).setFluids(getInputTank(0).getFluid(), getInputTank(1).getFluid());
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, OldProcessingContainer outputContainer) {
 		if (recipe.hasCatalyst()) {
 			outputContainer.addInputItem(catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), true), CaptureType.BOTH);
 		}
@@ -421,7 +421,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, OldProcessingContainer outputContainer) {
 		if (recipe.hasCatalyst()) {
 			catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), false);
 		}
@@ -434,8 +434,8 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe,
-			ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe,
+			OldProcessingContainer outputContainer) {
 		ProcessingCheckState multiBlockCheck = checkMultiBlockReady();
 		if (!multiBlockCheck.isOk()) {
 			return multiBlockCheck;
@@ -455,7 +455,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, OldProcessingContainer outputContainer) {
 		// Output the refined fluids.
 		fillOutputTanksWithOutput(recipe, FluidAction.EXECUTE);
 		heatStorage.cool(getHeatUsage(), HeatTransferAction.EXECUTE);

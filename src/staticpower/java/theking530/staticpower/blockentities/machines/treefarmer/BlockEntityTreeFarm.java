@@ -36,10 +36,10 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.blockentity.components.control.processing.MachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -89,7 +89,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final MachineProcessingComponent processingComponent;
+	public final OldMachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	@UpdateSerialize
@@ -117,7 +117,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
 				.setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.treeFarmerProcessingTime.get(), this::canProcess,
+		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.treeFarmerProcessingTime.get(), this::canProcess,
 				this::canProcess, this::processingCompleted, true));
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
@@ -210,7 +210,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			refreshBlocksInRange(range);
 		}
 
-		ProcessingOutputContainer outputContainer = processingComponent.getOutputContainer();
+		OldProcessingContainer outputContainer = processingComponent.getOutputContainer();
 		// Only perform a harvest if the internal inventory is TOTALLY empty.
 		if (outputContainer.getOutputItems().isEmpty()) {
 			processBlock(getCurrentPosition());
@@ -307,8 +307,8 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			harvestBlock(pos, harvestResults, visited);
 
 			// Insert all the harvested results into the internal inventory.
-			ProcessingOutputContainer outputContainer = processingComponent.getOutputContainer();
-			outputContainer.open(null);
+			OldProcessingContainer outputContainer = processingComponent.getOutputContainer();
+			outputContainer.open();
 			for (int i = 0; i < harvestResults.size(); i++) {
 				outputContainer.addOutputItem(harvestResults.get(i), CaptureType.COUNT_ONLY);
 			}

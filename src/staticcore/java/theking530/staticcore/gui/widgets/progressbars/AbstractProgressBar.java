@@ -12,7 +12,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.blockentity.components.control.processing.AbstractProcesingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldAbstractProcesingComponent;
+import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
 import theking530.staticcore.gui.StaticCoreSprites;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
@@ -35,7 +36,15 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * exists).
 	 */
 	@Nullable
-	protected AbstractProcesingComponent<?> machineProcessingComponent;
+	@Deprecated
+	protected OldAbstractProcesingComponent<?> oldMachineProcessingComponent;
+
+	/**
+	 * The machine processing component this progress bar is bound to (if one
+	 * exists).
+	 */
+	@Nullable
+	protected AbstractProcessingComponent<?, ?> machineProcessingComponent;
 
 	/**
 	 * The visual current progress. This is interpolated to match the current
@@ -112,16 +121,25 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Capture the max progress.
+		if (oldMachineProcessingComponent != null) {
+			maxProgress = oldMachineProcessingComponent.getMaxProcessingTime();
+			currentProgress = oldMachineProcessingComponent.getCurrentProcessingTime();
+			tickDownRate = oldMachineProcessingComponent.getTimeUnitsPerTick();
+			isProcessingErrored = oldMachineProcessingComponent.isProcessingStoppedDueToError();
+			processingErrorMessage = oldMachineProcessingComponent.getProcessingErrorMessage();
+		}
+
 		if (machineProcessingComponent != null) {
-			maxProgress = machineProcessingComponent.getMaxProcessingTime();
+			maxProgress = machineProcessingComponent.getProcessingTime();
 			currentProgress = machineProcessingComponent.getCurrentProcessingTime();
-			tickDownRate = machineProcessingComponent.getTimeUnitsPerTick();
-			isProcessingErrored = machineProcessingComponent.isProcessingStoppedDueToError();
-			processingErrorMessage = machineProcessingComponent.getProcessingErrorMessage();
+			tickDownRate = machineProcessingComponent.getProcessingTicksPerGameTick();
+			isProcessingErrored = machineProcessingComponent.getProcessingState().isError();
+			processingErrorMessage = machineProcessingComponent.getProcessingState().getErrorMessage();
 		}
 
 		// Calculate the visual current progress.
-		visualCurrentProgress = SDMath.clamp(visualCurrentProgress + partialTicks, currentProgress - 1, currentProgress);
+		visualCurrentProgress = SDMath.clamp(visualCurrentProgress + partialTicks, currentProgress - 1,
+				currentProgress);
 
 		if (visualCurrentProgress > maxProgress) {
 			visualCurrentProgress = maxProgress;
@@ -149,7 +167,8 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 			if (visualCurrentProgresPercentage < startPercentage) {
 				visualCurrentProgresPercentage = 0.0f;
 			} else {
-				visualCurrentProgresPercentage = (visualCurrentProgresPercentage - startPercentage) / totalPercentCovered;
+				visualCurrentProgresPercentage = (visualCurrentProgresPercentage - startPercentage)
+						/ totalPercentCovered;
 			}
 		}
 
@@ -164,7 +183,8 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 			}
 		} else if (enableProgressTooltip) {
 			if (currentProgress > 0) {
-				MutableComponent remainingTime = GuiTextUtilities.formatTicksToTimeUnit((int) ((maxProgress - currentProgress) / (tickDownRate)));
+				MutableComponent remainingTime = GuiTextUtilities
+						.formatTicksToTimeUnit((int) ((maxProgress - currentProgress) / (tickDownRate)));
 				tooltips.add(Component.translatable("gui.staticcore.remaining").append(": ").append(remainingTime));
 			}
 
@@ -221,18 +241,38 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 
 	@SuppressWarnings("unchecked")
 	/**
-	 * Binds this progress bar to the provided {@link MachineProcessingComponent}.
+	 * Binds this progress bar to the provided
+	 * {@link OldMachineProcessingComponent}.
 	 * 
 	 * @param component The component to bind to.
 	 * @return This progress bar for chaining of commands.
 	 */
-	public T bindToMachineProcessingComponent(AbstractProcesingComponent<?> component) {
+	public T bindToMachineProcessingComponent(OldAbstractProcesingComponent<?> component) {
+		oldMachineProcessingComponent = component;
+
+		// Set the initial values.
+		maxProgress = oldMachineProcessingComponent.getMaxProcessingTime();
+		currentProgress = oldMachineProcessingComponent.getCurrentProcessingTime();
+		tickDownRate = oldMachineProcessingComponent.getTimeUnitsPerTick();
+		visualCurrentProgress = currentProgress;
+		return (T) this;
+	}
+
+	@SuppressWarnings("unchecked")
+	/**
+	 * Binds this progress bar to the provided
+	 * {@link OldMachineProcessingComponent}.
+	 * 
+	 * @param component The component to bind to.
+	 * @return This progress bar for chaining of commands.
+	 */
+	public T bindToMachineProcessingComponent(AbstractProcessingComponent<?, ?> component) {
 		machineProcessingComponent = component;
 
 		// Set the initial values.
-		maxProgress = machineProcessingComponent.getMaxProcessingTime();
+		maxProgress = machineProcessingComponent.getProcessingTime();
 		currentProgress = machineProcessingComponent.getCurrentProcessingTime();
-		tickDownRate = machineProcessingComponent.getTimeUnitsPerTick();
+		tickDownRate = machineProcessingComponent.getProcessingTicksPerGameTick();
 		visualCurrentProgress = currentProgress;
 		return (T) this;
 	}

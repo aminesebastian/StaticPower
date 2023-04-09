@@ -6,11 +6,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticcore.blockentity.components.fluids.FluidInputServoComponent;
@@ -31,7 +31,7 @@ import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProcessor<MixerRecipe> {
+public class BlockEntityMixer extends BlockEntityMachine implements IOldRecipeProcessor<MixerRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityMixer> TYPE = new BlockEntityTypeAllocator<BlockEntityMixer>("mixer",
 			(type, pos, state) -> new BlockEntityMixer(pos, state), ModBlocks.Mixer);
@@ -46,7 +46,7 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final RecipeProcessingComponent<MixerRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<MixerRecipe> processingComponent;
 
 	public BlockEntityMixer(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
@@ -61,7 +61,7 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<MixerRecipe>("ProcessingComponent", ModRecipeTypes.MIXER_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<MixerRecipe>("ProcessingComponent", ModRecipeTypes.MIXER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -92,12 +92,12 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<MixerRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<MixerRecipe> component) {
 		return new RecipeMatchParameters().setItems(input1Inventory.getStackInSlot(0), input2Inventory.getStackInSlot(0)).setFluids(fluidInput1.getFluid(), fluidInput2.getFluid());
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, OldProcessingContainer outputContainer) {
 		if (recipe.hasPrimaryItemInput()) {
 			outputContainer.addInputItem(input1Inventory.extractItem(0, recipe.getPrimaryItemInput().getCount(), true), CaptureType.BOTH);
 		}
@@ -120,7 +120,7 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, OldProcessingContainer outputContainer) {
 		if (recipe.hasPrimaryItemInput()) {
 			input1Inventory.extractItem(0, recipe.getPrimaryItemInput().getCount(), false);
 		}
@@ -130,7 +130,7 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, OldProcessingContainer outputContainer) {
 		if (fluidOutput.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).fluid().getAmount()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
@@ -138,7 +138,7 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, OldProcessingContainer outputContainer) {
 		fluidOutput.fill(outputContainer.getOutputFluid(0).fluid().copy(), FluidAction.EXECUTE);
 
 		// Drain the fluid.

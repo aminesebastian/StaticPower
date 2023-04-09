@@ -8,11 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.StaticCoreConfig;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
@@ -35,7 +35,7 @@ import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipeProcessor<LumberMillRecipe> {
+public class BlockEntityLumberMill extends BlockEntityMachine implements IOldRecipeProcessor<LumberMillRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityLumberMill> TYPE = new BlockEntityTypeAllocator<>("lumber_mill",
 			(type, pos, state) -> new BlockEntityLumberMill(pos, state), ModBlocks.LumberMill);
@@ -47,7 +47,7 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final RecipeProcessingComponent<LumberMillRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<LumberMillRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	public BlockEntityLumberMill(BlockPos pos, BlockState state) {
@@ -71,7 +71,7 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<LumberMillRecipe>("ProcessingComponent", ModRecipeTypes.LUMBER_MILL_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<LumberMillRecipe>("ProcessingComponent", ModRecipeTypes.LUMBER_MILL_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -100,7 +100,7 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	 * @param recipe
 	 * @return
 	 */
-	protected boolean canOutputsTakeRecipeResult(ProcessingOutputContainer outputContainer) {
+	protected boolean canOutputsTakeRecipeResult(OldProcessingContainer outputContainer) {
 		if (outputContainer.getOutputItems().size() > 0) {
 			if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0).item())) {
 				return false;
@@ -133,12 +133,12 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<LumberMillRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<LumberMillRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, OldProcessingContainer outputContainer) {
 		// Move the item.
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput(), CaptureType.BOTH);
@@ -151,12 +151,12 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, OldProcessingContainer outputContainer) {
 		// If the recipe cannot be insert into the output, return false.
 		if (!canOutputsTakeRecipeResult(outputContainer)) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
@@ -169,7 +169,7 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, OldProcessingContainer outputContainer) {
 		if (outputContainer.getOutputItems().size() > 0) {
 			mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 			if (outputContainer.getOutputItems().size() > 1) {

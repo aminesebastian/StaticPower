@@ -6,12 +6,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.ProcessingItemWrapper;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -35,7 +35,7 @@ import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRecipeProcessor<GrinderRecipe> {
+public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IOldRecipeProcessor<GrinderRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPoweredGrinder> TYPE = new BlockEntityTypeAllocator<>("grinder",
 			(type, pos, state) -> new BlockEntityPoweredGrinder(pos, state), ModBlocks.PoweredGrinder);
@@ -44,7 +44,7 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 	public final InventoryComponent outputInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final RecipeProcessingComponent<GrinderRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<GrinderRecipe> processingComponent;
 
 	@UpdateSerialize
 	private double bonusOutputChance;
@@ -68,7 +68,7 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<GrinderRecipe>("ProcessingComponent",
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<GrinderRecipe>("ProcessingComponent",
 				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), ModRecipeTypes.GRINDER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
@@ -87,13 +87,13 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<GrinderRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<GrinderRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
-			ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
+			OldProcessingContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
 
 		for (StaticPowerOutputItem outputItem : recipe.getOutputItems()) {
@@ -104,14 +104,14 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
-			ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
+			OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
-			ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
+			OldProcessingContainer outputContainer) {
 		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory,
 				outputContainer.getOutputItems().stream().map(x -> x.item()).toList())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
@@ -120,8 +120,8 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
-			ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe,
+			OldProcessingContainer outputContainer) {
 		for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
 			InventoryUtilities.insertItemIntoInventory(outputInventory, output.item().copy(), false);
 		}

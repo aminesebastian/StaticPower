@@ -1,10 +1,10 @@
 package theking530.staticcore.productivity.cacheentry;
 
-import theking530.staticcore.productivity.product.power.PowerProductionStack;
+import theking530.staticcore.productivity.product.power.PowerProductInterfaceId;
 
-public class PowerProductionEntry extends ProductionEntry<PowerProductionStack> {
+public class PowerProductionEntry extends ProductionEntry<PowerProductInterfaceId> {
 
-	public PowerProductionEntry(PowerProductionStack product) {
+	public PowerProductionEntry(PowerProductInterfaceId product) {
 		super(product);
 	}
 }

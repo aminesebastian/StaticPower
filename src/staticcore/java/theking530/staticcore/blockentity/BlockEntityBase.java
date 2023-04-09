@@ -55,9 +55,9 @@ import theking530.staticcore.block.StaticCoreBlock;
 import theking530.staticcore.block.StaticCoreTieredBlock;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.ProcessingItemWrapper;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.CompoundInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
@@ -336,8 +336,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		}
 
 		// Drop all the INPUTS from any recipe processing components.
-		for (RecipeProcessingComponent<?> comp : getComponents(RecipeProcessingComponent.class)) {
-			ProcessingOutputContainer outputContainer = comp.getProcessingMaterials();
+		for (OldRecipeProcessingComponent<?> comp : getComponents(OldRecipeProcessingComponent.class)) {
+			OldProcessingContainer outputContainer = comp.getProcessingMaterials();
 			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
 				if (!input.isTemplateItem()) {
 					WorldUtilities.dropItem(level, worldPosition, input.item());

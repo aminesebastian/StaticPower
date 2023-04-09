@@ -26,7 +26,7 @@ import net.minecraftforge.common.FarmlandWaterManager;
 import net.minecraftforge.common.ticket.AABBTicket;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.blockentity.components.control.processing.MachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
@@ -77,7 +77,7 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final MachineProcessingComponent processingComponent;
+	public final OldMachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	private final List<BlockPos> blocks;
@@ -106,7 +106,7 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.basicFarmerProcessingTime.get(), this::canFarm, this::canFarm,
+		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.basicFarmerProcessingTime.get(), this::canFarm, this::canFarm,
 				this::processingCompleted, true));
 		processingComponent.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage)
 				.setProcessingPowerUsage(StaticPowerConfig.SERVER.basicFarmerPowerUsage.get());

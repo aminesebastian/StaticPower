@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
-import theking530.staticcore.blockentity.components.control.processing.AbstractProcesingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldAbstractProcesingComponent;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
@@ -41,7 +41,7 @@ public class ProgressInfoProvider implements IProbeInfoProvider, IProbeConfigPro
 		}
 
 		@SuppressWarnings("rawtypes")
-		Optional<AbstractProcesingComponent> processing = ComponentUtilities.getComponent(AbstractProcesingComponent.class, be);
+		Optional<OldAbstractProcesingComponent> processing = ComponentUtilities.getComponent(OldAbstractProcesingComponent.class, be);
 		if (processing.isPresent()) {
 			if (processing.get().hasProcessingStarted()) {
 				int remaining = processing.get().getMaxProcessingTime() - processing.get().getCurrentProcessingTime();

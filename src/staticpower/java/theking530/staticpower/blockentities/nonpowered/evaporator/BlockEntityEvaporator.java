@@ -14,7 +14,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
-import theking530.staticcore.blockentity.components.control.processing.MachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
@@ -49,7 +49,7 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 	public static final int DEFAULT_TANK_SIZE = 5000;
 
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final MachineProcessingComponent processingComponent;
+	public final OldMachineProcessingComponent processingComponent;
 	public final FluidTankComponent inputTankComponent;
 	public final FluidTankComponent outputTankComponent;
 	public final HeatStorageComponent heatStorage;
@@ -65,7 +65,7 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachineNoFacePreset.INSTANCE));
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", EvaporatorRecipe.DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess,
+		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", EvaporatorRecipe.DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess,
 				this::processingCompleted, true).setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory)
 				.setRedstoneControlComponent(redstoneControlComponent));
 

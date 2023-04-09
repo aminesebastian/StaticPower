@@ -1,6 +1,8 @@
 package theking530.staticcore.init;
 
 import theking530.staticcore.blockentity.components.control.ProcesingComponentSyncPacket;
+import theking530.staticcore.blockentity.components.control.processing.basic.BasicProcessingComponentSyncPacket;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponentSyncPacket;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponentSyncPacket;
 import theking530.staticcore.blockentity.components.fluids.PacketFluidContainerComponent;
 import theking530.staticcore.blockentity.components.fluids.PacketFluidTankComponent;
@@ -26,8 +28,11 @@ import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics
 import theking530.staticcore.productivity.metrics.PacketRequestProductionTimeline;
 import theking530.staticcore.research.network.PacketSetSelectedResearch;
 
-public class StaticCorePackets {
+public class StaticCoreNetworkMessages {
 	public static void init() {
+		StaticCoreMessageHandler.registerMessage(BasicProcessingComponentSyncPacket.class);
+		StaticCoreMessageHandler.registerMessage(RecipeProcessingComponentSyncPacket.class);
+		
 		StaticCoreMessageHandler.registerMessage(PacketRedstoneComponentSync.class);
 		StaticCoreMessageHandler.registerMessage(PacketCableAttachmentRedstoneSync.class);
 		StaticCoreMessageHandler.registerMessage(PacketSideConfigTab.class);

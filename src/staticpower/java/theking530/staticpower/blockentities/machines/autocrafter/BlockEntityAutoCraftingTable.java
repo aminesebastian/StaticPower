@@ -15,11 +15,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -35,7 +35,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderAutoCraftingTable;
 import theking530.staticpower.init.ModBlocks;
 
-public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements IRecipeProcessor<CraftingRecipe> {
+public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements IOldRecipeProcessor<CraftingRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoCraftingTable>("crafting_table_auto",
 			(type, pos, state) -> new BlockEntityAutoCraftingTable(pos, state), ModBlocks.AutoCraftingTable);
@@ -46,7 +46,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 		}
 	}
 
-	public final RecipeProcessingComponent<CraftingRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<CraftingRecipe> processingComponent;
 	public final InventoryComponent patternInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
@@ -64,7 +64,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CraftingRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(),
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<CraftingRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(),
 				RecipeType.CRAFTING, this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
@@ -130,7 +130,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CraftingRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<CraftingRecipe> component) {
 		ItemStack[] pattern = new ItemStack[patternInventory.getSlots()];
 		for (int i = 0; i < patternInventory.getSlots(); i++) {
 			pattern[i] = patternInventory.getStackInSlot(i);
@@ -139,7 +139,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, OldProcessingContainer outputContainer) {
 		// If this recipe is shaped, make sure we place the same shaped recipe's items
 		// into the internal inventory. If shapeless, just put the items into the
 		// internal inv.
@@ -193,7 +193,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, OldProcessingContainer outputContainer) {
 		// If this recipe is shaped, make sure we place the same shaped recipe's items
 		// into the internal inventory. If shapeless, just put the items into the
 		// internal inv.
@@ -244,7 +244,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, OldProcessingContainer outputContainer) {
 		if (!hasRequiredItems(recipe, outputContainer.getInputItems().stream().map(x -> x.item()).toList())) {
 			return ProcessingCheckState.error("Missing items in input inventory!");
 		}
@@ -257,7 +257,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, OldProcessingContainer outputContainer) {
 		outputInventory.insertItem(0, recipe.getResultItem().copy(), false);
 	}
 }

@@ -15,7 +15,7 @@ import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
-import theking530.staticcore.blockentity.components.control.processing.AbstractProcesingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldAbstractProcesingComponent;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
@@ -83,7 +83,7 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		}
 
 		// Add processing data.
-		Optional<AbstractProcesingComponent> processing = ComponentUtilities.getComponent(AbstractProcesingComponent.class, te);
+		Optional<OldAbstractProcesingComponent> processing = ComponentUtilities.getComponent(OldAbstractProcesingComponent.class, te);
 		if (processing.isPresent()) {
 			CompoundTag processingData = new CompoundTag();
 			if (processing.get().hasProcessingStarted()) {

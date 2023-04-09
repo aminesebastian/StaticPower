@@ -7,11 +7,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidInputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
@@ -34,7 +34,7 @@ import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipeProcessor<VulcanizerRecipe> {
+public class BlockEntityVulcanizer extends BlockEntityMachine implements IOldRecipeProcessor<VulcanizerRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityVulcanizer> TYPE = new BlockEntityTypeAllocator<BlockEntityVulcanizer>("vulcanizer",
 			(type, pos, state) -> new BlockEntityVulcanizer(pos, state), ModBlocks.Vulcanizer);
@@ -44,7 +44,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 	public final InventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
-	public final RecipeProcessingComponent<VulcanizerRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<VulcanizerRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	@UpdateSerialize
@@ -63,7 +63,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(),
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(),
 				ModRecipeTypes.VULCANIZER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
@@ -95,12 +95,12 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<VulcanizerRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<VulcanizerRecipe> component) {
 		return new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, OldProcessingContainer outputContainer) {
 		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItems().get(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -108,7 +108,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, OldProcessingContainer outputContainer) {
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
 		if (recipe.hasInputItem()) {
@@ -119,7 +119,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, OldProcessingContainer outputContainer) {
 		fluidTankComponent.drain(outputContainer.getInputFluids().get(0).fluid(), FluidAction.EXECUTE);
 		outputInventory.insertItem(0, outputContainer.getOutputItems().get(0).item().copy(), false);
 	}

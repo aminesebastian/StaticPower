@@ -19,7 +19,7 @@ import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.productivity.ProductionTrackingToken;
-import theking530.staticcore.productivity.product.power.PowerProductionStack;
+import theking530.staticcore.productivity.product.power.PowerProductInterfaceId;
 import theking530.staticpower.blockentities.components.TieredPowerStorageComponent;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
@@ -50,7 +50,7 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 			(allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state), ModBlocks.SolarPanelCreative);
 
 	private final ProductionTrackingComponent trackingComponent;
-	private final PowerProductionStack powerProductionStack;
+	private final PowerProductInterfaceId powerProductionStack;
 
 	public PowerStorageComponent powerStorage;
 	public SideConfigurationComponent sideConfiguration;
@@ -78,7 +78,7 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 		registerComponent(new PowerDistributionComponent("PowerDistribution", powerStorage).setProvideAlternatingCurrent(true));
 		registerComponent(trackingComponent = new ProductionTrackingComponent("ProductionTracker"));
 
-		powerProductionStack = new PowerProductionStack(getBlockState().getBlock());
+		powerProductionStack = new PowerProductInterfaceId(getBlockState().getBlock());
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 
 	// Functionality
 	public void generateRF() {
-		ProductionTrackingToken<PowerProductionStack> powerToken = trackingComponent.getToken(StaticCoreProductTypes.Power.get());
+		ProductionTrackingToken<PowerProductInterfaceId> powerToken = trackingComponent.getToken(StaticCoreProductTypes.Power.get());
 		if (isGenerating()) {
 			double maxGeneration = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
 			double actualGeneration = maxGeneration;

@@ -6,11 +6,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -28,7 +28,7 @@ import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProcessor<FormerRecipe> {
+public class BlockEntityFormer extends BlockEntityMachine implements IOldRecipeProcessor<FormerRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityFormer> TYPE = new BlockEntityTypeAllocator<>("former", (type, pos, state) -> new BlockEntityFormer(pos, state),
 			ModBlocks.Former);
@@ -38,7 +38,7 @@ public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProc
 	public final InventoryComponent outputInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final RecipeProcessingComponent<FormerRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<FormerRecipe> processingComponent;
 
 	public BlockEntityFormer(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
@@ -62,7 +62,7 @@ public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProc
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FormerRecipe>("ProcessingComponent", ModRecipeTypes.FORMER_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<FormerRecipe>("ProcessingComponent", ModRecipeTypes.FORMER_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -85,12 +85,12 @@ public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProc
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FormerRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<FormerRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), moldInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, OldProcessingContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
 		outputContainer.addInputItem(moldInventory.getStackInSlot(0), CaptureType.NONE, true);
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
@@ -101,12 +101,12 @@ public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProc
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, OldProcessingContainer outputContainer) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -114,7 +114,7 @@ public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProc
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, OldProcessingContainer outputContainer) {
 		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 	}
 }

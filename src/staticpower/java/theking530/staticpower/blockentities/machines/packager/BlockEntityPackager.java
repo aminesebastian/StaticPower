@@ -6,11 +6,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -34,7 +34,7 @@ import theking530.staticpower.init.ModBlocks;
  * @author Amine Sebastian
  *
  */
-public class BlockEntityPackager extends BlockEntityMachine implements IRecipeProcessor<PackagerRecipe> {
+public class BlockEntityPackager extends BlockEntityMachine implements IOldRecipeProcessor<PackagerRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPackager> TYPE = new BlockEntityTypeAllocator<>("packager", (type, pos, state) -> new BlockEntityPackager(pos, state),
 			ModBlocks.Packager);
@@ -50,7 +50,7 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 	/**
 	 * The processing component that handles the recipe processing of this machine.
 	 */
-	public final RecipeProcessingComponent<PackagerRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<PackagerRecipe> processingComponent;
 	/** The crafting grid size to use (2x2 vs 3x3). */
 	@UpdateSerialize
 	protected int gridSize;
@@ -74,7 +74,7 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<PackagerRecipe>("ProcessingComponent", PackagerRecipe.RECIPE_TYPE, this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<PackagerRecipe>("ProcessingComponent", PackagerRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -93,12 +93,12 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<PackagerRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<PackagerRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setIntParameter("size", gridSize);
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, OldProcessingContainer outputContainer) {
 		// Move the input to the internal inventory.
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
@@ -110,12 +110,12 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, OldProcessingContainer outputContainer) {
 		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -123,7 +123,7 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, OldProcessingContainer outputContainer) {
 		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 	}
 

@@ -1,12 +1,13 @@
-package theking530.staticcore.blockentity.components.control.processing;
+package theking530.staticcore.blockentity.components.control.oldprocessing;
 
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
+import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.serialization.SaveSerialize;
 
-public class MachineProcessingComponent extends AbstractProcesingComponent<MachineProcessingComponent> {
+public class OldMachineProcessingComponent extends OldAbstractProcesingComponent<OldMachineProcessingComponent> {
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	protected Supplier<ProcessingCheckState> canStartProcessingCallback;
@@ -14,25 +15,25 @@ public class MachineProcessingComponent extends AbstractProcesingComponent<Machi
 	protected Supplier<ProcessingCheckState> processingEndedCallback;
 
 	@SaveSerialize
-	private final ProcessingOutputContainer outputContainer;
+	private final OldProcessingContainer outputContainer;
 	private Runnable processingStartedCallback;
 
-	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> canStartProcessingCallback,
+	public OldMachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> canStartProcessingCallback,
 			@Nonnull Supplier<ProcessingCheckState> canContinueProcessingCallback, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback, boolean serverOnly) {
 		super(name, processingTime, serverOnly);
 		this.canStartProcessingCallback = canStartProcessingCallback;
 		this.canContinueProcessingCallback = canContinueProcessingCallback;
 		this.processingEndedCallback = processingEndedCallback;
-		outputContainer = new ProcessingOutputContainer();
+		outputContainer = new OldProcessingContainer();
 	}
 
-	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback) {
+	public OldMachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback) {
 		this(name, processingTime, () -> ProcessingCheckState.error(""), () -> ProcessingCheckState.ok(), processingEndedCallback, true);
 	}
 
-	public static MachineProcessingComponent createMovingProcessingComponent(String name, @Nonnull Supplier<ProcessingCheckState> canStartProcessingCallback,
+	public static OldMachineProcessingComponent createMovingProcessingComponent(String name, @Nonnull Supplier<ProcessingCheckState> canStartProcessingCallback,
 			@Nonnull Supplier<ProcessingCheckState> canContinueProcessingCallback, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback) {
-		return new MachineProcessingComponent(name, DEFAULT_MOVING_TIME, processingEndedCallback, processingEndedCallback, processingEndedCallback, true);
+		return new OldMachineProcessingComponent(name, DEFAULT_MOVING_TIME, processingEndedCallback, processingEndedCallback, processingEndedCallback, true);
 	}
 
 	@Override
@@ -57,11 +58,11 @@ public class MachineProcessingComponent extends AbstractProcesingComponent<Machi
 		}
 	}
 
-	public ProcessingOutputContainer getOutputContainer() {
+	public OldProcessingContainer getOutputContainer() {
 		return this.outputContainer;
 	}
 
-	public MachineProcessingComponent setProcessingStartedCallback(Runnable processingStartedCallback) {
+	public OldMachineProcessingComponent setProcessingStartedCallback(Runnable processingStartedCallback) {
 		this.processingStartedCallback = processingStartedCallback;
 		return this;
 	}

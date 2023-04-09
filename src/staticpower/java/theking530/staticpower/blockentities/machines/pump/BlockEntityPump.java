@@ -37,7 +37,7 @@ import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.fluid.CapabilityStaticFluid;
 import theking530.api.fluid.IStaticPowerFluidHandler;
-import theking530.staticcore.blockentity.components.control.processing.MachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
@@ -87,7 +87,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 	public final InventoryComponent tubeInventory;
 	public final InventoryComponent batteryInventory;
 	public final FluidTankComponent fluidTankComponent;
-	public final MachineProcessingComponent processingComponent;
+	public final OldMachineProcessingComponent processingComponent;
 	private final LoopingSoundComponent soundComponent;
 	private final FluidPumpRenderingState renderingState;
 	private PumpTubeCache pumpTubeCache;
@@ -108,7 +108,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 		}));
 		registerComponent(soundComponent = new LoopingSoundComponent("SoundComponent", 20));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", pumpRate, this::canPerformInWorldPumping, this::canPerformInWorldPumping,
+		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", pumpRate, this::canPerformInWorldPumping, this::canPerformInWorldPumping,
 				this::performInWorldPumping, true).setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage)
 				.setShouldModuleProcessingTimeByPowerSatisfaction(false));
 

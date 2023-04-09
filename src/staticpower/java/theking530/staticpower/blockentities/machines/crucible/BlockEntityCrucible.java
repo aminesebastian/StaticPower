@@ -9,11 +9,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
@@ -38,7 +38,7 @@ import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityCrucible extends BlockEntityMachine implements IRecipeProcessor<CrucibleRecipe> {
+public class BlockEntityCrucible extends BlockEntityMachine implements IOldRecipeProcessor<CrucibleRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityCrucible> TYPE = new BlockEntityTypeAllocator<>("crucible", (type, pos, state) -> new BlockEntityCrucible(pos, state),
 			ModBlocks.Crucible);
@@ -50,7 +50,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final HeatStorageComponent heatStorage;
 
-	public final RecipeProcessingComponent<CrucibleRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<CrucibleRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	public BlockEntityCrucible(BlockPos pos, BlockState state) {
@@ -77,7 +77,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1.0f));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", ModRecipeTypes.CRUCIBLE_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", ModRecipeTypes.CRUCIBLE_RECIPE_TYPE.get(), this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -113,12 +113,12 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CrucibleRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<CrucibleRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, OldProcessingContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 		outputContainer.addOutputFluid(recipe.getOutputFluid(), CaptureType.BOTH);
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
@@ -129,12 +129,12 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, OldProcessingContainer outputContainer) {
 		// If this recipe has an item output that we cannot put into the output slot,
 		// continue waiting.
 		if (outputContainer.hasOutputItems() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
@@ -160,7 +160,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, OldProcessingContainer outputContainer) {
 		if (outputContainer.hasOutputItems()) {
 			outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 		}

@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
-import theking530.staticcore.blockentity.components.control.processing.MachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -31,16 +31,16 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent fuelBurningInventory;
-	public final MachineProcessingComponent fuelComponent;
-	public final MachineProcessingComponent fuelMoveComponent;
+	public final OldMachineProcessingComponent fuelComponent;
+	public final OldMachineProcessingComponent fuelMoveComponent;
 
 	public BlockEntityMiner(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
 		registerComponent(fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
-		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
+		registerComponent(fuelMoveComponent = new OldMachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
 				.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel, this::fuelProcessingCompleted, true)
+		registerComponent(fuelComponent = new OldMachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel, this::fuelProcessingCompleted, true)
 				.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(new InputServoComponent("FuelInputServo", 20, fuelInventory));
 	}

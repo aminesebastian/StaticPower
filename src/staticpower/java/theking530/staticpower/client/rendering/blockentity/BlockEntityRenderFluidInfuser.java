@@ -12,7 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
 import theking530.staticcore.client.StaticPowerBlockEntitySpecialRenderer;
 import theking530.staticcore.client.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.math.SDMath;
@@ -55,7 +55,7 @@ public class BlockEntityRenderFluidInfuser extends StaticPowerBlockEntitySpecial
 					WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
 			// Render the item inside the infuser.
-			ProcessingOutputContainer processingContainer = tileEntity.processingComponent.getProcessingMaterials();
+			OldProcessingContainer processingContainer = tileEntity.processingComponent.getProcessingMaterials();
 			if (processingContainer.hasInputItems()) {
 				ItemStack inputItem = processingContainer.getInputItem(0).item();
 				// Get the baked model and check if it wants to render the item in 3d or 2d.

@@ -14,11 +14,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.BlockEntityUpdateRequest;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
@@ -34,7 +34,7 @@ import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRe
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeProcessor<AlloyFurnaceRecipe> {
+public class BlockEntityAlloyFurnace extends BlockEntityBase implements IOldRecipeProcessor<AlloyFurnaceRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityAlloyFurnace> TYPE = new BlockEntityTypeAllocator<>("alloy_furnace",
 			(type, pos, state) -> new BlockEntityAlloyFurnace(pos, state), ModBlocks.AlloyFurnace);
@@ -42,7 +42,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent outputInventory;
-	public final RecipeProcessingComponent<AlloyFurnaceRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<AlloyFurnaceRecipe> processingComponent;
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final LoopingSoundComponent furnaceSoundComponent;
 
@@ -63,7 +63,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 		}));
 
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AlloyFurnaceSideConfiguration.INSTANCE));
-		registerComponent(processingComponent = new RecipeProcessingComponent<AlloyFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<AlloyFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
 				ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 	}
@@ -102,12 +102,12 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<AlloyFurnaceRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1));
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, OldProcessingContainer outputContainer) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -118,13 +118,13 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInput1().getCount(), false);
 		inputInventory.extractItem(1, recipe.getInput2().getCount(), false);
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, OldProcessingContainer outputContainer) {
 		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput1().getCount(), true), CaptureType.BOTH);
 		outputContainer.addInputItem(inputInventory.extractItem(1, recipe.getInput2().getCount(), true), CaptureType.BOTH);
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
@@ -133,7 +133,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, OldProcessingContainer outputContainer) {
 		InventoryUtilities.insertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0).item().copy(), false);
 	}
 

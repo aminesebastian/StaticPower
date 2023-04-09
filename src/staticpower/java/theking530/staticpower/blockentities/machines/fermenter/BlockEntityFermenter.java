@@ -8,11 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
@@ -35,7 +35,7 @@ import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeProcessor<FermenterRecipe> {
+public class BlockEntityFermenter extends BlockEntityMachine implements IOldRecipeProcessor<FermenterRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityFermenter> TYPE = new BlockEntityTypeAllocator<>("fermenter", (type, pos, state) -> new BlockEntityFermenter(pos, state),
 			ModBlocks.Fermenter);
@@ -46,7 +46,7 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final RecipeProcessingComponent<FermenterRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<FermenterRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	public BlockEntityFermenter(BlockPos pos, BlockState state) {
@@ -65,7 +65,7 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FermenterRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fermenterProcessingTime.get(),
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<FermenterRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fermenterProcessingTime.get(),
 				ModRecipeTypes.FERMENTER_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
@@ -102,7 +102,7 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FermenterRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<FermenterRecipe> component) {
 		int slot = getSlotToProccess();
 		if (slot >= 0) {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(slot));
@@ -111,7 +111,7 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, OldProcessingContainer outputContainer) {
 		int slot = getSlotToProccess();
 		outputContainer.addInputItem(inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
 		outputContainer.addOutputItem(recipe.getResidualOutput().calculateOutput(), CaptureType.BOTH);
@@ -119,13 +119,13 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
-	public void processingStarted(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, OldProcessingContainer outputContainer) {
 		int slot = getSlotToProccess();
 		inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, OldProcessingContainer outputContainer) {
 		if (outputContainer.hasOutputItems()) {
 			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
 				return ProcessingCheckState.outputsCannotTakeRecipe();
@@ -144,7 +144,7 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, OldProcessingContainer outputContainer) {
 		if (outputContainer.hasOutputItems()) {
 			outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 		}

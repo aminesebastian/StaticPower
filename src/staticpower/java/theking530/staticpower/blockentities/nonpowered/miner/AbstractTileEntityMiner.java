@@ -20,7 +20,7 @@ import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
-import theking530.staticcore.blockentity.components.control.processing.MachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
@@ -52,7 +52,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 	public final InventoryComponent internalInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final MachineProcessingComponent processingComponent;
+	public final OldMachineProcessingComponent processingComponent;
 	public final HeatStorageComponent heatStorage;
 	public final LoopingSoundComponent miningSoundComponent;
 
@@ -83,7 +83,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64, MachineSideMode.Never));
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::upgradeInventoryChanged));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", getProcessingTime(), this::canProcess, this::canProcess,
+		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", getProcessingTime(), this::canProcess, this::canProcess,
 				this::processingCompleted, true));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);

@@ -11,11 +11,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.energy.PowerStack;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.RecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.energy.PowerDistributionComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidInputServoComponent;
@@ -33,7 +33,7 @@ import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGenerat
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRecipeProcessor<FluidGeneratorRecipe> {
+public class BlockEntityFluidGenerator extends BlockEntityMachine implements IOldRecipeProcessor<FluidGeneratorRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityFluidGenerator> TYPE = new BlockEntityTypeAllocator<BlockEntityFluidGenerator>("fluid_generator",
 			(type, pos, state) -> new BlockEntityFluidGenerator(pos, state), ModBlocks.FluidGenerator);
@@ -45,7 +45,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 	}
 
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final RecipeProcessingComponent<FluidGeneratorRecipe> processingComponent;
+	public final OldRecipeProcessingComponent<FluidGeneratorRecipe> processingComponent;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final FluidTankComponent fluidTankComponent;
 	public final LoopingSoundComponent generatingSoundComponent;
@@ -54,7 +54,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 		super(TYPE, pos, state);
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		registerComponent(processingComponent = new RecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", ModRecipeTypes.FLUID_GENERATOR_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", ModRecipeTypes.FLUID_GENERATOR_RECIPE_TYPE.get(), this));
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setMaxProcessingTime(0);
 		processingComponent.setMoveTime(0);
@@ -94,13 +94,13 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FluidGeneratorRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<FluidGeneratorRecipe> component) {
 		return new RecipeMatchParameters(fluidTankComponent.getFluid());
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe,
-			ProcessingOutputContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe,
+			OldProcessingContainer outputContainer) {
 		// Do nothing if the input tank is empty.
 		if (fluidTankComponent.getFluidAmount() == 0) {
 			return ProcessingCheckState.skip();
@@ -116,7 +116,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe, OldProcessingContainer outputContainer) {
 		powerStorage.setMaximumOutputPower(recipe.getPowerGeneration());
 		powerStorage.setMaximumInputPower(recipe.getPowerGeneration());
 		outputContainer.setOutputPower(recipe.getPowerGeneration());
@@ -124,7 +124,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe, OldProcessingContainer outputContainer) {
 		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage()), false);
 		fluidTankComponent.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
 	}

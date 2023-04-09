@@ -109,6 +109,10 @@ public class SDMath {
 		return (b * alpha) + (a * (1.0f - alpha));
 	}
 
+	public static double lerp(double a, double b, double alpha) {
+		return (b * alpha) + (a * (1.0f - alpha));
+	}
+
 	public static float lerp(float a, float b, float alpha) {
 		return (b * alpha) + (a * (1.0f - alpha));
 	}
@@ -169,16 +173,21 @@ public class SDMath {
 	}
 
 	public static Vec3 getPointAlongQuadraticBezierCurve(float alpha, Vec3 start, Vec3 controlPoint, Vec3 end) {
-		double x = (1 - alpha) * (1 - alpha) * start.x() + 2 * (1 - alpha) * alpha * controlPoint.x() + alpha * alpha * end.x();
-		double y = (1 - alpha) * (1 - alpha) * start.y() + 2 * (1 - alpha) * alpha * controlPoint.y() + alpha * alpha * end.y();
-		double z = (1 - alpha) * (1 - alpha) * start.z() + 2 * (1 - alpha) * alpha * controlPoint.z() + alpha * alpha * end.z();
+		double x = (1 - alpha) * (1 - alpha) * start.x() + 2 * (1 - alpha) * alpha * controlPoint.x()
+				+ alpha * alpha * end.x();
+		double y = (1 - alpha) * (1 - alpha) * start.y() + 2 * (1 - alpha) * alpha * controlPoint.y()
+				+ alpha * alpha * end.y();
+		double z = (1 - alpha) * (1 - alpha) * start.z() + 2 * (1 - alpha) * alpha * controlPoint.z()
+				+ alpha * alpha * end.z();
 		return new Vec3(x, y, z);
 
 	}
 
 	public static Vec3 getQuadrativeBezierDerivative(float alpha, Vec3 start, Vec3 controlPoint, Vec3 end) {
-		Vec3 d1 = new Vec3(2 * (controlPoint.x() - start.x()), 2 * (controlPoint.y() - start.y()), 2 * (controlPoint.z() - start.z()));
-		Vec3 d2 = new Vec3(2 * (end.x() - controlPoint.x()), 2 * (end.y() - controlPoint.y()), 2 * (controlPoint.z() - start.z()));
+		Vec3 d1 = new Vec3(2 * (controlPoint.x() - start.x()), 2 * (controlPoint.y() - start.y()),
+				2 * (controlPoint.z() - start.z()));
+		Vec3 d2 = new Vec3(2 * (end.x() - controlPoint.x()), 2 * (end.y() - controlPoint.y()),
+				2 * (controlPoint.z() - start.z()));
 
 		double x = (1 - alpha) * d1.x() + alpha * d2.x();
 		double y = (1 - alpha) * d1.y() + alpha * d2.y();

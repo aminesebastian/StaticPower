@@ -9,7 +9,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.blockentity.BlockEntityBase;
-import theking530.staticcore.blockentity.components.control.processing.AbstractProcesingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldAbstractProcesingComponent;
 import theking530.staticcore.network.NetworkMessage;
 
 public class ProcesingComponentSyncPacket extends NetworkMessage {
@@ -21,7 +21,7 @@ public class ProcesingComponentSyncPacket extends NetworkMessage {
 
 	}
 
-	public ProcesingComponentSyncPacket(BlockPos pos, AbstractProcesingComponent<?> component) {
+	public ProcesingComponentSyncPacket(BlockPos pos, OldAbstractProcesingComponent<?> component) {
 		this.pos = pos;
 		this.componentName = component.getComponentName();
 		this.data = new CompoundTag();
@@ -49,7 +49,7 @@ public class ProcesingComponentSyncPacket extends NetworkMessage {
 			Level world = Minecraft.getInstance().player.getCommandSenderWorld();
 			if (world.getBlockEntity(pos) instanceof BlockEntityBase) {
 				BlockEntityBase te = (BlockEntityBase) world.getBlockEntity(pos);
-				AbstractProcesingComponent<?> storageComponent = te.getComponent(AbstractProcesingComponent.class, componentName);
+				OldAbstractProcesingComponent<?> storageComponent = te.getComponent(OldAbstractProcesingComponent.class, componentName);
 				storageComponent.recieveClientSynchronizeData(data, true);
 			}
 		});

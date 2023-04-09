@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.blockentity.components.control.processing.MachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidInputServoComponent;
@@ -48,8 +48,8 @@ public class BlockEntityBottler extends BlockEntityMachine {
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 
-	public final MachineProcessingComponent moveComponent;
-	public final MachineProcessingComponent processingComponent;
+	public final OldMachineProcessingComponent moveComponent;
+	public final OldMachineProcessingComponent processingComponent;
 
 	public final FluidTankComponent fluidTankComponent;
 
@@ -75,10 +75,10 @@ public class BlockEntityBottler extends BlockEntityMachine {
 
 		// Use the old processing system because we need to support NON recipe based
 		// processing as well as recipe based.
-		registerComponent(moveComponent = MachineProcessingComponent
+		registerComponent(moveComponent = OldMachineProcessingComponent
 				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted)
 				.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.bottlerProcessingTime.get(), this::canProcess,
+		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.bottlerProcessingTime.get(), this::canProcess,
 				this::canProcess, this::processingCompleted, true));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
