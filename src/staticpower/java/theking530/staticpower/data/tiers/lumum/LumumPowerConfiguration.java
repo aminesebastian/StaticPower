@@ -12,7 +12,7 @@ public class LumumPowerConfiguration extends TierPowerConfiguration {
 
 	@Override
 	protected double getDefaultPowerCapacity() {
-		return 2000;
+		return 5000;
 	}
 
 	@Override

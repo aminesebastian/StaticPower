@@ -9,10 +9,10 @@ import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.cacheentry.PowerProductionEntry;
 import theking530.staticcore.productivity.product.ProductType;
 
-public class PowerProductType extends ProductType<PowerProductInterfaceId> {
+public class PowerProductType extends ProductType<PowerProducer> {
 
 	public PowerProductType() {
-		super(PowerProductInterfaceId.class, (isClientSide) -> new ProductionCache<PowerProductInterfaceId>(StaticCoreProductTypes.Power.get(), isClientSide));
+		super(PowerProducer.class, (isClientSide) -> new ProductionCache<PowerProducer>(StaticCoreProductTypes.Power.get(), isClientSide));
 	}
 
 	@Override
@@ -21,35 +21,35 @@ public class PowerProductType extends ProductType<PowerProductInterfaceId> {
 	}
 
 	@Override
-	public ProductionTrackingToken<PowerProductInterfaceId> createProductivityToken() {
-		return new ProductionTrackingToken<PowerProductInterfaceId>(this);
+	public ProductionTrackingToken<PowerProducer> createProductivityToken() {
+		return new ProductionTrackingToken<PowerProducer>(this);
 	}
 
 	@Override
-	public int getProductHashCode(PowerProductInterfaceId product) {
+	public int getProductHashCode(PowerProducer product) {
 		return product.getProductHashCode();
 	}
 
 	@Override
-	public PowerProductionEntry createProductionEntry(PowerProductInterfaceId product) {
+	public PowerProductionEntry createProductionEntry(PowerProducer product) {
 		return new PowerProductionEntry(product);
 	}
 
 	@Override
-	public String getSerializedProduct(PowerProductInterfaceId product) {
+	public String getSerializedProduct(PowerProducer product) {
 		return product.serialize().toString();
 	}
 
 	@Override
-	public boolean isValidProduct(PowerProductInterfaceId product) {
+	public boolean isValidProduct(PowerProducer product) {
 		return product.getBlockSource().asItem() != Items.AIR;
 	}
 
 	@Override
-	public PowerProductInterfaceId deserializeProduct(String serializedProduct) {
+	public PowerProducer deserializeProduct(String serializedProduct) {
 		try {
 			CompoundTag tag = TagParser.parseTag(serializedProduct);
-			return PowerProductInterfaceId.deserialize(tag);
+			return PowerProducer.deserialize(tag);
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("An error occured when attempting to deserialize the serialized string: %1$s to a PowerProductionStack.", serializedProduct));
 		}

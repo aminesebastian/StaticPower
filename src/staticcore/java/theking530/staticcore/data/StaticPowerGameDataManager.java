@@ -34,7 +34,8 @@ public class StaticPowerGameDataManager {
 	}
 
 	public static void loadDataFromDisk(Load load) {
-		if (!load.getLevel().isClientSide() && load.getLevel().dimensionType().effectsLocation().equals(new ResourceLocation("minecraft:overworld"))) {
+		if (!load.getLevel().isClientSide() && load.getLevel().dimensionType().effectsLocation()
+				.equals(new ResourceLocation("minecraft:overworld"))) {
 			// TODO: Determine how to prevent it from loading multiple times (if there are
 			// multiple worlds loaded).
 			StaticCore.LOGGER.info("Loading Static Power data!");
@@ -62,7 +63,8 @@ public class StaticPowerGameDataManager {
 						createAndCacheDataFirstTime(entry.getKey(), false);
 					}
 				} catch (Exception e) {
-					StaticCore.LOGGER.error(String.format("An error occured when attempting to load data: %1$s from the disk.", entry.getKey()), e);
+					StaticCore.LOGGER.error(String.format(
+							"An error occured when attempting to load data: %1$s from the disk.", entry.getKey()), e);
 				}
 			});
 			loadDataForClients();
@@ -71,7 +73,8 @@ public class StaticPowerGameDataManager {
 	}
 
 	public static void saveDataToDisk(Save save) {
-		if (!save.getLevel().isClientSide() && save.getLevel().dimensionType().effectsLocation().equals(new ResourceLocation("minecraft:overworld"))) {
+		if (!save.getLevel().isClientSide() && save.getLevel().dimensionType().effectsLocation()
+				.equals(new ResourceLocation("minecraft:overworld"))) {
 			// TODO: Determine how to prevent it from saving multiple times (if there are
 			// multiple worlds loaded).
 			StaticCore.LOGGER.info("Saving Static Power data!");
@@ -91,7 +94,8 @@ public class StaticPowerGameDataManager {
 					// If there is a lock file, just skip this save.
 					lockFile = new File(lockfileName);
 					if (lockFile.exists() && !lockFile.isDirectory()) {
-						StaticCore.LOGGER.warn(String.format("Skipping saving data for: %1$s to the disk. Lock file still exists.", data.getId()));
+						StaticCore.LOGGER.warn(String.format(
+								"Skipping saving data for: %1$s to the disk. Lock file still exists.", data.getId()));
 						return;
 					}
 
@@ -105,7 +109,8 @@ public class StaticPowerGameDataManager {
 					writer.write(JsonUtilities.nbtToPrettyJson(tag));
 					writer.close();
 				} catch (Exception e) {
-					StaticCore.LOGGER.error(String.format("An error occured when attempting to save data: %1$s to the disk.", data.getId()), e);
+					StaticCore.LOGGER.error(String.format(
+							"An error occured when attempting to save data: %1$s to the disk.", data.getId()), e);
 				} finally {
 					try {
 						// Delete the lock file if it exists.
@@ -118,7 +123,9 @@ public class StaticPowerGameDataManager {
 							writer.close();
 						}
 					} catch (IOException e) {
-						StaticCore.LOGGER.error(String.format("An error occured when attempting to close the save data writer for data: %1$s.", data.getId()), e);
+						StaticCore.LOGGER.error(String.format(
+								"An error occured when attempting to close the save data writer for data: %1$s.",
+								data.getId()), e);
 					}
 				}
 			});
@@ -174,6 +181,12 @@ public class StaticPowerGameDataManager {
 		}
 	}
 
+	public static void clientTickGameData() {
+		for (StaticPowerGameData data : DATA.values()) {
+			data.clientTick();
+		}
+	}
+
 	private static StaticPowerGameData createAndCacheDataFirstTime(ResourceLocation id, boolean isClientSide) {
 		StaticPowerGameData newInstance = DATA_FACTORIES.get(id).apply(isClientSide);
 		newInstance.onFirstTimeCreated();
@@ -189,7 +202,8 @@ public class StaticPowerGameDataManager {
 	}
 
 	private static Connection ensureDatabaseExists(ResourceLocation database) {
-		String url = String.format("jdbc:sqlite:%1$s/%2$s_%3$s.db", StaticCoreForgeEventsCommon.DATA_PATH.toAbsolutePath().toString(), database.getNamespace(),
+		String url = String.format("jdbc:sqlite:%1$s/%2$s_%3$s.db",
+				StaticCoreForgeEventsCommon.DATA_PATH.toAbsolutePath().toString(), database.getNamespace(),
 				database.getPath());
 		Exception exception = null;
 		Connection connection = null;
@@ -204,7 +218,10 @@ public class StaticPowerGameDataManager {
 		// If the connection is null or there was an exception thrown, throw our own
 		// runtime exception.
 		if (connection == null || exception != null) {
-			throw new RuntimeException(String.format("An error occured when attempting to create the sqlite database: %1$s", database.toString()), exception);
+			throw new RuntimeException(
+					String.format("An error occured when attempting to create the sqlite database: %1$s",
+							database.toString()),
+					exception);
 		}
 
 		// Otherwise log the fact that we connected and return the connection.
@@ -213,7 +230,8 @@ public class StaticPowerGameDataManager {
 	}
 
 	private static String formatDataSaveFileName(ResourceLocation id) {
-		return String.format("%1$s/%2$s_%3$s.json", StaticCoreForgeEventsCommon.DATA_PATH.toAbsolutePath().toString(), id.getNamespace(), id.getPath());
+		return String.format("%1$s/%2$s_%3$s.json", StaticCoreForgeEventsCommon.DATA_PATH.toAbsolutePath().toString(),
+				id.getNamespace(), id.getPath());
 	}
 
 }

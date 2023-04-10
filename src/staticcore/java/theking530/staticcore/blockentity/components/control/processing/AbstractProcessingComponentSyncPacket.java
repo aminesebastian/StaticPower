@@ -16,6 +16,7 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 	private int maxProcessingTime;
 	private int proccesingTime;
 	private ProcessingCheckState processingState;
+	private boolean performedWorkLastTick;
 
 	public AbstractProcessingComponentSyncPacket() {
 
@@ -27,6 +28,7 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 		this.proccesingTime = component.getCurrentProcessingTime();
 		this.maxProcessingTime = component.getProcessingTime();
 		this.processingState = component.getProcessingState();
+		this.performedWorkLastTick = component.performedWorkLastTick();
 	}
 
 	@Override
@@ -36,6 +38,7 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 		buffer.writeInt(proccesingTime);
 		buffer.writeInt(maxProcessingTime);
 		processingState.toNetwork(buffer);
+		buffer.writeBoolean(performedWorkLastTick);
 	}
 
 	@Override
@@ -45,6 +48,7 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 		proccesingTime = buffer.readInt();
 		maxProcessingTime = buffer.readInt();
 		processingState = ProcessingCheckState.fromNetwork(buffer);
+		performedWorkLastTick = buffer.readBoolean();
 	}
 
 	@Override
@@ -54,8 +58,8 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 			Level world = Minecraft.getInstance().player.getCommandSenderWorld();
 			if (world.getBlockEntity(pos) instanceof BlockEntityBase) {
 				BlockEntityBase te = (BlockEntityBase) world.getBlockEntity(pos);
-				AbstractProcessingComponent<?, ?> storageComponent = te
-						.getComponent(AbstractProcessingComponent.class, componentName);
+				AbstractProcessingComponent<?, ?> storageComponent = te.getComponent(AbstractProcessingComponent.class,
+						componentName);
 				storageComponent.recieveClientSynchronizeData(this);
 			}
 		});
@@ -79,5 +83,9 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 
 	public ProcessingCheckState getProcessingState() {
 		return processingState;
+	}
+
+	public boolean getPerformedWorkLastTick() {
+		return performedWorkLastTick;
 	}
 }

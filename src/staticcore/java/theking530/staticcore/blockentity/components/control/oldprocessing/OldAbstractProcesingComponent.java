@@ -26,14 +26,14 @@ import theking530.staticcore.init.StaticCoreUpgradeTypes;
 import theking530.staticcore.init.StaticCoreUpgradeTypes.SpeedMultiplierUpgradeValue;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.productivity.ProductionTrackingToken;
-import theking530.staticcore.productivity.product.power.PowerProductInterfaceId;
+import theking530.staticcore.productivity.product.power.PowerProducer;
 
 public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesingComponent<?>> extends AbstractBlockEntityComponent {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
 	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
 
 	private ProductionTrackingComponent productionTrackingComponent;
-	private PowerProductInterfaceId powerProductionStack;
+	private PowerProducer powerProductionStack;
 
 	private boolean shouldControlOnBlockState;
 	protected UpgradeInventoryComponent upgradeInventory;
@@ -108,7 +108,7 @@ public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesi
 	@Override
 	public void onRegistered(BlockEntityBase owner) {
 		super.onRegistered(owner);
-		powerProductionStack = new PowerProductInterfaceId(owner.getBlockState().getBlock());
+		powerProductionStack = new PowerProducer(owner.getBlockState().getBlock());
 		if (getBlockEntity().hasComponentOfType(ProductionTrackingComponent.class)) {
 			productionTrackingComponent = getBlockEntity().getComponent(ProductionTrackingComponent.class);
 		} else {
@@ -684,11 +684,11 @@ public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesi
 		return getProductionTrackingComponent().getToken(StaticCoreProductTypes.Fluid.get());
 	}
 
-	public ProductionTrackingToken<PowerProductInterfaceId> getPowerProductionToken() {
+	public ProductionTrackingToken<PowerProducer> getPowerProductionToken() {
 		return getProductionTrackingComponent().getToken(StaticCoreProductTypes.Power.get());
 	}
 
-	public PowerProductInterfaceId getPowerProductionStack() {
+	public PowerProducer getPowerProductionStack() {
 		return powerProductionStack;
 	}
 

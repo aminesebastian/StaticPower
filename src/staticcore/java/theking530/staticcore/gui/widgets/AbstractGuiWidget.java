@@ -390,7 +390,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseX
 	 * @param mouseY
 	 */
-	public final void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY, RectangleBounds parentBounds) {
+	public final void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX,
+			int mouseY, RectangleBounds parentBounds) {
 		this.parentSize = parentSize;
 		this.childrenToDraw.clear();
 		lastMousePosition = new Vector2D(mouseX, mouseY);
@@ -424,9 +425,11 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		// new matrix so that it's owned by this widget, and not modified by any
 		// external references.
 		lastMatrixStack = new PoseStack();
-		lastMatrixStack.translate(screenSpacePosition.getX() - getPosition().getX(), screenSpacePosition.getY() - getPosition().getY(), 0);
+		lastMatrixStack.translate(screenSpacePosition.getX() - getPosition().getX(),
+				screenSpacePosition.getY() - getPosition().getY(), 0);
 
-		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX() * scale.getX(), this.size.getY() * scale.getY());
+		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX() * scale.getX(),
+				this.size.getY() * scale.getY());
 
 		if (isVisible() && isEnabled()) {
 			if (isHovered()) {
@@ -437,7 +440,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		}
 	}
 
-	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX,
+			int mouseY) {
 
 	}
 
@@ -450,7 +454,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public final void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {
+	public final void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks,
+			RectangleBounds parentBounds) {
 		if (shouldRenderThisFrame) {
 			matrix.pushPose();
 			transformPoseBeforeRender(matrix);
@@ -494,7 +499,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public final void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {
+	public final void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks,
+			RectangleBounds parentBounds) {
 		if (shouldRenderThisFrame) {
 			matrix.pushPose();
 			transformPoseBeforeRender(matrix);
@@ -530,7 +536,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		}
 	}
 
-	public final void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {
+	public final void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks,
+			RectangleBounds parentBounds) {
 		if (shouldRenderThisFrame) {
 			matrix.pushPose();
 			transformPoseBeforeRender(matrix);
@@ -673,7 +680,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	}
 
 	protected void playSoundLocally(SoundEvent sound, float volume, float pitch) {
-		getLocalPlayer().level.playSound(getLocalPlayer(), getLocalPlayer().blockPosition(), sound, SoundSource.MASTER, volume, pitch);
+		getLocalPlayer().level.playSound(getLocalPlayer(), getLocalPlayer().blockPosition(), sound, SoundSource.MASTER,
+				volume, pitch);
 	}
 
 	public void registerWidget(@SuppressWarnings("rawtypes") AbstractGuiWidget widget) {
@@ -698,6 +706,12 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 	protected void onWidgetRemoved(AbstractGuiWidget<?> widget) {
 
+	}
+
+	public void removeChild(int index) {
+		AbstractGuiWidget<?> widget = widgets.get(index);
+		widget.removedFromParent(parent);
+		widgets.remove(index);
 	}
 
 	public void clearChildren() {

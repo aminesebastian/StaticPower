@@ -14,10 +14,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
+import theking530.staticcore.blockentity.components.control.processing.basic.BasicProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
@@ -179,7 +179,6 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 			ProcessingOutputContainer outputContainer, ProcessingContainer processingContainer) {
 		int transferCount = recipe.isWildcardRecipe() ? 1 : recipe.getSmithTarget().getCount();
 		processingContainer.addInputItem(inputInventory.extractItem(0, transferCount, false), CaptureType.NONE, false);
-
 		processingContainer.addInputItem(inputInventory.extractItem(1, recipe.getModifierMaterial().getCount(), false),
 				CaptureType.BOTH);
 		processingContainer.addInputFluid(
@@ -187,8 +186,7 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
-	public void onProcessingCompleted(AbstractProcessingComponent<?, ?> component,
-			ProcessingContainer outputContainer) {
+	public void onProcessingCompleted(BasicProcessingComponent<?, ?> component, ProcessingContainer outputContainer) {
 		ItemStack output = outputContainer.getOutputItem(0).copy();
 
 		// Make a hybrid of recipe parameters with the output as the smithing target,

@@ -51,9 +51,13 @@ public class Team {
 	}
 
 	public void tick(Level level) {
-		level.getProfiler().push("ProductionManager.Tick");
+		level.getProfiler().push("ProductionManager.ServerTick");
 		productionManager.tick(level.getGameTime());
 		level.getProfiler().pop();
+	}
+
+	public void clientTick() {
+		productionManager.clientTick();
 	}
 
 	public String getName() {
@@ -117,7 +121,8 @@ public class Team {
 	public void sendPacketToAllPlayers(NetworkMessage message, Function<ServerPlayer, Boolean> filter) {
 		forEachPlayer((player) -> {
 			if (filter == null || filter.apply(player)) {
-				StaticCoreMessageHandler.sendMessageToPlayer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, player, message);
+				StaticCoreMessageHandler.sendMessageToPlayer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, player,
+						message);
 			}
 		});
 	}
@@ -144,11 +149,13 @@ public class Team {
 	protected void forEachPlayer(Consumer<ServerPlayer> callback) {
 		if (ServerLifecycleHooks.getCurrentServer() != null) {
 			for (String uuid : getPlayers()) {
-				ServerPlayer player = (ServerPlayer) ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(UUID.fromString(uuid));
+				ServerPlayer player = (ServerPlayer) ServerLifecycleHooks.getCurrentServer().getPlayerList()
+						.getPlayer(UUID.fromString(uuid));
 				callback.accept(player);
 			}
 		} else {
-			StaticCore.LOGGER.error("An attempt was made to execute logic for all members on this team from the client. This is a NOOP.");
+			StaticCore.LOGGER.error(
+					"An attempt was made to execute logic for all members on this team from the client. This is a NOOP.");
 		}
 	}
 
@@ -196,6 +203,7 @@ public class Team {
 
 	@Override
 	public String toString() {
-		return "Team [id=" + id + ", name=" + name + ", players=" + players + ", researchManager=" + researchManager + ", productionManager=" + productionManager + "]";
+		return "Team [id=" + id + ", name=" + name + ", players=" + players + ", researchManager=" + researchManager
+				+ ", productionManager=" + productionManager + "]";
 	}
 }

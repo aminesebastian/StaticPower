@@ -20,6 +20,10 @@ public abstract class StaticPowerGameData {
 	public void tick(Level level) {
 	}
 
+	public void clientTick() {
+
+	}
+
 	public ResourceLocation getId() {
 		return id;
 	}
@@ -33,6 +37,7 @@ public abstract class StaticPowerGameData {
 	}
 
 	public void syncToClients() {
-		StaticCoreMessageHandler.sendToAllPlayers(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, new StaticPowerGameDataSyncPacket(this));
+		StaticCoreMessageHandler.sendToAllPlayers(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
+				new StaticPowerGameDataSyncPacket(this));
 	}
 }

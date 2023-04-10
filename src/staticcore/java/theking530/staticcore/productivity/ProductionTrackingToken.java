@@ -38,12 +38,14 @@ public class ProductionTrackingToken<T> {
 		setProductionPerSecond(team, product, productionPerSecond, productionPerSecond);
 	}
 
-	public void setProductionPerSecond(Team team, T product, double productionPerSecond, double idealProductionPerSecond) {
+	public void setProductionPerSecond(Team team, T product, double productionPerSecond,
+			double idealProductionPerSecond) {
 		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
 		ProductionCache<T> cache = getProductionCache(team);
-		ProductionEntry<T> entry = cache.addOrUpdateProductionRate(this, product, getType().getProductHashCode(product), productionPerSecond, idealProductionPerSecond);
+		ProductionEntry<T> entry = cache.addOrUpdateProductionRate(this, product, getType().getProductHashCode(product),
+				productionPerSecond, idealProductionPerSecond);
 		trackedProductionEntries.add(entry);
 	}
 
@@ -60,12 +62,14 @@ public class ProductionTrackingToken<T> {
 		setConsumptionPerSecond(team, product, consumptionPerSecond, consumptionPerSecond);
 	}
 
-	public void setConsumptionPerSecond(Team team, T product, double consumptionPerSecond, double idealConsumptionPerSecond) {
+	public void setConsumptionPerSecond(Team team, T product, double consumptionPerSecond,
+			double idealConsumptionPerSecond) {
 		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
 		ProductionCache<T> cache = getProductionCache(team);
-		ProductionEntry<T> entry = cache.addOrUpdateConsumptionRate(this, product, getType().getProductHashCode(product), consumptionPerSecond, idealConsumptionPerSecond);
+		ProductionEntry<T> entry = cache.addOrUpdateConsumptionRate(this, product,
+				getType().getProductHashCode(product), consumptionPerSecond, idealConsumptionPerSecond);
 		trackedProductionEntries.add(entry);
 	}
 
@@ -82,8 +86,7 @@ public class ProductionTrackingToken<T> {
 			return;
 		}
 		ProductionCache<T> cache = getProductionCache(team);
-		ProductionEntry<T> entry = cache.addProduced(product, getType().getProductHashCode(product), amount);
-		trackedProductionEntries.add(entry);
+		cache.addProduced(product, getType().getProductHashCode(product), amount);
 	}
 
 	/**
@@ -99,8 +102,7 @@ public class ProductionTrackingToken<T> {
 			return;
 		}
 		ProductionCache<T> cache = getProductionCache(team);
-		ProductionEntry<T> entry = cache.addConsumed(product, getType().getProductHashCode(product), amount);
-		trackedProductionEntries.add(entry);
+		cache.addConsumed(product, getType().getProductHashCode(product), amount);
 	}
 
 	/**

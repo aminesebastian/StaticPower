@@ -6,6 +6,9 @@ import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.productivity.ProductMetricTileRenderer;
+import theking530.staticcore.productivity.cacheentry.ProductivityRate;
+import theking530.staticcore.productivity.metrics.MetricType;
+import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.utilities.MetricConverter;
 import theking530.staticcore.utilities.math.Vector2D;
@@ -17,13 +20,15 @@ public class ItemStackProductMetricRenderer extends ProductMetricTileRenderer<It
 	}
 
 	@Override
-	protected void drawIcon(ItemStack product, PoseStack pose, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
+	protected void drawIcon(ProductionMetric metric, MetricType metricType, ItemStack product, ProductivityRate smoothedValue,
+			PoseStack pose, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
 		GuiDrawUtilities.drawItem(pose, product, 3, 2, 10, 16, 16);
 	}
 
 	@Override
-	protected String getValueText(ItemStack product, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
-		MetricConverter converter = new MetricConverter(getMetric().getMetricValue(getMetricType()).getCurrentValue());
+	protected String getValueText(ProductionMetric metric, MetricType metricType, ItemStack product,
+			ProductivityRate smoothedValue, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
+		MetricConverter converter = new MetricConverter(smoothedValue.getCurrentValue());
 		return converter.getValueAsString(true);
 	}
 }

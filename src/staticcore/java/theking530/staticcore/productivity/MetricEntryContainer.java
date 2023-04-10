@@ -6,8 +6,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
+import theking530.staticcore.productivity.metrics.ClientProductionMetric;
 import theking530.staticcore.productivity.metrics.MetricType;
-import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.product.ProductType;
 
 public class MetricEntryContainer extends AbstractGuiWidget<MetricEntryContainer> {
@@ -19,20 +19,35 @@ public class MetricEntryContainer extends AbstractGuiWidget<MetricEntryContainer
 		this.metricType = metricType;
 	}
 
-	public void updateMetrics(ProductType<?> productType, ImmutableList<ProductionMetric> metrics) {
-		this.clearChildren();
-		for (ProductionMetric metric : metrics) {
-			if (!metric.getMetricValue(metricType).isZero()) {
+	public void updateMetrics(ProductType<?> productType, ImmutableList<ClientProductionMetric> metrics) {
+		int currentSize = getChildren().size();
+		int requiredSize = metrics.size();
+		int delta = requiredSize - currentSize;
+
+		// Create or remove widgets as needed.
+		if (delta > 0) {
+			for (int i = 0; i < delta; i++) {
 				MetricEntryWidget metricWidget = new MetricEntryWidget(metricType, 0, 0, 0, 20);
-				metricWidget.setMetric(productType, metric);
 				registerWidget(metricWidget);
 				metricWidget.setClickedCallback((widget) -> {
 					if (selectedMetricChanged != null) {
-						selectedMetricChanged.accept(widget, metric.getProductHash());
+						selectedMetricChanged.accept(widget, widget.getMetric().getProductHash());
 					}
 				});
 			}
+		} else if (requiredSize < currentSize) {
+			for (int i = currentSize; i < currentSize + delta; i--) {
+				removeChild(i);
+			}
 		}
+
+		for (int i = 0; i < requiredSize; i++) {
+			ClientProductionMetric metric = metrics.get(i);
+			MetricEntryWidget metricWidget = (MetricEntryWidget) getChildren().get(i);
+			metricWidget.setMetric(productType, metric);
+			metricWidget.setVisible(!metric.getMetricValue(metricType).isZero());
+		}
+
 		repositionWidgets();
 	}
 

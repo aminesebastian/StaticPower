@@ -14,11 +14,9 @@ import theking530.staticcore.utilities.SDTime;
 public class ProductionManager {
 	private final Team team;
 	private final Map<ProductType<?>, ProductionCache<?>> cache;
-	private final boolean isClientSide;
 
 	public ProductionManager(Team team, boolean isClientSide) {
 		this.team = team;
-		this.isClientSide = isClientSide;
 		cache = new HashMap<>();
 
 		Collection<ProductType<?>> registeredProducts = StaticCoreRegistries.ProductRegistry().getValues();
@@ -31,31 +29,38 @@ public class ProductionManager {
 	}
 
 	public void tick(long gameTime) {
-		if (!isClientSide) {
-			int currentTickIndex = (int) (gameTime % 20);
-			for (ProductionCache<?> prodCache : cache.values()) {
-				prodCache.tick(gameTime);
-				prodCache.insertProductivityPerSecond(team.getDatabaseConnection(), currentTickIndex, gameTime);
+		int currentTickIndex = (int) (gameTime % 20);
+		for (ProductionCache<?> prodCache : cache.values()) {
+			prodCache.tick(gameTime);
+			prodCache.insertProductivityPerSecond(team.getDatabaseConnection(), currentTickIndex, gameTime);
 
-				if (gameTime % SDTime.TICKS_PER_SECOND == 0) {
-					prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.SECOND, gameTime);
-				}
-
-				if (gameTime % SDTime.TICKS_PER_MINUTE == 0) {
-					prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.MINUTE, gameTime);
-					prodCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.SECOND, MetricPeriod.MINUTE, gameTime);
-				}
-
-				if (gameTime % SDTime.TICKS_PER_HOUR == 0) {
-					prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.HOUR, gameTime);
-					prodCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.MINUTE, MetricPeriod.HOUR, gameTime);
-				}
-
-				if (gameTime % SDTime.TICKS_PER_DAY == 0) {
-					prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.DAY, gameTime);
-					prodCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.HOUR, MetricPeriod.DAY, gameTime);
-				}
+			if (gameTime % SDTime.TICKS_PER_SECOND == 0) {
+				prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.SECOND, gameTime);
 			}
+
+			if (gameTime % SDTime.TICKS_PER_MINUTE == 0) {
+				prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.MINUTE, gameTime);
+				prodCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.SECOND, MetricPeriod.MINUTE,
+						gameTime);
+			}
+
+			if (gameTime % SDTime.TICKS_PER_HOUR == 0) {
+				prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.HOUR, gameTime);
+				prodCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.MINUTE, MetricPeriod.HOUR,
+						gameTime);
+			}
+
+			if (gameTime % SDTime.TICKS_PER_DAY == 0) {
+				prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.DAY, gameTime);
+				prodCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.HOUR, MetricPeriod.DAY,
+						gameTime);
+			}
+		}
+	}
+
+	public void clientTick() {
+		for (ProductionCache<?> prodCache : cache.values()) {
+			prodCache.clientTick();
 		}
 	}
 

@@ -12,7 +12,7 @@ public class EnergizedPowerConfiguration extends TierPowerConfiguration {
 
 	@Override
 	protected double getDefaultPowerCapacity() {
-		return 1000;
+		return 2500;
 	}
 
 	@Override

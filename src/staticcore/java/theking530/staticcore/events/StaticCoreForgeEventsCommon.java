@@ -73,14 +73,19 @@ public class StaticCoreForgeEventsCommon {
 
 	@SubscribeEvent
 	public static void worldTickEvent(TickEvent.LevelTickEvent event) {
-		if (!event.level.isClientSide) {
-			if (event.phase == TickEvent.Phase.START) {
-				CableNetworkAccessor.get(event.level).preWorldTick();
-			} else if (event.phase == TickEvent.Phase.END) {
-				CableNetworkAccessor.get(event.level).tick();
-				StaticPowerGameDataManager.tickGameData(event.level);
-			}
+		if (event.phase == TickEvent.Phase.START) {
+			CableNetworkAccessor.get(event.level).preWorldTick();
 		}
+
+		if (event.phase == TickEvent.Phase.END) {
+			CableNetworkAccessor.get(event.level).tick();
+			StaticPowerGameDataManager.tickGameData(event.level);
+		}
+	}
+
+	@SubscribeEvent
+	public static void clientTickEvent(TickEvent.ClientTickEvent event) {
+		StaticPowerGameDataManager.clientTickGameData();
 	}
 
 	@SubscribeEvent

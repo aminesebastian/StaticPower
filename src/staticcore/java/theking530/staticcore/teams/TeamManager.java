@@ -46,6 +46,13 @@ public class TeamManager extends StaticPowerGameData {
 		}
 	}
 
+	@Override
+	public void clientTick() {
+		for (Team team : teams.values()) {
+			team.clientTick();
+		}
+	}
+
 	/**
 	 * Gets the team for the provided player, or empty if no team exists.
 	 * 

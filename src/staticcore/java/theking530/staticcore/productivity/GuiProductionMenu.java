@@ -21,11 +21,11 @@ import theking530.staticcore.gui.widgets.containers.HorizontalBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.network.StaticCoreMessageHandler;
+import theking530.staticcore.productivity.metrics.ClientProductionMetrics;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionTimeline;
-import theking530.staticcore.productivity.metrics.ProductionMetrics;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline.ProductivityTimelineEntry;
 import theking530.staticcore.productivity.product.ProductType;
@@ -84,16 +84,17 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 
 		// Create the product type buttons.
 		for (ProductType<?> prodType : StaticCoreRegistries.ProductRegistry().getValues()) {
-			StandardButton button = new TextButton(0, 0, 14, Component.translatable(prodType.getUnlocalizedName(2)).getString(), (self, mouseButton) -> {
-				for (AbstractGuiWidget<?> otherButton : productButtonContainer.getChildren()) {
-					TextButton castOtherButton = (TextButton) otherButton;
-					if (castOtherButton != null) {
-						castOtherButton.setToggled(false);
-					}
-				}
-				self.setToggled(true);
-				changeDisplayedProductType(prodType);
-			});
+			StandardButton button = new TextButton(0, 0, 14,
+					Component.translatable(prodType.getUnlocalizedName(2)).getString(), (self, mouseButton) -> {
+						for (AbstractGuiWidget<?> otherButton : productButtonContainer.getChildren()) {
+							TextButton castOtherButton = (TextButton) otherButton;
+							if (castOtherButton != null) {
+								castOtherButton.setToggled(false);
+							}
+						}
+						self.setToggled(true);
+						changeDisplayedProductType(prodType);
+					});
 			button.setTooltip(Component.translatable(prodType.getUnlocalizedName(2)));
 			if (displayedProductType == prodType) {
 				button.setToggled(true);
@@ -136,7 +137,8 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		}
 
 		// If the data has changed since we last fetched, update the display values.
-		if (getProductionManager() != null && getProductionManager().getCache(displayedProductType).haveClientValuesUpdatedSince(lastClientFetchTime)) {
+		if (getProductionManager() != null && getProductionManager().getCache(displayedProductType)
+				.haveClientValuesUpdatedSince(lastClientFetchTime)) {
 			updateDisplayValues();
 		}
 	}
@@ -157,6 +159,10 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		displayedProductType = product;
 		selectedConsumptionProduct.clear();
 		selectedProductionProduct.clear();
+		
+		consumptionMetrics.clearChildren();
+		productionMetrics.clearChildren();
+		
 		requestMetricUpdateFromServer();
 	}
 
@@ -177,10 +183,12 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	}
 
 	private void requestMetricUpdateFromServer() {
-		StaticCoreMessageHandler.sendToServer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, new PacketRequestProductionMetrics(displayedProductType));
+		StaticCoreMessageHandler.sendToServer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
+				new PacketRequestProductionMetrics(displayedProductType));
 	}
 
-	public void recieveTimelineData(ProductType<?> productType, MetricPeriod period, MetricType type, List<ProductivityTimeline> timelines) {
+	public void recieveTimelineData(ProductType<?> productType, MetricPeriod period, MetricType type,
+			List<ProductivityTimeline> timelines) {
 		// First ensure we clear all the data from the graphs before we do anything
 		// else.
 		if (type == MetricType.PRODUCTION) {
@@ -195,7 +203,8 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		}
 
 		for (ProductivityTimeline timeline : timelines) {
-			DynamicGraphDataSet data = new DynamicGraphDataSet(productType.getProductColor(timeline.serializedProduct()));
+			DynamicGraphDataSet data = new DynamicGraphDataSet(
+					productType.getProductColor(timeline.serializedProduct()));
 
 			for (int i = 0; i < 60; i++) {
 				ProductivityTimelineEntry entry = timeline.entries().get(i);
@@ -213,7 +222,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	@SuppressWarnings("resource")
 	private void updateDisplayValues() {
 		ProductionManager manager = getProductionManager();
-		ProductionMetrics metrics = manager.getCache(displayedProductType).getProductionMetrics(selectedMetricPeriod);
+		ClientProductionMetrics metrics = manager.getCache(displayedProductType).getClientMetrics();
 
 		consumptionMetrics.updateMetrics(displayedProductType, metrics.getConsumption());
 		productionMetrics.updateMetrics(displayedProductType, metrics.getProduction());
@@ -237,48 +246,58 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 			throw new RuntimeException("We can't get a timeline for a single second!");
 		}
 		StaticCoreMessageHandler.sendToServer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
-				new PacketRequestProductionTimeline(displayedProductType, products, MetricPeriod.values()[period.ordinal() - 1], type));
+				new PacketRequestProductionTimeline(displayedProductType, products,
+						MetricPeriod.values()[period.ordinal() - 1], type));
 	}
 
 	@Override
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		Vector2D overallHalfPadding = overallPadding.copy().divide(2);
-		GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), overallSize.getY(), overallHalfPadding.getX(), overallHalfPadding.getY(), 0,
-				new SDColor(0.1f, 0.1f, 0.1f, 0.75f));
+		GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), overallSize.getY(), overallHalfPadding.getX(),
+				overallHalfPadding.getY(), 0, new SDColor(0.1f, 0.1f, 0.1f, 0.75f));
 
 		{
-			GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), TOP_PANEL_HEIGHT, overallHalfPadding.getX(), overallHalfPadding.getY() + TOP_PANEL_HEIGHT - 4, 0,
+			GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), TOP_PANEL_HEIGHT,
+					overallHalfPadding.getX(), overallHalfPadding.getY() + TOP_PANEL_HEIGHT - 4, 0,
 					new SDColor(0.35f, 0.35f, 0.35f));
 			productButtonContainer.setWidth(overallSize.getX() - 6);
-			productButtonContainer.setPosition(overallHalfPadding.getX() + 3, overallHalfPadding.getY() + TOP_PANEL_HEIGHT - 1);
+			productButtonContainer.setPosition(overallHalfPadding.getX() + 3,
+					overallHalfPadding.getY() + TOP_PANEL_HEIGHT - 1);
 		}
 
 		{
-			GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), TOP_PANEL_HEIGHT, overallHalfPadding.getX(), overallHalfPadding.getY(), 1,
-					new SDColor(0.5f, 0.5f, 0.5f));
-			GuiDrawUtilities.drawStringLeftAligned(pose, "Production", overallHalfPadding.getX() + 8, overallHalfPadding.getY() + 13, 1, 1, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawGenericBackground(pose, overallSize.getX(), TOP_PANEL_HEIGHT,
+					overallHalfPadding.getX(), overallHalfPadding.getY(), 1, new SDColor(0.5f, 0.5f, 0.5f));
+			GuiDrawUtilities.drawStringLeftAligned(pose, "Production", overallHalfPadding.getX() + 8,
+					overallHalfPadding.getY() + 13, 1, 1, SDColor.EIGHT_BIT_WHITE, true);
 		}
 
 		{
-			GuiDrawUtilities.drawStringLeftAligned(pose, "Production", overallTopLeft.getX() + 14, graphPanelPos.getY() - 5, 1, 1, SDColor.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawSlotWithBorder(pose, graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4, graphPanelSize.getY(), graphPanelPos.getX(), graphPanelPos.getY(), 1,
+			GuiDrawUtilities.drawStringLeftAligned(pose, "Production", overallTopLeft.getX() + 14,
+					graphPanelPos.getY() - 5, 1, 1, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawSlotWithBorder(pose, graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4,
+					graphPanelSize.getY(), graphPanelPos.getX(), graphPanelPos.getY(), 1,
 					new SDColor(0.1f, 0.1f, 0.1f));
 			productionGraph.setSize(graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4, graphPanelSize.getY());
 			productionGraph.setPosition(graphPanelPos.getX(), graphPanelPos.getY());
 
-			GuiDrawUtilities.drawStringLeftAligned(pose, "Consumption", graphPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, graphPanelPos.getY() - 5, 1, 1,
-					SDColor.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawSlotWithBorder(pose, graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4, graphPanelSize.getY(),
-					graphPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, graphPanelPos.getY(), 1, new SDColor(0.1f, 0.1f, 0.1f));
+			GuiDrawUtilities.drawStringLeftAligned(pose, "Consumption",
+					graphPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, graphPanelPos.getY() - 5,
+					1, 1, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawSlotWithBorder(pose, graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4,
+					graphPanelSize.getY(), graphPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4,
+					graphPanelPos.getY(), 1, new SDColor(0.1f, 0.1f, 0.1f));
 			consumptionGraph.setSize(graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4, graphPanelSize.getY());
-			consumptionGraph.setPosition(graphPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, graphPanelPos.getY());
+			consumptionGraph.setPosition(graphPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4,
+					graphPanelPos.getY());
 		}
 
 		{
-			GuiDrawUtilities.drawSlotWithBorder(pose, bottomPanelSize.getX(), bottomPanelSize.getY(), bottomPanelPos.getX(), bottomPanelPos.getY(), 1,
-					new SDColor(0.1f, 0.1f, 0.1f));
-			GuiDrawUtilities.drawSlotWithBorder(pose, bottomPanelSize.getX(), bottomPanelSize.getY(), bottomPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4,
-					bottomPanelPos.getY(), 1, new SDColor(0.1f, 0.1f, 0.1f));
+			GuiDrawUtilities.drawSlotWithBorder(pose, bottomPanelSize.getX(), bottomPanelSize.getY(),
+					bottomPanelPos.getX(), bottomPanelPos.getY(), 1, new SDColor(0.1f, 0.1f, 0.1f));
+			GuiDrawUtilities.drawSlotWithBorder(pose, bottomPanelSize.getX(), bottomPanelSize.getY(),
+					bottomPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, bottomPanelPos.getY(),
+					1, new SDColor(0.1f, 0.1f, 0.1f));
 		}
 	}
 
@@ -291,22 +310,26 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		overallPadding = new Vector2D(getScreenBounds().getWidth() / 4, getScreenBounds().getHeight() / 8);
 		Vector2D overallHalfPadding = overallPadding.copy().divide(2);
 		overallTopLeft = new Vector2D(overallPadding.getX() / 2, overallPadding.getY() / 2);
-		overallSize = new Vector2D(getScreenBounds().getWidth(), getScreenBounds().getHeight()).subtract(overallPadding);
+		overallSize = new Vector2D(getScreenBounds().getWidth(), getScreenBounds().getHeight())
+				.subtract(overallPadding);
 
-		graphPanelPos = new Vector2D(GRAPH_PANEL_PADDING / 2 + overallHalfPadding.getX(),
-				overallHalfPadding.getY() + TOP_PANEL_HEIGHT + POST_TOP_PANEL_MARGIN + GRAPH_PANEL_PADDING / 2 + GRAPH_PANEL_OFFSET);
+		graphPanelPos = new Vector2D(GRAPH_PANEL_PADDING / 2 + overallHalfPadding.getX(), overallHalfPadding.getY()
+				+ TOP_PANEL_HEIGHT + POST_TOP_PANEL_MARGIN + GRAPH_PANEL_PADDING / 2 + GRAPH_PANEL_OFFSET);
 		graphPanelSize = new Vector2D(overallSize.getX() / 2 - GRAPH_PANEL_PADDING, overallSize.getY() / 4);
 
 		bottomPanelPos = new Vector2D(overallTopLeft.getX() + GRAPH_PANEL_PADDING / 2,
-				overallTopLeft.getY() + TOP_PANEL_HEIGHT + POST_TOP_PANEL_MARGIN + graphPanelSize.getY() + GRAPH_PANEL_PADDING / 2 + GRAPH_PANEL_OFFSET + 4);
+				overallTopLeft.getY() + TOP_PANEL_HEIGHT + POST_TOP_PANEL_MARGIN + graphPanelSize.getY()
+						+ GRAPH_PANEL_PADDING / 2 + GRAPH_PANEL_OFFSET + 4);
 		bottomPanelSize = new Vector2D(graphPanelSize.getX() + GRAPH_PANEL_PADDING / 4,
-				overallSize.getY() - graphPanelSize.getY() - TOP_PANEL_HEIGHT - POST_TOP_PANEL_MARGIN - GRAPH_PANEL_PADDING - GRAPH_PANEL_OFFSET - 2);
+				overallSize.getY() - graphPanelSize.getY() - TOP_PANEL_HEIGHT - POST_TOP_PANEL_MARGIN
+						- GRAPH_PANEL_PADDING - GRAPH_PANEL_OFFSET - 2);
 
 		productionScrollBox.setPosition(bottomPanelPos.getX(), bottomPanelPos.getY());
 		productionScrollBox.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
 		productionMetrics.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
 
-		consumptionScrollBox.setPosition(bottomPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4, bottomPanelPos.getY());
+		consumptionScrollBox.setPosition(bottomPanelPos.getX() + (overallSize.getX() / 2) - GRAPH_PANEL_PADDING / 4,
+				bottomPanelPos.getY());
 		consumptionScrollBox.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
 		consumptionMetrics.setSize(bottomPanelSize.getX(), bottomPanelSize.getY());
 

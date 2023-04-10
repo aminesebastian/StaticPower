@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 
@@ -17,6 +18,8 @@ import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 import theking530.staticcore.productivity.cacheentry.ProductionEntry.ProductionEntryState;
 import theking530.staticcore.productivity.cacheentry.ProductivityRate;
+import theking530.staticcore.productivity.metrics.ClientProductionMetric;
+import theking530.staticcore.productivity.metrics.ClientProductionMetrics;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.ProductionMetric;
@@ -26,11 +29,14 @@ import theking530.staticcore.productivity.metrics.ProductivityTimeline.Productiv
 import theking530.staticcore.productivity.product.ProductType;
 
 public class ProductionCache<T> {
+	public static final double SMOOTHING_FACTOR = 1.0 / 5.0;
+
 	private final List<Map<Integer, ProductionEntry<T>>> productivityBuckets;
 	private final Map<Integer, Integer> productivityBucketMap;
 	private final ProductType<T> productType;
 	private final String productTablePrefix;
-	private ProductionMetrics clientMetrics;
+	private ClientProductionMetrics nextMetrics;
+	private ClientProductionMetrics clientMetrics;
 	private long lastClientSyncTime;
 
 	private Connection database;
@@ -40,14 +46,16 @@ public class ProductionCache<T> {
 	public ProductionCache(ProductType<T> productType, boolean isClientSide) {
 		this.isClientSide = isClientSide;
 		this.productType = productType;
-		this.productTablePrefix = StaticCoreRegistries.ProductRegistry().getKey(productType).toString().replace(":", "_");
+		this.productTablePrefix = StaticCoreRegistries.ProductRegistry().getKey(productType).toString().replace(":",
+				"_");
 		bucketRoundRobinIndex = 0;
 		productivityBucketMap = new HashMap<>();
 		productivityBuckets = new LinkedList<Map<Integer, ProductionEntry<T>>>();
 		for (int i = 0; i < 20; i++) {
 			productivityBuckets.add(new HashMap<Integer, ProductionEntry<T>>());
 		}
-		clientMetrics = ProductionMetrics.EMPTY;
+		nextMetrics = ClientProductionMetrics.EMPTY;
+		clientMetrics = ClientProductionMetrics.EMPTY;
 	}
 
 	public void tick(long gameTime) {
@@ -58,21 +66,49 @@ public class ProductionCache<T> {
 		}
 	}
 
-	public ProductionEntry<T> addOrUpdateProductionRate(ProductionTrackingToken<T> token, T product, int productHash, double rate) {
+	public void clientTick() {
+		for (ClientProductionMetric lastProduced : clientMetrics.getProduction()) {
+			Optional<ClientProductionMetric> next = nextMetrics.getProduction().stream()
+					.filter((x) -> x.getProductHash() == lastProduced.getProductHash()).findFirst();
+			if (next.isEmpty()) {
+				continue;
+			}
+
+			lastProduced.getProduced().interpolateTowards(next.get().getProduced().getCurrentValue(),
+					next.get().getProduced().getIdealValue(), 10);
+		}
+
+		for (ClientProductionMetric lastConsumed : clientMetrics.getConsumption()) {
+			Optional<ClientProductionMetric> next = nextMetrics.getConsumption().stream()
+					.filter((x) -> x.getProductHash() == lastConsumed.getProductHash()).findFirst();
+			if (next.isEmpty()) {
+				continue;
+			}
+
+			lastConsumed.getConsumed().interpolateTowards(next.get().getConsumed().getCurrentValue(),
+					next.get().getConsumed().getIdealValue(), 10);
+		}
+	}
+
+	public ProductionEntry<T> addOrUpdateProductionRate(ProductionTrackingToken<T> token, T product, int productHash,
+			double rate) {
 		return addOrUpdateProductionRate(token, product, productHash, rate, rate);
 	}
 
-	public ProductionEntry<T> addOrUpdateProductionRate(ProductionTrackingToken<T> token, T product, int productHash, double currentRate, double idealRate) {
+	public ProductionEntry<T> addOrUpdateProductionRate(ProductionTrackingToken<T> token, T product, int productHash,
+			double currentRate, double idealRate) {
 		ProductionEntry<T> entry = getOrCreateProductionEntry(product, productHash);
 		entry.updateProductionRate(token, currentRate, idealRate);
 		return entry;
 	}
 
-	public ProductionEntry<T> addOrUpdateConsumptionRate(ProductionTrackingToken<T> token, T product, int productHash, double rate) {
+	public ProductionEntry<T> addOrUpdateConsumptionRate(ProductionTrackingToken<T> token, T product, int productHash,
+			double rate) {
 		return addOrUpdateConsumptionRate(token, product, productHash, rate, rate);
 	}
 
-	public ProductionEntry<T> addOrUpdateConsumptionRate(ProductionTrackingToken<T> token, T product, int productHash, double currentRate, double idealRate) {
+	public ProductionEntry<T> addOrUpdateConsumptionRate(ProductionTrackingToken<T> token, T product, int productHash,
+			double currentRate, double idealRate) {
 		ProductionEntry<T> entry = getOrCreateProductionEntry(product, productHash);
 		entry.updateConsumptionRate(token, currentRate, idealRate);
 		return entry;
@@ -113,13 +149,15 @@ public class ProductionCache<T> {
 			List<ProductivityTimelineEntry> entries = new LinkedList<>();
 			ResultSet sqlData = stmt.executeQuery(query);
 			while (sqlData.next()) {
-				ProductivityTimelineEntry entry = new ProductivityTimelineEntry(sqlData.getFloat(1), sqlData.getFloat(2), sqlData.getLong(3));
+				ProductivityTimelineEntry entry = new ProductivityTimelineEntry(sqlData.getFloat(1),
+						sqlData.getFloat(2), sqlData.getLong(3));
 				entries.add(entry);
 			}
 			return new ProductivityTimeline(productType, serializedProduct, period, ImmutableList.copyOf(entries));
 		} catch (Exception e) {
-			StaticCore.LOGGER.error(String.format("An error occured when getting the production timeline for product hash: %1$d on table: %2$s.", productHash, productTablePrefix),
-					e);
+			StaticCore.LOGGER.error(String.format(
+					"An error occured when getting the production timeline for product hash: %1$d on table: %2$s.",
+					productHash, productTablePrefix), e);
 		}
 		return new ProductivityTimeline(productType, serializedProduct, period, ImmutableList.of());
 	}
@@ -135,24 +173,33 @@ public class ProductionCache<T> {
 			ResultSet sqlData = stmt.executeQuery(query);
 			return sqlData.getString(1);
 		} catch (Exception e) {
-			StaticCore.LOGGER.error(
-					String.format("An error occured when attempting to get the serialized product for product hash: %1$d on table: %2$s.", productHash, productTablePrefix), e);
+			StaticCore.LOGGER.error(String.format(
+					"An error occured when attempting to get the serialized product for product hash: %1$d on table: %2$s.",
+					productHash, productTablePrefix), e);
 		}
 		return "";
 	}
 
+	public ClientProductionMetrics getClientMetrics() {
+		return clientMetrics;
+	}
+
 	public ProductionMetrics getProductionMetrics(MetricPeriod period) {
-		if (this.isClientSide) {
-			return clientMetrics;
-		} else {
-			List<ProductionMetric> inputs = getAverageProductionRate(period, MetricType.CONSUMPTION);
-			List<ProductionMetric> outputs = getAverageProductionRate(period, MetricType.PRODUCTION);
-			return new ProductionMetrics(inputs, outputs);
-		}
+		List<ProductionMetric> inputs = getAverageProductionRate(period, MetricType.CONSUMPTION);
+		List<ProductionMetric> outputs = getAverageProductionRate(period, MetricType.PRODUCTION);
+		return new ProductionMetrics(inputs, outputs);
 	}
 
 	public void setClientSyncedMetrics(ProductionMetrics metrics, long syncTime) {
-		clientMetrics = metrics;
+		ClientProductionMetrics recievedMetrics = new ClientProductionMetrics(metrics.getConsumption(),
+				metrics.getProduction());
+		if (clientMetrics.isEmpty()) {
+			clientMetrics = recievedMetrics;
+		} else {
+			clientMetrics = nextMetrics;
+		}
+
+		nextMetrics = recievedMetrics;
 		lastClientSyncTime = syncTime;
 	}
 
@@ -174,7 +221,8 @@ public class ProductionCache<T> {
 			stmt.addBatch(createProductivityTable(MetricPeriod.DAY));
 			stmt.executeBatch();
 		} catch (SQLException e) {
-			StaticCore.LOGGER.error(String.format("An error occured when creating the productivity tracking tables!"), e);
+			StaticCore.LOGGER.error(String.format("An error occured when creating the productivity tracking tables!"),
+					e);
 		}
 		createProductLookupTable();
 	}
@@ -211,7 +259,8 @@ public class ProductionCache<T> {
 			}
 
 			if (!toBeInserted.isEmpty()) {
-				StaticCore.LOGGER.trace(String.format("Inserting %1$d entries for bucket: %2$d for product: %3$s.", toBeInserted.size(), bucketIndex, productTablePrefix));
+				StaticCore.LOGGER.trace(String.format("Inserting %1$d entries for bucket: %2$d for product: %3$s.",
+						toBeInserted.size(), bucketIndex, productTablePrefix));
 				stmt.executeBatch();
 
 				// Only if we made it this far should we clear the entires.
@@ -221,17 +270,22 @@ public class ProductionCache<T> {
 			}
 
 		} catch (Exception e) {
-			StaticCore.LOGGER.error(String.format("An error occured when inserting the per second productivity for product: %1$s.", productTablePrefix), e);
+			StaticCore.LOGGER.error(
+					String.format("An error occured when inserting the per second productivity for product: %1$s.",
+							productTablePrefix),
+					e);
 		}
 	}
 
-	public void updateAggregateData(Connection database, MetricPeriod fromPeriod, MetricPeriod toPeriod, long gameTime) {
+	public void updateAggregateData(Connection database, MetricPeriod fromPeriod, MetricPeriod toPeriod,
+			long gameTime) {
 		if (isClientSide) {
 			throw new RuntimeException("Aggregate data can only be updated on the server!");
 		}
 
-		StaticCore.LOGGER.trace(String.format("Updating aggregate data for product type: %1$s from period: %2$s to period: %3$s.", productTablePrefix, fromPeriod.getTableKey(),
-				toPeriod.getTableKey()));
+		StaticCore.LOGGER.trace(
+				String.format("Updating aggregate data for product type: %1$s from period: %2$s to period: %3$s.",
+						productTablePrefix, fromPeriod.getTableKey(), toPeriod.getTableKey()));
 		try {
 			//@formatter:off
 			String upsert = String.format("REPLACE INTO %1$s_productivity_%3$s \n"
@@ -248,8 +302,9 @@ public class ProductionCache<T> {
 			Statement stmt = database.createStatement();
 			stmt.execute(upsert);
 		} catch (Exception e) {
-			StaticCore.LOGGER.error(String.format("An error occured when aggregating the productivity for product: %1$s from period: %2$s to period: %3$s.", productTablePrefix,
-					fromPeriod.getTableKey(), toPeriod.getTableKey()), e);
+			StaticCore.LOGGER.error(String.format(
+					"An error occured when aggregating the productivity for product: %1$s from period: %2$s to period: %3$s.",
+					productTablePrefix, fromPeriod.getTableKey(), toPeriod.getTableKey()), e);
 		}
 	}
 
@@ -258,7 +313,8 @@ public class ProductionCache<T> {
 			return;
 		}
 
-		StaticCore.LOGGER.trace(String.format("Deleting old data for product: %1$s over period: %2$s.", productTablePrefix, period.getTableKey()));
+		StaticCore.LOGGER.trace(String.format("Deleting old data for product: %1$s over period: %2$s.",
+				productTablePrefix, period.getTableKey()));
 		try {
 			//@formatter:off
 			String upsert = String.format("DELETE FROM %1$s_productivity_%2$s \n"
@@ -270,7 +326,8 @@ public class ProductionCache<T> {
 			stmt.execute(upsert);
 		} catch (Exception e) {
 			StaticCore.LOGGER
-					.error(String.format("An error occured when clearing old data for product: %1$s over period: %2$s.", productTablePrefix, period.getMaxRecordsAgeTicks()), e);
+					.error(String.format("An error occured when clearing old data for product: %1$s over period: %2$s.",
+							productTablePrefix, period.getMaxRecordsAgeTicks()), e);
 		}
 	}
 
@@ -280,20 +337,24 @@ public class ProductionCache<T> {
 		// Pull the production rates from memory into the metrics result.
 		for (Map<Integer, ProductionEntry<T>> bucket : productivityBuckets) {
 			for (ProductionEntry<T> entry : bucket.values()) {
-				ProductivityRate consumption = new ProductivityRate(entry.getConsumptionRate().getCurrentValue() * period.getPeriodLengthInSeconds(),
+				ProductivityRate consumption = new ProductivityRate(
+						entry.getConsumptionRate().getCurrentValue() * period.getPeriodLengthInSeconds(),
 						entry.getConsumptionRate().getIdealValue() * period.getPeriodLengthInSeconds());
-				ProductivityRate production = new ProductivityRate(entry.getProductionRate().getCurrentValue() * period.getPeriodLengthInSeconds(),
+				ProductivityRate production = new ProductivityRate(
+						entry.getProductionRate().getCurrentValue() * period.getPeriodLengthInSeconds(),
 						entry.getProductionRate().getIdealValue() * period.getPeriodLengthInSeconds());
-				metrics.add(
-						new ProductionMetric(productType.getProductHashCode(entry.getProduct()), productType.getSerializedProduct(entry.getProduct()), consumption, production));
+				metrics.add(new ProductionMetric(productType.getProductHashCode(entry.getProduct()),
+						productType.getSerializedProduct(entry.getProduct()), consumption, production));
 			}
 		}
 
 		// Sort such that the highest rates go to the top.
 		if (direction == MetricType.PRODUCTION) {
-			metrics.sort((m1, m2) -> Double.compare(m2.getProduced().getCurrentValue(), m1.getProduced().getCurrentValue()));
+			metrics.sort(
+					(m1, m2) -> Double.compare(m2.getProduced().getCurrentValue(), m1.getProduced().getCurrentValue()));
 		} else {
-			metrics.sort((m1, m2) -> Double.compare(m2.getConsumed().getCurrentValue(), m1.getConsumed().getCurrentValue()));
+			metrics.sort(
+					(m1, m2) -> Double.compare(m2.getConsumed().getCurrentValue(), m1.getConsumed().getCurrentValue()));
 		}
 
 		return metrics;
@@ -341,7 +402,8 @@ public class ProductionCache<T> {
 			Statement stmt = getDatabase().createStatement();
 			stmt.execute(tableQuery);
 		} catch (Exception e) {
-			StaticCore.LOGGER.error(String.format("An error occured when creating the lookup table for product type: $1$s!", productTablePrefix), e);
+			StaticCore.LOGGER.error(String.format(
+					"An error occured when creating the lookup table for product type: $1$s!", productTablePrefix), e);
 		}
 	}
 
@@ -355,8 +417,9 @@ public class ProductionCache<T> {
 			Statement stmt = getDatabase().createStatement();
 			stmt.execute(insert);
 		} catch (Exception e) {
-			StaticCore.LOGGER.error(String.format("An error occured when inserting a new product entry for product: $1$s!", productType.getSerializedProduct(entry.getProduct())),
-					e);
+			StaticCore.LOGGER
+					.error(String.format("An error occured when inserting a new product entry for product: $1$s!",
+							productType.getSerializedProduct(entry.getProduct())), e);
 		}
 	}
 

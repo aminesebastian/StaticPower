@@ -100,14 +100,12 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 	}
 
 	protected double calculatePowerSatisfaction() {
-		if (getDefaultPowerUsage() > powerComponent.getCapacity()) {
-			return 0;
+		if (powerComponent == null || getDefaultPowerUsage() == 0) {
+			return 1;
 		}
 
 		double currentTickSatisfaction = 0;
-		if (getDefaultPowerUsage() == 0 || powerComponent == null) {
-			currentTickSatisfaction = 1;
-		} else if (powerComponent.getStoredPower() == powerComponent.getCapacity()) {
+		if (powerComponent.getStoredPower() == powerComponent.getCapacity()) {
 			currentTickSatisfaction = 1;
 		} else {
 			currentTickSatisfaction = SDMath.clamp(powerComponent.getAveragePowerAddedPerTick() / defaultPowerUsage, 0,
@@ -299,11 +297,13 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 	}
 
 	@Override
-	protected void updateProductionStatistics(TeamComponent teamComp) {
-		super.updateProductionStatistics(teamComp);
+	protected void updateProductionRates(TeamComponent teamComp) {
+		super.updateProductionRates(teamComp);
+		// We capture this here and not as a product when processing starts because the
+		// value can change over time as the power satisfaction changes.
 		if (powerComponent != null && getPowerUsage() > 0) {
 			getProductionToken(StaticCoreProductTypes.Power.get()).setConsumptionPerSecond(teamComp.getOwningTeam(),
-					getPowerProductInterfaceId(), getPowerUsage() * 20, defaultPowerUsage * 20);
+					getPowerProducerId(), getPowerUsage() * 20, defaultPowerUsage * 20);
 		}
 	}
 

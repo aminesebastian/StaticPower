@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.init.StaticCoreProductTypes;
+import theking530.staticcore.productivity.metrics.ClientProductionMetric;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.product.ProductType;
@@ -26,10 +27,12 @@ import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.math.Vector2D;
 
 public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
+
 	@Nullable
-	private ProductionMetric metric;
+	private ClientProductionMetric metric;
 	private MetricType metricType;
 	private ProductType<?> currentProductType;
+
 	private Consumer<MetricEntryWidget> clicked;
 
 	public MetricEntryWidget(MetricType metricType, float xPosition, float yPosition, float width, float height) {
@@ -37,7 +40,7 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		this.metricType = metricType;
 	}
 
-	public void setMetric(ProductType<?> productType, @Nullable ProductionMetric metric) {
+	public void setMetric(ProductType<?> productType, @Nullable ClientProductionMetric metric) {
 		this.metric = metric;
 		this.currentProductType = productType;
 	}
@@ -54,7 +57,8 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		return currentProductType;
 	}
 
-	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX,
+			int mouseY) {
 
 	}
 
@@ -82,8 +86,9 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		GuiDrawUtilities.drawRectangle(pose, 1f, getHeight(), getWidth() - 1, 0, 10, SDColor.DARK_GREY);
 
 		if (metric != null && currentProductType != null) {
-			ProductMetricTileRendererRegistry.getRenderer(currentProductType).setRenderContext(metric, metricType);
-			ProductMetricTileRendererRegistry.getRenderer(currentProductType).drawBackground(pose, new Vector2D(mouseX, mouseY), partialTicks, getSize(), isHovered());
+			ProductMetricTileRendererRegistry.getRenderer(currentProductType).drawBackground(metric, metricType,
+					metric.getSmoothedMetricValue(metricType), pose, new Vector2D(mouseX, mouseY), partialTicks,
+					getSize(), isHovered());
 		}
 	}
 
@@ -94,8 +99,9 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 	@Override
 	public void renderWidgetForeground(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 		if (metric != null && currentProductType != null) {
-			ProductMetricTileRendererRegistry.getRenderer(currentProductType).setRenderContext(metric, metricType);
-			ProductMetricTileRendererRegistry.getRenderer(currentProductType).drawForeground(pose, new Vector2D(mouseX, mouseY), partialTicks, getSize(), isHovered());
+			ProductMetricTileRendererRegistry.getRenderer(currentProductType).drawForeground(metric, metricType,
+					metric.getSmoothedMetricValue(metricType), pose, new Vector2D(mouseX, mouseY), partialTicks,
+					getSize(), isHovered());
 		}
 	}
 
@@ -108,7 +114,8 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 					CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
 					tag.putByte("Count", (byte) 1);
 					ItemStack product = ItemStack.of(tag);
-					tooltips.addAll(product.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.Default.NORMAL));
+					tooltips.addAll(
+							product.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.Default.NORMAL));
 				} else if (currentProductType == StaticCoreProductTypes.Fluid.get()) {
 					CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
 					tag.putInt("Amount", (byte) 1);

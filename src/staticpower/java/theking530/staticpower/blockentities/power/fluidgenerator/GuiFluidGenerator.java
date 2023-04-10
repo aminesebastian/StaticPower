@@ -27,19 +27,23 @@ public class GuiFluidGenerator extends StaticCoreBlockEntityScreen<ContainerFlui
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Input, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60,
+				MachineSideMode.Input, getTileEntity()));
 		registerWidget(new GuiPowerBarFromStorage(getTileEntity().powerStorage, 8, 8, 16, 60));
 		registerWidget(fireBar = new FireProgressBar(81, 52));
 		fireBar.setMaxProgress(1);
 
 		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory));
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(
+				new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT),
+				true);
 		getTabManager()
-				.registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
+				.registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent,
+				Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 	}
 
 	@Override
@@ -47,7 +51,7 @@ public class GuiFluidGenerator extends StaticCoreBlockEntityScreen<ContainerFlui
 		// We set the max progress high because the fire progress bar is inverted, so we
 		// want to provide a LOW percentage.
 		fireBar.setMaxProgress(getTileEntity().fluidTankComponent.getFluidAmount());
-		if (getTileEntity().processingComponent.getIsOnBlockState()) {
+		if (getTileEntity().processingComponent.performedWorkLastTick()) {
 			fireBar.setCurrentProgress(0);
 		} else {
 			fireBar.setCurrentProgress(1);

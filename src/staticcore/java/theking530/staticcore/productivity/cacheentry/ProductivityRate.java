@@ -31,7 +31,11 @@ public class ProductivityRate {
 		return currentValue == 0 && idealValue == 0;
 	}
 
-	public void interpolateTowards(double totalCurrentValue, double totalIdealValue, int smoothingFactor) {
+	public ProductivityRate copy() {
+		return new ProductivityRate(currentValue, idealValue);
+	}
+
+	public void interpolateTowards(double totalCurrentValue, double totalIdealValue, double smoothingFactor) {
 		currentValue = (totalCurrentValue + (currentValue * smoothingFactor)) / (smoothingFactor + 1);
 		if (currentValue < 0.001) {
 			if (totalCurrentValue > 0) {

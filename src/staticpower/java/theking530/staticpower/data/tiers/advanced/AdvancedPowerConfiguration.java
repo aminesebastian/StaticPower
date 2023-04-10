@@ -12,7 +12,7 @@ public class AdvancedPowerConfiguration extends TierPowerConfiguration {
 
 	@Override
 	protected double getDefaultPowerCapacity() {
-		return 250;
+		return 1000;
 	}
 
 	@Override

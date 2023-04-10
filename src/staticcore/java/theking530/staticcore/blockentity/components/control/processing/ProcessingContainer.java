@@ -14,9 +14,10 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.productivity.product.ProductType;
+import theking530.staticcore.productivity.product.power.PowerProducer;
 
 public class ProcessingContainer extends ProcessingOutputContainer {
-	private final Map<ProductType<?>, List<ProcessingProductWrapper<?, ?>>> inputMap;
+	private final Map<ProductType<?>, List<ProcessingProduct<?, ?>>> inputMap;
 	private CompoundTag customParameters;
 
 	public ProcessingContainer() {
@@ -29,7 +30,7 @@ public class ProcessingContainer extends ProcessingOutputContainer {
 	}
 
 	public ProcessingContainer addInputItem(ItemStack item, CaptureType captureType, boolean isTemplateItem) {
-		return addInput(StaticCoreProductTypes.Item.get(), item, item.getCount(), captureType, isTemplateItem);
+		return addInput(StaticCoreProductTypes.Item.get(), item.copy(), item.getCount(), captureType, isTemplateItem);
 	}
 
 	public ProcessingContainer addInputFluid(FluidStack fluid, CaptureType captureType) {
@@ -37,25 +38,34 @@ public class ProcessingContainer extends ProcessingOutputContainer {
 	}
 
 	public ProcessingContainer addInputFluid(FluidStack fluid, CaptureType captureType, boolean isTemplateItem) {
-		return addInput(StaticCoreProductTypes.Fluid.get(), fluid, fluid.getAmount(), captureType, isTemplateItem);
+		return addInput(StaticCoreProductTypes.Fluid.get(), fluid.copy(), fluid.getAmount(), captureType,
+				isTemplateItem);
+	}
+
+	public ProcessingOutputContainer addInputPower(PowerProducer producer, double power, CaptureType captureType,
+			boolean isTemplateItem) {
+		return addInput(StaticCoreProductTypes.Power.get(), producer, power, captureType, isTemplateItem);
 	}
 
 	public ItemStack getInputItem(int index) {
-		return getInput(StaticCoreProductTypes.Item.get(), index).copy();
+		return getInput(StaticCoreProductTypes.Item.get(), index).getProduct().copy();
 	}
 
 	public FluidStack getInputFluid(int index) {
-		return getInput(StaticCoreProductTypes.Fluid.get(), index).copy();
+		return getInput(StaticCoreProductTypes.Fluid.get(), index).getProduct().copy();
+	}
+
+	public double getInputPower(int index) {
+		return getInput(StaticCoreProductTypes.Power.get(), index).getAmount();
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getInput(ProductType<T> type, int index) {
-		List<ProcessingProductWrapper<?, ?>> list = inputMap.get(type);
-		return (T) list.get(index).getProduct();
+	public <T extends ProductType<K>, K> ProcessingProduct<T, K> getInput(T type, int index) {
+		return (ProcessingProduct<T, K>) inputMap.get(type).get(index);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> ProcessingContainer addInput(ProductType<T> type, T product, int amount, CaptureType captureType,
+	public <T> ProcessingContainer addInput(ProductType<T> type, T product, double amount, CaptureType captureType,
 			boolean isTemplateItem) {
 
 		if (isClosed()) {
@@ -68,12 +78,12 @@ public class ProcessingContainer extends ProcessingOutputContainer {
 		}
 
 		inputMap.computeIfAbsent(type, (x) -> new ArrayList<>());
-		inputMap.get(type).add(new ProcessingProductWrapper(type, product, amount, captureType, isTemplateItem));
+		inputMap.get(type).add(new ProcessingProduct(type, product, amount, captureType, isTemplateItem));
 		return this;
 	}
 
 	public void mergeOutputContainer(ProcessingOutputContainer other) {
-		for (Entry<ProductType<?>, List<ProcessingProductWrapper<?, ?>>> entry : other.outputMap.entrySet()) {
+		for (Entry<ProductType<?>, List<ProcessingProduct<?, ?>>> entry : other.outputMap.entrySet()) {
 			outputMap.computeIfAbsent(entry.getKey(), (x) -> new ArrayList<>());
 			outputMap.get(entry.getKey()).addAll(entry.getValue());
 		}
@@ -95,8 +105,7 @@ public class ProcessingContainer extends ProcessingOutputContainer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <K, T extends ProductType<K>, W extends ProcessingProductWrapper<T, K>> List<W> getInputProductsOfType(
-			T type) {
+	public <K, T extends ProductType<K>, W extends ProcessingProduct<T, K>> List<W> getInputProductsOfType(T type) {
 		return (List<W>) inputMap.get(type);
 	}
 

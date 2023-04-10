@@ -5,10 +5,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class PowerProductInterfaceId {
+public class PowerProducer {
 	private final Block blockSource;
 
-	public PowerProductInterfaceId(Block blockSource) {
+	public PowerProducer(Block blockSource) {
 		this.blockSource = blockSource;
 	}
 
@@ -18,9 +18,9 @@ public class PowerProductInterfaceId {
 		return output;
 	}
 
-	public static PowerProductInterfaceId deserialize(CompoundTag tag) {
+	public static PowerProducer deserialize(CompoundTag tag) {
 		ResourceLocation key = new ResourceLocation(tag.getString("block"));
-		return new PowerProductInterfaceId(ForgeRegistries.BLOCKS.getValue(key));
+		return new PowerProducer(ForgeRegistries.BLOCKS.getValue(key));
 	}
 
 	public Block getBlockSource() {
