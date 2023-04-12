@@ -10,14 +10,14 @@ import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
 import theking530.staticcore.init.StaticCoreKeyBindings;
 import theking530.staticcore.research.Research;
 import theking530.staticcore.research.gui.ResearchManager.ResearchInstance;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.utilities.SDColor;
 
 public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget> {
 	private final SimpleProgressBar progressBar;
 	private boolean drawBackground;
 	private SDColor backgroundTint;
-	private Team team;
+	private ITeam team;
 	private Research research;
 	private ResearchInstance currentProgress;
 
@@ -58,11 +58,11 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 		return this;
 	}
 
-	public Team getTeam() {
+	public ITeam getTeam() {
 		return team;
 	}
 
-	public void setTeam(Team team) {
+	public void setTeam(ITeam team) {
 		this.team = team;
 	}
 

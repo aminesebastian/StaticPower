@@ -10,7 +10,7 @@ import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ClientTeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.utilities.SDColor;
 
@@ -27,7 +27,7 @@ public class GuiResearchTab extends AbstractInfoTab {
 	}
 
 	public void setTeamClicked(StandardButton button, MouseButton mouseButton) {
-		Team localTeam = TeamManager.getLocalTeam();
+		ClientTeam localTeam = TeamManager.getLocalTeam();
 		if (localTeam != null) {
 			teamComponent.setTeam(localTeam.getId());
 		}

@@ -6,7 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 
 public class PacketSetSelectedResearch extends NetworkMessage {
@@ -38,7 +38,7 @@ public class PacketSetSelectedResearch extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			Team team = TeamManager.get(ctx.get().getSender().level).getTeamById(teamId);
+			ITeam team = TeamManager.get(ctx.get().getSender().level).getTeamById(teamId);
 			if (team != null) {
 				team.getResearchManager().setSelectedResearch(researchId);
 			}

@@ -20,6 +20,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.product.power.PowerProducer;
+import theking530.staticcore.teams.ServerTeam;
 import theking530.staticpower.blockentities.components.TieredPowerStorageComponent;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
@@ -101,8 +102,8 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 			// No need to check if we the power storage can take this power. If it can't
 			// this will just be a no-op.
 			double added = powerStorage.addPower(new PowerStack(actualGeneration, powerStorage.getOutputVoltage()), false);
-			powerToken.setProductionPerSecond(getTeamComponent().getOwningTeam(), powerProductionStack, added * 20, actualGeneration * 20);
-			powerToken.produced(getTeamComponent().getOwningTeam(), powerProductionStack, added);
+			powerToken.setProductionPerSecond((ServerTeam)getTeamComponent().getOwningTeam(), powerProductionStack, added * 20, actualGeneration * 20);
+			powerToken.produced((ServerTeam)getTeamComponent().getOwningTeam(), powerProductionStack, added);
 		} else {
 			powerToken.invalidate();
 		}

@@ -19,7 +19,7 @@ import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.utilities.MetricConverter;
 import theking530.staticpower.blockentities.digistorenetwork.manager.BlockEntityDigistoreManager;
 import theking530.staticpower.blockentities.digistorenetwork.patternstorage.BlockEntityPatternStorage;
@@ -229,12 +229,12 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 		craftingTimer = tag.getInt("crafting_timer");
 	}
 
-	protected Optional<Team> getOwningTeam() {
+	protected Optional<ITeam> getOwningTeam() {
 		if (!isManagerPresent()) {
 			return Optional.empty();
 		}
 
-		Team team = manager.getTeamComponent().getOwningTeam();
+		ITeam team = manager.getTeamComponent().getOwningTeam();
 		return Optional.ofNullable(team);
 	}
 

@@ -27,8 +27,10 @@ import theking530.staticcore.init.StaticCoreUpgradeTypes.SpeedMultiplierUpgradeV
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.product.power.PowerProducer;
+import theking530.staticcore.teams.ServerTeam;
 
-public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesingComponent<?>> extends AbstractBlockEntityComponent {
+public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesingComponent<?>>
+		extends AbstractBlockEntityComponent {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
 	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
 
@@ -245,10 +247,12 @@ public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesi
 			}
 
 			// Use power if requested to.
-			if (getPowerUsage() > 0 && powerComponent != null && currentProcessingTimer < fullSatisfactionProcessingTime) {
+			if (getPowerUsage() > 0 && powerComponent != null
+					&& currentProcessingTimer < fullSatisfactionProcessingTime) {
 				powerComponent.drainPower(getPowerUsage(), false);
 				if (teamComp != null) {
-					getPowerProductionToken().consumed(teamComp.getOwningTeam(), powerProductionStack, getPowerUsage());
+					getPowerProductionToken().consumed((ServerTeam) teamComp.getOwningTeam(), powerProductionStack,
+							getPowerUsage());
 				}
 			}
 
@@ -371,8 +375,8 @@ public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesi
 
 	protected void updateProductionStatistics(TeamComponent teamComp) {
 		if (powerComponent != null && getPowerUsage() > 0) {
-			getPowerProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), powerProductionStack, getPowerUsage() * 20,
-					fullSatisfactionPowerUsage * 20);
+			getPowerProductionToken().setConsumptionPerSecond((ServerTeam) teamComp.getOwningTeam(),
+					powerProductionStack, getPowerUsage() * 20, fullSatisfactionPowerUsage * 20);
 		}
 	}
 
@@ -403,7 +407,8 @@ public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesi
 		// Check the power state.
 		// Only do this if there is still processing to be done.
 		ProcessingCheckState powerState;
-		if (currentProcessingTimer < fullSatisfactionProcessingTime && !(powerState = checkPowerRequirements()).isOk()) {
+		if (currentProcessingTimer < fullSatisfactionProcessingTime
+				&& !(powerState = checkPowerRequirements()).isOk()) {
 			return powerState;
 		}
 
@@ -564,8 +569,10 @@ public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesi
 			processingSpeedUpgradeMultiplier = 1.0f;
 			powerUsageIncreaseMultiplier = 1.0f;
 		} else {
-			processingSpeedUpgradeMultiplier = (float) (1.0f + (speedUpgrade.getUpgradeValue().speedIncrease()) * speedUpgrade.getUpgradeWeight());
-			powerUsageIncreaseMultiplier = (float) (1.0f + (speedUpgrade.getUpgradeValue().powerUsageIncrease()) * speedUpgrade.getUpgradeWeight());
+			processingSpeedUpgradeMultiplier = (float) (1.0f
+					+ (speedUpgrade.getUpgradeValue().speedIncrease()) * speedUpgrade.getUpgradeWeight());
+			powerUsageIncreaseMultiplier = (float) (1.0f
+					+ (speedUpgrade.getUpgradeValue().powerUsageIncrease()) * speedUpgrade.getUpgradeWeight());
 		}
 
 		// Set the processing time.
@@ -694,11 +701,13 @@ public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesi
 
 	protected void sendSynchronizationPacket() {
 		if (getLevel().isClientSide()) {
-			StaticCore.LOGGER.warn("#synchronizeToClient (called at %1$s) should only be called from the server!", getPos().toString());
+			StaticCore.LOGGER.warn("#synchronizeToClient (called at %1$s) should only be called from the server!",
+					getPos().toString());
 			return;
 		}
 
-		boolean shouldSync = Math.abs(lastSyncProcessingTime - this.currentProcessingTimer) >= SYNC_UPDATE_DELTA_THRESHOLD;
+		boolean shouldSync = Math
+				.abs(lastSyncProcessingTime - this.currentProcessingTimer) >= SYNC_UPDATE_DELTA_THRESHOLD;
 		shouldSync |= lastSyncProcessingTime == 0 && currentProcessingTimer != 0;
 		shouldSync |= currentProcessingTimer == 0 && lastSyncProcessingTime != 0;
 
@@ -706,8 +715,8 @@ public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesi
 			lastSyncProcessingTime = currentProcessingTimer;
 			// Send the packet to all clients within the requested radius.
 			ProcesingComponentSyncPacket msg = new ProcesingComponentSyncPacket(getPos(), this);
-			StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(),
-					SYNC_PACKET_UPDATE_RADIUS, msg);
+			StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(),
+					getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
 		}
 	}
 

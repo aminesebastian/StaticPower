@@ -23,9 +23,9 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
 import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
 import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.ProcessingItemWrapper;
+import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.redstonecontrol.RedstoneMode;
@@ -39,6 +39,7 @@ import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
+import theking530.staticcore.teams.ServerTeam;
 import theking530.staticcore.utilities.item.InventoryUtilities;
 import theking530.staticcore.utilities.item.ItemUtilities;
 import theking530.staticcore.utilities.math.SDMath;
@@ -52,8 +53,9 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class BlockEntityHydroponicPod extends BlockEntityBase implements IOldRecipeProcessor<HydroponicFarmingRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHydroponicPod> TYPE = new BlockEntityTypeAllocator<>("hydroponic_farmer_pod",
-			(type, pos, state) -> new BlockEntityHydroponicPod(pos, state), ModBlocks.HydroponicPod);
+	public static final BlockEntityTypeAllocator<BlockEntityHydroponicPod> TYPE = new BlockEntityTypeAllocator<>(
+			"hydroponic_farmer_pod", (type, pos, state) -> new BlockEntityHydroponicPod(pos, state),
+			ModBlocks.HydroponicPod);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -71,20 +73,24 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IOldRec
 
 	public BlockEntityHydroponicPod(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", BackOutputOnly.INSTANCE));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent",
+				RedstoneMode.Ignore));
+		registerComponent(
+				ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", BackOutputOnly.INSTANCE));
 
 		// Setup the inventories.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return CraftingUtilities.getRecipe(ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(), new RecipeMatchParameters(stack), getLevel()).isPresent();
-			}
-		}).setSlotLimit(2));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return CraftingUtilities.getRecipe(ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(),
+								new RecipeMatchParameters(stack), getLevel()).isPresent();
+					}
+				}).setSlotLimit(2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 10, MachineSideMode.Output));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 
-		registerComponent(
-				processingComponent = new OldRecipeProcessingComponent<HydroponicFarmingRecipe>("ProcessingComponent", ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new OldRecipeProcessingComponent<HydroponicFarmingRecipe>(
+				"ProcessingComponent", ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(), this));
 		processingComponent.setShouldControlBlockState(true);
 
 		owningFarmer = null;
@@ -96,8 +102,8 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IOldRec
 			if (SDMath.diceRoll(0.01f)) {
 				float randomX = ((2 * getLevel().random.nextFloat()) - 1.0f) * 0.25f;
 				float randomZ = ((2 * getLevel().random.nextFloat()) - 1.0f) * 0.25f;
-				getLevel().addParticle(ParticleTypes.FALLING_DRIPSTONE_WATER, getBlockPos().getX() + randomX + 0.5, getBlockPos().getY() + 0.8,
-						getBlockPos().getZ() + randomZ + 0.5, 0.0f, 0.0f, 0.0f);
+				getLevel().addParticle(ParticleTypes.FALLING_DRIPSTONE_WATER, getBlockPos().getX() + randomX + 0.5,
+						getBlockPos().getY() + 0.8, getBlockPos().getZ() + randomZ + 0.5, 0.0f, 0.0f, 0.0f);
 			}
 		}
 
@@ -105,7 +111,9 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IOldRec
 			// Only do the following if we have a farmer.
 			if (hasFarmer() && hasWater() && isGrowing()) {
 				// Use fluid if we're growing.
-				processingComponent.getFluidProductionToken().setConsumptionPerSecond(getTeamComponent().getOwningTeam(), owningFarmer.fluidTankComponent.getFluid(), (2) * 20);
+				processingComponent.getFluidProductionToken().setConsumptionPerSecond(
+						(ServerTeam) getTeamComponent().getOwningTeam(), owningFarmer.fluidTankComponent.getFluid(),
+						(2) * 20);
 				owningFarmer.fluidTankComponent.drain(2, FluidAction.EXECUTE);
 			}
 		}
@@ -162,7 +170,8 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IOldRec
 	}
 
 	public Optional<BlockState> getPlantBlockStateForHarvest(OldProcessingContainer outputContainer) {
-		Optional<Block> block = getPlantBlockFromSeed(processingComponent.getProcessingMaterials().getInputItem(0).item());
+		Optional<Block> block = getPlantBlockFromSeed(
+				processingComponent.getProcessingMaterials().getInputItem(0).item());
 		if (block.isEmpty()) {
 			return Optional.empty();
 		}
@@ -238,13 +247,16 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IOldRec
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<HydroponicFarmingRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(
+			OldRecipeProcessingComponent<HydroponicFarmingRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe, OldProcessingContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
+	public void captureInputsAndProducts(OldRecipeProcessingComponent<HydroponicFarmingRecipe> component,
+			HydroponicFarmingRecipe recipe, OldProcessingContainer outputContainer) {
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true),
+				CaptureType.BOTH);
 
 		HarvestResult results = getDrops(outputContainer);
 		for (ItemStack stack : results.getResults()) {
@@ -255,13 +267,14 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IOldRec
 	}
 
 	@Override
-	public void processingStarted(OldRecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe, OldProcessingContainer outputContainer) {
+	public void processingStarted(OldRecipeProcessingComponent<HydroponicFarmingRecipe> component,
+			HydroponicFarmingRecipe recipe, OldProcessingContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe,
-			OldProcessingContainer outputContainer) {
+	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<HydroponicFarmingRecipe> component,
+			HydroponicFarmingRecipe recipe, OldProcessingContainer outputContainer) {
 		if (!hasFarmer()) {
 			return ProcessingCheckState.error("Missing farmer!");
 		}
@@ -278,14 +291,17 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IOldRec
 	}
 
 	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe, OldProcessingContainer outputContainer) {
+	public void processingCompleted(OldRecipeProcessingComponent<HydroponicFarmingRecipe> component,
+			HydroponicFarmingRecipe recipe, OldProcessingContainer outputContainer) {
 		// Iterate through all the drops. If the input is empty, check if any of the
 		// drops can be put back into the seed slot.
 		// If so, transfer. Then, whatever is left goes into the buffer.
 		for (ProcessingItemWrapper wrapper : outputContainer.getOutputItems()) {
 			ItemStack stack = wrapper.item().copy();
-			if (CraftingUtilities.getRecipe(ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(), new RecipeMatchParameters(stack), getLevel()).isPresent()) {
-				if (inputInventory.getStackInSlot(0).isEmpty() || ItemUtilities.areItemStacksStackable(inputInventory.getStackInSlot(0), stack)) {
+			if (CraftingUtilities.getRecipe(ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(),
+					new RecipeMatchParameters(stack), getLevel()).isPresent()) {
+				if (inputInventory.getStackInSlot(0).isEmpty()
+						|| ItemUtilities.areItemStacksStackable(inputInventory.getStackInSlot(0), stack)) {
 					ItemStack remaining = inputInventory.insertItem(0, stack.copy(), false);
 					stack.setCount(remaining.getCount());
 				}

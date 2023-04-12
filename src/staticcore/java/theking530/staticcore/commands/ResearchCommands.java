@@ -9,7 +9,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.StaticCore;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 
 public class ResearchCommands {
@@ -33,7 +33,7 @@ public class ResearchCommands {
 			throws CommandSyntaxException {
 		try {
 			Player player = commandContext.getSource().getPlayerOrException();
-			Team team = TeamManager.get(player.level).getTeamForPlayer(player);
+			ITeam team = TeamManager.get(player.level).getTeamForPlayer(player);
 			if (team != null) {
 				team.getResearchManager().unlockAllResearch(player.level);
 			}
@@ -47,7 +47,7 @@ public class ResearchCommands {
 	public static int lockAllResearch(CommandContext<CommandSourceStack> commandContext) throws CommandSyntaxException {
 		try {
 			Player player = commandContext.getSource().getPlayerOrException();
-			Team team = TeamManager.get(player.level).getTeamForPlayer(player);
+			ITeam team = TeamManager.get(player.level).getTeamForPlayer(player);
 			if (team != null) {
 				team.getResearchManager().lockAllResearch();
 			}

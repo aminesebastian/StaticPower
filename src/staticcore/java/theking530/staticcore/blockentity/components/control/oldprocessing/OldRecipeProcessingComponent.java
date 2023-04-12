@@ -20,10 +20,12 @@ import theking530.staticcore.crafting.AbstractMachineRecipe;
 import theking530.staticcore.crafting.AbstractStaticPowerRecipe;
 import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
+import theking530.staticcore.teams.ServerTeam;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
-public class OldRecipeProcessingComponent<T extends Recipe<?>> extends OldAbstractProcesingComponent<OldRecipeProcessingComponent<T>> {
+public class OldRecipeProcessingComponent<T extends Recipe<?>>
+		extends OldAbstractProcesingComponent<OldRecipeProcessingComponent<T>> {
 	public static final int MOVE_TIME = 8;
 
 	private final RecipeType<T> recipeType;
@@ -42,7 +44,8 @@ public class OldRecipeProcessingComponent<T extends Recipe<?>> extends OldAbstra
 		this(name, 0, recipeType, processor);
 	}
 
-	public OldRecipeProcessingComponent(String name, int processingTime, RecipeType<T> recipeType, IOldRecipeProcessor<T> processor) {
+	public OldRecipeProcessingComponent(String name, int processingTime, RecipeType<T> recipeType,
+			IOldRecipeProcessor<T> processor) {
 		super(name, processingTime, true);
 		this.recipeType = recipeType;
 		this.processor = processor;
@@ -99,14 +102,14 @@ public class OldRecipeProcessingComponent<T extends Recipe<?>> extends OldAbstra
 		super.updateProductionStatistics(teamComp);
 		for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
 			if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
-				getItemProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.item(),
+				getItemProductionToken().setProductionPerSecond((ServerTeam) teamComp.getOwningTeam(), output.item(),
 						output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)),
 						output.item().getCount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
 		for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
 			if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
-				getItemProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.item(),
+				getItemProductionToken().setConsumptionPerSecond((ServerTeam) teamComp.getOwningTeam(), input.item(),
 						input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)),
 						input.item().getCount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
@@ -114,14 +117,14 @@ public class OldRecipeProcessingComponent<T extends Recipe<?>> extends OldAbstra
 
 		for (ProcessingFluidWrapper output : outputContainer.getOutputFluids()) {
 			if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
-				getFluidProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.fluid(),
+				getFluidProductionToken().setProductionPerSecond((ServerTeam) teamComp.getOwningTeam(), output.fluid(),
 						output.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)),
 						output.fluid().getAmount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
 		}
 		for (ProcessingFluidWrapper input : outputContainer.getInputFluids()) {
 			if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
-				getFluidProductionToken().setConsumptionPerSecond(teamComp.getOwningTeam(), input.fluid(),
+				getFluidProductionToken().setConsumptionPerSecond((ServerTeam) teamComp.getOwningTeam(), input.fluid(),
 						input.fluid().getAmount() * (1.0 / (getMaxProcessingTime() / 20.0)),
 						input.fluid().getAmount() * (1.0 / (getFullPowerSatisfactionMaxProcessingTime() / 20.0)));
 			}
@@ -202,23 +205,27 @@ public class OldRecipeProcessingComponent<T extends Recipe<?>> extends OldAbstra
 		if (teamComp != null) {
 			for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
 				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.COUNT_ONLY) {
-					getItemProductionToken().produced(teamComp.getOwningTeam(), output.item(), output.item().getCount());
+					getItemProductionToken().produced((ServerTeam) teamComp.getOwningTeam(), output.item(),
+							output.item().getCount());
 				}
 			}
 			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
 				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.COUNT_ONLY) {
-					getItemProductionToken().consumed(teamComp.getOwningTeam(), input.item(), input.item().getCount());
+					getItemProductionToken().consumed((ServerTeam) teamComp.getOwningTeam(), input.item(),
+							input.item().getCount());
 				}
 			}
 
 			for (ProcessingFluidWrapper output : outputContainer.getOutputFluids()) {
 				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.COUNT_ONLY) {
-					getFluidProductionToken().produced(teamComp.getOwningTeam(), output.fluid(), output.fluid().getAmount());
+					getFluidProductionToken().produced((ServerTeam) teamComp.getOwningTeam(), output.fluid(),
+							output.fluid().getAmount());
 				}
 			}
 			for (ProcessingFluidWrapper input : outputContainer.getInputFluids()) {
 				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.COUNT_ONLY) {
-					getFluidProductionToken().consumed(teamComp.getOwningTeam(), input.fluid(), input.fluid().getAmount());
+					getFluidProductionToken().consumed((ServerTeam) teamComp.getOwningTeam(), input.fluid(),
+							input.fluid().getAmount());
 				}
 			}
 		}
@@ -251,14 +258,15 @@ public class OldRecipeProcessingComponent<T extends Recipe<?>> extends OldAbstra
 	public Optional<T> getRecipeMatchingParameters(RecipeMatchParameters matchParameters) {
 		// Check for the recipe.
 		if (recipeType == RecipeType.SMELTING) {
-			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]),
-					getLevel());
+			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING,
+					new SimpleContainer(matchParameters.getItems()[0]), getLevel());
 		} else if (recipeType == RecipeType.CRAFTING) {
 			FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3);
 			for (int i = 0; i < 9; i++) {
 				craftingInv.setItem(i, matchParameters.getItems()[i]);
 			}
-			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getLevel());
+			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv,
+					getLevel());
 		} else {
 			RecipeType<Recipe<RecipeMatchParameters>> castType = (RecipeType<Recipe<RecipeMatchParameters>>) recipeType;
 			return (Optional<T>) CraftingUtilities.getRecipe(castType, matchParameters, getLevel());

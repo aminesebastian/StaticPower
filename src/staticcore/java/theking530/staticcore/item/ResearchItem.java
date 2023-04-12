@@ -19,7 +19,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.StaticCoreItemGroup;
 import theking530.staticcore.research.gui.ResearchManager;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.utilities.SDColor;
 
@@ -46,7 +46,7 @@ public class ResearchItem extends StaticCoreItem {
 		// server. If server is stale, it will get re-synced regardless.
 		if (!world.isClientSide()) {
 			if (researchTier == 1) {
-				Team team = TeamManager.get(world).getTeamForPlayer(player);
+				ITeam team = TeamManager.get(world).getTeamForPlayer(player);
 				if (team != null) {
 					ResearchManager manager = team.getResearchManager();
 					if (manager.hasSelectedResearch() && !manager.getSelectedResearch().isCompleted()) {
@@ -67,7 +67,7 @@ public class ResearchItem extends StaticCoreItem {
 		if (!worldIn.isClientSide()) {
 			if (entityLiving instanceof Player) {
 				Player player = (Player) entityLiving;
-				Team team = TeamManager.get(worldIn).getTeamForPlayer(player);
+				ITeam team = TeamManager.get(worldIn).getTeamForPlayer(player);
 				if (team != null) {
 					ResearchManager manager = team.getResearchManager();
 					if (manager.hasSelectedResearch() && !manager.getSelectedResearch().isCompleted()) {

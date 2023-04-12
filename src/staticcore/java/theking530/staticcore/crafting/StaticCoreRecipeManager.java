@@ -23,7 +23,7 @@ import theking530.staticcore.init.StaticCoreRecipeTypes;
 import theking530.staticcore.research.Research;
 import theking530.staticcore.research.ResearchUnlock;
 import theking530.staticcore.research.ResearchUnlock.ResearchUnlockType;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ServerTeam;
 
 public class StaticCoreRecipeManager {
 	private static final HashMap<RecipeType<?>, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<>();
@@ -157,7 +157,7 @@ public class StaticCoreRecipeManager {
 		return recipes.get(type);
 	}
 
-	public static List<ResourceLocation> getMissingResearchForRecipe(ResourceLocation recipeId, Team team) {
+	public static List<ResourceLocation> getMissingResearchForRecipe(ResourceLocation recipeId, ServerTeam team) {
 		// If the recipe is locked, capture all the research that still needs to be
 		// completed.
 		if (LOCKED_RECIPES.containsKey(recipeId)) {

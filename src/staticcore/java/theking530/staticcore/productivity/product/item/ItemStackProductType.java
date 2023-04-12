@@ -3,8 +3,6 @@ package theking530.staticcore.productivity.product.item;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.item.ItemStack;
-import theking530.staticcore.init.StaticCoreProductTypes;
-import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.cacheentry.ItemProductionEntry;
 import theking530.staticcore.productivity.product.ProductType;
@@ -13,7 +11,7 @@ import theking530.staticcore.utilities.item.ItemUtilities;
 public class ItemStackProductType extends ProductType<ItemStack> {
 
 	public ItemStackProductType() {
-		super(ItemStack.class, (isClientSide) -> new ProductionCache<ItemStack>(StaticCoreProductTypes.Item.get(), isClientSide));
+		super(ItemStack.class);
 	}
 
 	@Override
@@ -58,7 +56,9 @@ public class ItemStackProductType extends ProductType<ItemStack> {
 			tag.putByte("Count", (byte) 1);
 			return ItemStack.of(tag);
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("An error occured when attempting to deserialize the serialized string: %1$s to an ItemStack.", serializedProduct));
+			throw new RuntimeException(String.format(
+					"An error occured when attempting to deserialize the serialized string: %1$s to an ItemStack.",
+					serializedProduct));
 		}
 	}
 }

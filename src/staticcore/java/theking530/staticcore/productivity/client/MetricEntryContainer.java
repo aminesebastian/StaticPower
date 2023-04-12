@@ -1,4 +1,4 @@
-package theking530.staticcore.productivity;
+package theking530.staticcore.productivity.client;
 
 import java.util.function.BiConsumer;
 

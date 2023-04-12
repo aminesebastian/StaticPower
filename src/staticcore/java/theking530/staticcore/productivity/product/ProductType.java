@@ -1,19 +1,16 @@
 package theking530.staticcore.productivity.product;
 
-import java.util.function.Function;
-
-import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
+import theking530.staticcore.productivity.ServerProductionCache;
 import theking530.staticcore.productivity.cacheentry.ProductionEntry;
+import theking530.staticcore.productivity.client.ClientProductionCache;
 import theking530.staticcore.utilities.SDColor;
 
 public abstract class ProductType<T> {
 	private final Class<T> productClass;
-	private Function<Boolean, ProductionCache<T>> cacheType;
 
-	public ProductType(Class<T> productClass, Function<Boolean, ProductionCache<T>> cacheType) {
+	public ProductType(Class<T> productClass) {
 		this.productClass = productClass;
-		this.cacheType = cacheType;
 	}
 
 	public abstract String getUnlocalizedName(int amount);
@@ -27,8 +24,12 @@ public abstract class ProductType<T> {
 		return token;
 	}
 
-	public ProductionCache<T> createNewCacheInstance(boolean isClientSide) {
-		return cacheType.apply(isClientSide);
+	public ServerProductionCache<T> createServerCache() {
+		return new ServerProductionCache<T>(this);
+	}
+
+	public ClientProductionCache<T> createClientCache() {
+		return new ClientProductionCache<T>(this);
 	}
 
 	public SDColor getProductColor(T product) {

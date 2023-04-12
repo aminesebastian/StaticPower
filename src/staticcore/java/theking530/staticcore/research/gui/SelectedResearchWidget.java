@@ -16,7 +16,7 @@ import theking530.staticcore.research.ResearchIcon;
 import theking530.staticcore.research.ResearchUnlock;
 import theking530.staticcore.research.ResearchUnlockUtilities;
 import theking530.staticcore.research.gui.ResearchManager.ResearchInstance;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ClientTeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.utilities.SDColor;
 
@@ -33,7 +33,7 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 	}
 
 	public void tick() {
-		Team team = TeamManager.getLocalTeam();
+		ClientTeam team = TeamManager.getLocalTeam();
 		if (research != null && team != null) {
 			if (team.getResearchManager() != null) {
 				if (team.getResearchManager().isResearching(research.getId())) {

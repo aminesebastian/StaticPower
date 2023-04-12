@@ -6,8 +6,8 @@ import theking530.staticcore.productivity.cacheentry.ProductivityRate;
 public class ProductionMetric {
 	private final int productHash;
 	private final String serializedProduct;
-	private final ProductivityRate consumed;
-	private final ProductivityRate produced;
+	protected final ProductivityRate consumed;
+	protected final ProductivityRate produced;
 
 	public ProductionMetric(int productHash, String serializedProduct, ProductivityRate consumed, ProductivityRate produced) {
 		this.productHash = productHash;

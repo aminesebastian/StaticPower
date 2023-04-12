@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.network.StaticCoreMessageHandler;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 
 public class TeamComponent extends AbstractBlockEntityComponent {
@@ -25,7 +25,7 @@ public class TeamComponent extends AbstractBlockEntityComponent {
 	@Override
 	public void onOwningBlockEntityFirstPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (placer instanceof Player) {
-			Team placerTeam = TeamManager.get(context.getLevel()).getTeamForPlayer((Player) placer);
+			ITeam placerTeam = TeamManager.get(context.getLevel()).getTeamForPlayer((Player) placer);
 			if (placerTeam != null) {
 				teamId = placerTeam.getId().toString();
 			}
@@ -40,7 +40,7 @@ public class TeamComponent extends AbstractBlockEntityComponent {
 		}
 	}
 
-	public Team getOwningTeam() {
+	public ITeam getOwningTeam() {
 		if (teamId == "missing") {
 			return null;
 		}

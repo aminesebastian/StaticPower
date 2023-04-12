@@ -14,9 +14,9 @@ import theking530.staticcore.StaticCore;
 import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.network.StaticCoreMessageHandler;
-import theking530.staticcore.productivity.ProductionCache;
+import theking530.staticcore.productivity.ServerProductionCache;
 import theking530.staticcore.productivity.product.ProductType;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 
 public class PacketRequestProductionTimeline extends NetworkMessage {
@@ -29,7 +29,8 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 
 	}
 
-	public PacketRequestProductionTimeline(ProductType<?> productType, Collection<Integer> productHashCodes, MetricPeriod period, MetricType type) {
+	public PacketRequestProductionTimeline(ProductType<?> productType, Collection<Integer> productHashCodes,
+			MetricPeriod period, MetricType type) {
 		this.productType = productType;
 		this.productHashCodes = productHashCodes;
 		this.period = period;
@@ -64,24 +65,29 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer serverPlayer = ctx.get().getSender();
-			Team team = TeamManager.get(serverPlayer.level).getTeamForPlayer(serverPlayer);
+			ITeam team = TeamManager.get(serverPlayer.level).getTeamForPlayer(serverPlayer);
 			if (team == null) {
-				StaticCore.LOGGER
-						.error(String.format("Recieved request for production timeline for player: %1$s that does not belong to any team!", serverPlayer.getName().getString()));
+				StaticCore.LOGGER.error(String.format(
+						"Recieved request for production timeline for player: %1$s that does not belong to any team!",
+						serverPlayer.getName().getString()));
 				return;
 			}
 
-			ProductionCache<?> cache = team.getProductionManager().getCache(productType);
+			ServerProductionCache<?> cache = (ServerProductionCache<?>) team.getProductionManager()
+					.getProductTypeCache(productType);
 			List<ProductivityTimeline> timelines = new LinkedList<ProductivityTimeline>();
 			for (int hashCode : productHashCodes) {
-				ProductivityTimeline timeline = cache.getProductivityTimeline(period, hashCode, serverPlayer.level.getGameTime());
+				ProductivityTimeline timeline = cache.getProductivityTimeline(period, hashCode,
+						serverPlayer.level.getGameTime());
 				if (!timeline.entries().isEmpty()) {
 					timelines.add(timeline);
 				}
 			}
 
-			PacketRecieveProductionTimeline response = new PacketRecieveProductionTimeline(productType, period, type, timelines);
-			StaticCoreMessageHandler.sendMessageToPlayer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) ctx.get().getSender(), response);
+			PacketRecieveProductionTimeline response = new PacketRecieveProductionTimeline(productType, period, type,
+					timelines);
+			StaticCoreMessageHandler.sendMessageToPlayer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
+					(ServerPlayer) ctx.get().getSender(), response);
 		});
 	}
 }

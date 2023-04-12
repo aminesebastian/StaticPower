@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.network.NetworkMessage;
-import theking530.staticcore.productivity.GuiProductionMenu;
+import theking530.staticcore.productivity.client.GuiProductionMenu;
 import theking530.staticcore.productivity.product.ProductType;
 
 public class PacketRecieveProductionTimeline extends NetworkMessage {

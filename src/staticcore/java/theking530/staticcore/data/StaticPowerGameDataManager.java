@@ -12,7 +12,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.function.Function;
+
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -27,13 +28,13 @@ import theking530.staticcore.utilities.JsonUtilities;
 public class StaticPowerGameDataManager {
 	private static final HashMap<ResourceLocation, Connection> DATABASE_CONNECTIONS = new LinkedHashMap<>();
 	private static final HashMap<ResourceLocation, StaticPowerGameData> DATA = new LinkedHashMap<>();
-	private static final HashMap<ResourceLocation, Function<Boolean, StaticPowerGameData>> DATA_FACTORIES = new LinkedHashMap<>();
+	private static final HashMap<ResourceLocation, IStaticPowerGameDataFactory> DATA_FACTORIES = new LinkedHashMap<>();
 
-	public static void registerDataFactory(ResourceLocation id, Function<Boolean, StaticPowerGameData> factory) {
+	public static void registerDataFactory(ResourceLocation id, IStaticPowerGameDataFactory factory) {
 		DATA_FACTORIES.put(id, factory);
 	}
 
-	public static void loadDataFromDisk(Load load) {
+	public static void loadDataOnDiskFromServer(Load load) {
 		if (!load.getLevel().isClientSide() && load.getLevel().dimensionType().effectsLocation()
 				.equals(new ResourceLocation("minecraft:overworld"))) {
 			// TODO: Determine how to prevent it from loading multiple times (if there are
@@ -46,21 +47,12 @@ public class StaticPowerGameDataManager {
 				try {
 					String formattedName = formatDataSaveFileName(entry.getKey());
 					Path path = Path.of(formattedName);
-					if (Files.exists(path)) {
-						// Read the file and parse it into a compound tag.
-						List<String> lines = Files.readAllLines(path);
-						String json = String.join("\n", lines);
-						CompoundTag tag = TagParser.parseTag(json);
-
-						// If we already have a loaded data object with this name, load on top of it,
-						// otherwise create a new one.
-						if (!DATA.containsKey(entry.getKey())) {
-							DATA.put(entry.getKey(), entry.getValue().apply(false));
-						}
-						DATA.get(entry.getKey()).deserialize(tag);
-					} else {
+					if (!Files.exists(path)) {
 						// If the file was not found, create the data for the first time.
-						createAndCacheDataFirstTime(entry.getKey(), false);
+						createAndCacheDataFirstTime(entry.getKey());
+					} else {
+						// Read the file and parse it into a compound tag.
+						loadGameData(path, entry.getKey(), entry.getValue());
 					}
 				} catch (Exception e) {
 					StaticCore.LOGGER.error(String.format(
@@ -72,7 +64,7 @@ public class StaticPowerGameDataManager {
 		}
 	}
 
-	public static void saveDataToDisk(Save save) {
+	public static void saveDataToDiskOnServer(Save save) {
 		if (!save.getLevel().isClientSide() && save.getLevel().dimensionType().effectsLocation()
 				.equals(new ResourceLocation("minecraft:overworld"))) {
 			// TODO: Determine how to prevent it from saving multiple times (if there are
@@ -132,13 +124,13 @@ public class StaticPowerGameDataManager {
 
 			StaticCore.LOGGER.info("Finished Saving Static Power data!");
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends StaticPowerGameData> T getOrCreateaGameData(ResourceLocation id, boolean isClientSide) {
+	public static <T extends StaticPowerGameData> T getGameData(ResourceLocation id) {
 		if (!DATA.containsKey(id)) {
-			createAndCacheDataFirstTime(id, isClientSide);
+			throw new RuntimeException(
+					"Attempted to fetch game data that does not exist! Make sure the game data factory was properly registered.");
 		}
 		return (T) DATA.get(id);
 	}
@@ -174,24 +166,35 @@ public class StaticPowerGameDataManager {
 	}
 
 	public static void tickGameData(Level level) {
-		if (level.dimensionType().effectsLocation().equals(new ResourceLocation("minecraft:overworld"))) {
-			for (StaticPowerGameData data : DATA.values()) {
-				data.tick(level);
-			}
-		}
-	}
-
-	public static void clientTickGameData() {
 		for (StaticPowerGameData data : DATA.values()) {
-			data.clientTick();
+			data.tick(level);
 		}
 	}
 
-	private static StaticPowerGameData createAndCacheDataFirstTime(ResourceLocation id, boolean isClientSide) {
-		StaticPowerGameData newInstance = DATA_FACTORIES.get(id).apply(isClientSide);
+	private static StaticPowerGameData createAndCacheDataFirstTime(ResourceLocation id) {
+		StaticPowerGameData newInstance = DATA_FACTORIES.get(id).createGameDataInstance(false);
 		newInstance.onFirstTimeCreated();
 		DATA.put(newInstance.getId(), newInstance);
 		return newInstance;
+	}
+
+	private static StaticPowerGameData loadGameData(Path filePath, ResourceLocation id,
+			IStaticPowerGameDataFactory factory) throws IOException, CommandSyntaxException {
+		List<String> lines = Files.readAllLines(filePath);
+		String json = String.join("\n", lines);
+		CompoundTag tag = TagParser.parseTag(json);
+
+		// If we already have a loaded data object with this name, load on top of it,
+		// otherwise create a new one.
+		StaticPowerGameData instance;
+		if (!DATA.containsKey(id)) {
+			instance = DATA.put(id, factory.createGameDataInstance(false));
+		} else {
+			instance = DATA.get(id);
+		}
+
+		instance.deserialize(tag);
+		return instance;
 	}
 
 	public static Connection getDatabaseConnection(ResourceLocation database) {

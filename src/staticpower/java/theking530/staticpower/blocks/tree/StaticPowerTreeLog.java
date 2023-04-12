@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
@@ -49,7 +49,7 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		// If there is a striped variant defined.
 		if (handIn == InteractionHand.MAIN_HAND && strippedVariant != null) {
-			Team team = TeamManager.get(worldIn).getTeamForPlayer(player);
+			ITeam team = TeamManager.get(worldIn).getTeamForPlayer(player);
 			if (team != null) {
 				if (team.getResearchManager().hasCompletedResearch(ModResearch.RUBBER_WOOD_STRIPPING)) {
 					// If the player is holding an axe.

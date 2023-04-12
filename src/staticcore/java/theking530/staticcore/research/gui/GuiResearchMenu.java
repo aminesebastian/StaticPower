@@ -27,7 +27,7 @@ import theking530.staticcore.research.ResearchLevels;
 import theking530.staticcore.research.ResearchLevels.ResearchLevel;
 import theking530.staticcore.research.ResearchLevels.ResearchNode;
 import theking530.staticcore.research.gui.ResearchManager.ResearchInstance;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ClientTeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.math.RectangleBounds;
@@ -390,7 +390,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		return getLocalTeam().getResearchManager();
 	}
 
-	protected Team getLocalTeam() {
+	protected ClientTeam getLocalTeam() {
 		return TeamManager.getLocalTeam();
 	}
 }

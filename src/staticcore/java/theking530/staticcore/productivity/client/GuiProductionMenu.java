@@ -1,4 +1,4 @@
-package theking530.staticcore.productivity;
+package theking530.staticcore.productivity.client;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ import theking530.staticcore.productivity.metrics.PacketRequestProductionTimelin
 import theking530.staticcore.productivity.metrics.ProductivityTimeline;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline.ProductivityTimelineEntry;
 import theking530.staticcore.productivity.product.ProductType;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ClientTeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.math.Vector2D;
@@ -137,7 +137,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		}
 
 		// If the data has changed since we last fetched, update the display values.
-		if (getProductionManager() != null && getProductionManager().getCache(displayedProductType)
+		if (getProductionManager() != null && getProductionManager().getProductTypeCache(displayedProductType)
 				.haveClientValuesUpdatedSince(lastClientFetchTime)) {
 			updateDisplayValues();
 		}
@@ -159,13 +159,14 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		displayedProductType = product;
 		selectedConsumptionProduct.clear();
 		selectedProductionProduct.clear();
-		
+
 		consumptionMetrics.clearChildren();
 		productionMetrics.clearChildren();
-		
+
 		requestMetricUpdateFromServer();
 	}
 
+	@SuppressWarnings("unused")
 	private void changeDisplayedTimePeriod(MetricPeriod period) {
 		this.selectedMetricPeriod = period;
 		updateDisplayValues();
@@ -221,8 +222,9 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 
 	@SuppressWarnings("resource")
 	private void updateDisplayValues() {
-		ProductionManager manager = getProductionManager();
-		ClientProductionMetrics metrics = manager.getCache(displayedProductType).getClientMetrics();
+		ClientProductionManager manager = getProductionManager();
+		ClientProductionMetrics metrics = manager.getProductTypeCache(displayedProductType)
+				.getProductionMetrics(this.selectedMetricPeriod);
 
 		consumptionMetrics.updateMetrics(displayedProductType, metrics.getConsumption());
 		productionMetrics.updateMetrics(displayedProductType, metrics.getProduction());
@@ -335,11 +337,11 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 
 	}
 
-	protected ProductionManager getProductionManager() {
+	protected ClientProductionManager getProductionManager() {
 		return getLocalTeam().getProductionManager();
 	}
 
-	protected Team getLocalTeam() {
+	protected ClientTeam getLocalTeam() {
 		return TeamManager.getLocalTeam();
 	}
 }

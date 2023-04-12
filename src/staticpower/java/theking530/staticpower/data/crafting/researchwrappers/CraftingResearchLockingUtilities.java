@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import theking530.staticcore.container.FakeCraftingInventory;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 
 public class CraftingResearchLockingUtilities {
@@ -61,7 +61,7 @@ public class CraftingResearchLockingUtilities {
 			return false;
 		}
 
-		Team team = TeamManager.get(player.level).getTeamForPlayer(player);
+		ITeam team = TeamManager.get(player.level).getTeamForPlayer(player);
 		return canTeamCraftRecipe(team, recipe);
 	}
 
@@ -72,7 +72,7 @@ public class CraftingResearchLockingUtilities {
 	 * @param recipe
 	 * @return
 	 */
-	public static boolean canTeamCraftRecipe(Team team, Recipe<?> recipe) {
+	public static boolean canTeamCraftRecipe(ITeam team, Recipe<?> recipe) {
 		if (team == null) {
 			return false;
 		}

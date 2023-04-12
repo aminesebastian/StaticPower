@@ -19,17 +19,18 @@ import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
 import theking530.staticcore.research.Research;
 import theking530.staticcore.research.ResearchLevels;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
+import theking530.staticcore.teams.ServerTeam;
 import theking530.staticcore.utilities.NBTUtilities;
 
 public class ResearchManager {
-	private final Team team;
+	private final ITeam team;
 	private final List<ResourceLocation> completedResearch;
 	private final HashMap<ResourceLocation, ResearchInstance> activeResearch;
 	private final boolean isClientSide;
 	private ResearchInstance selectedResearch;
 
-	public ResearchManager(Team team, boolean isClientSide) {
+	public ResearchManager(ITeam team, boolean isClientSide) {
 		this.team = team;
 		this.isClientSide = isClientSide;
 		completedResearch = new ArrayList<>();
@@ -91,7 +92,8 @@ public class ResearchManager {
 	public void addProgressToSelectedResearch(int requirementIndex, int amount) {
 		if (hasSelectedResearch() && !getSelectedResearch().isCompleted()) {
 			team.markDirty(true);
-			selectedResearch.requirementFullfillment[requirementIndex] = selectedResearch.requirementFullfillment[requirementIndex] + amount;
+			selectedResearch.requirementFullfillment[requirementIndex] = selectedResearch.requirementFullfillment[requirementIndex]
+					+ amount;
 			if (selectedResearch.isCompleted()) {
 				markResearchAsCompleted(selectedResearch.getTrackedResearch().getId());
 			}
@@ -112,7 +114,8 @@ public class ResearchManager {
 
 	public Research getLastCompletedResearch() {
 		if (completedResearch.size() > 0) {
-			return StaticCoreRecipeManager.getRecipe(StaticCoreRecipeTypes.RESEARCH_RECIPE_TYPE.get(), completedResearch.get(completedResearch.size() - 1)).orElse(null);
+			return StaticCoreRecipeManager.getRecipe(StaticCoreRecipeTypes.RESEARCH_RECIPE_TYPE.get(),
+					completedResearch.get(completedResearch.size() - 1)).orElse(null);
 		}
 		return null;
 	}
@@ -122,7 +125,8 @@ public class ResearchManager {
 			return false;
 		}
 
-		Research research = StaticCoreRecipeManager.getRecipe(StaticCoreRecipeTypes.RESEARCH_RECIPE_TYPE.get(), id).orElse(null);
+		Research research = StaticCoreRecipeManager.getRecipe(StaticCoreRecipeTypes.RESEARCH_RECIPE_TYPE.get(), id)
+				.orElse(null);
 		if (research != null) {
 			for (ResourceLocation pre : research.getPrerequisites()) {
 				if (!completedResearch.contains(pre)) {
@@ -148,14 +152,15 @@ public class ResearchManager {
 		setSelectedResearch(getInitialResearch());
 	}
 
-	public Team getTeam() {
+	public ITeam getTeam() {
 		return team;
 	}
 
 	protected void markResearchAsCompleted(ResourceLocation research) {
 		// If we already completed this, wtf you doin.
 		if (completedResearch.contains(research)) {
-			StaticCore.LOGGER.warn(String.format("Team: %1$s attempted to complete already completed research: %2$s.", team, research.toString()));
+			StaticCore.LOGGER.warn(String.format("Team: %1$s attempted to complete already completed research: %2$s.",
+					team, research.toString()));
 			return;
 		}
 
@@ -169,9 +174,12 @@ public class ResearchManager {
 		selectedResearch = null;
 
 		// Play a happy sound.
-		team.playLocalSoundForAllPlayers(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0f, 1.0f);
-		team.playLocalSoundForAllPlayers(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
-		team.playLocalSoundForAllPlayers(SoundEvents.EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
+		ServerTeam serverTeam = (ServerTeam) team;
+		if (serverTeam != null) {
+			serverTeam.playLocalSoundForAllPlayers(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0f, 1.0f);
+			serverTeam.playLocalSoundForAllPlayers(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
+			serverTeam.playLocalSoundForAllPlayers(SoundEvents.EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
+		}
 		team.markDirty(true);
 		StaticCore.LOGGER.info(String.format("Team: %1$s completed research: %2$s!", team, research.toString()));
 	}
@@ -194,7 +202,7 @@ public class ResearchManager {
 		return output;
 	}
 
-	public void deserialize(CompoundTag tag, Team team) {
+	public void deserialize(CompoundTag tag, ITeam team) {
 		ListTag completedResearchList = tag.getList("completedResearch", Tag.TAG_COMPOUND);
 		completedResearch.clear();
 		completedResearchList.stream().filter((completedTag) -> {
@@ -229,7 +237,8 @@ public class ResearchManager {
 	}
 
 	public boolean validateResearchExists(ResourceLocation researchId) {
-		return StaticCoreRecipeManager.getRecipe(StaticCoreRecipeTypes.RESEARCH_RECIPE_TYPE.get(), researchId).isPresent();
+		return StaticCoreRecipeManager.getRecipe(StaticCoreRecipeTypes.RESEARCH_RECIPE_TYPE.get(), researchId)
+				.isPresent();
 	}
 
 	public static ResourceLocation getInitialResearch() {
@@ -247,12 +256,14 @@ public class ResearchManager {
 
 		public ResearchInstance(ResourceLocation researchName, ResearchManager manager) {
 			this.manager = manager;
-			research = StaticCoreRecipeManager.getRecipe(StaticCoreRecipeTypes.RESEARCH_RECIPE_TYPE.get(), researchName).orElse(null);
+			research = StaticCoreRecipeManager.getRecipe(StaticCoreRecipeTypes.RESEARCH_RECIPE_TYPE.get(), researchName)
+					.orElse(null);
 
 			// Throw a fatal error if somehow we ended up with an invalid research name.
 			if (research == null) {
 				requirementFullfillment = new int[0];
-				StaticCore.LOGGER.fatal(String.format("Invalid research with name: %1$s provided.", researchName.toString()));
+				StaticCore.LOGGER
+						.fatal(String.format("Invalid research with name: %1$s provided.", researchName.toString()));
 			} else {
 				requirementFullfillment = new int[research.getRequirements().size()];
 				for (int i = 0; i < research.getRequirements().size(); i++) {

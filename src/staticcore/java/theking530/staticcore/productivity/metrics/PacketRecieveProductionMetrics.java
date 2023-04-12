@@ -8,18 +8,20 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.productivity.client.ClientProductionCache;
+import theking530.staticcore.productivity.client.ClientProductionManager;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.teams.TeamManager;
 
 public class PacketRecieveProductionMetrics extends NetworkMessage {
-	private ProductionMetrics metrics;
+	private ServerProductionMetrics metrics;
 	private ProductType<?> productType;
 
 	public PacketRecieveProductionMetrics() {
 
 	}
 
-	public PacketRecieveProductionMetrics(ProductType<?> productType, ProductionMetrics metrics) {
+	public PacketRecieveProductionMetrics(ProductType<?> productType, ServerProductionMetrics metrics) {
 		this.metrics = metrics;
 		this.productType = productType;
 	}
@@ -33,14 +35,17 @@ public class PacketRecieveProductionMetrics extends NetworkMessage {
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
 		productType = StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
-		metrics = ProductionMetrics.decode(buffer);
+		metrics = ServerProductionMetrics.decode(buffer);
 	}
 
 	@SuppressWarnings("resource")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			TeamManager.getLocalTeam().getProductionManager().getCache(productType).setClientSyncedMetrics(metrics, Minecraft.getInstance().level.getGameTime());
+			ClientProductionManager clientManager = (ClientProductionManager) TeamManager.getLocalTeam()
+					.getProductionManager();
+			ClientProductionCache<?> clientCache = (ClientProductionCache<?>) clientManager.getProductTypeCache(productType);
+			clientCache.setClientSyncedMetrics(metrics, Minecraft.getInstance().level.getGameTime());
 		});
 	}
 }

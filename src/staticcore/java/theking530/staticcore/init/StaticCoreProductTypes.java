@@ -10,8 +10,8 @@ import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.productivity.product.fluid.FluidStackProductType;
 import theking530.staticcore.productivity.product.item.ItemStackProductType;
-import theking530.staticcore.productivity.product.power.PowerProductType;
 import theking530.staticcore.productivity.product.power.PowerProducer;
+import theking530.staticcore.productivity.product.power.PowerProductType;
 
 public class StaticCoreProductTypes {
 	private static final DeferredRegister<ProductType<?>> PRODUCT_REGISTRY = DeferredRegister.create(StaticCoreRegistries.PRODUCT_TYPE_REGISTRY_KEY, StaticCore.MOD_ID);

@@ -18,6 +18,7 @@ import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.productivity.product.power.PowerProducer;
+import theking530.staticcore.teams.ServerTeam;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
@@ -425,7 +426,8 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH
 				|| product.getCaptureType() == CaptureType.COUNT_ONLY && !product.isTemplateItem()) {
-			getProductionToken(type).consumed(teamComp.getOwningTeam(), product.getProduct(), product.getAmount());
+			getProductionToken(type).consumed((ServerTeam) teamComp.getOwningTeam(), product.getProduct(),
+					product.getAmount());
 		}
 	}
 
@@ -439,7 +441,8 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH
 				|| product.getCaptureType() == CaptureType.COUNT_ONLY && !product.isTemplateItem()) {
-			getProductionToken(type).produced(teamComp.getOwningTeam(), product.getProduct(), product.getAmount());
+			getProductionToken(type).produced((ServerTeam) teamComp.getOwningTeam(), product.getProduct(),
+					product.getAmount());
 		}
 	}
 
@@ -462,8 +465,8 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	private <W extends ProductType<G>, G> void updateInputProductionRate(TeamComponent teamComp, W type,
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH || product.getCaptureType() == CaptureType.RATE_ONLY) {
-			getProductionToken(type).setConsumptionPerSecond(teamComp.getOwningTeam(), product.getProduct(),
-					product.getAmount() * (1.0 / (getProcessingTime() / 20.0)),
+			getProductionToken(type).setConsumptionPerSecond((ServerTeam) teamComp.getOwningTeam(),
+					product.getProduct(), product.getAmount() * (1.0 / (getProcessingTime() / 20.0)),
 					product.getAmount() * (1.0 / (getDefaultMaxProcessingTime() / 20.0)));
 		}
 	}
@@ -477,7 +480,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	private <W extends ProductType<G>, G> void updateOutputProductionRate(TeamComponent teamComp, W type,
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH || product.getCaptureType() == CaptureType.RATE_ONLY) {
-			getProductionToken(type).setProductionPerSecond(teamComp.getOwningTeam(), product.getProduct(),
+			getProductionToken(type).setProductionPerSecond((ServerTeam) teamComp.getOwningTeam(), product.getProduct(),
 					product.getAmount() * (1.0 / (getProcessingTime() / 20.0)),
 					product.getAmount() * (1.0 / (getDefaultMaxProcessingTime() / 20.0)));
 		}

@@ -5,32 +5,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 import theking530.staticcore.StaticCoreRegistries;
-import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.product.ProductType;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ServerTeam;
 import theking530.staticcore.utilities.SDTime;
 
-public class ProductionManager {
-	private final Team team;
-	private final Map<ProductType<?>, ProductionCache<?>> cache;
+public class ServerProductionManager implements IProductionManager<ServerProductionCache<?>> {
+	private final ServerTeam team;
+	private final Map<ProductType<?>, ServerProductionCache<?>> cache;
 
-	public ProductionManager(Team team, boolean isClientSide) {
+	public ServerProductionManager(ServerTeam team) {
 		this.team = team;
 		cache = new HashMap<>();
 
 		Collection<ProductType<?>> registeredProducts = StaticCoreRegistries.ProductRegistry().getValues();
 		for (ProductType<?> productType : registeredProducts) {
-			cache.put(productType, productType.createNewCacheInstance(isClientSide));
+			cache.put(productType, productType.createServerCache());
 		}
-		if (!isClientSide) {
-			initializeDatabase();
-		}
+		initializeDatabase();
 	}
 
 	public void tick(long gameTime) {
 		int currentTickIndex = (int) (gameTime % 20);
-		for (ProductionCache<?> prodCache : cache.values()) {
+		for (ServerProductionCache<?> prodCache : cache.values()) {
 			prodCache.tick(gameTime);
 			prodCache.insertProductivityPerSecond(team.getDatabaseConnection(), currentTickIndex, gameTime);
 
@@ -58,24 +55,23 @@ public class ProductionManager {
 		}
 	}
 
-	public void clientTick() {
-		for (ProductionCache<?> prodCache : cache.values()) {
-			prodCache.clientTick();
-		}
-	}
-
 	@SuppressWarnings("unchecked")
-	public <T, K extends ProductionEntry<T>> ProductionCache<T> getCache(ProductType<T> productType) {
+	@Override
+	public <T> ServerProductionCache<T> getProductTypeCache(ProductType<T> productType) {
 		if (cache.containsKey(productType)) {
-			return (ProductionCache<T>) cache.get(productType);
+			return (ServerProductionCache<T>) cache.get(productType);
 		}
 		return null;
 	}
 
 	protected void initializeDatabase() {
-		for (ProductionCache<?> prodCache : cache.values()) {
+		for (ServerProductionCache<?> prodCache : cache.values()) {
 			prodCache.initializeDatabase(team.getDatabaseConnection());
 		}
 	}
 
+	@Override
+	public boolean isClientSide() {
+		return false;
+	}
 }

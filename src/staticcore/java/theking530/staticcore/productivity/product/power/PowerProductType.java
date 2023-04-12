@@ -3,8 +3,6 @@ package theking530.staticcore.productivity.product.power;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.item.Items;
-import theking530.staticcore.init.StaticCoreProductTypes;
-import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.cacheentry.PowerProductionEntry;
 import theking530.staticcore.productivity.product.ProductType;
@@ -12,7 +10,7 @@ import theking530.staticcore.productivity.product.ProductType;
 public class PowerProductType extends ProductType<PowerProducer> {
 
 	public PowerProductType() {
-		super(PowerProducer.class, (isClientSide) -> new ProductionCache<PowerProducer>(StaticCoreProductTypes.Power.get(), isClientSide));
+		super(PowerProducer.class);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 import theking530.staticcore.productivity.product.ProductType;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ServerTeam;
 
 public class ProductionTrackingToken<T> {
 	private final ProductType<T> type;
@@ -34,16 +34,16 @@ public class ProductionTrackingToken<T> {
 	 * @param product
 	 * @param consumptionPerSection
 	 */
-	public void setProductionPerSecond(Team team, T product, double productionPerSecond) {
+	public void setProductionPerSecond(ServerTeam team, T product, double productionPerSecond) {
 		setProductionPerSecond(team, product, productionPerSecond, productionPerSecond);
 	}
 
-	public void setProductionPerSecond(Team team, T product, double productionPerSecond,
+	public void setProductionPerSecond(ServerTeam team, T product, double productionPerSecond,
 			double idealProductionPerSecond) {
 		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
-		ProductionCache<T> cache = getProductionCache(team);
+		ServerProductionCache<T> cache = getProductionCache(team);
 		ProductionEntry<T> entry = cache.addOrUpdateProductionRate(this, product, getType().getProductHashCode(product),
 				productionPerSecond, idealProductionPerSecond);
 		trackedProductionEntries.add(entry);
@@ -58,16 +58,16 @@ public class ProductionTrackingToken<T> {
 	 * @param product
 	 * @param consumptionPerSecond
 	 */
-	public void setConsumptionPerSecond(Team team, T product, double consumptionPerSecond) {
+	public void setConsumptionPerSecond(ServerTeam team, T product, double consumptionPerSecond) {
 		setConsumptionPerSecond(team, product, consumptionPerSecond, consumptionPerSecond);
 	}
 
-	public void setConsumptionPerSecond(Team team, T product, double consumptionPerSecond,
+	public void setConsumptionPerSecond(ServerTeam team, T product, double consumptionPerSecond,
 			double idealConsumptionPerSecond) {
 		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
-		ProductionCache<T> cache = getProductionCache(team);
+		ServerProductionCache<T> cache = getProductionCache(team);
 		ProductionEntry<T> entry = cache.addOrUpdateConsumptionRate(this, product,
 				getType().getProductHashCode(product), consumptionPerSecond, idealConsumptionPerSecond);
 		trackedProductionEntries.add(entry);
@@ -81,11 +81,11 @@ public class ProductionTrackingToken<T> {
 	 * @param product
 	 * @param amount
 	 */
-	public void produced(Team team, T product, double amount) {
+	public void produced(ServerTeam team, T product, double amount) {
 		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
-		ProductionCache<T> cache = getProductionCache(team);
+		ServerProductionCache<T> cache = getProductionCache(team);
 		cache.addProduced(product, getType().getProductHashCode(product), amount);
 	}
 
@@ -97,11 +97,11 @@ public class ProductionTrackingToken<T> {
 	 * @param product
 	 * @param amount
 	 */
-	public void consumed(Team team, T product, double amount) {
+	public void consumed(ServerTeam team, T product, double amount) {
 		if (team == null || !getType().isValidProduct(product)) {
 			return;
 		}
-		ProductionCache<T> cache = getProductionCache(team);
+		ServerProductionCache<T> cache = getProductionCache(team);
 		cache.addConsumed(product, getType().getProductHashCode(product), amount);
 	}
 
@@ -118,8 +118,9 @@ public class ProductionTrackingToken<T> {
 		trackedProductionEntries.clear();
 	}
 
-	private ProductionCache<T> getProductionCache(Team team) {
-		ProductionManager prodManager = team.getProductionManager();
-		return prodManager.getCache(getType());
+	@SuppressWarnings("unchecked")
+	private ServerProductionCache<T> getProductionCache(ServerTeam team) {
+		IProductionManager<?> prodManager = team.getProductionManager();
+		return (ServerProductionCache<T>) prodManager.getProductTypeCache(getType());
 	}
 }

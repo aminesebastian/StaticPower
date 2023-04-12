@@ -23,18 +23,18 @@ import theking530.staticcore.data.StaticPowerGameDataManager;
 public class TeamManager extends StaticPowerGameData {
 	public static final ResourceLocation ID = new ResourceLocation(StaticCore.MOD_ID, "teams");
 	private final boolean isClientSide;
-	private final Map<String, Team> teams;
+	private final Map<String, ITeam> teams;
 
 	public TeamManager(boolean isClientSide) {
-		super(ID);
+		super(ID, isClientSide);
 		this.isClientSide = isClientSide;
-		teams = new HashMap<String, Team>();
+		teams = new HashMap<String, ITeam>();
 	}
 
 	@Override
 	public void tick(Level level) {
 		boolean isDirty = false;
-		for (Team team : teams.values()) {
+		for (ITeam team : teams.values()) {
 			team.tick(level);
 			if (team.isDirty()) {
 				isDirty = true;
@@ -46,21 +46,14 @@ public class TeamManager extends StaticPowerGameData {
 		}
 	}
 
-	@Override
-	public void clientTick() {
-		for (Team team : teams.values()) {
-			team.clientTick();
-		}
-	}
-
 	/**
 	 * Gets the team for the provided player, or empty if no team exists.
 	 * 
 	 * @param player
 	 * @return
 	 */
-	public Team getTeamForPlayer(Player player) {
-		for (Team team : teams.values()) {
+	public ITeam getTeamForPlayer(Player player) {
+		for (ITeam team : teams.values()) {
 			if (team.hasPlayer(player)) {
 				return team;
 			}
@@ -74,7 +67,7 @@ public class TeamManager extends StaticPowerGameData {
 	 * @param teamId
 	 * @return
 	 */
-	public Team getTeamById(String teamId) {
+	public ITeam getTeamById(String teamId) {
 		if (teams.containsKey(teamId)) {
 			return teams.get(teamId);
 		}
@@ -92,14 +85,18 @@ public class TeamManager extends StaticPowerGameData {
 			return;
 		}
 
+		if (isClientSide()) {
+			throw new RuntimeException("Teams should only be created on the server!");
+		}
+
 		// Name the team after the first player in the list and create it.
 		String name = String.format("%1$s's Team", players[0].getDisplayName().getString());
-		Team newTeam = new Team(name, UUID.randomUUID().toString().replace("-", ""), isClientSide);
+		ServerTeam newTeam = new ServerTeam(name, UUID.randomUUID().toString().replace("-", ""));
 
 		// For all the players, if they're also on another team, remove them from that
 		// team.
 		for (Player player : players) {
-			Team existingTeam = getTeamForPlayer(players[0]);
+			ITeam existingTeam = getTeamForPlayer(players[0]);
 			if (existingTeam != null) {
 				existingTeam.removePlayer(player);
 			}
@@ -116,7 +113,7 @@ public class TeamManager extends StaticPowerGameData {
 	 * 
 	 * @return
 	 */
-	public List<Team> getTeams() {
+	public List<ITeam> getTeams() {
 		return List.copyOf(teams.values());
 	}
 
@@ -131,9 +128,13 @@ public class TeamManager extends StaticPowerGameData {
 			CompoundTag teamTagCompound = (CompoundTag) teamTag;
 			String teamId = teamTagCompound.getString("id");
 			if (teams.containsKey(teamId)) {
-				teams.get(teamId).deserialize(teamTagCompound);
+				teams.get(teamId).deserializeNBT(teamTagCompound);
 			} else {
-				teams.put(teamId, Team.fromTag(teamTagCompound, isClientSide));
+				if (isClientSide()) {
+					teams.put(teamId, ClientTeam.fromTag(teamTagCompound));
+				} else {
+					teams.put(teamId, ServerTeam.fromTag(teamTagCompound));
+				}
 			}
 		}
 	}
@@ -142,20 +143,21 @@ public class TeamManager extends StaticPowerGameData {
 	public CompoundTag serialize(CompoundTag tag) {
 		ListTag teamsTag = new ListTag();
 		teams.values().forEach(team -> {
-			teamsTag.add(team.serialize());
+			teamsTag.add(team.serializeNBT());
 		});
 		tag.put("teams", teamsTag);
 		return tag;
 	}
 
 	public static TeamManager get(Level level) {
-		return StaticPowerGameDataManager.getOrCreateaGameData(ID, level.isClientSide());
+		return StaticPowerGameDataManager.getGameData(ID);
 	}
 
 	@SuppressWarnings("resource")
 	@OnlyIn(Dist.CLIENT)
-	public static Team getLocalTeam() {
-		return TeamManager.get(Minecraft.getInstance().level).getTeamForPlayer(Minecraft.getInstance().player);
+	public static ClientTeam getLocalTeam() {
+		return (ClientTeam) TeamManager.get(Minecraft.getInstance().level)
+				.getTeamForPlayer(Minecraft.getInstance().player);
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 
@@ -18,75 +17,41 @@ import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 import theking530.staticcore.productivity.cacheentry.ProductionEntry.ProductionEntryState;
 import theking530.staticcore.productivity.cacheentry.ProductivityRate;
-import theking530.staticcore.productivity.metrics.ClientProductionMetric;
-import theking530.staticcore.productivity.metrics.ClientProductionMetrics;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.ProductionMetric;
-import theking530.staticcore.productivity.metrics.ProductionMetrics;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline.ProductivityTimelineEntry;
+import theking530.staticcore.productivity.metrics.ServerProductionMetrics;
 import theking530.staticcore.productivity.product.ProductType;
 
-public class ProductionCache<T> {
-	public static final double SMOOTHING_FACTOR = 1.0 / 5.0;
-
+public class ServerProductionCache<T> implements IProductionCache<T> {
 	private final List<Map<Integer, ProductionEntry<T>>> productivityBuckets;
 	private final Map<Integer, Integer> productivityBucketMap;
 	private final ProductType<T> productType;
 	private final String productTablePrefix;
-	private ClientProductionMetrics nextMetrics;
-	private ClientProductionMetrics clientMetrics;
 	private long lastClientSyncTime;
 
 	private Connection database;
 	private int bucketRoundRobinIndex;
-	private boolean isClientSide;
 
-	public ProductionCache(ProductType<T> productType, boolean isClientSide) {
-		this.isClientSide = isClientSide;
+	public ServerProductionCache(ProductType<T> productType) {
 		this.productType = productType;
-		this.productTablePrefix = StaticCoreRegistries.ProductRegistry().getKey(productType).toString().replace(":",
-				"_");
+		this.productTablePrefix = StaticCoreRegistries.ProductRegistry().getKey(productType).getPath();
 		bucketRoundRobinIndex = 0;
 		productivityBucketMap = new HashMap<>();
 		productivityBuckets = new LinkedList<Map<Integer, ProductionEntry<T>>>();
 		for (int i = 0; i < 20; i++) {
 			productivityBuckets.add(new HashMap<Integer, ProductionEntry<T>>());
 		}
-		nextMetrics = ClientProductionMetrics.EMPTY;
-		clientMetrics = ClientProductionMetrics.EMPTY;
 	}
 
+	@Override
 	public void tick(long gameTime) {
 		for (Map<Integer, ProductionEntry<T>> bucket : productivityBuckets) {
 			for (ProductionEntry<T> entry : bucket.values()) {
 				entry.tick(gameTime);
 			}
-		}
-	}
-
-	public void clientTick() {
-		for (ClientProductionMetric lastProduced : clientMetrics.getProduction()) {
-			Optional<ClientProductionMetric> next = nextMetrics.getProduction().stream()
-					.filter((x) -> x.getProductHash() == lastProduced.getProductHash()).findFirst();
-			if (next.isEmpty()) {
-				continue;
-			}
-
-			lastProduced.getProduced().interpolateTowards(next.get().getProduced().getCurrentValue(),
-					next.get().getProduced().getIdealValue(), 10);
-		}
-
-		for (ClientProductionMetric lastConsumed : clientMetrics.getConsumption()) {
-			Optional<ClientProductionMetric> next = nextMetrics.getConsumption().stream()
-					.filter((x) -> x.getProductHash() == lastConsumed.getProductHash()).findFirst();
-			if (next.isEmpty()) {
-				continue;
-			}
-
-			lastConsumed.getConsumed().interpolateTowards(next.get().getConsumed().getCurrentValue(),
-					next.get().getConsumed().getIdealValue(), 10);
 		}
 	}
 
@@ -126,6 +91,7 @@ public class ProductionCache<T> {
 		return entry;
 	}
 
+	@Override
 	public ProductType<T> getProductType() {
 		return productType;
 	}
@@ -180,38 +146,18 @@ public class ProductionCache<T> {
 		return "";
 	}
 
-	public ClientProductionMetrics getClientMetrics() {
-		return clientMetrics;
-	}
-
-	public ProductionMetrics getProductionMetrics(MetricPeriod period) {
+	public ServerProductionMetrics getProductionMetrics(MetricPeriod period) {
 		List<ProductionMetric> inputs = getAverageProductionRate(period, MetricType.CONSUMPTION);
 		List<ProductionMetric> outputs = getAverageProductionRate(period, MetricType.PRODUCTION);
-		return new ProductionMetrics(inputs, outputs);
+		return new ServerProductionMetrics(inputs, outputs);
 	}
 
-	public void setClientSyncedMetrics(ProductionMetrics metrics, long syncTime) {
-		ClientProductionMetrics recievedMetrics = new ClientProductionMetrics(metrics.getConsumption(),
-				metrics.getProduction());
-		if (clientMetrics.isEmpty()) {
-			clientMetrics = recievedMetrics;
-		} else {
-			clientMetrics = nextMetrics;
-		}
-
-		nextMetrics = recievedMetrics;
-		lastClientSyncTime = syncTime;
-	}
-
+	@Override
 	public boolean haveClientValuesUpdatedSince(long lastCheckTime) {
 		return lastClientSyncTime > lastCheckTime;
 	}
 
 	public void initializeDatabase(Connection database) {
-		if (isClientSide) {
-			throw new RuntimeException("The database can only be initialized on the server!");
-		}
-
 		this.database = database;
 		try {
 			Statement stmt = database.createStatement();
@@ -228,10 +174,6 @@ public class ProductionCache<T> {
 	}
 
 	public void insertProductivityPerSecond(Connection database, int bucketIndex, long gameTime) {
-		if (isClientSide) {
-			throw new RuntimeException("Productivity data can only be inserted on the server!");
-		}
-
 		List<ProductionEntry<T>> toBeInserted = new LinkedList<>();
 
 		try {
@@ -279,10 +221,6 @@ public class ProductionCache<T> {
 
 	public void updateAggregateData(Connection database, MetricPeriod fromPeriod, MetricPeriod toPeriod,
 			long gameTime) {
-		if (isClientSide) {
-			throw new RuntimeException("Aggregate data can only be updated on the server!");
-		}
-
 		StaticCore.LOGGER.trace(
 				String.format("Updating aggregate data for product type: %1$s from period: %2$s to period: %3$s.",
 						productTablePrefix, fromPeriod.getTableKey(), toPeriod.getTableKey()));

@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.event.IModBusEvent;
+import theking530.staticcore.productivity.client.ProductMetricTileRenderer;
 import theking530.staticcore.productivity.product.ProductType;
 
 public class ProductMetricTileRendererRegistry {

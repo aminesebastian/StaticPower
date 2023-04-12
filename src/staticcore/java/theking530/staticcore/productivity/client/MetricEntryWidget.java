@@ -1,4 +1,4 @@
-package theking530.staticcore.productivity;
+package theking530.staticcore.productivity.client;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.init.StaticCoreProductTypes;
+import theking530.staticcore.productivity.ProductMetricTileRendererRegistry;
 import theking530.staticcore.productivity.metrics.ClientProductionMetric;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.ProductionMetric;

@@ -8,12 +8,12 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.network.FriendlyByteBuf;
 
-public class ProductionMetrics {
-	public static final ProductionMetrics EMPTY = new ProductionMetrics(Collections.emptyList(), Collections.emptyList());
+public class ServerProductionMetrics {
+	public static final ServerProductionMetrics EMPTY = new ServerProductionMetrics(Collections.emptyList(), Collections.emptyList());
 	private final ImmutableList<ProductionMetric> consumption;
 	private final ImmutableList<ProductionMetric> production;
 
-	public ProductionMetrics(List<ProductionMetric> inputs, List<ProductionMetric> outputs) {
+	public ServerProductionMetrics(List<ProductionMetric> inputs, List<ProductionMetric> outputs) {
 		this.consumption = ImmutableList.copyOf(inputs);
 		this.production = ImmutableList.copyOf(outputs);
 	}
@@ -42,7 +42,7 @@ public class ProductionMetrics {
 		}
 	}
 
-	public static ProductionMetrics decode(FriendlyByteBuf buffer) {
+	public static ServerProductionMetrics decode(FriendlyByteBuf buffer) {
 		List<ProductionMetric> inputs = new LinkedList<>();
 		int count = buffer.readInt();
 		for (int i = 0; i < count; i++) {
@@ -55,6 +55,6 @@ public class ProductionMetrics {
 			outputs.add(ProductionMetric.deserialize(buffer.readNbt()));
 		}
 
-		return new ProductionMetrics(inputs, outputs);
+		return new ServerProductionMetrics(inputs, outputs);
 	}
 }

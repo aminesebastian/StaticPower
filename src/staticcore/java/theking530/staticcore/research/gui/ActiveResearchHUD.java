@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import theking530.staticcore.gui.screens.StaticCoreHUDElement;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ClientTeam;
 import theking530.staticcore.teams.TeamManager;
 
 public class ActiveResearchHUD extends StaticCoreHUDElement {
@@ -27,7 +27,7 @@ public class ActiveResearchHUD extends StaticCoreHUDElement {
 		setVisible(currentScreen == null);
 
 		// Keep the research updated.
-		Team team = TeamManager.getLocalTeam();
+		ClientTeam team = TeamManager.getLocalTeam();
 		if (team != null) {
 			activeResearch.setTeam(team);
 			if (team.getResearchManager().hasSelectedResearch()) {

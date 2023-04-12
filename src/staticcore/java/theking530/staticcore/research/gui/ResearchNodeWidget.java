@@ -23,7 +23,7 @@ import theking530.staticcore.research.ResearchUnlock;
 import theking530.staticcore.research.ResearchUnlockUtilities;
 import theking530.staticcore.research.gui.ResearchManager.ResearchInstance;
 import theking530.staticcore.research.network.PacketSetSelectedResearch;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ClientTeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.math.Vector2D;
@@ -38,7 +38,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private final Vector2D maxExpandedSize;
 	private SDColor tileColor;
 	private SDColor bodyColor;
-	private Team team;
+	private ClientTeam team;
 	private ResearchManager manager;
 	private boolean expand;
 	private float expandedAlpha;

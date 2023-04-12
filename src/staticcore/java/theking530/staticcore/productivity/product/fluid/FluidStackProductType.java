@@ -3,8 +3,6 @@ package theking530.staticcore.productivity.product.fluid;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticcore.init.StaticCoreProductTypes;
-import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.cacheentry.FluidProductionEntry;
 import theking530.staticcore.productivity.product.ProductType;
@@ -13,7 +11,7 @@ import theking530.staticcore.utilities.FluidUtilities;
 public class FluidStackProductType extends ProductType<FluidStack> {
 
 	public FluidStackProductType() {
-		super(FluidStack.class, (isClientSide) -> new ProductionCache<FluidStack>(StaticCoreProductTypes.Fluid.get(), isClientSide));
+		super(FluidStack.class);
 	}
 
 	@Override
@@ -59,7 +57,9 @@ public class FluidStackProductType extends ProductType<FluidStack> {
 			tag.putInt("Amount", (byte) 1);
 			return FluidStack.loadFluidStackFromNBT(tag);
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("An error occured when attempting to deserialize the serialized string: %1$s to a FluidStack.", serializedProduct));
+			throw new RuntimeException(String.format(
+					"An error occured when attempting to deserialize the serialized string: %1$s to a FluidStack.",
+					serializedProduct));
 		}
 	}
 }

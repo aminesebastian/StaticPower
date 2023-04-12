@@ -30,7 +30,7 @@ import theking530.staticcore.init.StaticCoreItems;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.research.gui.ResearchManager.ResearchInstance;
-import theking530.staticcore.teams.Team;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
@@ -207,7 +207,7 @@ public class BlockEntityLaboratory extends BlockEntityMachine {
 	}
 
 	public Optional<ResearchInstance> getCurrentResearchInstance() {
-		Team team = getTeamComponent().getOwningTeam();
+		ITeam team = getTeamComponent().getOwningTeam();
 		if (team != null) {
 			if (team.getResearchManager().getSelectedResearch() != null) {
 				return Optional.of(team.getResearchManager().getSelectedResearch());

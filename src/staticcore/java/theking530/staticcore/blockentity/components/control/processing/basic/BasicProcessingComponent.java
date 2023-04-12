@@ -15,6 +15,7 @@ import theking530.staticcore.blockentity.components.serialization.SaveSerialize;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.blockentity.components.team.TeamComponent;
 import theking530.staticcore.init.StaticCoreProductTypes;
+import theking530.staticcore.teams.ServerTeam;
 import theking530.staticcore.utilities.math.SDMath;
 
 public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K>, K extends BasicProcessingComponentSyncPacket>
@@ -302,8 +303,9 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 		// We capture this here and not as a product when processing starts because the
 		// value can change over time as the power satisfaction changes.
 		if (powerComponent != null && getPowerUsage() > 0) {
-			getProductionToken(StaticCoreProductTypes.Power.get()).setConsumptionPerSecond(teamComp.getOwningTeam(),
-					getPowerProducerId(), getPowerUsage() * 20, defaultPowerUsage * 20);
+			getProductionToken(StaticCoreProductTypes.Power.get()).setConsumptionPerSecond(
+					(ServerTeam) teamComp.getOwningTeam(), getPowerProducerId(), getPowerUsage() * 20,
+					defaultPowerUsage * 20);
 		}
 	}
 

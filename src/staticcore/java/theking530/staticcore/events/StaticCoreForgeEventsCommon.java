@@ -29,6 +29,8 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.event.level.LevelEvent.Load;
 import net.minecraftforge.event.level.LevelEvent.Save;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -72,20 +74,27 @@ public class StaticCoreForgeEventsCommon {
 	}
 
 	@SubscribeEvent
-	public static void worldTickEvent(TickEvent.LevelTickEvent event) {
+	public static void serverTickEvent(TickEvent.ServerTickEvent event) {
+		Level overworld = event.getServer().overworld();
+
 		if (event.phase == TickEvent.Phase.START) {
-			CableNetworkAccessor.get(event.level).preWorldTick();
+			CableNetworkAccessor.get(overworld).preWorldTick();
 		}
 
 		if (event.phase == TickEvent.Phase.END) {
-			CableNetworkAccessor.get(event.level).tick();
-			StaticPowerGameDataManager.tickGameData(event.level);
+			CableNetworkAccessor.get(event.getServer().overworld()).tick();
+			StaticPowerGameDataManager.tickGameData(overworld);
 		}
 	}
 
+	@SuppressWarnings("resource")
 	@SubscribeEvent
 	public static void clientTickEvent(TickEvent.ClientTickEvent event) {
-		StaticPowerGameDataManager.clientTickGameData();
+		Level level = Minecraft.getInstance().level;
+
+		if (level != null) {
+			StaticPowerGameDataManager.tickGameData(Minecraft.getInstance().level);
+		}
 	}
 
 	@SubscribeEvent
@@ -107,14 +116,14 @@ public class StaticCoreForgeEventsCommon {
 	@SubscribeEvent
 	public static void onLoad(Load load) {
 		if (!load.getLevel().isClientSide()) {
-			StaticPowerGameDataManager.loadDataFromDisk(load);
+			StaticPowerGameDataManager.loadDataOnDiskFromServer(load);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onSave(Save save) {
 		if (!save.getLevel().isClientSide()) {
-			StaticPowerGameDataManager.saveDataToDisk(save);
+			StaticPowerGameDataManager.saveDataToDiskOnServer(save);
 		}
 	}
 
@@ -137,8 +146,19 @@ public class StaticCoreForgeEventsCommon {
 	@SubscribeEvent
 	public static void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent loggedIn) {
 		// If on the server, synchronize all the game data.
+		if (loggedIn.getEntity().level.isClientSide()) {
+			StaticPowerGameDataManager.clearAllGameData();
+		}
+
 		if (!loggedIn.getEntity().level.isClientSide()) {
 			StaticPowerGameDataManager.loadDataForClients();
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerLeft(PlayerLoggedOutEvent event) {
+		if (event.getEntity().getLevel().isClientSide()) {
+			StaticPowerGameDataManager.clearAllGameData();
 		}
 	}
 
