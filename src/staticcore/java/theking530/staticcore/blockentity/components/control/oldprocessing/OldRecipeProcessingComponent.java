@@ -56,6 +56,10 @@ public class OldRecipeProcessingComponent<T extends Recipe<?>>
 
 	@Override
 	public boolean process() {
+		if (hasProcessingStarted() && !getCurrentRecipe().isPresent()) {
+			cancelProcessing();
+		}
+
 		if (!hasProcessingStarted()) {
 			if (!attemptMove()) {
 				return false;
@@ -199,6 +203,7 @@ public class OldRecipeProcessingComponent<T extends Recipe<?>>
 			processor.processingCompleted(this, getCurrentRecipe().get(), outputContainer);
 		} else {
 			System.out.println("wtf");
+			return;
 		}
 
 		TeamComponent teamComp = getBlockEntity().getComponent(TeamComponent.class);

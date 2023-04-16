@@ -1,6 +1,7 @@
 package theking530.staticcore.productivity;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -99,7 +100,6 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 	public ProductivityTimeline getProductivityTimeline(MetricPeriod period, int productHash, long currentGameTick) {
 		String serializedProduct = getSerializedProductFromHash(productHash);
 		try {
-			Statement stmt = database.createStatement();
 			long threshold = currentGameTick - period.getMaxRecordsAgeTicks();
 			//@formatter:off
 			String query = String.format("SELECT consumed, produced, game_tick \n"
@@ -113,7 +113,8 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 			//@formatter:on		
 
 			List<ProductivityTimelineEntry> entries = new LinkedList<>();
-			ResultSet sqlData = stmt.executeQuery(query);
+			PreparedStatement stmt = database.prepareStatement(query);
+			ResultSet sqlData = stmt.executeQuery();
 			while (sqlData.next()) {
 				ProductivityTimelineEntry entry = new ProductivityTimelineEntry(sqlData.getFloat(1),
 						sqlData.getFloat(2), sqlData.getLong(3));
@@ -130,13 +131,13 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 
 	public String getSerializedProductFromHash(int productHash) {
 		try {
-			Statement stmt = database.createStatement();
-		//@formatter:off
-		String query = String.format("SELECT serialized_product "
-				+ "FROM %1$s_product "
-				+ "WHERE product_hash = %2$d ", productTablePrefix, productHash);	
-		//@formatter:on		
-			ResultSet sqlData = stmt.executeQuery(query);
+			//@formatter:off
+			String query = String.format("SELECT serialized_product "
+					+ "FROM %1$s_product "
+					+ "WHERE product_hash = %2$d ", productTablePrefix, productHash);	
+			//@formatter:on		
+			PreparedStatement stmt = database.prepareStatement(query);
+			ResultSet sqlData = stmt.executeQuery();
 			return sqlData.getString(1);
 		} catch (Exception e) {
 			StaticCore.LOGGER.error(String.format(

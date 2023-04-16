@@ -4,17 +4,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.client.rendering.ICustomRenderer;
+import theking530.staticcore.data.StaticCoreGameDataManager;
 import theking530.staticcore.gui.screens.StaticCoreHUDElement;
 
 @Mod.EventBusSubscriber(modid = StaticCore.MOD_ID, bus = EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -28,6 +32,26 @@ public class StaticCoreForgeBusClient {
 
 	public static void addCustomRenderer(ICustomRenderer renderer) {
 		CUSTOM_RENDERERS.add(renderer);
+	}
+
+	@SuppressWarnings("resource")
+	@SubscribeEvent
+	public static void clientTickEvent(TickEvent.ClientTickEvent event) {
+		Level level = Minecraft.getInstance().level;
+
+		if (level != null) {
+			StaticCoreGameDataManager.get().tickGameData(Minecraft.getInstance().level);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onClientPlayerJoinServer(ClientPlayerNetworkEvent.LoggingIn event) {
+		StaticCoreGameDataManager.createForClient();
+	}
+
+	@SubscribeEvent
+	public static void onClientPlayerLeavingServer(ClientPlayerNetworkEvent.LoggingOut event) {
+		StaticCoreGameDataManager.unload();
 	}
 
 	@SuppressWarnings("resource")

@@ -16,7 +16,7 @@ public class StaticPowerGameDataSyncPacket extends NetworkMessage {
 
 	}
 
-	public StaticPowerGameDataSyncPacket(StaticPowerGameData data) {
+	public StaticPowerGameDataSyncPacket(StaticCoreGameData data) {
 		id = data.getId();
 		serializedData = data.serialize(new CompoundTag());
 	}
@@ -36,7 +36,7 @@ public class StaticPowerGameDataSyncPacket extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			StaticPowerGameData gameData = StaticPowerGameDataManager.getGameData(id);
+			StaticCoreGameData gameData = StaticCoreGameDataManager.get().getGameData(id);
 			gameData.deserialize(serializedData);
 			gameData.onSyncedFromServer(serializedData);
 		});

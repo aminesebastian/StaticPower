@@ -28,7 +28,7 @@ import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
-import theking530.staticcore.data.StaticPowerGameDataManager;
+import theking530.staticcore.data.StaticCoreGameDataManager;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.teams.TeamManager;
 
@@ -38,7 +38,7 @@ public class StaticCoreModCommonEvents {
 	@SubscribeEvent
 	public static void commonSetupEvent(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
-			StaticPowerGameDataManager.registerDataFactory(TeamManager.ID, (isClientSide) -> {
+			StaticCoreGameDataManager.registerDataFactory(TeamManager.ID, (isClientSide) -> {
 				return new TeamManager(isClientSide);
 			});
 

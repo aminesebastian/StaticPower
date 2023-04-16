@@ -30,11 +30,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.event.level.LevelEvent.Load;
 import net.minecraftforge.event.level.LevelEvent.Save;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidUtil;
@@ -55,7 +53,7 @@ import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.RecipeReloadListener;
 import theking530.staticcore.crafting.StaticCoreRecipeManager;
 import theking530.staticcore.crafting.thermal.ThermalConductivityRecipe;
-import theking530.staticcore.data.StaticPowerGameDataManager;
+import theking530.staticcore.data.StaticCoreGameDataManager;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.init.StaticCoreKeyBindings;
@@ -83,17 +81,7 @@ public class StaticCoreForgeEventsCommon {
 
 		if (event.phase == TickEvent.Phase.END) {
 			CableNetworkAccessor.get(event.getServer().overworld()).tick();
-			StaticPowerGameDataManager.tickGameData(overworld);
-		}
-	}
-
-	@SuppressWarnings("resource")
-	@SubscribeEvent
-	public static void clientTickEvent(TickEvent.ClientTickEvent event) {
-		Level level = Minecraft.getInstance().level;
-
-		if (level != null) {
-			StaticPowerGameDataManager.tickGameData(Minecraft.getInstance().level);
+			StaticCoreGameDataManager.get().tickGameData(overworld);
 		}
 	}
 
@@ -103,63 +91,39 @@ public class StaticCoreForgeEventsCommon {
 	}
 
 	@SubscribeEvent
-	public static void onServerAboutToStart(ServerAboutToStartEvent serverStarted) {
+	public static void onServerAboutToStartEvent(ServerAboutToStartEvent serverStarted) {
 		DATA_PATH = serverStarted.getServer().getWorldPath(new LevelResource("data"));
-		StaticPowerGameDataManager.clearAllGameData();
+		StaticCoreGameDataManager.createForServer();
+		StaticCoreGameDataManager.get().load();
 	}
 
 	@SubscribeEvent
-	public static void onServerStopped(ServerStoppedEvent serverStopped) {
-		StaticPowerGameDataManager.clearAllGameData();
+	public static void onServerStopping(ServerStoppingEvent serverStopped) {
+		StaticCoreGameDataManager.unload();
 	}
 
 	@SubscribeEvent
-	public static void onLoad(Load load) {
-		if (!load.getLevel().isClientSide()) {
-			StaticPowerGameDataManager.loadDataOnDiskFromServer(load);
+	public static void onServerSave(Save save) {
+		if(!save.getLevel().isClientSide()) {
+			StaticCoreGameDataManager.get().save();
 		}
 	}
 
 	@SubscribeEvent
-	public static void onSave(Save save) {
-		if (!save.getLevel().isClientSide()) {
-			StaticPowerGameDataManager.saveDataToDiskOnServer(save);
-		}
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLoad(PlayerEvent.LoadFromFile load) {
-		// When called on the server, add the player to a team if one does not exist.
-		// When called on the client, clear the local data registry.
-		if (!load.getEntity().getLevel().isClientSide()) {
-			// TODO: Change this back later, for now there will only be one team.
-			if (TeamManager.get(load.getEntity().getLevel()).getTeamForPlayer(load.getEntity()) == null) {
-				if (TeamManager.get(load.getEntity().getLevel()).getTeams().size() == 0) {
-					TeamManager.get(load.getEntity().getLevel()).createTeam(load.getEntity());
-				} else {
-					TeamManager.get(load.getEntity().getLevel()).getTeams().get(0).addPlayer(load.getEntity());
-				}
+	public static void onServerLoad(PlayerEvent.LoadFromFile load) {
+		// TODO: Change this back later, for now there will only be one team.
+		if (TeamManager.get(load.getEntity().getLevel()).getTeamForPlayer(load.getEntity()) == null) {
+			if (TeamManager.get(load.getEntity().getLevel()).getTeams().size() == 0) {
+				TeamManager.get(load.getEntity().getLevel()).createTeam(load.getEntity());
+			} else {
+				TeamManager.get(load.getEntity().getLevel()).getTeams().get(0).addPlayer(load.getEntity());
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public static void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent loggedIn) {
-		// If on the server, synchronize all the game data.
-		if (loggedIn.getEntity().level.isClientSide()) {
-			StaticPowerGameDataManager.clearAllGameData();
-		}
-
-		if (!loggedIn.getEntity().level.isClientSide()) {
-			StaticPowerGameDataManager.loadDataForClients();
-		}
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLeft(PlayerLoggedOutEvent event) {
-		if (event.getEntity().getLevel().isClientSide()) {
-			StaticPowerGameDataManager.clearAllGameData();
-		}
+	public static void onServerPlayerLoggedIn(PlayerLoggedInEvent loggedIn) {
+		StaticCoreGameDataManager.get().loadDataForClients();
 	}
 
 	@SubscribeEvent

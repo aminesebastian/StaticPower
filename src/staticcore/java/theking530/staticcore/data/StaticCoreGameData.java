@@ -6,11 +6,11 @@ import net.minecraft.world.level.Level;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 
-public abstract class StaticPowerGameData {
+public abstract class StaticCoreGameData {
 	private final ResourceLocation id;
 	private final boolean isClientSide;
 
-	public StaticPowerGameData(ResourceLocation id, boolean isClientSide) {
+	public StaticCoreGameData(ResourceLocation id, boolean isClientSide) {
 		this.id = id;
 		this.isClientSide = isClientSide;
 	}

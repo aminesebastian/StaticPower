@@ -15,12 +15,10 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
-import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
@@ -32,7 +30,8 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
 public class StaticPowerForgeEventsCommon {
-	public static final ResourceLocation STATIC_POWER_PLAYER_DATA = new ResourceLocation(StaticPower.MOD_ID, "player_data");
+	public static final ResourceLocation STATIC_POWER_PLAYER_DATA = new ResourceLocation(StaticPower.MOD_ID,
+			"player_data");
 
 	@SubscribeEvent
 	public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
@@ -44,17 +43,13 @@ public class StaticPowerForgeEventsCommon {
 	}
 
 	@SubscribeEvent
-	public static void onServerStopped(ServerStoppedEvent serverStopped) {
-		StaticPowerGameDataManager.clearAllGameData();
-	}
-
-	@SubscribeEvent
 	public static void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent loggedIn) {
 		// If on the server, send a sync packet for the static power player data
 		// capability.
 		if (!loggedIn.getEntity().level.isClientSide()) {
 			loggedIn.getEntity().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
-				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) loggedIn.getEntity(),
+				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL,
+						(ServerPlayer) loggedIn.getEntity(),
 						new PacketSyncStaticPowerPlayerDataCapability(((StaticPowerPlayerData) data).serializeNBT()));
 			});
 		}
@@ -88,7 +83,8 @@ public class StaticPowerForgeEventsCommon {
 		for (int i = 0; i < event.getEntity().getInventory().getContainerSize(); i++) {
 			if (event.getEntity().getInventory().getItem(i).getItem() instanceof Backpack) {
 				Backpack backpackItem = (Backpack) event.getEntity().getInventory().getItem(i).getItem();
-				remaining = backpackItem.playerPickedUpItem(event.getEntity().getInventory().getItem(i), remaining, event.getEntity());
+				remaining = backpackItem.playerPickedUpItem(event.getEntity().getInventory().getItem(i), remaining,
+						event.getEntity());
 
 				// If there is no more item to insert, just break.
 				if (remaining.isEmpty()) {
@@ -110,7 +106,8 @@ public class StaticPowerForgeEventsCommon {
 			pickedUpItem.setCount(originalItem.getCount() - remaining.getCount());
 
 			event.getEntity().awardStat(Stats.ITEM_PICKED_UP.get(pickedUpItem.getItem()), pickedUpItem.getCount());
-			net.minecraftforge.event.ForgeEventFactory.firePlayerItemPickupEvent(event.getEntity(), event.getItem(), pickedUpItem.copy());
+			net.minecraftforge.event.ForgeEventFactory.firePlayerItemPickupEvent(event.getEntity(), event.getItem(),
+					pickedUpItem.copy());
 			event.getEntity().onItemPickup(event.getItem());
 		}
 	}
@@ -128,7 +125,8 @@ public class StaticPowerForgeEventsCommon {
 		if (event.getEntity().getMainHandItem().getItem() instanceof Hammer) {
 			Hammer hammer = (Hammer) event.getEntity().getMainHandItem().getItem();
 			if (!event.getEntity().getCooldowns().isOnCooldown(hammer)) {
-				if (hammer.onHitBlockLeftClick(event.getItemStack(), event.getEntity(), event.getPos(), event.getFace())) {
+				if (hammer.onHitBlockLeftClick(event.getItemStack(), event.getEntity(), event.getPos(),
+						event.getFace())) {
 					event.setCanceled(true);
 				}
 			}
