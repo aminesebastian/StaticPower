@@ -1,4 +1,4 @@
-package theking530.staticcore.data;
+package theking530.staticcore.data.gamedata;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -6,34 +6,35 @@ import net.minecraft.world.level.Level;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 
-public abstract class StaticCoreGameData {
+public abstract class BasicStaticCoreGameData implements IStaticCoreGameData {
 	private final ResourceLocation id;
 	private final boolean isClientSide;
 
-	public StaticCoreGameData(ResourceLocation id, boolean isClientSide) {
+	public BasicStaticCoreGameData(ResourceLocation id, boolean isClientSide) {
 		this.id = id;
 		this.isClientSide = isClientSide;
 	}
 
-	public abstract void deserialize(CompoundTag tag);
-
-	public abstract CompoundTag serialize(CompoundTag tag);
-
+	@Override
 	public void tick(Level level) {
 	}
 
+	@Override
 	public boolean isClientSide() {
 		return isClientSide;
 	}
 
+	@Override
 	public ResourceLocation getId() {
 		return id;
 	}
 
+	@Override
 	public void onFirstTimeCreated() {
 		StaticCore.LOGGER.debug(String.format("Created GameData with name: %1$s.", getId()));
 	}
 
+	@Override
 	public void onSyncedFromServer(CompoundTag tag) {
 		if (!isClientSide()) {
 			throw new RuntimeException("#onSyncedFromServer should only be called on the client!");
@@ -42,6 +43,7 @@ public abstract class StaticCoreGameData {
 		StaticCore.LOGGER.debug(String.format("Recieved synchronization data for GameData with name: %1$s.", getId()));
 	}
 
+	@Override
 	public void syncToClients() {
 		if (isClientSide()) {
 			throw new RuntimeException("#syncToClient should only be called from the server side!");

@@ -15,7 +15,7 @@ import theking530.staticcore.cablenetwork.CableStateSyncPacket;
 import theking530.staticcore.cablenetwork.CableStateSyncRequestPacket;
 import theking530.staticcore.container.PacketCloseCurrentContainer;
 import theking530.staticcore.container.PacketRevertToParentContainer;
-import theking530.staticcore.data.StaticPowerGameDataSyncPacket;
+import theking530.staticcore.data.gamedata.StaticPowerGameDataSyncPacket;
 import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;

@@ -1,4 +1,4 @@
-package theking530.staticcore.data;
+package theking530.staticcore.data.gamedata;
 
 import java.util.function.Supplier;
 
@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.data.gamedata.StaticCoreGameDataManager.StaticCoreDataAccessor;
 import theking530.staticcore.network.NetworkMessage;
 
 public class StaticPowerGameDataSyncPacket extends NetworkMessage {
@@ -16,7 +17,7 @@ public class StaticPowerGameDataSyncPacket extends NetworkMessage {
 
 	}
 
-	public StaticPowerGameDataSyncPacket(StaticCoreGameData data) {
+	public StaticPowerGameDataSyncPacket(BasicStaticCoreGameData data) {
 		id = data.getId();
 		serializedData = data.serialize(new CompoundTag());
 	}
@@ -36,7 +37,7 @@ public class StaticPowerGameDataSyncPacket extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			StaticCoreGameData gameData = StaticCoreGameDataManager.get().getGameData(id);
+			BasicStaticCoreGameData gameData = StaticCoreDataAccessor.getClient().getGameData(id);
 			gameData.deserialize(serializedData);
 			gameData.onSyncedFromServer(serializedData);
 		});

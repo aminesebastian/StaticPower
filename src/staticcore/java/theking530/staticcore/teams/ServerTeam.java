@@ -12,7 +12,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import theking530.staticcore.StaticCore;
-import theking530.staticcore.data.StaticCoreGameDataManager;
+import theking530.staticcore.data.gamedata.StaticCoreGameDataManager.StaticCoreDataAccessor;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.productivity.ServerProductionManager;
@@ -25,7 +25,7 @@ public class ServerTeam extends AbstractTeam {
 
 	public ServerTeam(String name, String id) {
 		super(name, id);
-		db = StaticCoreGameDataManager.get()
+		db = StaticCoreDataAccessor.getServer()
 				.getDatabaseConnection(new ResourceLocation(StaticCore.MOD_ID, "team_" + id));
 		researchManager = new ResearchManager(this, false);
 		productionManager = new ServerProductionManager(this);

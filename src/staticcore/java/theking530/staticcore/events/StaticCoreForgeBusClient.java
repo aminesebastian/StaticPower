@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.client.rendering.ICustomRenderer;
-import theking530.staticcore.data.StaticCoreGameDataManager;
+import theking530.staticcore.data.gamedata.StaticCoreGameDataManager.StaticCoreDataAccessor;
 import theking530.staticcore.gui.screens.StaticCoreHUDElement;
 
 @Mod.EventBusSubscriber(modid = StaticCore.MOD_ID, bus = EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -40,18 +40,18 @@ public class StaticCoreForgeBusClient {
 		Level level = Minecraft.getInstance().level;
 
 		if (level != null) {
-			StaticCoreGameDataManager.get().tickGameData(Minecraft.getInstance().level);
+			StaticCoreDataAccessor.getClient().tickGameData(Minecraft.getInstance().level);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onClientPlayerJoinServer(ClientPlayerNetworkEvent.LoggingIn event) {
-		StaticCoreGameDataManager.createForClient();
+		StaticCoreDataAccessor.createForClient();
 	}
 
 	@SubscribeEvent
 	public static void onClientPlayerLeavingServer(ClientPlayerNetworkEvent.LoggingOut event) {
-		StaticCoreGameDataManager.unload();
+		StaticCoreDataAccessor.unloadForClient();
 	}
 
 	@SuppressWarnings("resource")

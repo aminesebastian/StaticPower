@@ -1,5 +1,7 @@
 package theking530.staticcore.events;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +55,7 @@ import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.RecipeReloadListener;
 import theking530.staticcore.crafting.StaticCoreRecipeManager;
 import theking530.staticcore.crafting.thermal.ThermalConductivityRecipe;
-import theking530.staticcore.data.StaticCoreGameDataManager;
+import theking530.staticcore.data.gamedata.StaticCoreGameDataManager.StaticCoreDataAccessor;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.init.StaticCoreKeyBindings;
@@ -63,7 +65,7 @@ import theking530.staticcore.utilities.ITooltipProvider;
 
 @Mod.EventBusSubscriber(modid = StaticCore.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
 public class StaticCoreForgeEventsCommon {
-	public static Path DATA_PATH;
+	public static Path dataPath;
 
 	@SubscribeEvent
 	public static void onRegisterCommandEvent(RegisterCommandsEvent event) {
@@ -81,7 +83,7 @@ public class StaticCoreForgeEventsCommon {
 
 		if (event.phase == TickEvent.Phase.END) {
 			CableNetworkAccessor.get(event.getServer().overworld()).tick();
-			StaticCoreGameDataManager.get().tickGameData(overworld);
+			StaticCoreDataAccessor.getServer().tickGameData(overworld);
 		}
 	}
 
@@ -92,25 +94,34 @@ public class StaticCoreForgeEventsCommon {
 
 	@SubscribeEvent
 	public static void onServerAboutToStartEvent(ServerAboutToStartEvent serverStarted) {
-		DATA_PATH = serverStarted.getServer().getWorldPath(new LevelResource("data"));
-		StaticCoreGameDataManager.createForServer();
-		StaticCoreGameDataManager.get().load();
+		dataPath = serverStarted.getServer().getWorldPath(new LevelResource("staticcore"));
+
+		// The following attempts to create the data path but does nothing if it already
+		// exists.
+		try {
+			Files.createDirectories(dataPath);
+		} catch (IOException e) {
+			throw new RuntimeException("An error occured when attempting to create the Static Core data storage path.",
+					e);
+		}
+		StaticCoreDataAccessor.createForServer();
+		StaticCoreDataAccessor.getServer().load();
 	}
 
 	@SubscribeEvent
 	public static void onServerStopping(ServerStoppingEvent serverStopped) {
-		StaticCoreGameDataManager.unload();
+		StaticCoreDataAccessor.unloadForServer();
 	}
 
 	@SubscribeEvent
-	public static void onServerSave(Save save) {
-		if(!save.getLevel().isClientSide()) {
-			StaticCoreGameDataManager.get().save();
+	public static void onSave(Save save) {
+		if (save.getLevel().isClientSide()) {
+			StaticCoreDataAccessor.getServer().save();
 		}
 	}
 
 	@SubscribeEvent
-	public static void onServerLoad(PlayerEvent.LoadFromFile load) {
+	public static void onPlayerLoad(PlayerEvent.LoadFromFile load) {
 		// TODO: Change this back later, for now there will only be one team.
 		if (TeamManager.get(load.getEntity().getLevel()).getTeamForPlayer(load.getEntity()) == null) {
 			if (TeamManager.get(load.getEntity().getLevel()).getTeams().size() == 0) {
@@ -123,7 +134,7 @@ public class StaticCoreForgeEventsCommon {
 
 	@SubscribeEvent
 	public static void onServerPlayerLoggedIn(PlayerLoggedInEvent loggedIn) {
-		StaticCoreGameDataManager.get().loadDataForClients();
+		StaticCoreDataAccessor.getServer().loadDataForClients();
 	}
 
 	@SubscribeEvent

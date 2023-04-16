@@ -17,10 +17,10 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.StaticCore;
-import theking530.staticcore.data.StaticCoreGameData;
-import theking530.staticcore.data.StaticCoreGameDataManager;
+import theking530.staticcore.data.gamedata.BasicStaticCoreGameData;
+import theking530.staticcore.data.gamedata.StaticCoreGameDataManager.StaticCoreDataAccessor;
 
-public class TeamManager extends StaticCoreGameData {
+public class TeamManager extends BasicStaticCoreGameData {
 	public static final ResourceLocation ID = new ResourceLocation(StaticCore.MOD_ID, "teams");
 	private final boolean isClientSide;
 	private final Map<String, ITeam> teams;
@@ -150,7 +150,7 @@ public class TeamManager extends StaticCoreGameData {
 	}
 
 	public static TeamManager get(Level level) {
-		return StaticCoreGameDataManager.get().getGameData(ID);
+		return StaticCoreDataAccessor.get(level).getGameData(ID);
 	}
 
 	@SuppressWarnings("resource")
