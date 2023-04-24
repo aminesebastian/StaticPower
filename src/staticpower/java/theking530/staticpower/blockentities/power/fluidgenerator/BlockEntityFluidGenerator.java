@@ -12,12 +12,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.energy.PowerStack;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingProduct;
-import theking530.staticcore.blockentity.components.control.processing.basic.BasicProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
@@ -113,33 +111,46 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public ProcessingCheckState captureOutputs(RecipeProcessingComponent<FluidGeneratorRecipe> component,
-			FluidGeneratorRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureOutputs(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addPower(component.getPowerProducerId(), recipe.getPowerGeneration());
+
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<FluidGeneratorRecipe> component,
+			FluidGeneratorRecipe recipe, ConcretizedProductContainer outputContainer) {
 		// Check to make sure we can store power.
-		powerStorage.setMaximumInputPower(recipe.getPowerGeneration());
-		powerStorage.setMaximumOutputPower(recipe.getPowerGeneration());
-		if (!powerStorage.canFullyAcceptPower(recipe.getPowerGeneration())) {
+		double powerAmount = outputContainer.getPower(0);
+		if (!powerStorage.canFullyAcceptPower(powerAmount)) {
 			return ProcessingCheckState.powerOutputFull();
 		}
 
-		outputContainer.addOutputPower(component.getPowerProducerId(), recipe.getPowerGeneration(), CaptureType.BOTH,
-				false);
 		return ProcessingCheckState.ok();
 	}
 
 	@Override
-	public void onRecipeProcessingStarted(RecipeProcessingComponent<FluidGeneratorRecipe> component,
-			FluidGeneratorRecipe recipe, ProcessingOutputContainer outputContainer,
-			ProcessingContainer processingContainer) {
-		FluidStack usedFluid = fluidTankComponent.drain(recipe.getFluid().getAmount(), FluidAction.EXECUTE);
-		processingContainer.addInputFluid(usedFluid, CaptureType.BOTH);
+	public void prepareComponentForProcessing(RecipeProcessingComponent<FluidGeneratorRecipe> component,
+			FluidGeneratorRecipe recipe, ConcretizedProductContainer outputContainer) {
+		// Check to make sure we can store power.
+		double powerAmount = outputContainer.getPower(0);
+		powerStorage.setMaximumInputPower(powerAmount);
+		powerStorage.setMaximumOutputPower(powerAmount);
 	}
 
 	@Override
-	public void onProcessingCompleted(BasicProcessingComponent<?, ?> component, ProcessingContainer outputContainer) {
-		ProcessingProduct<ProductType<PowerProducer>, PowerProducer> generatedPower = outputContainer
-				.getOutput(StaticCoreProductTypes.Power.get(), 0);
+	public void captureInputs(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+		FluidStack usedFluid = fluidTankComponent.drain(component.getProcessingRecipe().get().getFluid().getAmount(),
+				FluidAction.EXECUTE);
+		processingContainer.getInputs().addFluid(usedFluid);
+	}
 
+	@Override
+	public void onProcessingCompleted(RecipeProcessingComponent<FluidGeneratorRecipe> component,
+			ProcessingContainer processingContainer) {
+		ProcessingProduct<ProductType<PowerProducer>, PowerProducer> generatedPower = processingContainer.getOutputs()
+				.getProductOfType(StaticCoreProductTypes.Power.get(), 0);
 		powerStorage.addPower(
 				new PowerStack(generatedPower.getAmount(), powerStorage.getInputVoltageRange().maximumVoltage()),
 				false);

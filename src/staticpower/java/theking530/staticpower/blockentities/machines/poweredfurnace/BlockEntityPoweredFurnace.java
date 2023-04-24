@@ -8,11 +8,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -34,10 +35,11 @@ import theking530.staticpower.init.ModBlocks;
  * @author Amine Sebastian
  *
  */
-public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IOldRecipeProcessor<SmeltingRecipe> {
+public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRecipeProcessor<SmeltingRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>("powered_furnace",
-			(type, pos, state) -> new BlockEntityPoweredFurnace(pos, state), ModBlocks.PoweredFurnace);
+	public static final BlockEntityTypeAllocator<BlockEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>(
+			"powered_furnace", (type, pos, state) -> new BlockEntityPoweredFurnace(pos, state),
+			ModBlocks.PoweredFurnace);
 
 	/**
 	 * Indicates how many times faster this block will perform compared to the
@@ -49,17 +51,19 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IOl
 	public final InventoryComponent outputInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final OldRecipeProcessingComponent<SmeltingRecipe> processingComponent;
+	public final RecipeProcessingComponent<SmeltingRecipe> processingComponent;
 
 	public BlockEntityPoweredFurnace(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
-			}
-		}));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts())
+								.isPresent();
+					}
+				}));
 
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
@@ -67,12 +71,13 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IOl
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", RecipeType.SMELTING, this));
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(processingComponent = new RecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", 0,
+				RecipeType.SMELTING));
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get());
+		processingComponent.setBasePowerUsage(StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get());
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", inputInventory));
@@ -82,36 +87,6 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IOl
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<SmeltingRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
-	}
-
-	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, OldProcessingContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItems().get(0).item())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, OldProcessingContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, 1, true), CaptureType.BOTH);
-		outputContainer.addOutputItem(recipe.getResultItem().copy(), CaptureType.BOTH);
-		component.setMaxProcessingTime(getCookTime(recipe));
-	}
-
-	@Override
-	public void processingStarted(OldRecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, OldProcessingContainer outputContainer) {
-		inputInventory.extractItem(0, 1, false);
-	}
-
-	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, OldProcessingContainer outputContainer) {
-		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
-	}
-
 	public static int getCookTime(SmeltingRecipe recipe) {
 		return (int) (recipe.getCookingTime() / DEFAULT_PROCESSING_TIME_MULT);
 	}
@@ -119,5 +94,44 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IOl
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerPoweredFurnace(windowId, inventory, this);
+	}
+
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<SmeltingRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+	}
+
+	@Override
+	public void captureOutputs(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addItem(recipe.getResultItem().copy(), CaptureType.BOTH);
+	}
+
+	@Override
+	public void prepareComponentForProcessing(RecipeProcessingComponent<SmeltingRecipe> component,
+			SmeltingRecipe recipe, ConcretizedProductContainer outputContainer) {
+		component.setBaseProcessingTime(getCookTime(component.getProcessingRecipe().get()));
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<SmeltingRecipe> component,
+			SmeltingRecipe recipe, ConcretizedProductContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getItem(0))) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void captureInputs(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+
+		processingContainer.getInputs().addItem(inputInventory.extractItem(0, 1, false), CaptureType.BOTH);
+	}
+
+	@Override
+	public void onProcessingCompleted(RecipeProcessingComponent<SmeltingRecipe> component,
+			ProcessingContainer processingContainer) {
+		outputInventory.insertItem(0, processingContainer.getOutputs().getItem(0).copy(), false);
 	}
 }

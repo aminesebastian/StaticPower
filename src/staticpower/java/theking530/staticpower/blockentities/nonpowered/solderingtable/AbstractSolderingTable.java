@@ -26,16 +26,19 @@ public abstract class AbstractSolderingTable extends BlockEntityBase implements 
 	public final InventoryComponent solderingIronInventory;
 	public final InventoryComponent inventory;
 
-	public AbstractSolderingTable(BlockEntityTypeAllocator<? extends AbstractSolderingTable> allocator, BlockPos pos, BlockState state) {
+	public AbstractSolderingTable(BlockEntityTypeAllocator<? extends AbstractSolderingTable> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
-		registerComponent(inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));
-		registerComponent(solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setShiftClickPriority(100)
-				.setFilter(new ItemStackHandlerFilter() {
-					public boolean canInsertItem(int slot, ItemStack stack) {
-						return stack.getItem() instanceof ISolderingIron;
-					}
-				}));
+		registerComponent(
+				inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));
+		registerComponent(
+				solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never)
+						.setShiftClickEnabled(true).setShiftClickPriority(100).setFilter(new ItemStackHandlerFilter() {
+							public boolean canInsertItem(int slot, ItemStack stack) {
+								return stack.getItem() instanceof ISolderingIron;
+							}
+						}));
 
 		// Don't drop the pattern or output slots.
 		patternInventory.setShouldDropContentsOnBreak(false);
@@ -46,10 +49,10 @@ public abstract class AbstractSolderingTable extends BlockEntityBase implements 
 		for (ItemStack input : inventory) {
 			inputs.add(input.copy());
 		}
-		return hasRequiredItems(recipe, inputs);
+		return hasRequiredItems(recipe);
 	}
 
-	public boolean hasRequiredItems(SolderingRecipe recipe, List<ItemStack> items) {
+	public boolean hasRequiredItems(SolderingRecipe recipe) {
 		// If there is no soldering iron, return false. If there is, but it cannot be
 		// used to solder, return false.
 		if (requiresSolderingIron()) {
@@ -64,9 +67,9 @@ public abstract class AbstractSolderingTable extends BlockEntityBase implements 
 		}
 
 		// Create a duplicate inventory.
-		ItemStackHandler duplicateInventory = new ItemStackHandler(items.size());
-		for (int i = 0; i < items.size(); i++) {
-			duplicateInventory.setStackInSlot(i, items.get(i).copy());
+		ItemStackHandler duplicateInventory = new ItemStackHandler(inventory.getSlots());
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			duplicateInventory.setStackInSlot(i, inventory.getStackInSlot(i).copy());
 		}
 
 		// Allocate a flag to indicate if we found an ingredient match.
@@ -123,11 +126,7 @@ public abstract class AbstractSolderingTable extends BlockEntityBase implements 
 			}
 
 			// Break out of the loop if we're out of items.
-			List<ItemStack> items = new ArrayList<ItemStack>();
-			for (ItemStack stack : inventory) {
-				items.add(stack);
-			}
-			if (!hasRequiredItems(recipe, items)) {
+			if (!hasRequiredItems(recipe)) {
 				break;
 			}
 
@@ -175,7 +174,8 @@ public abstract class AbstractSolderingTable extends BlockEntityBase implements 
 	}
 
 	public Optional<SolderingRecipe> getRecipeForItems(ItemStack... items) {
-		return CraftingUtilities.getRecipe(ModRecipeTypes.SOLDERING_RECIPE_TYPE.get(), new RecipeMatchParameters(items), getLevel());
+		return CraftingUtilities.getRecipe(ModRecipeTypes.SOLDERING_RECIPE_TYPE.get(), new RecipeMatchParameters(items),
+				getLevel());
 	}
 
 	protected boolean requiresSolderingIron() {

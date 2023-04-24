@@ -15,11 +15,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -35,10 +36,11 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderAutoCraftingTable;
 import theking530.staticpower.init.ModBlocks;
 
-public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements IOldRecipeProcessor<CraftingRecipe> {
+public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements IRecipeProcessor<CraftingRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoCraftingTable>("crafting_table_auto",
-			(type, pos, state) -> new BlockEntityAutoCraftingTable(pos, state), ModBlocks.AutoCraftingTable);
+	public static final BlockEntityTypeAllocator<BlockEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoCraftingTable>(
+			"crafting_table_auto", (type, pos, state) -> new BlockEntityAutoCraftingTable(pos, state),
+			ModBlocks.AutoCraftingTable);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -46,7 +48,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 		}
 	}
 
-	public final OldRecipeProcessingComponent<CraftingRecipe> processingComponent;
+	public final RecipeProcessingComponent<CraftingRecipe> processingComponent;
 	public final InventoryComponent patternInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
@@ -57,16 +59,17 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	public BlockEntityAutoCraftingTable(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setSlotsLockable(true).setShiftClickEnabled(true));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input)
+				.setSlotsLockable(true).setShiftClickEnabled(true));
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryInventory", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<CraftingRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(),
-				RecipeType.CRAFTING, this));
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(processingComponent = new RecipeProcessingComponent<CraftingRecipe>("ProcessingComponent",
+				StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(), RecipeType.CRAFTING));
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -130,7 +133,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<CraftingRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CraftingRecipe> component) {
 		ItemStack[] pattern = new ItemStack[patternInventory.getSlots()];
 		for (int i = 0; i < patternInventory.getSlots(); i++) {
 			pattern[i] = patternInventory.getStackInSlot(i);
@@ -139,10 +142,14 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	}
 
 	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, OldProcessingContainer outputContainer) {
-		// If this recipe is shaped, make sure we place the same shaped recipe's items
-		// into the internal inventory. If shapeless, just put the items into the
-		// internal inv.
+	public void captureOutputs(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addItem(recipe.getResultItem(), CaptureType.BOTH);
+	}
+
+	@Override
+	public void captureInputs(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
 		if (recipe instanceof ShapedRecipe) {
 			ShapedRecipe sRecipe = (ShapedRecipe) recipe;
 			for (int x = 0; x < 3; ++x) {
@@ -150,7 +157,8 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 					// Get the recipe index.
 					Ingredient ingredient = Ingredient.EMPTY;
 					if (x >= 0 && y >= 0 && x < sRecipe.getRecipeWidth() && y < sRecipe.getRecipeHeight()) {
-						ingredient = sRecipe.getIngredients().get(sRecipe.getRecipeWidth() - x - 1 + y * sRecipe.getRecipeWidth());
+						ingredient = sRecipe.getIngredients()
+								.get(sRecipe.getRecipeWidth() - x - 1 + y * sRecipe.getRecipeWidth());
 					}
 
 					// Skip empty ingredients.
@@ -161,8 +169,8 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 					// Capture the item.
 					for (int j = 0; j < inputInventory.getSlots(); j++) {
 						if (ingredient.test(inputInventory.getStackInSlot(j))) {
-							ItemStack extracted = inputInventory.extractItem(j, 1, true);
-							outputContainer.addInputItem(extracted, CaptureType.BOTH);
+							ItemStack extracted = inputInventory.extractItem(j, 1, false);
+							inputContainer.addItem(extracted, CaptureType.BOTH);
 							break;
 						}
 					}
@@ -182,60 +190,8 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 				// Remove the item.
 				for (int j = 0; j < inputInventory.getSlots(); j++) {
 					if (ing.test(inputInventory.getStackInSlot(j))) {
-						ItemStack extracted = inputInventory.extractItem(j, 1, true);
-						outputContainer.addInputItem(extracted, CaptureType.BOTH);
-						break;
-					}
-				}
-			}
-		}
-		outputContainer.addOutputItem(recipe.getResultItem(), CaptureType.BOTH);
-	}
-
-	@Override
-	public void processingStarted(OldRecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, OldProcessingContainer outputContainer) {
-		// If this recipe is shaped, make sure we place the same shaped recipe's items
-		// into the internal inventory. If shapeless, just put the items into the
-		// internal inv.
-		if (recipe instanceof ShapedRecipe) {
-			ShapedRecipe sRecipe = (ShapedRecipe) recipe;
-			for (int x = 0; x < 3; ++x) {
-				for (int y = 0; y < 3; ++y) {
-					// Get the recipe index.
-					Ingredient ingredient = Ingredient.EMPTY;
-					if (x >= 0 && y >= 0 && x < sRecipe.getRecipeWidth() && y < sRecipe.getRecipeHeight()) {
-						ingredient = sRecipe.getIngredients().get(sRecipe.getRecipeWidth() - x - 1 + y * sRecipe.getRecipeWidth());
-					}
-
-					// Skip empty ingredients.
-					if (ingredient.equals(Ingredient.EMPTY)) {
-						continue;
-					}
-
-					// Capture the item.
-					for (int j = 0; j < inputInventory.getSlots(); j++) {
-						if (ingredient.test(inputInventory.getStackInSlot(j))) {
-							inputInventory.extractItem(j, 1, false);
-							break;
-						}
-					}
-				}
-			}
-		} else {
-			// Transfer the materials into the internal inventory.
-			for (int i = 0; i < recipe.getIngredients().size(); i++) {
-				// Get the used ingredient.
-				Ingredient ing = recipe.getIngredients().get(i);
-
-				// Skip holes in the recipe.
-				if (ing.equals(Ingredient.EMPTY)) {
-					continue;
-				}
-
-				// Remove the item.
-				for (int j = 0; j < inputInventory.getSlots(); j++) {
-					if (ing.test(inputInventory.getStackInSlot(j))) {
-						inputInventory.extractItem(j, 1, false);
+						ItemStack extracted = inputInventory.extractItem(j, 1, false);
+						inputContainer.addItem(extracted, CaptureType.BOTH);
 						break;
 					}
 				}
@@ -244,8 +200,9 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, OldProcessingContainer outputContainer) {
-		if (!hasRequiredItems(recipe, outputContainer.getInputItems().stream().map(x -> x.item()).toList())) {
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<CraftingRecipe> component,
+			CraftingRecipe recipe, ConcretizedProductContainer outputContainer) {
+		if (!hasRequiredItems(recipe, outputContainer.getItems())) {
 			return ProcessingCheckState.error("Missing items in input inventory!");
 		}
 
@@ -257,7 +214,9 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 	}
 
 	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, OldProcessingContainer outputContainer) {
-		outputInventory.insertItem(0, recipe.getResultItem().copy(), false);
+	public void onProcessingCompleted(RecipeProcessingComponent<CraftingRecipe> component,
+			ProcessingContainer processingContainer) {
+		outputInventory.insertItem(0, processingContainer.getOutputs().getItem(0).copy(), false);
 	}
+
 }

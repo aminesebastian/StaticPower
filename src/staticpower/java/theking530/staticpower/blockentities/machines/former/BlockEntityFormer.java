@@ -6,11 +6,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -28,32 +29,34 @@ import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityFormer extends BlockEntityMachine implements IOldRecipeProcessor<FormerRecipe> {
+public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProcessor<FormerRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFormer> TYPE = new BlockEntityTypeAllocator<>("former", (type, pos, state) -> new BlockEntityFormer(pos, state),
-			ModBlocks.Former);
+	public static final BlockEntityTypeAllocator<BlockEntityFormer> TYPE = new BlockEntityTypeAllocator<>("former",
+			(type, pos, state) -> new BlockEntityFormer(pos, state), ModBlocks.Former);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent moldInventory;
 	public final InventoryComponent outputInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final OldRecipeProcessingComponent<FormerRecipe> processingComponent;
+	public final RecipeProcessingComponent<FormerRecipe> processingComponent;
 
 	public BlockEntityFormer(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
 		// Setup the input inventories to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return true;
-			}
-		}));
-		registerComponent(moldInventory = new InventoryComponent("MoldInputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return StaticPowerRecipeRegistry.isValidFormerMold(stack);
-			}
-		}));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return true;
+					}
+				}));
+		registerComponent(moldInventory = new InventoryComponent("MoldInputInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return StaticPowerRecipeRegistry.isValidFormerMold(stack);
+					}
+				}));
 
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
@@ -62,11 +65,12 @@ public class BlockEntityFormer extends BlockEntityMachine implements IOldRecipeP
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<FormerRecipe>("ProcessingComponent", ModRecipeTypes.FORMER_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FormerRecipe>("ProcessingComponent", 0,
+				ModRecipeTypes.FORMER_RECIPE_TYPE.get()));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
-		processingComponent.setShouldControlBlockState(true);
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
@@ -85,36 +89,39 @@ public class BlockEntityFormer extends BlockEntityMachine implements IOldRecipeP
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<FormerRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FormerRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), moldInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, OldProcessingContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
-		outputContainer.addInputItem(moldInventory.getStackInSlot(0), CaptureType.NONE, true);
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
-
-		// Set the power usage and processing time.
-		component.setProcessingPowerUsage(recipe.getPowerCost());
-		component.setMaxProcessingTime(recipe.getProcessingTime());
+	public void captureOutputs(RecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
 	}
 
 	@Override
-	public void processingStarted(OldRecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, OldProcessingContainer outputContainer) {
-		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
-	}
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<FormerRecipe> component,
+			FormerRecipe recipe, ConcretizedProductContainer outputContainer) {
 
-	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, OldProcessingContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
+
 		return ProcessingCheckState.ok();
 	}
 
 	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, OldProcessingContainer outputContainer) {
-		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
+	public void captureInputs(RecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+		inputContainer.addItem(inputInventory.extractItem(0,
+				component.getProcessingRecipe().get().getInputIngredient().getCount(), false), CaptureType.BOTH);
+		inputContainer.addItem(moldInventory.getStackInSlot(0), CaptureType.NONE, true);
+
+	}
+
+	@Override
+	public void onProcessingCompleted(RecipeProcessingComponent<FormerRecipe> component,
+			ProcessingContainer processingContainer) {
+		outputInventory.insertItem(0, processingContainer.getOutputs().getItem(0).copy(), false);
 	}
 }

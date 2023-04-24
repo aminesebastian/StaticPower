@@ -15,6 +15,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -34,7 +35,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.level.LevelEvent.Save;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidUtil;
@@ -51,6 +52,7 @@ import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.commands.ResearchCommands;
+import theking530.staticcore.commands.TeamCommands;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.RecipeReloadListener;
 import theking530.staticcore.crafting.StaticCoreRecipeManager;
@@ -71,6 +73,7 @@ public class StaticCoreForgeEventsCommon {
 	public static void onRegisterCommandEvent(RegisterCommandsEvent event) {
 		CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
 		ResearchCommands.register(commandDispatcher);
+		TeamCommands.register(commandDispatcher);
 	}
 
 	@SubscribeEvent
@@ -109,32 +112,33 @@ public class StaticCoreForgeEventsCommon {
 	}
 
 	@SubscribeEvent
-	public static void onServerStopping(ServerStoppingEvent serverStopped) {
+	public static void onServerStopping(ServerStoppedEvent serverStopped) {
 		StaticCoreDataAccessor.unloadForServer();
 	}
 
 	@SubscribeEvent
 	public static void onSave(Save save) {
-		if (save.getLevel().isClientSide()) {
+		if (!save.getLevel().isClientSide() && StaticCoreDataAccessor.getServer() != null) {
 			StaticCoreDataAccessor.getServer().save();
 		}
 	}
 
 	@SubscribeEvent
 	public static void onPlayerLoad(PlayerEvent.LoadFromFile load) {
-		// TODO: Change this back later, for now there will only be one team.
-		if (TeamManager.get(load.getEntity().getLevel()).getTeamForPlayer(load.getEntity()) == null) {
-			if (TeamManager.get(load.getEntity().getLevel()).getTeams().size() == 0) {
-				TeamManager.get(load.getEntity().getLevel()).createTeam(load.getEntity());
-			} else {
-				TeamManager.get(load.getEntity().getLevel()).getTeams().get(0).addPlayer(load.getEntity());
-			}
-		}
+
 	}
 
 	@SubscribeEvent
 	public static void onServerPlayerLoggedIn(PlayerLoggedInEvent loggedIn) {
-		StaticCoreDataAccessor.getServer().loadDataForClients();
+		StaticCoreDataAccessor.getServer().loadDataForClient((ServerPlayer) loggedIn.getEntity());
+		// TODO: Change this back later, for now there will only be one team.
+		if (TeamManager.get(loggedIn.getEntity().getLevel()).getTeamForPlayer(loggedIn.getEntity()) == null) {
+			if (TeamManager.get(loggedIn.getEntity().getLevel()).getTeams().size() == 0) {
+				TeamManager.get(loggedIn.getEntity().getLevel()).createTeam(loggedIn.getEntity());
+			} else {
+				TeamManager.get(loggedIn.getEntity().getLevel()).getTeams().get(0).addPlayer(loggedIn.getEntity());
+			}
+		}
 	}
 
 	@SubscribeEvent

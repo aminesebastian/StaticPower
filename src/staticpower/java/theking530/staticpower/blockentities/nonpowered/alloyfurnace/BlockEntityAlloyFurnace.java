@@ -14,11 +14,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.BlockEntityUpdateRequest;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
@@ -34,15 +35,15 @@ import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRe
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityAlloyFurnace extends BlockEntityBase implements IOldRecipeProcessor<AlloyFurnaceRecipe> {
+public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeProcessor<AlloyFurnaceRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityAlloyFurnace> TYPE = new BlockEntityTypeAllocator<>("alloy_furnace",
-			(type, pos, state) -> new BlockEntityAlloyFurnace(pos, state), ModBlocks.AlloyFurnace);
+	public static final BlockEntityTypeAllocator<BlockEntityAlloyFurnace> TYPE = new BlockEntityTypeAllocator<>(
+			"alloy_furnace", (type, pos, state) -> new BlockEntityAlloyFurnace(pos, state), ModBlocks.AlloyFurnace);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent outputInventory;
-	public final OldRecipeProcessingComponent<AlloyFurnaceRecipe> processingComponent;
+	public final RecipeProcessingComponent<AlloyFurnaceRecipe> processingComponent;
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final LoopingSoundComponent furnaceSoundComponent;
 
@@ -55,17 +56,21 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IOldReci
 		super(TYPE, pos, state);
 		registerComponent(furnaceSoundComponent = new LoopingSoundComponent("FurnaceSoundComponent", 20));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input2).setShiftClickEnabled(true));
-		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input3).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0;
-			}
-		}));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input2)
+				.setShiftClickEnabled(true));
+		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input3)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0;
+					}
+				}));
 
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AlloyFurnaceSideConfiguration.INSTANCE));
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<AlloyFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
-				ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get(), this));
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				AlloyFurnaceSideConfiguration.INSTANCE));
+		registerComponent(processingComponent = new RecipeProcessingComponent<AlloyFurnaceRecipe>("ProcessingComponent",
+				StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
+				ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get()));
+		processingComponent.setShouldControlOnBlockState(true);
 	}
 
 	public void process() {
@@ -81,7 +86,8 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IOldReci
 			// remaining
 			// fuel, use some.
 			Optional<AlloyFurnaceRecipe> recipe = processingComponent.getPendingRecipe();
-			if (recipe.isPresent() && InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.get().getOutput().getItemStack())) {
+			if (recipe.isPresent() && InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory,
+					recipe.get().getOutput().getItemStack())) {
 				int burnTime = ForgeHooks.getBurnTime(fuelInventory.getStackInSlot(0), null);
 				if (burnTimeRemaining <= 0 && burnTime > 0) {
 					lastFuelBurnTime = burnTimeRemaining = burnTime;
@@ -91,24 +97,29 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IOldReci
 			}
 
 			if (burnTimeRemaining > 0) {
-				furnaceSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1f, 1.0f, getBlockPos(), 64);
+				furnaceSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1f,
+						1.0f, getBlockPos(), 64);
 			} else {
 				furnaceSoundComponent.stopPlayingSound();
-				if (processingComponent.getCurrentProcessingTime() > 0) {
-					processingComponent.cancelProcessing();
-				}
 			}
 		}
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<AlloyFurnaceRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1));
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, OldProcessingContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0).item())) {
+	public void captureOutputs(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<AlloyFurnaceRecipe> component,
+			AlloyFurnaceRecipe recipe, ConcretizedProductContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		if (burnTimeRemaining <= 0) {
@@ -118,23 +129,28 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IOldReci
 	}
 
 	@Override
-	public void processingStarted(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, OldProcessingContainer outputContainer) {
-		inputInventory.extractItem(0, recipe.getInput1().getCount(), false);
-		inputInventory.extractItem(1, recipe.getInput2().getCount(), false);
+	public void captureInputs(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+		inputContainer.addItem(
+				inputInventory.extractItem(0, component.getProcessingRecipe().get().getInput1().getCount(), true));
+		inputContainer.addItem(
+				inputInventory.extractItem(1, component.getProcessingRecipe().get().getInput2().getCount(), true));
 	}
 
 	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, OldProcessingContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput1().getCount(), true), CaptureType.BOTH);
-		outputContainer.addInputItem(inputInventory.extractItem(1, recipe.getInput2().getCount(), true), CaptureType.BOTH);
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
-
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+	public ProcessingCheckState canContinueProcessing(RecipeProcessingComponent<AlloyFurnaceRecipe> component,
+			ProcessingContainer processingContainer) {
+		if (burnTimeRemaining < 0) {
+			return ProcessingCheckState.cancel();
+		}
+		return ProcessingCheckState.ok();
 	}
 
 	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, OldProcessingContainer outputContainer) {
-		InventoryUtilities.insertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0).item().copy(), false);
+	public void onProcessingCompleted(RecipeProcessingComponent<AlloyFurnaceRecipe> component,
+			ProcessingContainer processingContainer) {
+		InventoryUtilities.insertItemIntoInventory(outputInventory, processingContainer.getOutputs().getItem(0).copy(),
+				false);
 	}
 
 	public int getLastFuelBurnTime() {

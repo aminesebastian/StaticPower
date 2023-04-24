@@ -7,11 +7,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
@@ -33,10 +34,10 @@ import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityCarpenter extends BlockEntityMachine implements IOldRecipeProcessor<CarpenterRecipe> {
+public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeProcessor<CarpenterRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCarpenter> TYPE = new BlockEntityTypeAllocator<>("carpenter", (type, pos, state) -> new BlockEntityCarpenter(pos, state),
-			ModBlocks.Carpenter);
+	public static final BlockEntityTypeAllocator<BlockEntityCarpenter> TYPE = new BlockEntityTypeAllocator<>(
+			"carpenter", (type, pos, state) -> new BlockEntityCarpenter(pos, state), ModBlocks.Carpenter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;
@@ -45,7 +46,7 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IOldReci
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final OldRecipeProcessingComponent<CarpenterRecipe> processingComponent;
+	public final RecipeProcessingComponent<CarpenterRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	public BlockEntityCarpenter(BlockPos pos, BlockState state) {
@@ -54,21 +55,25 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IOldReci
 		// Get the tier object.
 		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setSlotsLockable(true));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setSlotsLockable(true));
 
 		// Setup all the other inventories.
-		registerComponent(mainOutputInventory = new InventoryComponent("MainOutputInventory", 1, MachineSideMode.Output2));
-		registerComponent(secondaryOutputInventory = new InventoryComponent("SecondaryOutputInventory", 1, MachineSideMode.Output3));
+		registerComponent(
+				mainOutputInventory = new InventoryComponent("MainOutputInventory", 1, MachineSideMode.Output2));
+		registerComponent(secondaryOutputInventory = new InventoryComponent("SecondaryOutputInventory", 1,
+				MachineSideMode.Output3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<CarpenterRecipe>("ProcessingComponent", ModRecipeTypes.LATHE_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CarpenterRecipe>("ProcessingComponent", 0,
+				ModRecipeTypes.LATHE_RECIPE_TYPE.get()));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
-		processingComponent.setShouldControlBlockState(true);
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
@@ -79,75 +84,25 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IOldReci
 		registerComponent(new OutputServoComponent("SecondaryOutputServo", secondaryOutputInventory));
 
 		// Setup the fluid tank and fluid servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
-				.setUpgradeInventory(upgradesInventory));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get())
+				.setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent,
+				MachineSideMode.Output));
 
 		// Register components to allow the lumbermill to fill buckets in the GUI.
-		registerComponent(
-				fluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo",
+				fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<CarpenterRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
-				inputInventory.getStackInSlot(4), inputInventory.getStackInSlot(5), inputInventory.getStackInSlot(6), inputInventory.getStackInSlot(7),
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CarpenterRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1),
+				inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3), inputInventory.getStackInSlot(4),
+				inputInventory.getStackInSlot(5), inputInventory.getStackInSlot(6), inputInventory.getStackInSlot(7),
 				inputInventory.getStackInSlot(8));
-	}
-
-	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, OldProcessingContainer outputContainer) {
-		// Move the items.
-		for (int i = 0; i < 9; i++) {
-			outputContainer.addInputItem(inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), true), CaptureType.BOTH);
-		}
-
-		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput(), CaptureType.BOTH);
-		outputContainer.addOutputItem(recipe.getSecondaryOutput().calculateOutput(), CaptureType.BOTH);
-		outputContainer.addOutputFluid(recipe.getOutputFluid(), CaptureType.BOTH);
-
-		// Set the power usage.
-		component.setProcessingPowerUsage(recipe.getPowerCost());
-		component.setMaxProcessingTime(recipe.getProcessingTime());
-	}
-
-	@Override
-	public void processingStarted(OldRecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, OldProcessingContainer outputContainer) {
-		// Move the items.
-		for (int i = 0; i < 9; i++) {
-			inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), false);
-		}
-	}
-
-	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, OldProcessingContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0).item())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		if (outputContainer.getOutputItems().size() > 1) {
-			if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, outputContainer.getOutputItem(1).item())) {
-				return ProcessingCheckState.outputsCannotTakeRecipe();
-			}
-		}
-
-		if (outputContainer.hasOutputFluids()) {
-			if (fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).fluid().getAmount()) {
-				return ProcessingCheckState.fluidOutputFull();
-			}
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe, OldProcessingContainer outputContainer) {
-		mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
-		if (outputContainer.getOutputItems().size() > 1) {
-			secondaryOutputInventory.insertItem(0, outputContainer.getOutputItem(1).item().copy(), false);
-		}
-		fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.EXECUTE);
 	}
 
 	@Override
@@ -158,5 +113,54 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IOldReci
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerLathe(windowId, inventory, this);
+	}
+
+	@Override
+	public void captureOutputs(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addItem(recipe.getPrimaryOutput().calculateOutput(), CaptureType.BOTH);
+		outputContainer.addItem(recipe.getSecondaryOutput().calculateOutput(), CaptureType.BOTH);
+		outputContainer.addFluid(recipe.getOutputFluid(), CaptureType.BOTH);
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<CarpenterRecipe> component,
+			CarpenterRecipe recipe, ConcretizedProductContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getItem(0))) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		if (outputContainer.getItems().size() > 1) {
+			if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0,
+					outputContainer.getItem(1))) {
+				return ProcessingCheckState.outputsCannotTakeRecipe();
+			}
+		}
+
+		if (outputContainer.hasFluids()) {
+			if (fluidTankComponent.fill(outputContainer.getFluid(0), FluidAction.SIMULATE) != outputContainer
+					.getFluid(0).getAmount()) {
+				return ProcessingCheckState.fluidOutputFull();
+			}
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void captureInputs(RecipeProcessingComponent<CarpenterRecipe> component, CarpenterRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+		for (int i = 0; i < 9; i++) {
+			inputContainer.addItem(inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), true),
+					CaptureType.BOTH);
+		}
+	}
+
+	@Override
+	public void onProcessingCompleted(RecipeProcessingComponent<CarpenterRecipe> component,
+			ProcessingContainer processingContainer) {
+		mainOutputInventory.insertItem(0, processingContainer.getOutputs().getItem(0).copy(), false);
+		if (processingContainer.getOutputs().getItems().size() > 1) {
+			secondaryOutputInventory.insertItem(0, processingContainer.getOutputs().getItem(1).copy(), false);
+		}
+		fluidTankComponent.fill(processingContainer.getOutputs().getFluid(0), FluidAction.EXECUTE);
 	}
 }

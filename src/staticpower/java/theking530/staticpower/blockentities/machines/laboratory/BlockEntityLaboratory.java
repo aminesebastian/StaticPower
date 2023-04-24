@@ -14,8 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.presets.InputOnlyNoFace;
@@ -38,8 +38,8 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityLaboratory extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityLaboratory> TYPE = new BlockEntityTypeAllocator<>("laboratory",
-			(type, pos, state) -> new BlockEntityLaboratory(pos, state), ModBlocks.Laboratory);
+	public static final BlockEntityTypeAllocator<BlockEntityLaboratory> TYPE = new BlockEntityTypeAllocator<>(
+			"laboratory", (type, pos, state) -> new BlockEntityLaboratory(pos, state), ModBlocks.Laboratory);
 
 	/**
 	 * Indicates how many times faster this block will perform compared to the
@@ -50,7 +50,7 @@ public class BlockEntityLaboratory extends BlockEntityMachine {
 	public final InventoryComponent inputInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final OldMachineProcessingComponent processingComponent;
+	public final MachineProcessingComponent processingComponent;
 
 	@UpdateSerialize
 	private String owningTeam;
@@ -59,44 +59,44 @@ public class BlockEntityLaboratory extends BlockEntityMachine {
 		super(TYPE, pos, state);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 7, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				switch (slot) {
-				case 0:
-					return stack.getItem() == StaticCoreItems.ResearchTier1.get();
-				case 1:
-					return stack.getItem() == StaticCoreItems.ResearchTier2.get();
-				case 2:
-					return stack.getItem() == StaticCoreItems.ResearchTier3.get();
-				case 3:
-					return stack.getItem() == StaticCoreItems.ResearchTier4.get();
-				case 4:
-					return stack.getItem() == StaticCoreItems.ResearchTier5.get();
-				case 5:
-					return stack.getItem() == StaticCoreItems.ResearchTier6.get();
-				case 6:
-					return stack.getItem() == StaticCoreItems.ResearchTier7.get();
-				default:
-					return false;
-				}
-			}
-		}));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 7, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						switch (slot) {
+						case 0:
+							return stack.getItem() == StaticCoreItems.ResearchTier1.get();
+						case 1:
+							return stack.getItem() == StaticCoreItems.ResearchTier2.get();
+						case 2:
+							return stack.getItem() == StaticCoreItems.ResearchTier3.get();
+						case 3:
+							return stack.getItem() == StaticCoreItems.ResearchTier4.get();
+						case 4:
+							return stack.getItem() == StaticCoreItems.ResearchTier5.get();
+						case 5:
+							return stack.getItem() == StaticCoreItems.ResearchTier6.get();
+						case 6:
+							return stack.getItem() == StaticCoreItems.ResearchTier7.get();
+						default:
+							return false;
+						}
+					}
+				}));
 
 		// Setup all the other inventories.
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", 100, this::canStartProcessing, this::canContinueProcessing,
-				this::processingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 100));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
-		processingComponent.setShouldControlBlockState(true);
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.laboratoryPowerUsage.get());
+		processingComponent.setBasePowerUsage(StaticPowerConfig.SERVER.laboratoryPowerUsage.get());
 
 		// Setup the I/O servo.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
@@ -110,18 +110,22 @@ public class BlockEntityLaboratory extends BlockEntityMachine {
 		super.process();
 
 		// Randomly generate smoke and flame particles.
-		if (processingComponent.getIsOnBlockState()) {
+		if (processingComponent.isBlockStateOn()) {
 			if (SDMath.diceRoll(0.25f)) {
 				@SuppressWarnings("resource")
 				float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
 				randomOffset /= 3.5f;
 
-				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
-				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset - 0.5f, 0.32f, forwardOffset));
-				getLevel().addParticle(ParticleTypes.ELECTRIC_SPARK, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
-						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
-				getLevel().addParticle(ParticleTypes.BUBBLE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
-						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
+				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f
+						: -0.05f;
+				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(),
+						new Vector3f(randomOffset - 0.5f, 0.32f, forwardOffset));
+				getLevel().addParticle(ParticleTypes.ELECTRIC_SPARK, getBlockPos().getX() + forwardVector.x(),
+						getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
+						0.0f);
+				getLevel().addParticle(ParticleTypes.BUBBLE, getBlockPos().getX() + forwardVector.x(),
+						getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
+						0.0f);
 			}
 		}
 	}

@@ -1,13 +1,15 @@
 package theking530.staticcore.productivity.client;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.BiConsumer;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.productivity.metrics.ClientProductionMetric;
 import theking530.staticcore.productivity.metrics.MetricType;
+import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.product.ProductType;
 
 public class MetricEntryContainer extends AbstractGuiWidget<MetricEntryContainer> {
@@ -19,9 +21,19 @@ public class MetricEntryContainer extends AbstractGuiWidget<MetricEntryContainer
 		this.metricType = metricType;
 	}
 
-	public void updateMetrics(ProductType<?> productType, ImmutableList<ClientProductionMetric> metrics) {
+	public void updateMetrics(ProductType<?> productType, Collection<ProductionMetric> rawMetrics) {
+		// Sort such that the highest rates go to the top.
+		List<ProductionMetric> sortedMetrics = new ArrayList<>(rawMetrics);
+		if (metricType == MetricType.PRODUCTION) {
+			sortedMetrics.sort(
+					(m1, m2) -> Double.compare(m2.getProduced().getCurrentValue(), m1.getProduced().getCurrentValue()));
+		} else {
+			sortedMetrics.sort(
+					(m1, m2) -> Double.compare(m2.getConsumed().getCurrentValue(), m1.getConsumed().getCurrentValue()));
+		}
+
 		int currentSize = getChildren().size();
-		int requiredSize = metrics.size();
+		int requiredSize = sortedMetrics.size();
 		int delta = requiredSize - currentSize;
 
 		// Create or remove widgets as needed.
@@ -42,7 +54,7 @@ public class MetricEntryContainer extends AbstractGuiWidget<MetricEntryContainer
 		}
 
 		for (int i = 0; i < requiredSize; i++) {
-			ClientProductionMetric metric = metrics.get(i);
+			ProductionMetric metric = sortedMetrics.get(i);
 			MetricEntryWidget metricWidget = (MetricEntryWidget) getChildren().get(i);
 			metricWidget.setMetric(productType, metric);
 			metricWidget.setVisible(!metric.getMetricValue(metricType).isZero());

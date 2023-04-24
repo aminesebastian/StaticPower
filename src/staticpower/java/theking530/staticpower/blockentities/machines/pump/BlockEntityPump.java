@@ -37,8 +37,8 @@ import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.fluid.CapabilityStaticFluid;
 import theking530.api.fluid.IStaticPowerFluidHandler;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationUtilities;
@@ -73,9 +73,10 @@ public class BlockEntityPump extends BlockEntityMachine {
 	}
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE = new BlockEntityTypeAllocator<BlockEntityPump>("pump",
-			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.BasicPump, ModBlocks.AdvancedPump, ModBlocks.StaticPump, ModBlocks.EnergizedPump,
-			ModBlocks.LumumPump, ModBlocks.CreativePump);
+	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE = new BlockEntityTypeAllocator<BlockEntityPump>(
+			"pump", (type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.BasicPump,
+			ModBlocks.AdvancedPump, ModBlocks.StaticPump, ModBlocks.EnergizedPump, ModBlocks.LumumPump,
+			ModBlocks.CreativePump);
 	public static final ModelProperty<FluidPumpRenderingState> PUMP_RENDERING_STATE = new ModelProperty<FluidPumpRenderingState>();
 	public static final int MAX_SEARCH_DEPTH = 512;
 	static {
@@ -87,7 +88,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 	public final InventoryComponent tubeInventory;
 	public final InventoryComponent batteryInventory;
 	public final FluidTankComponent fluidTankComponent;
-	public final OldMachineProcessingComponent processingComponent;
+	public final MachineProcessingComponent processingComponent;
 	private final LoopingSoundComponent soundComponent;
 	private final FluidPumpRenderingState renderingState;
 	private PumpTubeCache pumpTubeCache;
@@ -101,18 +102,20 @@ public class BlockEntityPump extends BlockEntityMachine {
 		StaticCoreTier tierObject = getTierObject();
 		int pumpRate = tierObject.pumpRate.get();
 
-		registerComponent(tubeInventory = new InventoryComponent("TubeInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return ModItemTags.matches(ModItemTags.PUMP_TUBE, stack.getItem());
-			}
-		}));
+		registerComponent(tubeInventory = new InventoryComponent("TubeInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return ModItemTags.matches(ModItemTags.PUMP_TUBE, stack.getItem());
+					}
+				}));
 		registerComponent(soundComponent = new LoopingSoundComponent("SoundComponent", 20));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
-		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", pumpRate, this::canPerformInWorldPumping, this::canPerformInWorldPumping,
-				this::performInWorldPumping, true).setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage)
-				.setShouldModuleProcessingTimeByPowerSatisfaction(false));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", pumpRate)
+				.setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage)
+				.setModulateProcessingTimeByPowerSatisfaction(false));
 
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", StaticPowerConfig.SERVER.pumpTankCapacity.get()));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank",
+				StaticPowerConfig.SERVER.pumpTankCapacity.get()));
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input, MachineSideMode.Output);
 		fluidTankComponent.setFluidTankFilter(new IFluidTankComponentFilter() {
 			@Override
@@ -132,7 +135,8 @@ public class BlockEntityPump extends BlockEntityMachine {
 		});
 
 		registerComponent(new InputServoComponent("InputServoComponent", tubeInventory, 0));
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 1000, fluidTankComponent, MachineSideMode.Input));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 1000, fluidTankComponent,
+				MachineSideMode.Input));
 	}
 
 	@Override
@@ -173,7 +177,8 @@ public class BlockEntityPump extends BlockEntityMachine {
 		}
 
 		if (pushType == FluidPumpResult.ACTIVE_SUPPLY) {
-			soundComponent.startPlayingSound(SoundEvents.AMBIENT_UNDERWATER_LOOP, SoundSource.BLOCKS, 0.5f, 0.9f, getBlockPos(), 32);
+			soundComponent.startPlayingSound(SoundEvents.AMBIENT_UNDERWATER_LOOP, SoundSource.BLOCKS, 0.5f, 0.9f,
+					getBlockPos(), 32);
 			powerStorage.drainPower(1, false);
 		} else {
 			soundComponent.stopPlayingSound();
@@ -190,10 +195,14 @@ public class BlockEntityPump extends BlockEntityMachine {
 		}
 
 		// First try to push to a static fluid capability.
-		IStaticPowerFluidHandler staticFluidHandler = te.getCapability(CapabilityStaticFluid.STATIC_FLUID_CAPABILITY, side.getOpposite()).orElse(null);
+		IStaticPowerFluidHandler staticFluidHandler = te
+				.getCapability(CapabilityStaticFluid.STATIC_FLUID_CAPABILITY, side.getOpposite()).orElse(null);
 		if (staticFluidHandler != null) {
-			float pressure = this.powerStorage.drainPower(1, true).getPower() == 1 ? IStaticPowerFluidHandler.MAX_PRESSURE : IStaticPowerFluidHandler.PASSIVE_FLOW_PRESSURE;
-			FluidStack simulatedDrain = fluidTankComponent.drain(fluidTankComponent.getCapacity(), FluidAction.SIMULATE);
+			float pressure = this.powerStorage.drainPower(1, true).getPower() == 1
+					? IStaticPowerFluidHandler.MAX_PRESSURE
+					: IStaticPowerFluidHandler.PASSIVE_FLOW_PRESSURE;
+			FluidStack simulatedDrain = fluidTankComponent.drain(fluidTankComponent.getCapacity(),
+					FluidAction.SIMULATE);
 			int filled = staticFluidHandler.fill(simulatedDrain, pressure, FluidAction.EXECUTE);
 			fluidTankComponent.drain(filled, FluidAction.EXECUTE);
 			return FluidPumpResult.ACTIVE_SUPPLY;
@@ -248,7 +257,8 @@ public class BlockEntityPump extends BlockEntityMachine {
 		if (pumpTubeCache != null) {
 			BlockPos fluidPos = getNextPumpablePosition();
 			if (fluidPos != null) {
-				PumpTubePathResult pathResult = doesPumpTubePathExistToPosition(fluidPos, pumpTubeCache.getFacingDirection());
+				PumpTubePathResult pathResult = doesPumpTubePathExistToPosition(fluidPos,
+						pumpTubeCache.getFacingDirection());
 				if (!pathResult.isComplete() && !hasTubesForPlacement()) {
 					return ProcessingCheckState.error("gui.staticpower.alert.missing_pump_tubes");
 				}
@@ -263,7 +273,8 @@ public class BlockEntityPump extends BlockEntityMachine {
 
 		// If we don't have a pump cache, try to make one.
 		if (pumpTubeCache == null || pumpTubeCache.isEmpty()) {
-			Direction sideWithPumpTube = sidesToPumpFrom.get(getLevel().getRandom().nextIntBetweenInclusive(0, sidesToPumpFrom.size() - 1));
+			Direction sideWithPumpTube = sidesToPumpFrom
+					.get(getLevel().getRandom().nextIntBetweenInclusive(0, sidesToPumpFrom.size() - 1));
 			BlockPos pumpTubePos = getBlockPos().relative(sideWithPumpTube);
 
 			// First check and see if any of the pump tubes along the chain have valid
@@ -328,7 +339,8 @@ public class BlockEntityPump extends BlockEntityMachine {
 
 	protected PumpTubePathResult doesPumpTubePathExistToPosition(BlockPos fluidPos, Direction expectedDirection) {
 		BlockPos queryPos = getBlockPos().relative(expectedDirection);
-		BlockPos targetPos = WorldUtilities.projectPositionOntoLine(fluidPos, getBlockPos(), expectedDirection.getAxis());
+		BlockPos targetPos = WorldUtilities.projectPositionOntoLine(fluidPos, getBlockPos(),
+				expectedDirection.getAxis());
 
 		List<BlockPos> missingTubes = new ArrayList<>();
 		while (!queryPos.equals(targetPos)) {
@@ -365,7 +377,8 @@ public class BlockEntityPump extends BlockEntityMachine {
 		}
 
 		if (fluidState.getType().getPickupSound().isPresent()) {
-			getLevel().playSound(null, getBlockPos(), fluidState.getType().getPickupSound().get(), SoundSource.BLOCKS, 0.5f, 1.0f);
+			getLevel().playSound(null, getBlockPos(), fluidState.getType().getPickupSound().get(), SoundSource.BLOCKS,
+					0.5f, 1.0f);
 		} else {
 			getLevel().playSound(null, getBlockPos(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.5f, 1.0f);
 		}
@@ -418,7 +431,9 @@ public class BlockEntityPump extends BlockEntityMachine {
 		}
 
 		if (!output.isEmpty()) {
-			StaticPower.LOGGER.info(String.format("Cached new pump tube for pump at location: %1$s. New pump queue size: %2$d.", getBlockPos(), output.size()));
+			StaticPower.LOGGER
+					.info(String.format("Cached new pump tube for pump at location: %1$s. New pump queue size: %2$d.",
+							getBlockPos(), output.size()));
 		} else {
 			StaticPower.LOGGER.info(String.format("No fluids were found at location: %1$s.", getBlockPos()));
 		}
@@ -427,7 +442,8 @@ public class BlockEntityPump extends BlockEntityMachine {
 	}
 
 	protected void placePumpTube(BlockPos tubePos, Direction facingDirection) {
-		getLevel().setBlock(tubePos, ModBlocks.PumpTube.get().defaultBlockState().setValue(BlockPumpTube.FACING, facingDirection), 2);
+		getLevel().setBlock(tubePos,
+				ModBlocks.PumpTube.get().defaultBlockState().setValue(BlockPumpTube.FACING, facingDirection), 2);
 		tubeInventory.getStackInSlot(0).shrink(1);
 		getLevel().playSound(null, tubePos, SoundEvents.COPPER_PLACE, SoundSource.BLOCKS, 1.0f, 1.0f);
 	}
@@ -473,11 +489,13 @@ public class BlockEntityPump extends BlockEntityMachine {
 
 			BlockEntity entity = getLevel().getBlockEntity(toCheck);
 			if (entity != null) {
-				IStaticPowerStorage powerStorage = entity.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, dir).orElse(null);
+				IStaticPowerStorage powerStorage = entity
+						.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, dir).orElse(null);
 				if (powerStorage != null) {
 					renderingState.setConnected(dir, powerStorage.canOutputExternalPower());
 				} else {
-					renderingState.setConnected(dir, entity.getCapability(ForgeCapabilities.ITEM_HANDLER, dir).isPresent());
+					renderingState.setConnected(dir,
+							entity.getCapability(ForgeCapabilities.ITEM_HANDLER, dir).isPresent());
 				}
 			}
 		}
@@ -495,7 +513,8 @@ public class BlockEntityPump extends BlockEntityMachine {
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state,
+			LivingEntity placer, ItemStack stack) {
 		return false;
 	}
 

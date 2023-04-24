@@ -1,5 +1,6 @@
 package theking530.staticcore.commands;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -41,7 +42,7 @@ public class ResearchCommands {
 		} catch (Exception e) {
 			StaticCore.LOGGER.error("An error occured when executing the unlock all research command.", e);
 		}
-		return 1;
+		return Command.SINGLE_SUCCESS;
 	}
 
 	public static int lockAllResearch(CommandContext<CommandSourceStack> commandContext) throws CommandSyntaxException {
@@ -54,6 +55,6 @@ public class ResearchCommands {
 		} catch (Exception e) {
 			StaticCore.LOGGER.error("An error occured when executing the unlock all research command.", e);
 		}
-		return 1;
+		return Command.SINGLE_SUCCESS;
 	}
 }

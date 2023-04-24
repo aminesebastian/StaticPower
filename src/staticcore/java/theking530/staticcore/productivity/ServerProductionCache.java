@@ -19,11 +19,10 @@ import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 import theking530.staticcore.productivity.cacheentry.ProductionEntry.ProductionEntryState;
 import theking530.staticcore.productivity.cacheentry.ProductivityRate;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
-import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.ProductionMetric;
+import theking530.staticcore.productivity.metrics.ProductionMetrics;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline.ProductivityTimelineEntry;
-import theking530.staticcore.productivity.metrics.ServerProductionMetrics;
 import theking530.staticcore.productivity.product.ProductType;
 
 public class ServerProductionCache<T> implements IProductionCache<T> {
@@ -147,10 +146,9 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 		return "";
 	}
 
-	public ServerProductionMetrics getProductionMetrics(MetricPeriod period) {
-		List<ProductionMetric> inputs = getAverageProductionRate(period, MetricType.CONSUMPTION);
-		List<ProductionMetric> outputs = getAverageProductionRate(period, MetricType.PRODUCTION);
-		return new ServerProductionMetrics(inputs, outputs);
+	public ProductionMetrics getProductionMetrics(MetricPeriod period) {
+		Map<Integer, ProductionMetric> metrics = getAverageProductionRate(period);
+		return new ProductionMetrics(metrics);
 	}
 
 	@Override
@@ -208,7 +206,7 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 
 				// Only if we made it this far should we clear the entires.
 				for (ProductionEntry<T> entry : toBeInserted) {
-					entry.clearCurrentSecondMetrics();
+					entry.onProductivityCapturedIntoDatabase();
 				}
 			}
 
@@ -270,32 +268,23 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 		}
 	}
 
-	private List<ProductionMetric> getAverageProductionRate(MetricPeriod period, MetricType direction) {
-		List<ProductionMetric> metrics = new LinkedList<ProductionMetric>();
+	private Map<Integer, ProductionMetric> getAverageProductionRate(MetricPeriod period) {
+		Map<Integer, ProductionMetric> metrics = new HashMap<>();
 
 		// Pull the production rates from memory into the metrics result.
 		for (Map<Integer, ProductionEntry<T>> bucket : productivityBuckets) {
 			for (ProductionEntry<T> entry : bucket.values()) {
+				int productHash = productType.getProductHashCode(entry.getProduct());
 				ProductivityRate consumption = new ProductivityRate(
 						entry.getConsumptionRate().getCurrentValue() * period.getPeriodLengthInSeconds(),
 						entry.getConsumptionRate().getIdealValue() * period.getPeriodLengthInSeconds());
 				ProductivityRate production = new ProductivityRate(
 						entry.getProductionRate().getCurrentValue() * period.getPeriodLengthInSeconds(),
 						entry.getProductionRate().getIdealValue() * period.getPeriodLengthInSeconds());
-				metrics.add(new ProductionMetric(productType.getProductHashCode(entry.getProduct()),
+				metrics.put(productHash, new ProductionMetric(productHash,
 						productType.getSerializedProduct(entry.getProduct()), consumption, production));
 			}
 		}
-
-		// Sort such that the highest rates go to the top.
-		if (direction == MetricType.PRODUCTION) {
-			metrics.sort(
-					(m1, m2) -> Double.compare(m2.getProduced().getCurrentValue(), m1.getProduced().getCurrentValue()));
-		} else {
-			metrics.sort(
-					(m1, m2) -> Double.compare(m2.getConsumed().getCurrentValue(), m1.getConsumed().getCurrentValue()));
-		}
-
 		return metrics;
 	}
 

@@ -6,10 +6,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 
 public class OutputSlot extends StaticPowerContainerSlot {
-	private OldRecipeProcessingComponent<?> processingComponent;
+	private RecipeProcessingComponent<?> processingComponent;
 	private boolean shouldApplyExperience;
 
 	public OutputSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
@@ -29,7 +29,7 @@ public class OutputSlot extends StaticPowerContainerSlot {
 		return false;
 	}
 
-	public OutputSlot shouldApplyExperience(OldRecipeProcessingComponent<?> processingComponent) {
+	public OutputSlot shouldApplyExperience(RecipeProcessingComponent<?> processingComponent) {
 		this.processingComponent = processingComponent;
 		this.shouldApplyExperience = true;
 		return this;

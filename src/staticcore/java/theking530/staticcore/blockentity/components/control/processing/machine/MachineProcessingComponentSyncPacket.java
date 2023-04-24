@@ -1,16 +1,16 @@
-package theking530.staticcore.blockentity.components.control.processing.basic;
+package theking530.staticcore.blockentity.components.control.processing.machine;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponentSyncPacket;
 
-public class BasicProcessingComponentSyncPacket extends AbstractProcessingComponentSyncPacket {
+public class MachineProcessingComponentSyncPacket extends AbstractProcessingComponentSyncPacket {
 
-	public BasicProcessingComponentSyncPacket() {
+	public MachineProcessingComponentSyncPacket() {
 
 	}
 
-	public <T extends BasicProcessingComponent<?, ?>> BasicProcessingComponentSyncPacket(BlockPos pos, T component) {
+	public <T extends AbstractMachineProcessingComponent<?, ?>> MachineProcessingComponentSyncPacket(BlockPos pos, T component) {
 		super(pos, component);
 	}
 

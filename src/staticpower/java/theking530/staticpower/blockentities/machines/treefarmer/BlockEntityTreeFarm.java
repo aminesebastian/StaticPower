@@ -36,10 +36,12 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.IProcessor;
+import theking530.staticcore.blockentity.components.control.processing.IReadOnlyProcessingContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -72,10 +74,10 @@ import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.tags.ModItemTags;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 
-public class BlockEntityTreeFarm extends BlockEntityMachine {
+public class BlockEntityTreeFarm extends BlockEntityMachine implements IProcessor<MachineProcessingComponent> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTreeFarm> TYPE = new BlockEntityTypeAllocator<BlockEntityTreeFarm>("tree_farm",
-			(type, pos, state) -> new BlockEntityTreeFarm(pos, state), ModBlocks.TreeFarmer);
+	public static final BlockEntityTypeAllocator<BlockEntityTreeFarm> TYPE = new BlockEntityTypeAllocator<BlockEntityTreeFarm>(
+			"tree_farm", (type, pos, state) -> new BlockEntityTreeFarm(pos, state), ModBlocks.TreeFarmer);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -89,7 +91,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final OldMachineProcessingComponent processingComponent;
+	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	@UpdateSerialize
@@ -99,7 +101,6 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	private boolean shouldDrawRadiusPreview;
 
 	private final List<BlockPos> blocks;
-	private final HashSet<BlockPos> visited;
 	private final Ingredient saplingIngredient;
 
 	public BlockEntityTreeFarm(BlockPos pos, BlockState state) {
@@ -107,33 +108,38 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 
 		saplingIngredient = Ingredient.of(ItemTags.SAPLINGS);
 
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return slot == 0 ? ModItemTags.matches(ModItemTags.FARMING_AXE, stack.getItem()) : saplingIngredient.test(stack);
-			}
-		}).setSlotsLockable(true));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return slot == 0 ? ModItemTags.matches(ModItemTags.FARMING_AXE, stack.getItem())
+								: saplingIngredient.test(stack);
+					}
+				}).setSlotsLockable(true));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
-		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
-				.setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
+		registerComponent(
+				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
+						.setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
-		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.treeFarmerProcessingTime.get(), this::canProcess,
-				this::canProcess, this::processingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent",
+				StaticPowerConfig.SERVER.treeFarmerProcessingTime.get()));
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setPowerComponent(powerStorage);
-		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.treeFarmerPowerUsage.get());
+		processingComponent.setBasePowerUsage(StaticPowerConfig.SERVER.treeFarmerPowerUsage.get());
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
-			return CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluid), getLevel()).isPresent();
-		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory).setAutoSyncPacketsEnabled(true));
+			return CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(),
+					new RecipeMatchParameters(fluid), getLevel()).isPresent();
+		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory)
+				.setAutoSyncPacketsEnabled(true));
 
 		currentBlockIndex = 0;
 		shouldDrawRadiusPreview = false;
 		range = StaticPowerConfig.SERVER.treeFarmerDefaultRange.get();
 		blocks = new LinkedList<BlockPos>();
-		visited = new HashSet<BlockPos>(StaticPowerConfig.SERVER.treeFarmerMaxTreeRecursion.get());
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("BucketDrain", fluidTankComponent));
+		registerComponent(
+				fluidContainerComponent = new FluidContainerInventoryComponent("BucketDrain", fluidTankComponent));
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 
@@ -151,8 +157,8 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	}
 
 	public float getGrowthBonus() {
-		FertalizerRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(this.fluidTankComponent.getFluid()), getLevel())
-				.orElse(null);
+		FertalizerRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(),
+				new RecipeMatchParameters(this.fluidTankComponent.getFluid()), getLevel()).orElse(null);
 		if (recipe != null) {
 			return recipe.getFertalizationAmount();
 		}
@@ -175,73 +181,15 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			// Shift over so we center the range around the farmer.
 			Vector3f position = new Vector3f(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ());
 			Vec3i offsetDirection = this.getFacingDirection().getOpposite().getNormal();
-			position.add(new Vector3f((offsetDirection.getX() * range) - range, 0.0f, (offsetDirection.getZ() * range) - range));
+			position.add(new Vector3f((offsetDirection.getX() * range) - range, 0.0f,
+					(offsetDirection.getZ() * range) - range));
 			position.add(new Vector3f(offsetDirection.getX(), 0.0f, offsetDirection.getZ()));
 			// Add the entry.
-			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale, new SDColor(0.1f, 1.0f, 0.2f, 0.25f));
+			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale,
+					new SDColor(0.1f, 1.0f, 0.2f, 0.25f));
 		} else {
 			// Remove the entry.
 			RadiusPreviewRenderer.removeRadiusRenderer(this, "range");
-		}
-	}
-
-	@Override
-	public void process() {
-		if (processingComponent.performedWorkLastTick()) {
-			if (!getLevel().isClientSide()) {
-				fluidTankComponent.drain(StaticPowerConfig.SERVER.treeFarmerFluidUsage.get(), FluidAction.EXECUTE);
-			}
-		}
-	}
-
-	protected ProcessingCheckState canProcess() {
-		if (fluidTankComponent.getFluidAmount() < StaticPowerConfig.SERVER.treeFarmerFluidUsage.get()) {
-			return ProcessingCheckState.notEnoughFluid();
-		}
-		if (!hasAxe()) {
-			return ProcessingCheckState.error("Missing Axe!");
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState processingCompleted() {
-		// Edge case where we somehow need to refresh blocks.
-		if (blocks.size() == 0) {
-			refreshBlocksInRange(range);
-		}
-
-		OldProcessingContainer outputContainer = processingComponent.getOutputContainer();
-		// Only perform a harvest if the internal inventory is TOTALLY empty.
-		if (outputContainer.getOutputItems().isEmpty()) {
-			processBlock(getCurrentPosition());
-			((ServerLevel) getLevel()).sendParticles(ParticleTypes.FALLING_WATER, getCurrentPosition().getX() + 0.5D, getCurrentPosition().getY() + 1.0D,
-					getCurrentPosition().getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
-			incrementPosition();
-		}
-
-		// For each of the farmed stacks, place the harvested stacks into the output
-		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
-		// Otherwise, update the farmed stack.
-		for (int i = 0; i < outputContainer.getOutputItems().size(); i++) {
-			ItemStack extractedStack = outputContainer.getOutputItems().get(i).item().copy();
-			InventoryComponent targetInventory = outputInventory;
-			if (saplingIngredient.test(extractedStack)) {
-				if (InventoryUtilities.canPartiallyInsertItemIntoInventory(inputInventory, extractedStack)) {
-					targetInventory = inputInventory;
-				}
-			}
-			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(targetInventory, extractedStack, false);
-			if (!insertedStack.isEmpty()) {
-				outputContainer.getOutputItems().get(i).item().setCount(insertedStack.getCount());
-			}
-		}
-
-		// Return true if we finished clearing the internal inventory.
-		if (outputContainer.getOutputItems().isEmpty()) {
-			outputContainer.clear();
-			return ProcessingCheckState.ok();
-		} else {
-			return ProcessingCheckState.internalBufferNotEmpty();
 		}
 	}
 
@@ -289,35 +237,12 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 
 	protected void useAxe() {
 		if (hasAxe()) {
-			if (inputInventory.getStackInSlot(0).hurt(StaticPowerConfig.SERVER.treeFarmerToolUsage.get(), getLevel().getRandom(), null)) {
+			if (inputInventory.getStackInSlot(0).hurt(StaticPowerConfig.SERVER.treeFarmerToolUsage.get(),
+					getLevel().getRandom(), null)) {
 				inputInventory.setStackInSlot(0, ItemStack.EMPTY);
 				getLevel().playSound(null, worldPosition, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
 			}
 		}
-	}
-
-	protected void processBlock(BlockPos pos) {
-		if (isFarmableBlock(pos)) {
-			// Clear the visited and add the current position.
-			visited.clear();
-			visited.add(pos);
-
-			// Allocate a list for the harvested results and perform the harvest.
-			List<ItemStack> harvestResults = new LinkedList<ItemStack>();
-			harvestBlock(pos, harvestResults, visited);
-
-			// Insert all the harvested results into the internal inventory.
-			OldProcessingContainer outputContainer = processingComponent.getOutputContainer();
-			outputContainer.open();
-			for (int i = 0; i < harvestResults.size(); i++) {
-				outputContainer.addOutputItem(harvestResults.get(i), CaptureType.COUNT_ONLY);
-			}
-			outputContainer.close();
-		}
-
-		// Plant a sapling in this place if possible and apply the bonemeal.
-		plantSapling(pos);
-		bonemealSapling(pos);
 	}
 
 	protected boolean isFarmableBlock(BlockPos pos) {
@@ -366,8 +291,10 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			BonemealableBlock growable = (BonemealableBlock) block;
 			if (growable.isBonemealSuccess(getLevel(), getLevel().getRandom(), pos, getLevel().getBlockState(pos))
 					&& growable.isValidBonemealTarget(getLevel(), pos, getLevel().getBlockState(pos), false)) {
-				growable.performBonemeal((ServerLevel) getLevel(), getLevel().getRandom(), pos, getLevel().getBlockState(pos));
-				((ServerLevel) getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+				growable.performBonemeal((ServerLevel) getLevel(), getLevel().getRandom(), pos,
+						getLevel().getBlockState(pos));
+				((ServerLevel) getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D,
+						pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 				return true;
 			}
 		}
@@ -399,7 +326,8 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 					FakePlayer player = FakePlayerFactory.getMinecraft((ServerLevel) getLevel());
 					player.setItemInHand(InteractionHand.MAIN_HAND, sapling.copy());
 					InteractionResult placementResult = sapling
-							.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
+							.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND,
+									new BlockHitResult(new Vec3(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
 
 					if (placementResult.consumesAction()) {
 						// Once planted, extract the sapling from the slot.
@@ -418,8 +346,8 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		range = StaticPowerConfig.SERVER.treeFarmerDefaultRange.get();
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
-				range = (int) Math.max(range,
-						StaticPowerConfig.SERVER.treeFarmerDefaultRange.get() * ((BaseRangeUpgrade) stack.getItem()).getTierObject().upgradeConfiguration.rangeUpgrade.get());
+				range = (int) Math.max(range, StaticPowerConfig.SERVER.treeFarmerDefaultRange.get()
+						* ((BaseRangeUpgrade) stack.getItem()).getTierObject().upgradeConfiguration.rangeUpgrade.get());
 			}
 		}
 		refreshBlocksInRange(range);
@@ -433,5 +361,88 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerTreeFarmer(windowId, inventory, this);
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(MachineProcessingComponent component,
+			ProcessingContainer processingContainer) {
+		if (fluidTankComponent.getFluidAmount() < StaticPowerConfig.SERVER.treeFarmerFluidUsage.get()) {
+			return ProcessingCheckState.notEnoughFluid();
+		}
+		if (!hasAxe()) {
+			return ProcessingCheckState.error("Missing Axe!");
+		}
+		if (getCurrentPosition() == null) {
+			return ProcessingCheckState.error("wtf");
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void onProcessingStarted(MachineProcessingComponent component, ProcessingContainer processingContainer) {
+		BlockPos pos = getCurrentPosition();
+		if (isFarmableBlock(pos)) {
+			HashSet<BlockPos> visited = new HashSet<BlockPos>(
+					StaticPowerConfig.SERVER.treeFarmerMaxTreeRecursion.get());
+			visited.add(pos);
+			List<ItemStack> harvestResults = new LinkedList<ItemStack>();
+			harvestBlock(pos, harvestResults, visited);
+
+			for (int i = 0; i < harvestResults.size(); i++) {
+				processingContainer.getOutputs().addItem(harvestResults.get(i), CaptureType.COUNT_ONLY);
+			}
+		}
+	}
+
+	public void onProcessingProgressMade(MachineProcessingComponent component,
+			ProcessingContainer processingContainer) {
+		fluidTankComponent.drain(StaticPowerConfig.SERVER.treeFarmerFluidUsage.get(), FluidAction.EXECUTE);
+	}
+
+	@Override
+	public ProcessingCheckState canCompleteProcessing(MachineProcessingComponent component,
+			ProcessingContainer processingContainer) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory,
+				processingContainer.getOutputs().getItems())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void onProcessingCompleted(MachineProcessingComponent component, ProcessingContainer processingContainer) {
+		// Edge case where we somehow need to refresh blocks.
+		if (blocks.size() == 0) {
+			refreshBlocksInRange(range);
+		}
+
+		IReadOnlyProcessingContainer outputContainer = processingContainer.getOutputs();
+
+		// For each of the farmed stacks, place the harvested stacks into the output
+		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
+		// Otherwise, update the farmed stack.
+		for (int i = 0; i < outputContainer.getItems().size(); i++) {
+			ItemStack extractedStack = outputContainer.getItem(i).copy();
+			InventoryComponent targetInventory = outputInventory;
+			if (saplingIngredient.test(extractedStack)) {
+				if (InventoryUtilities.canPartiallyInsertItemIntoInventory(inputInventory, extractedStack)) {
+					targetInventory = inputInventory;
+				}
+			}
+			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(targetInventory, extractedStack,
+					false);
+			if (!insertedStack.isEmpty()) {
+				outputContainer.getItem(i).setCount(insertedStack.getCount());
+			}
+		}
+
+		// Plant a sapling in this place if possible and apply the bonemeal.
+		plantSapling(getCurrentPosition());
+		bonemealSapling(getCurrentPosition());
+
+		((ServerLevel) getLevel()).sendParticles(ParticleTypes.FALLING_WATER, getCurrentPosition().getX() + 0.5D,
+				getCurrentPosition().getY() + 1.0D, getCurrentPosition().getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+		incrementPosition();
 	}
 }

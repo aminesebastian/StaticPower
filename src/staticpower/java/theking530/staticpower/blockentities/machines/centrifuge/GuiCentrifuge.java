@@ -3,7 +3,6 @@ package theking530.staticpower.blockentities.machines.centrifuge;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
@@ -28,12 +27,15 @@ public class GuiCentrifuge extends StaticCoreBlockEntityScreen<ContainerCentrifu
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromStorage(getTileEntity().powerStorage, 8, 8, 16, 52));
-		registerWidget(new CentrifugeProgressBar(79, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(new CentrifugeProgressBar(79, 38)
+				.bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100));
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(
+				new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT),
+				true);
 
 		setOutputSlotSize(20);
 	}
@@ -43,9 +45,13 @@ public class GuiCentrifuge extends StaticCoreBlockEntityScreen<ContainerCentrifu
 		infoTab.clear();
 		infoTab.addLine("desc1", Component.literal("Separates items into their base components."));
 		infoTab.addKeyValueTwoLiner("c_speed", Component.literal("Current Speed"),
-				GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed()).append(Component.translatable("gui.staticpower.rpm")), ChatFormatting.YELLOW);
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed())
+						.append(Component.translatable("gui.staticpower.rpm")),
+				ChatFormatting.YELLOW);
 		infoTab.addKeyValueTwoLiner("max_speed", Component.literal("Max Speed"),
-				GuiTextUtilities.formatNumberAsString(getTileEntity().getMaxSpeed()).append(Component.translatable("gui.staticpower.rpm")), ChatFormatting.RED);
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getMaxSpeed())
+						.append(Component.translatable("gui.staticpower.rpm")),
+				ChatFormatting.RED);
 	}
 
 	@Override
@@ -53,7 +59,7 @@ public class GuiCentrifuge extends StaticCoreBlockEntityScreen<ContainerCentrifu
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		String rpmText = getTileEntity().getCurrentSpeed() + " RPM";
-		drawEmptySlot(stack, 123 - (Minecraft.getInstance().font.width(rpmText) / 2), 40, Minecraft.getInstance().font.width(rpmText) + 4, 11);
-		Minecraft.getInstance().font.drawShadow(stack, rpmText, 125 - (Minecraft.getInstance().font.width(rpmText) / 2), 42, SDColor.EIGHT_BIT_WHITE.encodeInInteger());
+		drawEmptySlot(stack, 123 - (font.width(rpmText) / 2), 40, font.width(rpmText) + 4, 11);
+		font.drawShadow(stack, rpmText, 125 - (font.width(rpmText) / 2), 42, SDColor.EIGHT_BIT_WHITE.encodeInInteger());
 	}
 }

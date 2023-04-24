@@ -55,9 +55,6 @@ import theking530.staticcore.block.StaticCoreBlock;
 import theking530.staticcore.block.StaticCoreTieredBlock;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.ProcessingItemWrapper;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.CompoundInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
@@ -72,7 +69,8 @@ import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.world.WorldUtilities;
 
-public abstract class BlockEntityBase extends BlockEntity implements MenuProvider, IBreakSerializeable, ICableStateSyncTarget {
+public abstract class BlockEntityBase extends BlockEntity
+		implements MenuProvider, IBreakSerializeable, ICableStateSyncTarget {
 	public static final Logger LOGGER = LogManager.getLogger(BlockEntityBase.class);
 	@UpdateSerialize
 	/**
@@ -125,7 +123,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		if (blockEntity instanceof BlockEntityBase) {
 			((BlockEntityBase) blockEntity).tick();
 		} else {
-			StaticCore.LOGGER.error("Attempting to call TileEntityBase ticker for block entity that doesn not inherit from TileEntityBase.");
+			StaticCore.LOGGER.error(
+					"Attempting to call TileEntityBase ticker for block entity that doesn not inherit from TileEntityBase.");
 		}
 	}
 
@@ -145,7 +144,9 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		// If an update is queued, perform the update.
 		if (updateRequestQueue.size() > 0) {
 			// Debug the update.
-			StaticCore.LOGGER.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!", getBlockPos().toString(), getBlockState(), updateRequestQueue.size()));
+			StaticCore.LOGGER
+					.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!",
+							getBlockPos().toString(), getBlockState(), updateRequestQueue.size()));
 
 			// Calculate the flag to use.
 			int flags = 0;
@@ -173,7 +174,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 			// Perform the block update.
 			if (flags > 0) {
-				level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), getBlockState(), newState, flags, 512);
+				level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), getBlockState(), newState,
+						flags, 512);
 			}
 
 			// Perform a data sync if requested.
@@ -271,18 +273,24 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	public void synchronizeDataToPlayersInRadius(int radius, boolean triggerRenderUpdate) {
 		if (!getLevel().isClientSide()) {
 			NetworkMessage msg = new BlockEntityBasicSyncPacket(this, triggerRenderUpdate);
-			StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), radius, msg);
+			StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(),
+					getBlockPos(), radius, msg);
 		} else {
-			StaticCore.LOGGER.warn(String.format("Calling #synchronizeDataToPlayersInRadius() on the client is a no-op. Called at position: %1$s.", getBlockPos().toString()));
+			StaticCore.LOGGER.warn(String.format(
+					"Calling #synchronizeDataToPlayersInRadius() on the client is a no-op. Called at position: %1$s.",
+					getBlockPos().toString()));
 		}
 	}
 
 	public void synchronizeDataToContainerListener(ServerPlayer player) {
 		if (!getLevel().isClientSide()) {
 			NetworkMessage msg = new BlockEntityBasicSyncPacket(this, false);
-			StaticCoreMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), msg);
+			StaticCoreMessageHandler.MAIN_PACKET_CHANNEL
+					.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), msg);
 		} else {
-			StaticCore.LOGGER.warn(String.format("Calling #synchronizeDataToContainerListener() on the client is a no-op. Called at position: %1$s.", getBlockPos().toString()));
+			StaticCore.LOGGER.warn(String.format(
+					"Calling #synchronizeDataToContainerListener() on the client is a no-op. Called at position: %1$s.",
+					getBlockPos().toString()));
 		}
 	}
 
@@ -297,7 +305,9 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		if (getLevel().isClientSide()) {
 			requestModelDataUpdate();
 		} else {
-			StaticCore.LOGGER.warn(String.format("Calling #addRenderingUpdateRequest() on the server is a no-op. Called at position: %1$s.", getBlockPos().toString()));
+			StaticCore.LOGGER.warn(String.format(
+					"Calling #addRenderingUpdateRequest() on the server is a no-op. Called at position: %1$s.",
+					getBlockPos().toString()));
 		}
 	}
 
@@ -307,7 +317,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		}
 	}
 
-	public InteractionResult onBlockActivated(BlockState currentState, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult onBlockActivated(BlockState currentState, Player player, InteractionHand hand,
+			BlockHitResult hit) {
 		return InteractionResult.PASS;
 	}
 
@@ -333,17 +344,6 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 					WorldUtilities.dropItem(level, worldPosition, extracted);
 				}
 			}
-		}
-
-		// Drop all the INPUTS from any recipe processing components.
-		for (OldRecipeProcessingComponent<?> comp : getComponents(OldRecipeProcessingComponent.class)) {
-			OldProcessingContainer outputContainer = comp.getProcessingMaterials();
-			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
-				if (!input.isTemplateItem()) {
-					WorldUtilities.dropItem(level, worldPosition, input.item());
-				}
-			}
-			outputContainer.clear();
 		}
 	}
 
@@ -391,7 +391,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	public ResourceLocation getTier() {
 		if (!hasTier()) {
-			throw new RuntimeException("Tried to get the tier for a block that does not have one defined. Use #hasTier() to check if a block has a tier!");
+			throw new RuntimeException(
+					"Tried to get the tier for a block that does not have one defined. Use #hasTier() to check if a block has a tier!");
 		}
 
 		StaticCoreTieredBlock tieredBlock = (StaticCoreTieredBlock) getBlockState().getBlock();
@@ -413,7 +414,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		transferItemInternally(1, fromInv, fromSlot, toInv, toSlot);
 	}
 
-	public void transferItemInternally(int count, InventoryComponent fromInv, int fromSlot, InventoryComponent toInv, int toSlot) {
+	public void transferItemInternally(int count, InventoryComponent fromInv, int fromSlot, InventoryComponent toInv,
+			int toSlot) {
 		toInv.insertItem(toSlot, fromInv.extractItem(fromSlot, count, false), false);
 	}
 
@@ -577,7 +579,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		}
 
 		// Sort the inventories.
-		Comparator<InventoryComponent> inventoryComparator = Comparator.comparingInt(InventoryComponent::getShiftClickPriority).reversed();
+		Comparator<InventoryComponent> inventoryComparator = Comparator
+				.comparingInt(InventoryComponent::getShiftClickPriority).reversed();
 		inventories.sort(inventoryComparator);
 
 		// Return the sorted list.
@@ -627,7 +630,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	@Override
-	public void deserializeOnPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void deserializeOnPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer,
+			ItemStack stack) {
 		deserializeSaveNbt(nbt);
 		deserializeUpdateNbt(nbt, false);
 	}
@@ -638,7 +642,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state,
+			LivingEntity placer, ItemStack stack) {
 		return false;
 	}
 
@@ -657,7 +662,9 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractBlockEntityComponent component : components.values()) {
-			CompoundTag componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundTag();
+			CompoundTag componentTag = nbt.contains(component.getComponentName())
+					? nbt.getCompound(component.getComponentName())
+					: new CompoundTag();
 			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -700,7 +707,9 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractBlockEntityComponent component : components.values()) {
-			CompoundTag componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundTag();
+			CompoundTag componentTag = nbt.contains(component.getComponentName())
+					? nbt.getCompound(component.getComponentName())
+					: new CompoundTag();
 			component.serializeSaveNbt(componentTag);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -758,7 +767,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		}
 
 		// Call mark and notify locally.
-		getLevel().markAndNotifyBlock(getBlockPos(), getLevel().getChunkAt(getBlockPos()), getBlockState(), getBlockState(), Block.UPDATE_ALL_IMMEDIATE, 512);
+		getLevel().markAndNotifyBlock(getBlockPos(), getLevel().getChunkAt(getBlockPos()), getBlockState(),
+				getBlockState(), Block.UPDATE_ALL_IMMEDIATE, 512);
 	}
 
 	/**
@@ -841,7 +851,9 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 */
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		LOGGER.error(String.format("TileEntity: %1$s did not override the method #createMenu. The container for this TE is missing.", getDisplayName().getString()));
+		LOGGER.error(String.format(
+				"TileEntity: %1$s did not override the method #createMenu. The container for this TE is missing.",
+				getDisplayName().getString()));
 		return null;
 	}
 

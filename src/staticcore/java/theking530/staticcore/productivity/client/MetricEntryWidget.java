@@ -20,7 +20,6 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.productivity.ProductMetricTileRendererRegistry;
-import theking530.staticcore.productivity.metrics.ClientProductionMetric;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.product.ProductType;
@@ -30,7 +29,7 @@ import theking530.staticcore.utilities.math.Vector2D;
 public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 
 	@Nullable
-	private ClientProductionMetric metric;
+	private ProductionMetric metric;
 	private MetricType metricType;
 	private ProductType<?> currentProductType;
 
@@ -41,7 +40,7 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		this.metricType = metricType;
 	}
 
-	public void setMetric(ProductType<?> productType, @Nullable ClientProductionMetric metric) {
+	public void setMetric(ProductType<?> productType, @Nullable ProductionMetric metric) {
 		this.metric = metric;
 		this.currentProductType = productType;
 	}

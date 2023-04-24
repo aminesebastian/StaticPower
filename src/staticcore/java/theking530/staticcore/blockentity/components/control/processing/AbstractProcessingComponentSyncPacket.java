@@ -13,8 +13,7 @@ import theking530.staticcore.network.NetworkMessage;
 public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessage {
 	private BlockPos pos;
 	private String componentName;
-	private int maxProcessingTime;
-	private int proccesingTime;
+	private Timer proccesingTimer;
 	private ProcessingCheckState processingState;
 	private boolean performedWorkLastTick;
 
@@ -25,8 +24,7 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 	public AbstractProcessingComponentSyncPacket(BlockPos pos, AbstractProcessingComponent<?, ?> component) {
 		this.pos = pos;
 		this.componentName = component.getComponentName();
-		this.proccesingTime = component.getCurrentProcessingTime();
-		this.maxProcessingTime = component.getProcessingTime();
+		this.proccesingTimer = component.getProcessingTimer();
 		this.processingState = component.getProcessingState();
 		this.performedWorkLastTick = component.performedWorkLastTick();
 	}
@@ -35,8 +33,7 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeLong(pos.asLong());
 		buffer.writeUtf(componentName);
-		buffer.writeInt(proccesingTime);
-		buffer.writeInt(maxProcessingTime);
+		proccesingTimer.encode(buffer);
 		processingState.toNetwork(buffer);
 		buffer.writeBoolean(performedWorkLastTick);
 	}
@@ -45,8 +42,7 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 	public void decode(FriendlyByteBuf buffer) {
 		pos = BlockPos.of(buffer.readLong());
 		componentName = buffer.readUtf();
-		proccesingTime = buffer.readInt();
-		maxProcessingTime = buffer.readInt();
+		proccesingTimer = Timer.decode(buffer);
 		processingState = ProcessingCheckState.fromNetwork(buffer);
 		performedWorkLastTick = buffer.readBoolean();
 	}
@@ -73,12 +69,8 @@ public abstract class AbstractProcessingComponentSyncPacket extends NetworkMessa
 		return componentName;
 	}
 
-	public int getMaxProcessingTime() {
-		return maxProcessingTime;
-	}
-
-	public int getProccesingTime() {
-		return proccesingTime;
+	public Timer getProccesingTime() {
+		return proccesingTimer;
 	}
 
 	public ProcessingCheckState getProcessingState() {

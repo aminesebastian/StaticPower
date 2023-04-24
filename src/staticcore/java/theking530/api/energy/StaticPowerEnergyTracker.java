@@ -67,8 +67,10 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 	 * should be called once per tick.
 	 */
 	protected void captureEnergyMetric() {
-		averageRecievedPower = interpolatePowerTowards(averageRecievedPower, currentFrameRecieved.stream().mapToDouble((stack) -> stack.getPower()).sum());
-		averageDrainedPower = interpolatePowerTowards(averageDrainedPower, currentFrameExtracted.stream().mapToDouble((power) -> power).sum());
+		averageRecievedPower = interpolatePowerTowards(averageRecievedPower,
+				currentFrameRecieved.stream().mapToDouble((stack) -> stack.getPower()).sum());
+		averageDrainedPower = interpolatePowerTowards(averageDrainedPower,
+				currentFrameExtracted.stream().mapToDouble((power) -> power).sum());
 
 		// Capture the average received voltages and current.
 		if (currentFrameRecieved.size() > 0) {
@@ -91,16 +93,21 @@ public class StaticPowerEnergyTracker implements IStaticPowerEnergyTracker {
 		currentFrameCurrentType = CurrentType.DIRECT;
 	}
 
-	protected double interpolatePowerTowards(double currentValue, double totalPower) {
+	protected double interpolatePowerTowards(double currentValue, double target) {
 		// If the difference is sufficiently large, just snap to the new target.
-		if (Math.abs(currentValue - totalPower) > INSTANT_SNAP_DELTA_THRESHOLD) {
-			return totalPower;
+		double delta = Math.abs(currentValue - target);
+		if (delta > INSTANT_SNAP_DELTA_THRESHOLD) {
+			return target;
 		}
 
-		double newAverage = smoothingFactor * totalPower + (1.0 - smoothingFactor) * currentValue;
+		if (delta < 1) {
+			return target;
+		}
+
+		double newAverage = smoothingFactor * target + (1.0 - smoothingFactor) * currentValue;
 		if (newAverage < 0.001) {
-			if (totalPower > 0) {
-				newAverage = totalPower;
+			if (target > 0) {
+				newAverage = target;
 			} else {
 				newAverage = 0;
 			}

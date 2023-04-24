@@ -15,6 +15,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.event.IModBusEvent;
@@ -82,17 +83,12 @@ public class StaticCoreGameDataManager {
 		// for the data.
 		DATA_FACTORIES.entrySet().parallelStream().forEach((entry) -> {
 			try {
-				//@formatter:off
-				String query = String.format("SELECT data \n"
-						+ "FROM serialized_data \n"
-						+ "WHERE id = \"%1$s\"",
-						formatDataIdToDatabaseId(entry.getKey()));		
-				//@formatter:on		
-
+				String query = "SELECT data FROM serialized_data WHERE id = ?";
 				PreparedStatement stmt = getMainDatabase().prepareStatement(query);
+				stmt.setString(1, entry.getKey().toString());
 				ResultSet sqlData = stmt.executeQuery();
 				if (sqlData.next()) {
-					loadGameData(entry.getKey(), sqlData.getString(0), entry.getValue());
+					loadGameData(entry.getKey(), sqlData.getString(1), entry.getValue());
 				}
 			} catch (Exception e) {
 				StaticCore.LOGGER.error(String.format(
@@ -122,18 +118,15 @@ public class StaticCoreGameDataManager {
 		cachedData.values().parallelStream().forEach((data) -> {
 			CompoundTag tag = new CompoundTag();
 			data.serialize(tag);
-			String serializedData = JsonUtilities.nbtToPrettyJson(tag);
-			//@formatter:off
-				String insert = String.format("REPLACE INTO serialized_data(id, data) \n"
-						+ "  VALUES('%1$s', '%2$s');",
-						formatDataIdToDatabaseId(data.getId()), serializedData);
-				//@formatter:on
 			try {
-				PreparedStatement stmt = getMainDatabase().prepareStatement(insert);
+				String replaceQuery = "REPLACE INTO serialized_data(id, data) VALUES(?, ?)";
+				PreparedStatement stmt = getMainDatabase().prepareStatement(replaceQuery);
+				stmt.setString(1, data.getId().toString());
+				stmt.setString(2, JsonUtilities.nbtToPrettyJson(tag));
 				stmt.execute();
 			} catch (Exception e) {
 				StaticCore.LOGGER
-						.error(String.format("An error occured when saving the serialized game data for data id: $1$s!",
+						.error(String.format("An error occured when saving the serialized game data for data id: %1$s!",
 								data.getId().toString()), e);
 			}
 		});
@@ -158,6 +151,12 @@ public class StaticCoreGameDataManager {
 	public void loadDataForClients() {
 		for (IStaticCoreGameData data : cachedData.values()) {
 			data.syncToClients();
+		}
+	}
+
+	public void loadDataForClient(ServerPlayer player) {
+		for (IStaticCoreGameData data : cachedData.values()) {
+			data.syncToClient(player);
 		}
 	}
 
@@ -225,10 +224,6 @@ public class StaticCoreGameDataManager {
 		StaticCore.LOGGER.debug(String.format("Connected to database: %1$s.", database.toString()));
 		databaseConnections.put(database, connection);
 		return connection;
-	}
-
-	private String formatDataIdToDatabaseId(ResourceLocation id) {
-		return id.toString().replace(":", "_");
 	}
 
 	public static class StaticCoreDataRegisterEvent extends Event implements IModBusEvent {

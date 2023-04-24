@@ -21,11 +21,11 @@ import theking530.staticcore.gui.widgets.containers.HorizontalBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.network.StaticCoreMessageHandler;
-import theking530.staticcore.productivity.metrics.ClientProductionMetrics;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionTimeline;
+import theking530.staticcore.productivity.metrics.ProductionMetrics;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline.ProductivityTimelineEntry;
 import theking530.staticcore.productivity.product.ProductType;
@@ -223,18 +223,19 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	@SuppressWarnings("resource")
 	private void updateDisplayValues() {
 		ClientProductionManager manager = getProductionManager();
-		ClientProductionMetrics metrics = manager.getProductTypeCache(displayedProductType)
+		ProductionMetrics metrics = manager.getProductTypeCache(displayedProductType)
 				.getProductionMetrics(this.selectedMetricPeriod);
 
-		consumptionMetrics.updateMetrics(displayedProductType, metrics.getConsumption());
-		productionMetrics.updateMetrics(displayedProductType, metrics.getProduction());
+		consumptionMetrics.updateMetrics(displayedProductType, metrics.getMetrics().values());
+		productionMetrics.updateMetrics(displayedProductType, metrics.getMetrics().values());
 
 		if (!metrics.isEmpty()) {
-			if (selectedConsumptionProduct.isEmpty() && !metrics.getConsumption().isEmpty()) {
-				selectedConsumptionProduct.add(metrics.getConsumption().get(0).getProductHash());
+			int firstProduct = metrics.getMetrics().values().stream().findFirst().get().getProductHash();
+			if (selectedConsumptionProduct.isEmpty()) {
+				selectedConsumptionProduct.add(firstProduct);
 			}
-			if (selectedProductionProduct.isEmpty() && !metrics.getProduction().isEmpty()) {
-				selectedProductionProduct.add(metrics.getProduction().get(0).getProductHash());
+			if (selectedProductionProduct.isEmpty()) {
+				selectedProductionProduct.add(firstProduct);
 			}
 		}
 

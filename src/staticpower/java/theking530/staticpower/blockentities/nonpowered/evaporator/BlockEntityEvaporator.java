@@ -37,8 +37,8 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class BlockEntityEvaporator extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityEvaporator> TYPE = new BlockEntityTypeAllocator<BlockEntityEvaporator>("evaporator",
-			(type, pos, state) -> new BlockEntityEvaporator(pos, state), ModBlocks.Evaporator);
+	public static final BlockEntityTypeAllocator<BlockEntityEvaporator> TYPE = new BlockEntityTypeAllocator<BlockEntityEvaporator>(
+			"evaporator", (type, pos, state) -> new BlockEntityEvaporator(pos, state), ModBlocks.Evaporator);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -61,27 +61,35 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 
 		// Get the tier.
 		StaticCoreTier tierObject = getTierObject();
-		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachineNoFacePreset.INSTANCE));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent",
+				RedstoneMode.Ignore));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				DefaultMachineNoFacePreset.INSTANCE));
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", EvaporatorRecipe.DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess,
-				this::processingCompleted, true).setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory)
-				.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent",
+				EvaporatorRecipe.DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted,
+				true).setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted)
+				.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent));
 
-		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", tierObject.defaultTankCapacity.get(), (fluidStack) -> {
-			return isValidInput(fluidStack, true);
-		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank",
+				tierObject.defaultTankCapacity.get(), (fluidStack) -> {
+					return isValidInput(fluidStack, true);
+				}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		inputTankComponent.setAutoSyncPacketsEnabled(true);
 
-		registerComponent(outputTankComponent = new FluidTankComponent("OutputFluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
-				.setUpgradeInventory(upgradesInventory));
+		registerComponent(
+				outputTankComponent = new FluidTankComponent("OutputFluidTank", tierObject.defaultTankCapacity.get())
+						.setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent, MachineSideMode.Input));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent, MachineSideMode.Output));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent,
+				MachineSideMode.Input));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent,
+				MachineSideMode.Output));
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tierObject.defaultMachineOverheatTemperature.get(),
-				tierObject.defaultMachineMaximumTemperature.get(), 1.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
+				tierObject.defaultMachineOverheatTemperature.get(), tierObject.defaultMachineMaximumTemperature.get(),
+				1.0f));
 	}
 
 	protected ProcessingCheckState canProcess() {
@@ -90,11 +98,13 @@ public class BlockEntityEvaporator extends BlockEntityBase {
 			// Get the recipe.
 			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 			// Check if the output fluid matches the already exists fluid if one exists.
-			if (!outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
+			if (!outputTankComponent.getFluid().isEmpty()
+					&& !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
 				return ProcessingCheckState.outputFluidDoesNotMatch();
 			}
 			// Check the fluid capacity.
-			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
+			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent
+					.getCapacity()) {
 				return ProcessingCheckState.fluidOutputFull();
 			}
 			// Check the heat level.

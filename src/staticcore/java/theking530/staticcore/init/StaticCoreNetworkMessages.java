@@ -1,7 +1,7 @@
 package theking530.staticcore.init;
 
 import theking530.staticcore.blockentity.components.control.ProcesingComponentSyncPacket;
-import theking530.staticcore.blockentity.components.control.processing.basic.BasicProcessingComponentSyncPacket;
+import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponentSyncPacket;
 import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponentSyncPacket;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponentSyncPacket;
 import theking530.staticcore.blockentity.components.fluids.PacketFluidContainerComponent;
@@ -30,7 +30,7 @@ import theking530.staticcore.research.network.PacketSetSelectedResearch;
 
 public class StaticCoreNetworkMessages {
 	public static void init() {
-		StaticCoreMessageHandler.registerMessage(BasicProcessingComponentSyncPacket.class);
+		StaticCoreMessageHandler.registerMessage(MachineProcessingComponentSyncPacket.class);
 		StaticCoreMessageHandler.registerMessage(RecipeProcessingComponentSyncPacket.class);
 		
 		StaticCoreMessageHandler.registerMessage(PacketRedstoneComponentSync.class);

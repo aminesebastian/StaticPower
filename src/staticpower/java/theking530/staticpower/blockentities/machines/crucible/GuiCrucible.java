@@ -50,7 +50,7 @@ public class GuiCrucible extends StaticCoreBlockEntityScreen<ContainerCrucible, 
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<CrucibleRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentRecipe();
+		Optional<CrucibleRecipe> currentRecipe = getTileEntity().processingComponent.getProcessingRecipe();
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent()) {

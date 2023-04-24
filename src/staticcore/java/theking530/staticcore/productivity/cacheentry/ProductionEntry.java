@@ -16,19 +16,18 @@ public abstract class ProductionEntry<T> {
 	}
 
 	private static final int TIME_UNTIL_REMOVAL = 100;
-	private static final int SMOOTHING_FACTOR = 10;
 
 	protected T product;
 	protected double currentSecondConsumed;
 	protected double currentSecondProduced;
+
 	protected Map<ProductionTrackingToken<T>, ProductivityRate> productionRates;
 	protected Map<ProductionTrackingToken<T>, ProductivityRate> consumptionRates;
+	protected ProductivityRate currentTickProduction;
+	protected ProductivityRate currentTickConsumption;
 
 	protected Map<ProductionTrackingToken<T>, Long> invalidatedTokens;
 	protected Set<ProductionTrackingToken<T>> readyToRemoveTokens;
-
-	protected ProductivityRate smoothedProduction;
-	protected ProductivityRate smoothedConsumption;
 
 	protected long currentGameTime;
 
@@ -44,8 +43,8 @@ public abstract class ProductionEntry<T> {
 		consumptionRates = new HashMap<>();
 		invalidatedTokens = new HashMap<>();
 		readyToRemoveTokens = new HashSet<>();
-		smoothedProduction = new ProductivityRate(0, 0);
-		smoothedConsumption = new ProductivityRate(0, 0);
+		currentTickProduction = new ProductivityRate(0, 0);
+		currentTickConsumption = new ProductivityRate(0, 0);
 		currentGameTime = 0;
 	}
 
@@ -55,22 +54,21 @@ public abstract class ProductionEntry<T> {
 	}
 
 	public void tick(long gameTime) {
-		double currentProduction = 0;
-		double idealProduction = 0;
+		double currentProduction = 0, idealProduction = 0;
 		for (ProductivityRate val : productionRates.values()) {
 			currentProduction += val.getCurrentValue();
 			idealProduction += val.getIdealValue();
 		}
-		smoothedProduction.interpolateTowards(currentProduction, idealProduction, SMOOTHING_FACTOR);
+		currentTickProduction.setValues(currentProduction, idealProduction);
 
-		double currentConsumption = 0;
-		double idealConsumption = 0;
+		double currentConsumption = 0, idealConsumption = 0;
 		for (ProductivityRate val : consumptionRates.values()) {
 			currentConsumption += val.getCurrentValue();
 			idealConsumption += val.getIdealValue();
 		}
-		smoothedConsumption.interpolateTowards(currentConsumption, idealConsumption, SMOOTHING_FACTOR);
+		currentTickConsumption.setValues(currentConsumption, idealConsumption);
 
+		// Remove any tokens that have not had any activity in TIME_UNTIL_REMOVAL time.
 		for (ProductionTrackingToken<T> removedToken : invalidatedTokens.keySet()) {
 			long timeSinceRemoved = gameTime - invalidatedTokens.get(removedToken);
 			if (timeSinceRemoved >= TIME_UNTIL_REMOVAL) {
@@ -79,14 +77,14 @@ public abstract class ProductionEntry<T> {
 				readyToRemoveTokens.add(removedToken);
 			}
 		}
-		
+
 		for (ProductionTrackingToken<T> fullyRemoved : readyToRemoveTokens) {
 			invalidatedTokens.remove(fullyRemoved);
 		}
 		readyToRemoveTokens.clear();
 	}
 
-	public void clearCurrentSecondMetrics() {
+	public void onProductivityCapturedIntoDatabase() {
 		currentSecondConsumed = 0;
 		currentSecondProduced = 0;
 	}
@@ -131,11 +129,11 @@ public abstract class ProductionEntry<T> {
 	}
 
 	public ProductivityRate getProductionRate() {
-		return smoothedProduction;
+		return currentTickProduction;
 	}
 
 	public ProductivityRate getConsumptionRate() {
-		return smoothedConsumption;
+		return currentTickConsumption;
 	}
 
 	public void produced(double amount) {

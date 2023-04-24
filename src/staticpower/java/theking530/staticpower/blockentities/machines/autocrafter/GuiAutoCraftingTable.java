@@ -19,7 +19,8 @@ import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.StaticPowerSprites;
 
-public class GuiAutoCraftingTable extends StaticCoreBlockEntityScreen<ContainerAutoCraftingTable, BlockEntityAutoCraftingTable> {
+public class GuiAutoCraftingTable
+		extends StaticCoreBlockEntityScreen<ContainerAutoCraftingTable, BlockEntityAutoCraftingTable> {
 	private final SpriteDrawable lockedSprite;
 
 	public GuiAutoCraftingTable(ContainerAutoCraftingTable container, Inventory invPlayer, Component name) {
@@ -33,13 +34,17 @@ public class GuiAutoCraftingTable extends StaticCoreBlockEntityScreen<ContainerA
 	public void initializeGui() {
 		super.initializeGui();
 		registerWidget(new GuiPowerBarFromStorage(getTileEntity().powerStorage, 8, 8, 16, 45));
-		registerWidget(new ArrowProgressBar(99, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(
+				new ArrowProgressBar(99, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(
+				new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT),
+				true);
+		getTabManager()
+				.registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}
@@ -48,7 +53,7 @@ public class GuiAutoCraftingTable extends StaticCoreBlockEntityScreen<ContainerA
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 		// Check if we have a recipe currently processing.
-		CraftingRecipe recipe = getTileEntity().processingComponent.getCurrentRecipe().orElse(null);
+		CraftingRecipe recipe = getTileEntity().processingComponent.getProcessingRecipe().orElse(null);
 
 		// If we do not, check to see if we have a potential recipe.
 		if (recipe == null) {

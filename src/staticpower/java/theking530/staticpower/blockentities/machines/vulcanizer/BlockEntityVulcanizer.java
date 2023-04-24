@@ -6,12 +6,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidInputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
@@ -34,17 +34,17 @@ import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityVulcanizer extends BlockEntityMachine implements IOldRecipeProcessor<VulcanizerRecipe> {
+public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipeProcessor<VulcanizerRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityVulcanizer> TYPE = new BlockEntityTypeAllocator<BlockEntityVulcanizer>("vulcanizer",
-			(type, pos, state) -> new BlockEntityVulcanizer(pos, state), ModBlocks.Vulcanizer);
+	public static final BlockEntityTypeAllocator<BlockEntityVulcanizer> TYPE = new BlockEntityTypeAllocator<BlockEntityVulcanizer>(
+			"vulcanizer", (type, pos, state) -> new BlockEntityVulcanizer(pos, state), ModBlocks.Vulcanizer);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
-	public final OldRecipeProcessingComponent<VulcanizerRecipe> processingComponent;
+	public final RecipeProcessingComponent<VulcanizerRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	@UpdateSerialize
@@ -63,9 +63,9 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IOldRec
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(),
-				ModRecipeTypes.VULCANIZER_RECIPE_TYPE.get(), this));
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent",
+				StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(), ModRecipeTypes.VULCANIZER_RECIPE_TYPE.get()));
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
@@ -75,17 +75,20 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IOldRec
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get(), (fluidStack) -> {
-			return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(fluidStack)).isPresent();
-		}));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get(),
+				(fluidStack) -> {
+					return processingComponent.getRecipe(new RecipeMatchParameters(fluidStack)).isPresent();
+				}));
 
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
 		fluidTankComponent.setUpgradeInventory(upgradesInventory);
 
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent,
+				MachineSideMode.Input));
 
 		// Create the fluid container component.
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo",
+				fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
@@ -95,37 +98,45 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IOldRec
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<VulcanizerRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<VulcanizerRecipe> component) {
 		return new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(inputInventory.getStackInSlot(0));
-	}
-
-	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, OldProcessingContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItems().get(0).item())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, OldProcessingContainer outputContainer) {
-		component.setProcessingPowerUsage(recipe.getPowerCost());
-		component.setMaxProcessingTime(recipe.getProcessingTime());
-		if (recipe.hasInputItem()) {
-			outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputItem().getCount(), false), CaptureType.BOTH);
-		}
-		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getInputFluid().getAmount(), CaptureType.BOTH);
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
-	}
-
-	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, OldProcessingContainer outputContainer) {
-		fluidTankComponent.drain(outputContainer.getInputFluids().get(0).fluid(), FluidAction.EXECUTE);
-		outputInventory.insertItem(0, outputContainer.getOutputItems().get(0).item().copy(), false);
 	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerVulcanizer(windowId, inventory, this);
 	}
+
+	@Override
+	public void captureOutputs(RecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
+
+	}
+
+	@Override
+	public void captureInputs(RecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+		if (recipe.hasInputItem()) {
+			inputContainer.addItem(inputInventory.extractItem(0, recipe.getInputItem().getCount(), false),
+					CaptureType.BOTH);
+		}
+		inputContainer.addFluid(fluidTankComponent.getFluid(), recipe.getInputFluid().getAmount(), CaptureType.BOTH);
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<VulcanizerRecipe> component,
+			VulcanizerRecipe recipe, ConcretizedProductContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getItem(0))) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void onProcessingCompleted(RecipeProcessingComponent<VulcanizerRecipe> component,
+			ProcessingContainer processingContainer) {
+		outputInventory.insertItem(0, processingContainer.getOutputs().getItem(0).copy(), false);
+	}
+
 }

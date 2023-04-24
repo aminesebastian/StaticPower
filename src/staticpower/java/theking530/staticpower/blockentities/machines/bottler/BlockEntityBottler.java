@@ -12,8 +12,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidInputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
@@ -38,8 +38,8 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class BlockEntityBottler extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBottler> TYPE = new BlockEntityTypeAllocator<>("bottler", (type, pos, state) -> new BlockEntityBottler(pos, state),
-			ModBlocks.Bottler);
+	public static final BlockEntityTypeAllocator<BlockEntityBottler> TYPE = new BlockEntityTypeAllocator<>("bottler",
+			(type, pos, state) -> new BlockEntityBottler(pos, state), ModBlocks.Bottler);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -48,8 +48,7 @@ public class BlockEntityBottler extends BlockEntityMachine {
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 
-	public final OldMachineProcessingComponent moveComponent;
-	public final OldMachineProcessingComponent processingComponent;
+	public final MachineProcessingComponent processingComponent;
 
 	public final FluidTankComponent fluidTankComponent;
 
@@ -60,12 +59,13 @@ public class BlockEntityBottler extends BlockEntityMachine {
 		StaticCoreTier tierObject = StaticCoreConfig.getTier(getTier());
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return isValidInput(stack);
-			}
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return isValidInput(stack);
+					}
 
-		}));
+				}));
 
 		// Setup all the other inventories.;
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
@@ -73,14 +73,9 @@ public class BlockEntityBottler extends BlockEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		// Use the old processing system because we need to support NON recipe based
-		// processing as well as recipe based.
-		registerComponent(moveComponent = OldMachineProcessingComponent
-				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted)
-				.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.bottlerProcessingTime.get(), this::canProcess,
-				this::canProcess, this::processingCompleted, true));
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent",
+				StaticPowerConfig.SERVER.bottlerProcessingTime.get()));
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setPowerComponent(powerStorage);
@@ -90,11 +85,13 @@ public class BlockEntityBottler extends BlockEntityMachine {
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
-				.setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get())
+				.setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent,
+				MachineSideMode.Input));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo",
+				fluidTankComponent));
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
@@ -109,9 +106,11 @@ public class BlockEntityBottler extends BlockEntityMachine {
 	 * @return
 	 */
 	protected ProcessingCheckState canMoveFromInputToProcessing() {
-		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0)) && internalInventory.getStackInSlot(0).isEmpty() && fluidTankComponent.getFluidAmount() > 0
+		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0))
+				&& internalInventory.getStackInSlot(0).isEmpty() && fluidTankComponent.getFluidAmount() > 0
 				&& powerStorage.canSupplyPower(processingComponent.getPowerUsage())) {
-			if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getSimulatedFilledContainer(inputInventory.getStackInSlot(0)))) {
+			if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0,
+					getSimulatedFilledContainer(inputInventory.getStackInSlot(0)))) {
 				return ProcessingCheckState.ok();
 			}
 		}
@@ -136,7 +135,7 @@ public class BlockEntityBottler extends BlockEntityMachine {
 				transferItemInternally(inputInventory, 0, internalInventory, 0);
 			}
 
-			processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+			processingComponent.setBasePowerUsage(recipe.getPowerCost());
 
 			// Trigger a block update.
 			return ProcessingCheckState.ok();
@@ -183,13 +182,15 @@ public class BlockEntityBottler extends BlockEntityMachine {
 			// Attempt to fill the container and capture the result if this is a fluid
 			// container, otherwise just put the output into the output slot.
 			if (FluidUtil.getFluidHandler(output).isPresent()) {
-				FluidActionResult result = FluidUtil.tryFillContainer(internalInventory.getStackInSlot(0), fluidTankComponent, fluidTankComponent.getFluidAmount(), null, true);
+				FluidActionResult result = FluidUtil.tryFillContainer(internalInventory.getStackInSlot(0),
+						fluidTankComponent, fluidTankComponent.getFluidAmount(), null, true);
 
 				// Insert the filled container into the output slot.
 				outputInventory.insertItem(0, result.getResult().copy(), false);
 			} else {
 				outputInventory.insertItem(0, output.copy(), false);
-				fluidTankComponent.drain(getRecipe(internalInventory.getStackInSlot(0)).getFluid().getAmount(), FluidAction.EXECUTE);
+				fluidTankComponent.drain(getRecipe(internalInventory.getStackInSlot(0)).getFluid().getAmount(),
+						FluidAction.EXECUTE);
 			}
 
 			// Clear the internal inventory.
@@ -238,7 +239,8 @@ public class BlockEntityBottler extends BlockEntityMachine {
 			// Simulate to drain the container and capture the result.
 			FluidTank simulatedTank = new FluidTank(fluidTankComponent.getTankCapacity(0));
 			simulatedTank.fill(fluidTankComponent.getFluidInTank(0), FluidAction.EXECUTE);
-			FluidActionResult result = FluidUtil.tryFillContainer(output, simulatedTank, fluidTankComponent.getCapacity(), null, true);
+			FluidActionResult result = FluidUtil.tryFillContainer(output, simulatedTank,
+					fluidTankComponent.getCapacity(), null, true);
 
 			return result.result;
 		} else {
@@ -251,7 +253,10 @@ public class BlockEntityBottler extends BlockEntityMachine {
 	}
 
 	protected BottleRecipe getRecipe(ItemStack stack) {
-		return CraftingUtilities.getRecipe(ModRecipeTypes.BOTTLER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(stack), getLevel()).orElse(null);
+		return CraftingUtilities
+				.getRecipe(ModRecipeTypes.BOTTLER_RECIPE_TYPE.get(),
+						new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(stack), getLevel())
+				.orElse(null);
 	}
 
 	@Override

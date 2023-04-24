@@ -6,11 +6,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
@@ -34,7 +35,7 @@ import theking530.staticpower.data.crafting.wrappers.tumbler.TumblerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityTumbler extends BlockEntityMachine implements IOldRecipeProcessor<TumblerRecipe> {
+public class BlockEntityTumbler extends BlockEntityMachine implements IRecipeProcessor<TumblerRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityTumbler> TYPE = new BlockEntityTypeAllocator<>("tumbler",
 			(type, pos, state) -> new BlockEntityTumbler(pos, state), ModBlocks.Tumbler);
@@ -43,7 +44,7 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IOldRecipe
 	public final InventoryComponent outputInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final OldRecipeProcessingComponent<TumblerRecipe> processingComponent;
+	public final RecipeProcessingComponent<TumblerRecipe> processingComponent;
 
 	@UpdateSerialize
 	private double bonusOutputChance;
@@ -54,10 +55,11 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IOldRecipe
 		super(TYPE, pos, state);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true)
-				.setFilter(new ItemStackHandlerFilter() {
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 					public boolean canInsertItem(int slot, ItemStack stack) {
-						return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
+						return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts())
+								.isPresent();
 					}
 				}));
 
@@ -69,9 +71,9 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IOldRecipe
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<TumblerRecipe>("ProcessingComponent",
-				StaticPowerConfig.SERVER.tumblerProcessingTime.get(), ModRecipeTypes.TUMBLER_RECIPE_TYPE.get(), this));
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(processingComponent = new RecipeProcessingComponent<TumblerRecipe>("ProcessingComponent",
+				StaticPowerConfig.SERVER.tumblerProcessingTime.get(), ModRecipeTypes.TUMBLER_RECIPE_TYPE.get()));
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
@@ -99,7 +101,8 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IOldRecipe
 		// new processing speeds.
 		double upgradeAmount = bonusOutputChance;
 		if (!upgradeWrapper.isEmpty()) {
-			upgradeAmount = (1.0f + (upgradeWrapper.getUpgradeValue().outputMultiplierIncrease() * upgradeWrapper.getUpgradeWeight()));
+			upgradeAmount = (1.0f + (upgradeWrapper.getUpgradeValue().outputMultiplierIncrease()
+					* upgradeWrapper.getUpgradeWeight()));
 		}
 
 		// Set the bonus output amount.
@@ -122,58 +125,26 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IOldRecipe
 				if (powerStorage.canSupplyPower(StaticPowerConfig.SERVER.tumblerMotorPowerUsage.get())
 						&& redstoneControlComponent.passesRedstoneCheck()) {
 					powerStorage.drainPower(StaticPowerConfig.SERVER.tumblerMotorPowerUsage.get(), false);
-					currentSpeed = SDMath.clamp(currentSpeed + 1, 0, StaticPowerConfig.SERVER.tumblerRequiredSpeed.get());
+					currentSpeed = SDMath.clamp(currentSpeed + 1, 0,
+							StaticPowerConfig.SERVER.tumblerRequiredSpeed.get());
 				} else {
-					currentSpeed = SDMath.clamp(currentSpeed - 1, 0, StaticPowerConfig.SERVER.tumblerRequiredSpeed.get());
+					currentSpeed = SDMath.clamp(currentSpeed - 1, 0,
+							StaticPowerConfig.SERVER.tumblerRequiredSpeed.get());
 				}
 			}
 		}
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<TumblerRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<TumblerRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public void processingStarted(OldRecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe,
-			OldProcessingContainer outputContainer) {
-		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
-	}
-
-	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe,
-			OldProcessingContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
-
-		ItemStack outputItem = recipe.getOutput().calculateOutput(bonusOutputChance - 1.0f);
-		outputContainer.addOutputItem(outputItem, CaptureType.BOTH);
-
-		component.setProcessingPowerUsage(recipe.getPowerCost());
-		component.setMaxProcessingTime(recipe.getProcessingTime());
-	}
-
-	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe,
-			OldProcessingContainer outputContainer) {
-		// If the items can be insert into the output, transfer the items and return
-		// true.
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
-		// Check the current speed.
-		if (currentSpeed < StaticPowerConfig.SERVER.tumblerRequiredSpeed.get()) {
-			return ProcessingCheckState
-					.error("Tumbler has not reached the required speed of " + StaticPowerConfig.SERVER.tumblerRequiredSpeed.get() + "RPM");
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe,
-			OldProcessingContainer outputContainer) {
-		InventoryUtilities.insertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item().copy(), false);
+	public void onProcessingCompleted(RecipeProcessingComponent<TumblerRecipe> component,
+			ProcessingContainer processingContainer) {
+		InventoryUtilities.insertItemIntoInventory(outputInventory, processingContainer.getOutputs().getItem(0).copy(),
+				false);
 	}
 
 	public int getCurrentSpeed() {
@@ -187,5 +158,36 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IOldRecipe
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerTumbler(windowId, inventory, this);
+	}
+
+	@Override
+	public void captureOutputs(RecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+
+		ItemStack outputItem = recipe.getOutput().calculateOutput(bonusOutputChance - 1.0f);
+		outputContainer.addItem(outputItem, CaptureType.BOTH);
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<TumblerRecipe> component,
+			TumblerRecipe recipe, ConcretizedProductContainer outputContainer) {
+		// If the items can be insert into the output, transfer the items and return
+		// true.
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getItem(0))) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		// Check the current speed.
+		if (currentSpeed < StaticPowerConfig.SERVER.tumblerRequiredSpeed.get()) {
+			return ProcessingCheckState.error("Tumbler has not reached the required speed of "
+					+ StaticPowerConfig.SERVER.tumblerRequiredSpeed.get() + "RPM");
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void captureInputs(RecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+		inputContainer.addItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false));
 	}
 }

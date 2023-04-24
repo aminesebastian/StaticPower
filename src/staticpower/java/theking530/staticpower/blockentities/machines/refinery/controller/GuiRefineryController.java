@@ -24,7 +24,8 @@ import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
 
-public class GuiRefineryController extends StaticCoreBlockEntityScreen<ContainerRefineryController, BlockEntityRefineryController> {
+public class GuiRefineryController
+		extends StaticCoreBlockEntityScreen<ContainerRefineryController, BlockEntityRefineryController> {
 	private FluidProgressBar fluidBar1;
 	private FluidProgressBar fluidBar2;
 	private FluidProgressBar fluidBar3;
@@ -33,7 +34,8 @@ public class GuiRefineryController extends StaticCoreBlockEntityScreen<Container
 
 	public GuiRefineryController(ContainerRefineryController container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 178);
-		registerWidget(multiblockStatusWidget = new MultiblockStatusWidget(this.getXSize() - 18, 5, 12, 12).setShouldRenderWhenWellFormed(true));
+		registerWidget(multiblockStatusWidget = new MultiblockStatusWidget(this.getXSize() - 18, 5, 12, 12)
+				.setShouldRenderWhenWellFormed(true));
 		updateNotificationWidget();
 	}
 
@@ -42,30 +44,42 @@ public class GuiRefineryController extends StaticCoreBlockEntityScreen<Container
 		registerWidget(new GuiPowerBarFromStorage(getTileEntity().powerStorage, 8, 22, 16, 54));
 		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage, 27, 22, 4, 54));
 
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().getInputTank(0), 38, 22, 16, 54, MachineSideMode.Input2, getTileEntity()));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().getInputTank(1), 58, 22, 16, 54, MachineSideMode.Input3, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().getInputTank(0), 38, 22, 16, 54, MachineSideMode.Input2,
+				getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().getInputTank(1), 58, 22, 16, 54, MachineSideMode.Input3,
+				getTileEntity()));
 
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().getOutputTank(0), 108, 22, 16, 54, MachineSideMode.Output, getTileEntity()));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().getOutputTank(1), 128, 22, 16, 54, MachineSideMode.Output2, getTileEntity()));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().getOutputTank(2), 148, 22, 16, 54, MachineSideMode.Output3, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().getOutputTank(0), 108, 22, 16, 54,
+				MachineSideMode.Output, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().getOutputTank(1), 128, 22, 16, 54,
+				MachineSideMode.Output2, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().getOutputTank(2), 148, 22, 16, 54,
+				MachineSideMode.Output3, getTileEntity()));
 
-		registerWidget(new ArrowProgressBar(80, 42).bindToMachineProcessingComponent(getTileEntity().processingComponent));
-		registerWidget(fluidBar1 = new FluidProgressBar(79, 61, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
-		registerWidget(fluidBar2 = new FluidProgressBar(79, 67, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
-		registerWidget(fluidBar3 = new FluidProgressBar(79, 73, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
+		registerWidget(
+				new ArrowProgressBar(80, 42).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(fluidBar1 = new FluidProgressBar(79, 61, 24, 4)
+				.bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
+		registerWidget(fluidBar2 = new FluidProgressBar(79, 67, 24, 4)
+				.bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
+		registerWidget(fluidBar3 = new FluidProgressBar(79, 73, 24, 4)
+				.bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab("Statistics", 110), true);
 		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage));
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(
+				new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT),
+				true);
+		getTabManager()
+				.registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 	}
 
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<RefineryRecipe> recipe = getTileEntity().processingComponent.getCurrentRecipe();
+		Optional<RefineryRecipe> recipe = getTileEntity().processingComponent.getProcessingRecipe();
 
 		// Update the progress bar.
 		if (recipe.isPresent()) {
@@ -87,13 +101,13 @@ public class GuiRefineryController extends StaticCoreBlockEntityScreen<Container
 		}
 
 		// Update the production data.
-		infoTab.addKeyValueTwoLiner("productivity", Component.literal("Productivity"),
-				GuiTextUtilities.formatNumberAsString(getTileEntity().getProductivity() * 100).append("% (")
-						.append(ChatFormatting.DARK_AQUA + GuiTextUtilities.formatNumberAsString(getTileEntity().getBoilers().size()).getString())
-						.append(" Boilers" + ChatFormatting.RESET + ")"),
-				ChatFormatting.GREEN);
-		infoTab.addKeyValueTwoLiner("heat_gen", Component.literal("Heat Generation"), GuiTextUtilities.formatHeatRateToString(getTileEntity().getHeatGeneration()),
-				ChatFormatting.RED);
+		infoTab.addKeyValueTwoLiner("productivity", Component.literal("Productivity"), GuiTextUtilities
+				.formatNumberAsString(getTileEntity().getProductivity() * 100).append("% (")
+				.append(ChatFormatting.DARK_AQUA
+						+ GuiTextUtilities.formatNumberAsString(getTileEntity().getBoilers().size()).getString())
+				.append(" Boilers" + ChatFormatting.RESET + ")"), ChatFormatting.GREEN);
+		infoTab.addKeyValueTwoLiner("heat_gen", Component.literal("Heat Generation"),
+				GuiTextUtilities.formatHeatRateToString(getTileEntity().getHeatGeneration()), ChatFormatting.RED);
 
 		updateNotificationWidget();
 	}

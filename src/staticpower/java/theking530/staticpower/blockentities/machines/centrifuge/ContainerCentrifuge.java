@@ -58,7 +58,7 @@ public class ContainerCentrifuge extends StaticPowerTileEntityContainer<BlockEnt
 
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
-		if (getTileEntity().processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack)).isPresent() && !mergeItemStack(stack, 0)) {
+		if (getTileEntity().processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent() && !mergeItemStack(stack, 0)) {
 			return true;
 		}
 		if (EnergyHandlerItemStackUtilities.isEnergyContainer(stack) && !mergeItemStack(stack, 1)) {

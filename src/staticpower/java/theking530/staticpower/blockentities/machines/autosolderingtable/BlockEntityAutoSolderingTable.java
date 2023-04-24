@@ -10,11 +10,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
@@ -35,10 +36,11 @@ import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implements IOldRecipeProcessor<SolderingRecipe> {
+public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implements IRecipeProcessor<SolderingRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityAutoSolderingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoSolderingTable>("soldering_table_auto",
-			(type, pos, state) -> new BlockEntityAutoSolderingTable(pos, state), ModBlocks.AutoSolderingTable);
+	public static final BlockEntityTypeAllocator<BlockEntityAutoSolderingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoSolderingTable>(
+			"soldering_table_auto", (type, pos, state) -> new BlockEntityAutoSolderingTable(pos, state),
+			ModBlocks.AutoSolderingTable);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -46,7 +48,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 		}
 	}
 
-	public final OldRecipeProcessingComponent<SolderingRecipe> processingComponent;
+	public final RecipeProcessingComponent<SolderingRecipe> processingComponent;
 	public final RedstoneControlComponent redstoneControlComponent;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -61,19 +63,21 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 		// Set the inventory component to the input mode.
 		inventory.setMode(MachineSideMode.Input).setSlotsLockable(true);
 
-		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent",
+				RedstoneMode.Ignore));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<SolderingRecipe>("ProcessingComponent",
-				StaticPowerConfig.SERVER.autoSolderingTableProcessingTime.get(), ModRecipeTypes.SOLDERING_RECIPE_TYPE.get(), this));
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(processingComponent = new RecipeProcessingComponent<SolderingRecipe>("ProcessingComponent",
+				StaticPowerConfig.SERVER.autoSolderingTableProcessingTime.get(),
+				ModRecipeTypes.SOLDERING_RECIPE_TYPE.get()));
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
-		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.autoSolderingTablePowerUsage.get());
+		processingComponent.setBasePowerUsage(StaticPowerConfig.SERVER.autoSolderingTablePowerUsage.get());
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
@@ -83,7 +87,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<SolderingRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<SolderingRecipe> component) {
 		ItemStack[] pattern = new ItemStack[patternInventory.getSlots()];
 		for (int i = 0; i < patternInventory.getSlots(); i++) {
 			pattern[i] = patternInventory.getStackInSlot(i);
@@ -92,7 +96,38 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 	}
 
 	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<SolderingRecipe> component, SolderingRecipe recipe, OldProcessingContainer outputContainer) {
+	protected boolean requiresSolderingIron() {
+		return false;
+	}
+
+	@Override
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+		return new ContainerAutoSolderingTable(windowId, inventory, this);
+	}
+
+	@Override
+	public void captureOutputs(RecipeProcessingComponent<SolderingRecipe> component, SolderingRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addItem(recipe.getResultItem(), CaptureType.BOTH);
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<SolderingRecipe> component,
+			SolderingRecipe recipe, ConcretizedProductContainer outputContainer) {
+		if (!hasRequiredItems(recipe)) {
+			return ProcessingCheckState.error("Missing items in input inventory!");
+		}
+
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getItem(0))) {
+			ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void captureInputs(RecipeProcessingComponent<SolderingRecipe> component, SolderingRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
 		// If we still have the recipe, and the required items, move the input items
 		// into the internal inventory.
 		// Transfer the materials into the internal inventory.
@@ -109,64 +144,18 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 			for (int j = 0; j < inventory.getSlots(); j++) {
 				if (ing.test(inventory.getStackInSlot(j))) {
 					ItemStack extracted = inventory.extractItem(j, 1, true);
-					outputContainer.addInputItem(extracted, CaptureType.BOTH);
+					inputContainer.addItem(extracted, CaptureType.BOTH);
 					break;
 				}
 			}
 		}
 
-		outputContainer.addOutputItem(recipe.getResultItem(), CaptureType.BOTH);
 	}
 
 	@Override
-	public void processingStarted(OldRecipeProcessingComponent<SolderingRecipe> component, SolderingRecipe recipe, OldProcessingContainer outputContainer) {
-		// If we still have the recipe, and the required items, move the input items
-		// into the internal inventory.
-		// Transfer the materials into the internal inventory.
-		for (int i = 0; i < patternInventory.getSlots(); i++) {
-			// Get the used ingredient.
-			Ingredient ing = recipe.getIngredients().get(i);
-
-			// Skip holes in the recipe.
-			if (ing.equals(Ingredient.EMPTY)) {
-				continue;
-			}
-
-			// Remove the item.
-			for (int j = 0; j < inventory.getSlots(); j++) {
-				if (ing.test(inventory.getStackInSlot(j))) {
-					inventory.extractItem(j, 1, false);
-					break;
-				}
-			}
-		}
+	public void onProcessingCompleted(RecipeProcessingComponent<SolderingRecipe> component,
+			ProcessingContainer processingContainer) {
+		outputInventory.insertItem(0, processingContainer.getOutputs().getItem(0).copy(), false);
 	}
 
-	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<SolderingRecipe> component, SolderingRecipe recipe, OldProcessingContainer outputContainer) {
-		if (!hasRequiredItems(recipe, outputContainer.getInputItems().stream().map(x -> x.item()).toList())) {
-			return ProcessingCheckState.error("Missing items in input inventory!");
-		}
-
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
-			ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
-		return ProcessingCheckState.ok();
-	}
-
-	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<SolderingRecipe> component, SolderingRecipe recipe, OldProcessingContainer outputContainer) {
-		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
-	}
-
-	@Override
-	protected boolean requiresSolderingIron() {
-		return false;
-	}
-
-	@Override
-	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		return new ContainerAutoSolderingTable(windowId, inventory, this);
-	}
 }

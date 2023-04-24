@@ -31,28 +31,34 @@ public class GuiCaster extends StaticCoreBlockEntityScreen<ContainerCaster, Bloc
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromStorage(getTileEntity().powerStorage, 8, 8, 16, 54));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 34, 22, 20, 54, MachineSideMode.Input, getTileEntity()));
-		registerWidget(new ArrowProgressBar(59, 34).bindToMachineProcessingComponent(getTileEntity().processingComponent).setAnimationLastUntil(0.5f));
-		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(108, 40, 36, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent)
-				.setAnimationStartAfter(0.5f));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 34, 22, 20, 54,
+				MachineSideMode.Input, getTileEntity()));
+		registerWidget(new ArrowProgressBar(59, 34)
+				.bindToMachineProcessingComponent(getTileEntity().processingComponent).setAnimationLastUntil(0.5f));
+		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(108, 40, 36, 5)
+				.bindToMachineProcessingComponent(getTileEntity().processingComponent).setAnimationStartAfter(0.5f));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine("desc1", Component.literal("The former transforms items into other items=by shaping them against molds."));
+		infoTab.addLine("desc1",
+				Component.literal("The former transforms items into other items=by shaping them against molds."));
 
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(
+				new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT),
+				true);
+		getTabManager()
+				.registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
 	}
 
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<CastingRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentRecipe();
+		Optional<CastingRecipe> currentRecipe = getTileEntity().processingComponent.getProcessingRecipe();
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent()) {
-			progressBar.setFluidStack(getTileEntity().processingComponent.getProcessingMaterials().getInputFluid(0).fluid());
+			progressBar.setFluidStack(getTileEntity().processingComponent.getProcessingInputs().getFluid(0));
 		} else {
 			progressBar.setFluidStack(FluidStack.EMPTY);
 		}

@@ -51,7 +51,7 @@ public class GuiFermenter extends StaticCoreBlockEntityScreen<ContainerFermenter
 	public void updateData() {
 		// If the recipe is non-null, render the fluid progress bar.
 		if (getTileEntity().processingComponent.hasProcessingStarted()) {
-			FluidStack fluid = getTileEntity().processingComponent.getCurrentRecipe().get().getOutputFluidStack();
+			FluidStack fluid = getTileEntity().processingComponent.getProcessingRecipe().get().getOutputFluidStack();
 			progressBar.setFluidStack(fluid);
 		} else {
 			progressBar.setFluidStack(FluidStack.EMPTY);

@@ -3,22 +3,22 @@ package theking530.staticcore.blockentity.components.control.processing;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import theking530.staticcore.StaticCoreRegistries;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
 import theking530.staticcore.productivity.product.ProductType;
 
 public class ProcessingProduct<T extends ProductType<K>, K> {
 	private final T productType;
 	private final K product;
 	private final CaptureType captureType;
-	private final boolean isTemplateItem;
+	private final boolean isTemplateProduct;
 	private double amount;
 
-	public ProcessingProduct(T productType, K product, double amount, CaptureType captureType, boolean isTemplateItem) {
+	public ProcessingProduct(T productType, K product, double amount, CaptureType captureType, boolean isTemplateProduct) {
 		this.productType = productType;
 		this.product = product;
 		this.amount = amount;
 		this.captureType = captureType;
-		this.isTemplateItem = isTemplateItem;
+		this.isTemplateProduct = isTemplateProduct;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -27,11 +27,11 @@ public class ProcessingProduct<T extends ProductType<K>, K> {
 		product = productType.deserializeProduct(tag.getString("product"));
 		amount = tag.getDouble("amount");
 		captureType = CaptureType.values()[tag.getByte("capture_type")];
-		isTemplateItem = tag.getBoolean("template");
+		isTemplateProduct = tag.getBoolean("template");
 	}
 
-	public boolean isTemplateItem() {
-		return isTemplateItem;
+	public boolean isTemplateProduct() {
+		return isTemplateProduct;
 	}
 
 	public K getProduct() {
@@ -57,7 +57,7 @@ public class ProcessingProduct<T extends ProductType<K>, K> {
 		output.putString("product", serializedProduct);
 		output.putDouble("amount", amount);
 		output.putByte("capture_type", (byte) captureType.ordinal());
-		output.putBoolean("template", isTemplateItem);
+		output.putBoolean("template", isTemplateProduct);
 
 		return output;
 	}

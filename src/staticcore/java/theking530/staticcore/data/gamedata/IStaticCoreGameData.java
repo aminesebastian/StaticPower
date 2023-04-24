@@ -2,6 +2,7 @@ package theking530.staticcore.data.gamedata;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
 public interface IStaticCoreGameData {
@@ -20,4 +21,6 @@ public interface IStaticCoreGameData {
 	public void onSyncedFromServer(CompoundTag tag);
 
 	public void syncToClients();
+
+	public void syncToClient(ServerPlayer player);
 }

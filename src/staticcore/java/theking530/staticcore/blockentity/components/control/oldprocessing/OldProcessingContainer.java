@@ -11,12 +11,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
 import theking530.staticcore.utilities.NBTUtilities;
 
+@Deprecated
 public class OldProcessingContainer implements INBTSerializable<CompoundTag> {
-	public enum CaptureType {
-		NONE, RATE_ONLY, COUNT_ONLY, BOTH
-	}
 
 	public record ProcessingItemWrapper(ItemStack item, CaptureType captureType, boolean isTemplateItem) {
 

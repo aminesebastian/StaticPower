@@ -29,6 +29,7 @@ import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.product.power.PowerProducer;
 import theking530.staticcore.teams.ServerTeam;
 
+@Deprecated
 public abstract class OldAbstractProcesingComponent<T extends OldAbstractProcesingComponent<?>>
 		extends AbstractBlockEntityComponent {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;

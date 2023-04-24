@@ -14,14 +14,14 @@ import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.teams.TeamManager;
 
 public class PacketRecieveProductionMetrics extends NetworkMessage {
-	private ServerProductionMetrics metrics;
+	private ProductionMetrics metrics;
 	private ProductType<?> productType;
 
 	public PacketRecieveProductionMetrics() {
 
 	}
 
-	public PacketRecieveProductionMetrics(ProductType<?> productType, ServerProductionMetrics metrics) {
+	public PacketRecieveProductionMetrics(ProductType<?> productType, ProductionMetrics metrics) {
 		this.metrics = metrics;
 		this.productType = productType;
 	}
@@ -35,7 +35,7 @@ public class PacketRecieveProductionMetrics extends NetworkMessage {
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
 		productType = StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
-		metrics = ServerProductionMetrics.decode(buffer);
+		metrics = ProductionMetrics.decode(buffer);
 	}
 
 	@SuppressWarnings("resource")
@@ -44,7 +44,8 @@ public class PacketRecieveProductionMetrics extends NetworkMessage {
 		ctx.get().enqueueWork(() -> {
 			ClientProductionManager clientManager = (ClientProductionManager) TeamManager.getLocalTeam()
 					.getProductionManager();
-			ClientProductionCache<?> clientCache = (ClientProductionCache<?>) clientManager.getProductTypeCache(productType);
+			ClientProductionCache<?> clientCache = (ClientProductionCache<?>) clientManager
+					.getProductTypeCache(productType);
 			clientCache.setClientSyncedMetrics(metrics, Minecraft.getInstance().level.getGameTime());
 		});
 	}

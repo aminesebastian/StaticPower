@@ -9,11 +9,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
@@ -38,10 +39,10 @@ import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityCrucible extends BlockEntityMachine implements IOldRecipeProcessor<CrucibleRecipe> {
+public class BlockEntityCrucible extends BlockEntityMachine implements IRecipeProcessor<CrucibleRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCrucible> TYPE = new BlockEntityTypeAllocator<>("crucible", (type, pos, state) -> new BlockEntityCrucible(pos, state),
-			ModBlocks.Crucible);
+	public static final BlockEntityTypeAllocator<BlockEntityCrucible> TYPE = new BlockEntityTypeAllocator<>("crucible",
+			(type, pos, state) -> new BlockEntityCrucible(pos, state), ModBlocks.Crucible);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -50,7 +51,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IOldRecip
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final HeatStorageComponent heatStorage;
 
-	public final OldRecipeProcessingComponent<CrucibleRecipe> processingComponent;
+	public final RecipeProcessingComponent<CrucibleRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	public BlockEntityCrucible(BlockPos pos, BlockState state) {
@@ -60,12 +61,14 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IOldRecip
 		StaticCoreTier tier = getTierObject();
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
-			}
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts())
+								.isPresent();
+					}
 
-		}));
+				}));
 
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
@@ -73,15 +76,16 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IOldRecip
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Register the heate component.
-		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
+				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1.0f));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", ModRecipeTypes.CRUCIBLE_RECIPE_TYPE.get(), this));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent",
+				StaticPowerConfig.SERVER.crucibleProcessingTime.get(), ModRecipeTypes.CRUCIBLE_RECIPE_TYPE.get()));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
-		processingComponent.setShouldControlBlockState(true);
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
@@ -91,10 +95,12 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IOldRecip
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
 		// Setup the fluid tank and fluid output servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
-				.setUpgradeInventory(upgradesInventory));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get())
+				.setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent,
+				MachineSideMode.Output));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo",
+				fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
@@ -105,52 +111,56 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IOldRecip
 		super.process();
 		if (!level.isClientSide && redstoneControlComponent.passesRedstoneCheck()) {
 			if (powerStorage.canSupplyPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get())
-					&& HeatStorageUtilities.canFullyAbsorbHeat(heatStorage, StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
-				heatStorage.heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(), HeatTransferAction.EXECUTE);
+					&& HeatStorageUtilities.canFullyAbsorbHeat(heatStorage,
+							StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
+				heatStorage.heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(),
+						HeatTransferAction.EXECUTE);
 				powerStorage.drainPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get(), false);
 			}
 		}
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<CrucibleRecipe> component) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+		return new ContainerCrucible(windowId, inventory, this);
+	}
+
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CrucibleRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 	}
 
 	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, OldProcessingContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
-		outputContainer.addOutputFluid(recipe.getOutputFluid(), CaptureType.BOTH);
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
+	public void captureOutputs(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addFluid(recipe.getOutputFluid(), CaptureType.BOTH);
+		outputContainer.addItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
 
-		// Set the power usage.
-		component.setProcessingPowerUsage(recipe.getPowerCost());
-		component.setMaxProcessingTime(recipe.getProcessingTime());
 	}
 
 	@Override
-	public void processingStarted(OldRecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, OldProcessingContainer outputContainer) {
-		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
-	}
-
-	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, OldProcessingContainer outputContainer) {
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<CrucibleRecipe> component,
+			CrucibleRecipe recipe, ConcretizedProductContainer outputContainer) {
 		// If this recipe has an item output that we cannot put into the output slot,
 		// continue waiting.
-		if (outputContainer.hasOutputItems() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
+		if (outputContainer.hasItems()
+				&& !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
 		// Check the heat.
 		if (heatStorage.getCurrentHeat() < recipe.getProcessingSection().getMinimumHeat()) {
-			return ProcessingCheckState.error(
-					"Minimum heat temperature of " + GuiTextUtilities.formatHeatToString(recipe.getProcessingSection().getMinimumHeat()).getString() + " has not been reached!");
+			return ProcessingCheckState.error("Minimum heat temperature of "
+					+ GuiTextUtilities.formatHeatToString(recipe.getProcessingSection().getMinimumHeat()).getString()
+					+ " has not been reached!");
 		}
 
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
-		if (fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).fluid().getAmount()) {
-			if (!fluidTankComponent.getFluid().isEmpty() && fluidTankComponent.getFluid().isFluidEqual(outputContainer.getOutputFluid(0).fluid())) {
+		if (fluidTankComponent.fill(outputContainer.getFluid(0), FluidAction.SIMULATE) != outputContainer.getFluid(0)
+				.getAmount()) {
+			if (!fluidTankComponent.getFluid().isEmpty()
+					&& fluidTankComponent.getFluid().isFluidEqual(outputContainer.getFluid(0))) {
 				return ProcessingCheckState.outputFluidDoesNotMatch();
 			} else {
 				return ProcessingCheckState.fluidOutputFull();
@@ -160,16 +170,18 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IOldRecip
 	}
 
 	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, OldProcessingContainer outputContainer) {
-		if (outputContainer.hasOutputItems()) {
-			outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
-		}
-
-		fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.EXECUTE);
+	public void captureInputs(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+		inputContainer.addItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		return new ContainerCrucible(windowId, inventory, this);
+	public void onProcessingCompleted(RecipeProcessingComponent<CrucibleRecipe> component,
+			ProcessingContainer processingContainer) {
+		if (processingContainer.getOutputs().hasItems()) {
+			outputInventory.insertItem(0, processingContainer.getOutputs().getItem(0).copy(), false);
+		}
+
+		fluidTankComponent.fill(processingContainer.getOutputs().getFluid(0), FluidAction.EXECUTE);
 	}
 }

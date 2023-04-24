@@ -130,9 +130,9 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 		}
 
 		if (machineProcessingComponent != null) {
-			maxProgress = machineProcessingComponent.getProcessingTime();
-			currentProgress = machineProcessingComponent.getCurrentProcessingTime();
-			tickDownRate = machineProcessingComponent.getProcessingTicksPerGameTick();
+			maxProgress = machineProcessingComponent.getProcessingTimer().getMaxTime();
+			currentProgress = machineProcessingComponent.getProcessingTimer().getCurrentTime();
+			tickDownRate = machineProcessingComponent.getProcessingTimer().getTicksPerIncrement();
 			isProcessingErrored = machineProcessingComponent.getProcessingState().isError();
 			processingErrorMessage = machineProcessingComponent.getProcessingState().getErrorMessage();
 		}
@@ -270,9 +270,9 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 		machineProcessingComponent = component;
 
 		// Set the initial values.
-		maxProgress = machineProcessingComponent.getProcessingTime();
-		currentProgress = machineProcessingComponent.getCurrentProcessingTime();
-		tickDownRate = machineProcessingComponent.getProcessingTicksPerGameTick();
+		maxProgress = machineProcessingComponent.getProcessingTimer().getMaxTime();
+		currentProgress = machineProcessingComponent.getProcessingTimer().getCurrentTime();
+		tickDownRate = machineProcessingComponent.getProcessingTimer().getTicksPerIncrement();
 		visualCurrentProgress = currentProgress;
 		return (T) this;
 	}

@@ -12,7 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.IReadOnlyProcessingContainer;
 import theking530.staticcore.client.StaticPowerBlockEntitySpecialRenderer;
 import theking530.staticcore.client.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.math.SDMath;
@@ -28,8 +28,8 @@ public class BlockEntityRenderFluidInfuser extends StaticPowerBlockEntitySpecial
 	}
 
 	@Override
-	public void renderTileEntityBase(BlockEntityFluidInfuser tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
-			int combinedOverlay) {
+	public void renderTileEntityBase(BlockEntityFluidInfuser tileEntity, BlockPos pos, float partialTicks,
+			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.FluidInfuser");
 		if (!tileEntity.fluidTankComponent.isEmpty()) {
 			float filledPercentage = tileEntity.fluidTankComponent.getVisualFillLevel();
@@ -42,34 +42,41 @@ public class BlockEntityRenderFluidInfuser extends StaticPowerBlockEntitySpecial
 			float secondSectionHeight = secondSectionFilledPercentage * 0.284f;
 			float lastSectionHeight = lastSectionFilledPercentage * 0.095f;
 
-			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.186f, 0.001f),
-					new Vector3D(0.376f, firstSectionHeight, 1.0f), new Vector4D(0.0f, 0.0f, 1.0f, firstSectionFilledPercentage * 0.45f),
+			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer,
+					new Vector3D(0.3125f, 0.186f, 0.001f), new Vector3D(0.376f, firstSectionHeight, 1.0f),
+					new Vector4D(0.0f, 0.0f, 1.0f, firstSectionFilledPercentage * 0.45f),
 					WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
-			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.218f, 0.28f, 0.001f),
-					new Vector3D(0.564f, secondSectionHeight, 1.0f), new Vector4D(0.0f, 0.0f, 1.0f, secondSectionFilledPercentage * 0.75f),
+			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer,
+					new Vector3D(0.218f, 0.28f, 0.001f), new Vector3D(0.564f, secondSectionHeight, 1.0f),
+					new Vector4D(0.0f, 0.0f, 1.0f, secondSectionFilledPercentage * 0.75f),
 					WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
-			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.562f, 0.001f),
-					new Vector3D(0.376f, lastSectionHeight, 1.0f), new Vector4D(0.0f, 0.0f, 1.0f, lastSectionFilledPercentage * 0.45f),
+			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer,
+					new Vector3D(0.3125f, 0.562f, 0.001f), new Vector3D(0.376f, lastSectionHeight, 1.0f),
+					new Vector4D(0.0f, 0.0f, 1.0f, lastSectionFilledPercentage * 0.45f),
 					WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
 			// Render the item inside the infuser.
-			OldProcessingContainer processingContainer = tileEntity.processingComponent.getProcessingMaterials();
-			if (processingContainer.hasInputItems()) {
-				ItemStack inputItem = processingContainer.getInputItem(0).item();
+			IReadOnlyProcessingContainer processingContainer = tileEntity.processingComponent.getProcessingInputs();
+			if (processingContainer.hasItems()) {
+				ItemStack inputItem = processingContainer.getItem(0);
 				// Get the baked model and check if it wants to render the item in 3d or 2d.
-				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inputItem, null, null, combinedOverlay);
+				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inputItem, null, null,
+						combinedOverlay);
 				boolean render3D = itemModel.isGui3d();
 
-				int forwardBlockLightLevel = LevelRenderer.getLightColor(tileEntity.getLevel(), tileEntity.getBlockPos().relative(tileEntity.getFacingDirection()));
+				int forwardBlockLightLevel = LevelRenderer.getLightColor(tileEntity.getLevel(),
+						tileEntity.getBlockPos().relative(tileEntity.getFacingDirection()));
 
 				if (render3D) {
-					WorldRenderingUtilities.drawItemInWorld(tileEntity, inputItem, TransformType.GUI, new Vector3D(0.5f, 0.42f, 1.005f), new Vector3D(0.3f, 0.3f, 0.02f),
-							partialTicks, matrixStack, buffer, forwardBlockLightLevel, combinedOverlay);
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, inputItem, TransformType.GUI,
+							new Vector3D(0.5f, 0.42f, 1.005f), new Vector3D(0.3f, 0.3f, 0.02f), partialTicks,
+							matrixStack, buffer, forwardBlockLightLevel, combinedOverlay);
 				} else {
-					WorldRenderingUtilities.drawItemInWorld(tileEntity, inputItem, TransformType.GUI, new Vector3D(0.5f, 0.42f, 1.005f), new Vector3D(0.3f, 0.3f, 0.16f),
-							partialTicks, matrixStack, buffer, forwardBlockLightLevel, combinedOverlay);
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, inputItem, TransformType.GUI,
+							new Vector3D(0.5f, 0.42f, 1.005f), new Vector3D(0.3f, 0.3f, 0.16f), partialTicks,
+							matrixStack, buffer, forwardBlockLightLevel, combinedOverlay);
 				}
 			}
 		}

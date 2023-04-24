@@ -6,29 +6,29 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.basic.BasicProcessingComponent;
+import theking530.staticcore.blockentity.components.control.processing.machine.AbstractMachineProcessingComponent;
 import theking530.staticcore.container.FakeCraftingInventory;
 import theking530.staticcore.crafting.AbstractMachineRecipe;
 import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 
 public class RecipeProcessingComponent<T extends Recipe<?>>
-		extends BasicProcessingComponent<RecipeProcessingComponent<T>, RecipeProcessingComponentSyncPacket> {
+		extends AbstractMachineProcessingComponent<RecipeProcessingComponent<T>, RecipeProcessingComponentSyncPacket> {
 
 	public static final int MOVE_TIME = 8;
 	private final RecipeType<T> recipeType;
 	private ResourceLocation recipeId;
-	private ProcessingOutputContainer outputContainer;
+	private ConcretizedProductContainer concretizedOutputContainer;
 
 	public RecipeProcessingComponent(String name, int processingTime, RecipeType<T> recipeType) {
 		super(name, processingTime);
 		this.recipeType = recipeType;
 		this.setPreProductionTime(MOVE_TIME);
 		this.recipeId = null;
-		this.outputContainer = new ProcessingOutputContainer();
+		this.concretizedOutputContainer = new ConcretizedProductContainer();
 	}
 
 	public RecipeType<T> getRecipeType() {
@@ -37,7 +37,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>>
 
 	@Override
 	protected ProcessingCheckState canStartProcessing() {
-		outputContainer.clear();
+		concretizedOutputContainer.clear();
 		RecipeMatchParameters params = getRecipeProcessingOwner().get().getRecipeMatchParameters(this);
 		Optional<T> recipeCheck = getRecipe(params);
 		if (!recipeCheck.isPresent()) {
@@ -49,15 +49,19 @@ public class RecipeProcessingComponent<T extends Recipe<?>>
 		T recipe = recipeCheck.get();
 		if (recipe instanceof AbstractMachineRecipe) {
 			AbstractMachineRecipe machineRecipe = (AbstractMachineRecipe) recipe;
-			setDefaultPowerUsage(machineRecipe.getPowerCost());
-			setDefaultMaxProcessingTime(machineRecipe.getProcessingTime());
+			setBasePowerUsage(machineRecipe.getPowerCost());
+			setBaseProcessingTime(machineRecipe.getProcessingTime());
 		}
 
-		outputContainer.open();
+		concretizedOutputContainer.open();
 		recipeId = recipe.getId();
-		ProcessingCheckState captureResult = getRecipeProcessingOwner().get().captureOutputs(this, recipe,
-				outputContainer);
-		outputContainer.close();
+		getRecipeProcessingOwner().get().captureOutputs(this, recipe, concretizedOutputContainer);
+		concretizedOutputContainer.close();
+
+		getRecipeProcessingOwner().get().prepareComponentForProcessing(this, recipe, concretizedOutputContainer);
+
+		ProcessingCheckState captureResult = getRecipeProcessingOwner().get().canStartProcessingRecipe(this, recipe,
+				concretizedOutputContainer);
 
 		if (!captureResult.isOk()) {
 			return captureResult;
@@ -68,28 +72,29 @@ public class RecipeProcessingComponent<T extends Recipe<?>>
 
 	@Override
 	protected void onProcessingStarted(ProcessingContainer processingContainer) {
-		RecipeMatchParameters params = getRecipeProcessingOwner().get().getRecipeMatchParameters(this);
-		Optional<T> recipeCheck = getRecipe(params);
-		T recipe = recipeCheck.get();
-		getRecipeProcessingOwner().get().onRecipeProcessingStarted(this, recipe, outputContainer, processingContainer);
-		processingContainer.mergeOutputContainer(outputContainer);
+		processingContainer.absorbIntoOutputs(concretizedOutputContainer);
+		getRecipeProcessingOwner().get().captureInputs(this, getProcessingRecipe().get(), processingContainer,
+				processingContainer.getInputs());
+		super.onProcessingStarted(processingContainer);
 	}
 
 	@Override
 	protected void resetToIdle() {
 		super.resetToIdle();
-		this.recipeId = null;
+		recipeId = null;
+		concretizedOutputContainer.clear();
+		concretizedOutputContainer.close();
 	}
 
 	@Override
 	protected ProcessingCheckState canContinueProcessing() {
+		if (getProcessingRecipe().isEmpty()) {
+			return ProcessingCheckState.cancel();
+		}
+
 		ProcessingCheckState superCheck = super.canContinueProcessing();
 		if (!superCheck.isOk()) {
 			return superCheck;
-		}
-
-		if (getProcessingRecipe().isEmpty()) {
-			return ProcessingCheckState.cancel();
 		}
 
 		return ProcessingCheckState.ok();
@@ -97,13 +102,13 @@ public class RecipeProcessingComponent<T extends Recipe<?>>
 
 	@Override
 	protected ProcessingCheckState canCompleteProcessing() {
+		if (getProcessingRecipe().isEmpty()) {
+			return ProcessingCheckState.cancel();
+		}
+
 		ProcessingCheckState superCheck = super.canCompleteProcessing();
 		if (!superCheck.isOk()) {
 			return superCheck;
-		}
-
-		if (getProcessingRecipe().isEmpty()) {
-			return ProcessingCheckState.cancel();
 		}
 
 		return ProcessingCheckState.ok();
@@ -125,6 +130,20 @@ public class RecipeProcessingComponent<T extends Recipe<?>>
 			return Optional.empty();
 		}
 		return Optional.of((T) recipe.get());
+	}
+
+	/**
+	 * First attempts to get the recipe being currently processed. If we are not
+	 * processing, then it attempts to get the pending recipe.
+	 * 
+	 * @return
+	 */
+	public Optional<T> getProcessingOrPendingRecipe() {
+		Optional<T> recipe = this.getProcessingRecipe();
+		if (!recipe.isPresent()) {
+			recipe = this.getPendingRecipe();
+		}
+		return recipe;
 	}
 
 	@SuppressWarnings("unchecked")

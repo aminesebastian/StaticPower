@@ -1,4 +1,4 @@
-package theking530.staticcore.blockentity.components.control.processing.basic;
+package theking530.staticcore.blockentity.components.control.processing.machine;
 
 import java.util.Optional;
 
@@ -18,10 +18,10 @@ import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.teams.ServerTeam;
 import theking530.staticcore.utilities.math.SDMath;
 
-public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K>, K extends BasicProcessingComponentSyncPacket>
+public abstract class AbstractMachineProcessingComponent<T extends AbstractProcessingComponent<T, K>, K extends MachineProcessingComponentSyncPacket>
 		extends AbstractProcessingComponent<T, K> {
 
-	public static final int POWER_SMOOTHING_FACTOR = 10;
+	protected static final int POWER_SMOOTHING_FACTOR = 10;
 
 	/**
 	 * This is how much power this processing component should use per tick, before
@@ -65,7 +65,7 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 	 */
 	protected @Nullable RedstoneControlComponent redstoneControlComponent;
 
-	public BasicProcessingComponent(String name, int processingTime) {
+	public AbstractMachineProcessingComponent(String name, int processingTime) {
 		super(name, processingTime);
 		this.modulateProcessingTimeByPowerSatisfaction = true;
 	}
@@ -75,14 +75,6 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 		powerSatisfaction = calculatePowerSatisfaction();
 		powerUsage = calculatePowerUsage();
 		super.preProcessUpdate();
-	}
-
-	@Override
-	protected void onProcessingProgressMade(ProcessingContainer processingContainer) {
-		super.onProcessingProgressMade(processingContainer);
-		if (this.powerComponent != null) {
-			this.powerComponent.drainPower(getPowerUsage(), false);
-		}
 	}
 
 	@Override
@@ -137,7 +129,7 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 	}
 
 	@SuppressWarnings("unchecked")
-	public T setDefaultPowerUsage(double defaultPowerUsage) {
+	public T setBasePowerUsage(double defaultPowerUsage) {
 		this.defaultPowerUsage = defaultPowerUsage;
 		return (T) this;
 	}
@@ -156,6 +148,14 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 
 	public final double getPowerSatisfaction() {
 		return powerSatisfaction;
+	}
+
+	public float getCalculatedPowerUsageMultipler() {
+		return 0;
+	}
+
+	public float getCalculatedHeatGenerationMultiplier() {
+		return 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -177,6 +177,7 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 		return (T) this;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected ProcessingCheckState canStartProcessing() {
 		ProcessingCheckState powerRequirementsCheck = checkPowerRequirements();
@@ -201,6 +202,7 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 		return ProcessingCheckState.ok();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected ProcessingCheckState canContinueProcessing() {
 		ProcessingCheckState powerRequirementsCheck = checkPowerRequirements();
@@ -225,6 +227,7 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 		return ProcessingCheckState.ok();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected ProcessingCheckState canCompleteProcessing() {
 		Optional<IProcessor> processingInterface = getProcessingOwner();
@@ -247,6 +250,7 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 		return ProcessingCheckState.ok();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected void onProcessingStarted(ProcessingContainer processingContainer) {
 		Optional<IProcessor> processingInterface = getProcessingOwner();
@@ -255,6 +259,21 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	protected void onProcessingProgressMade(ProcessingContainer processingContainer) {
+		super.onProcessingProgressMade(processingContainer);
+		if (this.powerComponent != null) {
+			this.powerComponent.drainPower(getPowerUsage(), false);
+		}
+
+		Optional<IProcessor> processingInterface = getProcessingOwner();
+		if (processingInterface.isPresent()) {
+			processingInterface.get().onProcessingProgressMade(this, processingContainer);
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected void onProcessingCanceled(ProcessingContainer processingContainer) {
 		Optional<IProcessor> processingInterface = getProcessingOwner();
@@ -263,6 +282,7 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected void onProcessingPausedDueToError(ProcessingContainer processingContainer) {
 		Optional<IProcessor> processingInterface = getProcessingOwner();
@@ -271,6 +291,7 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected void onProcessingCompleted(ProcessingContainer processingContainer) {
 		Optional<IProcessor> processingInterface = getProcessingOwner();
@@ -312,9 +333,10 @@ public class BasicProcessingComponent<T extends AbstractProcessingComponent<T, K
 	@SuppressWarnings({ "unchecked" })
 	@Override
 	protected K createSynchronizationPacket() {
-		return (K) new BasicProcessingComponentSyncPacket(getPos(), this);
+		return (K) new MachineProcessingComponentSyncPacket(getPos(), this);
 	}
 
+	@SuppressWarnings({ "rawtypes" })
 	protected Optional<IProcessor> getProcessingOwner() {
 		if (getBlockEntity() instanceof IProcessor) {
 			return Optional.of((IProcessor) getBlockEntity());

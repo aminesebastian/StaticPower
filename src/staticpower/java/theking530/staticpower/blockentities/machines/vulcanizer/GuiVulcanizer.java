@@ -26,14 +26,20 @@ public class GuiVulcanizer extends StaticCoreBlockEntityScreen<ContainerVulcaniz
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromStorage(getTileEntity().powerStorage, 8, 8, 16, 52));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 50, 22, 20, 54, MachineSideMode.Input, getTileEntity()));
-		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(76, 45, 32, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 50, 22, 20, 54,
+				MachineSideMode.Input, getTileEntity()));
+		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(76, 45, 32, 5)
+				.bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(
+				new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT),
+				true);
+		getTabManager()
+				.registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(
+				new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}
@@ -41,7 +47,6 @@ public class GuiVulcanizer extends StaticCoreBlockEntityScreen<ContainerVulcaniz
 	@Override
 	public void updateData() {
 		super.updateData();
-		// If the recipe is non-null, render the fluid progress bar.
 		if (getTileEntity().processingComponent.hasProcessingStarted()) {
 			FluidStack fluid = getTileEntity().fluidTankComponent.getFluid();
 			progressBar.setFluidStack(fluid);

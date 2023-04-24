@@ -7,11 +7,11 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
 import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.ProcessingFluidWrapper;
 import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.ProcessingItemWrapper;
 import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
 import theking530.staticcore.blockentity.components.serialization.SaveSerialize;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.blockentity.components.team.TeamComponent;
@@ -24,6 +24,7 @@ import theking530.staticcore.teams.ServerTeam;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
+@Deprecated
 public class OldRecipeProcessingComponent<T extends Recipe<?>>
 		extends OldAbstractProcesingComponent<OldRecipeProcessingComponent<T>> {
 	public static final int MOVE_TIME = 8;

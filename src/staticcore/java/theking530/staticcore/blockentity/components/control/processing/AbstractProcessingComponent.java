@@ -3,13 +3,14 @@ package theking530.staticcore.blockentity.components.control.processing;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.block.StaticCoreBlock;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
 import theking530.staticcore.blockentity.components.serialization.SaveSerialize;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.blockentity.components.team.TeamComponent;
@@ -48,26 +49,13 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	 * modifications are added (from upgrades/power satisfaction/etc).
 	 */
 	@UpdateSerialize
-	private int defaultMaxProcessingTime;
+	private int baseProcessingTime;
+
 	/**
-	 * This is the actual max processing time that this component will tick up
-	 * towards.
+	 * This is the timer keeping track of how far along we are in production.
 	 */
 	@UpdateSerialize
-	private int processingTime;
-	/**
-	 * Indicates for how many ticks this component has been processing. If this gets
-	 * larger than {@link #processingTime}, the component will attempt to complete
-	 * processing.
-	 */
-	@UpdateSerialize
-	private int currentProcessingTime;
-	/**
-	 * How many ticks of progress is made per in-game tick. Usually this should be
-	 * set to 1 but can be increased for faster processing.
-	 */
-	@SaveSerialize
-	private int processingTicksPerGameTick;
+	private Timer processingTimer;
 	/**
 	 * This indicates the last processing time value for which we issued a sync
 	 * packet to the client.
@@ -78,6 +66,11 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	 * on the last tick.
 	 */
 	private boolean performedWorkLastTick;
+
+	/**
+	 * Indicates whether or not processing has been paused by an external input.
+	 */
+	private boolean processingPaused;
 
 	/**
 	 * If true, this component will set the IS_ON blockstate property on the block
@@ -97,30 +90,32 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	private int blockStateOffTimer;
 
 	/**
-	 * Defaulted to 0, this value is the amount of time after it is determined we
-	 * can start processing before we start processing. For example, once we
-	 * determine we can start smelting an ore, we then wait this amount of ticks
+	 * Defaulted to 0, this timer tracks the amount of time after it is determined
+	 * we can start processing before we start processing. For example, once we
+	 * determine we can start smelting an ore, we then wait for this timer to elapse
 	 * before we actually start smelting it. This gives users a little buffer room
 	 * before production starts in case they accidentally started it.
 	 */
-	private int preProductionTime;
+	private Timer preProductionTimer;
+
 	/**
-	 * How long the spin up time has been progressing.
+	 * The amount of experience that has been accrued during processing.
 	 */
-	private int currentPreProductionTime;
+	@SaveSerialize
+	private float accumulatedExperience;
 
 	public AbstractProcessingComponent(String name, int processingTime) {
 		super(name);
 		this.productionTokens = new HashMap<ProductType<?>, ProductionTrackingToken<?>>();
 		this.processingContainer = new ProcessingContainer();
-		this.defaultMaxProcessingTime = processingTime;
+		this.baseProcessingTime = processingTime;
 		this.shouldControlOnBlockState = false;
 
 		this.currentProcessingState = ProcessingCheckState.idle();
-		this.processingTicksPerGameTick = 1;
 		this.performedWorkLastTick = false;
-		this.preProductionTime = 0;
-		this.currentPreProductionTime = 0;
+
+		this.preProductionTimer = new Timer(0);
+		this.processingTimer = new Timer(processingTime);
 	}
 
 	@Override
@@ -135,10 +130,10 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 			return;
 		}
 
-		if (defaultMaxProcessingTime > 0) {
-			processingTime = modifyProcessingTime(defaultMaxProcessingTime);
+		if (baseProcessingTime > 0) {
+			processingTimer.setMaxTime(modifyProcessingTime(baseProcessingTime));
 		} else {
-			processingTime = 0;
+			processingTimer.setMaxTime(0);
 		}
 
 		sendSynchronizationPacket();
@@ -174,7 +169,12 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 
 	protected boolean performWork() {
 		try {
-			if (currentProcessingState.isIdle() || (currentProcessingState.isError() && getProcessingProgress() == 0)) {
+			if (processingPaused) {
+				return false;
+			}
+
+			if (currentProcessingState.isIdle()
+					|| (currentProcessingState.isError() && processingTimer.getCurrentTime() == 0)) {
 				currentProcessingState = canStartProcessing();
 
 				if (currentProcessingState.isOk()) {
@@ -195,20 +195,19 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 				// has elapsed, otherwise we don't need to because we're still in the same
 				// iteration where we called it above.
 				if (hasPreProductionTimer()) {
-					if (currentPreProductionTime < preProductionTime) {
-						currentPreProductionTime++;
-						return false;
-					} else {
+					if (preProductionTimer.increment()) {
 						ProcessingCheckState pendingCheck = canStartProcessing();
 						if (!pendingCheck.isOk()) {
 							resetToIdle();
 							return false;
 						}
+					} else {
+						return false;
 					}
 				}
 
 				currentProcessingState = ProcessingCheckState.ok();
-				currentPreProductionTime = 0;
+				preProductionTimer.reset();
 				processingContainer.open();
 				onProcessingStarted(processingContainer);
 				processingContainer.close();
@@ -225,9 +224,8 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 				}
 				return false;
 			} else {
-				if (currentProcessingTime < getProcessingTime()) {
-					currentProcessingTime = SDMath.clamp(currentProcessingTime + processingTicksPerGameTick, 0,
-							getProcessingTime());
+				if (!processingTimer.hasElapsed()) {
+					processingTimer.increment();
 					onProcessingProgressMade(processingContainer);
 
 					// Update all the production statistics.
@@ -237,7 +235,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 					}
 
 					// If we still have more processing to do, return with true.
-					if (currentProcessingTime < getProcessingTime()) {
+					if (!processingTimer.hasElapsed()) {
 						return true;
 					}
 				}
@@ -275,8 +273,8 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 
 	protected void resetToIdle() {
 		currentProcessingState = ProcessingCheckState.idle();
-		currentProcessingTime = 0;
-		currentPreProductionTime = 0;
+		processingTimer.reset();
+		preProductionTimer.reset();
 		processingContainer.clear();
 		processingContainer.close();
 	}
@@ -311,39 +309,43 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 
 	}
 
-	public final int getProcessingTime() {
-		return processingTime;
+	public boolean isProcessingPaused() {
+		return processingPaused;
 	}
 
-	public final int getProcessingProgress() {
-		return currentProcessingTime;
+	public void pauseProcessing() {
+		this.processingPaused = true;
 	}
 
-	public final int getDefaultMaxProcessingTime() {
-		return defaultMaxProcessingTime;
+	public void resumeProcessing() {
+		this.processingPaused = false;
+	}
+
+	public final Timer getProcessingTimer() {
+		return processingTimer;
+	}
+
+	public boolean hasProcessingStarted() {
+		return processingTimer.getCurrentTime() > 0;
+	}
+
+	public final int getBaseProcessingTime() {
+		return baseProcessingTime;
 	}
 
 	public boolean performedWorkLastTick() {
 		return performedWorkLastTick;
 	}
 
-	public int getProgressScaled(int scaleValue) {
-		return (int) (((float) (getProcessingProgress()) / getProcessingTime()) * scaleValue);
-	}
-
 	@SuppressWarnings("unchecked")
-	public T setDefaultMaxProcessingTime(int defaultMaxProcessingTime) {
-		this.defaultMaxProcessingTime = defaultMaxProcessingTime;
+	public T setBaseProcessingTime(int baseProcessingTime) {
+		this.baseProcessingTime = baseProcessingTime;
 		return (T) this;
-	}
-
-	public final int getProcessingTicksPerGameTick() {
-		return processingTicksPerGameTick;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setProcessingTicksPerGameTick(int processingTicksPerGameTick) {
-		this.processingTicksPerGameTick = processingTicksPerGameTick;
+		processingTimer.setRate(processingTicksPerGameTick);
 		return (T) this;
 	}
 
@@ -355,10 +357,6 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	public T setShouldControlOnBlockState(boolean shouldControlOnBlockState) {
 		this.shouldControlOnBlockState = shouldControlOnBlockState;
 		return (T) this;
-	}
-
-	public final int getCurrentProcessingTime() {
-		return currentProcessingTime;
 	}
 
 	public final ProcessingCheckState getProcessingState() {
@@ -389,35 +387,31 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	}
 
 	public boolean hasPreProductionTimer() {
-		return preProductionTime > 0;
+		return preProductionTimer.getMaxTime() > 0;
 	}
 
-	public int getPreProductionTime() {
-		return preProductionTime;
+	public Timer getPreProductionTimer() {
+		return preProductionTimer;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setPreProductionTime(int ticks) {
-		this.preProductionTime = ticks;
+		this.preProductionTimer.setMaxTime(ticks);
 		return (T) this;
 	}
 
-	public int getCurrentPreProductionTime() {
-		return currentPreProductionTime;
-	}
-
 	protected void recordProductionCompletedStatistics(TeamComponent teamComp) {
-		for (ProductType<?> productType : processingContainer.geInputProductTypes()) {
+		for (ProductType<?> productType : processingContainer.getInputs().getProductTypes()) {
 			recordProductsConsumedOfType(teamComp, productType);
 		}
 
-		for (ProductType<?> productType : processingContainer.getOutputProductTypes()) {
+		for (ProductType<?> productType : processingContainer.getOutputs().getProductTypes()) {
 			recordProductsProducedOfType(teamComp, productType);
 		}
 	}
 
 	private <W extends ProductType<G>, G> void recordProductsConsumedOfType(TeamComponent teamComp, W type) {
-		for (ProcessingProduct<?, G> product : processingContainer.getInputProductsOfType(type)) {
+		for (ProcessingProduct<?, G> product : processingContainer.getInputs().getProductsOfType(type)) {
 			recordProductConsumed(teamComp, type, product);
 		}
 	}
@@ -425,14 +419,14 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	private <W extends ProductType<G>, G> void recordProductConsumed(TeamComponent teamComp, W type,
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH
-				|| product.getCaptureType() == CaptureType.COUNT_ONLY && !product.isTemplateItem()) {
+				|| product.getCaptureType() == CaptureType.COUNT_ONLY && !product.isTemplateProduct()) {
 			getProductionToken(type).consumed((ServerTeam) teamComp.getOwningTeam(), product.getProduct(),
 					product.getAmount());
 		}
 	}
 
 	private <W extends ProductType<G>, G> void recordProductsProducedOfType(TeamComponent teamComp, W type) {
-		for (ProcessingProduct<?, G> product : processingContainer.getOutputProductsOfType(type)) {
+		for (ProcessingProduct<?, G> product : processingContainer.getOutputs().getProductsOfType(type)) {
 			recordProductProduced(teamComp, type, product);
 		}
 	}
@@ -440,24 +434,24 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	private <W extends ProductType<G>, G> void recordProductProduced(TeamComponent teamComp, W type,
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH
-				|| product.getCaptureType() == CaptureType.COUNT_ONLY && !product.isTemplateItem()) {
+				|| product.getCaptureType() == CaptureType.COUNT_ONLY && !product.isTemplateProduct()) {
 			getProductionToken(type).produced((ServerTeam) teamComp.getOwningTeam(), product.getProduct(),
 					product.getAmount());
 		}
 	}
 
 	protected void updateProductionRates(TeamComponent teamComp) {
-		for (ProductType<?> productType : processingContainer.geInputProductTypes()) {
+		for (ProductType<?> productType : processingContainer.getInputs().getProductTypes()) {
 			updateInputProductionRatesOfType(teamComp, productType);
 		}
 
-		for (ProductType<?> productType : processingContainer.getOutputProductTypes()) {
+		for (ProductType<?> productType : processingContainer.getOutputs().getProductTypes()) {
 			updateOutputProductionRatesOfType(teamComp, productType);
 		}
 	}
 
 	private <W extends ProductType<G>, G> void updateInputProductionRatesOfType(TeamComponent teamComp, W type) {
-		for (ProcessingProduct<?, G> product : processingContainer.getInputProductsOfType(type)) {
+		for (ProcessingProduct<?, G> product : processingContainer.getInputs().getProductsOfType(type)) {
 			updateInputProductionRate(teamComp, type, product);
 		}
 	}
@@ -466,13 +460,13 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH || product.getCaptureType() == CaptureType.RATE_ONLY) {
 			getProductionToken(type).setConsumptionPerSecond((ServerTeam) teamComp.getOwningTeam(),
-					product.getProduct(), product.getAmount() * (1.0 / (getProcessingTime() / 20.0)),
-					product.getAmount() * (1.0 / (getDefaultMaxProcessingTime() / 20.0)));
+					product.getProduct(), product.getAmount() * (1.0 / (getProcessingTimer().getMaxTime() / 20.0)),
+					product.getAmount() * (1.0 / (getBaseProcessingTime() / 20.0)));
 		}
 	}
 
 	private <W extends ProductType<G>, G> void updateOutputProductionRatesOfType(TeamComponent teamComp, W type) {
-		for (ProcessingProduct<?, G> product : processingContainer.getOutputProductsOfType(type)) {
+		for (ProcessingProduct<?, G> product : processingContainer.getOutputs().getProductsOfType(type)) {
 			updateOutputProductionRate(teamComp, type, product);
 		}
 	}
@@ -481,13 +475,44 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH || product.getCaptureType() == CaptureType.RATE_ONLY) {
 			getProductionToken(type).setProductionPerSecond((ServerTeam) teamComp.getOwningTeam(), product.getProduct(),
-					product.getAmount() * (1.0 / (getProcessingTime() / 20.0)),
-					product.getAmount() * (1.0 / (getDefaultMaxProcessingTime() / 20.0)));
+					product.getAmount() * (1.0 / (getProcessingTimer().getMaxTime() / 20.0)),
+					product.getAmount() * (1.0 / (getBaseProcessingTime() / 20.0)));
 		}
 	}
 
 	protected ProcessingContainer getProcessingContainer() {
 		return this.processingContainer;
+	}
+
+	public IReadOnlyProcessingContainer getProcessingInputs() {
+		return processingContainer.getInputs();
+	}
+
+	public IReadOnlyProcessingContainer getProcessingOutputs() {
+		return processingContainer.getOutputs();
+	}
+
+	public float getAccumulatedExperience() {
+		return accumulatedExperience;
+	}
+
+	public void clearAccumulatedExperience() {
+		accumulatedExperience = 0.0f;
+	}
+
+	public void applyExperience(Player player) {
+		if (getAccumulatedExperience() > 0) {
+			int points = (int) getAccumulatedExperience();
+			float chanceOfAnotherPoint = getAccumulatedExperience() - points;
+			if (chanceOfAnotherPoint > 0) {
+				if (SDMath.diceRoll(chanceOfAnotherPoint)) {
+					points += 1;
+				}
+			}
+
+			WorldUtilities.dropExperience(getLevel(), getPos(), points);
+			clearAccumulatedExperience();
+		}
 	}
 
 	public PowerProducer getPowerProducerId() {
@@ -496,7 +521,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <G> ProductionTrackingToken<G> getProductionToken(ProductType<G> productType) {
+	public <G> ProductionTrackingToken<G> getProductionToken(ProductType<G> productType) {
 		if (!productionTokens.containsKey(productType)) {
 			productionTokens.put(productType, productType.getProductivityToken());
 		}
@@ -507,9 +532,9 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		invalidateProductionTokens();
 
 		// Drop any items in the output container.
-		if (getProcessingContainer().hasInputProductsOfType(StaticCoreProductTypes.Item.get())) {
-			for (ProcessingProduct<ProductType<ItemStack>, ItemStack> wrapper : getProcessingContainer()
-					.getInputProductsOfType(StaticCoreProductTypes.Item.get())) {
+		if (getProcessingContainer().getInputs().hasProductsOfType(StaticCoreProductTypes.Item.get())) {
+			for (ProcessingProduct<?, ItemStack> wrapper : getProcessingContainer().getInputs()
+					.getProductsOfType(StaticCoreProductTypes.Item.get())) {
 				WorldUtilities.dropItem(getLevel(), getPos(), wrapper.getProduct().copy());
 			}
 		}
@@ -537,12 +562,12 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		}
 
 		boolean shouldSync = Math
-				.abs(lastSyncProcessingTime - this.currentProcessingTime) >= SYNC_UPDATE_DELTA_THRESHOLD;
-		shouldSync |= lastSyncProcessingTime == 0 && currentProcessingTime != 0;
-		shouldSync |= currentProcessingTime == 0 && lastSyncProcessingTime != 0;
+				.abs(lastSyncProcessingTime - this.processingTimer.getCurrentTime()) >= SYNC_UPDATE_DELTA_THRESHOLD;
+		shouldSync |= lastSyncProcessingTime == 0 && processingTimer.getCurrentTime() != 0;
+		shouldSync |= processingTimer.getCurrentTime() == 0 && lastSyncProcessingTime != 0;
 
 		if (shouldSync) {
-			lastSyncProcessingTime = currentProcessingTime;
+			lastSyncProcessingTime = processingTimer.getCurrentTime();
 			K msg = createSynchronizationPacket();
 			StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(),
 					getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
@@ -552,8 +577,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	protected abstract K createSynchronizationPacket();
 
 	protected void handleClientSynchronizeData(K packet) {
-		this.currentProcessingTime = packet.getProccesingTime();
-		this.processingTime = packet.getMaxProcessingTime();
+		this.processingTimer = packet.getProccesingTime();
 		this.currentProcessingState = packet.getProcessingState();
 		this.performedWorkLastTick = packet.getPerformedWorkLastTick();
 	}

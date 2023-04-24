@@ -26,8 +26,8 @@ import net.minecraftforge.common.FarmlandWaterManager;
 import net.minecraftforge.common.ticket.AABBTicket;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
 import theking530.staticcore.blockentity.components.items.BatteryInventoryComponent;
@@ -61,8 +61,8 @@ import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 
 public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBasicFarmer> TYPE = new BlockEntityTypeAllocator<BlockEntityBasicFarmer>("basic_farmer",
-			(allocator, pos, state) -> new BlockEntityBasicFarmer(pos, state), ModBlocks.BasicFarmer);
+	public static final BlockEntityTypeAllocator<BlockEntityBasicFarmer> TYPE = new BlockEntityTypeAllocator<BlockEntityBasicFarmer>(
+			"basic_farmer", (allocator, pos, state) -> new BlockEntityBasicFarmer(pos, state), ModBlocks.BasicFarmer);
 	private static final Map<Class<?>, IFarmerHarvester> HARVETERS = new LinkedHashMap<Class<?>, IFarmerHarvester>();
 
 	static {
@@ -77,7 +77,7 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final OldMachineProcessingComponent processingComponent;
+	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	private final List<BlockPos> blocks;
@@ -91,28 +91,33 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	public BlockEntityBasicFarmer(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				if (slot == 0) {
-					return ModItemTags.matches(ModItemTags.FARMING_HOE, stack.getItem());
-				} else {
-					return ModItemTags.matches(ModItemTags.FARMING_HOE, stack.getItem());
-				}
-			}
-		}).setSlotsLockable(true));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input)
+				.setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						if (slot == 0) {
+							return ModItemTags.matches(ModItemTags.FARMING_HOE, stack.getItem());
+						} else {
+							return ModItemTags.matches(ModItemTags.FARMING_HOE, stack.getItem());
+						}
+					}
+				}).setSlotsLockable(true));
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
-		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
+		registerComponent(
+				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
+						.setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
-		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.basicFarmerProcessingTime.get(), this::canFarm, this::canFarm,
-				this::processingCompleted, true));
-		processingComponent.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage)
-				.setProcessingPowerUsage(StaticPowerConfig.SERVER.basicFarmerPowerUsage.get());
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent",
+				StaticPowerConfig.SERVER.basicFarmerProcessingTime.get()));
+		processingComponent.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent)
+				.setPowerComponent(powerStorage)
+				.setBasePowerUsage(StaticPowerConfig.SERVER.basicFarmerPowerUsage.get());
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
-			return CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(fluid), getLevel()).isPresent();
+			return CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(),
+					new RecipeMatchParameters(fluid), getLevel()).isPresent();
 		}));
 
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
@@ -121,7 +126,8 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", outputInventory));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo",
+				fluidTankComponent));
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
@@ -152,7 +158,8 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	}
 
 	public float getGrowthBonus() {
-		FertalizerRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(this.fluidTankComponent.getFluid()), getLevel()).orElse(null);
+		FertalizerRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(),
+				new RecipeMatchParameters(this.fluidTankComponent.getFluid()), getLevel()).orElse(null);
 		if (recipe != null) {
 			return recipe.getFertalizationAmount();
 		}
@@ -172,7 +179,8 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 			position.add(new Vector3f(-range, 0.0f, -range));
 
 			// Add the entry.
-			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale, new SDColor(0.1f, 1.0f, 0.2f, 0.25f));
+			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale,
+					new SDColor(0.1f, 1.0f, 0.2f, 0.25f));
 		} else {
 			// Remove the entry.
 			RadiusPreviewRenderer.removeRadiusRenderer(this, "range");
@@ -214,10 +222,12 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 				wateringTicket.invalidate();
 			}
 
-			AABB rangeBounds = new AABB(getBlockPos().getX() - range - 1, getBlockPos().getY() - 1, getBlockPos().getZ() - range - 1, getBlockPos().getX() + range + 1, getBlockPos().getY(),
+			AABB rangeBounds = new AABB(getBlockPos().getX() - range - 1, getBlockPos().getY() - 1,
+					getBlockPos().getZ() - range - 1, getBlockPos().getX() + range + 1, getBlockPos().getY(),
 					getBlockPos().getZ() + range + 1);
 			wateringTicket = FarmlandWaterManager.addAABBTicket(getLevel(), rangeBounds);
-			StaticPower.LOGGER.debug(String.format("Adding farmland watering ticket for farmer at position: %1$s.", getBlockPos().toString()));
+			StaticPower.LOGGER.debug(String.format("Adding farmland watering ticket for farmer at position: %1$s.",
+					getBlockPos().toString()));
 		}
 	}
 
@@ -247,7 +257,8 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 
 		for (int i = 0; i < internalInventory.getSlots(); i++) {
 			ItemStack extractedStack = internalInventory.extractItem(i, Integer.MAX_VALUE, false);
-			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(outputInventory, extractedStack, false);
+			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(outputInventory, extractedStack,
+					false);
 			if (!insertedStack.isEmpty()) {
 				internalInventory.setStackInSlot(i, insertedStack);
 			}
@@ -256,8 +267,9 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 		// Return true if we finished clearing the internal inventory.
 		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
 			if (harvested) {
-				((ServerLevel) getLevel()).sendParticles(ParticleTypes.FALLING_WATER, getCurrentPosition().getX() + 0.5D, getCurrentPosition().getY() + 1.0D, getCurrentPosition().getZ() + 0.5D, 1,
-						0.0D, 0.0D, 0.0D, 0.0D);
+				((ServerLevel) getLevel()).sendParticles(ParticleTypes.FALLING_WATER,
+						getCurrentPosition().getX() + 0.5D, getCurrentPosition().getY() + 1.0D,
+						getCurrentPosition().getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 				return ProcessingCheckState.ok();
 			} else {
 				return ProcessingCheckState.cancel();
@@ -285,9 +297,11 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	}
 
 	private void refreshBlocksInRange(int range) {
-		StaticPower.LOGGER.debug(String.format("Farmer at position: %1$s refershing eligible blocks..", getBlockPos().toString()));
+		StaticPower.LOGGER.debug(
+				String.format("Farmer at position: %1$s refershing eligible blocks..", getBlockPos().toString()));
 		blocks.clear();
-		for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(-range, 0, -range), getBlockPos().offset(range, 0, range))) {
+		for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(-range, 0, -range),
+				getBlockPos().offset(range, 0, range))) {
 			if (pos != getBlockPos()) {
 				blocks.add(pos.immutable());
 			}
@@ -306,7 +320,8 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	protected void useHoe() {
 		// If we have an hoe, and we're on the server, use it.
 		if (hasHoe() && !getLevel().isClientSide) {
-			if (inputInventory.getStackInSlot(0).hurt(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getLevel().random, null)) {
+			if (inputInventory.getStackInSlot(0).hurt(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(),
+					getLevel().random, null)) {
 				inputInventory.getStackInSlot(1).shrink(1);
 				getLevel().playSound(null, worldPosition, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
 			}
@@ -317,7 +332,8 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 	protected void useAxe() {
 		// If we have an axe, and we're on the server, use it.
 		if (hasAxe() && !getLevel().isClientSide) {
-			if (inputInventory.getStackInSlot(1).hurt(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getLevel().random, null)) {
+			if (inputInventory.getStackInSlot(1).hurt(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(),
+					getLevel().random, null)) {
 				inputInventory.getStackInSlot(1).shrink(1);
 				getLevel().playSound(null, worldPosition, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
 			}
@@ -357,11 +373,14 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 
 	@SuppressWarnings("resource")
 	protected boolean growCrop(BlockPos pos) {
-		if (getLevel().getBlockState(pos) != null && getLevel().getBlockState(pos).getBlock() instanceof BonemealableBlock) {
+		if (getLevel().getBlockState(pos) != null
+				&& getLevel().getBlockState(pos).getBlock() instanceof BonemealableBlock) {
 			BonemealableBlock tempCrop = (BonemealableBlock) getLevel().getBlockState(pos).getBlock();
 			if (tempCrop.isValidBonemealTarget(getLevel(), pos, getLevel().getBlockState(pos), false)) {
-				tempCrop.performBonemeal((ServerLevel) getLevel(), getLevel().random, pos, getLevel().getBlockState(pos));
-				((ServerLevel) getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+				tempCrop.performBonemeal((ServerLevel) getLevel(), getLevel().random, pos,
+						getLevel().getBlockState(pos));
+				((ServerLevel) getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D,
+						pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 			}
 		}
 		return true;
@@ -371,7 +390,8 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 		range = StaticPowerConfig.SERVER.basicFarmerDefaultRange.get();
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
-				range = (int) Math.max(range, StaticPowerConfig.SERVER.basicFarmerDefaultRange.get() * ((BaseRangeUpgrade) stack.getItem()).getTierObject().upgradeConfiguration.rangeUpgrade.get());
+				range = (int) Math.max(range, StaticPowerConfig.SERVER.basicFarmerDefaultRange.get()
+						* ((BaseRangeUpgrade) stack.getItem()).getTierObject().upgradeConfiguration.rangeUpgrade.get());
 			}
 		}
 		refreshBlocksInRange(range);

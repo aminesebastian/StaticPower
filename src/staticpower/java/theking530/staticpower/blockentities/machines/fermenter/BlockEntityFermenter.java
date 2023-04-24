@@ -8,11 +8,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldRecipeProcessingComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.interfaces.IOldRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
@@ -35,10 +36,10 @@ import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityFermenter extends BlockEntityMachine implements IOldRecipeProcessor<FermenterRecipe> {
+public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeProcessor<FermenterRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFermenter> TYPE = new BlockEntityTypeAllocator<>("fermenter", (type, pos, state) -> new BlockEntityFermenter(pos, state),
-			ModBlocks.Fermenter);
+	public static final BlockEntityTypeAllocator<BlockEntityFermenter> TYPE = new BlockEntityTypeAllocator<>(
+			"fermenter", (type, pos, state) -> new BlockEntityFermenter(pos, state), ModBlocks.Fermenter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -46,18 +47,20 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IOldReci
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final OldRecipeProcessingComponent<FermenterRecipe> processingComponent;
+	public final RecipeProcessingComponent<FermenterRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
 	public BlockEntityFermenter(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
-			}
-		}));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts())
+								.isPresent();
+					}
+				}));
 
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
@@ -65,22 +68,25 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IOldReci
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new OldRecipeProcessingComponent<FermenterRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fermenterProcessingTime.get(),
-				ModRecipeTypes.FERMENTER_RECIPE_TYPE.get(), this));
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(processingComponent = new RecipeProcessingComponent<FermenterRecipe>("ProcessingComponent",
+				StaticPowerConfig.SERVER.fermenterProcessingTime.get(), ModRecipeTypes.FERMENTER_RECIPE_TYPE.get()));
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.fermenterPowerUsage.get());
+		processingComponent.setBasePowerUsage(StaticPowerConfig.SERVER.fermenterPowerUsage.get());
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
-		registerComponent(new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000)
+				.setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent,
+				MachineSideMode.Output));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo",
+				fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
@@ -88,11 +94,13 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IOldReci
 
 	protected int getSlotToProccess() {
 		for (int i = 0; i < 9; i++) {
-			FermenterRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERMENTER_RECIPE_TYPE.get(), new RecipeMatchParameters(inputInventory.getStackInSlot(i)), getLevel()).orElse(null);
+			FermenterRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERMENTER_RECIPE_TYPE.get(),
+					new RecipeMatchParameters(inputInventory.getStackInSlot(i)), getLevel()).orElse(null);
 			if (recipe != null) {
 				FluidStack fermentingResult = recipe.getOutputFluidStack();
 				if (fluidTankComponent.fill(fermentingResult, FluidAction.SIMULATE) == fermentingResult.getAmount()) {
-					if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItemStack())) {
+					if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory,
+							recipe.getResidualOutput().getItemStack())) {
 						return i;
 					}
 				}
@@ -102,7 +110,7 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IOldReci
 	}
 
 	@Override
-	public RecipeMatchParameters getRecipeMatchParameters(OldRecipeProcessingComponent<FermenterRecipe> component) {
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FermenterRecipe> component) {
 		int slot = getSlotToProccess();
 		if (slot >= 0) {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(slot));
@@ -111,32 +119,33 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IOldReci
 	}
 
 	@Override
-	public void captureInputsAndProducts(OldRecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, OldProcessingContainer outputContainer) {
-		int slot = getSlotToProccess();
-		outputContainer.addInputItem(inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
-		outputContainer.addOutputItem(recipe.getResidualOutput().calculateOutput(), CaptureType.BOTH);
-		outputContainer.addOutputFluid(recipe.getOutputFluidStack(), CaptureType.BOTH);
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+		return new ContainerFermenter(windowId, inventory, this);
 	}
 
 	@Override
-	public void processingStarted(OldRecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, OldProcessingContainer outputContainer) {
-		int slot = getSlotToProccess();
-		inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), false);
+	public void captureOutputs(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addItem(recipe.getResidualOutput().calculateOutput(), CaptureType.BOTH);
+		outputContainer.addFluid(recipe.getOutputFluidStack(), CaptureType.BOTH);
 	}
 
 	@Override
-	public ProcessingCheckState canStartProcessing(OldRecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, OldProcessingContainer outputContainer) {
-		if (outputContainer.hasOutputItems()) {
-			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<FermenterRecipe> component,
+			FermenterRecipe recipe, ConcretizedProductContainer outputContainer) {
+		if (outputContainer.hasItems()) {
+			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getItem(0))) {
 				return ProcessingCheckState.outputsCannotTakeRecipe();
 			}
 		}
 
-		if (!fluidTankComponent.getFluid().isEmpty() && !outputContainer.getOutputFluid(0).fluid().isFluidEqual(fluidTankComponent.getFluid())) {
+		if (!fluidTankComponent.getFluid().isEmpty()
+				&& !outputContainer.getFluid(0).isFluidEqual(fluidTankComponent.getFluid())) {
 			return ProcessingCheckState.outputFluidDoesNotMatch();
 		}
 
-		if (fluidTankComponent.getFluid().getAmount() + outputContainer.getOutputFluid(0).fluid().getAmount() > fluidTankComponent.getCapacity()) {
+		if (fluidTankComponent.getFluid().getAmount() + outputContainer.getFluid(0).getAmount() > fluidTankComponent
+				.getCapacity()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
 
@@ -144,17 +153,20 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IOldReci
 	}
 
 	@Override
-	public void processingCompleted(OldRecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, OldProcessingContainer outputContainer) {
-		if (outputContainer.hasOutputItems()) {
-			outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
-		}
+	public void captureInputs(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+		int slot = getSlotToProccess();
+		inputContainer.addItem(inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), false));
 
-		fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.EXECUTE);
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		return new ContainerFermenter(windowId, inventory, this);
-	}
+	public void onProcessingCompleted(RecipeProcessingComponent<FermenterRecipe> component,
+			ProcessingContainer processingContainer) {
+		if (processingContainer.getOutputs().hasItems()) {
+			outputInventory.insertItem(0, processingContainer.getOutputs().getItem(0).copy(), false);
+		}
 
+		fluidTankComponent.fill(processingContainer.getOutputs().getFluid(0), FluidAction.EXECUTE);
+	}
 }

@@ -13,11 +13,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.StaticCoreConfig;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldProcessingContainer.CaptureType;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
-import theking530.staticcore.blockentity.components.control.processing.ProcessingOutputContainer;
-import theking530.staticcore.blockentity.components.control.processing.basic.BasicProcessingComponent;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer.CaptureType;
 import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
 import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
@@ -150,44 +149,56 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 	}
 
 	@Override
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+		return new ContainerAutoSmith(windowId, inventory, this);
+	}
+
+	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<AutoSmithRecipe> component) {
 		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1))
 				.setFluids(fluidTankComponent.getFluid());
 	}
 
 	@Override
-	public ProcessingCheckState captureOutputs(RecipeProcessingComponent<AutoSmithRecipe> component,
-			AutoSmithRecipe recipe, ProcessingOutputContainer outputContainer) {
+	public void captureOutputs(RecipeProcessingComponent<AutoSmithRecipe> component, AutoSmithRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
 		int transferCount = recipe.isWildcardRecipe() ? 1 : recipe.getSmithTarget().getCount();
 		ItemStack toModifyItem = inputInventory.extractItem(0, transferCount, true);
+
+		// Only capture the output if the recipe was successfully applied.
 		if (!recipe.applyToItemStack(toModifyItem)) {
+			outputContainer.add(StaticCoreProductTypes.Item.get(), toModifyItem, toModifyItem.getCount(),
+					CaptureType.BOTH, false);
+		}
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<AutoSmithRecipe> component,
+			AutoSmithRecipe recipe, ConcretizedProductContainer outputContainer) {
+		if (outputContainer.getItems().isEmpty()) {
 			return ProcessingCheckState.skip();
 		}
 
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, toModifyItem)) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
-
-		outputContainer.addOutput(StaticCoreProductTypes.Item.get(), toModifyItem, toModifyItem.getCount(),
-				CaptureType.BOTH, false);
-
 		return ProcessingCheckState.ok();
 	}
 
 	@Override
-	public void onRecipeProcessingStarted(RecipeProcessingComponent<AutoSmithRecipe> component, AutoSmithRecipe recipe,
-			ProcessingOutputContainer outputContainer, ProcessingContainer processingContainer) {
+	public void captureInputs(RecipeProcessingComponent<AutoSmithRecipe> component, AutoSmithRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
 		int transferCount = recipe.isWildcardRecipe() ? 1 : recipe.getSmithTarget().getCount();
-		processingContainer.addInputItem(inputInventory.extractItem(0, transferCount, false), CaptureType.NONE, false);
-		processingContainer.addInputItem(inputInventory.extractItem(1, recipe.getModifierMaterial().getCount(), false),
-				CaptureType.BOTH);
-		processingContainer.addInputFluid(
-				fluidTankComponent.drain(recipe.getModifierFluid().getAmount(), FluidAction.EXECUTE), CaptureType.BOTH);
+		inputContainer.addItem(inputInventory.extractItem(0, transferCount, false), CaptureType.NONE, false);
+		inputContainer.addItem(inputInventory.extractItem(1, recipe.getModifierMaterial().getCount(), false));
+		inputContainer.addFluid(fluidTankComponent.drain(recipe.getModifierFluid().getAmount(), FluidAction.EXECUTE));
+
 	}
 
 	@Override
-	public void onProcessingCompleted(BasicProcessingComponent<?, ?> component, ProcessingContainer outputContainer) {
-		ItemStack output = outputContainer.getOutputItem(0).copy();
+	public void onProcessingCompleted(RecipeProcessingComponent<AutoSmithRecipe> component,
+			ProcessingContainer processingContainer) {
+		ItemStack output = processingContainer.getOutputs().getItem(0).copy();
 
 		// Make a hybrid of recipe parameters with the output as the smithing target,
 		// but the inputs as the rest.
@@ -208,10 +219,5 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 		getLevel().playSound(null, getBlockPos().getX(), getBlockPos().getY() + 0.5, getBlockPos().getZ(),
 				SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.1F,
 				((getLevel().getRandom().nextFloat() * .75f) + 1.25f));
-	}
-
-	@Override
-	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		return new ContainerAutoSmith(windowId, inventory, this);
 	}
 }

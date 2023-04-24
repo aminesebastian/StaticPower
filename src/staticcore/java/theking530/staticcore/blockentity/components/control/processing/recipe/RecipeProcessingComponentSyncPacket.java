@@ -6,9 +6,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
-import theking530.staticcore.blockentity.components.control.processing.basic.BasicProcessingComponentSyncPacket;
+import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponentSyncPacket;
 
-public class RecipeProcessingComponentSyncPacket extends BasicProcessingComponentSyncPacket {
+public class RecipeProcessingComponentSyncPacket extends MachineProcessingComponentSyncPacket {
 	private ResourceLocation recipeId;
 
 	public RecipeProcessingComponentSyncPacket() {

@@ -47,7 +47,7 @@ public class GuiSqueezer extends StaticCoreBlockEntityScreen<ContainerSqueezer, 
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<SqueezerRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentRecipe();
+		Optional<SqueezerRecipe> currentRecipe = getTileEntity().processingComponent.getProcessingRecipe();
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent() && currentRecipe.get().hasOutputFluid()) {
