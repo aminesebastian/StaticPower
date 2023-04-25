@@ -103,8 +103,8 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 			//@formatter:off
 			String query = String.format("SELECT consumed, produced, game_tick \n"
 					+ "FROM %1$s_productivity_%2$s \n"
-					+ "WHERE game_tick > %3$d AND product_hash = %4$d\n"
-					+ "ORDER BY game_tick DESC",
+					+ "WHERE game_tick >= %3$d AND product_hash = %4$d\n"
+					+ "ORDER BY game_tick ASC",
 					productTablePrefix, 
 					period.getTableKey(),
 					threshold,
@@ -181,7 +181,7 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 
 			for (ProductionEntry<T> entry : bucket) {
 				ProductionEntryState metric = entry.getValuesForDatabaseInsert();
-				if (metric.isEmpty()) {
+				if (metric.consumed() <= 0 && metric.produced() <=  0) {
 					continue;
 				}
 

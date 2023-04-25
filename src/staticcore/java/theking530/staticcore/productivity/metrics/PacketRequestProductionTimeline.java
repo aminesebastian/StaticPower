@@ -20,6 +20,7 @@ import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 
 public class PacketRequestProductionTimeline extends NetworkMessage {
+	private long requestedAtTime;
 	private ProductType<?> productType;
 	private Collection<Integer> productHashCodes;
 	private MetricPeriod period;
@@ -29,8 +30,9 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 
 	}
 
-	public PacketRequestProductionTimeline(ProductType<?> productType, Collection<Integer> productHashCodes,
+	public PacketRequestProductionTimeline(long requestedAtTime,ProductType<?> productType, Collection<Integer> productHashCodes,
 			MetricPeriod period, MetricType type) {
+		this.requestedAtTime = requestedAtTime;
 		this.productType = productType;
 		this.productHashCodes = productHashCodes;
 		this.period = period;
@@ -39,6 +41,7 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
+		buffer.writeLong(requestedAtTime);
 		buffer.writeUtf(StaticCoreRegistries.ProductRegistry().getKey(productType).toString());
 		buffer.writeByte(period.ordinal());
 		buffer.writeByte(type.ordinal());
@@ -50,6 +53,7 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
+		requestedAtTime = buffer.readLong();
 		productType = StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
 		period = MetricPeriod.values()[buffer.readByte()];
 		type = MetricType.values()[buffer.readByte()];
@@ -77,15 +81,14 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 					.getProductTypeCache(productType);
 			List<ProductivityTimeline> timelines = new LinkedList<ProductivityTimeline>();
 			for (int hashCode : productHashCodes) {
-				ProductivityTimeline timeline = cache.getProductivityTimeline(period, hashCode,
-						serverPlayer.level.getGameTime());
+				ProductivityTimeline timeline = cache.getProductivityTimeline(period, hashCode, requestedAtTime);
 				if (!timeline.entries().isEmpty()) {
 					timelines.add(timeline);
 				}
 			}
 
-			PacketRecieveProductionTimeline response = new PacketRecieveProductionTimeline(productType, period, type,
-					timelines);
+			PacketRecieveProductionTimeline response = new PacketRecieveProductionTimeline(requestedAtTime, productType,
+					period, type, timelines);
 			StaticCoreMessageHandler.sendMessageToPlayer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
 					(ServerPlayer) ctx.get().getSender(), response);
 		});

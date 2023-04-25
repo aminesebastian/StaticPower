@@ -27,8 +27,8 @@ public class BlockEntityRenderPowerMonitor extends StaticPowerBlockEntitySpecial
 	}
 
 	@Override
-	public void renderTileEntityBase(BlockEntityPowerMonitor tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
-			int combinedOverlay) {
+	public void renderTileEntityBase(BlockEntityPowerMonitor tileEntity, BlockPos pos, float partialTicks,
+			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.PowerMonitor");
 		if (tileEntity.getMetrics().getData(MetricsTimeUnit.TICKS).getInputValues().size() <= 1) {
 			return;
@@ -47,21 +47,29 @@ public class BlockEntityRenderPowerMonitor extends StaticPowerBlockEntitySpecial
 
 		matrixStack.popPose();
 
-		double maxValue = tileEntity.getRecievedData().getMinMaxValues().getY();
-		double minValue = tileEntity.getProvidedData().getMinMaxValues().getX();
+		double maxValue = tileEntity.getRecievedData().getRange().getMax();
+		double minValue = tileEntity.getProvidedData().getRange().getMin();
 
 		// Draw the max value.
-		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, PowerTextFormatting.formatPowerRateToString(maxValue).getString(), new SDColor(255.0f, 255.0f, 255.0f, 255.0f),
-				new Vector3D(0.07f, 0.43f, 0.025f), 0.0035f, matrixStack, buffer, combinedLight, combinedOverlay);
+		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer,
+				PowerTextFormatting.formatPowerRateToString(maxValue).getString(),
+				new SDColor(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.07f, 0.43f, 0.025f), 0.0035f, matrixStack,
+				buffer, combinedLight, combinedOverlay);
 
 		// Draw the min value.
-		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, PowerTextFormatting.formatPowerRateToString(minValue).getString(), new SDColor(255.0f, 255.0f, 255.0f, 255.0f),
-				new Vector3D(0.07f, 0.04f, 0.025f), 0.0035f, matrixStack, buffer, combinedLight, combinedOverlay);
+		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer,
+				PowerTextFormatting.formatPowerRateToString(minValue).getString(),
+				new SDColor(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.07f, 0.04f, 0.025f), 0.0035f, matrixStack,
+				buffer, combinedLight, combinedOverlay);
 
 		// Draw the current value.
 		WorldRenderingUtilities.drawTextInWorld(this.blockRenderer,
-				PowerTextFormatting.formatPowerRateToString(tileEntity.getMetrics().getData(MetricsTimeUnit.TICKS).getInputValues().peekLast()).getString(), new SDColor(255.0f, 255.0f, 255.0f, 255.0f),
-				new Vector3D(0.74f, 0.2145f, 0.025f), 0.0035f, matrixStack, buffer, combinedLight, combinedOverlay);
+				PowerTextFormatting
+						.formatPowerRateToString(
+								tileEntity.getMetrics().getData(MetricsTimeUnit.TICKS).getInputValues().peekLast())
+						.getString(),
+				new SDColor(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.74f, 0.2145f, 0.025f), 0.0035f, matrixStack,
+				buffer, combinedLight, combinedOverlay);
 
 		matrixStack.popPose();
 		Minecraft.getInstance().getProfiler().pop();

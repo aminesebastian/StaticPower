@@ -1,7 +1,5 @@
 package theking530.staticpower.blockentities.power.powermonitor;
 
-import java.util.Collections;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,11 +9,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.energy.metrics.IPowerMetricsSyncConsumer;
-import theking530.api.energy.metrics.MetricsTimeUnit;
 import theking530.api.energy.metrics.PowerTransferMetrics;
 import theking530.staticcore.blockentity.components.energy.PowerDistributionComponent;
 import theking530.staticcore.blockentity.components.serialization.SaveSerialize;
-import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
+import theking530.staticcore.gui.widgets.DataGraphWidget.DynamicGraphDataSet;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDColor;
@@ -25,8 +22,9 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowerMetricsSyncConsumer {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPowerMonitor> TYPE = new BlockEntityTypeAllocator<BlockEntityPowerMonitor>("power_monitor",
-			(allocator, pos, state) -> new BlockEntityPowerMonitor(allocator, pos, state), ModBlocks.PowerMonitor);
+	public static final BlockEntityTypeAllocator<BlockEntityPowerMonitor> TYPE = new BlockEntityTypeAllocator<BlockEntityPowerMonitor>(
+			"power_monitor", (allocator, pos, state) -> new BlockEntityPowerMonitor(allocator, pos, state),
+			ModBlocks.PowerMonitor);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -36,8 +34,8 @@ public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowe
 
 	@SaveSerialize
 	private PowerTransferMetrics metrics;
-	private FloatGraphDataSet recievedData;
-	private FloatGraphDataSet providedData;
+	private DynamicGraphDataSet recievedData;
+	private DynamicGraphDataSet providedData;
 
 	private long minPowerThreshold;
 	private long maxPowerThreshold;
@@ -49,7 +47,8 @@ public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowe
 
 	protected PowerDistributionComponent powerDistributor;
 
-	public BlockEntityPowerMonitor(BlockEntityTypeAllocator<BlockEntityPowerMonitor> allocator, BlockPos pos, BlockState state) {
+	public BlockEntityPowerMonitor(BlockEntityTypeAllocator<BlockEntityPowerMonitor> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
 
 		// Add the power distributor.
@@ -63,8 +62,8 @@ public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowe
 		metrics = new PowerTransferMetrics();
 
 		// Initialize the default data.
-		recievedData = new FloatGraphDataSet(new SDColor(0.1f, 1.0f, 0.2f, 0.75f), Collections.emptyList());
-		providedData = new FloatGraphDataSet(new SDColor(1.0f, 0.1f, 0.2f, 0.75f), Collections.emptyList());
+		recievedData = new DynamicGraphDataSet(new SDColor(0.1f, 1.0f, 0.2f, 0.75f));
+		providedData = new DynamicGraphDataSet(new SDColor(1.0f, 0.1f, 0.2f, 0.75f));
 	}
 
 	@Override
@@ -149,21 +148,23 @@ public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowe
 	@Override
 	public void recieveMetrics(PowerTransferMetrics metrics) {
 		this.metrics = metrics;
-		recievedData = new FloatGraphDataSet(new SDColor(0.1f, 1.0f, 0.2f, 0.75f), metrics.getData(MetricsTimeUnit.SECONDS).getInputValues());
-		providedData = new FloatGraphDataSet(new SDColor(1.0f, 0.1f, 0.2f, 0.75f), metrics.getData(MetricsTimeUnit.SECONDS).getOutputValues());
+//		recievedData = new DynamicGraphDataSet(new SDColor(0.1f, 1.0f, 0.2f, 0.75f),
+//				metrics.getData(MetricsTimeUnit.SECONDS).getInputValues());
+//		providedData = new DynamicGraphDataSet(new SDColor(1.0f, 0.1f, 0.2f, 0.75f),
+//				metrics.getData(MetricsTimeUnit.SECONDS).getOutputValues());
 	}
 
 	/**
 	 * @return the recievedData
 	 */
-	public FloatGraphDataSet getRecievedData() {
+	public DynamicGraphDataSet getRecievedData() {
 		return recievedData;
 	}
 
 	/**
 	 * @return the providedData
 	 */
-	public FloatGraphDataSet getProvidedData() {
+	public DynamicGraphDataSet getProvidedData() {
 		return providedData;
 	}
 }

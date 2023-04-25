@@ -1,19 +1,18 @@
 package theking530.staticcore.gui.widgets;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.Map.Entry;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.math.SDMath;
-import theking530.staticcore.utilities.math.Vector2D;
 import theking530.staticcore.utilities.math.Vector3D;
 
 public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
@@ -42,43 +41,56 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 			GuiDrawUtilities.drawRectangle(matrix, getWidth(), 0.5f, 0, i * scale, 1, lineColor);
 		}
 
+		GraphDataRange totalRange = getTotalContainedRange();
+
 		// If we have no data, stop here.
-		Vector2D minMax = new Vector2D(0, 0);
 		if (!dataSets.isEmpty()) {
-			minMax = getTotalYValueRange();
-			minMax.multiply(1.25f);
-			float offset = 0; // ((Minecraft.getInstance().level.getGameTime() % 20) + partialTicks) / 20.0f;
+			float offset = 0;// ((Minecraft.getInstance().level.getGameTime() % 40) + partialTicks) / 20.0f;
 
 			// Move us down so the origin of the graph is the bottom right corner and then
 			// draw the data.
 			matrix.pushPose();
 			matrix.translate(getWidth() - (offset * scale), getSize().getY(), 0);
-			for (String dataLabel : dataSets.keySet()) {
-				if (dataSets.get(dataLabel).getData().length > 0) {
-					drawDataSet(matrix, maxDataPoints, dataSets.get(dataLabel), minMax.getY(), scale);
+			for (Entry<String, IGraphDataSet> data : dataSets.entrySet()) {
+				IGraphDataSet dataSet = data.getValue();
+				if (dataSet.getData().length > 0) {
+					drawDataSet(matrix, maxDataPoints, dataSet, scale);
 				}
-				double currentValue = dataSets.get(dataLabel).getData()[0];
-				float currentValueY = (float) (currentValue / Math.max(minMax.getY(), 1)) * getHeight();
+				GraphDataPoint currentValue = dataSet.getData()[0];
+				float currentValueY = (float) (currentValue.getY() / Math.max(totalRange.getMax(), 1)) * getHeight();
 				float valueLabelY = -currentValueY - 4;
 				valueLabelY = SDMath.clamp(valueLabelY, -getHeight() - 2, -5);
-				GuiDrawUtilities.drawString(matrix, GuiTextUtilities.formatNumberAsString(currentValue).getString(), -4,
-						valueLabelY, 10, 0.75f,
-						dataSets.get(dataLabel).getLineColor().fromFloatToEightBit().encodeInInteger(), true);
-				GuiDrawUtilities.drawRectangle(matrix, 4, 4, -5, -currentValueY - 2.5f, 5,
-						dataSets.get(dataLabel).getLineColor());
+				GuiDrawUtilities.drawString(matrix,
+						GuiTextUtilities.formatNumberAsString(currentValue.getY()).getString(), -4, valueLabelY, 10,
+						0.75f, dataSet.getLineColor().fromFloatToEightBit().encodeInInteger(), true);
+				GuiDrawUtilities.drawRectangle(matrix, 4, 4, -5, -currentValueY - 2.5f, 5, dataSet.getLineColor());
 			}
 			matrix.popPose();
 		}
 
 		// Draw y axis values.
 		GuiDrawUtilities.drawStringLeftAligned(matrix,
-				GuiTextUtilities.formatNumberAsString(minMax.getX() < 0 ? minMax.getX() : 0).getString(), 4,
+				GuiTextUtilities.formatNumberAsString(totalRange.getMin() < 0 ? totalRange.getMin() : 0).getString(), 4,
 				getSize().getY() - 4, 10, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
-		if (minMax.getY() > minMax.getX()) {
+		if (totalRange.getMax() > totalRange.getMin()) {
 			GuiDrawUtilities.drawStringLeftAligned(matrix,
-					GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 4, 8, 10, 0.75f,
+					GuiTextUtilities.formatNumberAsString(totalRange.getMax()).getString(), 4, 8, 10, 0.75f,
 					SDColor.EIGHT_BIT_WHITE, true);
 		}
+	}
+
+	public GraphDataRange getTotalContainedRange() {
+		double min = 0, max = 0;
+		for (IGraphDataSet dataSet : dataSets.values()) {
+			if (dataSet.getRange().getMin() < min) {
+				min = dataSet.getRange().getMin();
+			}
+			if (dataSet.getRange().getMax() > max) {
+				max = dataSet.getRange().getMax();
+			}
+		}
+
+		return new GraphDataRange(min, max);
 	}
 
 	public void setDataSet(String label, IGraphDataSet dataSet) {
@@ -93,171 +105,60 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 		dataSets.clear();
 	}
 
-	protected Vector2D getTotalYValueRange() {
-		// Allocate the min and max values.
-		double min = Integer.MAX_VALUE;
-		double max = Integer.MIN_VALUE;
-
-		// Calculate the min and max values.
-		for (String dataLabel : dataSets.keySet()) {
-			for (double data : dataSets.get(dataLabel).getData()) {
-				if (data > max) {
-					max = data;
-				}
-				if (data < min) {
-					min = data;
-				}
-			}
-		}
-
-		// Return the values.
-		return new Vector2D((float) min, (float) max);
-	}
-
-	protected void drawDataSet(PoseStack matrix, int maxPointsToDisplay, IGraphDataSet data, float maxDataValue,
-			float valueScale) {
+	protected void drawDataSet(PoseStack matrix, int maxPointsToDisplay, IGraphDataSet data, float valueScale) {
 		SDColor lineColor = data.getLineColor();
 
-		double[] yAxis = data.getData();
+		GraphDataPoint[] yAxis = data.getData();
 		int maxPoints = (int) Math.min(yAxis.length, maxPointsToDisplay + 1);
 
 		// Render all the data points.
 		if (maxPoints >= 2) {
 			for (int i = 0; i < maxPoints - 1; i++) {
 				float x = -(i * valueScale) + 1f;
-				float y = (float) (yAxis[i] / maxDataValue) * getHeight();
-				float nextY = (float) (yAxis[i + 1] / maxDataValue) * getHeight();
+				float y = (float) (yAxis[i].getY() / data.getRange().getMax()) * getHeight();
+				float nextY = (float) (yAxis[i + 1].getY() / data.getRange().getMax()) * getHeight();
 
 				GuiDrawUtilities.drawLine(matrix, new Vector3D(x, -y, 1), new Vector3D(x - valueScale, -nextY, 1),
-						lineColor, 3);
+						lineColor, data.getLineThickness());
 			}
 		} else if (yAxis.length == 1) {
 			float x = getWidth();
-			float y = (float) -SDMath.clamp(yAxis[0] * valueScale, -maxDataValue, maxDataValue);
-			GuiDrawUtilities.drawLine(matrix, new Vector3D(x, y, 10), new Vector3D(x, y, 10), lineColor, 5);
-		}
-	}
-
-	public static class SupplierGraphDataSet extends AbstractGraphDataSet {
-		private Supplier<double[]> dataSupplier;
-		private Vector2D minMaxValues;
-
-		public SupplierGraphDataSet(SDColor color, Supplier<double[]> dataSupplier) {
-			super(color);
-			this.minMaxValues = new Vector2D();
-			this.dataSupplier = dataSupplier;
-		}
-
-		@Override
-		public double[] getData() {
-			double[] data = dataSupplier.get();
-			for (int i = 0; i < data.length; i++) {
-				if (data[i] > minMaxValues.getY()) {
-					minMaxValues.setY((float) data[i]);
-				} else if (data[i] < minMaxValues.getX()) {
-					minMaxValues.setX((float) data[i]);
-				}
-			}
-			return data;
-		}
-
-		@Override
-		public Vector2D getMinMaxValues() {
-			return minMaxValues;
-		}
-	}
-
-	public static class DoubleGraphDataSet extends AbstractGraphDataSet {
-		private double[] data;
-		private Vector2D minMaxValues;
-
-		public DoubleGraphDataSet(SDColor color, Collection<Double> data) {
-			super(color);
-
-			this.minMaxValues = new Vector2D();
-			this.data = new double[data.size()];
-
-			// Populate the data array.
-			int index = 0;
-			for (Double value : data) {
-				this.data[index] = value;
-				if (value > minMaxValues.getY()) {
-					minMaxValues.setY(value.floatValue());
-				} else if (value < minMaxValues.getX()) {
-					minMaxValues.setX(value.floatValue());
-				}
-				index++;
-			}
-		}
-
-		@Override
-		public double[] getData() {
-			return data;
-		}
-
-		@Override
-		public Vector2D getMinMaxValues() {
-			return minMaxValues;
-		}
-	}
-
-	public static class FloatGraphDataSet extends AbstractGraphDataSet {
-		private double[] data;
-		private Vector2D minMaxValues;
-
-		public FloatGraphDataSet(SDColor color, Collection<Float> data) {
-			super(color);
-
-			this.minMaxValues = new Vector2D();
-			this.data = new double[data.size()];
-
-			// Populate the data array.
-			int index = 0;
-			for (Float value : data) {
-				this.data[index] = value;
-				if (value > minMaxValues.getY()) {
-					minMaxValues.setY(value);
-				} else if (value < minMaxValues.getX()) {
-					minMaxValues.setX(value);
-				}
-				index++;
-			}
-		}
-
-		@Override
-		public double[] getData() {
-			return data;
-		}
-
-		@Override
-		public Vector2D getMinMaxValues() {
-			return minMaxValues;
+			float y = (float) -SDMath.clamp(yAxis[0].getY() * valueScale, -data.getRange().getMax(),
+					data.getRange().getMax());
+			GuiDrawUtilities.drawLine(matrix, new Vector3D(x, y, 10), new Vector3D(x, y, 10), lineColor,
+					data.getLineThickness());
 		}
 	}
 
 	public static class DynamicGraphDataSet extends AbstractGraphDataSet {
-		private List<Double> data;
+		private List<GraphDataPoint> data;
 		private int maxDataLength;
-		private Vector2D minMaxValues;
+
+		private GraphDataRange domain;
+		private GraphDataRange range;
 
 		public DynamicGraphDataSet(SDColor color) {
-			super(color);
-			this.data = new ArrayList<Double>();
-			this.maxDataLength = 0;
-			this.minMaxValues = new Vector2D();
+			this(color, 0, 0, 0, 0);
 		}
 
-		public void addNewDataPoint(double newData) {
-			data.add(newData);
+		public DynamicGraphDataSet(SDColor color, double minDomain, double maxDomain) {
+			this(color, minDomain, maxDomain, 0, 0);
+		}
+
+		public DynamicGraphDataSet(SDColor color, double minDomain, double maxDomain, double minRange,
+				double maxRange) {
+			super(color);
+			this.data = new ArrayList<GraphDataPoint>();
+			this.maxDataLength = 0;
+
+			this.domain = new GraphDataRange(minDomain, maxDomain);
+			this.range = new GraphDataRange(minRange, maxRange);
+		}
+
+		public void addNewDataPoint(double x, double y) {
+			data.add(new GraphDataPoint(x, y));
 			if (maxDataLength > 0 && data.size() > maxDataLength) {
 				data.remove(0);
-			}
-
-			// Capture the updated min and max values.
-			if (newData > minMaxValues.getY()) {
-				minMaxValues.setY((float) newData);
-			} else if (newData < minMaxValues.getX()) {
-				minMaxValues.setX((float) newData);
 			}
 		}
 
@@ -267,8 +168,8 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 		}
 
 		@Override
-		public double[] getData() {
-			double[] target = new double[data.size()];
+		public GraphDataPoint[] getData() {
+			GraphDataPoint[] target = new GraphDataPoint[data.size()];
 			for (int i = 0; i < target.length; i++) {
 				target[i] = data.get(i);
 			}
@@ -276,8 +177,21 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 		}
 
 		@Override
-		public Vector2D getMinMaxValues() {
-			return minMaxValues;
+		public GraphDataRange getDomain() {
+			return domain;
+		}
+
+		@Override
+		public GraphDataRange getRange() {
+			return range;
+		}
+
+		public void setDomain(GraphDataRange domain) {
+			this.domain = domain;
+		}
+
+		public void setRange(GraphDataRange range) {
+			this.range = range;
 		}
 	}
 
@@ -286,7 +200,7 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 		protected float lineThickness;
 
 		public AbstractGraphDataSet(SDColor color) {
-			this(color, 3);
+			this(color, 5);
 		}
 
 		public AbstractGraphDataSet(SDColor color, float lineThickness) {
@@ -310,8 +224,46 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 
 		public float getLineThickness();
 
-		public double[] getData();
+		public GraphDataPoint[] getData();
 
-		public Vector2D getMinMaxValues();
+		public GraphDataRange getDomain();
+
+		public GraphDataRange getRange();
+	}
+
+	public static class GraphDataPoint {
+		double x;
+		double y;
+
+		public GraphDataPoint(double x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		public double getX() {
+			return x;
+		}
+
+		public double getY() {
+			return y;
+		}
+	}
+
+	public static class GraphDataRange {
+		double min;
+		double max;
+
+		public GraphDataRange(double min, double max) {
+			this.min = min;
+			this.max = max;
+		}
+
+		public double getMin() {
+			return min;
+		}
+
+		public double getMax() {
+			return max;
+		}
 	}
 }

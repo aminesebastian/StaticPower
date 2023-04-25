@@ -11,12 +11,10 @@ import theking530.api.energy.metrics.MetricsTimeUnit;
 import theking530.api.energy.metrics.PowerTransferMetrics.PowerTransferMetricWrapper;
 import theking530.staticcore.gui.screens.StaticCoreBlockEntityScreen;
 import theking530.staticcore.gui.widgets.DataGraphWidget;
-import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
-import theking530.staticcore.utilities.SDColor;
 
 public class GuiPowerCable extends StaticCoreBlockEntityScreen<ContainerPowerCable, BlockEntityPowerCable> {
 
@@ -60,9 +58,9 @@ public class GuiPowerCable extends StaticCoreBlockEntityScreen<ContainerPowerCab
 		}
 
 		// Add the data.
-		graphWidget.setDataSet("received", new FloatGraphDataSet(new SDColor(0, 1.0f, 0.2f, 0.75f), metrics.getInputValues()));
-		graphWidget.setDataSet("provided", new FloatGraphDataSet(new SDColor(1.0f, 0, 0.1f, 0.75f), metrics.getOutputValues()));
-		graphWidget.setDataSet("net", new FloatGraphDataSet(new SDColor(0, 0.1f, 1.0f, 1), netData));
+//		graphWidget.setDataSet("received", new FloatGraphDataSet(new SDColor(0, 1.0f, 0.2f, 0.75f), metrics.getInputValues()));
+//		graphWidget.setDataSet("provided", new FloatGraphDataSet(new SDColor(1.0f, 0, 0.1f, 0.75f), metrics.getOutputValues()));
+//		graphWidget.setDataSet("net", new FloatGraphDataSet(new SDColor(0, 0.1f, 1.0f, 1), netData));
 	}
 
 	protected PowerTransferMetricWrapper getMetrics() {

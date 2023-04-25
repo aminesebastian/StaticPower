@@ -8,7 +8,6 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import theking530.staticcore.StaticCoreRegistries;
-import theking530.staticcore.productivity.metrics.ProductivityTimeline.ProductivityTimelineEntry;
 import theking530.staticcore.productivity.product.ProductType;
 
 public record ProductivityTimeline(ProductType<?> productType, String serializedProduct, MetricPeriod period, ImmutableList<ProductivityTimelineEntry> entries) {

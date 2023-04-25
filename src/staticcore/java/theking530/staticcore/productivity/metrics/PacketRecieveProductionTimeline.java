@@ -14,6 +14,7 @@ import theking530.staticcore.productivity.client.GuiProductionMenu;
 import theking530.staticcore.productivity.product.ProductType;
 
 public class PacketRecieveProductionTimeline extends NetworkMessage {
+	private long requestedAtTime;
 	private ProductType<?> productType;
 	private MetricPeriod period;
 	private MetricType type;
@@ -23,7 +24,9 @@ public class PacketRecieveProductionTimeline extends NetworkMessage {
 
 	}
 
-	public PacketRecieveProductionTimeline(ProductType<?> productType,  MetricPeriod period, MetricType type, List<ProductivityTimeline> timelines) {
+	public PacketRecieveProductionTimeline(long requestedAtTime, ProductType<?> productType, MetricPeriod period,
+			MetricType type, List<ProductivityTimeline> timelines) {
+		this.requestedAtTime = requestedAtTime;
 		this.productType = productType;
 		this.period = period;
 		this.type = type;
@@ -32,6 +35,7 @@ public class PacketRecieveProductionTimeline extends NetworkMessage {
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
+		buffer.writeLong(requestedAtTime);
 		buffer.writeByte(timelines.size());
 		for (ProductivityTimeline timeline : timelines) {
 			timeline.encode(buffer);
@@ -44,6 +48,7 @@ public class PacketRecieveProductionTimeline extends NetworkMessage {
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
+		requestedAtTime = buffer.readLong();
 		timelines = new LinkedList<ProductivityTimeline>();
 		int count = buffer.readByte();
 		for (int i = 0; i < count; i++) {
@@ -61,7 +66,7 @@ public class PacketRecieveProductionTimeline extends NetworkMessage {
 		ctx.get().enqueueWork(() -> {
 			GuiProductionMenu productionMenu = (GuiProductionMenu) Minecraft.getInstance().screen;
 			if (productionMenu != null) {
-				productionMenu.recieveTimelineData(productType,  period, type, timelines);
+				productionMenu.recieveTimelineData(requestedAtTime, productType, period, type, timelines);
 			}
 		});
 	}

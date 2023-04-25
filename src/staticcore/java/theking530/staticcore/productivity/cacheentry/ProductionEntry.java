@@ -10,9 +10,6 @@ import theking530.staticcore.productivity.ProductionTrackingToken;
 public abstract class ProductionEntry<T> {
 	public record ProductionEntryState(double consumed, double produced, ProductivityRate consumptionRate,
 			ProductivityRate productionRate) {
-		public boolean isEmpty() {
-			return consumed == 0 && produced == 0 && consumptionRate.isZero() && productionRate.isZero();
-		}
 	}
 
 	private static final int TIME_UNTIL_REMOVAL = 100;

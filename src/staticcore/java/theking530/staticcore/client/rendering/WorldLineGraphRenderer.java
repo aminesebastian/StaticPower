@@ -6,9 +6,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import theking530.staticcore.gui.widgets.DataGraphWidget.GraphDataRange;
 import theking530.staticcore.gui.widgets.DataGraphWidget.IGraphDataSet;
 import theking530.staticcore.utilities.SDColor;
-import theking530.staticcore.utilities.math.Vector2D;
 import theking530.staticcore.utilities.math.Vector3D;
 
 public class WorldLineGraphRenderer {
@@ -65,13 +65,13 @@ public class WorldLineGraphRenderer {
 			}
 
 			// Get the min max values.
-			Vector2D minMax = data.getMinMaxValues();
+			GraphDataRange minMax = data.getRange();
 
 			// Capture the values.
-			if (minMax.getY() > maxValue) {
-				maxValue = minMax.getY();
-			} else if (minMax.getX() < minValue) {
-				minValue = minMax.getX();
+			if (minMax.getMax() > maxValue) {
+				maxValue = minMax.getMax();
+			} else if (minMax.getMin() < minValue) {
+				minValue = minMax.getMin();
 			}
 		}
 
@@ -83,40 +83,48 @@ public class WorldLineGraphRenderer {
 		if (minValue == 0 && maxValue == 0) {
 			for (IGraphDataSet data : dataSets.values()) {
 				// Draw line.
-				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0, 0.5f, 0.001f), new Vector3D(1, 0.5f, 0.001f), data.getLineThickness(), data.getLineColor());
+				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0, 0.5f, 0.001f),
+						new Vector3D(1, 0.5f, 0.001f), data.getLineThickness(), data.getLineColor());
 
 			}
 		} else {
 			for (IGraphDataSet data : dataSets.values()) {
 				for (int i = 1; i < endIndex; i++) {
-					double prev = (data.getData()[(i + startOffset) - 1] - maxDifference) / (maxDifference * 2);
-					double curr = (data.getData()[i + startOffset] - maxDifference) / (maxDifference * 2);
+					double prev = (data.getData()[(i + startOffset) - 1].getY() - maxDifference) / (maxDifference * 2);
+					double curr = (data.getData()[i + startOffset].getY() - maxDifference) / (maxDifference * 2);
 
 					// Draw line.
-					WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D((i - 1) * gridSpacing - smoothAnimation, (float) prev + 1, 0.001f),
-							new Vector3D(i * gridSpacing - smoothAnimation, (float) curr + 1, 0.001f), data.getLineThickness(), data.getLineColor());
+					WorldRenderingUtilities.drawLine(matrixStack, buffer,
+							new Vector3D((i - 1) * gridSpacing - smoothAnimation, (float) prev + 1, 0.001f),
+							new Vector3D(i * gridSpacing - smoothAnimation, (float) curr + 1, 0.001f),
+							data.getLineThickness(), data.getLineColor());
 				}
 			}
 		}
 
 	}
 
-	private void renderLineGraphBackground(float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
+	private void renderLineGraphBackground(float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLight) {
 		float yGridSpacing = gridSpacing / aspectRatio;
 		int xLines = (int) Math.ceil(1f / gridSpacing);
 		int yLines = (int) Math.ceil(1f / gridSpacing * aspectRatio);
 
 		for (int i = 0; i < xLines; i++) {
-			WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(i * gridSpacing, 0.0f, 0.0f), new Vector3D(i * gridSpacing, 1.0f, 0.0f), 10.0f,
-					new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
+			WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(i * gridSpacing, 0.0f, 0.0f),
+					new Vector3D(i * gridSpacing, 1.0f, 0.0f), 10.0f, new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
 		}
 		for (int i = 0; i < yLines; i++) {
 			if (i == yLines / 2) {
-				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
-						new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), 10.0f, new SDColor(0.5f, 0.5f, 0.525f, 0.2f));
+				WorldRenderingUtilities.drawLine(matrixStack, buffer,
+						new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
+						new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), 10.0f,
+						new SDColor(0.5f, 0.5f, 0.525f, 0.2f));
 			} else {
-				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
-						new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), 10.0f, new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
+				WorldRenderingUtilities.drawLine(matrixStack, buffer,
+						new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
+						new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), 10.0f,
+						new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
 			}
 		}
 	}
