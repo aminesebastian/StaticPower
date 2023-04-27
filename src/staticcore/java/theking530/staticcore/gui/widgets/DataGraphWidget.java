@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.utilities.SDColor;
@@ -45,25 +44,24 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 
 		// If we have no data, stop here.
 		if (!dataSets.isEmpty()) {
-			float offset = 0;// ((Minecraft.getInstance().level.getGameTime() % 40) + partialTicks) / 20.0f;
 
 			// Move us down so the origin of the graph is the bottom right corner and then
 			// draw the data.
 			matrix.pushPose();
-			matrix.translate(getWidth() - (offset * scale), getSize().getY(), 0);
+			matrix.translate(getWidth(), getSize().getY(), 0);
 			for (Entry<String, IGraphDataSet> data : dataSets.entrySet()) {
 				IGraphDataSet dataSet = data.getValue();
 				if (dataSet.getData().length > 0) {
-					drawDataSet(matrix, maxDataPoints, dataSet, scale);
+					drawDataSet(matrix, maxDataPoints, dataSet, scale, partialTicks);
 				}
 				GraphDataPoint currentValue = dataSet.getData()[0];
 				float currentValueY = (float) (currentValue.getY() / Math.max(totalRange.getMax(), 1)) * getHeight();
-				float valueLabelY = -currentValueY - 4;
-				valueLabelY = SDMath.clamp(valueLabelY, -getHeight() - 2, -5);
+				float valueLabelY = -currentValueY + 1;
+				valueLabelY = SDMath.clamp(valueLabelY, -getHeight() - 2, 1);
 				GuiDrawUtilities.drawString(matrix,
-						GuiTextUtilities.formatNumberAsString(currentValue.getY()).getString(), -4, valueLabelY, 10,
+						GuiTextUtilities.formatNumberAsString(currentValue.getY()).getString(), 8, valueLabelY, 10,
 						0.75f, dataSet.getLineColor().fromFloatToEightBit().encodeInInteger(), true);
-				GuiDrawUtilities.drawRectangle(matrix, 4, 4, -5, -currentValueY - 2.5f, 5, dataSet.getLineColor());
+				GuiDrawUtilities.drawRectangle(matrix, 4, 4, -4, -currentValueY - 3f, 5, dataSet.getLineColor());
 			}
 			matrix.popPose();
 		}
@@ -105,7 +103,8 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 		dataSets.clear();
 	}
 
-	protected void drawDataSet(PoseStack matrix, int maxPointsToDisplay, IGraphDataSet data, float valueScale) {
+	protected void drawDataSet(PoseStack matrix, int maxPointsToDisplay, IGraphDataSet data, float valueScale,
+			float partialTicks) {
 		SDColor lineColor = data.getLineColor();
 
 		GraphDataPoint[] yAxis = data.getData();
@@ -114,7 +113,7 @@ public class DataGraphWidget extends AbstractGuiWidget<DataGraphWidget> {
 		// Render all the data points.
 		if (maxPoints >= 2) {
 			for (int i = 0; i < maxPoints - 1; i++) {
-				float x = -(i * valueScale) + 1f;
+				float x =  -(float) yAxis[i].getX() * valueScale;
 				float y = (float) (yAxis[i].getY() / data.getRange().getMax()) * getHeight();
 				float nextY = (float) (yAxis[i + 1].getY() / data.getRange().getMax()) * getHeight();
 

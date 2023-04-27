@@ -134,11 +134,11 @@ public abstract class ProductionEntry<T> {
 	}
 
 	public void produced(double amount) {
-		currentSecondConsumed += Math.max(0, amount);
+		currentSecondProduced += Math.max(0, amount);
 	}
 
 	public void consumed(double amount) {
-		currentSecondProduced += Math.max(0, amount);
+		currentSecondConsumed += Math.max(0, amount);
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import theking530.staticcore.productivity.cacheentry.ProductionEntry;
 import theking530.staticcore.productivity.cacheentry.ProductionEntry.ProductionEntryState;
 import theking530.staticcore.productivity.cacheentry.ProductivityRate;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
+import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.metrics.ProductionMetrics;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline;
@@ -96,7 +97,8 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 		return productType;
 	}
 
-	public ProductivityTimeline getProductivityTimeline(MetricPeriod period, int productHash, long currentGameTick) {
+	public ProductivityTimeline getProductivityTimeline(MetricType type, MetricPeriod period, int productHash,
+			long currentGameTick) {
 		String serializedProduct = getSerializedProductFromHash(productHash);
 		try {
 			long threshold = currentGameTick - period.getMaxRecordsAgeTicks();
@@ -115,17 +117,21 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 			PreparedStatement stmt = database.prepareStatement(query);
 			ResultSet sqlData = stmt.executeQuery();
 			while (sqlData.next()) {
-				ProductivityTimelineEntry entry = new ProductivityTimelineEntry(sqlData.getFloat(1),
-						sqlData.getFloat(2), sqlData.getLong(3));
-				entries.add(entry);
+				float value = type == MetricType.CONSUMPTION ? sqlData.getFloat(1) : sqlData.getFloat(2);
+				ProductivityTimelineEntry entry = new ProductivityTimelineEntry(value, sqlData.getLong(3));
+				if (value != 0) {
+					entries.add(entry);
+				}
 			}
-			return new ProductivityTimeline(productType, serializedProduct, period, ImmutableList.copyOf(entries));
+			return new ProductivityTimeline(currentGameTick, productType, serializedProduct, type, period,
+					ImmutableList.copyOf(entries));
 		} catch (Exception e) {
 			StaticCore.LOGGER.error(String.format(
 					"An error occured when getting the production timeline for product hash: %1$d on table: %2$s.",
 					productHash, productTablePrefix), e);
 		}
-		return new ProductivityTimeline(productType, serializedProduct, period, ImmutableList.of());
+		return new ProductivityTimeline(currentGameTick, productType, serializedProduct, type, period,
+				ImmutableList.of());
 	}
 
 	public String getSerializedProductFromHash(int productHash) {
@@ -181,7 +187,7 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 
 			for (ProductionEntry<T> entry : bucket) {
 				ProductionEntryState metric = entry.getValuesForDatabaseInsert();
-				if (metric.consumed() <= 0 && metric.produced() <=  0) {
+				if (metric.consumed() <= 0 && metric.produced() <= 0) {
 					continue;
 				}
 

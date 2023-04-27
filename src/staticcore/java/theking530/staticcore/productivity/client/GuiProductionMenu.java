@@ -1,7 +1,6 @@
 package theking530.staticcore.productivity.client;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +25,7 @@ import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics;
 import theking530.staticcore.productivity.metrics.PacketRequestProductionTimeline;
+import theking530.staticcore.productivity.metrics.PacketRequestProductionTimeline.TimelineRequest;
 import theking530.staticcore.productivity.metrics.ProductionMetric;
 import theking530.staticcore.productivity.metrics.ProductionMetrics;
 import theking530.staticcore.productivity.metrics.ProductivityTimeline;
@@ -69,6 +69,8 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	private Vector2D bottomPanelPos;
 	private Vector2D bottomPanelSize;
 
+	private List<ProductivityTimeline> productivityTimelines;
+
 	public GuiProductionMenu() {
 		super(400, 400);
 	}
@@ -81,6 +83,9 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		displayedProductType = StaticCoreProductTypes.Item.get();
 		productButtonContainer = new HorizontalBox(0, 0, 0, 20).setEvenlyDivideSpace(true);
 		lastClientFetchTime = 0;
+
+		productivityTimelines = new ArrayList<>();
+
 		registerWidget(consumptionGraph = new DataGraphWidget(0, 0, 0, 0));
 		registerWidget(productionGraph = new DataGraphWidget(0, 0, 0, 0));
 
@@ -130,18 +135,13 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		super.tick();
 		if (Minecraft.getInstance().level.getGameTime() % 20 == 0) {
 			requestMetricUpdateFromServer();
-			if (!selectedConsumptionProduct.isEmpty()) {
-				updateTimelineValues(selectedConsumptionProduct, MetricType.CONSUMPTION, selectedMetricPeriod);
-			}
-			if (!selectedProductionProduct.isEmpty()) {
-				updateTimelineValues(selectedProductionProduct, MetricType.PRODUCTION, selectedMetricPeriod);
-			}
 		}
 
 		// If the data has changed since we last fetched, update the display values.
 		if (getProductionManager() != null && getProductionManager().getProductTypeCache(displayedProductType)
 				.haveClientValuesUpdatedSince(lastClientFetchTime)) {
 			updateDisplayValues();
+			updateTimelineValues(selectedMetricPeriod);
 		}
 	}
 
@@ -149,6 +149,63 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	public void render(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 		super.renderBackground(pose);
 		super.render(pose, mouseX, mouseY, partialTicks);
+
+		updateTimeline(displayedProductType, MetricPeriod.SECOND, productivityTimelines, partialTicks);
+	}
+
+	protected void updateTimeline(ProductType<?> productType, MetricPeriod period, List<ProductivityTimeline> timelines,
+			float partialTicks) {
+		productionGraph.clearAllData();
+		consumptionGraph.clearAllData();
+		
+		// If there is no data returned, get out.
+		if (timelines.isEmpty()) {
+			return;
+		}
+
+		@SuppressWarnings("resource")
+		long currentTick = Minecraft.getInstance().level.getGameTime();
+		long sinceLastUpdate = currentTick - lastClientFetchTime;
+		float offset = ((sinceLastUpdate % 20) + partialTicks) / 20.0f;
+		
+		for (ProductivityTimeline timeline : timelines) {
+
+			List<Double> expandedData = new ArrayList<>();
+			for (int i = 0; i < 60; i++) {
+				expandedData.add(0.0);
+			}
+
+			double minValue = 0, maxValue = 0;
+			for (ProductivityTimelineEntry timelineEntry : timeline.entries()) {
+				double value = timelineEntry.value();
+				if (value > maxValue) {
+					maxValue = value;
+				}
+				if (value < minValue) {
+					minValue = value;
+				}
+
+				float closestIndex = (currentTick - timelineEntry.tick());
+				closestIndex = closestIndex / period.getMetricPeriodInTicks();
+				int roundedIndex = Math.round(closestIndex);
+				if (roundedIndex >= 0 && roundedIndex < 60) {
+					expandedData.set(roundedIndex, value);
+				}
+			}
+
+			DynamicGraphDataSet data = new DynamicGraphDataSet(
+					productType.getProductColor(timeline.serializedProduct()), 0, 60, minValue, maxValue);
+
+			for (int i = 0; i < 60; i++) {
+				data.addNewDataPoint(i + offset, expandedData.get(i));
+			}
+
+			if (timeline.metricType() == MetricType.PRODUCTION) {
+				productionGraph.setDataSet(timeline.serializedProduct() + "_production", data);
+			} else {
+				consumptionGraph.setDataSet(timeline.serializedProduct() + "_consumption", data);
+			}
+		}
 	}
 
 	@Override
@@ -175,14 +232,16 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	}
 
 	private void metricEntryClicked(MetricEntryWidget widget, Integer productHash) {
-		if (widget.getMetricType() == MetricType.PRODUCTION) {
-			selectedProductionProduct.clear();
-			selectedProductionProduct.add(productHash);
-		} else {
+		updateTimelineValues(selectedMetricPeriod);
+		updateDisplayValues();
+
+		if(widget.getMetricType() == MetricType.CONSUMPTION) {
 			selectedConsumptionProduct.clear();
 			selectedConsumptionProduct.add(productHash);
+		}else {
+			selectedProductionProduct.clear();
+			selectedProductionProduct.add(productHash);
 		}
-		updateDisplayValues();
 	}
 
 	private void requestMetricUpdateFromServer() {
@@ -190,57 +249,8 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 				new PacketRequestProductionMetrics(displayedProductType));
 	}
 
-	public void recieveTimelineData(long requestAtTime, ProductType<?> productType, MetricPeriod period,
-			MetricType type, List<ProductivityTimeline> timelines) {
-		// First ensure we clear all the data from the graphs before we do anything
-		// else.
-		if (type == MetricType.PRODUCTION) {
-			productionGraph.clearAllData();
-		} else {
-			consumptionGraph.clearAllData();
-		}
-
-		// If there is no data returned, get out.
-		if (timelines.isEmpty()) {
-			return;
-		}
-
-		for (ProductivityTimeline timeline : timelines) {
-			List<Double> expandedData = new ArrayList<>();
-			for (int i = 0; i < 60; i++) {
-				expandedData.add(0.0);
-			}
-
-			double minValue = 0, maxValue = 0;
-			for (ProductivityTimelineEntry timelineEntry : timeline.entries()) {
-				int closestIndex = (int) (requestAtTime - timelineEntry.tick());
-				closestIndex = closestIndex / period.getMetricPeriodInTicks();
-				double value = type == MetricType.PRODUCTION ? timelineEntry.produced() : timelineEntry.consumed();
-				if (value > maxValue) {
-					maxValue = value;
-				}
-				if (value < minValue) {
-					minValue = value;
-				}
-
-				if (closestIndex >= 0 && closestIndex < 60) {
-					expandedData.set(closestIndex, value);
-				}
-			}
-
-			DynamicGraphDataSet data = new DynamicGraphDataSet(
-					productType.getProductColor(timeline.serializedProduct()), 0, 60, minValue, maxValue);
-
-			for (int i = 0; i < 60; i++) {
-				data.addNewDataPoint(i, expandedData.get(i));
-			}
-
-			if (type == MetricType.PRODUCTION) {
-				productionGraph.setDataSet(timeline.serializedProduct() + "_production", data);
-			} else {
-				consumptionGraph.setDataSet(timeline.serializedProduct() + "_consumption", data);
-			}
-		}
+	public void recieveTimelineData(long requestAtTime, MetricPeriod period, List<ProductivityTimeline> timelines) {
+		this.productivityTimelines = timelines;
 	}
 
 	@SuppressWarnings("resource")
@@ -261,7 +271,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 					}
 				}
 			}
-			
+
 			if (selectedConsumptionProduct.isEmpty()) {
 				for (ProductionMetric metric : metrics.getMetrics().values()) {
 					if (!metric.getConsumed().isZero()) {
@@ -272,19 +282,26 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 			}
 		}
 
-		updateTimelineValues(selectedConsumptionProduct, MetricType.CONSUMPTION, selectedMetricPeriod);
-		updateTimelineValues(selectedProductionProduct, MetricType.PRODUCTION, selectedMetricPeriod);
 		lastClientFetchTime = Minecraft.getInstance().level.getGameTime();
 	}
 
 	@SuppressWarnings("resource")
-	private void updateTimelineValues(Collection<Integer> products, MetricType type, MetricPeriod period) {
+	private void updateTimelineValues(MetricPeriod period) {
 		if (period == MetricPeriod.SECOND) {
 			throw new RuntimeException("We can't get a timeline for a single second!");
 		}
+
+		List<TimelineRequest> requests = new ArrayList<>();
+		for (Integer hash : selectedConsumptionProduct) {
+			requests.add(new TimelineRequest(this.displayedProductType, hash, MetricType.CONSUMPTION));
+		}
+		for (Integer hash : selectedProductionProduct) {
+			requests.add(new TimelineRequest(this.displayedProductType, hash, MetricType.PRODUCTION));
+		}
+
 		StaticCoreMessageHandler.sendToServer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
-				new PacketRequestProductionTimeline(Minecraft.getInstance().level.getGameTime(), displayedProductType,
-						products, MetricPeriod.values()[period.ordinal() - 1], type));
+				new PacketRequestProductionTimeline(Minecraft.getInstance().level.getGameTime(), requests,
+						MetricPeriod.values()[period.ordinal() - 1]));
 	}
 
 	@Override

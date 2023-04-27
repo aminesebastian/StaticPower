@@ -20,48 +20,57 @@ import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 
 public class PacketRequestProductionTimeline extends NetworkMessage {
+	public record TimelineRequest(ProductType<?> productType, int product, MetricType type) {
+
+		public void encode(FriendlyByteBuf buffer) {
+			buffer.writeUtf(StaticCoreRegistries.ProductRegistry().getKey(productType).toString());
+			buffer.writeInt(product);
+			buffer.writeByte(type.ordinal());
+
+		}
+
+		public static TimelineRequest decode(FriendlyByteBuf buffer) {
+			return new TimelineRequest(
+					StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf())),
+					buffer.readInt(), MetricType.values()[buffer.readByte()]);
+		}
+	}
+
 	private long requestedAtTime;
-	private ProductType<?> productType;
-	private Collection<Integer> productHashCodes;
+	private Collection<TimelineRequest> requests;
 	private MetricPeriod period;
-	private MetricType type;
 
 	public PacketRequestProductionTimeline() {
 
 	}
 
-	public PacketRequestProductionTimeline(long requestedAtTime,ProductType<?> productType, Collection<Integer> productHashCodes,
-			MetricPeriod period, MetricType type) {
+	public PacketRequestProductionTimeline(long requestedAtTime, Collection<TimelineRequest> requests,
+			MetricPeriod period) {
 		this.requestedAtTime = requestedAtTime;
-		this.productType = productType;
-		this.productHashCodes = productHashCodes;
+		this.requests = requests;
 		this.period = period;
-		this.type = type;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeLong(requestedAtTime);
-		buffer.writeUtf(StaticCoreRegistries.ProductRegistry().getKey(productType).toString());
 		buffer.writeByte(period.ordinal());
-		buffer.writeByte(type.ordinal());
-		buffer.writeByte(productHashCodes.size());
-		for (int code : productHashCodes) {
-			buffer.writeInt(code);
+
+		buffer.writeByte(requests.size());
+		for (TimelineRequest request : requests) {
+			request.encode(buffer);
 		}
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
 		requestedAtTime = buffer.readLong();
-		productType = StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
 		period = MetricPeriod.values()[buffer.readByte()];
-		type = MetricType.values()[buffer.readByte()];
 
-		productHashCodes = new ArrayList<>();
 		int count = buffer.readByte();
+		requests = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
-			productHashCodes.add(buffer.readInt());
+			requests.add(TimelineRequest.decode(buffer));
 		}
 	}
 
@@ -77,18 +86,19 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 				return;
 			}
 
-			ServerProductionCache<?> cache = (ServerProductionCache<?>) team.getProductionManager()
-					.getProductTypeCache(productType);
 			List<ProductivityTimeline> timelines = new LinkedList<ProductivityTimeline>();
-			for (int hashCode : productHashCodes) {
-				ProductivityTimeline timeline = cache.getProductivityTimeline(period, hashCode, requestedAtTime);
+			for (TimelineRequest request : requests) {
+				ServerProductionCache<?> cache = (ServerProductionCache<?>) team.getProductionManager()
+						.getProductTypeCache(request.productType);
+				ProductivityTimeline timeline = cache.getProductivityTimeline(request.type(), period, request.product(),
+						requestedAtTime);
 				if (!timeline.entries().isEmpty()) {
 					timelines.add(timeline);
 				}
 			}
 
-			PacketRecieveProductionTimeline response = new PacketRecieveProductionTimeline(requestedAtTime, productType,
-					period, type, timelines);
+			PacketRecieveProductionTimeline response = new PacketRecieveProductionTimeline(requestedAtTime, period,
+					timelines);
 			StaticCoreMessageHandler.sendMessageToPlayer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
 					(ServerPlayer) ctx.get().getSender(), response);
 		});
