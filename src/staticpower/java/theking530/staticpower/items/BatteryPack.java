@@ -69,7 +69,8 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 	 * When shift right clicked, toggle activation.
 	 */
 	@Override
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
+			InteractionHand hand, ItemStack item) {
 		if (player.isShiftKeyDown()) {
 			toggleActivated(item);
 			return InteractionResultHolder.success(item);
@@ -89,7 +90,8 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 		// If we're in a player's inventory.
 		if (isActivated(stack) && entityIn instanceof Player && !worldIn.isClientSide()) {
 			// Get the power capability.
-			IStaticPowerStorage powerStorage = stack.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).orElse(null);
+			IStaticPowerStorage powerStorage = stack.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY)
+					.orElse(null);
 			if (powerStorage == null) {
 				return;
 			}
@@ -106,7 +108,8 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 				for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
 					// Get the stack in the slot. Skip if its empty.
 					ItemStack inventoryStack = player.getInventory().getItem(i);
-					if (inventoryStack.isEmpty() || inventoryStack == stack || inventoryStack.getItem() instanceof BatteryPack) {
+					if (inventoryStack.isEmpty() || inventoryStack == stack
+							|| inventoryStack.getItem() instanceof BatteryPack) {
 						continue;
 					}
 
@@ -122,7 +125,8 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 					perItemDistribute = Math.min(perItemDistribute, powerStorage.getMaximumPowerOutput());
 
 					for (IStaticPowerStorage otherItem : items) {
-						double charged = otherItem.addPower(new PowerStack(perItemDistribute, powerStorage.getOutputVoltage()), false);
+						double charged = otherItem
+								.addPower(new PowerStack(perItemDistribute, powerStorage.getOutputVoltage()), false);
 						powerStorage.drainPower(charged, false);
 
 						// Break out if we used all the power.
@@ -149,7 +153,8 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new BatteryPackItemModel(existingModel);
 	}
 

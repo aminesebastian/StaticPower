@@ -65,9 +65,10 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	private boolean shouldExplodeWhenOverVolted;
 	private int electricalExplosionTimeRemaining;
 
-	public PowerStorageComponent(String name, double capacity, StaticPowerVoltage minInputVoltage, StaticPowerVoltage maxInputVoltage,
-			double maxInputPower, CurrentType[] acceptableInputCurrents, StaticPowerVoltage voltageOutput, double maxPowerOutput,
-			CurrentType outputCurrentType, boolean canAcceptExternalPower, boolean canOutputExternalPower) {
+	public PowerStorageComponent(String name, double capacity, StaticPowerVoltage minInputVoltage,
+			StaticPowerVoltage maxInputVoltage, double maxInputPower, CurrentType[] acceptableInputCurrents,
+			StaticPowerVoltage voltageOutput, double maxPowerOutput, CurrentType outputCurrentType,
+			boolean canAcceptExternalPower, boolean canOutputExternalPower) {
 		super(name);
 
 		exposeAsCapability = true;
@@ -80,8 +81,9 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		baseVoltageOutput = voltageOutput;
 		baseMaximumOutputPower = maxPowerOutput;
 
-		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputPower, acceptableInputCurrents,
-				voltageOutput, maxPowerOutput, outputCurrentType, canAcceptExternalPower, canOutputExternalPower, true);
+		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage),
+				maxInputPower, acceptableInputCurrents, voltageOutput, maxPowerOutput, outputCurrentType,
+				canAcceptExternalPower, canOutputExternalPower, true);
 
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 	}
@@ -119,8 +121,8 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 			float randomZ = ((2 * getLevel().getRandom().nextFloat()) - 1.0f) * 0.75f;
 
 			if (SDMath.diceRoll(0.5)) {
-				getLevel().addParticle(ParticleTypes.LARGE_SMOKE, getPos().getX() + randomX + 0.5, getPos().getY() + randomY + 0.5,
-						getPos().getZ() + randomZ + 0.5, 0.0f, 0.0f, 0.0f);
+				getLevel().addParticle(ParticleTypes.LARGE_SMOKE, getPos().getX() + randomX + 0.5,
+						getPos().getY() + randomY + 0.5, getPos().getZ() + randomZ + 0.5, 0.0f, 0.0f, 0.0f);
 			}
 			getLevel().addParticle(ParticleTypes.ELECTRIC_SPARK, getPos().getX() + randomX + 0.5, getPos().getY() + 1.0,
 					getPos().getZ() + randomZ + 0.5, 0.0f, 0.0f, 0.0f);
@@ -343,12 +345,12 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		if (sideConfig == null || sideConfig.getWorldSpaceDirectionConfiguration(side).isInputMode()) {
 			// Only when not simulating, check if we should initiate an explosion.
 			if (!simulate) {
-				if (receivedExplosivePowerCurrentTick
-						|| StaticPowerEnergyUtilities.shouldPowerStackTriggerExplosion(stack, this) != ElectricalExplosionTrigger.NONE) {
+				if (receivedExplosivePowerCurrentTick || StaticPowerEnergyUtilities
+						.shouldPowerStackTriggerExplosion(stack, this) != ElectricalExplosionTrigger.NONE) {
 					receivedExplosivePowerCurrentTick = true;
 					// Make a new power stack with 0 power but the accurate voltage and current type
 					// to the player will see it in the UI (if only for a moment ;))
-					return addPower(new PowerStack(0, stack.getVoltage(), stack.getCurrentType()), simulate);
+					return addPower(stack.copyWithPower(0), simulate);
 				}
 			}
 
@@ -473,18 +475,22 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 			return;
 		}
 
-		UpgradeItemWrapper<Double> powerCapacityUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.POWER_CAPACITY.get());
+		UpgradeItemWrapper<Double> powerCapacityUpgrade = upgradeInventory
+				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.POWER_CAPACITY.get());
 		if (powerCapacityUpgrade.isEmpty()) {
 			powerCapacityUpgradeMultiplier = 1.0f;
 		} else {
-			powerCapacityUpgradeMultiplier = (float) (1.0f + (powerCapacityUpgrade.getUpgradeValue() * powerCapacityUpgrade.getUpgradeWeight()));
+			powerCapacityUpgradeMultiplier = (float) (1.0f
+					+ (powerCapacityUpgrade.getUpgradeValue() * powerCapacityUpgrade.getUpgradeWeight()));
 		}
 
-		UpgradeItemWrapper<Double> powerTransferUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.POWER_TRANSFER.get());
+		UpgradeItemWrapper<Double> powerTransferUpgrade = upgradeInventory
+				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.POWER_TRANSFER.get());
 		if (powerTransferUpgrade.isEmpty()) {
 			powerOutputUpgradeMultiplier = 1.0f;
 		} else {
-			powerOutputUpgradeMultiplier = (float) (1.0f + (powerTransferUpgrade.getUpgradeValue() * powerTransferUpgrade.getUpgradeWeight()));
+			powerOutputUpgradeMultiplier = (float) (1.0f
+					+ (powerTransferUpgrade.getUpgradeValue() * powerTransferUpgrade.getUpgradeWeight()));
 		}
 
 		// Set the new values.
@@ -497,11 +503,12 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		UpgradeItemWrapper<StaticPowerVoltage> powerTransformerUpgrade = upgradeInventory
 				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.POWER_TRANSFORMER.get());
 		if (powerTransformerUpgrade.isEmpty()) {
-			storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), baseInputVoltageRange.maximumVoltage()));
+			storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(),
+					baseInputVoltageRange.maximumVoltage()));
 		} else {
 			if (storage.getInputVoltageRange().maximumVoltage().isLessThan(powerTransformerUpgrade.getUpgradeValue())) {
-				storage.setInputVoltageRange(
-						new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), powerTransformerUpgrade.getUpgradeValue()));
+				storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(),
+						powerTransformerUpgrade.getUpgradeValue()));
 			}
 		}
 	}
@@ -528,14 +535,15 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 
 	protected void sendSynchronizationPacket() {
 		if (getLevel().isClientSide()) {
-			StaticCore.LOGGER.warn("#synchronizeToClient (called at %1$s) should only be called from the server!", getPos().toString());
+			StaticCore.LOGGER.warn("#synchronizeToClient (called at %1$s) should only be called from the server!",
+					getPos().toString());
 			return;
 		}
 
 		// Send the packet to all clients within the requested radius.
 		PowerStorageComponentSyncPacket msg = new PowerStorageComponentSyncPacket(getPos(), this);
-		StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(),
-				SYNC_PACKET_UPDATE_RADIUS, msg);
+		StaticCoreMessageHandler.sendMessageToPlayerInArea(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, getLevel(),
+				getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
 		lastSyncEnergy = getStoredPower();
 		pendingManualSync = false;
 	}
@@ -555,7 +563,8 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		} else {
 			electricalExplosionTimeRemaining--;
 			if (electricalExplosionTimeRemaining <= 0) {
-				getLevel().explode(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, 1, Explosion.BlockInteraction.BREAK);
+				getLevel().explode(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, 1,
+						Explosion.BlockInteraction.BREAK);
 			}
 		}
 	}
@@ -579,5 +588,4 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	protected boolean isPendingElectricalExplosion() {
 		return isPendingOverVoltageExplostion;
 	}
-
 }

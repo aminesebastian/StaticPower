@@ -50,8 +50,8 @@ import theking530.staticpower.items.tools.TurbineBlades;
 
 public class BlockEntityTurbine extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTurbine> TYPE = new BlockEntityTypeAllocator<>("turbine", (type, pos, state) -> new BlockEntityTurbine(pos, state),
-			ModBlocks.Turbine);
+	public static final BlockEntityTypeAllocator<BlockEntityTurbine> TYPE = new BlockEntityTypeAllocator<>("turbine",
+			(type, pos, state) -> new BlockEntityTurbine(pos, state), ModBlocks.Turbine);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -82,11 +82,12 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 
 		// Register the input inventory and only let it receive items if they are
 		// burnable.
-		registerComponent(turbineBladeInventory = new InventoryComponent("TurbineInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return stack.getItem() instanceof TurbineBlades;
-			}
-		}));
+		registerComponent(turbineBladeInventory = new InventoryComponent("TurbineInventory", 1, MachineSideMode.Input)
+				.setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return stack.getItem() instanceof TurbineBlades;
+					}
+				}));
 
 		// Setup all the other inventories.
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
@@ -98,14 +99,17 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 		registerComponent(new PowerDistributionComponent("PowerDistributor", powerStorage));
 
 		// Setup the fluid tanks
-		registerComponent(inputFluidTankComponent = new FluidTankComponent("InputFluid", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
-				.setUpgradeInventory(upgradesInventory).setAutoSyncPacketsEnabled(true).setExposeAsCapability(false));
-		registerComponent(outputFluidTankComponent = new FluidTankComponent("OutputFluid", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
-				.setUpgradeInventory(upgradesInventory));
+		registerComponent(inputFluidTankComponent = new FluidTankComponent("InputFluid", tier.defaultTankCapacity.get())
+				.setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory)
+				.setAutoSyncPacketsEnabled(true).setExposeAsCapability(false));
+		registerComponent(
+				outputFluidTankComponent = new FluidTankComponent("OutputFluid", tier.defaultTankCapacity.get())
+						.setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 2, turbineBladeInventory));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputFluidTankComponent, MachineSideMode.Output));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputFluidTankComponent,
+				MachineSideMode.Output));
 	}
 
 	@Override
@@ -129,7 +133,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 						// Start the sound.
 						if (!isGenerating) {
 							isGenerating = true;
-							generatingSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 2.0f, 1.5f, getBlockPos(), 32);
+							generatingSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE,
+									SoundSource.BLOCKS, 2.0f, 1.5f, getBlockPos(), 32);
 						}
 
 						// Draw the input and fill the output.
@@ -140,7 +145,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 
 						// Damage the turbine blades.
 						if (turbineBladeInventory.getStackInSlot(0).hurt(1, level.random, null)) {
-							level.playSound(null, getBlockPos(), SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0f, 1.0f);
+							level.playSound(null, getBlockPos(), SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0f,
+									1.0f);
 						}
 
 						// Mark as having generated.
@@ -162,8 +168,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 				if (SDMath.diceRoll(0.4f)) {
 					float randomOffset = (2 * getLevel().getRandom().nextFloat()) - 1.0f;
 					randomOffset /= 2f;
-					getLevel().addParticle(ParticleTypes.FALLING_WATER, getBlockPos().getX() + 0.5 + randomOffset, getBlockPos().getY() - 0.5,
-							getBlockPos().getZ() + 0.5 + randomOffset, 0.0f, 0.01f, 0.0f);
+					getLevel().addParticle(ParticleTypes.FALLING_WATER, getBlockPos().getX() + 0.5 + randomOffset,
+							getBlockPos().getY() - 0.5, getBlockPos().getZ() + 0.5 + randomOffset, 0.0f, 0.01f, 0.0f);
 				}
 			}
 		}
@@ -193,7 +199,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 			// return the default of the recipe.
 			if (hasTurbineBlades()) {
 				TurbineBlades bladeItem = getTurbileBladesItem();
-				return (int) (recipe.getGenerationAmount() * StaticCoreConfig.getTier(bladeItem.getTier()).turbineBladeGenerationBoost.get());
+				return (int) (recipe.getGenerationAmount()
+						* StaticCoreConfig.getTier(bladeItem.getTier()).turbineBladeGenerationBoost.get());
 			} else {
 				return recipe.getGenerationAmount();
 			}
@@ -209,7 +216,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 		}
 
 		// If the fluid output is full, return error.
-		if (recipe.hasOutput() && outputFluidTankComponent.getFluid().getAmount() + recipe.getOutput().getAmount() > outputFluidTankComponent.getCapacity()) {
+		if (recipe.hasOutput() && outputFluidTankComponent.getFluid().getAmount()
+				+ recipe.getOutput().getAmount() > outputFluidTankComponent.getCapacity()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
 
@@ -264,7 +272,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 				RecipeMatchParameters matchParams = new RecipeMatchParameters(fluid);
 
 				// If there is a recipe for that fluid, attempt to suck it up.
-				if (CraftingUtilities.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams, getLevel()).isPresent()) {
+				if (CraftingUtilities.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams, getLevel())
+						.isPresent()) {
 					// Simulate a fill using the fluid.
 					int filled = inputFluidTankComponent.fill(new FluidStack(fluid, 1000), FluidAction.SIMULATE);
 
@@ -272,7 +281,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 					if (filled == 1000) {
 						inputFluidTankComponent.fill(new FluidStack(fluid, 1000), FluidAction.EXECUTE);
 						// Then set the block to empty.
-						getLevel().setBlockAndUpdate(getBlockPos().relative(Direction.DOWN), Blocks.AIR.defaultBlockState());
+						getLevel().setBlockAndUpdate(getBlockPos().relative(Direction.DOWN),
+								Blocks.AIR.defaultBlockState());
 					}
 				}
 			}

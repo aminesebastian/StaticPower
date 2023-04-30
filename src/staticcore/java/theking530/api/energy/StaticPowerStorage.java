@@ -38,8 +38,10 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	 */
 	protected boolean arePowerLimitsCumulative;
 
-	public StaticPowerStorage(double capacity, StaticVoltageRange inputVoltageRange, double maxInputPower, CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage,
-			double maxOutputPower, CurrentType outputCurrentType, boolean canAcceptExternalPower, boolean canOutputExternalPower, boolean arePowerLimitsCumulative) {
+	public StaticPowerStorage(double capacity, StaticVoltageRange inputVoltageRange, double maxInputPower,
+			CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage, double maxOutputPower,
+			CurrentType outputCurrentType, boolean canAcceptExternalPower, boolean canOutputExternalPower,
+			boolean arePowerLimitsCumulative) {
 		this();
 		this.capacity = capacity;
 		this.inputVoltageRange = inputVoltageRange;
@@ -191,7 +193,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		// If we can't accept the input type, do nothing,
 		if (!canAcceptCurrentType(stack.getCurrentType()) || stack.getPower() < 0) {
 			if (!simulate) {
-				ticker.powerAdded(new PowerStack(0, stack.getVoltage(), stack.getCurrentType()));
+				ticker.powerAdded(stack.copyWithPower(0));
 			}
 			return 0;
 		}
@@ -210,7 +212,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		actualPowerDelta = Math.min(actualPowerDelta, maxInputRate);
 
 		if (!simulate) {
-			ticker.powerAdded(new PowerStack(actualPowerDelta, stack.getVoltage(), stack.getCurrentType()));
+			ticker.powerAdded(stack.copyWithPower(actualPowerDelta));
 			storedPower += actualPowerDelta;
 		}
 

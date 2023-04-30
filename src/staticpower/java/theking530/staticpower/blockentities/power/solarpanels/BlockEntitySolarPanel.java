@@ -27,28 +27,34 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntitySolarPanel extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntitySolarPanel>("solar_panel_basic",
-			(allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state), ModBlocks.SolarPanelBasic);
+	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntitySolarPanel>(
+			"solar_panel_basic", (allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state),
+			ModBlocks.SolarPanelBasic);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntitySolarPanel>("solar_panel_advanced",
-			(allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state), ModBlocks.SolarPanelAdvanced);
+	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntitySolarPanel>(
+			"solar_panel_advanced", (allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state),
+			ModBlocks.SolarPanelAdvanced);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntitySolarPanel>("solar_panel_static",
-			(allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state), ModBlocks.SolarPanelStatic);
+	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntitySolarPanel>(
+			"solar_panel_static", (allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state),
+			ModBlocks.SolarPanelStatic);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntitySolarPanel>("solar_panel_energized",
-			(allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state), ModBlocks.SolarPanelEnergized);
+	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntitySolarPanel>(
+			"solar_panel_energized", (allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state),
+			ModBlocks.SolarPanelEnergized);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntitySolarPanel>("solar_panel_lumum",
-			(allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state), ModBlocks.SolarPanelLumum);
+	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntitySolarPanel>(
+			"solar_panel_lumum", (allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state),
+			ModBlocks.SolarPanelLumum);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntitySolarPanel>("solar_panel_creative",
-			(allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state), ModBlocks.SolarPanelCreative);
+	public static final BlockEntityTypeAllocator<BlockEntitySolarPanel> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntitySolarPanel>(
+			"solar_panel_creative", (allocator, pos, state) -> new BlockEntitySolarPanel(allocator, pos, state),
+			ModBlocks.SolarPanelCreative);
 
 	private final ProductionTrackingComponent trackingComponent;
 	private final PowerProducer powerProductionStack;
@@ -58,7 +64,8 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 	private final boolean isCreative;
 	private double generationPerTick;
 
-	public BlockEntitySolarPanel(BlockEntityTypeAllocator<BlockEntitySolarPanel> allocator, BlockPos pos, BlockState state) {
+	public BlockEntitySolarPanel(BlockEntityTypeAllocator<BlockEntitySolarPanel> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
 		// Set the values based on the tier.
 		isCreative = getTier() == StaticPowerTiers.CREATIVE;
@@ -73,10 +80,12 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 		powerStorage.setSideConfiguration(sideConfiguration);
 
 		// Set the side config to only output on the bottom and disable on the rest.
-		registerComponent(sideConfiguration = new SideConfigurationComponent("SideConfig", SolarPanelSideConfiguration.INSTANCE));
+		registerComponent(
+				sideConfiguration = new SideConfigurationComponent("SideConfig", SolarPanelSideConfiguration.INSTANCE));
 
 		// Set the distribution component.
-		registerComponent(new PowerDistributionComponent("PowerDistribution", powerStorage).setProvideAlternatingCurrent(true));
+		registerComponent(
+				new PowerDistributionComponent("PowerDistribution", powerStorage).setProvideAlternatingCurrent(true));
 		registerComponent(trackingComponent = new ProductionTrackingComponent("ProductionTracker"));
 
 		powerProductionStack = new PowerProducer(getBlockState().getBlock());
@@ -91,7 +100,8 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 
 	// Functionality
 	public void generateRF() {
-		ProductionTrackingToken<PowerProducer> powerToken = trackingComponent.getToken(StaticCoreProductTypes.Power.get());
+		ProductionTrackingToken<PowerProducer> powerToken = trackingComponent
+				.getToken(StaticCoreProductTypes.Power.get());
 		if (isGenerating()) {
 			double maxGeneration = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
 			double actualGeneration = maxGeneration;
@@ -101,9 +111,11 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 
 			// No need to check if we the power storage can take this power. If it can't
 			// this will just be a no-op.
-			double added = powerStorage.addPower(new PowerStack(actualGeneration, powerStorage.getOutputVoltage()), false);
-			powerToken.setProductionPerSecond((ServerTeam)getTeamComponent().getOwningTeam(), powerProductionStack, added * 20, actualGeneration * 20);
-			powerToken.produced((ServerTeam)getTeamComponent().getOwningTeam(), powerProductionStack, added);
+			double added = powerStorage.addPower(new PowerStack(actualGeneration, powerStorage.getOutputVoltage()),
+					false);
+			powerToken.setProductionPerSecond((ServerTeam) getTeamComponent().getOwningTeam(), powerProductionStack,
+					added * 20, actualGeneration * 20);
+			powerToken.produced((ServerTeam) getTeamComponent().getOwningTeam(), powerProductionStack, added);
 		} else {
 			powerToken.invalidate();
 		}

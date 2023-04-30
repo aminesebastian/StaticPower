@@ -25,14 +25,16 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity implements IStaticPowerStorage {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRefineryPowerTap> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryPowerTap>("refinery_power_tap",
-			(type, pos, state) -> new BlockEntityRefineryPowerTap(pos, state), ModBlocks.RefineryPowerTap);
+	public static final BlockEntityTypeAllocator<BlockEntityRefineryPowerTap> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryPowerTap>(
+			"refinery_power_tap", (type, pos, state) -> new BlockEntityRefineryPowerTap(pos, state),
+			ModBlocks.RefineryPowerTap);
 
 	public final SideConfigurationComponent ioSideConfiguration;
 
 	public BlockEntityRefineryPowerTap(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AllSidesInput.INSTANCE));
+		registerComponent(
+				ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AllSidesInput.INSTANCE));
 	}
 
 	@Override
@@ -46,7 +48,8 @@ public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity impleme
 		if (cap == CapabilityStaticPower.STATIC_VOLT_CAPABILITY) {
 			if (hasController()) {
 				if (side != null) {
-					MachineSideMode mode = getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side);
+					MachineSideMode mode = getComponent(SideConfigurationComponent.class)
+							.getWorldSpaceDirectionConfiguration(side);
 					if (mode == MachineSideMode.Input) {
 						return getController().powerStorage.manuallyGetCapability(cap, side);
 					}
@@ -158,5 +161,4 @@ public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity impleme
 		}
 		return PowerStack.EMPTY;
 	}
-
 }

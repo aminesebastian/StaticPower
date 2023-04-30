@@ -16,7 +16,6 @@ import theking530.staticcore.blockentity.components.serialization.UpdateSerializ
 import theking530.staticcore.blockentity.components.team.TeamComponent;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.teams.ServerTeam;
-import theking530.staticcore.utilities.math.SDMath;
 
 public abstract class AbstractMachineProcessingComponent<T extends AbstractProcessingComponent<T, K>, K extends MachineProcessingComponentSyncPacket>
 		extends AbstractProcessingComponent<T, K> {
@@ -28,7 +27,7 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	 * any modifiers or upgrades.
 	 */
 	@SaveSerialize
-	protected double defaultPowerUsage;
+	protected double basePowerUsage;
 	/**
 	 * This is the amount of power this processing component should use per tick
 	 * after modifiers and upgrades.
@@ -72,6 +71,11 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 
 	@Override
 	public void preProcessUpdate() {
+		// Do nothing on the client.
+		if (getLevel().isClientSide()) {
+			return;
+		}
+
 		powerSatisfaction = calculatePowerSatisfaction();
 		powerUsage = calculatePowerUsage();
 		super.preProcessUpdate();
@@ -93,16 +97,24 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	}
 
 	protected double calculatePowerSatisfaction() {
-		if (powerComponent == null || getDefaultPowerUsage() == 0) {
+		if (powerComponent == null || getBasePowerUsage() == 0) {
 			return 1;
 		}
 
+		if (powerComponent.getStoredPower() < getBasePowerUsage()) {
+			return 0;
+		}
+
 		double currentTickSatisfaction = 0;
-		if (powerComponent.getStoredPower() == powerComponent.getCapacity()) {
-			currentTickSatisfaction = 1;
+		double powerPercentage = powerComponent.getStoredPower() / powerComponent.getCapacity();
+
+		if (powerPercentage > 0.9f) {
+			currentTickSatisfaction = 1.0f;
+		} else if (powerPercentage > 0.0f) {
+			currentTickSatisfaction = powerPercentage;
 		} else {
-			currentTickSatisfaction = SDMath.clamp(powerComponent.getAveragePowerAddedPerTick() / defaultPowerUsage, 0,
-					1);
+			double percentOfBaseUsageSatisfied = powerComponent.getAveragePowerAddedPerTick() / getBasePowerUsage();
+			currentTickSatisfaction = Math.min(1, percentOfBaseUsageSatisfied);
 		}
 
 		double smoothedSatisfaction = (currentTickSatisfaction + (powerSatisfaction * POWER_SMOOTHING_FACTOR))
@@ -130,16 +142,17 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 
 	@SuppressWarnings("unchecked")
 	public T setBasePowerUsage(double defaultPowerUsage) {
-		this.defaultPowerUsage = defaultPowerUsage;
+		this.basePowerUsage = defaultPowerUsage;
 		return (T) this;
 	}
 
-	public final double getDefaultPowerUsage() {
-		return defaultPowerUsage;
+	public final double getBasePowerUsage() {
+		return basePowerUsage;
 	}
 
 	protected double calculatePowerUsage() {
-		return defaultPowerUsage * powerSatisfaction;
+		double rawUsage = basePowerUsage * powerSatisfaction;
+		return Math.ceil(rawUsage); // SDMath.clamp(rawUsage, basePowerUsage / 2, basePowerUsage);
 	}
 
 	public final double getPowerUsage() {
@@ -305,11 +318,13 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 			return ProcessingCheckState.ok();
 		}
 
-		if (defaultPowerUsage > 0) {
+		if (getBasePowerUsage() > 0) {
+			if (getPowerSatisfaction() <= 0.0) {
+				return ProcessingCheckState.notEnoughPower(getPowerUsage());
+			}
 			if (powerComponent.getStoredPower() < getPowerUsage()) {
 				return ProcessingCheckState.notEnoughPower(getPowerUsage());
 			}
-
 			if (powerComponent.getMaximumPowerOutput() < getPowerUsage()) {
 				return ProcessingCheckState.powerUsageTooHigh(getPowerUsage());
 			}
@@ -326,7 +341,7 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 		if (powerComponent != null && getPowerUsage() > 0) {
 			getProductionToken(StaticCoreProductTypes.Power.get()).setConsumptionPerSecond(
 					(ServerTeam) teamComp.getOwningTeam(), getPowerProducerId(), getPowerUsage() * 20,
-					defaultPowerUsage * 20);
+					basePowerUsage * 20);
 		}
 	}
 

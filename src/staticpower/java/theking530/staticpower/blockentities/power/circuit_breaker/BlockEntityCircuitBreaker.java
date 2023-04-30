@@ -31,8 +31,9 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityCircuitBreaker extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCircuitBreaker> TYPE = new BlockEntityTypeAllocator<BlockEntityCircuitBreaker>("circuit_braker",
-			(allocator, pos, state) -> new BlockEntityCircuitBreaker(allocator, pos, state), ModBlocks.CircuitBreakers.values());
+	public static final BlockEntityTypeAllocator<BlockEntityCircuitBreaker> TYPE = new BlockEntityTypeAllocator<BlockEntityCircuitBreaker>(
+			"circuit_braker", (allocator, pos, state) -> new BlockEntityCircuitBreaker(allocator, pos, state),
+			ModBlocks.CircuitBreakers.values());
 
 	public static final int MAX_RESET_DELAY = 5;
 	public static final int POST_RESET_TRANSFER_DELAY = 20;
@@ -45,13 +46,15 @@ public class BlockEntityCircuitBreaker extends BlockEntityBase {
 	private float resetProgress;
 	private long lastUntripProgressTick;
 
-	public BlockEntityCircuitBreaker(BlockEntityTypeAllocator<BlockEntityCircuitBreaker> allocator, BlockPos pos, BlockState state) {
+	public BlockEntityCircuitBreaker(BlockEntityTypeAllocator<BlockEntityCircuitBreaker> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
 
 		resetProgress = 0;
 
 		// Add the power distributor.
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", FrontBackInputOutputOnly.INSTANCE));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				FrontBackInputOutputOnly.INSTANCE));
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));
 		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
@@ -78,7 +81,8 @@ public class BlockEntityCircuitBreaker extends BlockEntityBase {
 			long ticksSinceLastResetProgress = getLevel().getGameTime() - lastUntripProgressTick;
 			if (!isTripped() || ticksSinceLastResetProgress > MAX_RESET_DELAY) {
 				resetProgress = 0;
-				getLevel().playSound(null, getBlockPos(), SoundEvents.CROSSBOW_LOADING_END, SoundSource.BLOCKS, 0.5f, 1.0f);
+				getLevel().playSound(null, getBlockPos(), SoundEvents.CROSSBOW_LOADING_END, SoundSource.BLOCKS, 0.5f,
+						1.0f);
 			}
 		}
 
@@ -113,7 +117,7 @@ public class BlockEntityCircuitBreaker extends BlockEntityBase {
 
 		double transfered = powerDistributor.manuallyDistributePower(powerStorage, stack, simulate);
 		if (!simulate) {
-			powerStorage.getEnergyTracker().powerAdded(new PowerStack(transfered, stack.getVoltage(), stack.getCurrentType()));
+			powerStorage.getEnergyTracker().powerAdded(stack.copyWithPower(transfered));
 			powerStorage.getEnergyTracker().powerDrained(transfered);
 			powerStorage.setOutputVoltage(stack.getVoltage());
 		}
@@ -147,7 +151,8 @@ public class BlockEntityCircuitBreaker extends BlockEntityBase {
 
 		if (!manual) {
 			getLevel().playSound(null, getBlockPos(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 0.25f, 1.25f);
-			((ServerLevel) getLevel()).sendParticles(ParticleTypes.POOF, getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.75, getBlockPos().getZ() + 0.5, 10, 0.1, 0.1, 0.1, 0);
+			((ServerLevel) getLevel()).sendParticles(ParticleTypes.POOF, getBlockPos().getX() + 0.5,
+					getBlockPos().getY() + 0.75, getBlockPos().getZ() + 0.5, 10, 0.1, 0.1, 0.1, 0);
 		}
 	}
 
@@ -160,7 +165,8 @@ public class BlockEntityCircuitBreaker extends BlockEntityBase {
 	}
 
 	@Override
-	public InteractionResult onBlockActivated(BlockState state, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult onBlockActivated(BlockState state, Player player, InteractionHand hand,
+			BlockHitResult hit) {
 		if (getLevel().isClientSide()) {
 			return InteractionResult.CONSUME;
 		}
@@ -173,18 +179,21 @@ public class BlockEntityCircuitBreaker extends BlockEntityBase {
 		} else {
 			if (isTripped()) {
 				if (resetProgress <= 0) {
-					getLevel().playSound(null, getBlockPos(), SoundEvents.CROSSBOW_LOADING_START, SoundSource.BLOCKS, 1.0f, 0.75f);
+					getLevel().playSound(null, getBlockPos(), SoundEvents.CROSSBOW_LOADING_START, SoundSource.BLOCKS,
+							1.0f, 0.75f);
 				}
 
 				float red = SDMath.lerp(1, 0, resetProgress);
 				float green = SDMath.lerp(0, 1, resetProgress);
 
-				((ServerLevel) getLevel()).sendParticles(new DustParticleOptions(new Vector3f(red, green, 0.25f), 1.0f), getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.9,
-						getBlockPos().getZ() + 0.5, 1, 0.1, 0.1, 0.1, 0);
+				((ServerLevel) getLevel()).sendParticles(new DustParticleOptions(new Vector3f(red, green, 0.25f), 1.0f),
+						getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.9, getBlockPos().getZ() + 0.5, 1, 0.1, 0.1,
+						0.1, 0);
 
 				// To prevent the sound from going too long.
 				if (resetProgress < 0.6f) {
-					getLevel().playSound(null, getBlockPos(), SoundEvents.CROSSBOW_LOADING_MIDDLE, SoundSource.BLOCKS, 0.1f, SDMath.lerp(0.75f, 1.25f, resetProgress));
+					getLevel().playSound(null, getBlockPos(), SoundEvents.CROSSBOW_LOADING_MIDDLE, SoundSource.BLOCKS,
+							0.1f, SDMath.lerp(0.75f, 1.25f, resetProgress));
 				}
 
 				resetProgress += 0.15f;

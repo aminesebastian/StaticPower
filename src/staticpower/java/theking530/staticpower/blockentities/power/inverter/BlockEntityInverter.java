@@ -19,18 +19,20 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityInverter extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityInverter> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityInverter>("inverted",
-			(allocator, pos, state) -> new BlockEntityInverter(allocator, pos, state), ModBlocks.Inverter);
+	public static final BlockEntityTypeAllocator<BlockEntityInverter> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityInverter>(
+			"inverted", (allocator, pos, state) -> new BlockEntityInverter(allocator, pos, state), ModBlocks.Inverter);
 
 	public final PowerStorageComponent powerStorage;
 	public final SideConfigurationComponent ioSideConfiguration;
 	private final PowerDistributionComponent powerDistributor;
 
-	public BlockEntityInverter(BlockEntityTypeAllocator<BlockEntityInverter> allocator, BlockPos pos, BlockState state) {
+	public BlockEntityInverter(BlockEntityTypeAllocator<BlockEntityInverter> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
 
 		// Add the power distributor.
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", FrontBackInputOutputOnly.INSTANCE));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				FrontBackInputOutputOnly.INSTANCE));
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));
 		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
@@ -56,11 +58,12 @@ public class BlockEntityInverter extends BlockEntityBase {
 			return 0;
 		}
 		if (stack.getCurrentType() == CurrentType.DIRECT) {
-			PowerStack alternatingVersion = new PowerStack(stack.getPower(), stack.getVoltage(), CurrentType.ALTERNATING);
+			PowerStack alternatingVersion = new PowerStack(stack.getPower(), stack.getVoltage(),
+					CurrentType.ALTERNATING);
 
 			double transfered = powerDistributor.manuallyDistributePower(powerStorage, alternatingVersion, simulate);
 			if (!simulate) {
-				powerStorage.getEnergyTracker().powerAdded(new PowerStack(transfered, stack.getVoltage(), stack.getCurrentType()));
+				powerStorage.getEnergyTracker().powerAdded(stack.copyWithPower(transfered));
 				powerStorage.getEnergyTracker().powerDrained(transfered);
 				powerStorage.setOutputVoltage(stack.getVoltage());
 			}

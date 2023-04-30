@@ -25,6 +25,7 @@ public class BatteryInventoryComponent extends InventoryComponent {
 			}
 		});
 	}
+
 	@Override
 	public void preProcessUpdate() {
 		if (!isEnabled()) {
@@ -42,7 +43,9 @@ public class BatteryInventoryComponent extends InventoryComponent {
 
 		StaticPowerVoltage candidateVoltage = EnergyHandlerItemStackUtilities.getVoltageOutput(candidate);
 		if (powerStorage.getInputVoltageRange().isVoltageInRange(candidateVoltage)) {
-			double requiredPower = powerStorage.addPower(new PowerStack(StaticPowerEnergyUtilities.getMaximumPower(), candidateVoltage, CurrentType.DIRECT), true);
+			double requiredPower = powerStorage.addPower(
+					new PowerStack(StaticPowerEnergyUtilities.getMaximumPower(), candidateVoltage, CurrentType.DIRECT),
+					true);
 			PowerStack maxPowerToSupply = EnergyHandlerItemStackUtilities.drainPower(candidate, requiredPower, false);
 			powerStorage.addPower(maxPowerToSupply, false);
 		}

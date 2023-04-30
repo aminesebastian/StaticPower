@@ -58,7 +58,8 @@ public class EnergyHandlerItemStackUtilities {
 	}
 
 	public static StaticVoltageRange getInputVoltageRange(ItemStack container) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container)
+				.orElse(null);
 		if (cap == null) {
 			return StaticVoltageRange.ZERO_VOLTAGE;
 		}
@@ -66,7 +67,8 @@ public class EnergyHandlerItemStackUtilities {
 	}
 
 	public static double getMaximumCurrentInput(ItemStack container) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container)
+				.orElse(null);
 		if (cap == null) {
 			return 0;
 		}
@@ -74,7 +76,8 @@ public class EnergyHandlerItemStackUtilities {
 	}
 
 	public static double getStoredPower(ItemStack container) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container)
+				.orElse(null);
 		if (cap == null) {
 			return 0;
 		}
@@ -82,7 +85,8 @@ public class EnergyHandlerItemStackUtilities {
 	}
 
 	public static double getCapacity(ItemStack container) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container)
+				.orElse(null);
 		if (cap == null) {
 			return 0;
 		}
@@ -90,7 +94,8 @@ public class EnergyHandlerItemStackUtilities {
 	}
 
 	public static StaticPowerVoltage getVoltageOutput(ItemStack container) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container)
+				.orElse(null);
 		if (cap == null) {
 			return StaticPowerVoltage.ZERO;
 		}
@@ -98,7 +103,8 @@ public class EnergyHandlerItemStackUtilities {
 	}
 
 	public static double getMaximumCurrentOutput(ItemStack container) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container)
+				.orElse(null);
 		if (cap == null) {
 			return 0;
 		}
@@ -106,7 +112,8 @@ public class EnergyHandlerItemStackUtilities {
 	}
 
 	public static double addPower(ItemStack container, PowerStack power, boolean simulate) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container)
+				.orElse(null);
 		if (cap == null) {
 			return 0;
 		}
@@ -114,7 +121,8 @@ public class EnergyHandlerItemStackUtilities {
 	}
 
 	public static PowerStack drainPower(ItemStack container, double power, boolean simulate) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container)
+				.orElse(null);
 		if (cap == null) {
 			return PowerStack.EMPTY;
 		}

@@ -29,28 +29,34 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityBattery extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_basic",
-			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryBasic);
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityBattery>(
+			"battery_block_basic", (allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state),
+			ModBlocks.BatteryBasic);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_advanced",
-			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryAdvanced);
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_ADVANCED = new BlockEntityTypeAllocator<BlockEntityBattery>(
+			"battery_block_advanced", (allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state),
+			ModBlocks.BatteryAdvanced);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_static",
-			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryStatic);
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_STATIC = new BlockEntityTypeAllocator<BlockEntityBattery>(
+			"battery_block_static", (allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state),
+			ModBlocks.BatteryStatic);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_energized",
-			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryEnergized);
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_ENERGIZED = new BlockEntityTypeAllocator<BlockEntityBattery>(
+			"battery_block_energized", (allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state),
+			ModBlocks.BatteryEnergized);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_lumum",
-			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryLumum);
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_LUMUM = new BlockEntityTypeAllocator<BlockEntityBattery>(
+			"battery_block_lumum", (allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state),
+			ModBlocks.BatteryLumum);
 
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityBattery>("battery_block_creative",
-			(allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state), ModBlocks.BatteryCreative);
+	public static final BlockEntityTypeAllocator<BlockEntityBattery> TYPE_CREATIVE = new BlockEntityTypeAllocator<BlockEntityBattery>(
+			"battery_block_creative", (allocator, pos, state) -> new BlockEntityBattery(allocator, pos, state),
+			ModBlocks.BatteryCreative);
 
 	public static final SideConfigurationPreset DEFAULT_SIDE_CONFIGURATION = new SideConfigurationPreset();
 
@@ -117,7 +123,8 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		if (!getLevel().isClientSide()) {
 			// If this is a creative battery, always keep the power at max.
 			if (getTier() == StaticPowerTiers.CREATIVE) {
-				powerStorage.addPower(new PowerStack(StaticPowerEnergyUtilities.getMaximumPower(), StaticPowerVoltage.LOW), false);
+				powerStorage.addPower(
+						new PowerStack(StaticPowerEnergyUtilities.getMaximumPower(), StaticPowerVoltage.LOW), false);
 			}
 
 			// Charge up the item in the input slot.
@@ -126,8 +133,10 @@ public class BlockEntityBattery extends BlockEntityMachine {
 				ItemStack stack = chargingInventory.getStackInSlot(0);
 				// If it's not empty and is an energy storing item.
 				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
-					if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
-						PowerStack maxOutput = powerStorage.drainPower(StaticPowerEnergyUtilities.getMaximumPower(), true);
+					if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities
+							.getCapacity(stack)) {
+						PowerStack maxOutput = powerStorage.drainPower(StaticPowerEnergyUtilities.getMaximumPower(),
+								true);
 						double charged = EnergyHandlerItemStackUtilities.addPower(stack, maxOutput, false);
 						powerStorage.drainPower(charged, false);
 					}

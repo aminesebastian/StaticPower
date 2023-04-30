@@ -27,20 +27,25 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityTransformer extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTransformer> BASIC_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_basic",
-			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerBasic);
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> BASIC_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>(
+			"transformer_basic", (allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state),
+			ModBlocks.TransformerBasic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTransformer> ADVANCED_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_advanced",
-			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerStatic);
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> ADVANCED_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>(
+			"transformer_advanced", (allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state),
+			ModBlocks.TransformerStatic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTransformer> STATIC_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_static",
-			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerStatic);
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> STATIC_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>(
+			"transformer_static", (allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state),
+			ModBlocks.TransformerStatic);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTransformer> ENERGIZED_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_energized",
-			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerEnergized);
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> ENERGIZED_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>(
+			"transformer_energized", (allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state),
+			ModBlocks.TransformerEnergized);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityTransformer> LUMUM_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>("transformer_lumum",
-			(allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state), ModBlocks.TransformerLumum);
+	public static final BlockEntityTypeAllocator<BlockEntityTransformer> LUMUM_TRANSFORMER = new BlockEntityTypeAllocator<BlockEntityTransformer>(
+			"transformer_lumum", (allocator, pos, state) -> new BlockEntityTransformer(allocator, pos, state),
+			ModBlocks.TransformerLumum);
 
 	public final PowerStorageComponent powerStorage;
 	public final RedstoneControlComponent redstoneControlComponent;
@@ -48,11 +53,14 @@ public class BlockEntityTransformer extends BlockEntityBase {
 	protected final PowerDistributionComponent powerDistributor;
 	protected int transformerRatio;
 
-	public BlockEntityTransformer(BlockEntityTypeAllocator<BlockEntityTransformer> allocator, BlockPos pos, BlockState state) {
+	public BlockEntityTransformer(BlockEntityTypeAllocator<BlockEntityTransformer> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
 
-		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", FrontBackInputOutputOnly.INSTANCE));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent",
+				RedstoneMode.Ignore));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				FrontBackInputOutputOnly.INSTANCE));
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));
 		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
@@ -80,7 +88,8 @@ public class BlockEntityTransformer extends BlockEntityBase {
 		}
 		// Do nothing if this side is not an input side OR the supplied stack is not
 		// alternating.
-		if (!ioSideConfiguration.getWorldSpaceDirectionConfiguration(side).isInputMode() || stack.getCurrentType() != CurrentType.ALTERNATING) {
+		if (!ioSideConfiguration.getWorldSpaceDirectionConfiguration(side).isInputMode()
+				|| stack.getCurrentType() != CurrentType.ALTERNATING) {
 			return 0.0;
 		}
 
@@ -88,7 +97,8 @@ public class BlockEntityTransformer extends BlockEntityBase {
 
 		BlockSide inputSide = SideConfigurationUtilities.getBlockSide(side, getFacingDirection());
 		boolean isInputOnShortSide = inputSide == BlockSide.FRONT;
-		PowerTransformDirection direction = isInputOnShortSide ? PowerTransformDirection.STEP_UP : PowerTransformDirection.STEP_DOWN;
+		PowerTransformDirection direction = isInputOnShortSide ? PowerTransformDirection.STEP_UP
+				: PowerTransformDirection.STEP_DOWN;
 
 		StaticPowerVoltage outputVoltageClass;
 		if (direction == PowerTransformDirection.STEP_UP) {
@@ -114,7 +124,7 @@ public class BlockEntityTransformer extends BlockEntityBase {
 
 		double transfered = powerDistributor.manuallyDistributePower(powerStorage, transformedStack, simulate);
 		if (!simulate) {
-			powerStorage.getEnergyTracker().powerAdded(new PowerStack(transfered, stack.getVoltage(), stack.getCurrentType()));
+			powerStorage.getEnergyTracker().powerAdded(stack.copyWithPower(transfered));
 			powerStorage.getEnergyTracker().powerDrained(transfered);
 			powerStorage.setOutputVoltage(outputVoltageClass);
 		}

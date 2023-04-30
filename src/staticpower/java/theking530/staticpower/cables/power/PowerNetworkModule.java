@@ -3,11 +3,13 @@ package theking530.staticpower.cables.power;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -56,21 +58,27 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	}
 
 	private record ElectricalPathProperties(double resistance, double maxCurrent, double length, List<Cable> cables) {
-		public static final ElectricalPathProperties EMPTY = new ElectricalPathProperties(0, 0, 0, Collections.emptyList());
+		public static final ElectricalPathProperties EMPTY = new ElectricalPathProperties(0, 0, 0,
+				Collections.emptyList());
 	}
 
 	private final List<CachedPowerDestination> destinations;
 	private final Map<BlockPos, PowerStack> currentTickCurrentMap;
+
+	private final Map<IStaticPowerStorage, Set<UUID>> currentTickTransferedMap;
+	private int recursionDepth;
 
 	private double maximumCurrentOutput;
 	private StaticPowerEnergyTracker energyTracker;
 
 	public PowerNetworkModule() {
 		this(ModCableModules.Power.get());
+		recursionDepth = 0;
 	}
 
 	public PowerNetworkModule(CableNetworkModuleType type) {
 		super(type);
+		currentTickTransferedMap = new HashMap<>();
 		destinations = new ArrayList<>();
 		currentTickCurrentMap = new HashMap<>();
 		energyTracker = new StaticPowerEnergyTracker();
@@ -80,6 +88,8 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	public void preWorldTick(Level world) {
 		energyTracker.tick(world);
 		currentTickCurrentMap.clear();
+		currentTickTransferedMap.clear();
+		recursionDepth = 0;
 	}
 
 	@Override
@@ -93,7 +103,8 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		// Check to make sure we have power and valid desinations.
 		if (mapper.getDestinations().size() > 0) {
 			mapper.getDestinations().forEach((pos, wrapper) -> {
-				if (!CableNetworkAccessor.get(getNetwork().getWorld()).isTrackingCable(wrapper.getFirstConnectedCable())) {
+				if (!CableNetworkAccessor.get(getNetwork().getWorld())
+						.isTrackingCable(wrapper.getFirstConnectedCable())) {
 					return;
 				}
 
@@ -122,7 +133,8 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			}
 
 			if (wrapper.supportsType(ModCableDestinations.Power.get())) {
-				IStaticPowerStorage powerStorage = wrapper.getTileEntity().getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, connectedSide).orElse(null);
+				IStaticPowerStorage powerStorage = wrapper.getTileEntity()
+						.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, connectedSide).orElse(null);
 				if (powerStorage != null && powerStorage.canAcceptExternalPower()) {
 					output.add(new CachedPowerDestination(powerStorage, cablePos, wrapper.getPos()));
 				}
@@ -142,28 +154,35 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		output.add(Component.literal(""));
 		ElectricalPathProperties properties = getPropertiesBetweenPoints(startingLocation, endingLocation);
 
-		output.add(Component.literal("From [").append(ChatFormatting.GRAY.toString() + startingLocation.toShortString()).append(ChatFormatting.WHITE + "] to [")
+		output.add(Component.literal("From [").append(ChatFormatting.GRAY.toString() + startingLocation.toShortString())
+				.append(ChatFormatting.WHITE + "] to [")
 
 				.append(ChatFormatting.GRAY.toString() + endingLocation.toShortString()).append("]"));
 		{
-			Component usedCurrentComponent = PowerTextFormatting.formatCurrentToString(energyTracker.getAverageCurrent(), false, true);
+			Component usedCurrentComponent = PowerTextFormatting
+					.formatCurrentToString(energyTracker.getAverageCurrent(), false, true);
 			Component maxCurrentComponent = PowerTextFormatting.formatCurrentToString(properties.maxCurrent);
 
 			output.add(Component.translatable("gui.staticcore.current").append(": ")
-					.append(ChatFormatting.RED.toString() + String.format("%1$s/%2$s", usedCurrentComponent.getString(), maxCurrentComponent.getString())));
+					.append(ChatFormatting.RED.toString() + String.format("%1$s/%2$s", usedCurrentComponent.getString(),
+							maxCurrentComponent.getString())));
 		}
 		{
-			Component usedPowerComponent = PowerTextFormatting.formatPowerToString(energyTracker.getAveragePowerAddedPerTick(), false, true);
-			Component maxPowerComponent = PowerTextFormatting.formatPowerRateToString(properties.maxCurrent * energyTracker.getAverageVoltage().getValue());
+			Component usedPowerComponent = PowerTextFormatting
+					.formatPowerToString(energyTracker.getAveragePowerAddedPerTick(), false, true);
+			Component maxPowerComponent = PowerTextFormatting
+					.formatPowerRateToString(properties.maxCurrent * energyTracker.getAverageVoltage().getValue());
 
-			output.add(Component.translatable("gui.staticcore.power").append(": ")
-					.append(ChatFormatting.GOLD.toString() + String.format("%1$s/%2$s", usedPowerComponent.getString(), maxPowerComponent.getString())));
+			output.add(Component.translatable("gui.staticcore.power").append(": ").append(ChatFormatting.GOLD.toString()
+					+ String.format("%1$s/%2$s", usedPowerComponent.getString(), maxPowerComponent.getString())));
 		}
 
-		output.add(Component.translatable("gui.staticcore.resistance").append(": ")
-				.append(ChatFormatting.GOLD.toString() + PowerTextFormatting.formatResistanceToString(properties.resistance).getString()));
+		output.add(
+				Component.translatable("gui.staticcore.resistance").append(": ").append(ChatFormatting.GOLD.toString()
+						+ PowerTextFormatting.formatResistanceToString(properties.resistance).getString()));
 
-		output.add(Component.translatable("gui.staticcore.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.length()));
+		output.add(Component.translatable("gui.staticcore.length").append(": ")
+				.append(ChatFormatting.GRAY.toString() + properties.length()));
 	}
 
 	public ElectricalPathProperties getPropertiesBetweenPoints(BlockPos start, BlockPos end) {
@@ -212,7 +231,8 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		return new ElectricalPathProperties(resistance, lowestMaxCurrent, path.getLength(), cables.stream().toList());
 	}
 
-	protected CablePowerSupplyEvent supplyPower(BlockPos powerSourcePos, BlockPos powerSourceCable, PowerStack stack, CachedPowerDestination destination, boolean simulate) {
+	protected CablePowerSupplyEvent supplyPower(BlockPos powerSourcePos, BlockPos powerSourceCable, PowerStack stack,
+			CachedPowerDestination destination, boolean simulate) {
 		// Avoid loops
 		if (destination.desintationPos.equals(powerSourcePos)) {
 			return CablePowerSupplyEvent.EMPTY;
@@ -256,22 +276,33 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 					existing.setPower(existing.getPower() + maximumMachineUsage);
 					return existing;
 				}
-				return new PowerStack(maximumMachineUsage, stack.getVoltage(), stack.getCurrentType());
+				return stack.copyWithPower(maximumMachineUsage);
 			});
 		}
 
 		// If we made it this far, actually supply the power and then return the power
 		// usage + the power loss;
-		double machineUsedPower = destination.power.addPower(new PowerStack(maximumMachineSupply, stack.getVoltage(), stack.getCurrentType()), simulate);
+		double machineUsedPower = destination.power.addPower(stack.copyWithPower(maximumMachineSupply), simulate);
 		return new CablePowerSupplyEvent(machineUsedPower, powerLoss);
 	}
 
 	public double addPower(BlockPos powerSourcePos, BlockPos powerSourceCable, PowerStack power, boolean simulate) {
+		recursionDepth++;
+		double returnValue = internalAddPower(powerSourcePos, powerSourceCable, power, simulate);
+		recursionDepth--;
+		if (recursionDepth <= 0) {
+			currentTickTransferedMap.clear();
+		}
+		return returnValue;
+	}
+
+	private double internalAddPower(BlockPos powerSourcePos, BlockPos powerSourceCable, PowerStack power,
+			boolean simulate) {
 		getNetwork().getWorld().getProfiler().push("PowerNetworkModule.AddingPower");
 
 		if (destinations.isEmpty()) {
 			// Still set the received stack so we can show the voltage with the multimeter.
-			energyTracker.powerTransfered(new PowerStack(0, power.getVoltage(), power.getCurrentType()));
+			energyTracker.powerTransfered(power.copyWithPower(0));
 			getNetwork().getWorld().getProfiler().pop();
 			return 0;
 		}
@@ -280,15 +311,29 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		Map<Integer, Double> powerToSupply = new HashMap<>();
 		double totalSimulatedPower = 0;
 		for (int i = 0; i < destinations.size(); i++) {
-			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, powerSourceCable, new PowerStack(StaticPowerEnergyUtilities.getMaximumPower(), power.getVoltage(), power.getCurrentType()),
-					destinations.get(i), true);
+			CachedPowerDestination destination = destinations.get(i);
+
+			// Avoid larger loops.
+			if (currentTickTransferedMap.containsKey(destination.power())) {
+				if (currentTickTransferedMap.get(destination.power()).contains(power.getId())) {
+					continue;
+				}
+			}
+
+			Set<UUID> idSet = currentTickTransferedMap.computeIfAbsent(destination.power(),
+					(storage) -> new HashSet<UUID>());
+			idSet.add(power.getId());
+
+			PowerStack simulatedPower = power.copyWithPower(StaticPowerEnergyUtilities.getMaximumPower());
+			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, powerSourceCable, simulatedPower,
+					destination, true);
 			powerToSupply.put(i, supplyEvent.getTotalPower());
 			totalSimulatedPower += supplyEvent.getTotalPower();
 		}
 
 		// If none of them need power, leave early.
 		if (totalSimulatedPower <= 0) {
-			energyTracker.powerTransfered(new PowerStack(0, power.getVoltage(), power.getCurrentType()));
+			energyTracker.powerTransfered(power.copyWithPower(0));
 			getNetwork().getWorld().getProfiler().pop();
 			return 0;
 		}
@@ -303,6 +348,10 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		double powerProvided = 0;
 		PowerStack powerCopy = power.copy();
 		for (int i = 0; i < destinations.size(); i++) {
+			if (!powerToSupply.containsKey(i)) {
+				continue;
+			}
+
 			double toSupplyForDesination = power.getPower() * powerToSupply.get(i);
 			if (toSupplyForDesination <= 0) {
 				continue;
@@ -310,19 +359,21 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 			// Create a new power stack for this destination and then supply it.
 			CachedPowerDestination destination = destinations.get(i);
-			PowerStack stack = new PowerStack(toSupplyForDesination, power.getVoltage(), power.getCurrentType());
+			PowerStack stack = power.copyWithPower(toSupplyForDesination);
 
 			getNetwork().getWorld().getProfiler().push("PowerNetworkModule.Supplying");
-			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, powerSourceCable, stack, destination, simulate);
+			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, powerSourceCable, stack, destination,
+					simulate);
 			getNetwork().getWorld().getProfiler().pop();
 
 			// Reduce the remaining power by the TOTAL supplied amount.
 			powerCopy.setPower(powerCopy.getPower() - supplyEvent.getTotalPower());
 			powerProvided += supplyEvent.getTotalPower();
-
 			if (!simulate) {
-				energyTracker.powerTransfered(new PowerStack(supplyEvent.getTotalPower(), power.getVoltage(), power.getCurrentType()));
+				energyTracker.powerTransfered(power.copyWithPower(supplyEvent.getTotalPower()));
 			}
+
+	
 		}
 
 		// If any cables were over-currented, break them.
@@ -345,9 +396,12 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 	private void breakCable(BlockPos cablePos) {
 		Network.getWorld().destroyBlock(cablePos, false);
-		Network.getWorld().playSound(null, cablePos, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 0.5f, 1.25f);
-		((ServerLevel) Network.getWorld()).sendParticles(ParticleTypes.SMOKE, cablePos.getX() + 0.5, cablePos.getY() + 0.5, cablePos.getZ() + 0.5, 5, 0.15, 0.15, 0.15, 0);
-		((ServerLevel) Network.getWorld()).sendParticles(ParticleTypes.LANDING_LAVA, cablePos.getX() + 0.5, cablePos.getY() + 0.5, cablePos.getZ() + 0.5, 2, 0.15, 0.15, 0.15, 0);
+		Network.getWorld().playSound(null, cablePos, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 0.5f,
+				1.25f);
+		((ServerLevel) Network.getWorld()).sendParticles(ParticleTypes.SMOKE, cablePos.getX() + 0.5,
+				cablePos.getY() + 0.5, cablePos.getZ() + 0.5, 5, 0.15, 0.15, 0.15, 0);
+		((ServerLevel) Network.getWorld()).sendParticles(ParticleTypes.LANDING_LAVA, cablePos.getX() + 0.5,
+				cablePos.getY() + 0.5, cablePos.getZ() + 0.5, 2, 0.15, 0.15, 0.15, 0);
 	}
 
 	@Override

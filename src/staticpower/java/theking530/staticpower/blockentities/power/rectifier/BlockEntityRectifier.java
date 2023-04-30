@@ -19,18 +19,21 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRectifier extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRectifier> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityRectifier>("rectifier",
-			(allocator, pos, state) -> new BlockEntityRectifier(allocator, pos, state), ModBlocks.Rectifier);
+	public static final BlockEntityTypeAllocator<BlockEntityRectifier> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityRectifier>(
+			"rectifier", (allocator, pos, state) -> new BlockEntityRectifier(allocator, pos, state),
+			ModBlocks.Rectifier);
 
 	public final PowerStorageComponent powerStorage;
 	public final SideConfigurationComponent ioSideConfiguration;
 	private final PowerDistributionComponent powerDistributor;
 
-	public BlockEntityRectifier(BlockEntityTypeAllocator<BlockEntityRectifier> allocator, BlockPos pos, BlockState state) {
+	public BlockEntityRectifier(BlockEntityTypeAllocator<BlockEntityRectifier> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
 
 		// Add the power distributor.
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", FrontBackInputOutputOnly.INSTANCE));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				FrontBackInputOutputOnly.INSTANCE));
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));
 		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, true) {
 			@Override
@@ -56,11 +59,12 @@ public class BlockEntityRectifier extends BlockEntityBase {
 			return 0;
 		}
 		if (stack.getCurrentType() == CurrentType.ALTERNATING) {
-			PowerStack directVersion = new PowerStack(Math.abs(stack.getPower()), stack.getVoltage(), CurrentType.DIRECT);
+			PowerStack directVersion = new PowerStack(Math.abs(stack.getPower()), stack.getVoltage(),
+					CurrentType.DIRECT);
 
 			double transfered = powerDistributor.manuallyDistributePower(powerStorage, directVersion, simulate);
 			if (!simulate) {
-				powerStorage.getEnergyTracker().powerAdded(new PowerStack(transfered, stack.getVoltage(), stack.getCurrentType()));
+				powerStorage.getEnergyTracker().powerAdded(stack.copyWithPower(transfered));
 				powerStorage.getEnergyTracker().powerDrained(transfered);
 				powerStorage.setOutputVoltage(stack.getVoltage());
 			}

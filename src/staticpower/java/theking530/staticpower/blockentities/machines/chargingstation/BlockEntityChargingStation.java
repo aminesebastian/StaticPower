@@ -27,8 +27,9 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityChargingStation extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityChargingStation> TYPE = new BlockEntityTypeAllocator<BlockEntityChargingStation>("charging_station",
-			(type, pos, state) -> new BlockEntityChargingStation(pos, state), ModBlocks.ChargingStation);
+	public static final BlockEntityTypeAllocator<BlockEntityChargingStation> TYPE = new BlockEntityTypeAllocator<BlockEntityChargingStation>(
+			"charging_station", (type, pos, state) -> new BlockEntityChargingStation(pos, state),
+			ModBlocks.ChargingStation);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -45,8 +46,8 @@ public class BlockEntityChargingStation extends BlockEntityMachine {
 		super(TYPE, pos, state);
 
 		// Add the input inventory that only takes energy storing items.
-		registerComponent(
-				unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 					public boolean canInsertItem(int slot, ItemStack stack) {
 						return EnergyHandlerItemStackUtilities.isEnergyContainer(stack);
 					}
@@ -79,7 +80,8 @@ public class BlockEntityChargingStation extends BlockEntityMachine {
 				}
 
 				// Get the amount of power to apply to each item.
-				double maxOutput = Math.min(powerStorage.getStoredPower(), powerStorage.getMaximumPowerOutput() / count);
+				double maxOutput = Math.min(powerStorage.getStoredPower(),
+						powerStorage.getMaximumPowerOutput() / count);
 
 				// Attempt to charge each item.
 				for (int i = 0; i < unchargedInventory.getSlots(); i++) {
@@ -87,8 +89,10 @@ public class BlockEntityChargingStation extends BlockEntityMachine {
 					ItemStack stack = unchargedInventory.getStackInSlot(i);
 					// If it's not empty and is an energy storing item.
 					if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
-						if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
-							double charged = EnergyHandlerItemStackUtilities.addPower(stack, new PowerStack(maxOutput, powerStorage.getOutputVoltage()), false);
+						if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities
+								.getCapacity(stack)) {
+							double charged = EnergyHandlerItemStackUtilities.addPower(stack,
+									new PowerStack(maxOutput, powerStorage.getOutputVoltage()), false);
 							powerStorage.drainPower(charged, false);
 						} else {
 							moveChargedItemToOutputs(i);
@@ -111,7 +115,8 @@ public class BlockEntityChargingStation extends BlockEntityMachine {
 			// If we can place the charged item into an output slot, do so. There's no need
 			// to check the result of the call to insertItem as we already know the result
 			// is going to be empty.
-			if (InventoryUtilities.canFullyInsertStackIntoSlot(chargedInventory, i, unchargedInventory.getStackInSlot(fromSlot))) {
+			if (InventoryUtilities.canFullyInsertStackIntoSlot(chargedInventory, i,
+					unchargedInventory.getStackInSlot(fromSlot))) {
 				ItemStack stack = unchargedInventory.extractItem(fromSlot, 1, false);
 				chargedInventory.insertItem(i, stack, false);
 			}
@@ -124,7 +129,8 @@ public class BlockEntityChargingStation extends BlockEntityMachine {
 		for (int i = 0; i < unchargedInventory.getSlots(); i++) {
 			ItemStack stack = unchargedInventory.getStackInSlot(i);
 			if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
-				if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
+				if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities
+						.getCapacity(stack)) {
 					count++;
 				}
 			}

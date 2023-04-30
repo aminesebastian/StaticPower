@@ -40,11 +40,13 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	private final StaticPowerVoltage voltage;
 	private final boolean isIndustrial;
 
-	public PowerCableComponent(String name, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
+	public PowerCableComponent(String name, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower,
+			double powerLoss) {
 		this(name, ModCableModules.Power.get(), isIndustrial, voltage, maxPower, powerLoss);
 	}
 
-	public PowerCableComponent(String name, CableNetworkModuleType powerModuleType, boolean isIndustrial, StaticPowerVoltage voltage, double maxCurrent, double powerLoss) {
+	public PowerCableComponent(String name, CableNetworkModuleType powerModuleType, boolean isIndustrial,
+			StaticPowerVoltage voltage, double maxCurrent, double powerLoss) {
 		super(name, powerModuleType);
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 
@@ -78,7 +80,8 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state,
+			LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putByte(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
 		cable.getDataTag().putDouble(RESISTANCE, powerLoss);
