@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -65,7 +64,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	private final List<CachedPowerDestination> destinations;
 	private final Map<BlockPos, PowerStack> currentTickCurrentMap;
 
-	private final Map<IStaticPowerStorage, Set<UUID>> currentTickTransferedMap;
+	private final Set<IStaticPowerStorage> currentTransferVisitedMap;
 	private int recursionDepth;
 
 	private double maximumCurrentOutput;
@@ -78,7 +77,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 	public PowerNetworkModule(CableNetworkModuleType type) {
 		super(type);
-		currentTickTransferedMap = new HashMap<>();
+		currentTransferVisitedMap = new HashSet<>();
 		destinations = new ArrayList<>();
 		currentTickCurrentMap = new HashMap<>();
 		energyTracker = new StaticPowerEnergyTracker();
@@ -88,7 +87,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	public void preWorldTick(Level world) {
 		energyTracker.tick(world);
 		currentTickCurrentMap.clear();
-		currentTickTransferedMap.clear();
+		currentTransferVisitedMap.clear();
 		recursionDepth = 0;
 	}
 
@@ -291,7 +290,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 		double returnValue = internalAddPower(powerSourcePos, powerSourceCable, power, simulate);
 		recursionDepth--;
 		if (recursionDepth <= 0) {
-			currentTickTransferedMap.clear();
+			currentTransferVisitedMap.clear();
 		}
 		return returnValue;
 	}
@@ -314,15 +313,11 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			CachedPowerDestination destination = destinations.get(i);
 
 			// Avoid larger loops.
-			if (currentTickTransferedMap.containsKey(destination.power())) {
-				if (currentTickTransferedMap.get(destination.power()).contains(power.getId())) {
-					continue;
-				}
+			if (currentTransferVisitedMap.contains(destination.power())) {
+				continue;
 			}
 
-			Set<UUID> idSet = currentTickTransferedMap.computeIfAbsent(destination.power(),
-					(storage) -> new HashSet<UUID>());
-			idSet.add(power.getId());
+			currentTransferVisitedMap.add(destination.power());
 
 			PowerStack simulatedPower = power.copyWithPower(StaticPowerEnergyUtilities.getMaximumPower());
 			CablePowerSupplyEvent supplyEvent = supplyPower(powerSourcePos, powerSourceCable, simulatedPower,
@@ -373,7 +368,6 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 				energyTracker.powerTransfered(power.copyWithPower(supplyEvent.getTotalPower()));
 			}
 
-	
 		}
 
 		// If any cables were over-currented, break them.

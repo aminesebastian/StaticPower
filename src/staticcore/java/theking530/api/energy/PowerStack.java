@@ -1,14 +1,12 @@
 package theking530.api.energy;
 
 import java.util.Objects;
-import java.util.UUID;
 
 import net.minecraft.nbt.CompoundTag;
 
 public class PowerStack {
 	public static final PowerStack EMPTY = new EmptyPowerStack(0, StaticPowerVoltage.ZERO);
 
-	private UUID id;
 	private double power;
 	private StaticPowerVoltage voltage;
 	private double current;
@@ -18,28 +16,19 @@ public class PowerStack {
 		this(power, voltage, CurrentType.DIRECT);
 	}
 
-	public PowerStack(double power, StaticPowerVoltage voltage, CurrentType type) {
-		this(UUID.randomUUID(), power, voltage, type);
-	}
-
 	private PowerStack(PowerStack otherStack) {
 		this(otherStack, otherStack.power);
 	}
 
 	private PowerStack(PowerStack otherStack, double power) {
-		this(otherStack.getId(), power, otherStack.voltage, otherStack.type);
+		this(power, otherStack.voltage, otherStack.type);
 	}
 
-	private PowerStack(UUID id, double power, StaticPowerVoltage voltage, CurrentType type) {
-		this.id = id;
+	public PowerStack(double power, StaticPowerVoltage voltage, CurrentType type) {
 		this.power = power;
 		this.voltage = voltage;
 		this.type = type;
 		updateCurrent();
-	}
-
-	public UUID getId() {
-		return id;
 	}
 
 	public double getPower() {
@@ -86,7 +75,6 @@ public class PowerStack {
 
 	public CompoundTag serialize() {
 		CompoundTag output = new CompoundTag();
-		output.putUUID("id", id);
 		output.putDouble("p", power);
 		output.putDouble("v", voltage.ordinal());
 		output.putByte("t", (byte) type.ordinal());
@@ -94,7 +82,7 @@ public class PowerStack {
 	}
 
 	public static PowerStack deserialize(CompoundTag tag) {
-		return new PowerStack(tag.getUUID("id"), tag.getDouble("p"), StaticPowerVoltage.values()[tag.getByte("v")],
+		return new PowerStack(tag.getDouble("p"), StaticPowerVoltage.values()[tag.getByte("v")],
 				CurrentType.values()[tag.getByte("t")]);
 	}
 
@@ -108,7 +96,7 @@ public class PowerStack {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(current, power, id, type, voltage);
+		return Objects.hash(current, power, type, voltage);
 	}
 
 	@Override
@@ -121,14 +109,13 @@ public class PowerStack {
 			return false;
 		PowerStack other = (PowerStack) obj;
 		return Double.doubleToLongBits(current) == Double.doubleToLongBits(other.current)
-				&& Double.doubleToLongBits(power) == Double.doubleToLongBits(other.power)
-				&& Objects.equals(id, other.id) && type == other.type && voltage == other.voltage;
+				&& Double.doubleToLongBits(power) == Double.doubleToLongBits(other.power) && type == other.type
+				&& voltage == other.voltage;
 	}
 
 	@Override
 	public String toString() {
-		return "PowerStack [id=" + id + ", power=" + power + ", voltage=" + voltage + ", current=" + current + ", type="
-				+ type + "]";
+		return "PowerStack [power=" + power + ", voltage=" + voltage + ", current=" + current + ", type=" + type + "]";
 	}
 
 	/**

@@ -54,6 +54,9 @@
 	"gui.staticcore.max_power_transfer": "Transfer Rate",
 	"gui.staticcore.max_input_power": "Max. Input Power",
 	"gui.staticcore.max_output_power": "Max. Output Power",
+	"gui.staticcore.power_satisfaction": "Power Satisfaction",
+	
+	
 	"gui.staticcore.power_loss": "Power Loss",
 	"gui.staticcore.power_loss_per_block": "Loss Per Block",
 	

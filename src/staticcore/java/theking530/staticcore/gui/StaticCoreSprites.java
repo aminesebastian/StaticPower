@@ -15,6 +15,11 @@ public class StaticCoreSprites {
 	public static final ResourceLocation GUI_POWER_BAR_FG = registerSprite("gui/power_bar_power");
 	public static final ResourceLocation GUI_POWER_BAR_BG = registerSprite("gui/power_bar_bg");
 
+	public static final ResourceLocation POWER_SATISFACTION_BASE = registerSprite("gui/power_indicator/base");
+	public static final ResourceLocation POWER_SATISFACTION_INDICATOR = registerSprite("gui/power_indicator/indicator");
+	public static final ResourceLocation POWER_SATISFACTION_FRAME = registerSprite("gui/power_indicator/frame");
+	public static final ResourceLocation POWER_SATISFACTION_GLASS = registerSprite("gui/power_indicator/glass");
+
 	public static final ResourceLocation CANCEL = registerSprite("gui/cancel");
 	public static final ResourceLocation GREEN_CHECK = registerSprite("gui/check");
 	public static final ResourceLocation DISABLED = registerSprite("gui/disabled");

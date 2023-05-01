@@ -135,7 +135,7 @@ public class ConcretizedProductContainer implements INBTSerializable<CompoundTag
 
 		if (isClosed()) {
 			throw new RuntimeException(
-					String.format("Attempted to add an input item to a clowed process output container."));
+					String.format("Attempted to add an input item to a closed process output container."));
 		}
 
 		if (amount == 0) {

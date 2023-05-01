@@ -166,7 +166,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		@SuppressWarnings("resource")
 		long currentTick = Minecraft.getInstance().level.getGameTime();
 		long sinceLastUpdate = currentTick - lastClientFetchTime;
-		float offset = ((sinceLastUpdate % 20) + partialTicks) / 20.0f;
+		float offset = 0.0f; //((sinceLastUpdate % 20) + partialTicks) / 20.0f;
 		
 		for (ProductivityTimeline timeline : timelines) {
 
