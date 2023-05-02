@@ -26,20 +26,25 @@ import theking530.staticpower.entities.smeep.EntitySmeep;
 import theking530.staticpower.entities.smeep.TypeSmeep;
 
 public class ModEntities {
-	public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, StaticPower.MOD_ID);
+	public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister
+			.create(ForgeRegistries.ENTITY_TYPES, StaticPower.MOD_ID);
 	public static final List<AbstractEntityBuilder<?>> ENTITIES = new ArrayList<>();
 
 	public static final AbstractEntityBuilder<EntitySmeep> Smeep = registerEntity("smeep", new TypeSmeep());
 	public static final AbstractEntityBuilder<EntityEnox> Enox = registerEntity("enox", new TypeEnox());
-	public static final AbstractEntityBuilder<CauldronContainedEntity> CauldronContainedEntity = registerEntity("cauldron_contained_entity", new CauldronContainedEntityType());
-	public static final AbstractEntityBuilder<ConveyorBeltEntity> ConveyorBeltEntity = registerEntity("conveyor_belt_entity", new ConveyorBeltEntityType());
-	public static final AbstractEntityBuilder<AnvilForgeEntity> AnvilForgeEntity = registerEntity("anvil_forge_entity", new AnvilForgeEntityType());
+	public static final AbstractEntityBuilder<CauldronContainedEntity> CauldronContainedEntity = registerEntity(
+			"cauldron_contained_entity", new CauldronContainedEntityType());
+	public static final AbstractEntityBuilder<ConveyorBeltEntity> ConveyorBeltEntity = registerEntity(
+			"conveyor_belt_entity", new ConveyorBeltEntityType());
+	public static final AbstractEntityBuilder<AnvilForgeEntity> AnvilForgeEntity = registerEntity("anvil_forge_entity",
+			new AnvilForgeEntityType());
 
 	public static void init(IEventBus eventBus) {
 		ENTITY_TYPES.register(eventBus);
 	}
 
-	private static <T extends Entity> AbstractEntityBuilder<T> registerEntity(String name, AbstractEntityBuilder<T> entity) {
+	private static <T extends Entity> AbstractEntityBuilder<T> registerEntity(String name,
+			AbstractEntityBuilder<T> entity) {
 		ENTITY_TYPES.register(name, () -> entity.build(name));
 		if (entity instanceof AbstractSpawnableMobType) {
 			((AbstractSpawnableMobType<?>) entity).registerSpawnEgg(name);

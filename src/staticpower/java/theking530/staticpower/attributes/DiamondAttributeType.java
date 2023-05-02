@@ -18,7 +18,8 @@ public class DiamondAttributeType extends AbstractHardenedAttributeType {
 		}
 
 		// Get the modifier amount.
-		double modifier = StaticCoreConfig.getTier(StaticPowerTiers.DIAMOND).toolConfiguration.hardenedDurabilityBoost.get();
+		double modifier = StaticCoreConfig.getTier(StaticPowerTiers.DIAMOND).toolConfiguration.hardenedDurabilityBoost
+				.get();
 		value *= modifier;
 
 		// Return the modified value.

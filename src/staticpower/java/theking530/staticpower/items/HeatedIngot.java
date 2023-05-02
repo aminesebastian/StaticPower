@@ -46,7 +46,8 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelProvider
 	@Nullable
 	@Override
 	public Entity createEntity(Level world, Entity location, ItemStack itemstack) {
-		Entity output = new AnvilForgeEntity(world, location.getEyePosition().x, location.getEyePosition().y, location.getEyePosition().z, itemstack);
+		Entity output = new AnvilForgeEntity(world, location.getEyePosition().x, location.getEyePosition().y,
+				location.getEyePosition().z, itemstack);
 		output.setDeltaMovement(location.getDeltaMovement());
 		return output;
 	}
@@ -79,7 +80,8 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelProvider
 				boolean cooled = cooldownIngot(stack);
 				if (cooled) {
 					player.getInventory().setItem(slot, getCooledVariant(stack));
-					level.playSound(player, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 0.5f, 1.0f);
+					level.playSound(player, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 0.5f,
+							1.0f);
 				} else {
 					stack.getTag().putInt(HEATED_TAG, getRemainingHeat(stack) - 1);
 				}
@@ -137,7 +139,8 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelProvider
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		tooltip.add(Component.translatable("gui.staticpower.remaining_heat_time").append(" ")
-				.append(GuiTextUtilities.formatNumberAsStringOneDecimal(getRemainingHeat(stack) / 20.0f).withStyle(ChatFormatting.GOLD))
+				.append(GuiTextUtilities.formatNumberAsStringOneDecimal(getRemainingHeat(stack) / 20.0f)
+						.withStyle(ChatFormatting.GOLD))
 				.append(Component.translatable("gui.staticpower.seconds.short").withStyle(ChatFormatting.GOLD)));
 	}
 
@@ -148,7 +151,8 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelProvider
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new HeatedItemModel(existingModel);
 	}
 }

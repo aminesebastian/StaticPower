@@ -93,7 +93,8 @@ public class StaticPowerModEventsClient {
 		// Register any additional models we want.
 		StaticPower.LOGGER.info("Registering Additional Models!");
 		StaticPowerAdditionalModels.registerModels(event);
-		StaticPower.LOGGER.info(String.format("Registered: %1$d Additional Models!", StaticPowerAdditionalModels.MODELS.size()));
+		StaticPower.LOGGER
+				.info(String.format("Registered: %1$d Additional Models!", StaticPowerAdditionalModels.MODELS.size()));
 	}
 
 	@SubscribeEvent
@@ -116,7 +117,8 @@ public class StaticPowerModEventsClient {
 						if (override != null) {
 							event.getModels().put(variantMRL, override);
 						} else {
-							StaticPower.LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.get().getName().getString()));
+							StaticPower.LOGGER.error(String.format("Encountered null model override for block: %1$s.",
+									block.get().getName().getString()));
 						}
 					}
 				}
@@ -130,7 +132,8 @@ public class StaticPowerModEventsClient {
 
 				if (supplier.hasModelOverride(null)) {
 					// Get the existing model.
-					ModelResourceLocation modelLocation = new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(item.get()), "inventory");
+					ModelResourceLocation modelLocation = new ModelResourceLocation(
+							ForgeRegistries.ITEMS.getKey(item.get()), "inventory");
 					BakedModel existingModel = supplier.getItemModelOverride(event);
 					if (existingModel == null) {
 						existingModel = event.getModelManager().getModel(modelLocation);
@@ -168,7 +171,8 @@ public class StaticPowerModEventsClient {
 					event.addSprite(sprite);
 					spriteCount++;
 				} catch (Exception e) {
-					StaticPower.LOGGER.error(String.format("Failed to register texture: %1$s to the texture atlas.", sprite));
+					StaticPower.LOGGER
+							.error(String.format("Failed to register texture: %1$s to the texture atlas.", sprite));
 				}
 			}
 			StaticPower.LOGGER.info(String.format("Registered %1$s Static Power sprites.", spriteCount));

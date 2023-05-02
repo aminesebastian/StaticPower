@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldAbstractProcesingComponent;
 import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
 import theking530.staticcore.gui.StaticCoreSprites;
 import theking530.staticcore.gui.drawables.IDrawable;
@@ -31,14 +30,6 @@ import theking530.staticcore.utilities.math.Vector2D;
  */
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> extends AbstractGuiWidget<T> {
-	/**
-	 * The machine processing component this progress bar is bound to (if one
-	 * exists).
-	 */
-	@Nullable
-	@Deprecated
-	protected OldAbstractProcesingComponent<?> oldMachineProcessingComponent;
-
 	/**
 	 * The machine processing component this progress bar is bound to (if one
 	 * exists).
@@ -120,15 +111,6 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		// Capture the max progress.
-		if (oldMachineProcessingComponent != null) {
-			maxProgress = oldMachineProcessingComponent.getMaxProcessingTime();
-			currentProgress = oldMachineProcessingComponent.getCurrentProcessingTime();
-			tickDownRate = oldMachineProcessingComponent.getTimeUnitsPerTick();
-			isProcessingErrored = oldMachineProcessingComponent.isProcessingStoppedDueToError();
-			processingErrorMessage = oldMachineProcessingComponent.getProcessingErrorMessage();
-		}
-
 		if (machineProcessingComponent != null) {
 			maxProgress = machineProcessingComponent.getProcessingTimer().getMaxTime();
 			currentProgress = machineProcessingComponent.getProcessingTimer().getCurrentTime();
@@ -241,27 +223,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 
 	@SuppressWarnings("unchecked")
 	/**
-	 * Binds this progress bar to the provided
-	 * {@link OldMachineProcessingComponent}.
-	 * 
-	 * @param component The component to bind to.
-	 * @return This progress bar for chaining of commands.
-	 */
-	public T bindToMachineProcessingComponent(OldAbstractProcesingComponent<?> component) {
-		oldMachineProcessingComponent = component;
-
-		// Set the initial values.
-		maxProgress = oldMachineProcessingComponent.getMaxProcessingTime();
-		currentProgress = oldMachineProcessingComponent.getCurrentProcessingTime();
-		tickDownRate = oldMachineProcessingComponent.getTimeUnitsPerTick();
-		visualCurrentProgress = currentProgress;
-		return (T) this;
-	}
-
-	@SuppressWarnings("unchecked")
-	/**
-	 * Binds this progress bar to the provided
-	 * {@link OldMachineProcessingComponent}.
+	 * Binds this progress bar to the provided {@link AbstractProcessingComponent}.
 	 * 
 	 * @param component The component to bind to.
 	 * @return This progress bar for chaining of commands.

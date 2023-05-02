@@ -38,7 +38,8 @@ public abstract class AbstractHardenedAttributeType extends AttributeType<Boolea
 	}
 
 	@Override
-	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Boolean> instance, AttributeModifierInstance<Boolean> modifier) {
+	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Boolean> instance,
+			AttributeModifierInstance<Boolean> modifier) {
 		return !instance.getValue();
 	}
 

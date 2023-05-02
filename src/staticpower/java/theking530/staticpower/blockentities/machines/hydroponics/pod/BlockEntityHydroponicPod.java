@@ -118,6 +118,8 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipe
 						(ServerTeam) getTeamComponent().getOwningTeam(), owningFarmer.fluidTankComponent.getFluid(),
 						(2) * 20);
 				owningFarmer.fluidTankComponent.drain(2, FluidAction.EXECUTE);
+				processingComponent.getProductionToken(StaticCoreProductTypes.Fluid.get()).consumed(
+						(ServerTeam) getTeamComponent().getOwningTeam(), owningFarmer.fluidTankComponent.getFluid(), 2);
 			}
 		}
 	}

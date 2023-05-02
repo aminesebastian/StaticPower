@@ -16,10 +16,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -33,6 +35,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent.Save;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
@@ -62,7 +65,9 @@ import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.init.StaticCoreKeyBindings;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
+import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
+import theking530.staticcore.teams.TeamUtilities;
 import theking530.staticcore.utilities.ITooltipProvider;
 
 @Mod.EventBusSubscriber(modid = StaticCore.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
@@ -126,6 +131,19 @@ public class StaticCoreForgeEventsCommon {
 	@SubscribeEvent
 	public static void onPlayerLoad(PlayerEvent.LoadFromFile load) {
 
+	}
+
+	@SubscribeEvent
+	public static void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
+		if (!(event.getEntity() instanceof Player)) {
+			return;
+		}
+
+		BlockEntity blockEntity = event.getLevel().getBlockEntity(event.getPos());
+		ITeam team = TeamManager.get(event.getLevel()).getTeamForPlayer((Player) event.getEntity());
+		if (team != null) {
+			TeamUtilities.setOwningTeam(blockEntity, team);
+		}
 	}
 
 	@SubscribeEvent

@@ -6,19 +6,11 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.productivity.ProductMetricTileRendererRegistry;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.ProductionMetric;
@@ -71,10 +63,11 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		SDColor lightColor = new SDColor(0.75f, 0.75f, 0.75f, 1.0f);
 
 		SDColor bgColor = new SDColor(0.6f, 0.6f, 0.6f, 1.0f);
-		if (this.isHovered()) {
+		if (isHovered()) {
 			bgColor.add(0, 0, 0.1f);
 		}
-		GuiDrawUtilities.drawRectangle(pose, getWidth(), getHeight(), 0, 0, 0, bgColor);
+
+		GuiDrawUtilities.drawRectangle(pose, getWidth(), getHeight(), 0, 0, 1, bgColor);
 
 		GuiDrawUtilities.drawRectangle(pose, getWidth(), 1, 0, 0, 1, lightColor);
 		GuiDrawUtilities.drawRectangle(pose, getWidth(), 1, 0, getHeight() - 1, 1, SDColor.DARK_GREY);
@@ -105,28 +98,14 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		}
 	}
 
-	@SuppressWarnings("resource")
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
-		try {
-			if (metric != null) {
-				if (currentProductType == StaticCoreProductTypes.Item.get()) {
-					CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
-					tag.putByte("Count", (byte) 1);
-					ItemStack product = ItemStack.of(tag);
-					tooltips.addAll(
-							product.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.Default.NORMAL));
-				} else if (currentProductType == StaticCoreProductTypes.Fluid.get()) {
-					CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
-					tag.putInt("Amount", (byte) 1);
-					FluidStack product = FluidStack.loadFluidStackFromNBT(tag);
-					tooltips.add(product.getDisplayName());
-				}
-			}
-		} catch (CommandSyntaxException e) {
-			e.printStackTrace();
-		}
 
+		if (metric != null && currentProductType != null) {
+			ProductMetricTileRendererRegistry.getRenderer(currentProductType).getTooltips(metric, metricType,
+					metric.getSmoothedMetricValue(metricType), getLastRenderMatrix(), mousePosition, getSize(),
+					isHovered(), tooltips, showAdvanced);
+		}
 	}
 
 	@Override

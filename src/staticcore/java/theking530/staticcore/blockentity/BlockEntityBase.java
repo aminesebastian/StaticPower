@@ -116,7 +116,7 @@ public abstract class BlockEntityBase extends BlockEntity
 		isFullyLoadedInWorld = false;
 		saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
 		updateSerializeableFields = SerializationUtilities.getUpdateSerializeableFields(this);
-		registerComponent(teamComponent = new TeamComponent("team"));
+		registerComponent(teamComponent = new TeamComponent("team_component"));
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {

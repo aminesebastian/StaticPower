@@ -12,43 +12,49 @@ public class EquipmentMaterial {
 	private Tier toolMaterial;
 	private EquipmentMaterial parentMaterial;
 
-	public EquipmentMaterial(String name, ChatFormatting color, EquipmentMaterial parentMaterial, boolean validArmor, boolean validTool) {
+	public EquipmentMaterial(String name, ChatFormatting color, EquipmentMaterial parentMaterial, boolean validArmor,
+			boolean validTool) {
 		this.name = name;
 		this.color = color;
 		this.parentMaterial = parentMaterial;
 	}
-	
+
 	public EquipmentMaterial getParentMaterial() {
-		if(parentMaterial != null) {
+		if (parentMaterial != null) {
 			return getParentMaterialWorker(parentMaterial);
-		}else{
+		} else {
 			return this;
 		}
 	}
+
 	private EquipmentMaterial getParentMaterialWorker(EquipmentMaterial parentMaterial) {
-		if(parentMaterial.parentMaterial != null) {
+		if (parentMaterial.parentMaterial != null) {
 			return getParentMaterialWorker(parentMaterial);
-		}else{
+		} else {
 			return parentMaterial;
 		}
 	}
-	public void initArmorMaterial(ArmorMaterial material){
+
+	public void initArmorMaterial(ArmorMaterial material) {
 		armorMaterial = material;
 	}
+
 	public void initToolMaterial(Tier material) {
 		toolMaterial = material;
 	}
-	
+
 	public ArmorMaterial getArmorMaterial() {
 		return armorMaterial;
 	}
+
 	public boolean isValidArmorMaterial() {
 		return getArmorMaterial() != null;
 	}
-	
+
 	public Tier getToolMaterial() {
 		return toolMaterial;
 	}
+
 	public boolean isValidToolMaterial() {
 		return getToolMaterial() != null;
 	}

@@ -43,7 +43,8 @@ public class JuiceBottleItem extends StaticPowerItem {
 			int newFoodAmount = SDMath.clamp(0, serverplayerentity.getFoodData().getFoodLevel() + foodAmount, 20);
 			serverplayerentity.getFoodData().setFoodLevel(newFoodAmount);
 
-			float newSaturationAmount = SDMath.clamp(0.0f, serverplayerentity.getFoodData().getSaturationLevel() + saturation, 20.0f);
+			float newSaturationAmount = SDMath.clamp(0.0f,
+					serverplayerentity.getFoodData().getSaturationLevel() + saturation, 20.0f);
 			serverplayerentity.getFoodData().setSaturation(newSaturationAmount);
 		}
 

@@ -48,13 +48,14 @@ public class ThermalConductivityBehaviours {
 
 	public static class OverheatingBehaviour extends ThermalConductivityBehaviours {
 
-		public static final Codec<OverheatingBehaviour> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				Codec.INT.optionalFieldOf("overheat_temperature", 0).forGetter(recipe -> recipe.getTemperature()),
-				BlockState.CODEC.optionalFieldOf("overheated_block", Blocks.AIR.defaultBlockState())
-						.forGetter(recipe -> recipe.getBlockState()),
-				StaticPowerOutputItem.CODEC.optionalFieldOf("overheated_item", StaticPowerOutputItem.EMPTY)
-						.forGetter(recipe -> recipe.getItem()))
-				.apply(instance, OverheatingBehaviour::new));
+		public static final Codec<OverheatingBehaviour> CODEC = RecordCodecBuilder
+				.create(instance -> instance
+						.group(Codec.INT.optionalFieldOf("temperature", 0).forGetter(recipe -> recipe.getTemperature()),
+								BlockState.CODEC.optionalFieldOf("block", Blocks.AIR.defaultBlockState())
+										.forGetter(recipe -> recipe.getBlockState()),
+								StaticPowerOutputItem.CODEC.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
+										.forGetter(recipe -> recipe.getItem()))
+						.apply(instance, OverheatingBehaviour::new));
 
 		public OverheatingBehaviour(int temperature, BlockState block, StaticPowerOutputItem itemstack) {
 			super(temperature, block, itemstack);
@@ -69,13 +70,14 @@ public class ThermalConductivityBehaviours {
 	}
 
 	public static class FreezingBehaviour extends ThermalConductivityBehaviours {
-		public static final Codec<FreezingBehaviour> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				Codec.INT.optionalFieldOf("overheat_temperature", 0).forGetter(recipe -> recipe.getTemperature()),
-				BlockState.CODEC.optionalFieldOf("overheated_block", Blocks.AIR.defaultBlockState())
-						.forGetter(recipe -> recipe.getBlockState()),
-				StaticPowerOutputItem.CODEC.optionalFieldOf("overheated_item", StaticPowerOutputItem.EMPTY)
-						.forGetter(recipe -> recipe.getItem()))
-				.apply(instance, FreezingBehaviour::new));
+		public static final Codec<FreezingBehaviour> CODEC = RecordCodecBuilder
+				.create(instance -> instance
+						.group(Codec.INT.optionalFieldOf("temperature", 0).forGetter(recipe -> recipe.getTemperature()),
+								BlockState.CODEC.optionalFieldOf("block", Blocks.AIR.defaultBlockState())
+										.forGetter(recipe -> recipe.getBlockState()),
+								StaticPowerOutputItem.CODEC.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
+										.forGetter(recipe -> recipe.getItem()))
+						.apply(instance, FreezingBehaviour::new));
 
 		public FreezingBehaviour(int temperature, BlockState block, StaticPowerOutputItem itemstack) {
 			super(temperature, block, itemstack);

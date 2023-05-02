@@ -27,7 +27,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.utilities.SDColor;
@@ -120,25 +119,25 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 					true);
 		}
 
-		if (!recipe.getFluidInput().isEmpty()) {
-			if (ForgeRegistries.FLUIDS.getKey(recipe.getFluidInput().getFluid()).toString().contains("flowing")) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 26f, 31, 0.0f, 0.5f, ChatFormatting.BLUE,
-						false);
-			} else {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 21.5f, 31, 0.0f, 0.5f, ChatFormatting.BLUE,
-						false);
-			}
-		}
-
-		if (!recipe.getOutputFluid().isEmpty()) {
-			if (ForgeRegistries.FLUIDS.getKey(recipe.getOutputFluid().getFluid()).toString().contains("flowing")) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 13, 0.0f, 0.5f, ChatFormatting.WHITE,
-						false);
-			} else {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 13, 0.0f, 0.5f, ChatFormatting.WHITE,
-						false);
-			}
-		}
+//		if (!recipe.getFluidInput().isEmpty()) {
+//			if (ForgeRegistries.FLUIDS.getKey(recipe.getFluidInput().getFluid()).toString().contains("flowing")) {
+//				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 26f, 31, 0.0f, 0.5f, ChatFormatting.BLUE,
+//						false);
+//			} else {
+//				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 21.5f, 31, 0.0f, 0.5f, ChatFormatting.BLUE,
+//						false);
+//			}
+//		}
+//
+//		if (!recipe.getOutputFluid().isEmpty()) {
+//			if (ForgeRegistries.FLUIDS.getKey(recipe.getOutputFluid().getFluid()).toString().contains("flowing")) {
+//				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 13, 0.0f, 0.5f, ChatFormatting.WHITE,
+//						false);
+//			} else {
+//				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 13, 0.0f, 0.5f, ChatFormatting.WHITE,
+//						false);
+//			}
+//		}
 
 		// If the input or output is fire, manually render it.
 		if (recipe.getIsFireInput() || recipe.getHasFireOutput()) {
@@ -173,33 +172,52 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 			IFocusGroup ingredients) {
 		// Set the input.
 		if (!recipe.getRecipe().isAirRecipe()) {
-			builder.addSlot(RecipeIngredientRole.INPUT, 6, 6).addIngredients(recipe.getInput());
+			builder.addSlot(RecipeIngredientRole.INPUT, 6, 6).addIngredients(recipe.getBlocks());
 		}
 
 		// Set the input fluid.
 		if (!recipe.getFluidInput().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.INPUT, 5, 5)
-					.addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluidInput())
-					.setFluidRenderer(getFluidTankDisplaySize(recipe.getFluidInput()), false, 20, 20);
+			addFluidIngredientSlot(builder, 5, 5, 20, 20, recipe.getFluidInput());
 		}
 
 		// Set the overheated block output.
-		if (!recipe.getOutputBlock().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 20).addIngredient(VanillaTypes.ITEM_STACK,
-					recipe.getOutputBlock());
+		if (recipe.getRecipe().hasOverheatingBehaviour()) {
+			ConcretizedThermalConductivityBehaviour overheat = recipe.getConcretizedOverheat();
+			if (!overheat.block().isEmpty()) {
+				builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 20).addIngredient(VanillaTypes.ITEM_STACK,
+						overheat.block());
+			}
+
+			if (!overheat.fluid().isEmpty()) {
+				builder.addSlot(RecipeIngredientRole.OUTPUT, 35, 16)
+						.addIngredient(ForgeTypes.FLUID_STACK, overheat.fluid())
+						.setFluidRenderer(getFluidTankDisplaySize(overheat.fluid()), false, 16, 48);
+			}
+
+			if (!overheat.item().isEmpty()) {
+				builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 18).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK,
+						overheat.item());
+			}
 		}
 
-		// Set the overheated item output.
-		if (!recipe.getOutputItem().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 18).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK,
-					recipe.getOutputItem());
-		}
+		// Set the frozen block output.
+		if (recipe.getRecipe().hasFreezeBehaviour()) {
+			ConcretizedThermalConductivityBehaviour freeze = recipe.getConcretizedFreeze();
+			if (!freeze.block().isEmpty()) {
+				builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 20).addIngredient(VanillaTypes.ITEM_STACK,
+						freeze.block());
+			}
 
-		// Add the fluid.
-		if (!recipe.getOutputFluid().isEmpty()) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 35, 16)
-					.addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid())
-					.setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false, 16, 48);
+			if (!freeze.fluid().isEmpty()) {
+				builder.addSlot(RecipeIngredientRole.OUTPUT, 35, 16)
+						.addIngredient(ForgeTypes.FLUID_STACK, freeze.fluid())
+						.setFluidRenderer(getFluidTankDisplaySize(freeze.fluid()), false, 16, 48);
+			}
+
+			if (!freeze.item().isEmpty()) {
+				builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 18).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK,
+						freeze.item());
+			}
 		}
 	}
 }

@@ -1,7 +1,10 @@
 package theking530.staticcore.productivity.product.power;
 
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
@@ -20,14 +23,23 @@ public class PowerProductMetricRenderer extends ProductMetricTileRenderer<PowerP
 	}
 
 	@Override
-	protected void drawIcon(ProductionMetric metric, MetricType metricType, PowerProducer product, ProductivityRate smoothedValue,
-			PoseStack pose, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
+	protected void drawIcon(ProductionMetric metric, MetricType metricType, PowerProducer product,
+			ProductivityRate smoothedValue, PoseStack pose, Vector2D mousePosition, float partialTicks,
+			Vector2D tileSize, boolean isHovered) {
 		GuiDrawUtilities.drawItem(pose, new ItemStack(product.getBlockSource().asItem()), 3, 2, 10, 16, 16);
 	}
 
 	@Override
 	protected String getValueText(ProductionMetric metric, MetricType metricType, PowerProducer product,
-			ProductivityRate smoothedValue, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
+			ProductivityRate smoothedValue, Vector2D mousePosition, float partialTicks, Vector2D tileSize,
+			boolean isHovered) {
 		return PowerTextFormatting.formatPowerToString(smoothedValue.getCurrentValue()).getString();
+	}
+
+	@Override
+	protected void getTooltips(ProductionMetric metric, MetricType metricType, PowerProducer product,
+			ProductivityRate smoothedValue, PoseStack pose, Vector2D mousePosition, Vector2D tileSize,
+			boolean isHovered, List<Component> tooltips, boolean showAdvanced) {
+		tooltips.add(product.getBlockSource().getName());
 	}
 }

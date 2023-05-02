@@ -56,7 +56,8 @@ public class StaticPowerItemGroup extends CreativeModeTab {
 					}
 				}
 			} catch (final Exception e) {
-				StaticPower.LOGGER.warn(String.format("Failed to add cover for block: %1$s to the creative tab.", ForgeRegistries.BLOCKS.getKey(block)), e);
+				StaticPower.LOGGER.warn(String.format("Failed to add cover for block: %1$s to the creative tab.",
+						ForgeRegistries.BLOCKS.getKey(block)), e);
 			}
 		}
 	}

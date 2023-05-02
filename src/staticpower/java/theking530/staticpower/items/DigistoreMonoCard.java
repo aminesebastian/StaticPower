@@ -52,7 +52,8 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelProv
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
-			int capacity = StaticCoreConfig.getTier(tierType).digistoreCardCapacity.get() * (StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get() / 8);
+			int capacity = StaticCoreConfig.getTier(tierType).digistoreCardCapacity.get()
+					* (StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get() / 8);
 
 			// Cover in case of integer overflow, we max at int.max.
 			return new DigistoreInventoryCapabilityProvider(stack, 1, capacity < 0 ? Integer.MAX_VALUE : capacity, nbt);
@@ -67,7 +68,8 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelProv
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new DigistoreMonoCardItemModel(existingModel);
 	}
 }

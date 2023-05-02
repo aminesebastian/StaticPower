@@ -56,14 +56,16 @@ public class FortuneAttributeType extends AttributeType<Number> {
 		}
 
 		if (showAdvanced) {
-			return baseTitle.append(" " + fortuneTier).append((ChatFormatting.GRAY.toString() + " (" + instance.getValue() + "/" + MAX_VALUE + ")"));
+			return baseTitle.append(" " + fortuneTier)
+					.append((ChatFormatting.GRAY.toString() + " (" + instance.getValue() + "/" + MAX_VALUE + ")"));
 		} else {
 			return baseTitle.append(" " + fortuneTier);
 		}
 	}
 
 	@Override
-	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Number> instance, AttributeModifierInstance<Number> modifier) {
+	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Number> instance,
+			AttributeModifierInstance<Number> modifier) {
 		// If we're already at the max, we can't take another modifier.
 		if (instance.getValue().intValue() >= MAX_VALUE) {
 			return false;
@@ -89,7 +91,8 @@ public class FortuneAttributeType extends AttributeType<Number> {
 
 		String sign = difference > 0 ? "+" : difference < 0 ? "-" : "";
 		String color = difference > 0 ? ChatFormatting.GREEN.toString() : ChatFormatting.RED.toString();
-		return super.getAttributeTitle(instance, false).append(" ").append(Component.literal(color + sign + difference));
+		return super.getAttributeTitle(instance, false).append(" ")
+				.append(Component.literal(color + sign + difference));
 	}
 
 }

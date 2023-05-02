@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.StaticCore;
 
 /**
  * Utility class to help serialize objects to and from NBT using the annotations
@@ -74,7 +75,8 @@ public class SerializationUtilities {
 			// Iterate through all the fields.
 			for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
 				for (Field field : c.getDeclaredFields()) {
-					if (field.isAnnotationPresent(SaveSerialize.class) || field.isAnnotationPresent(UpdateSerialize.class)) {
+					if (field.isAnnotationPresent(SaveSerialize.class)
+							|| field.isAnnotationPresent(UpdateSerialize.class)) {
 						updateFields.add(field);
 					}
 				}
@@ -122,7 +124,10 @@ public class SerializationUtilities {
 				} else if (t == long.class) {
 					nbt.putLong(field.getName(), field.getLong(object));
 				} else if (t == String.class) {
-					nbt.putString(field.getName(), (String) field.get(object));
+					String value = (String) field.get(object);
+					if (value != null) {
+						nbt.putString(field.getName(), (String) field.get(object));
+					}
 				} else if (t == BlockPos.class) {
 					BlockPos pos = (BlockPos) field.get(object);
 					nbt.putLong(field.getName(), pos.asLong());
@@ -148,9 +153,12 @@ public class SerializationUtilities {
 					Component component = (Component) field.get(object);
 					nbt.putString(field.getName(), Component.Serializer.toJson(component));
 				} else {
-					LOGGER.error(String.format("Encountered serializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
+					LOGGER.error(String.format("Encountered serializeable field %1$s with unsupported type: %2$s.",
+							field.getName(), t));
 				}
 			} catch (Throwable e) {
+				StaticCore.LOGGER.debug(String.format("There was an error attempting to serialize field: %1$s!", field),
+						e);
 			} finally {
 				// Reset the private state if needed.
 				if (!isAccessible) {
@@ -220,9 +228,12 @@ public class SerializationUtilities {
 					INBTSerializable<CompoundTag> serializeable = (INBTSerializable<CompoundTag>) field.get(object);
 					serializeable.deserializeNBT(nbt.getCompound(field.getName()));
 				} else {
-					LOGGER.error(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
+					LOGGER.error(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.",
+							field.getName(), t));
 				}
 			} catch (Throwable e) {
+				StaticCore.LOGGER
+						.debug(String.format("There was an error attempting to deserialize field: %1$s!", field), e);
 			} finally {
 				// Reset the private state if needed.
 				if (!isAccessible) {

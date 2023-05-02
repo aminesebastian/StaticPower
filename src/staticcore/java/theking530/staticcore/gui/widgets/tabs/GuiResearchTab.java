@@ -5,7 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.blockentity.components.team.TeamComponent;
+import theking530.api.team.ITeamOwnable;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
@@ -16,10 +16,10 @@ import theking530.staticcore.utilities.SDColor;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiResearchTab extends AbstractInfoTab {
-	private final TeamComponent teamComponent;
+	private final ITeamOwnable teamComponent;
 	public TextButton setTeamButton;
 
-	public GuiResearchTab(TeamComponent teamComponent) {
+	public GuiResearchTab(ITeamOwnable teamComponent) {
 		super("gui.staticcore.tab_title.team", new SDColor(255, 255, 255), 100, new SDColor(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(Blocks.LECTERN.asItem()));
 		this.teamComponent = teamComponent;
 		registerWidget(setTeamButton = new TextButton(14, 18, 16, Component.translatable("gui.staticcore.set_team").getString(), this::setTeamClicked));

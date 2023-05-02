@@ -121,6 +121,6 @@ public class ProductionTrackingToken<T> {
 	@SuppressWarnings("unchecked")
 	private ServerProductionCache<T> getProductionCache(ServerTeam team) {
 		IProductionManager<?> prodManager = team.getProductionManager();
-		return (ServerProductionCache<T>) prodManager.getProductTypeCache(getType());
+		return (ServerProductionCache<T>) prodManager.getProductCache(getType());
 	}
 }

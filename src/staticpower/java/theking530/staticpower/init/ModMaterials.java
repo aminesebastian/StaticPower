@@ -409,7 +409,9 @@ public class ModMaterials {
 	private static void validateAndCacheMaterialBundle(MaterialBundle bundle) {
 		bundle.validate();
 		if (MATERIALS.containsKey(bundle.getName())) {
-			throw new RuntimeException(String.format("Material names must be unique. Attempted to add a duplicate material with name: %1$s.", bundle.getName()));
+			throw new RuntimeException(String.format(
+					"Material names must be unique. Attempted to add a duplicate material with name: %1$s.",
+					bundle.getName()));
 		}
 		MATERIALS.put(bundle.getName(), bundle);
 	}

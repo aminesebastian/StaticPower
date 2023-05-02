@@ -3,7 +3,6 @@ package theking530.staticpower.integration.JEI.categories.thermalconductivity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -11,31 +10,24 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.thermal.ThermalConductivityRecipe;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
 import theking530.staticcore.utilities.item.ItemUtilities;
 import theking530.staticpower.StaticPower;
 
 public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
-	private static List<ThermalConductivityJEIRecipeWrapper> RECIPES;
+	private static final List<ThermalConductivityJEIRecipeWrapper> RECIPES = new ArrayList<>();
 
 	public ThermalConductivityRecipeProvider() {
 	}
 
 	public static List<ThermalConductivityJEIRecipeWrapper> getRecipes() {
-		// Create the recipes array.
-		RECIPES = new ArrayList<ThermalConductivityJEIRecipeWrapper>();
+		RECIPES.clear();
 
-		// Get all thermal conductivity recipes.
 		@SuppressWarnings("resource")
 		List<ThermalConductivityRecipe> originalRecipes = Minecraft.getInstance().level.getRecipeManager()
 				.getAllRecipesFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get());
@@ -43,57 +35,16 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 		// Iterate through all the recipes.
 		for (ThermalConductivityRecipe recipe : originalRecipes) {
 			try {
-				// Skip air recipe.
 				if (recipe.isAirRecipe()) {
 					continue;
 				}
 
-				// Create the recipe (may be dropped).
-				ThermalConductivityJEIRecipeWrapper jeiRecipe;
+				boolean isFireInput = !recipe.getBlocks().isEmpty()
+						&& recipe.getBlocks().test(new ItemStack(Blocks.FIRE, 1));
+				ThermalConductivityJEIRecipeWrapper jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe,
+						isFireInput);
 
-				// If this is a fire input recipe, mark it.
-				if (!recipe.getBlocks().isEmpty() && recipe.getBlocks().test(new ItemStack(Blocks.FIRE, 1))) {
-					jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe, true);
-				} else {
-					try {
-						jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe);
-					} catch (Throwable e) {
-						StaticPower.LOGGER.warn(e);
-						continue;
-					}
-
-				}
-
-				// Add blocks.
-				if (!recipe.getBlocks().isEmpty()) {
-					RECIPES.add(jeiRecipe);
-
-					// Add all the potential inputs.
-					for (Entry<ResourceKey<Block>, Block> block : ForgeRegistries.BLOCKS.getEntries()) {
-						RecipeMatchParameters matchParams = new RecipeMatchParameters(
-								block.getValue().defaultBlockState());
-						if (recipe.matches(matchParams, null)) {
-							jeiRecipe.addInput(new ItemStack(block.getValue()));
-						}
-					}
-					// Finalize the recipe.
-					jeiRecipe.finalize();
-				}
-
-				if (!recipe.getFluids().isEmpty()) {
-					RECIPES.add(jeiRecipe);
-					// Add all the potential inputs.
-					for (Entry<ResourceKey<Fluid>, Fluid> fluid : ForgeRegistries.FLUIDS.getEntries()) {
-						RecipeMatchParameters matchParams = new RecipeMatchParameters(
-								new FluidStack(fluid.getValue(), 1));
-						if (recipe.matches(matchParams, null)) {
-							jeiRecipe.setFluidStack(new FluidStack(fluid.getValue(), 1000));
-						}
-					}
-
-					// Finalize the recipe.
-					jeiRecipe.finalize();
-				}
+				RECIPES.add(jeiRecipe);
 			} catch (Exception e) {
 				StaticPower.LOGGER.warn(e);
 			}
@@ -106,17 +57,22 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 		if (focus.getTypedValue().getIngredient() instanceof ItemStack) {
 			ItemStack itemStack = (ItemStack) focus.getTypedValue().getIngredient();
 			if (focus.getRole() == RecipeIngredientRole.OUTPUT) {
-				if (isValidOverheatingOutput(itemStack)) {
+				if (isValidItemOrBlockOutput(itemStack)) {
 					return Collections.singletonList(ThermalConductivityRecipeCategory.TYPE);
 				}
 			} else if (focus.getRole() == RecipeIngredientRole.INPUT) {
-				if (hasThermalConductivity(itemStack)) {
+				if (isValidBlockInput(itemStack)) {
 					return Collections.singletonList(ThermalConductivityRecipeCategory.TYPE);
 				}
 			}
 		} else if (focus.getTypedValue().getIngredient() instanceof FluidStack) {
+			FluidStack fluidStack = (FluidStack) focus.getTypedValue().getIngredient();
 			if (focus.getRole() == RecipeIngredientRole.INPUT) {
-				if (hasThermalConductivity((FluidStack) focus.getTypedValue().getIngredient())) {
+				if (isValidFluidInput(fluidStack)) {
+					return Collections.singletonList(ThermalConductivityRecipeCategory.TYPE);
+				}
+			} else if (focus.getRole() == RecipeIngredientRole.OUTPUT) {
+				if (isValidFluidOutput(fluidStack)) {
 					return Collections.singletonList(ThermalConductivityRecipeCategory.TYPE);
 				}
 			}
@@ -141,18 +97,13 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 		return Collections.emptyList();
 	}
 
-	private static boolean hasThermalConductivity(ItemStack stack) {
-		// Check to see if this itemstack represents a block.
+	private static boolean isValidBlockInput(ItemStack stack) {
 		if (stack.getItem() instanceof BlockItem) {
-			// Get block item.
 			BlockItem blockItem = (BlockItem) stack.getItem();
 
-			// Create the match params.
 			ItemStack input = new ItemStack(blockItem);
-
-			// Get the recipes.
 			for (ThermalConductivityJEIRecipeWrapper recipe : RECIPES) {
-				if (recipe.getInput().test(input)) {
+				if (recipe.getBlocks().test(input)) {
 					return true;
 				}
 			}
@@ -161,22 +112,45 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 		return false;
 	}
 
-	private static boolean hasThermalConductivity(FluidStack stack) {
-		// Get the recipes.
+	private static boolean isValidFluidInput(FluidStack stack) {
 		for (ThermalConductivityJEIRecipeWrapper recipe : RECIPES) {
-			if (recipe.getFluidInput().isFluidEqual(stack)) {
+			if (recipe.getFluidInput().test(stack)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private static boolean isValidOverheatingOutput(ItemStack stack) {
-		// Iterate through all the recipes and add the applicable ones.
+	private static boolean isValidItemOrBlockOutput(ItemStack stack) {
 		for (ThermalConductivityJEIRecipeWrapper recipe : RECIPES) {
-			if (ItemUtilities.areItemStacksStackable(recipe.getOutputBlock(), stack)
-					|| ItemUtilities.areItemStacksStackable(recipe.getOutputItem().getItemStack(), stack)) {
-				return true;
+			if (recipe.getRecipe().hasOverheatingBehaviour()) {
+				if (ItemUtilities.areItemStacksStackable(recipe.getConcretizedOverheat().block(), stack)
+						|| ItemUtilities.areItemStacksStackable(recipe.getConcretizedOverheat().item().getItemStack(),
+								stack)) {
+					return true;
+				}
+			}
+			if (recipe.getRecipe().hasFreezeBehaviour()) {
+				if (ItemUtilities.areItemStacksStackable(recipe.getConcretizedFreeze().block(), stack) || ItemUtilities
+						.areItemStacksStackable(recipe.getConcretizedFreeze().item().getItemStack(), stack)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean isValidFluidOutput(FluidStack stack) {
+		for (ThermalConductivityJEIRecipeWrapper recipe : RECIPES) {
+			if (recipe.getRecipe().hasOverheatingBehaviour()) {
+				if (recipe.getConcretizedOverheat().fluid().isFluidEqual(stack)) {
+					return true;
+				}
+			}
+			if (recipe.getRecipe().hasFreezeBehaviour()) {
+				if (recipe.getConcretizedFreeze().fluid().isFluidEqual(stack)) {
+					return true;
+				}
 			}
 		}
 		return false;

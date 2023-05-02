@@ -44,30 +44,34 @@ public class DigistoreCard extends StaticPowerItem {
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
-			return new DigistoreInventoryCapabilityProvider(stack, StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get(),
+			return new DigistoreInventoryCapabilityProvider(stack,
+					StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get(),
 					StaticCoreConfig.getTier(tierType).digistoreCardCapacity.get(), nbt);
 		}
 		return null;
 	}
 
 	public static IDigistoreInventory getInventory(ItemStack stack) {
-		return stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY)
-				.orElseThrow(() -> new RuntimeException("Encounetered a digistore card without an attached digistore inventory."));
+		return stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).orElseThrow(
+				() -> new RuntimeException("Encounetered a digistore card without an attached digistore inventory."));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(Component.literal("Stores: ").append(String.valueOf(getInventory(stack).getItemCapacity() / 64)).append(" Stacks"));
-		tooltip.add(Component.literal("Max Types: ").append(String.valueOf(getInventory(stack).getUniqueItemCapacity())));
+		tooltip.add(Component.literal("Stores: ").append(String.valueOf(getInventory(stack).getItemCapacity() / 64))
+				.append(" Stacks"));
+		tooltip.add(
+				Component.literal("Max Types: ").append(String.valueOf(getInventory(stack).getUniqueItemCapacity())));
 
 		if (showAdvanced) {
 			int storedAmount = getInventory(stack).getTotalContainedCount();
 			float filledPercentage = (float) storedAmount / getInventory(stack).getItemCapacity();
 			MetricConverter converter = new MetricConverter(storedAmount);
-			tooltip.add(
-					Component.literal("Stored: ").append(converter.getValueAsString(true)).append(" Items (").append(String.valueOf((int) (100 * filledPercentage))).append("%)"));
-			tooltip.add(Component.literal("Types: ").append(String.valueOf(getInventory(stack).getCurrentUniqueItemTypeCount())));
+			tooltip.add(Component.literal("Stored: ").append(converter.getValueAsString(true)).append(" Items (")
+					.append(String.valueOf((int) (100 * filledPercentage))).append("%)"));
+			tooltip.add(Component.literal("Types: ")
+					.append(String.valueOf(getInventory(stack).getCurrentUniqueItemTypeCount())));
 		}
 	}
 

@@ -29,7 +29,8 @@ public class PortableBattery extends StaticPowerEnergyStoringItem implements ICu
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new PortableBatteryItemModel(existingModel);
 	}
 

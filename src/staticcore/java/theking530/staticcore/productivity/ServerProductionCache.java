@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.ImmutableList;
+import java.util.TreeMap;
 
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.StaticCoreRegistries;
@@ -98,40 +97,40 @@ public class ServerProductionCache<T> implements IProductionCache<T> {
 	}
 
 	public ProductivityTimeline getProductivityTimeline(MetricType type, MetricPeriod period, int productHash,
-			long currentGameTick) {
+			long startTime, long endTime) {
 		String serializedProduct = getSerializedProductFromHash(productHash);
 		try {
-			long threshold = currentGameTick - period.getMaxRecordsAgeTicks();
 			//@formatter:off
 			String query = String.format("SELECT consumed, produced, game_tick \n"
 					+ "FROM %1$s_productivity_%2$s \n"
-					+ "WHERE game_tick >= %3$d AND product_hash = %4$d\n"
+					+ "WHERE game_tick >= %3$d AND game_tick <= %4$d AND product_hash = %5$d\n"
 					+ "ORDER BY game_tick ASC",
 					productTablePrefix, 
 					period.getTableKey(),
-					threshold,
+					startTime,
+					endTime,
 					productHash);		
 			//@formatter:on		
 
-			List<ProductivityTimelineEntry> entries = new LinkedList<>();
+			TreeMap<Long, ProductivityTimelineEntry> entries = new TreeMap<>();
 			PreparedStatement stmt = database.prepareStatement(query);
 			ResultSet sqlData = stmt.executeQuery();
 			while (sqlData.next()) {
 				float value = type == MetricType.CONSUMPTION ? sqlData.getFloat(1) : sqlData.getFloat(2);
 				ProductivityTimelineEntry entry = new ProductivityTimelineEntry(value, sqlData.getLong(3));
 				if (value != 0) {
-					entries.add(entry);
+					entries.put(entry.tick(), entry);
 				}
 			}
-			return new ProductivityTimeline(currentGameTick, productType, serializedProduct, type, period,
-					ImmutableList.copyOf(entries));
+			return new ProductivityTimeline(startTime, endTime, productHash, productType, serializedProduct, type,
+					period, entries);
 		} catch (Exception e) {
 			StaticCore.LOGGER.error(String.format(
 					"An error occured when getting the production timeline for product hash: %1$d on table: %2$s.",
 					productHash, productTablePrefix), e);
 		}
-		return new ProductivityTimeline(currentGameTick, productType, serializedProduct, type, period,
-				ImmutableList.of());
+		return new ProductivityTimeline(startTime, endTime, productHash, productType, serializedProduct, type, period,
+				new TreeMap<>());
 	}
 
 	public String getSerializedProductFromHash(int productHash) {

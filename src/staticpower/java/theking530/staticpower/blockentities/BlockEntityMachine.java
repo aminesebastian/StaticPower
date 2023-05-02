@@ -26,11 +26,14 @@ public abstract class BlockEntityMachine extends BlockEntityBase {
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final RedstoneControlComponent redstoneControlComponent;
 
-	public BlockEntityMachine(BlockEntityTypeAllocator<? extends BlockEntityMachine> allocator, BlockPos pos, BlockState state) {
+	public BlockEntityMachine(BlockEntityTypeAllocator<? extends BlockEntityMachine> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
 		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, false));
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", getDefaultSideConfiguration()));
-		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				getDefaultSideConfiguration()));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent",
+				RedstoneMode.Ignore));
 
 		powerStorage.setSideConfiguration(ioSideConfiguration);
 	}
@@ -41,7 +44,8 @@ public abstract class BlockEntityMachine extends BlockEntityBase {
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state,
+			LivingEntity placer, ItemStack stack) {
 		return true;
 	}
 

@@ -3,6 +3,7 @@ package theking530.staticcore.productivity.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,7 +22,8 @@ public class MetricEntryContainer extends AbstractGuiWidget<MetricEntryContainer
 		this.metricType = metricType;
 	}
 
-	public void updateMetrics(ProductType<?> productType, Collection<ProductionMetric> rawMetrics) {
+	public void updateMetrics(ProductType<?> productType, Collection<ProductionMetric> rawMetrics,
+			Set<Integer> productsWithTimelines) {
 		// Sort such that the highest rates go to the top.
 		List<ProductionMetric> sortedMetrics = new ArrayList<>(rawMetrics);
 		if (metricType == MetricType.PRODUCTION) {
@@ -32,34 +34,24 @@ public class MetricEntryContainer extends AbstractGuiWidget<MetricEntryContainer
 					(m1, m2) -> Double.compare(m2.getConsumed().getCurrentValue(), m1.getConsumed().getCurrentValue()));
 		}
 
-		int currentSize = getChildren().size();
+		clearChildren();
 		int requiredSize = sortedMetrics.size();
-		int delta = requiredSize - currentSize;
 
 		// Create or remove widgets as needed.
-		if (delta > 0) {
-			for (int i = 0; i < delta; i++) {
-				MetricEntryWidget metricWidget = new MetricEntryWidget(metricType, 0, 0, 0, 20);
-				registerWidget(metricWidget);
-				metricWidget.setClickedCallback((widget) -> {
-					if (selectedMetricChanged != null) {
-						selectedMetricChanged.accept(widget, widget.getMetric().getProductHash());
-					}
-				});
-			}
-		} else if (requiredSize < currentSize) {
-			for (int i = currentSize; i < currentSize + delta; i--) {
-				removeChild(i);
-			}
-		}
-
 		for (int i = 0; i < requiredSize; i++) {
 			ProductionMetric metric = sortedMetrics.get(i);
-			MetricEntryWidget metricWidget = (MetricEntryWidget) getChildren().get(i);
+			if (metric.getMetricValue(metricType).isZero()) {
+				continue;
+			}
+			MetricEntryWidget metricWidget = new MetricEntryWidget(metricType, 0, 0, 0, 20);
+			registerWidget(metricWidget);
 			metricWidget.setMetric(productType, metric);
-			metricWidget.setVisible(!metric.getMetricValue(metricType).isZero());
+			metricWidget.setClickedCallback((widget) -> {
+				if (selectedMetricChanged != null) {
+					selectedMetricChanged.accept(widget, widget.getMetric().getProductHash());
+				}
+			});
 		}
-
 		repositionWidgets();
 	}
 

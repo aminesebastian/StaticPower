@@ -63,7 +63,8 @@ public class StaticPowerOre extends StaticPowerBlock {
 	 * Gets the amount of XP spawned when this ore is mined.
 	 */
 	@Override
-	public int getExpDrop(BlockState state, LevelReader level, RandomSource randomSource, BlockPos pos, int fortuneLevel, int silkTouchLevel) {
+	public int getExpDrop(BlockState state, LevelReader level, RandomSource randomSource, BlockPos pos,
+			int fortuneLevel, int silkTouchLevel) {
 		return silkTouchLevel == 0 ? this.getExperience(randomSource) : 0;
 	}
 

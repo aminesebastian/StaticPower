@@ -1,19 +1,19 @@
 package theking530.staticpower.blockentities.nonpowered.condenser;
 
-import java.util.Optional;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.recipe.IRecipeProcessor;
+import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponent;
 import theking530.staticcore.blockentity.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationComponent;
@@ -23,7 +23,6 @@ import theking530.staticcore.blockentity.components.fluids.FluidOutputServoCompo
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
 import theking530.staticcore.blockentity.components.heat.HeatStorageComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
-import theking530.staticcore.crafting.CraftingUtilities;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
@@ -32,13 +31,13 @@ import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRe
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModRecipeTypes;
 
-public class BlockEntityCondenser extends BlockEntityBase {
+public class BlockEntityCondenser extends BlockEntityBase implements IRecipeProcessor<CondensationRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCondenser> TYPE = new BlockEntityTypeAllocator<>("condenser",
-			(type, pos, state) -> new BlockEntityCondenser(pos, state), ModBlocks.Condenser);
+	public static final BlockEntityTypeAllocator<BlockEntityCondenser> TYPE = new BlockEntityTypeAllocator<>(
+			"condenser", (type, pos, state) -> new BlockEntityCondenser(pos, state), ModBlocks.Condenser);
 
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final OldMachineProcessingComponent processingComponent;
+	public final RecipeProcessingComponent<CondensationRecipe> processingComponent;
 	public final FluidTankComponent inputTankComponent;
 	public final FluidTankComponent outputTankComponent;
 	public final HeatStorageComponent heatStorage;
@@ -50,63 +49,86 @@ public class BlockEntityCondenser extends BlockEntityBase {
 
 		// Get the tier.
 		StaticCoreTier tierObject = getTierObject();
-		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", DefaultMachineNoFacePreset.INSTANCE));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent",
+				RedstoneMode.Ignore));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				DefaultMachineNoFacePreset.INSTANCE));
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent", CondensationRecipe.DEFAULT_PROCESSING_TIME, this::canProcess,
-				this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted)
-				.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CondensationRecipe>("ProcessingComponent",
+				CondensationRecipe.DEFAULT_PROCESSING_TIME, ModRecipeTypes.CONDENSATION_RECIPE_TYPE.get())
+				.setShouldControlOnBlockState(true).setUpgradeInventory(upgradesInventory)
+				.setRedstoneControlComponent(redstoneControlComponent).setPreProductionTime(0));
 
-		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", tierObject.defaultTankCapacity.get(), (fluidStack) -> {
-			return isValidInput(fluidStack, true);
-		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank",
+				tierObject.defaultTankCapacity.get(), (fluidStack) -> {
+					return processingComponent
+							.getRecipe(new RecipeMatchParameters().setFluids(fluidStack).ignoreFluidAmounts())
+							.isPresent();
+				}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 
-		registerComponent(outputTankComponent = new FluidTankComponent("OutputFluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
-				.setUpgradeInventory(upgradesInventory));
+		registerComponent(
+				outputTankComponent = new FluidTankComponent("OutputFluidTank", tierObject.defaultTankCapacity.get())
+						.setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent, MachineSideMode.Input));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent, MachineSideMode.Output));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent,
+				MachineSideMode.Input));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent,
+				MachineSideMode.Output));
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tierObject.defaultMachineOverheatTemperature.get(),
-				tierObject.defaultMachineMaximumTemperature.get(), 1.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
+				tierObject.defaultMachineOverheatTemperature.get(), tierObject.defaultMachineMaximumTemperature.get(),
+				1.0f));
 	}
 
-	protected ProcessingCheckState canProcess() {
-		// Check if we have a valid input. If not, just skip.
-		if (isValidInput(inputTankComponent.getFluid(), false)) {
-			// Get the recipe.
-			CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
-
-			// Check if the output fluid matches the already exists fluid if one exists.
-			if (!outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
-				return ProcessingCheckState.outputFluidDoesNotMatch();
-			}
-			// Check the fluid capacity.
-			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
-				return ProcessingCheckState.fluidOutputFull();
-			}
-
-			// Check the heat level.
-			if (heatStorage.getCurrentHeat() + recipe.getProcessingSection().getHeat() > heatStorage.getOverheatThreshold()) {
-				return ProcessingCheckState.notEnoughHeatCapacity(recipe.getProcessingSection().getHeat());
-			}
-			if (heatStorage.getCurrentHeat() > recipe.getProcessingSection().getMinimumHeat()) {
-				return ProcessingCheckState.heatStorageTooHot(recipe.getProcessingSection().getMinimumHeat());
-			}
-
-			// If all the checks pass, return ok.
-			return ProcessingCheckState.ok();
-		} else {
-			return ProcessingCheckState.skip();
-		}
+	@Override
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+		return new ContainerCondenser(windowId, inventory, this);
 	}
 
-	protected void processingStarted() {
-		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
-		if (recipe != null) {
-			this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CondensationRecipe> component) {
+		return new RecipeMatchParameters().setFluids(inputTankComponent.getFluid());
+	}
+
+	@Override
+	public void captureOutputs(RecipeProcessingComponent<CondensationRecipe> component, CondensationRecipe recipe,
+			ConcretizedProductContainer outputContainer) {
+		outputContainer.addFluid(recipe.getOutputFluid().copy());
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<CondensationRecipe> component,
+			CondensationRecipe recipe, ConcretizedProductContainer outputContainer) {
+		// Check if the output fluid matches the already exists fluid if one exists.
+		if (!outputTankComponent.getFluid().isEmpty()
+				&& !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
+			return ProcessingCheckState.outputFluidDoesNotMatch();
 		}
+
+		// Check the fluid capacity.
+		if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent
+				.getCapacity()) {
+			return ProcessingCheckState.fluidOutputFull();
+		}
+
+		// Check the heat level.
+		if (heatStorage.getCurrentHeat() + recipe.getProcessingSection().getHeat() > heatStorage
+				.getOverheatThreshold()) {
+			return ProcessingCheckState.notEnoughHeatCapacity(recipe.getProcessingSection().getHeat());
+		}
+		if (heatStorage.getCurrentHeat() > recipe.getProcessingSection().getMinimumHeat()) {
+			return ProcessingCheckState.heatStorageTooHot(recipe.getProcessingSection().getMinimumHeat());
+		}
+
+		// If all the checks pass, return ok.
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void captureInputs(RecipeProcessingComponent<CondensationRecipe> component, CondensationRecipe recipe,
+			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
+		inputContainer.addFluid(inputTankComponent.drain(recipe.getInputFluid().getAmount(), FluidAction.EXECUTE));
 	}
 
 	/**
@@ -116,57 +138,11 @@ public class BlockEntityCondenser extends BlockEntityBase {
 	 * 
 	 * @return
 	 */
-	protected ProcessingCheckState processingCompleted() {
-
-		// If we have an item in the internal inventory, but not a valid output, just
-		// return true. It is possible that a recipe was modified and no longer is
-		// valid.
-		if (!isValidInput(inputTankComponent.getFluid(), false)) {
-			return ProcessingCheckState.ok();
-		}
-
-		// Get recipe.
-		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
-
-		// Check the heat level.
-		if (heatStorage.getCurrentHeat() + recipe.getProcessingSection().getHeat() > heatStorage.getOverheatThreshold()) {
-			return ProcessingCheckState.error("Machine is too hot!");
-		}
-
-		// If we can't store the filled output in the output slot, return false.
-		if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
-			return ProcessingCheckState.fluidOutputFull();
-		}
-
-		if (!outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
-			return ProcessingCheckState.outputFluidDoesNotMatch();
-		}
-
-		// Drain the input fluid.
-		inputTankComponent.drain(recipe.getInputFluid().getAmount(), FluidAction.EXECUTE);
-
-		// Fill the output fluid.
-		outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
-
-		// Use the heat.
-		heatStorage.heat(recipe.getProcessingSection().getHeat(), HeatTransferAction.EXECUTE);
-		return ProcessingCheckState.ok();
-	}
-
-	public boolean isValidInput(FluidStack stack, boolean ignoreAmount) {
-		return getRecipe(stack, ignoreAmount).isPresent();
-	}
-
-	protected Optional<CondensationRecipe> getRecipe(FluidStack stack, boolean ignoreAmount) {
-		RecipeMatchParameters matchParams = new RecipeMatchParameters(stack);
-		if (ignoreAmount) {
-			matchParams.ignoreFluidAmounts();
-		}
-		return CraftingUtilities.getRecipe(ModRecipeTypes.CONDENSATION_RECIPE_TYPE.get(), matchParams, getLevel());
-	}
-
 	@Override
-	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		return new ContainerCondenser(windowId, inventory, this);
+	public void onProcessingCompleted(RecipeProcessingComponent<CondensationRecipe> component,
+			ProcessingContainer processingContainer) {
+		outputTankComponent.fill(processingContainer.getOutputs().getFluid(0), FluidAction.EXECUTE);
+		heatStorage.heat(component.getProcessingRecipe().get().getProcessingSection().getHeat(),
+				HeatTransferAction.EXECUTE);
 	}
 }

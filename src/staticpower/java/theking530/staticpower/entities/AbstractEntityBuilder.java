@@ -28,7 +28,8 @@ public abstract class AbstractEntityBuilder<T extends Entity> {
 	public void registerPlacements(FMLCommonSetupEvent event) {
 	}
 
-	protected boolean canSpawn(EntityType<T> type, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+	protected boolean canSpawn(EntityType<T> type, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos,
+			RandomSource random) {
 		return false;
 	}
 

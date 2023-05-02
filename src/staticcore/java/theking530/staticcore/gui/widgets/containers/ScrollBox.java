@@ -148,7 +148,7 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 			}
 
 			if (this.maxScroll > 0) {
-				GuiDrawUtilities.drawTexture(pose, StaticCoreGuiTextures.SCROLL_HANDLE, 10, 15, getSize().getX() - 10, handlePosition, 0, 0, 0, 1, 1, SDColor.WHITE);
+				GuiDrawUtilities.drawTexture(pose, StaticCoreGuiTextures.SCROLL_HANDLE, 10, 15, getSize().getX() - 10, handlePosition, 1, 0, 0, 1, 1, SDColor.WHITE);
 			}
 
 		}

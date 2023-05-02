@@ -15,7 +15,8 @@ public class SmeltingAttributeType extends AttributeType<Boolean> {
 	}
 
 	@Override
-	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Boolean> instance, AttributeModifierInstance<Boolean> modifier) {
+	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Boolean> instance,
+			AttributeModifierInstance<Boolean> modifier) {
 		return !instance.getValue();
 	}
 

@@ -10,6 +10,7 @@ import theking530.staticpower.init.ModCreativeTabs;
 public class StaticPowerMobSpawnEgg extends ForgeSpawnEggItem {
 
 	public StaticPowerMobSpawnEgg(EntityType<? extends Mob> typeIn, SDColor primaryColorIn, SDColor secondaryColorIn) {
-		super(() -> typeIn, secondaryColorIn.encodeInInteger(), primaryColorIn.encodeInInteger(), new Item.Properties().tab(ModCreativeTabs.GENERAL));
+		super(() -> typeIn, secondaryColorIn.encodeInInteger(), primaryColorIn.encodeInInteger(),
+				new Item.Properties().tab(ModCreativeTabs.GENERAL));
 	}
 }

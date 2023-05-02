@@ -10,10 +10,12 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class ModItemAttributes {
-	private static final DeferredRegister<ItemAttributeType> ITEM_ATTRIBUTES = DeferredRegister.create(StaticCoreRegistries.ITEM_ATTRIBUTE_REGISTRY_KEY, StaticPower.MOD_ID);
+	private static final DeferredRegister<ItemAttributeType> ITEM_ATTRIBUTES = DeferredRegister
+			.create(StaticCoreRegistries.ITEM_ATTRIBUTE_REGISTRY_KEY, StaticPower.MOD_ID);
 
 	public static final RegistryObject<ItemAttributeType> DrillHardened = ITEM_ATTRIBUTES.register("drill_hardened",
-			() -> new ItemAttributeType(ModAttributes.Smelting, ModItems.BasicMiningDrill, new AttributeRenderLayer(StaticPowerAdditionalModels.BLADE_SMELTING, 2)));
+			() -> new ItemAttributeType(ModAttributes.Smelting, ModItems.BasicMiningDrill,
+					new AttributeRenderLayer(StaticPowerAdditionalModels.BLADE_SMELTING, 2)));
 
 	public static void init(IEventBus eventBus) {
 		ITEM_ATTRIBUTES.register(eventBus);

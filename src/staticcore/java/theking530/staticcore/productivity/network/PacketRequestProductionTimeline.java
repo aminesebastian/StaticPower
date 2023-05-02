@@ -1,4 +1,4 @@
-package theking530.staticcore.productivity.metrics;
+package theking530.staticcore.productivity.network;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,70 +7,58 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.StaticCore;
-import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.productivity.ServerProductionCache;
-import theking530.staticcore.productivity.product.ProductType;
+import theking530.staticcore.productivity.metrics.MetricPeriod;
+import theking530.staticcore.productivity.metrics.ProductivityTimeline;
 import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 
 public class PacketRequestProductionTimeline extends NetworkMessage {
-	public record TimelineRequest(ProductType<?> productType, int product, MetricType type) {
 
-		public void encode(FriendlyByteBuf buffer) {
-			buffer.writeUtf(StaticCoreRegistries.ProductRegistry().getKey(productType).toString());
-			buffer.writeInt(product);
-			buffer.writeByte(type.ordinal());
-
-		}
-
-		public static TimelineRequest decode(FriendlyByteBuf buffer) {
-			return new TimelineRequest(
-					StaticCoreRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf())),
-					buffer.readInt(), MetricType.values()[buffer.readByte()]);
-		}
-	}
-
-	private long requestedAtTime;
-	private Collection<TimelineRequest> requests;
+	private long startTime;
+	private long endTime;
+	private Collection<ProductivityTimelineRequest> requests;
 	private MetricPeriod period;
 
 	public PacketRequestProductionTimeline() {
 
 	}
 
-	public PacketRequestProductionTimeline(long requestedAtTime, Collection<TimelineRequest> requests,
-			MetricPeriod period) {
-		this.requestedAtTime = requestedAtTime;
+	public PacketRequestProductionTimeline(long startTime, long endTime,
+			Collection<ProductivityTimelineRequest> requests, MetricPeriod period) {
+		this.startTime = startTime;
+		this.endTime = endTime;
 		this.requests = requests;
 		this.period = period;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeLong(requestedAtTime);
+		buffer.writeLong(startTime);
+		buffer.writeLong(endTime);
 		buffer.writeByte(period.ordinal());
 
 		buffer.writeByte(requests.size());
-		for (TimelineRequest request : requests) {
+		for (ProductivityTimelineRequest request : requests) {
 			request.encode(buffer);
 		}
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
-		requestedAtTime = buffer.readLong();
+		startTime = buffer.readLong();
+		endTime = buffer.readLong();
 		period = MetricPeriod.values()[buffer.readByte()];
 
 		int count = buffer.readByte();
 		requests = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
-			requests.add(TimelineRequest.decode(buffer));
+			requests.add(ProductivityTimelineRequest.decode(buffer));
 		}
 	}
 
@@ -87,17 +75,17 @@ public class PacketRequestProductionTimeline extends NetworkMessage {
 			}
 
 			List<ProductivityTimeline> timelines = new LinkedList<ProductivityTimeline>();
-			for (TimelineRequest request : requests) {
+			for (ProductivityTimelineRequest request : requests) {
 				ServerProductionCache<?> cache = (ServerProductionCache<?>) team.getProductionManager()
-						.getProductTypeCache(request.productType);
+						.getProductCache(request.productType());
 				ProductivityTimeline timeline = cache.getProductivityTimeline(request.type(), period, request.product(),
-						requestedAtTime);
-				if (!timeline.entries().isEmpty()) {
+						startTime, endTime);
+				if (!timeline.getEntries().isEmpty()) {
 					timelines.add(timeline);
 				}
 			}
 
-			PacketRecieveProductionTimeline response = new PacketRecieveProductionTimeline(requestedAtTime, period,
+			PacketRecieveProductionTimeline response = new PacketRecieveProductionTimeline(startTime, endTime, period,
 					timelines);
 			StaticCoreMessageHandler.sendMessageToPlayer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
 					(ServerPlayer) ctx.get().getSender(), response);

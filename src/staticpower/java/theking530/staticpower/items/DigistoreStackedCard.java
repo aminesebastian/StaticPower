@@ -28,7 +28,8 @@ public class DigistoreStackedCard extends DigistoreCard {
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
 			float capacityMultiplier = 64.0f / StaticPowerConfig.SERVER.digistoreStackedCardUniqueTypes.get();
-			return new DigistoreInventoryCapabilityProvider(stack, StaticPowerConfig.SERVER.digistoreStackedCardUniqueTypes.get(),
+			return new DigistoreInventoryCapabilityProvider(stack,
+					StaticPowerConfig.SERVER.digistoreStackedCardUniqueTypes.get(),
 					(int) (StaticCoreConfig.getTier(tierType).digistoreCardCapacity.get() * capacityMultiplier), nbt);
 		}
 		return null;

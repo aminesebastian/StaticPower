@@ -1,4 +1,5 @@
 package theking530.staticpower.attributes;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import theking530.api.attributes.AttributeInstance;
@@ -14,7 +15,8 @@ public class GrindingAttributeType extends AttributeType<Boolean> {
 	}
 
 	@Override
-	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Boolean> instance, AttributeModifierInstance<Boolean> modifier) {
+	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Boolean> instance,
+			AttributeModifierInstance<Boolean> modifier) {
 		// If we already have the grinding modifier, dont do anything.
 		return !instance.getValue();
 	}

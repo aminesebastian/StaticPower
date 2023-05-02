@@ -22,7 +22,7 @@ import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
 public class HeatStorageUtilities {
-	public static final float HEATING_RATE = 1 / 1000f;
+	public static final float HEATING_RATE = 1 / 50f;
 
 	/**
 	 * Transfers the heat stored in this storage to adjacent blocks. The transfered
@@ -36,9 +36,19 @@ public class HeatStorageUtilities {
 
 	public static int transferHeatWithSurroundings(IHeatStorage storage, Level world, BlockPos currentPos,
 			HeatTransferAction action) {
-		int appliedDelta = 0;
+		float totalPassive = 0;
+		float totalApplied = 0;
 
 		for (Direction side : Direction.values()) {
+			// Skip any other entities with heat storage capability, we'll deal with those
+			// after.
+			BlockEntity be = world.getBlockEntity(currentPos.relative(side));
+			if (be != null) {
+				if (be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).isPresent()) {
+					continue;
+				}
+			}
+
 			// Get the temperature and conductivity on this side.
 			float tempOnSide = HeatStorageUtilities.getThermalPowerOnSide(world, currentPos, side, storage);
 			float conductivityOnSide = HeatStorageUtilities.getConductivityOnSide(world, currentPos, side, storage);
@@ -49,53 +59,29 @@ public class HeatStorageUtilities {
 				tempOnSide = storage.getOverheatThreshold();
 			}
 
-			// Skip any other entities with heat storage capability, we'll deal with those
-			// after.
-			BlockEntity be = world.getBlockEntity(currentPos.relative(side));
-			if (be != null) {
-				if (be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).isPresent()) {
-					continue;
-				}
-			}
-
 			// The proportion of the delta we can move this call.
 			// A value of 1 will move us instantly to the target.
-			float heatingCoefficient = Math.min(conductivityOnSide * storage.getConductivity(), 1.0f / HEATING_RATE)
-					* HEATING_RATE;
-
-			// Heat transfer is MOST efficient at the overheat threshold and falls off
-			// linearly under that temp. Efficiency over the overheat is worse by a
-			// factor of 4 and curved on a quintic scale.
-			if (action == HeatTransferAction.EXECUTE) {
-				float efficiencyMultiplier = 1;
-				if (storage.getCurrentHeat() > storage.getOverheatThreshold()) {
-					float totalRange = storage.getMaximumHeat() - storage.getOverheatThreshold();
-					float relativeValue = storage.getCurrentHeat() - storage.getOverheatThreshold();
-					efficiencyMultiplier = 1.5f - (float) relativeValue / totalRange;
-					efficiencyMultiplier = (float) Math.pow(efficiencyMultiplier, 4) / 4;
-				} else {
-					float totalRange = storage.getOverheatThreshold() - IHeatStorage.MINIMUM_TEMPERATURE;
-					float relativeValue = storage.getCurrentHeat() - IHeatStorage.MINIMUM_TEMPERATURE;
-					efficiencyMultiplier = (float) relativeValue / totalRange;
-				}
-				heatingCoefficient *= efficiencyMultiplier;
+			float heatingCoefficient = conductivityOnSide * storage.getConductivity() * HEATING_RATE * 1 / 20.0f;
+			if (storage.getCurrentHeat() > storage.getOverheatThreshold()) {
+				float totalRange = storage.getMaximumHeat() - storage.getOverheatThreshold();
+				float relativeValue = storage.getCurrentHeat() - storage.getOverheatThreshold();
+				heatingCoefficient = 1.5f - (float) relativeValue / totalRange;
+				heatingCoefficient = (float) Math.pow(heatingCoefficient, 4) / 4;
 			}
-
-			// Calculate the delta to the target temperature.
+			
 			float delta = tempOnSide - storage.getCurrentHeat();
+			float adjustedDelta = delta * heatingCoefficient;
+			if (Math.abs(adjustedDelta) < 0.1f) {
+				adjustedDelta = 0;
+			} 
+			totalPassive += adjustedDelta;
 
-			// How much can we move towards the target.
-			float amountToApply = delta * heatingCoefficient;
-			if (Math.abs(amountToApply - delta) < 100) {
-				amountToApply = delta;
-			}
+		}
 
-			// Move towards the targetTemperature amountToApply degrees.
-			if (amountToApply > 0) {
-				appliedDelta += storage.heat(amountToApply, action);
-			} else {
-				appliedDelta -= storage.cool(-amountToApply, action);
-			}
+		if (totalPassive > 0) {
+			totalApplied += storage.heat(totalPassive, action);
+		} else {
+			totalApplied -= storage.cool(-totalPassive, action);
 		}
 
 		for (Direction side : Direction.values()) {
@@ -124,11 +110,11 @@ public class HeatStorageUtilities {
 					if (amountToApply > 0) {
 						float heatApplied = storage.heat(amountToApply, action);
 						otherStorage.cool(heatApplied, action);
-						appliedDelta += heatApplied;
+						totalApplied += heatApplied;
 					} else {
 						float heatApplied = storage.cool(-amountToApply, action);
 						otherStorage.heat(heatApplied, action);
-						appliedDelta -= heatApplied;
+						totalApplied -= heatApplied;
 					}
 
 				}
@@ -142,7 +128,7 @@ public class HeatStorageUtilities {
 			}
 		}
 
-		return appliedDelta;
+		return (int) totalApplied;
 	}
 
 	public static float getBiomeAmbientTemperature(Level world, BlockPos currentPos) {

@@ -49,14 +49,16 @@ public class HasteAttributeType extends AttributeType<Number> {
 		}
 
 		if (showAdvanced) {
-			return baseTitle.append(" " + hasteTier).append((ChatFormatting.GRAY.toString() + " (" + instance.getValue().intValue() + "/" + MAX_VALUE + ")"));
+			return baseTitle.append(" " + hasteTier).append(
+					(ChatFormatting.GRAY.toString() + " (" + instance.getValue().intValue() + "/" + MAX_VALUE + ")"));
 		} else {
 			return baseTitle.append(" " + hasteTier);
 		}
 	}
 
 	@Override
-	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Number> instance, AttributeModifierInstance<Number> modifier) {
+	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Number> instance,
+			AttributeModifierInstance<Number> modifier) {
 		// If we're already at the max, we can't take another modifier.
 		if (instance.getValue().intValue() >= MAX_VALUE) {
 			return false;
@@ -81,6 +83,7 @@ public class HasteAttributeType extends AttributeType<Number> {
 
 		String sign = difference > 0 ? "+" : difference < 0 ? "-" : "";
 		String color = difference > 0 ? ChatFormatting.GREEN.toString() : ChatFormatting.RED.toString();
-		return super.getAttributeTitle(instance, false).append(" ").append(Component.literal(color + sign + difference));
+		return super.getAttributeTitle(instance, false).append(" ")
+				.append(Component.literal(color + sign + difference));
 	}
 }

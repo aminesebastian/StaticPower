@@ -22,8 +22,8 @@ public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<MixerRe
 
 	@Override
 	protected void buildRecipes() {
-		addRecipe("lava", FluidIngredient.of(1, Fluids.LAVA), true, 10000000, 1);
-		addRecipe("lava_flowing", FluidIngredient.of(1, Fluids.FLOWING_LAVA), true, 10000000, 5);
+		addRecipe("lava", FluidIngredient.of(1, Fluids.LAVA), true, 1500, 1);
+		addRecipe("lava_flowing", FluidIngredient.of(1, Fluids.FLOWING_LAVA), true, 1500, 5);
 
 		addRecipe("water", FluidIngredient.of(1, Fluids.WATER), 10,
 				new OverheatingBehaviour(100000, ModFluids.Steam.getBlock().get().defaultBlockState(),
@@ -33,6 +33,10 @@ public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<MixerRe
 				new OverheatingBehaviour(100000, ModFluids.Steam.getBlock().get().defaultBlockState(),
 						StaticPowerOutputItem.EMPTY),
 				new FreezingBehaviour(0, Blocks.ICE.defaultBlockState(), StaticPowerOutputItem.EMPTY));
+		
+
+		addRecipe("campfire", Ingredient.of(Blocks.CAMPFIRE), true, 1000, 5);
+		addRecipe("fire", Ingredient.of(Blocks.FIRE), true, 750, 5);
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluids, float conductivity) {

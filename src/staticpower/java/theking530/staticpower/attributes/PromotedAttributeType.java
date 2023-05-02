@@ -20,7 +20,8 @@ public class PromotedAttributeType extends AttributeType<Boolean> {
 	}
 
 	@Override
-	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Boolean> instance, AttributeModifierInstance<Boolean> modifier) {
+	public boolean canAcceptModifier(IAttributable attributable, AttributeInstance<Boolean> instance,
+			AttributeModifierInstance<Boolean> modifier) {
 		return !instance.getValue();
 	}
 
@@ -38,7 +39,8 @@ public class PromotedAttributeType extends AttributeType<Boolean> {
 	}
 
 	@Override
-	public void addAdditionalTooltipValues(AttributeInstance<Boolean> instance, List<Component> tooltip, boolean showAdvanced) {
+	public void addAdditionalTooltipValues(AttributeInstance<Boolean> instance, List<Component> tooltip,
+			boolean showAdvanced) {
 		if (showAdvanced) {
 			tooltip.add(Component.literal(ChatFormatting.GRAY + "Mining Tier +1"));
 		}

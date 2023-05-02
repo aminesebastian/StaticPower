@@ -15,7 +15,8 @@ import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldAbstractProcesingComponent;
+import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
+import theking530.staticcore.blockentity.components.control.processing.Timer;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
@@ -40,8 +41,8 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 			CompoundTag fluidData = new CompoundTag();
 			fluidData.putInt("value", tank.getFluidInTank(0).getAmount());
 			fluidData.putInt("max", tank.getTankCapacity(0));
-			fluidData.putString("description",
-					GuiTextUtilities.formatFluidToString(tank.getFluidInTank(0).getAmount()).append(" ").append(tank.getFluidInTank(0).getDisplayName()).getString());
+			fluidData.putString("description", GuiTextUtilities.formatFluidToString(tank.getFluidInTank(0).getAmount())
+					.append(" ").append(tank.getFluidInTank(0).getDisplayName()).getString());
 			data.put(FLUID_TAG, fluidData);
 		});
 
@@ -77,26 +78,30 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		});
 
 		// Add digistore data.
-		Optional<DigistoreCableProviderComponent> digistoreComponent = ComponentUtilities.getComponent(DigistoreCableProviderComponent.class, te);
+		Optional<DigistoreCableProviderComponent> digistoreComponent = ComponentUtilities
+				.getComponent(DigistoreCableProviderComponent.class, te);
 		if (digistoreComponent.isPresent()) {
 			data.putBoolean(DIGISTORE_MANAGER_TAG, digistoreComponent.get().isManagerPresent());
 		}
 
 		// Add processing data.
-		Optional<OldAbstractProcesingComponent> processing = ComponentUtilities.getComponent(OldAbstractProcesingComponent.class, te);
+		@SuppressWarnings("rawtypes")
+		Optional<AbstractProcessingComponent> processing = ComponentUtilities
+				.getComponent(AbstractProcessingComponent.class, te);
 		if (processing.isPresent()) {
 			CompoundTag processingData = new CompoundTag();
 			if (processing.get().hasProcessingStarted()) {
-				int remaining = processing.get().getMaxProcessingTime() - processing.get().getCurrentProcessingTime();
+				Timer processingTimer = processing.get().getProcessingTimer();
+				int remaining = processingTimer.getMaxTime() - processingTimer.getCurrentTime();
 				processingData.putInt("remaining", remaining);
-				processingData.putInt("max", processing.get().getMaxProcessingTime());
-				processingData.putString("description",
-						GuiTextUtilities.formatNumberAsString(remaining).append(" ").append(Component.translatable("gui.staticcore.ticks_remaining")).getString());
+				processingData.putInt("max", processingTimer.getMaxTime());
+				processingData.putString("description", GuiTextUtilities.formatNumberAsString(remaining).append(" ")
+						.append(Component.translatable("gui.staticcore.ticks_remaining")).getString());
 			} else {
 				processingData.putInt("remaining", 0);
 				processingData.putInt("max", 0);
-				processingData.putString("description",
-						GuiTextUtilities.formatNumberAsString(0).append(" ").append(Component.translatable("gui.staticcore.ticks_remaining")).getString());
+				processingData.putString("description", GuiTextUtilities.formatNumberAsString(0).append(" ")
+						.append(Component.translatable("gui.staticcore.ticks_remaining")).getString());
 			}
 			data.put(PROCESSING_TAG, processingData);
 		}

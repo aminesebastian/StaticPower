@@ -53,10 +53,8 @@ public class RecipeProcessingComponent<T extends Recipe<?>>
 			setBaseProcessingTime(machineRecipe.getProcessingTime());
 		}
 
-		concretizedOutputContainer.open();
 		recipeId = recipe.getId();
 		getRecipeProcessingOwner().get().captureOutputs(this, recipe, concretizedOutputContainer);
-		concretizedOutputContainer.close();
 
 		getRecipeProcessingOwner().get().prepareComponentForProcessing(this, recipe, concretizedOutputContainer);
 
@@ -83,7 +81,6 @@ public class RecipeProcessingComponent<T extends Recipe<?>>
 		super.resetToIdle();
 		recipeId = null;
 		concretizedOutputContainer.clear();
-		concretizedOutputContainer.close();
 	}
 
 	@Override

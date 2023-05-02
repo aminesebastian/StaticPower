@@ -79,7 +79,8 @@ public class StaticPowerForgeBusClient {
 			// Get the tool's item and get the blocks that are currently being targeted for
 			// harvesting.
 			AbstractMultiHarvestTool toolItem = (AbstractMultiHarvestTool) tool.getItem();
-			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getBlockPos(), Minecraft.getInstance().player);
+			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getBlockPos(),
+					Minecraft.getInstance().player);
 
 			// Get the world renderer state.
 			LevelRenderer worldRender = event.getLevelRenderer();
@@ -96,7 +97,8 @@ public class StaticPowerForgeBusClient {
 			// For all of the harvestable blocks, render the bounding box.
 			for (BlockPos pos : extraBlocks) {
 				if (Minecraft.getInstance().player.getCommandSenderWorld().getWorldBorder().isWithinBounds(pos)) {
-					worldRender.renderHitOutline(matrix, vertexBuilder, viewEntity, vector3d.x(), vector3d.y(), vector3d.z(), pos,
+					worldRender.renderHitOutline(matrix, vertexBuilder, viewEntity, vector3d.x(), vector3d.y(),
+							vector3d.z(), pos,
 							Minecraft.getInstance().player.getCommandSenderWorld().getBlockState(pos));
 				}
 			}
@@ -127,17 +129,21 @@ public class StaticPowerForgeBusClient {
 			if (!heldItem.isEmpty() && heldItem.getItem() instanceof AbstractMultiHarvestTool) {
 				// Raytrace from the player's perspective to see which block they are looking
 				// at.
-				BlockHitResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getCommandSenderWorld(), player, ClipContext.Fluid.ANY);
+				BlockHitResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getCommandSenderWorld(),
+						player, ClipContext.Fluid.ANY);
 				if (raytraceResult.getType() != HitResult.Type.BLOCK) {
 					return;
 				}
 
 				// Get all the extra blocks that we can mine based on where we are looking.
-				List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem()).getMineableExtraBlocks(heldItem, raytraceResult.getBlockPos(), player);
+				List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem())
+						.getMineableExtraBlocks(heldItem, raytraceResult.getBlockPos(), player);
 
 				// If we're currently mining, draw the block damage texture.
 				if (controller.isDestroying()) {
-					drawBlockDamageTexture(event.getLevelRenderer(), event.getPoseStack(), Minecraft.getInstance().gameRenderer.getMainCamera(), player.getCommandSenderWorld(), extraBlocks);
+					drawBlockDamageTexture(event.getLevelRenderer(), event.getPoseStack(),
+							Minecraft.getInstance().gameRenderer.getMainCamera(), player.getCommandSenderWorld(),
+							extraBlocks);
 				}
 			}
 		}
@@ -153,7 +159,8 @@ public class StaticPowerForgeBusClient {
 	 * @param extraBlocks   the list of blocks
 	 */
 	@SuppressWarnings("deprecation")
-	private static void drawBlockDamageTexture(LevelRenderer worldRender, PoseStack matrixStackIn, Camera renderInfo, Level world, Iterable<BlockPos> extraBlocks) {
+	private static void drawBlockDamageTexture(LevelRenderer worldRender, PoseStack matrixStackIn, Camera renderInfo,
+			Level world, Iterable<BlockPos> extraBlocks) {
 		// Get the current break progress.
 		int progress = (int) (getCurrentFocusedBlockDamage() * 10.0F) - 1;
 
@@ -167,14 +174,17 @@ public class StaticPowerForgeBusClient {
 
 		// Get the block render dispatcher and use it to render the damage effect.
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
-		VertexConsumer vertexBuilder = worldRender.renderBuffers.crumblingBufferSource().getBuffer(ModelBakery.DESTROY_TYPES.get(progress));
+		VertexConsumer vertexBuilder = worldRender.renderBuffers.crumblingBufferSource()
+				.getBuffer(ModelBakery.DESTROY_TYPES.get(progress));
 
 		// Render the effect for each of the blocks.
 		for (BlockPos pos : extraBlocks) {
 			matrixStackIn.pushPose();
 			// Make sure we transform into projection space.
-			matrixStackIn.translate((double) pos.getX() - renderInfo.getPosition().x, (double) pos.getY() - renderInfo.getPosition().y, (double) pos.getZ() - renderInfo.getPosition().z);
-			VertexConsumer matrixBuilder = new SheetedDecalTextureGenerator(vertexBuilder, matrixStackIn.last().pose(), matrixStackIn.last().normal());
+			matrixStackIn.translate((double) pos.getX() - renderInfo.getPosition().x,
+					(double) pos.getY() - renderInfo.getPosition().y, (double) pos.getZ() - renderInfo.getPosition().z);
+			VertexConsumer matrixBuilder = new SheetedDecalTextureGenerator(vertexBuilder, matrixStackIn.last().pose(),
+					matrixStackIn.last().normal());
 
 			// Render the damage.
 			dispatcher.renderBreakingTexture(world.getBlockState(pos), pos, world, matrixStackIn, matrixBuilder);
@@ -186,7 +196,8 @@ public class StaticPowerForgeBusClient {
 	protected static float getCurrentFocusedBlockDamage() {
 		try {
 			if (currentBlockDamageMP == null) {
-				currentBlockDamageMP = ObfuscationReflectionHelper.findField(MultiPlayerGameMode.class, "destroyProgress");
+				currentBlockDamageMP = ObfuscationReflectionHelper.findField(MultiPlayerGameMode.class,
+						"destroyProgress");
 			}
 			return currentBlockDamageMP.getFloat(Minecraft.getInstance().gameMode);
 		} catch (Exception e) {

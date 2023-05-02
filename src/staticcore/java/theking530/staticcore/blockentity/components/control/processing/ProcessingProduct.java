@@ -13,7 +13,8 @@ public class ProcessingProduct<T extends ProductType<K>, K> {
 	private final boolean isTemplateProduct;
 	private double amount;
 
-	public ProcessingProduct(T productType, K product, double amount, CaptureType captureType, boolean isTemplateProduct) {
+	public ProcessingProduct(T productType, K product, double amount, CaptureType captureType,
+			boolean isTemplateProduct) {
 		this.productType = productType;
 		this.product = product;
 		this.amount = amount;
@@ -54,6 +55,7 @@ public class ProcessingProduct<T extends ProductType<K>, K> {
 		CompoundTag output = new CompoundTag();
 
 		String serializedProduct = productType.getSerializedProduct(getProduct());
+		output.putString("type", StaticCoreRegistries.ProductRegistry().getKey(productType).toString());
 		output.putString("product", serializedProduct);
 		output.putDouble("amount", amount);
 		output.putByte("capture_type", (byte) captureType.ordinal());

@@ -60,11 +60,12 @@ import theking530.staticpower.integration.ModIntegrations;
 public class StaticPower {
 	public static final Logger LOGGER = LogManager.getLogger("Static Power");
 	public static final String MOD_ID = "staticpower";
-	public static final StaticCoreRegistrationHelper REGISTRATION = new StaticCoreRegistrationHelper( MOD_ID);
+	public static final StaticCoreRegistrationHelper REGISTRATION = new StaticCoreRegistrationHelper(MOD_ID);
 
-	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES,
+	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister
+			.create(ForgeRegistries.BLOCK_ENTITY_TYPES, StaticPower.MOD_ID);
+	private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES,
 			StaticPower.MOD_ID);
-	private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, StaticPower.MOD_ID);
 
 	public StaticPower() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();

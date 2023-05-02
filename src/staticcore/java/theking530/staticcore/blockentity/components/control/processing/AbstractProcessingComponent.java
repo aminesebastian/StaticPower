@@ -1,11 +1,9 @@
 package theking530.staticcore.blockentity.components.control.processing;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.api.team.ITeamOwnable;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.block.StaticCoreBlock;
 import theking530.staticcore.blockentity.BlockEntityBase;
@@ -16,6 +14,7 @@ import theking530.staticcore.blockentity.components.serialization.UpdateSerializ
 import theking530.staticcore.blockentity.components.team.TeamComponent;
 import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.network.StaticCoreMessageHandler;
+import theking530.staticcore.productivity.ProductionTokenContainer;
 import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.productivity.product.power.PowerProducer;
@@ -29,20 +28,16 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
 
 	/**
-	 * A container for all of our productivity tokens.
+	 * The productivity container used to manage production tokens.
 	 */
-	private final Map<ProductType<?>, ProductionTrackingToken<?>> productionTokens;
+	private ProductionTokenContainer productionTokenContainer;
+
 	/**
 	 * A container for all the products that are going to be produced by the time
 	 * that this processing component finishes production.
 	 */
 	@UpdateSerialize
 	private final ProcessingContainer processingContainer;
-	/**
-	 * The power product id for the owning block. This is used to group similar
-	 * machines in the production UI.
-	 */
-	private PowerProducer powerProducerId;
 
 	/**
 	 * This should be the default processing time for this component before any
@@ -106,7 +101,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 
 	public AbstractProcessingComponent(String name, int processingTime) {
 		super(name);
-		this.productionTokens = new HashMap<ProductType<?>, ProductionTrackingToken<?>>();
+		this.productionTokenContainer = new ProductionTokenContainer();
 		this.processingContainer = new ProcessingContainer();
 		this.baseProcessingTime = processingTime;
 		this.shouldControlOnBlockState = false;
@@ -121,7 +116,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	@Override
 	public void onRegistered(BlockEntityBase owner) {
 		super.onRegistered(owner);
-		powerProducerId = new PowerProducer(owner.getBlockState().getBlock());
+		productionTokenContainer.setPowerProducerId(new PowerProducer(owner.getBlockState().getBlock()));
 	}
 
 	public void preProcessUpdate() {
@@ -141,7 +136,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		// Process.
 		boolean performedWork = performWork();
 		if (!performedWork) {
-			invalidateProductionTokens();
+			productionTokenContainer.invalidateProductionTokens();
 		}
 
 		// Check for changing to the off state.
@@ -208,9 +203,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 
 				currentProcessingState = ProcessingCheckState.ok();
 				preProductionTimer.reset();
-				processingContainer.open();
 				onProcessingStarted(processingContainer);
-				processingContainer.close();
 			}
 
 			// Check if we can continue processing if we made it this far.
@@ -229,7 +222,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 					onProcessingProgressMade(processingContainer);
 
 					// Update all the production statistics.
-					TeamComponent teamComp = getBlockEntity().getComponent(TeamComponent.class);
+					ITeamOwnable teamComp = getBlockEntity().getComponent(TeamComponent.class);
 					if (teamComp != null && teamComp.getOwningTeam() != null) {
 						updateProductionRates(teamComp);
 					}
@@ -254,7 +247,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 				return false;
 			} else {
 				onProcessingCompleted(processingContainer);
-				TeamComponent teamComp = getBlockEntity().getComponent(TeamComponent.class);
+				ITeamOwnable teamComp = getBlockEntity().getComponent(TeamComponent.class);
 				if (teamComp != null && teamComp.getOwningTeam() != null) {
 					recordProductionCompletedStatistics(teamComp);
 				}
@@ -276,7 +269,6 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		processingTimer.reset();
 		preProductionTimer.reset();
 		processingContainer.clear();
-		processingContainer.close();
 	}
 
 	protected int modifyProcessingTime(int defaultProcessingTime) {
@@ -400,7 +392,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		return (T) this;
 	}
 
-	protected void recordProductionCompletedStatistics(TeamComponent teamComp) {
+	protected void recordProductionCompletedStatistics(ITeamOwnable teamComp) {
 		for (ProductType<?> productType : processingContainer.getInputs().getProductTypes()) {
 			recordProductsConsumedOfType(teamComp, productType);
 		}
@@ -410,13 +402,13 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		}
 	}
 
-	private <W extends ProductType<G>, G> void recordProductsConsumedOfType(TeamComponent teamComp, W type) {
+	private <W extends ProductType<G>, G> void recordProductsConsumedOfType(ITeamOwnable teamComp, W type) {
 		for (ProcessingProduct<?, G> product : processingContainer.getInputs().getProductsOfType(type)) {
 			recordProductConsumed(teamComp, type, product);
 		}
 	}
 
-	private <W extends ProductType<G>, G> void recordProductConsumed(TeamComponent teamComp, W type,
+	private <W extends ProductType<G>, G> void recordProductConsumed(ITeamOwnable teamComp, W type,
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH
 				|| product.getCaptureType() == CaptureType.COUNT_ONLY && !product.isTemplateProduct()) {
@@ -425,13 +417,13 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		}
 	}
 
-	private <W extends ProductType<G>, G> void recordProductsProducedOfType(TeamComponent teamComp, W type) {
+	private <W extends ProductType<G>, G> void recordProductsProducedOfType(ITeamOwnable teamComp, W type) {
 		for (ProcessingProduct<?, G> product : processingContainer.getOutputs().getProductsOfType(type)) {
 			recordProductProduced(teamComp, type, product);
 		}
 	}
 
-	private <W extends ProductType<G>, G> void recordProductProduced(TeamComponent teamComp, W type,
+	private <W extends ProductType<G>, G> void recordProductProduced(ITeamOwnable teamComp, W type,
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH
 				|| product.getCaptureType() == CaptureType.COUNT_ONLY && !product.isTemplateProduct()) {
@@ -440,7 +432,7 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		}
 	}
 
-	protected void updateProductionRates(TeamComponent teamComp) {
+	protected void updateProductionRates(ITeamOwnable teamComp) {
 		for (ProductType<?> productType : processingContainer.getInputs().getProductTypes()) {
 			updateInputProductionRatesOfType(teamComp, productType);
 		}
@@ -450,13 +442,13 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		}
 	}
 
-	private <W extends ProductType<G>, G> void updateInputProductionRatesOfType(TeamComponent teamComp, W type) {
+	private <W extends ProductType<G>, G> void updateInputProductionRatesOfType(ITeamOwnable teamComp, W type) {
 		for (ProcessingProduct<?, G> product : processingContainer.getInputs().getProductsOfType(type)) {
 			updateInputProductionRate(teamComp, type, product);
 		}
 	}
 
-	private <W extends ProductType<G>, G> void updateInputProductionRate(TeamComponent teamComp, W type,
+	private <W extends ProductType<G>, G> void updateInputProductionRate(ITeamOwnable teamComp, W type,
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH || product.getCaptureType() == CaptureType.RATE_ONLY) {
 			getProductionToken(type).setConsumptionPerSecond((ServerTeam) teamComp.getOwningTeam(),
@@ -465,13 +457,13 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		}
 	}
 
-	private <W extends ProductType<G>, G> void updateOutputProductionRatesOfType(TeamComponent teamComp, W type) {
+	private <W extends ProductType<G>, G> void updateOutputProductionRatesOfType(ITeamOwnable teamComp, W type) {
 		for (ProcessingProduct<?, G> product : processingContainer.getOutputs().getProductsOfType(type)) {
 			updateOutputProductionRate(teamComp, type, product);
 		}
 	}
 
-	private <W extends ProductType<G>, G> void updateOutputProductionRate(TeamComponent teamComp, W type,
+	private <W extends ProductType<G>, G> void updateOutputProductionRate(ITeamOwnable teamComp, W type,
 			ProcessingProduct<?, G> product) {
 		if (product.getCaptureType() == CaptureType.BOTH || product.getCaptureType() == CaptureType.RATE_ONLY) {
 			getProductionToken(type).setProductionPerSecond((ServerTeam) teamComp.getOwningTeam(), product.getProduct(),
@@ -516,20 +508,16 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 	}
 
 	public PowerProducer getPowerProducerId() {
-		return this.powerProducerId;
+		return productionTokenContainer.getPowerProducerId();
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public <G> ProductionTrackingToken<G> getProductionToken(ProductType<G> productType) {
-		if (!productionTokens.containsKey(productType)) {
-			productionTokens.put(productType, productType.getProductivityToken());
-		}
-		return (ProductionTrackingToken<G>) productionTokens.get(productType);
+		return productionTokenContainer.getProductionToken(productType);
 	}
 
 	public void onOwningBlockEntityBroken(BlockState state, BlockState newState, boolean isMoving) {
-		invalidateProductionTokens();
+		productionTokenContainer.invalidateProductionTokens();
 
 		// Drop any items in the output container.
 		if (getProcessingContainer().getInputs().hasProductsOfType(StaticCoreProductTypes.Item.get())) {
@@ -540,13 +528,6 @@ public abstract class AbstractProcessingComponent<T extends AbstractProcessingCo
 		}
 
 		processingContainer.clear();
-	}
-
-	protected void invalidateProductionTokens() {
-		for (ProductionTrackingToken<?> token : productionTokens.values()) {
-			token.invalidate();
-		}
-		productionTokens.clear();
 	}
 
 	@SuppressWarnings("unchecked")

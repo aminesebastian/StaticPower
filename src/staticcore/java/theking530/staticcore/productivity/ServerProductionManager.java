@@ -57,7 +57,7 @@ public class ServerProductionManager implements IProductionManager<ServerProduct
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> ServerProductionCache<T> getProductTypeCache(ProductType<T> productType) {
+	public <T> ServerProductionCache<T> getProductCache(ProductType<T> productType) {
 		if (cache.containsKey(productType)) {
 			return (ServerProductionCache<T>) cache.get(productType);
 		}

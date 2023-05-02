@@ -17,6 +17,7 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.event.IModBusEvent;
 import theking530.staticcore.StaticCore;
@@ -261,7 +262,7 @@ public class StaticCoreGameDataManager {
 			}
 		}
 
-		public static StaticCoreGameDataManager get(Level level) {
+		public static StaticCoreGameDataManager get(LevelAccessor level) {
 			return get(level.isClientSide());
 		}
 

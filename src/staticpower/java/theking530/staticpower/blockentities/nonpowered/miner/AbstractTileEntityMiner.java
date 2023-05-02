@@ -20,8 +20,10 @@ import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
+import theking530.staticcore.blockentity.components.control.processing.IProcessor;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationComponent;
@@ -36,7 +38,9 @@ import theking530.staticcore.blockentity.components.items.UpgradeInventoryCompon
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.gui.text.GuiTextUtilities;
+import theking530.staticcore.init.StaticCoreProductTypes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
+import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.teams.ServerTeam;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.item.InventoryUtilities;
@@ -47,13 +51,14 @@ import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
 
-public abstract class AbstractTileEntityMiner extends BlockEntityBase {
+public abstract class AbstractTileEntityMiner extends BlockEntityBase
+		implements IProcessor<MachineProcessingComponent> {
 	public final InventoryComponent drillBitInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final OldMachineProcessingComponent processingComponent;
+	public final MachineProcessingComponent processingComponent;
 	public final HeatStorageComponent heatStorage;
 	public final LoopingSoundComponent miningSoundComponent;
 
@@ -89,12 +94,13 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
 						.setModifiedCallback(this::upgradeInventoryChanged));
 
-		registerComponent(processingComponent = new OldMachineProcessingComponent("ProcessingComponent",
-				getProcessingTime(), this::canProcess, this::canProcess, this::processingCompleted, true));
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(
+				processingComponent = new MachineProcessingComponent("ProcessingComponent", getProcessingTime()));
+		processingComponent.setShouldControlOnBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(getFuelUsage());
+		processingComponent.setBasePowerUsage(getFuelUsage());
 		processingComponent.setUpgradeInventory(upgradesInventory);
+		processingComponent.setPreProductionTime(0);
 
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
@@ -115,40 +121,30 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 			refreshBlocksInRange(getRadius());
 		}
 
-		if (!level.isClientSide) {
-			// If the internal inventory is not empty, try to put the items sequentially
-			// into the output slot.
-			if (!InventoryUtilities.isInventoryEmpty(internalInventory)) {
-				for (int i = 0; i < internalInventory.getSlots(); i++) {
-					ItemStack stackInSlot = internalInventory.getStackInSlot(i);
-					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(outputInventory, stackInSlot,
-							false);
-					if (remaining.getCount() != stackInSlot.getCount()) {
-						internalInventory.extractItem(i, stackInSlot.getCount() - remaining.getCount(), false);
-					}
+		if (getLevel().isClientSide()) {
+			if (processingComponent.isBlockStateOn()) {
+				if (SDMath.diceRoll(0.5)) {
+					BlockPos minedPos = getCurrentlyTargetedBlockPos();
+					getLevel().addParticle(ParticleTypes.POOF, minedPos.getX() + 0.5f, minedPos.getY() + 0.5f,
+							minedPos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);
 				}
-			}
-
-			if (processingComponent.performedWorkLastTick()) {
-				heatStorage.setCanHeat(true);
-				heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
-				heatStorage.setCanHeat(false);
-			} else {
-				processingComponent.getItemProductionToken().invalidate();
-			}
-
-			if (processingComponent.getIsOnBlockState()) {
 				miningSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING, SoundSource.BLOCKS, 0.2f, 0.5f,
 						getBlockPos(), 64);
 			} else {
 				miningSoundComponent.stopPlayingSound();
 			}
 		} else {
-			if (processingComponent.performedWorkLastTick()) {
-				if (SDMath.diceRoll(0.5)) {
-					BlockPos minedPos = getCurrentlyTargetedBlockPos();
-					getLevel().addParticle(ParticleTypes.POOF, minedPos.getX() + 0.5f, minedPos.getY() + 0.5f,
-							minedPos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);
+			// If the internal inventory is not empty, try to put the items sequentially
+			// into the output slot.
+			for (int i = 0; i < internalInventory.getSlots(); i++) {
+				ItemStack stackInSlot = internalInventory.getStackInSlot(i);
+				if (stackInSlot.isEmpty()) {
+					continue;
+				}
+
+				ItemStack remaining = InventoryUtilities.insertItemIntoInventory(outputInventory, stackInSlot, false);
+				if (remaining.getCount() != stackInSlot.getCount()) {
+					internalInventory.extractItem(i, stackInSlot.getCount() - remaining.getCount(), false);
 				}
 			}
 		}
@@ -171,8 +167,8 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 	}
 
 	public int getTicksRemainingUntilCompletion() {
-		return getBlocksRemaining() * processingComponent.getMaxProcessingTime()
-				- processingComponent.getCurrentProcessingTime();
+		return getBlocksRemaining() * processingComponent.getProcessingTimer().getMaxTime()
+				- processingComponent.getProcessingTimer().getCurrentTime();
 	}
 
 	/**
@@ -186,12 +182,9 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 		refreshBlocksInRange(getRadius());
 	}
 
-	/**
-	 * Checks to make sure we can mine.
-	 * 
-	 * @return
-	 */
-	public ProcessingCheckState canProcess() {
+	@Override
+	public ProcessingCheckState canStartProcessing(MachineProcessingComponent component,
+			ProcessingContainer processingContainer) {
 		// If we're done processing, stop.
 		if (isDoneMining()) {
 			return ProcessingCheckState.skip();
@@ -212,6 +205,36 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 		return ProcessingCheckState.ok();
 	}
 
+	@Override
+	public void onProcessingProgressMade(MachineProcessingComponent component,
+			ProcessingContainer processingContainer) {
+		heatStorage.setCanHeat(true);
+		heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
+		heatStorage.setCanHeat(false);
+	}
+
+	@Override
+	public ProcessingCheckState canCompleteProcessing(MachineProcessingComponent component,
+			ProcessingContainer processingContainer) {
+
+		// Safety check. If we are out of range return true.
+		if (currentBlockIndex >= blocks.size()) {
+			// IF the blocks array has already been initialized, set the current block index
+			// to -1.
+			if (blocks.size() > 0) {
+				currentBlockIndex = -1;
+			}
+			return ProcessingCheckState.ok();
+		}
+
+		// Done!
+		if (currentBlockIndex == -1) {
+			return ProcessingCheckState.error("Processing Complete!");
+		}
+
+		return ProcessingCheckState.ok();
+	}
+
 	/**
 	 * Once the processing is completed, place the output in the output slot (if
 	 * possible). If not, return false. This method will continue to be called until
@@ -219,82 +242,57 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase {
 	 * 
 	 * @return
 	 */
-	protected ProcessingCheckState processingCompleted() {
-		if (InventoryUtilities.isInventoryEmpty(internalInventory) && hasDrillBit()) {
-			// Safety check. If we are out of range return true.
-			if (currentBlockIndex >= blocks.size()) {
-				// IF the blocks array has already been initialized, set the current block index
-				// to -1.
-				if (blocks.size() > 0) {
-					currentBlockIndex = -1;
-				}
-				return ProcessingCheckState.ok();
-			}
+	public void onProcessingCompleted(MachineProcessingComponent component, ProcessingContainer processingContainer) {
+		// Get the block to mine.
+		BlockPos minedPos = blocks.get(currentBlockIndex);
+		BlockState minedBlockState = level.getBlockState(minedPos);
 
-			// Done!
-			if (currentBlockIndex == -1) {
-				return ProcessingCheckState.error("Processing Complete!");
-			}
-
-			// We need to perform this here too, otherwise we'll skip a tick per generation.
-			heatStorage.setCanHeat(true);
-			heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
-			heatStorage.setCanHeat(false);
-
-			// Get the block to mine.
-			BlockPos minedPos = blocks.get(currentBlockIndex);
-			BlockState minedBlockState = level.getBlockState(minedPos);
-
-			// Increment the current block index.
-			currentBlockIndex++;
-			// IF we have reached the final block, set the current block index to -1.
-			if (currentBlockIndex >= blocks.size()) {
-				processingComponent.cancelProcessing();
-				currentBlockIndex = -1;
-			}
-
-			// Skip air blocks.
-			if (minedBlockState.getBlock() == Blocks.AIR) {
-				return ProcessingCheckState.ok();
-			}
-
-			// Play the sound.
-			level.playSound(null, getBlockPos(), minedBlockState.getSoundType().getBreakSound(), SoundSource.BLOCKS,
-					0.2f, 0.75f);
-			level.playSound(null, getCurrentlyTargetedBlockPos(), minedBlockState.getSoundType().getBreakSound(),
-					SoundSource.BLOCKS, 0.2f, 0.75f);
-
-			// Damage the drill bit.
-			if (getDrillBit().hurt(1, level.random, null)) {
-				level.playSound(null, getBlockPos(), SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0f, 1.0f);
-			}
-
-			// Check if this is a mineable block. If not, just return true.
-			if (!canMineBlock(minedBlockState, minedPos)) {
-				return ProcessingCheckState.ok();
-			}
-
-			// Insert the mined items into the internal inventory.
-			List<ItemStack> minedItems = attemptMineBlock(minedPos);
-			for (int i = 0; i < minedItems.size(); i++) {
-				InventoryUtilities.insertItemIntoInventory(internalInventory, minedItems.get(i), false);
-				processingComponent.getItemProductionToken().produced((ServerTeam) getTeamComponent().getOwningTeam(),
-						minedItems.get(i), minedItems.get(i).getCount());
-				processingComponent.getItemProductionToken().setProductionPerSecond(
-						(ServerTeam) getTeamComponent().getOwningTeam(), minedItems.get(i), minedItems.get(i).getCount()
-								* (1 / ((Math.max(processingComponent.getMaxProcessingTime(), 1) / 20.0))));
-			}
-
-			// Set the mined block to cobblestone.
-			level.setBlock(minedPos, Blocks.AIR.defaultBlockState(), 1 | 2 | 4);
-
-			// Raise the on mined event.
-			onBlockMined(minedPos, minedBlockState);
-
-			// Mark the te as dirty.
-			return ProcessingCheckState.ok();
+		// Increment the current block index.
+		currentBlockIndex++;
+		// IF we have reached the final block, set the current block index to -1.
+		if (currentBlockIndex >= blocks.size()) {
+			currentBlockIndex = -1;
 		}
-		return ProcessingCheckState.error("Items backed up in internal inventory.");
+
+		// Skip air blocks.
+		if (minedBlockState.getBlock() == Blocks.AIR) {
+			return;
+		}
+
+		// Play the sound.
+		level.playSound(null, getBlockPos(), minedBlockState.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.2f,
+				0.75f);
+		level.playSound(null, getCurrentlyTargetedBlockPos(), minedBlockState.getSoundType().getBreakSound(),
+				SoundSource.BLOCKS, 0.2f, 0.75f);
+
+		// Damage the drill bit.
+		if (getDrillBit().hurt(1, level.random, null)) {
+			level.playSound(null, getBlockPos(), SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0f, 1.0f);
+		}
+
+		// Check if this is a mineable block. If not, just return true.
+		if (!canMineBlock(minedBlockState, minedPos)) {
+			return;
+		}
+
+		// Insert the mined items into the internal inventory.
+		List<ItemStack> minedItems = attemptMineBlock(minedPos);
+		ProductionTrackingToken<ItemStack> itemProductionToken = processingComponent
+				.getProductionToken(StaticCoreProductTypes.Item.get());
+		for (int i = 0; i < minedItems.size(); i++) {
+			InventoryUtilities.insertItemIntoInventory(internalInventory, minedItems.get(i), false);
+			itemProductionToken.produced((ServerTeam) getTeamComponent().getOwningTeam(), minedItems.get(i),
+					minedItems.get(i).getCount());
+			itemProductionToken.setProductionPerSecond((ServerTeam) getTeamComponent().getOwningTeam(),
+					minedItems.get(i), minedItems.get(i).getCount()
+							* (1 / ((Math.max(processingComponent.getProcessingTimer().getMaxTime(), 1) / 20.0))));
+		}
+
+		// Set the mined block to cobblestone.
+		level.setBlock(minedPos, Blocks.AIR.defaultBlockState(), 1 | 2 | 4);
+
+		// Raise the on mined event.
+		onBlockMined(minedPos, minedBlockState);
 	}
 
 	public void onBlockMined(BlockPos pos, BlockState minedBlock) {

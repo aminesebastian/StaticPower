@@ -23,11 +23,9 @@ import theking530.staticcore.utilities.NBTUtilities;
 
 public class ConcretizedProductContainer implements INBTSerializable<CompoundTag>, IReadOnlyProcessingContainer {
 	protected final Map<ProductType<?>, List<ProcessingProduct<?, ?>>> productMap;
-	private boolean closed;
 
 	public ConcretizedProductContainer() {
 		productMap = new HashMap<>();
-		closed = true;
 	}
 
 	public ConcretizedProductContainer addItem(ItemStack item) {
@@ -132,12 +130,6 @@ public class ConcretizedProductContainer implements INBTSerializable<CompoundTag
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> ConcretizedProductContainer add(ProductType<T> type, T product, double amount, CaptureType captureType,
 			boolean isTemplateProduct) {
-
-		if (isClosed()) {
-			throw new RuntimeException(
-					String.format("Attempted to add an input item to a closed process output container."));
-		}
-
 		if (amount == 0) {
 			return this;
 		}
@@ -182,29 +174,15 @@ public class ConcretizedProductContainer implements INBTSerializable<CompoundTag
 		}
 	}
 
-	public void open() {
-		clear();
-		closed = false;
-	}
-
-	public void close() {
-		closed = true;
-	}
-
-	public boolean isClosed() {
-		return closed;
-	}
-
 	public void clear() {
 		productMap.clear();
-		closed = true;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
 		clear();
-		ListTag outputProductTypes = nbt.getList("product_types", ListTag.TAG_COMPOUND);
-		productMap.putAll(serializeMap(outputProductTypes));
+		ListTag productTypes = nbt.getList("product_types", ListTag.TAG_COMPOUND);
+		productMap.putAll(serializeMap(productTypes));
 	}
 
 	@SuppressWarnings("rawtypes")

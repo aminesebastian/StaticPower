@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 import theking530.api.energy.PowerStack;
+import theking530.api.team.ITeamOwnable;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
 import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.IProcessor;
@@ -41,11 +42,6 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	 */
 	@UpdateSerialize
 	private double powerSatisfaction;
-	/**
-	 * This represents the total amount of power that has been used since production
-	 * started.
-	 */
-	private double accumulatedPowerUsed;
 
 	@SaveSerialize
 	/**
@@ -170,11 +166,11 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	}
 
 	public float getCalculatedPowerUsageMultipler() {
-		return 0;
+		return 1;
 	}
 
 	public float getCalculatedHeatGenerationMultiplier() {
-		return 0;
+		return 1;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -284,7 +280,14 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 		super.onProcessingProgressMade(processingContainer);
 		if (this.powerComponent != null) {
 			PowerStack drained = this.powerComponent.drainPower(getPowerUsage(), false);
-			accumulatedPowerUsed += drained.getPower();
+
+			// Update all the production statistics.
+			ITeamOwnable teamComp = getBlockEntity().getComponent(TeamComponent.class);
+			if (teamComp != null && teamComp.getOwningTeam() != null) {
+				this.getProductionToken(StaticCoreProductTypes.Power.get())
+						.consumed((ServerTeam) teamComp.getOwningTeam(), getPowerProducerId(), drained.getPower());
+			}
+
 		}
 
 		Optional<IProcessor> processingInterface = getProcessingOwner();
@@ -345,7 +348,7 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	}
 
 	@Override
-	protected void updateProductionRates(TeamComponent teamComp) {
+	protected void updateProductionRates(ITeamOwnable teamComp) {
 		super.updateProductionRates(teamComp);
 		// We capture this here and not as a product when processing starts because the
 		// value can change over time as the power satisfaction changes.
@@ -354,21 +357,6 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 					(ServerTeam) teamComp.getOwningTeam(), getPowerProducerId(),
 					getPowerUsage() * 20 * powerSatisfaction, getPowerUsage() * 20);
 		}
-	}
-
-	@Override
-	protected void recordProductionCompletedStatistics(TeamComponent teamComp) {
-		super.recordProductionCompletedStatistics(teamComp);
-		if (this.accumulatedPowerUsed > 0 && teamComp != null) {
-			getProductionToken(StaticCoreProductTypes.Power.get()).consumed((ServerTeam) teamComp.getOwningTeam(),
-					getPowerProducerId(), accumulatedPowerUsed);
-		}
-	}
-
-	@Override
-	protected void resetToIdle() {
-		super.resetToIdle();
-		accumulatedPowerUsed = 0;
 	}
 
 	@SuppressWarnings({ "unchecked" })

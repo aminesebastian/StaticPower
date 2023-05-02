@@ -1,7 +1,10 @@
 package theking530.staticcore.productivity.product.fluid;
 
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -31,5 +34,12 @@ public class FluidStackProductMetricRenderer extends ProductMetricTileRenderer<F
 			ProductivityRate smoothedValue, Vector2D mousePosition, float partialTicks, Vector2D tileSize,
 			boolean isHovered) {
 		return GuiTextUtilities.formatFluidToString(smoothedValue.getCurrentValue()).getString();
+	}
+
+	@Override
+	protected void getTooltips(ProductionMetric metric, MetricType metricType, FluidStack product,
+			ProductivityRate smoothedValue, PoseStack pose, Vector2D mousePosition, Vector2D tileSize,
+			boolean isHovered, List<Component> tooltips, boolean showAdvanced) {
+		tooltips.add(product.getDisplayName());
 	}
 }

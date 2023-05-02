@@ -14,6 +14,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.StaticCore;
@@ -149,7 +150,7 @@ public class TeamManager extends BasicStaticCoreGameData {
 		return tag;
 	}
 
-	public static TeamManager get(Level level) {
+	public static TeamManager get(LevelAccessor level) {
 		return StaticCoreDataAccessor.get(level).getGameData(ID);
 	}
 

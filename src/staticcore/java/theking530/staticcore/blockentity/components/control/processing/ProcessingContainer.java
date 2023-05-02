@@ -38,17 +38,6 @@ public class ProcessingContainer implements INBTSerializable<CompoundTag> {
 		return customParameters;
 	}
 
-	public void open() {
-		clear();
-		inputs.open();
-		outputs.open();
-	}
-
-	public void close() {
-		inputs.close();
-		outputs.close();
-	}
-
 	public void clear() {
 		inputs.clear();
 		outputs.clear();

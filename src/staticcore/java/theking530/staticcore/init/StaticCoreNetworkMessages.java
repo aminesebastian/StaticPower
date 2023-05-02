@@ -1,6 +1,5 @@
 package theking530.staticcore.init;
 
-import theking530.staticcore.blockentity.components.control.ProcesingComponentSyncPacket;
 import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponentSyncPacket;
 import theking530.staticcore.blockentity.components.control.processing.recipe.RecipeProcessingComponentSyncPacket;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponentSyncPacket;
@@ -10,7 +9,8 @@ import theking530.staticcore.blockentity.components.heat.PacketHeatStorageCompon
 import theking530.staticcore.blockentity.components.items.PacketLockInventorySlot;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundPacketStart;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundPacketStop;
-import theking530.staticcore.blockentity.components.team.PacketSetTeamComponentTeam;
+import theking530.staticcore.blockentity.components.team.PacketSetBlockEntityTeamFromClient;
+import theking530.staticcore.blockentity.components.team.PacketSetBlockEntityTeamFromServer;
 import theking530.staticcore.cablenetwork.CableStateSyncPacket;
 import theking530.staticcore.cablenetwork.CableStateSyncRequestPacket;
 import theking530.staticcore.container.PacketCloseCurrentContainer;
@@ -22,17 +22,17 @@ import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComp
 import theking530.staticcore.gui.widgets.tabs.slottabs.PacketGuiTabAddSlots;
 import theking530.staticcore.network.BlockEntityBasicSyncPacket;
 import theking530.staticcore.network.StaticCoreMessageHandler;
-import theking530.staticcore.productivity.metrics.PacketRecieveProductionMetrics;
-import theking530.staticcore.productivity.metrics.PacketRecieveProductionTimeline;
-import theking530.staticcore.productivity.metrics.PacketRequestProductionMetrics;
-import theking530.staticcore.productivity.metrics.PacketRequestProductionTimeline;
+import theking530.staticcore.productivity.network.PacketRecieveProductionMetrics;
+import theking530.staticcore.productivity.network.PacketRecieveProductionTimeline;
+import theking530.staticcore.productivity.network.PacketRequestProductionMetrics;
+import theking530.staticcore.productivity.network.PacketRequestProductionTimeline;
 import theking530.staticcore.research.network.PacketSetSelectedResearch;
 
 public class StaticCoreNetworkMessages {
 	public static void init() {
 		StaticCoreMessageHandler.registerMessage(MachineProcessingComponentSyncPacket.class);
 		StaticCoreMessageHandler.registerMessage(RecipeProcessingComponentSyncPacket.class);
-		
+
 		StaticCoreMessageHandler.registerMessage(PacketRedstoneComponentSync.class);
 		StaticCoreMessageHandler.registerMessage(PacketCableAttachmentRedstoneSync.class);
 		StaticCoreMessageHandler.registerMessage(PacketSideConfigTab.class);
@@ -47,12 +47,11 @@ public class StaticCoreNetworkMessages {
 		StaticCoreMessageHandler.registerMessage(PacketCloseCurrentContainer.class);
 		StaticCoreMessageHandler.registerMessage(PacketRevertToParentContainer.class);
 
-		StaticCoreMessageHandler.registerMessage(ProcesingComponentSyncPacket.class);
-
 		StaticCoreMessageHandler.registerMessage(PowerStorageComponentSyncPacket.class);
 
 		StaticCoreMessageHandler.registerMessage(StaticPowerGameDataSyncPacket.class);
-		StaticCoreMessageHandler.registerMessage(PacketSetTeamComponentTeam.class);
+		StaticCoreMessageHandler.registerMessage(PacketSetBlockEntityTeamFromClient.class);
+		StaticCoreMessageHandler.registerMessage(PacketSetBlockEntityTeamFromServer.class);
 		StaticCoreMessageHandler.registerMessage(PacketSetSelectedResearch.class);
 
 		StaticCoreMessageHandler.registerMessage(CableStateSyncPacket.class);

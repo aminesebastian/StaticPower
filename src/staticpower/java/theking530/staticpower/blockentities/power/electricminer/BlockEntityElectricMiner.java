@@ -50,7 +50,7 @@ public class BlockEntityElectricMiner extends AbstractTileEntityMiner {
 		super.process();
 
 		// Render the particle effects.
-		if (processingComponent.getIsOnBlockState()) {
+		if (processingComponent.isBlockStateOn()) {
 			float randomOffset = (2 * getLevel().getRandom().nextFloat()) - 1.0f;
 			randomOffset /= 3.5f;
 			float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;

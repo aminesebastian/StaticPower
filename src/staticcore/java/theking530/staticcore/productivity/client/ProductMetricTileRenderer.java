@@ -1,8 +1,11 @@
 package theking530.staticcore.productivity.client;
 
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.productivity.cacheentry.ProductivityRate;
 import theking530.staticcore.productivity.metrics.MetricType;
@@ -29,6 +32,14 @@ public abstract class ProductMetricTileRenderer<T, K extends ProductType<T>> {
 	public void drawBackground(ProductionMetric metric, MetricType metricType, ProductivityRate smoothedValue,
 			PoseStack pose, Vector2D mousePosition, float partialTicks, Vector2D tileSize, boolean isHovered) {
 
+	}
+
+	public void getTooltips(ProductionMetric metric, MetricType metricType, ProductivityRate smoothedValue,
+			PoseStack pose, Vector2D mousePosition, Vector2D tileSize, boolean isHovered, List<Component> tooltips,
+			boolean showAdvanced) {
+		T deserializedProduct = deserializeProduct(metric);
+		getTooltips(metric, metricType, deserializedProduct, smoothedValue, pose, mousePosition, tileSize, isHovered,
+				tooltips, showAdvanced);
 	}
 
 	public void drawForeground(ProductionMetric metric, MetricType metricType, ProductivityRate smoothedValue,
@@ -85,5 +96,11 @@ public abstract class ProductMetricTileRenderer<T, K extends ProductType<T>> {
 		GuiDrawUtilities.drawGenericBackground(pose, Math.max(7, width * growthPercentage), 7, barXPos, barYPos, 1,
 				productColor);
 		pose.popPose();
+	}
+
+	protected void getTooltips(ProductionMetric metric, MetricType metricType, T product,
+			ProductivityRate smoothedValue, PoseStack pose, Vector2D mousePosition, Vector2D tileSize,
+			boolean isHovered, List<Component> tooltips, boolean showAdvanced) {
+
 	}
 }

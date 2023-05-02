@@ -22,17 +22,20 @@ public class StaticPowerItemBlockCustomRenderer extends StaticPowerItemBlock imp
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerItemBlockCustomRenderer.class);
 	private final BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> renderer;
 
-	public StaticPowerItemBlockCustomRenderer(Block block, BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> renderer) {
+	public StaticPowerItemBlockCustomRenderer(Block block,
+			BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> renderer) {
 		super(block, new Item.Properties());
 		this.renderer = renderer;
 	}
 
 	@Override
-	public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+	public void initializeClient(
+			java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
 		consumer.accept(new IClientItemExtensions() {
 			@Override
 			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return renderer.apply(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
+				return renderer.apply(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
+						Minecraft.getInstance().getEntityModels());
 			}
 		});
 	}
@@ -43,7 +46,8 @@ public class StaticPowerItemBlockCustomRenderer extends StaticPowerItemBlock imp
 	}
 
 	@Override
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new ItemCustomRendererPassthroughModel(existingModel);
 	}
 }

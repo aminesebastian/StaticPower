@@ -19,7 +19,8 @@ public abstract class AbstractSpawnableMobType<T extends Mob> extends AbstractEn
 	}
 
 	public void registerSpawnEgg(String name) {
-		spawnEgg = ModItems.ITEMS.register("egg_" + name, () -> new StaticPowerMobSpawnEgg(getType(), primaryEggColor, secondaryEggColor));
+		spawnEgg = ModItems.ITEMS.register("egg_" + name,
+				() -> new StaticPowerMobSpawnEgg(getType(), primaryEggColor, secondaryEggColor));
 	}
 
 	public StaticPowerMobSpawnEgg getEgg() {

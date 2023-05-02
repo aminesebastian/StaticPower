@@ -49,8 +49,10 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
 			double capacity = getCapacity();
-			return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, capacity,
-					getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower(), canAcceptExternalPower(), canOutputExternalPower()));
+			return new ItemStackMultiCapabilityProvider(stack, nbt)
+					.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, capacity,
+							getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower(),
+							canAcceptExternalPower(), canOutputExternalPower()));
 		}
 		return null;
 	}
@@ -65,8 +67,8 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		// Only show the animation if the stored power is the same (didn't change).
 		// This is so we don't SPAM the animation on charge or discharge.
-		return super.shouldCauseBlockBreakReset(oldStack, newStack)
-				&& EnergyHandlerItemStackUtilities.getStoredPower(newStack) == EnergyHandlerItemStackUtilities.getStoredPower(oldStack);
+		return super.shouldCauseBlockBreakReset(oldStack, newStack) && EnergyHandlerItemStackUtilities
+				.getStoredPower(newStack) == EnergyHandlerItemStackUtilities.getStoredPower(oldStack);
 	}
 
 	public abstract double getCapacity();
@@ -100,7 +102,8 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Override
 	public int getBarWidth(ItemStack stack) {
 		// Get the energy handler.
-		ItemStackStaticPowerEnergyCapability handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);
+		ItemStackStaticPowerEnergyCapability handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack)
+				.orElse(null);
 		if (handler == null) {
 			return 0;
 		}
@@ -115,13 +118,15 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 		double remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 		double capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(PowerTextFormatting.formatPowerToString(remainingCharge, capacity));
-		tooltip.add(PowerTextFormatting.formatVoltageRangeToString(EnergyHandlerItemStackUtilities.getInputVoltageRange(stack)));
+		tooltip.add(PowerTextFormatting
+				.formatVoltageRangeToString(EnergyHandlerItemStackUtilities.getInputVoltageRange(stack)));
 	}
 
 	public static class EnergyItemJEIInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
 		@Override
 		public String apply(ItemStack itemStack, UidContext context) {
-			return ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString() + EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " "
+			return ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString()
+					+ EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " "
 					+ EnergyHandlerItemStackUtilities.getStoredPower(itemStack);
 		}
 	}

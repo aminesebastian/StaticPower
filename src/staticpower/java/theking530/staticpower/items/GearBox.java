@@ -23,7 +23,8 @@ public class GearBox extends StaticPowerItem implements ICustomModelProvider {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new GearBoxModel(existingModel);
 	}
 }

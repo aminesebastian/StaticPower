@@ -11,8 +11,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
-import theking530.staticcore.blockentity.components.control.oldprocessing.OldMachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
+import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
+import theking530.staticcore.blockentity.components.control.processing.machine.MachineProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.InputServoComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
@@ -26,21 +27,25 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityMiner extends AbstractTileEntityMiner {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityMiner> TYPE = new BlockEntityTypeAllocator<>("miner", (type, pos, state) -> new BlockEntityMiner(pos, state), ModBlocks.Miner);
+	public static final BlockEntityTypeAllocator<BlockEntityMiner> TYPE = new BlockEntityTypeAllocator<>("miner",
+			(type, pos, state) -> new BlockEntityMiner(pos, state), ModBlocks.Miner);
 
 	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent fuelBurningInventory;
-	public final OldMachineProcessingComponent fuelComponent;
-	public final OldMachineProcessingComponent fuelMoveComponent;
+	public final MachineProcessingComponent fuelComponent;
+	public final MachineProcessingComponent fuelMoveComponent;
 
 	public BlockEntityMiner(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
-		registerComponent(fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
-		registerComponent(fuelMoveComponent = new OldMachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
-				.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(fuelComponent = new OldMachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel, this::fuelProcessingCompleted, true)
+		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true));
+		registerComponent(
+				fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
+		registerComponent(
+				fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME)
+						.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0)
 				.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(new InputServoComponent("FuelInputServo", 20, fuelInventory));
 	}
@@ -50,27 +55,32 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 		super.process();
 
 		// Update the processing cost.
-		fuelComponent.setTimeUnitsPerTick((int) processingComponent.getCalculatedPowerUsageMultipler());
+		fuelComponent.setProcessingTicksPerGameTick((int) processingComponent.getCalculatedPowerUsageMultipler());
 
 		// Randomly generate smoke and flame particles.
-		if (processingComponent.getIsOnBlockState()) {
+		if (processingComponent.isBlockStateOn()) {
 			if (SDMath.diceRoll(0.25f)) {
 				@SuppressWarnings("resource")
 				float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
 				randomOffset /= 3.5f;
 
-				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
-				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
-				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
+				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f
+						: -0.05f;
+				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(),
+						new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
+				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(),
+						getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
 						0.0f);
-				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
+				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(),
+						getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
 						0.0f);
 			}
 		}
 	}
 
 	public ProcessingCheckState canMoveFuel() {
-		if (isValidFuel(fuelInventory.getStackInSlot(0)) && fuelBurningInventory.getStackInSlot(0).isEmpty() && hasDrillBit()) {
+		if (isValidFuel(fuelInventory.getStackInSlot(0)) && fuelBurningInventory.getStackInSlot(0).isEmpty()
+				&& hasDrillBit()) {
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.skip();
@@ -78,8 +88,8 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 
 	public ProcessingCheckState moveFuel() {
 		int burnTime = getFuelBurnTime(fuelInventory.getStackInSlot(0));
-		fuelComponent.setMaxProcessingTime(burnTime);
-		fuelComponent.setTimeUnitsPerTick((int) getFuelUsage());
+		fuelComponent.setBaseProcessingTime(burnTime);
+		fuelComponent.setProcessingTicksPerGameTick((int) getFuelUsage());
 		transferItemInternally(fuelInventory, 0, fuelBurningInventory, 0);
 		return ProcessingCheckState.ok();
 	}
@@ -95,36 +105,42 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 		if (!isDoneMining()) {
 			return ProcessingCheckState.ok();
 		}
-		return ProcessingCheckState.error(processingComponent.getProcessingErrorMessage());
+		return processingComponent.getProcessingState();
 	}
 
 	public ProcessingCheckState fuelProcessingCompleted() {
-		fuelComponent.setMaxProcessingTime(0);
+		fuelComponent.setBaseProcessingTime(0);
 		fuelBurningInventory.setStackInSlot(0, ItemStack.EMPTY);
 		return ProcessingCheckState.ok();
 	}
 
-	/**
-	 * Checks to make sure we can mine.
-	 * 
-	 * @return
-	 */
-	public ProcessingCheckState canProcess() {
-		ProcessingCheckState superCall = super.canProcess();
-		if (superCall.isOk()) {
-			if (getRemainingFuel() == 0) {
-				return ProcessingCheckState.error("Missing fuel!");
-			}
+	@Override
+	public ProcessingCheckState canStartProcessing(MachineProcessingComponent component,
+			ProcessingContainer processingContainer) {
+		ProcessingCheckState superCall = super.canStartProcessing(component, processingContainer);
+		if (!superCall.isOk()) {
+			return superCall;
 		}
-		return superCall;
+
+		if (getRemainingFuel() == 0) {
+			return ProcessingCheckState.error("Missing fuel!");
+		}
+
+		return ProcessingCheckState.ok();
 	}
 
-	@Override
-	public void onBlockMined(BlockPos pos, BlockState minedBlock) {
-		// IF we have reached the final block, set the current block index to -1.
-		if (isDoneMining()) {
-			fuelComponent.cancelProcessing();
+	public ProcessingCheckState canContinueProcessing(MachineProcessingComponent component,
+			ProcessingContainer processingContainer) {
+		ProcessingCheckState superCall = super.canStartProcessing(component, processingContainer);
+		if (!superCall.isOk()) {
+			return superCall;
 		}
+
+		if (getRemainingFuel() == 0) {
+			return ProcessingCheckState.error("Missing fuel!");
+		}
+
+		return ProcessingCheckState.ok();
 	}
 
 	@Override
@@ -134,13 +150,15 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 
 	@Override
 	public int getHeatGeneration() {
-		return (int) (StaticPowerConfig.SERVER.minerHeatGeneration.get() * processingComponent.getCalculatedPowerUsageMultipler());
+		return (int) (StaticPowerConfig.SERVER.minerHeatGeneration.get()
+				* processingComponent.getCalculatedHeatGenerationMultiplier());
 	}
 
 	@Override
 	public int getRadius() {
 		// Get the range upgrade.
-		UpgradeItemWrapper<Double> upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.RANGE.get());
+		UpgradeItemWrapper<Double> upgradeWrapper = upgradesInventory
+				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.RANGE.get());
 
 		// If there isn't one, return the base level.
 		if (upgradeWrapper.isEmpty()) {
@@ -166,7 +184,7 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 	}
 
 	public int getRemainingFuel() {
-		return fuelComponent.getMaxProcessingTime() - fuelComponent.getCurrentProcessingTime();
+		return fuelComponent.getProcessingTimer().getMaxTime() - fuelComponent.getProcessingTimer().getCurrentTime();
 	}
 
 	@Override

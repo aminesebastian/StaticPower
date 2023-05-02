@@ -26,7 +26,7 @@ public interface IProcessor<T extends AbstractProcessingComponent<?, ?>> {
 	public default void onProcessingPausedDueToError(T component, ProcessingContainer processingContainer) {
 	}
 
-	public default void onProcessingCompleted(T component, ProcessingContainer outputContainer) {
+	public default void onProcessingCompleted(T component, ProcessingContainer processingContainer) {
 	}
 
 }

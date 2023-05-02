@@ -56,7 +56,8 @@ public abstract class AbstractToolPart extends StaticCoreItem implements ICustom
 					AbstractHardenedAttributeType attrib = (AbstractHardenedAttributeType) attribute;
 
 					// Apply the durability change. Then break the loop.
-					baseDurability.set(attrib.applyHardening((AttributeInstance<Boolean>) attributeInstance, baseDurability.get()));
+					baseDurability.set(attrib.applyHardening((AttributeInstance<Boolean>) attributeInstance,
+							baseDurability.get()));
 					break;
 				}
 			}

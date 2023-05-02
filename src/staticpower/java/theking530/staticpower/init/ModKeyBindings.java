@@ -14,12 +14,14 @@ public class ModKeyBindings {
 	/**
 	 * If the player has magnets in their inventory, this toggles the state.
 	 */
-	public static final KeyBinding TOGGLE_MAGNET = StaticCoreKeyBindings.createKeyBinding("toggle_magnet", GLFW.GLFW_KEY_M);
+	public static final KeyBinding TOGGLE_MAGNET = StaticCoreKeyBindings.createKeyBinding("toggle_magnet",
+			GLFW.GLFW_KEY_M);
 	/**
 	 * If the player has a wireless digistore terminal in their inventory, attempts
 	 * to open it.
 	 */
-	public static final KeyBinding OPEN_PORTABLE_DIGISTORE = StaticCoreKeyBindings.createKeyBinding("open_portable_digistore", GLFW.GLFW_KEY_TAB);
+	public static final KeyBinding OPEN_PORTABLE_DIGISTORE = StaticCoreKeyBindings
+			.createKeyBinding("open_portable_digistore", GLFW.GLFW_KEY_TAB);
 
 	/**
 	 * This event is called during the client side setup.

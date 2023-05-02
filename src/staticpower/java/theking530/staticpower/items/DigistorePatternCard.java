@@ -98,7 +98,8 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 	}
 
 	public static boolean hasPattern(ItemStack card) {
-		return card.getItem() instanceof DigistorePatternCard && card.hasTag() && card.getTag().contains(DigistorePatternCard.ENCODED_PATTERN_TAG);
+		return card.getItem() instanceof DigistorePatternCard && card.hasTag()
+				&& card.getTag().contains(DigistorePatternCard.ENCODED_PATTERN_TAG);
 	}
 
 	@Override
@@ -108,7 +109,8 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		BakedModel encodedModel = event.getModels().get(StaticPowerAdditionalModels.DIGISTORE_PATTERN_CARD_ENCODED);
 		return new PatternCardItemModel(existingModel, encodedModel);
 	}

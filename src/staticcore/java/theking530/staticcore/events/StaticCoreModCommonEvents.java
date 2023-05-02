@@ -22,6 +22,7 @@ import theking530.api.fluid.IStaticPowerFluidHandler;
 import theking530.api.heat.IHeatStorage;
 import theking530.api.item.compound.capability.ICompoundItem;
 import theking530.api.item.compound.slot.CompoundItemSlot;
+import theking530.api.team.ITeamOwnable;
 import theking530.api.upgrades.UpgradeType;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.StaticCoreRegistries;
@@ -94,5 +95,6 @@ public class StaticCoreModCommonEvents {
 		event.register(IStaticPowerStorage.class);
 		event.register(IStaticPowerFluidHandler.class);
 		event.register(ICompoundItem.class);
+		event.register(ITeamOwnable.class);
 	}
 }

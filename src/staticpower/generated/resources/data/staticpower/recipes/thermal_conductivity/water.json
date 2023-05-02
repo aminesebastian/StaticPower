@@ -8,17 +8,17 @@
     }
   },
   "freezing_behaviour": {
-    "overheated_block": {
+    "block": {
       "Name": "minecraft:ice"
     }
   },
   "overheating_behaviour": {
-    "overheat_temperature": 100000,
-    "overheated_block": {
+    "block": {
       "Name": "staticpower:steam",
       "Properties": {
         "level": "0"
       }
-    }
+    },
+    "temperature": 100000
   }
 }

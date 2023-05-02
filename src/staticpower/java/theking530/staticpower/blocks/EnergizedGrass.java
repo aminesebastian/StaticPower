@@ -22,8 +22,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class EnergizedGrass extends StaticPowerBlock {
 
 	public EnergizedGrass() {
-		super(Block.Properties.of(Material.DIRT).strength(0.6f).sound(SoundType.GRAVEL)
-				.lightLevel((state) -> 8).randomTicks());
+		super(Block.Properties.of(Material.DIRT).strength(0.6f).sound(SoundType.GRAVEL).lightLevel((state) -> 8)
+				.randomTicks());
 	}
 
 	@Override

@@ -22,12 +22,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class StaticGrass extends StaticPowerBlock {
 
 	public StaticGrass() {
-		super(Block.Properties.of(Material.DIRT).strength(0.6f).sound(SoundType.GRAVEL).lightLevel((state) -> 8).randomTicks());
+		super(Block.Properties.of(Material.DIRT).strength(0.6f).sound(SoundType.GRAVEL).lightLevel((state) -> 8)
+				.randomTicks());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+			boolean isShowingAdvanced) {
 		tooltip.add(Component.literal("Take a Leap."));
 		tooltip.add(Component.literal("Take Flight."));
 	}

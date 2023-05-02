@@ -12,8 +12,8 @@ public class DigistoreCraftingOutputSlot extends ResultSlot {
 	private final ContainerDigistoreCraftingTerminal container;
 	private final CraftingContainer craftMatrix;
 
-	public DigistoreCraftingOutputSlot(ContainerDigistoreCraftingTerminal container, Player player, CraftingContainer craftingInventory, Container inventoryIn, int slotIndex,
-			int xPosition, int yPosition) {
+	public DigistoreCraftingOutputSlot(ContainerDigistoreCraftingTerminal container, Player player,
+			CraftingContainer craftingInventory, Container inventoryIn, int slotIndex, int xPosition, int yPosition) {
 		super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
 		this.container = container;
 		this.craftMatrix = craftingInventory;
@@ -86,7 +86,8 @@ public class DigistoreCraftingOutputSlot extends ResultSlot {
 					// If the original item and this new item are both not empty, but are not equal,
 					// then the item turned into a container.
 					// Attempt to insert it back into the system. If not, skip this slot.
-					if (!originalItem.isEmpty() && !leftoverItem.isEmpty() && !ItemUtilities.areItemStacksStackable(originalItem, leftoverItem)) {
+					if (!originalItem.isEmpty() && !leftoverItem.isEmpty()
+							&& !ItemUtilities.areItemStacksStackable(originalItem, leftoverItem)) {
 						containerItemInsertRemaining = digistoreModule.insertItem(leftoverItem.copy(), false);
 						craftMatrix.setItem(i, containerItemInsertRemaining);
 					}
@@ -99,7 +100,8 @@ public class DigistoreCraftingOutputSlot extends ResultSlot {
 
 						// Extract the item and put it into the craft matrix if something was extracted
 						// and it won't somehow overflow the stack size.
-						if (!pulledItem.isEmpty() && craftMatrix.getItem(i).getCount() + pulledItem.getCount() < originalItem.getMaxStackSize()) {
+						if (!pulledItem.isEmpty() && craftMatrix.getItem(i).getCount()
+								+ pulledItem.getCount() < originalItem.getMaxStackSize()) {
 							if (craftMatrix.getItem(i).isEmpty()) {
 								craftMatrix.setItem(i, pulledItem);
 							} else {
