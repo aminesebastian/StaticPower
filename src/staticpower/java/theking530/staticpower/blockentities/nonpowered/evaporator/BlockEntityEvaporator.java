@@ -90,7 +90,7 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
 				tierObject.defaultMachineOverheatTemperature.get(), tierObject.defaultMachineMaximumTemperature.get(),
-				1.0f));
+				50.0f));
 	}
 
 	@Override

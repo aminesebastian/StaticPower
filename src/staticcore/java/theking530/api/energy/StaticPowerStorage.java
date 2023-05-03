@@ -33,7 +33,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	 * multiple times in a single tick will still result in 100W drains.
 	 * 
 	 * Note: If this is true, then
-	 * {@link #StaticPowerEnergyTracker.tick(net.minecraft.world.level.Level)} must
+	 * {@link #StaticPowerEnergyTracker.tickWithoutHeatTransfer(net.minecraft.world.level.Level)} must
 	 * be called per tick.
 	 */
 	protected boolean arePowerLimitsCumulative;

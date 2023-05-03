@@ -14,6 +14,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorage;
 import theking530.api.heat.HeatStorageUtilities;
+import theking530.api.heat.HeatTicker;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
@@ -44,8 +45,6 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	@UpdateSerialize
 	private boolean exposeAsCapability;
 	@UpdateSerialize
-	private boolean enableAutomaticHeatTransfer;
-	@UpdateSerialize
 	private int meltdownRecoveryTime;
 	@UpdateSerialize
 	private int remainingMeltdownTicks;
@@ -71,14 +70,14 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		this(name, IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maxHeat, conductivity);
 	}
 
-	public HeatStorageComponent(String name, float minHeat, float overheatThreshold, float maxHeat, float conductivity) {
+	public HeatStorageComponent(String name, float minHeat, float overheatThreshold, float maxHeat,
+			float conductivity) {
 		super(name);
 		defaultCapacity = maxHeat;
 		defaultConductivity = conductivity;
 		issueSyncPackets = false;
 		heatStorage = new HeatStorage(minHeat, overheatThreshold, maxHeat, conductivity);
 		exposeAsCapability = true;
-		enableAutomaticHeatTransfer = true;
 
 		// Create the accessors.
 		accessors = new HashMap<Direction, HeatComponentCapabilityAccess>();
@@ -91,7 +90,7 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	@Override
 	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
 		super.onOwningBlockEntityLoaded(level, pos, state);
-		heatStorage.setCurrentHeat(HeatStorageUtilities.getBiomeAmbientTemperature(getLevel(), getPos()));
+		heatStorage.setCurrentHeat(HeatStorageUtilities.getBiomeAmbientTemperature(getLevel(), getPos()).temperature());
 	}
 
 	@SuppressWarnings("resource")
@@ -138,10 +137,8 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 			}
 
 			// Capture heat transfer metrics.
-			heatStorage.captureHeatTransferMetric();
-
-			// Put us into meltdown mode if this ticker wants that.
-			if (hasMeltdownBehavior && heatStorage.getCurrentHeat() >= heatStorage.getOverheatThreshold()) {
+			heatStorage.getTicker().tickWithHeatTransfer(getLevel(), getPos());
+			if (hasMeltdownBehavior && heatStorage.isOverheated()) {
 				// Only do the following ONCE after we started the meltdown.
 				if (!enteredMeltdownState) {
 					enteredMeltdownState = true;
@@ -163,11 +160,6 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 					enteredMeltdownState = false;
 					remainingMeltdownTicks = 0;
 				}
-			}
-
-			if (this.getEnableAutomaticHeatTransfer()) {
-				HeatStorageUtilities.transferHeatWithSurroundings(heatStorage, getLevel(), getPos(),
-						HeatTransferAction.EXECUTE);
 			}
 		}
 	}
@@ -261,15 +253,6 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 
 	public HeatStorageComponent setExposedAsCapability(boolean exposeAsCapability) {
 		this.exposeAsCapability = exposeAsCapability;
-		return this;
-	}
-
-	public boolean getEnableAutomaticHeatTransfer() {
-		return enableAutomaticHeatTransfer;
-	}
-
-	public HeatStorageComponent setEnableAutomaticHeatTransfer(boolean enableAutomaticHeatTransfer) {
-		this.enableAutomaticHeatTransfer = enableAutomaticHeatTransfer;
 		return this;
 	}
 
@@ -390,6 +373,11 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		public float getConductivity() {
 			return HeatStorageComponent.this.getConductivity();
 		}
+
+		@Override
+		public HeatTicker getTicker() {
+			return HeatStorageComponent.this.getTicker();
+		}
 	}
 
 	@Override
@@ -427,6 +415,11 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		return heatStorage.cool(amountToCool, action);
 	}
 
+	@Override
+	public HeatTicker getTicker() {
+		return heatStorage.getTicker();
+	}
+
 	public void setCanHeat(boolean canHeat) {
 		heatStorage.setCanHeat(canHeat);
 	}
@@ -439,11 +432,11 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		heatStorage.setMinimumHeatThreshold(minimumHeat);
 	}
 
-	public float getCooledPerTick() {
-		return heatStorage.getCooledPerTick();
+	public double getCooledPerTick() {
+		return heatStorage.getTicker().getAverageCooledPerTick();
 	}
 
-	public float getHeatPerTick() {
-		return heatStorage.getHeatPerTick();
+	public double getHeatPerTick() {
+		return heatStorage.getTicker().getAverageHeatedPerTick();
 	}
 }

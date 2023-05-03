@@ -107,7 +107,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase
 		// Add the heat storage and the upgrade inventory to the heat component.
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
 				tierObject.defaultMachineOverheatTemperature.get(), tierObject.defaultMachineMaximumTemperature.get(),
-				1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
+				50.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));

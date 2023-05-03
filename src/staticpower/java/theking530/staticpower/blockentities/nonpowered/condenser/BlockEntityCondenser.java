@@ -78,7 +78,7 @@ public class BlockEntityCondenser extends BlockEntityBase implements IRecipeProc
 
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
 				tierObject.defaultMachineOverheatTemperature.get(), tierObject.defaultMachineMaximumTemperature.get(),
-				1.0f));
+			50.0f));
 	}
 
 	@Override

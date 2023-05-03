@@ -77,7 +77,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 
 		// Register the heate component.
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1.0f));
+				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 50.0f));
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent",

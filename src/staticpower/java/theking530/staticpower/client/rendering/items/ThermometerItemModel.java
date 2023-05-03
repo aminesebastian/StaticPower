@@ -54,9 +54,11 @@ public class ThermometerItemModel implements BakedModel {
 		return new ItemOverrides() {
 			@SuppressWarnings("resource")
 			@Override
-			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity, int x) {
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world,
+					@Nullable LivingEntity livingEntity, int x) {
 				BlockPos playerPosition = Minecraft.getInstance().player.getOnPos();
-				float biomeTemperature = HeatStorageUtilities.getBiomeAmbientTemperature(Minecraft.getInstance().level, playerPosition);
+				float biomeTemperature = HeatStorageUtilities
+						.getBiomeAmbientTemperature(Minecraft.getInstance().level, playerPosition).temperature();
 				biomeTemperature = biomeTemperature - IHeatStorage.MINIMUM_TEMPERATURE;
 				float ratio = SDMath.clamp((biomeTemperature) / 473.0f, 0, 1);
 				int mapEntry = (int) Math.floor(ratio * 200);
@@ -118,7 +120,8 @@ public class ThermometerItemModel implements BakedModel {
 		}
 
 		@Override
-		protected List<BakedQuad> getBakedQuadsFromModelData(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderLayer) {
+		protected List<BakedQuad> getBakedQuadsFromModelData(BlockState state, Direction side, RandomSource rand,
+				ModelData data, RenderType renderLayer) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
@@ -127,15 +130,20 @@ public class ThermometerItemModel implements BakedModel {
 				quads = new ArrayList<BakedQuad>();
 				quads.addAll(baseModel.getQuads(state, side, rand, data, renderLayer));
 
-				TextureAtlasSprite sideSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.THERMOMETER_FILL_BAR);
+				TextureAtlasSprite sideSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+						.apply(StaticPowerSprites.THERMOMETER_FILL_BAR);
 
-				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, (1 - filledRatio) * 16.0f, 16.0f, 16.0f }, 0);
-				BlockElementFace blockPartFace = new BlockElementFace(null, 1, sideSprite.getName().toString(), blockFaceUV);
+				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, (1 - filledRatio) * 16.0f, 16.0f, 16.0f },
+						0);
+				BlockElementFace blockPartFace = new BlockElementFace(null, 1, sideSprite.getName().toString(),
+						blockFaceUV);
 
-				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH,
+				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f),
+						new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH,
 						ModelUtilities.IDENTITY, null, false, new ResourceLocation("dummy_name")));
 
-				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.499f), new Vector3f(16.0f, filledRatio * 16.0f, 16.0f), blockPartFace, sideSprite, Direction.NORTH,
+				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.499f),
+						new Vector3f(16.0f, filledRatio * 16.0f, 16.0f), blockPartFace, sideSprite, Direction.NORTH,
 						ModelUtilities.IDENTITY, null, false, new ResourceLocation("dummy_name")));
 			}
 			return quads;
@@ -152,7 +160,8 @@ public class ThermometerItemModel implements BakedModel {
 		}
 
 		@Override
-		public BakedModel applyTransform(ItemTransforms.TransformType transformType, PoseStack poseStack, boolean applyLeftHandTransform) {
+		public BakedModel applyTransform(ItemTransforms.TransformType transformType, PoseStack poseStack,
+				boolean applyLeftHandTransform) {
 			BaseModel.getTransforms().getTransform(transformType).apply(applyLeftHandTransform, poseStack);
 			return this;
 		}

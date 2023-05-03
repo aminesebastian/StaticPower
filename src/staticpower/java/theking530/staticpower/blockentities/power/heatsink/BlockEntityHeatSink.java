@@ -54,8 +54,17 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 		super(allocator, pos, state);
 		this.heatSinkTier = heatSinkTier;
 		StaticCoreTier tier = StaticCoreConfig.getTier(heatSinkTier);
+
+		// TODO: Fix this to read from a config.
+		float conductivity = 400.0f;
+		if (heatSinkTier == StaticPowerTiers.ALUMINUM) {
+			conductivity = 200.0f;
+		} else if (heatSinkTier == StaticPowerTiers.GOLD) {
+			conductivity = 300.0f;
+		}
+
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), 1.0f));
+				tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), conductivity));
 	}
 
 	@Override

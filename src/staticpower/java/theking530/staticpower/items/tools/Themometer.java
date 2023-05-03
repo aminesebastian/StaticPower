@@ -49,13 +49,16 @@ public class Themometer extends StaticPowerItem implements ICustomModelProvider 
 	}
 
 	@Override
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
+			InteractionHand hand, ItemStack item) {
 		if (!world.isClientSide()) {
-			float temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos());
+			float temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos()).temperature();
 
 			BlockHitResult traceResult = RaytracingUtilities.findPlayerRayTrace(world, player, ClipContext.Fluid.ANY);
 			if (traceResult.getType() == HitResult.Type.MISS) {
-				MutableComponent chatComponent = Component.literal("Temperature (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString()).append(")");
+				MutableComponent chatComponent = Component.literal("Temperature (")
+						.append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString())
+						.append(")");
 				player.sendSystemMessage(chatComponent);
 				return InteractionResultHolder.consume(item);
 			}
@@ -64,15 +67,19 @@ public class Themometer extends StaticPowerItem implements ICustomModelProvider 
 	}
 
 	@Override
-	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
+	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos,
+			Direction face, Player player, ItemStack item) {
 		if (!world.isClientSide()) {
-			float temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos());
-			MutableComponent chatComponent = Component.literal("Temperature (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString()).append(")");
+			float temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos()).temperature();
+			MutableComponent chatComponent = Component.literal("Temperature (")
+					.append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString())
+					.append(")");
 
 			boolean found = false;
 			BlockEntity be = world.getBlockEntity(pos);
 			if (be != null) {
-				IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, face).orElse(be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, null).orElse(null));
+				IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, face)
+						.orElse(be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, null).orElse(null));
 				if (otherStorage != null) {
 					temperature = otherStorage.getCurrentHeat();
 					found = true;
@@ -84,8 +91,10 @@ public class Themometer extends StaticPowerItem implements ICustomModelProvider 
 			BlockState blockstate = world.getBlockState(pos);
 
 			// If there is a recipe for thermal conductivity for this block
-			Optional<ThermalConductivityRecipe> recipe = player.level.getRecipeManager().getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
-					new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)), player.level);
+			Optional<ThermalConductivityRecipe> recipe = player.level.getRecipeManager().getRecipeFor(
+					StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
+					new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)),
+					player.level);
 			if (recipe.isPresent()) {
 				if (recipe.get().hasActiveTemperature()) {
 					temperature = recipe.get().getTemperature();
@@ -94,7 +103,10 @@ public class Themometer extends StaticPowerItem implements ICustomModelProvider 
 			}
 
 			if (found) {
-				chatComponent = chatComponent.append(" ").append(Component.literal("Block (").append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString()).append(")"));
+				chatComponent = chatComponent.append(" ")
+						.append(Component.literal("Block (").append(
+								ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString())
+								.append(")"));
 			}
 			player.sendSystemMessage(chatComponent);
 			return InteractionResult.SUCCESS;
@@ -109,7 +121,8 @@ public class Themometer extends StaticPowerItem implements ICustomModelProvider 
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new ThermometerItemModel(existingModel);
 	}
 

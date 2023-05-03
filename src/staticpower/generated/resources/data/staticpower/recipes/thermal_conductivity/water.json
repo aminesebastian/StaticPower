@@ -1,7 +1,7 @@
 {
   "type": "staticcore:thermal_conducitity",
   "conductivity": 10.0,
-  "fluids": {
+  "fluid": {
     "amount": 1,
     "fluids": {
       "fluid": "minecraft:water"
@@ -19,6 +19,6 @@
         "level": "0"
       }
     },
-    "temperature": 100000
+    "temperature": 100
   }
 }

@@ -30,6 +30,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.StaticCore;
@@ -60,14 +61,17 @@ public class JsonUtilities {
 		});
 	});
 
-	public static final Codec<FluidStack> FLUIDSTACK_CODEC = RecordCodecBuilder.create(instance -> instance
-			.group(ForgeRegistries.FLUIDS.getCodec().fieldOf("fluid").forGetter(FluidStack::getFluid), Codec.INT.fieldOf("amount").forGetter(FluidStack::getAmount),
-					CompoundTag.CODEC.optionalFieldOf("tag").forGetter(stack -> Optional.ofNullable(stack.getTag())))
-			.apply(instance, (fluid, amount, tag) -> {
-				FluidStack stack = new FluidStack(fluid, amount);
-				tag.ifPresent(stack::setTag);
-				return stack;
-			}));
+	public static final Codec<FluidStack> FLUIDSTACK_CODEC = RecordCodecBuilder
+			.create(instance -> instance
+					.group(ForgeRegistries.FLUIDS.getCodec().fieldOf("fluid").forGetter(FluidStack::getFluid),
+							Codec.INT.fieldOf("amount").forGetter(FluidStack::getAmount),
+							CompoundTag.CODEC.optionalFieldOf("tag")
+									.forGetter(stack -> Optional.ofNullable(stack.getTag())))
+					.apply(instance, (fluid, amount, tag) -> {
+						FluidStack stack = new FluidStack(fluid, amount);
+						tag.ifPresent(stack::setTag);
+						return stack;
+					}));
 
 	public static final PrimitiveCodec<Character> CHAR = new PrimitiveCodec<Character>() {
 		@Override
@@ -106,6 +110,16 @@ public class JsonUtilities {
 		return encodedResult.result().get().getFirst();
 	}
 
+	public static JsonElement blockStateToJson(BlockState stack) {
+		DataResult<JsonElement> encodedResult = BlockState.CODEC.encodeStart(JsonOps.INSTANCE, stack);
+		return encodedResult.result().get();
+	}
+
+	public static BlockState blockStateFromJson(JsonElement json) {
+		DataResult<Pair<BlockState, JsonElement>> encodedResult = BlockState.CODEC.decode(JsonOps.INSTANCE, json);
+		return encodedResult.result().get().getFirst();
+	}
+
 	public static String nbtToPrettyJson(CompoundTag tag) {
 		return new StringTagVisitor().visit(tag);
 	}
@@ -114,11 +128,12 @@ public class JsonUtilities {
 		return JsonParser.parseString(nbtToPrettyJson(tag)).getAsJsonObject();
 	}
 
-	public static CompoundTag jsonToNbt(JsonObject json) {
+	public static CompoundTag jsonToNbt(JsonElement json) {
 		try {
 			return TagParser.parseTag(json.toString());
 		} catch (CommandSyntaxException e) {
-			StaticCore.LOGGER.error(String.format("There was an error when attempting to parse Json: %1$s.", json.getAsString()), e);
+			StaticCore.LOGGER.error(
+					String.format("There was an error when attempting to parse Json: %1$s.", json.getAsString()), e);
 		}
 		return null;
 	}
@@ -204,7 +219,8 @@ public class JsonUtilities {
 					this.builder.append(',');
 				}
 
-				this.builder.append(handleEscape(s)).append(':').append((new SDStringTagVisitor()).visit(p_178166_.get(s)));
+				this.builder.append(handleEscape(s)).append(':')
+						.append((new SDStringTagVisitor()).visit(p_178166_.get(s)));
 			}
 
 			this.builder.append('}');

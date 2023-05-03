@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
+import theking530.api.heat.HeatTicker;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.blockentity.components.heat.HeatStorageComponent;
@@ -42,7 +43,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		super.preProcessUpdate();
 		if (!isClientSide()) {
 			this.<HeatNetworkModule>getNetworkModule(ModCableModules.Heat.get()).ifPresent(network -> {
-				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat() - clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
+				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat()
+						- clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
 				shouldUpdate |= network.getHeatStorage().getOverheatThreshold() != clientSideHeatCapacity;
 				shouldUpdate |= clientSideHeat == 0 && network.getHeatStorage().getCurrentHeat() > 0;
 				shouldUpdate |= clientSideHeat > 0 && network.getHeatStorage().getCurrentHeat() == 0;
@@ -61,8 +63,10 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 				// Only send the packet to nearby players since these packets get sent
 				// frequently.
-				HeatCableUpdatePacket packet = new HeatCableUpdatePacket(getPos(), clientSideHeat, clientSideHeatCapacity);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, packet);
+				HeatCableUpdatePacket packet = new HeatCableUpdatePacket(getPos(), clientSideHeat,
+						clientSideHeatCapacity);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL,
+						getLevel(), getPos(), 32, packet);
 			});
 		}
 	}
@@ -75,7 +79,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	@Override
 	public float getCurrentHeat() {
 		if (!getBlockEntity().getLevel().isClientSide) {
-			return getHeatNetworkModule().isPresent() ? getHeatNetworkModule().get().getHeatStorage().getCurrentHeat() : 0.0f;
+			return getHeatNetworkModule().isPresent() ? getHeatNetworkModule().get().getHeatStorage().getCurrentHeat()
+					: 0.0f;
 		} else {
 			return clientSideHeat;
 		}
@@ -126,6 +131,16 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		}
 	}
 
+	@Override
+	public HeatTicker getTicker() {
+		if (!getBlockEntity().getLevel().isClientSide) {
+			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
+			return module != null ? module.getHeatStorage().getTicker() : null;
+		} else {
+			return null;
+		}
+	}
+
 	public void updateFromNetworkUpdatePacket(float clientHeat, float clientCapacity) {
 		this.clientSideHeat = clientHeat;
 		this.clientSideHeatCapacity = clientCapacity;
@@ -145,7 +160,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(Cable cable, BlockPlaceContext context, BlockState state,
+			LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putFloat(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.getDataTag().putFloat(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
@@ -176,4 +192,5 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		}
 		return LazyOptional.empty();
 	}
+
 }

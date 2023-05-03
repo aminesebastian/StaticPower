@@ -22,6 +22,9 @@ import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
 public class HeatStorageUtilities {
+	public record HeatQuery(float temperature, float conductivity) {
+	}
+
 	public static final float HEATING_RATE = 1 / 50f;
 
 	/**
@@ -50,37 +53,29 @@ public class HeatStorageUtilities {
 			}
 
 			// Get the temperature and conductivity on this side.
-			float tempOnSide = HeatStorageUtilities.getThermalPowerOnSide(world, currentPos, side, storage);
-			float conductivityOnSide = HeatStorageUtilities.getConductivityOnSide(world, currentPos, side, storage);
+			HeatQuery heatAndConductivity = HeatStorageUtilities.getThermalPowerOnSide(world, currentPos, side,
+					storage);
 
 			// If we're simulating and want to see max efficiency, set the temp on the side
 			// to the overheat temp, as that is the point of maximum efficiency.
 			if (action == HeatTransferAction.SIMULATE_MAX_EFFICIENCY) {
-				tempOnSide = storage.getOverheatThreshold();
+				heatAndConductivity = new HeatQuery(storage.getOverheatThreshold(), heatAndConductivity.conductivity());
 			}
 
-			// The proportion of the delta we can move this call.
-			// A value of 1 will move us instantly to the target.
-			float heatingCoefficient = conductivityOnSide * storage.getConductivity() * HEATING_RATE * 1 / 20.0f;
-			if (storage.getCurrentHeat() > storage.getOverheatThreshold()) {
-				float totalRange = storage.getMaximumHeat() - storage.getOverheatThreshold();
-				float relativeValue = storage.getCurrentHeat() - storage.getOverheatThreshold();
-				heatingCoefficient = 1.5f - (float) relativeValue / totalRange;
-				heatingCoefficient = (float) Math.pow(heatingCoefficient, 4) / 4;
-			}
-			
-			float delta = tempOnSide - storage.getCurrentHeat();
-			float adjustedDelta = delta * heatingCoefficient;
-			if (Math.abs(adjustedDelta) < 0.1f) {
-				adjustedDelta = 0;
-			} 
-			totalPassive += adjustedDelta;
+			float averageConductivity = (heatAndConductivity.conductivity() + storage.getConductivity()) / 2.0f;
+			float delta = heatAndConductivity.temperature() - storage.getCurrentHeat();
+			float heatAmount = averageConductivity * delta;
+			float heatAmountPerTick = heatAmount * 1 / 2000.0f;
+			totalPassive += heatAmountPerTick;
+		}
 
+		if (Math.abs(totalPassive) < 0.001f) {
+			totalPassive = 0;
 		}
 
 		if (totalPassive > 0) {
 			totalApplied += storage.heat(totalPassive, action);
-		} else {
+		} else if (totalPassive < 0) {
 			totalApplied -= storage.cool(-totalPassive, action);
 		}
 
@@ -90,33 +85,19 @@ public class HeatStorageUtilities {
 				IHeatStorage otherStorage = be
 						.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).orElse(null);
 				if (otherStorage != null && otherStorage != storage) {
+					float averageConductivity = (otherStorage.getConductivity() + storage.getConductivity()) / 2.0f;
+					float delta = otherStorage.getCurrentHeat() - storage.getCurrentHeat();
+					float heatAmount = averageConductivity * delta * 1 / 200.0f;
 
-					// The proportion of the delta we can move this call.
-					// A value of 1 will move us instantly to the target.
-					float heatingCoefficient = Math.min(otherStorage.getConductivity() * storage.getConductivity(),
-							1.0f / HEATING_RATE) * HEATING_RATE;
-
-					// Calculate the delta to the target temperature.
-					float tempTarget = otherStorage.getCurrentHeat();
-					float delta = tempTarget - storage.getCurrentHeat();
-
-					// How much can we move towards the target.
-					float amountToApply = delta * heatingCoefficient;
-					if (Math.abs(amountToApply - delta) < 100) {
-						amountToApply = delta;
-					}
-
-					// Move towards the targetTemperature amountToApply degrees.
-					if (amountToApply > 0) {
-						float heatApplied = storage.heat(amountToApply, action);
-						otherStorage.cool(heatApplied, action);
-						totalApplied += heatApplied;
+					if (heatAmount > 0) {
+						float cooled = otherStorage.cool(heatAmount, HeatTransferAction.SIMULATE);
+						float heated = storage.heat(cooled, action);
+						otherStorage.cool(heated, action);
 					} else {
-						float heatApplied = storage.cool(-amountToApply, action);
-						otherStorage.heat(heatApplied, action);
-						totalApplied -= heatApplied;
+						float heated = otherStorage.heat(-heatAmount, HeatTransferAction.SIMULATE);
+						float cooled = storage.cool(heated, action);
+						otherStorage.heat(cooled, action);
 					}
-
 				}
 			}
 		}
@@ -131,7 +112,7 @@ public class HeatStorageUtilities {
 		return (int) totalApplied;
 	}
 
-	public static float getBiomeAmbientTemperature(Level world, BlockPos currentPos) {
+	public static HeatQuery getBiomeAmbientTemperature(Level world, BlockPos currentPos) {
 		// Get the current biome we're in.
 		Holder<Biome> biome = world.getBiome(currentPos);
 
@@ -160,18 +141,15 @@ public class HeatStorageUtilities {
 			ambientHeat -= 1;
 		}
 
-		if (!world.canSeeSky(currentPos.above())) {
-			ambientHeat -= 10;
-		}
-
 		if (world.isRaining()) {
 			ambientHeat -= 5;
 		}
 
-		return ambientHeat;
+		return new HeatQuery(ambientHeat, 1.0f);
 	}
 
-	public static float getThermalPowerOnSide(Level world, BlockPos currentPos, Direction side, IHeatStorage storage) {
+	public static HeatQuery getThermalPowerOnSide(Level world, BlockPos currentPos, Direction side,
+			IHeatStorage storage) {
 		// Get the offset position.
 		BlockPos offsetPos = currentPos.relative(side);
 		BlockEntity be = world.getBlockEntity(offsetPos);
@@ -179,13 +157,14 @@ public class HeatStorageUtilities {
 			IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite())
 					.orElse(null);
 			if (otherStorage != null) {
-				return otherStorage.getCurrentHeat();
+				return new HeatQuery(otherStorage.getCurrentHeat(), otherStorage.getConductivity());
 			}
 		}
 
 		// Get the block and fluid states at the offset pos.
 		FluidState fluidState = world.getFluidState(offsetPos);
 		BlockState blockstate = world.getBlockState(offsetPos);
+		HeatQuery ambientTemperature = getBiomeAmbientTemperature(world, offsetPos);
 
 		// If there is a recipe for thermal conductivity for this block
 		ThermalConductivityRecipe recipe = world.getRecipeManager()
@@ -195,42 +174,13 @@ public class HeatStorageUtilities {
 				.orElse(null);
 
 		// Get the temperature on that side.
-		if (recipe != null && recipe.hasActiveTemperature()) {
-			return recipe.getTemperature();
-		} else {
-			return getBiomeAmbientTemperature(world, offsetPos);
-		}
-	}
-
-	public static float getConductivityOnSide(Level world, BlockPos pos, Direction side, IHeatStorage storage) {
-		// Get the offset position.
-		BlockPos offsetPos = pos.relative(side);
-		BlockEntity be = world.getBlockEntity(offsetPos);
-		if (be != null) {
-			IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite())
-					.orElse(null);
-			if (otherStorage != null) {
-				return otherStorage.getConductivity();
-			}
-		}
-
-		// Get the block and fluid states at the offset pos.
-		FluidState fluidState = world.getFluidState(offsetPos);
-		BlockState blockstate = world.getBlockState(offsetPos);
-
-		// If there is a recipe for thermal conductivity for this block
-		ThermalConductivityRecipe recipe = world.getRecipeManager()
-				.getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
-						new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)),
-						world)
-				.orElse(null);
-
-		// By default, everything has a conductivity of 1.
-		float conductivity = 1;
 		if (recipe != null) {
-			conductivity = recipe.getConductivity();
+			return new HeatQuery(
+					recipe.hasActiveTemperature() ? recipe.getTemperature() : ambientTemperature.temperature(),
+					recipe.getConductivity());
+		} else {
+			return new HeatQuery(ambientTemperature.temperature(), ambientTemperature.conductivity() / 10.0f);
 		}
-		return conductivity;
 	}
 
 	public static void handleOverheatingOnSide(Level world, BlockPos pos, Direction side, IHeatStorage storage) {

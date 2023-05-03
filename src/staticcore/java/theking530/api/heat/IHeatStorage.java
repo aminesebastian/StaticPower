@@ -32,13 +32,31 @@ public interface IHeatStorage {
 
 	/**
 	 * Returns the minimum amount of heat that *should* be stored in this heatable
-	 * entity. After this point, whatever object this heat storage recommends should
-	 * be able to function.
+	 * entity. After this point, the owner should exhibit some new effects (stop
+	 * working if a machine, etc).
 	 * 
 	 * @return
 	 */
 	public default float getMinimumHeatThreshold() {
-		return MINIMUM_TEMPERATURE;
+		return WATER_FREEZING_TEMPERATURE;
+	}
+
+	/**
+	 * Returns true if this heat storage is overheated.
+	 * 
+	 * @return
+	 */
+	public default boolean isOverheated() {
+		return getCurrentHeat() >= getOverheatThreshold();
+	}
+
+	/**
+	 * Returns true if this heat storage is frozen.
+	 * 
+	 * @return
+	 */
+	public default boolean isFrozen() {
+		return getCurrentHeat() <= getMinimumHeatThreshold();
 	}
 
 	/**
@@ -78,4 +96,6 @@ public interface IHeatStorage {
 	 * @return
 	 */
 	public float cool(float amountToCool, HeatTransferAction action);
+
+	public HeatTicker getTicker();
 }

@@ -141,9 +141,9 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 
 		// Add the heat storage and the upgrade inventory to the heat component.
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 0,
-				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1)
+				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 50)
 				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL)
-				.setExposedAsCapability(false).setEnableAutomaticHeatTransfer(false).setMeltdownRecoveryTicks(100));
+				.setExposedAsCapability(false).setMeltdownRecoveryTicks(100));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 	}
 

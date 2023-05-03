@@ -1,10 +1,10 @@
 {
   "type": "staticcore:thermal_conducitity",
-  "conductivity": 400.0,
+  "conductivity": 100.0,
   "fluid": {
     "amount": 1,
     "fluids": {
-      "fluid": "minecraft:flowing_water"
+      "fluid": "staticpower:coolant"
     }
   }
 }

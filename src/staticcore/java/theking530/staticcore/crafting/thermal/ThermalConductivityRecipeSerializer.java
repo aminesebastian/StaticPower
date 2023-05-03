@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Ingredient;
+import theking530.staticcore.block.BlockStateIngredient;
 import theking530.staticcore.crafting.StaticPowerRecipeSerializer;
 import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.FreezingBehaviour;
 import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.OverheatingBehaviour;
@@ -18,7 +18,7 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 
 	@Override
 	public ThermalConductivityRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		Ingredient blocks = Ingredient.fromNetwork(buffer);
+		BlockStateIngredient blocks = BlockStateIngredient.readFromBuffer(buffer);
 		FluidIngredient fluids = FluidIngredient.readFromBuffer(buffer);
 
 		// Read the int values.
@@ -46,7 +46,7 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, ThermalConductivityRecipe recipe) {
-		recipe.getBlocks().toNetwork(buffer);
+		recipe.getBlocks().writeToBuffer(buffer);
 		recipe.getFluids().writeToBuffer(buffer);
 
 		// Write the int values.

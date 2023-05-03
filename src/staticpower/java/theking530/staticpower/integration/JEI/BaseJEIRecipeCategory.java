@@ -11,8 +11,11 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.block.BlockStateIngredient;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.utilities.math.Vector2D;
@@ -64,7 +67,8 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<?>> implements IRec
 	public FluidStack getNthFluidInput(IRecipeSlotsView recipeSlotsView, int offset) {
 		int hits = 0;
 		for (IRecipeSlotView view : recipeSlotsView.getSlotViews(RecipeIngredientRole.INPUT)) {
-			if (view.getDisplayedIngredient().isPresent() && view.getDisplayedIngredient().get().getIngredient() instanceof FluidStack) {
+			if (view.getDisplayedIngredient().isPresent()
+					&& view.getDisplayedIngredient().get().getIngredient() instanceof FluidStack) {
 				if (hits == offset) {
 					return (FluidStack) view.getDisplayedIngredient().get().getIngredient();
 				}
@@ -113,31 +117,50 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<?>> implements IRec
 		return 0;
 	}
 
-	protected IRecipeSlotBuilder addPowerInputSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, MachineRecipeProcessingSection ingredient) {
-		return builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredient(PluginJEI.POWER_INGREDIENT, ingredient).setCustomRenderer(PluginJEI.POWER_INGREDIENT,
-				new PowerIngredientRenderer(RecipeIngredientRole.INPUT, width, height));
+	protected IRecipeSlotBuilder addPowerInputSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height,
+			MachineRecipeProcessingSection ingredient) {
+		return builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredient(PluginJEI.POWER_INGREDIENT, ingredient)
+				.setCustomRenderer(PluginJEI.POWER_INGREDIENT,
+						new PowerIngredientRenderer(RecipeIngredientRole.INPUT, width, height));
 	}
 
-	protected IRecipeSlotBuilder addPowerOutputSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, MachineRecipeProcessingSection ingredient) {
-		return builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).addIngredient(PluginJEI.POWER_INGREDIENT, ingredient).setCustomRenderer(PluginJEI.POWER_INGREDIENT,
-				new PowerIngredientRenderer(RecipeIngredientRole.OUTPUT, width, height));
+	protected IRecipeSlotBuilder addPowerOutputSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height,
+			MachineRecipeProcessingSection ingredient) {
+		return builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).addIngredient(PluginJEI.POWER_INGREDIENT, ingredient)
+				.setCustomRenderer(PluginJEI.POWER_INGREDIENT,
+						new PowerIngredientRenderer(RecipeIngredientRole.OUTPUT, width, height));
 	}
 
-	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, FluidIngredient ingredient) {
-		return addFluidIngredientSlot(builder, x, y, width, height, ingredient, getFluidTankDisplaySize(ingredient.getAmount()));
+	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, int x, int y, int width,
+			int height, FluidIngredient ingredient) {
+		return addFluidIngredientSlot(builder, x, y, width, height, ingredient,
+				getFluidTankDisplaySize(ingredient.getAmount()));
 	}
 
-	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, int x, int y, int width, int height, FluidIngredient ingredient, int tankDisplayCapacity) {
+	protected IRecipeSlotBuilder addBlockStateIngredientSlot(IRecipeLayoutBuilder builder, int x, int y,
+			BlockStateIngredient ingredient) {
+
+		IRecipeSlotBuilder blockSlot = builder.addSlot(RecipeIngredientRole.INPUT, x, y);
+		for (BlockState block : ingredient.getBlockStates()) {
+			blockSlot.addItemStack(new ItemStack(block.getBlock()));
+		}
+		return blockSlot;
+	}
+
+	protected IRecipeSlotBuilder addFluidIngredientSlot(IRecipeLayoutBuilder builder, int x, int y, int width,
+			int height, FluidIngredient ingredient, int tankDisplayCapacity) {
 		JEICustomFluidRenderer renderer = new JEICustomFluidRenderer(width, height, tankDisplayCapacity);
 
-		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, x, y).setCustomRenderer(ForgeTypes.FLUID_STACK, renderer);
+		IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.INPUT, x, y)
+				.setCustomRenderer(ForgeTypes.FLUID_STACK, renderer);
 		for (FluidStack fluid : ingredient.getFluids()) {
 			fluidSlot.addFluidStack(fluid.getFluid(), ingredient.getAmount());
 		}
 		return fluidSlot;
 	}
 
-	protected IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, RecipeIngredientRole role, int x, int y, int width, int height, FluidStack ingredient, int tankDisplayCapacity) {
+	protected IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, RecipeIngredientRole role, int x, int y,
+			int width, int height, FluidStack ingredient, int tankDisplayCapacity) {
 		JEICustomFluidRenderer renderer = new JEICustomFluidRenderer(width, height, tankDisplayCapacity);
 
 		IRecipeSlotBuilder fluidSlot = builder.addSlot(role, x, y).setCustomRenderer(ForgeTypes.FLUID_STACK, renderer);

@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -16,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
+import theking530.staticcore.block.BlockStateIngredient;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.StaticPowerRecipeType;
 import theking530.staticcore.crafting.thermal.ThermalConductivityRecipe;
@@ -33,7 +33,7 @@ public class ThermalConductivityJEIRecipeWrapper implements Recipe<Container> {
 	private final ConcretizedThermalConductivityBehaviour concretizedFreeze;
 
 	private List<ItemStack> rawInputs;
-	private Ingredient blocks;
+	private BlockStateIngredient blocks;
 	private FluidIngredient fluids;
 
 	public ThermalConductivityJEIRecipeWrapper(ThermalConductivityRecipe recipe) {
@@ -87,7 +87,7 @@ public class ThermalConductivityJEIRecipeWrapper implements Recipe<Container> {
 		return this.fluids;
 	}
 
-	public Ingredient getBlocks() {
+	public BlockStateIngredient getBlocks() {
 		return this.blocks;
 	}
 

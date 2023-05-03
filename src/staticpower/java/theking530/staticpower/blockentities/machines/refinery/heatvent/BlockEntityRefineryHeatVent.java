@@ -10,6 +10,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorageUtilities;
+import theking530.api.heat.HeatTicker;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -19,8 +20,9 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity implements IHeatStorage {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRefineryHeatVent> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryHeatVent>("refinery_heat_vent",
-			(type, pos, state) -> new BlockEntityRefineryHeatVent(pos, state), ModBlocks.RefineryHeatVent);
+	public static final BlockEntityTypeAllocator<BlockEntityRefineryHeatVent> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryHeatVent>(
+			"refinery_heat_vent", (type, pos, state) -> new BlockEntityRefineryHeatVent(pos, state),
+			ModBlocks.RefineryHeatVent);
 
 	public BlockEntityRefineryHeatVent(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
@@ -30,7 +32,8 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	public void process() {
 		if (hasController()) {
 			if (!getLevel().isClientSide()) {
-				HeatStorageUtilities.transferHeatWithSurroundings(getController().heatStorage, getLevel(), getBlockPos(), HeatTransferAction.EXECUTE);
+				HeatStorageUtilities.transferHeatWithSurroundings(getController().heatStorage, getLevel(),
+						getBlockPos(), HeatTransferAction.EXECUTE);
 			}
 		}
 	}
@@ -102,5 +105,13 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	public float cool(float amountToCool, HeatTransferAction action) {
 		// Cannot cool directly through this.
 		return 0;
+	}
+
+	@Override
+	public HeatTicker getTicker() {
+		if (hasController()) {
+			return getController().heatStorage.getTicker();
+		}
+		return null;
 	}
 }

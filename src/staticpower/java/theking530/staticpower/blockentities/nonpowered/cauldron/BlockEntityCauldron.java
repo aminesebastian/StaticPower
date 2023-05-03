@@ -39,11 +39,11 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class BlockEntityCauldron extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCauldron> RUSTY = new BlockEntityTypeAllocator<>("cauldron_rusty",
-			(type, pos, state) -> new BlockEntityCauldron(type, pos, state), ModBlocks.RustyCauldron);
+	public static final BlockEntityTypeAllocator<BlockEntityCauldron> RUSTY = new BlockEntityTypeAllocator<>(
+			"cauldron_rusty", (type, pos, state) -> new BlockEntityCauldron(type, pos, state), ModBlocks.RustyCauldron);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityCauldron> CLEAN = new BlockEntityTypeAllocator<>("cauldron_clean",
-			(type, pos, state) -> new BlockEntityCauldron(type, pos, state), ModBlocks.CleanCauldron);
+	public static final BlockEntityTypeAllocator<BlockEntityCauldron> CLEAN = new BlockEntityTypeAllocator<>(
+			"cauldron_clean", (type, pos, state) -> new BlockEntityCauldron(type, pos, state), ModBlocks.CleanCauldron);
 	public static final int BOILING_TEMP = 100;
 
 	static {
@@ -56,16 +56,18 @@ public class BlockEntityCauldron extends BlockEntityBase {
 	public final FluidTankComponent internalTank;
 	public final HeatStorageComponent heatStorage;
 
-	public BlockEntityCauldron(BlockEntityTypeAllocator<BlockEntityCauldron> allocator, BlockPos pos, BlockState state) {
+	public BlockEntityCauldron(BlockEntityTypeAllocator<BlockEntityCauldron> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
 		StaticCoreTier tier = StaticCoreConfig.getTier(StaticPowerTiers.BASIC);
 
-		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 1000).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
+		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 1000)
+				.setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
 
 		// Only allow this to be heated by other sources.
-		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1.0f)
-						.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.HEAT));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
+				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 50.0f)
+				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.HEAT));
 	}
 
 	@Override
@@ -75,28 +77,33 @@ public class BlockEntityCauldron extends BlockEntityBase {
 			// If boiling, handle recipes.
 			if (isBoiling()) {
 				// Create the AABB to search within.
-				AABB aabb = new AABB(worldPosition.getX() + 0.125, worldPosition.getY() + 0.1875, worldPosition.getZ() + 0.125, worldPosition.getX() + 0.875,
-						worldPosition.getY() + 1.0, worldPosition.getZ() + 0.875);
+				AABB aabb = new AABB(worldPosition.getX() + 0.125, worldPosition.getY() + 0.1875,
+						worldPosition.getZ() + 0.125, worldPosition.getX() + 0.875, worldPosition.getY() + 1.0,
+						worldPosition.getZ() + 0.875);
 				handleRecipes(aabb);
 
 				// Render effects.
 				if (SDMath.diceRoll(0.5) && internalTank.isFull()) {
 					// Generate a random XZ Pos.
-					Vector2D offset = new Vector2D(getLevel().getRandom().nextFloat(), getLevel().getRandom().nextFloat());
+					Vector2D offset = new Vector2D(getLevel().getRandom().nextFloat(),
+							getLevel().getRandom().nextFloat());
 					offset.multiply(2.0f);
 					offset.subtract(new Vector2D(1, 1));
 					offset.multiply(0.35f);
 
 					int temperature = FluidUtilities.getFluidTemperature(internalTank.getFluid());
 					// Render boiling bubbles.
-					SimpleParticleType bubbleParticle = temperature > 500 ? ParticleTypes.FALLING_LAVA : ParticleTypes.BUBBLE_POP;
-					((ServerLevel) getLevel()).sendParticles(bubbleParticle, getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.87,
+					SimpleParticleType bubbleParticle = temperature > 500 ? ParticleTypes.FALLING_LAVA
+							: ParticleTypes.BUBBLE_POP;
+					((ServerLevel) getLevel()).sendParticles(bubbleParticle,
+							getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.87,
 							getBlockPos().getZ() + 0.5f + offset.getY(), 1, 0.0D, 0.0D, 0.0D, 0.01D);
 
 					// Render a splash half of the time.
 					SimpleParticleType splashParticle = temperature > 500 ? ParticleTypes.LAVA : ParticleTypes.SPLASH;
 					if (SDMath.diceRoll(0.5)) {
-						((ServerLevel) getLevel()).sendParticles(splashParticle, getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.5,
+						((ServerLevel) getLevel()).sendParticles(splashParticle,
+								getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.5,
 								getBlockPos().getZ() + 0.5f + offset.getY(), 1, 0.0D, 0.0D, 0.0D, 0.5D);
 					}
 				}
@@ -125,7 +132,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 
 		// Capture the max craftable.
 		int maxCraftable = recipe.shouldDrainAfterCraft() ? 1 : item.getCount();
-		if (!recipe.getOutputFluid().isEmpty()) {
+		if (!recipe.getOutputFluid().isEmpty() && !recipe.shouldDrainAfterCraft()) {
 			int remainingTankSpace = internalTank.getCapacity() - internalTank.getFluidAmount();
 			maxCraftable = Math.min(item.getCount(), remainingTankSpace / recipe.getOutputFluid().getAmount());
 		}
@@ -143,7 +150,8 @@ public class BlockEntityCauldron extends BlockEntityBase {
 			outputItem.setCount(outputItem.getCount() * maxCraftable);
 
 			// Create the entity and make it bounce up.
-			ItemEntity outputItemEntity = new ItemEntity(getLevel(), entity.getX(), entity.getY(), entity.getZ(), outputItem);
+			ItemEntity outputItemEntity = new ItemEntity(getLevel(), entity.getX(), entity.getY(), entity.getZ(),
+					outputItem);
 			outputItemEntity.setDeltaMovement(0, 0.275, 0);
 			getLevel().addFreshEntity(outputItemEntity);
 		}
@@ -177,9 +185,10 @@ public class BlockEntityCauldron extends BlockEntityBase {
 			// Check to see if we have a recipe to produce.
 			getRecipe(item.getItem()).ifPresent(recipe -> {
 				// Make sure we can take the output fluid if the recipe has it.
+				// Note: All the input fluid in the tank will be drained once we finish
+				// production.
 				if (!recipe.getOutputFluid().isEmpty()) {
-					int filled = internalTank.fill(recipe.getOutputFluid(), FluidAction.SIMULATE);
-					if (recipe.getOutputFluid().getAmount() != filled) {
+					if (internalTank.getCapacity() < recipe.getOutputFluid().getAmount()) {
 						return;
 					}
 				}
@@ -192,7 +201,8 @@ public class BlockEntityCauldron extends BlockEntityBase {
 
 				// Create the new entity and add it to the world. Remove the incoming item
 				// stack.
-				CauldronContainedEntity entity = new CauldronContainedEntity(this.getLevel(), item.getX(), item.getY(), item.getZ(), item.getItem().copy(), procesingTime);
+				CauldronContainedEntity entity = new CauldronContainedEntity(this.getLevel(), item.getX(), item.getY(),
+						item.getZ(), item.getItem().copy(), procesingTime);
 				entity.setDeltaMovement(item.getDeltaMovement());
 				entity.setPickUpDelay(80); // Set this value initially a little high!
 				getLevel().addFreshEntity(entity);
@@ -203,6 +213,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 	}
 
 	public Optional<CauldronRecipe> getRecipe(ItemStack input) {
-		return CraftingUtilities.getRecipe(ModRecipeTypes.CAULDRON_RECIPE_TYPE.get(), new RecipeMatchParameters(input).setFluids(internalTank.getFluid()), getLevel());
+		return CraftingUtilities.getRecipe(ModRecipeTypes.CAULDRON_RECIPE_TYPE.get(),
+				new RecipeMatchParameters(input).setFluids(internalTank.getFluid()), getLevel());
 	}
 }

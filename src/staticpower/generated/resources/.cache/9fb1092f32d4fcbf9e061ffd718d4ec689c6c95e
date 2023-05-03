@@ -1,3 +1,6 @@
-// 1.19.2	2023-05-02T00:13:15.9421463	Recipes
-e40c65e2ac9e9bd39b1a002641ca0c9ad4073ae1 data/staticpower/recipes/condensation/ethanol.json
-60286db202bfd06fde21f0e0397c66d803aea53b data/staticpower/recipes/condensation/water_from_steam.json
+// 1.19.2	2023-05-03T01:16:47.1853107	Recipes
+f66bde49281ca5c5810e36d1cdc2ea36badeefbf data/staticpower/recipes/refining/coal_liquifaction.json
+046a763c8cdf08b9cfe8525cbea867f834f80fb1 data/staticpower/recipes/refining/crude_cracking.json
+8f98fba27fa81736ea7946293f670cb0ef99b2dc data/staticpower/recipes/refining/fuel.json
+1242f00c27a6ade057232bee4964ef68232b9999 data/staticpower/recipes/refining/heavy_cracking.json
+57a2fe413aa46b38b05d61d35edfcc008d4f9ce9 data/staticpower/recipes/refining/light_cracking.json

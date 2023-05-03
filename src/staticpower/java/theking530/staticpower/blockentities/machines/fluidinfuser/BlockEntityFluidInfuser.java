@@ -124,7 +124,7 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 	public void captureInputs(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe,
 			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
 		inputContainer.addItem(
-				inputInventory.extractItem(0, component.getProcessingRecipe().get().getInput().getCount(), true),
+				inputInventory.extractItem(0, component.getProcessingRecipe().get().getInput().getCount(), false),
 				CaptureType.BOTH);
 		inputContainer.addFluid(fluidTankComponent.getFluid(),
 				component.getProcessingRecipe().get().getRequiredFluid().getAmount(), CaptureType.BOTH);

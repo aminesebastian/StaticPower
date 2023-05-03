@@ -6,14 +6,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import theking530.staticcore.block.BlockStateIngredient;
 import theking530.staticcore.crafting.AbstractStaticPowerRecipe;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.FreezingBehaviour;
@@ -21,7 +18,6 @@ import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.Over
 import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.init.StaticCoreRecipeSerializers;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
-import theking530.staticcore.utilities.JsonUtilities;
 
 public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 
@@ -29,9 +25,9 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 
 	public static final Codec<ThermalConductivityRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
 			.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-					JsonUtilities.INGREDIENT_CODEC.optionalFieldOf("blocks", Ingredient.EMPTY)
+					BlockStateIngredient.CODEC.optionalFieldOf("block", BlockStateIngredient.EMPTY)
 							.forGetter(recipe -> recipe.getBlocks()),
-					FluidIngredient.CODEC.optionalFieldOf("fluids", FluidIngredient.EMPTY)
+					FluidIngredient.CODEC.optionalFieldOf("fluid", FluidIngredient.EMPTY)
 							.forGetter(recipe -> recipe.getFluids()),
 
 					Codec.BOOL.optionalFieldOf("has_active_temperature", false)
@@ -50,7 +46,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 						freezingBehaviour.isPresent() ? freezingBehaviour.get() : null);
 			}));
 
-	private final Ingredient blocks;
+	private final BlockStateIngredient blocks;
 	private final FluidIngredient fluids;
 
 	private final float temperature;
@@ -61,7 +57,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	private final OverheatingBehaviour overheatingBehaviour;
 	private final FreezingBehaviour freezingBehaviour;
 
-	public ThermalConductivityRecipe(ResourceLocation id, Ingredient blocks, FluidIngredient fluids,
+	public ThermalConductivityRecipe(ResourceLocation id, BlockStateIngredient blocks, FluidIngredient fluids,
 			boolean hasActiveTemperature, float temperature, float conductivity,
 			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
 		super(id);
@@ -91,7 +87,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		return isAirRecipe;
 	}
 
-	public Ingredient getBlocks() {
+	public BlockStateIngredient getBlocks() {
 		return blocks;
 	}
 
@@ -118,29 +114,16 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	@Override
 	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
 		// Check for fluid match.
-		if (!fluids.isEmpty()) {
-			// Allocate the fluid.
-			Fluid fluid = null;
-
-			// Match by fluidstate or by fluid.
-			if (matchParams.hasFluids()) {
-				fluid = matchParams.getFluids()[0].getFluid();
-			} else if (matchParams.hasBlocks()) {
-				fluid = matchParams.getBlocks()[0].getFluidState().getType();
-			}
-
-			// Check the fluid.
-			if (fluid != null) {
-				if (fluids.test(new FluidStack(fluid, 1))) {
-					return true;
-				}
+		if (!fluids.isEmpty() && matchParams.hasFluids() && !matchParams.getFluids()[0].isEmpty()) {
+			if (fluids.test(matchParams.getFluids()[0])) {
+				return true;
 			}
 		}
 
 		// Check for block match.
-		if (blocks != null && !blocks.isEmpty() && matchParams.hasBlocks()) {
+		if (!blocks.isEmpty() && matchParams.hasBlocks()) {
 			Block block = matchParams.getBlocks()[0].getBlock();
-			if (blocks.test(new ItemStack(block, 1))) {
+			if (blocks.test(block)) {
 				return true;
 			}
 		}

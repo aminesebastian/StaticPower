@@ -116,7 +116,7 @@ public class GuiTextUtilities {
 			output = Component.literal(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).append(metricRate.getSuffix());
 		}
 
-		return output.append(HEAT_CONDUCTIVITY_TRANSLATION);
+		return output.append(" ").append(HEAT_CONDUCTIVITY_TRANSLATION);
 	}
 
 	public static MutableComponent formatFluidToString(double currentFluid, double capacity) {

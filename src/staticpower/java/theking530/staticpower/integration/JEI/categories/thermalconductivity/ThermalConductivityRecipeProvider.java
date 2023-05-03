@@ -39,8 +39,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 					continue;
 				}
 
-				boolean isFireInput = !recipe.getBlocks().isEmpty()
-						&& recipe.getBlocks().test(new ItemStack(Blocks.FIRE, 1));
+				boolean isFireInput = !recipe.getBlocks().isEmpty() && recipe.getBlocks().test(Blocks.FIRE);
 				ThermalConductivityJEIRecipeWrapper jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe,
 						isFireInput);
 
@@ -100,10 +99,8 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 	private static boolean isValidBlockInput(ItemStack stack) {
 		if (stack.getItem() instanceof BlockItem) {
 			BlockItem blockItem = (BlockItem) stack.getItem();
-
-			ItemStack input = new ItemStack(blockItem);
 			for (ThermalConductivityJEIRecipeWrapper recipe : RECIPES) {
-				if (recipe.getBlocks().test(input)) {
+				if (recipe.getBlocks().test(blockItem.getBlock())) {
 					return true;
 				}
 			}

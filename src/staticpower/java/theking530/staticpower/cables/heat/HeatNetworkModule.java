@@ -44,22 +44,27 @@ public class HeatNetworkModule extends CableNetworkModule {
 		}
 		averageThermalConductivity /= Network.getGraph().getCables().size();
 
-		Component currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentHeat(), heatStorage.getOverheatThreshold());
-		Component cooling = GuiTextUtilities.formatHeatRateToString(heatStorage.getCooledPerTick());
-		Component heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick());
+		Component currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentHeat(),
+				heatStorage.getOverheatThreshold());
+		Component cooling = GuiTextUtilities.formatHeatRateToString(heatStorage.getTicker().getAverageCooledPerTick());
+		Component heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getTicker().getAverageHeatedPerTick());
 		Component averageConductivity = GuiTextUtilities.formatHeatRateToString(averageThermalConductivity);
 
-		components.add(Component.literal(ChatFormatting.WHITE.toString()).append(Component.literal("Contains: ")).append(ChatFormatting.GRAY.toString()).append(currentHeat));
-		components.add(Component.literal(ChatFormatting.RED.toString()).append(Component.literal("Heating: ")).append(ChatFormatting.GRAY.toString()).append(heating));
-		components.add(Component.literal(ChatFormatting.BLUE.toString()).append(Component.literal("Cooling: ")).append(ChatFormatting.GRAY.toString()).append(cooling));
-		components.add(Component.literal(ChatFormatting.AQUA.toString()).append(Component.literal("Average Conductivity: ")).append(ChatFormatting.GRAY.toString())
-				.append(averageConductivity));
+		components.add(Component.literal(ChatFormatting.WHITE.toString()).append(Component.literal("Contains: "))
+				.append(ChatFormatting.GRAY.toString()).append(currentHeat));
+		components.add(Component.literal(ChatFormatting.RED.toString()).append(Component.literal("Heating: "))
+				.append(ChatFormatting.GRAY.toString()).append(heating));
+		components.add(Component.literal(ChatFormatting.BLUE.toString()).append(Component.literal("Cooling: "))
+				.append(ChatFormatting.GRAY.toString()).append(cooling));
+		components.add(
+				Component.literal(ChatFormatting.AQUA.toString()).append(Component.literal("Average Conductivity: "))
+						.append(ChatFormatting.GRAY.toString()).append(averageConductivity));
 	}
 
 	@Override
 	public void tick(Level world) {
 		// Capture the transfer metrics.
-		heatStorage.captureHeatTransferMetric();
+		heatStorage.getTicker().tickWithoutHeatTransfer(world);
 
 		// Capture the original conductivity.
 		float originalConductivity = heatStorage.getConductivity();
@@ -85,7 +90,8 @@ public class HeatNetworkModule extends CableNetworkModule {
 			heatStorage.setConductivity(cableConductivity);
 
 			// Execute any heating/cooling.
-			HeatStorageUtilities.transferHeatWithSurroundings(heatStorage, world, cable.getPos(), HeatTransferAction.EXECUTE);
+			HeatStorageUtilities.transferHeatWithSurroundings(heatStorage, world, cable.getPos(),
+					HeatTransferAction.EXECUTE);
 		}
 
 		// Reset the conductivity.
@@ -106,14 +112,16 @@ public class HeatNetworkModule extends CableNetworkModule {
 					// Distribute the heat to the destinations.
 					for (IHeatStorage wrapper : destinations.keySet()) {
 						// Get the thermal conductivity of the cable connected to this destination.
-						float cableConductivity = CableNetworkAccessor.get(world).getCable(destinations.get(wrapper).getFirstConnectedCable()).getDataTag()
+						float cableConductivity = CableNetworkAccessor.get(world)
+								.getCable(destinations.get(wrapper).getFirstConnectedCable()).getDataTag()
 								.getFloat(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 
 						// Get the thermal conductivity of the attached cable.
 						float toSupply = Math.min(cableConductivity * wrapper.getConductivity(), outputPerDestination);
 
 						// Limit that to the max amount we currently have.
-						float supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()), HeatTransferAction.EXECUTE);
+						float supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()),
+								HeatTransferAction.EXECUTE);
 
 						// If the supplied amount is > 0, supply it.
 						if (supplied > 0) {
@@ -162,10 +170,14 @@ public class HeatNetworkModule extends CableNetworkModule {
 
 		// Check each destination and capture the ones that can recieve heat.
 		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
-			if (wrapper.hasTileEntity() && wrapper.supportsType(ModCableDestinations.Heat.get()) && !Network.getGraph().getCables().containsKey(pos)) {
-				IHeatStorage otherHeatStorage = wrapper.getTileEntity().getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, wrapper.getFirstConnectedDestinationSide())
+			if (wrapper.hasTileEntity() && wrapper.supportsType(ModCableDestinations.Heat.get())
+					&& !Network.getGraph().getCables().containsKey(pos)) {
+				IHeatStorage otherHeatStorage = wrapper.getTileEntity()
+						.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY,
+								wrapper.getFirstConnectedDestinationSide())
 						.orElse(null);
-				if (otherHeatStorage != null && otherHeatStorage.heat(heatStorage.getCurrentHeat(), HeatTransferAction.SIMULATE) > 0) {
+				if (otherHeatStorage != null
+						&& otherHeatStorage.heat(heatStorage.getCurrentHeat(), HeatTransferAction.SIMULATE) > 0) {
 					destinations.put(otherHeatStorage, wrapper);
 				}
 			}

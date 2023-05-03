@@ -1,9 +1,17 @@
 {
   "type": "staticcore:thermal_conducitity",
-  "blocks": {
-    "item": "minecraft:campfire"
+  "block": {
+    "block": {
+      "Name": "minecraft:campfire",
+      "Properties": {
+        "facing": "north",
+        "lit": "true",
+        "signal_fire": "false",
+        "waterlogged": "false"
+      }
+    }
   },
-  "conductivity": 5.0,
+  "conductivity": 3.0,
   "has_active_temperature": true,
   "temperature": 1000.0
 }
