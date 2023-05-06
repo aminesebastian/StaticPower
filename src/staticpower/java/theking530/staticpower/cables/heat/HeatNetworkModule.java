@@ -66,9 +66,6 @@ public class HeatNetworkModule extends CableNetworkModule {
 		// Capture the transfer metrics.
 		heatStorage.getTicker().tickWithoutHeatTransfer(world);
 
-		// Capture the original conductivity.
-		float originalConductivity = heatStorage.getConductivity();
-
 		// Capture the cables in an array because the passive heating can affect the
 		// list of cables.
 		Cable[] cables = new Cable[Network.getGraph().getCables().size()];
@@ -94,43 +91,6 @@ public class HeatNetworkModule extends CableNetworkModule {
 					HeatTransferAction.EXECUTE);
 		}
 
-		// Reset the conductivity.
-		heatStorage.setConductivity(originalConductivity);
-
-		// If we still have heat after dissipation, send the heat through the network.
-		if (heatStorage.getCurrentHeat() > 0) {
-			// Handle the active cooling.
-			if (Network.getGraph().getDestinations().size() > 0) {
-				// Get a map of all the applicable destination that support receiving heat.
-				HashMap<IHeatStorage, DestinationWrapper> destinations = getValidDestinations();
-
-				// Continue if we found some valid destinations.
-				if (destinations.size() > 0) {
-					// Calculate how we should split the output amount.
-					float outputPerDestination = Math.max(1, heatStorage.getCurrentHeat() / destinations.size());
-
-					// Distribute the heat to the destinations.
-					for (IHeatStorage wrapper : destinations.keySet()) {
-						// Get the thermal conductivity of the cable connected to this destination.
-						float cableConductivity = CableNetworkAccessor.get(world)
-								.getCable(destinations.get(wrapper).getFirstConnectedCable()).getDataTag()
-								.getFloat(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
-
-						// Get the thermal conductivity of the attached cable.
-						float toSupply = Math.min(cableConductivity * wrapper.getConductivity(), outputPerDestination);
-
-						// Limit that to the max amount we currently have.
-						float supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()),
-								HeatTransferAction.EXECUTE);
-
-						// If the supplied amount is > 0, supply it.
-						if (supplied > 0) {
-							heatStorage.cool(supplied, HeatTransferAction.EXECUTE);
-						}
-					}
-				}
-			}
-		}
 	}
 
 	@Override

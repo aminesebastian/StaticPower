@@ -24,8 +24,10 @@ import theking530.staticpower.blockentities.nonpowered.cauldron.BlockEntityCauld
 import theking530.staticpower.init.ModEntities;
 
 public class CauldronContainedEntity extends ItemEntity {
-	private static final EntityDataAccessor<Integer> TOTAL_COOKING_TIME = SynchedEntityData.defineId(CauldronContainedEntity.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> CURRENT_COOKING_TIME = SynchedEntityData.defineId(CauldronContainedEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TOTAL_COOKING_TIME = SynchedEntityData
+			.defineId(CauldronContainedEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> CURRENT_COOKING_TIME = SynchedEntityData
+			.defineId(CauldronContainedEntity.class, EntityDataSerializers.INT);
 
 	public CauldronContainedEntity(EntityType<? extends CauldronContainedEntity> p_i50217_1_, Level world) {
 		super(p_i50217_1_, world);
@@ -60,7 +62,7 @@ public class CauldronContainedEntity extends ItemEntity {
 		getItem().setCount(originalStackSize);
 
 		// Only perfrom the following on the server.
-		if (getCommandSenderWorld().isClientSide) {
+		if (getLevel().isClientSide()) {
 			return;
 		}
 
@@ -71,13 +73,15 @@ public class CauldronContainedEntity extends ItemEntity {
 			randomOffset -= 1;
 			randomOffset *= 0.0;
 
-			((ServerLevel) getCommandSenderWorld()).sendParticles(ParticleTypes.SPLASH, getX() + randomOffset, getY() + 0.8, getZ() + randomOffset, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+			((ServerLevel) getCommandSenderWorld()).sendParticles(ParticleTypes.SPLASH, getX() + randomOffset,
+					getY() + 0.8, getZ() + randomOffset, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 			if (SDMath.diceRoll(0.6)) {
-				((ServerLevel) getCommandSenderWorld()).sendParticles(ParticleTypes.BUBBLE_COLUMN_UP, getX() + randomOffset, getY() + 0.9, getZ() + randomOffset, 1, 0.0D, 1.0D,
-						0.0D, 1.0D);
+				((ServerLevel) getCommandSenderWorld()).sendParticles(ParticleTypes.BUBBLE_COLUMN_UP,
+						getX() + randomOffset, getY() + 0.9, getZ() + randomOffset, 1, 0.0D, 1.0D, 0.0D, 1.0D);
 			}
 			if (SDMath.diceRoll(0.15)) {
-				getCommandSenderWorld().playSound(null, this.blockPosition(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.BLOCKS, 0.5f, 0.75f);
+				getCommandSenderWorld().playSound(null, this.blockPosition(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT,
+						SoundSource.BLOCKS, 0.5f, 0.75f);
 			}
 		}
 
@@ -103,8 +107,10 @@ public class CauldronContainedEntity extends ItemEntity {
 						// If we crafted at least 1, render the effects and modify the stack size of
 						// this entity.
 						if (craftedAmount > 0) {
-							getCommandSenderWorld().playSound(null, this.blockPosition(), SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 0.5f, 1.0f);
-							((ServerLevel) getCommandSenderWorld()).sendParticles(ParticleTypes.SPLASH, getX(), getY() + 0.8, getZ(), 10, 0.0D, 0.0D, 0.0D, 0.0D);
+							getCommandSenderWorld().playSound(null, this.blockPosition(), SoundEvents.GENERIC_SPLASH,
+									SoundSource.BLOCKS, 0.5f, 1.0f);
+							((ServerLevel) getCommandSenderWorld()).sendParticles(ParticleTypes.SPLASH, getX(),
+									getY() + 0.8, getZ(), 10, 0.0D, 0.0D, 0.0D, 0.0D);
 
 							// Lower the count of item. If the count hits 0, remove the entity.
 							getItem().shrink(craftedAmount);
@@ -116,7 +122,8 @@ public class CauldronContainedEntity extends ItemEntity {
 						getEntityData().set(CURRENT_COOKING_TIME, getEntityData().get(CURRENT_COOKING_TIME) + 1);
 					}
 				} else {
-					convertBackToItem = true; // This means the cauldron's state has changed and can no longer craft this
+					convertBackToItem = true; // This means the cauldron's state has changed and can no longer craft
+												// this
 												// recipe.
 				}
 			}
@@ -128,7 +135,8 @@ public class CauldronContainedEntity extends ItemEntity {
 		// happen if the cauldron is no longer filled with the recipe liquid, or broken.
 		if (convertBackToItem) {
 			// Replace with standard item.
-			ItemEntity regularItem = new ItemEntity(this.getCommandSenderWorld(), this.getX(), this.getY(), this.getZ(), getItem().copy());
+			ItemEntity regularItem = new ItemEntity(this.getCommandSenderWorld(), this.getX(), this.getY(), this.getZ(),
+					getItem().copy());
 			getCommandSenderWorld().addFreshEntity(regularItem);
 
 			// Remove ourselves

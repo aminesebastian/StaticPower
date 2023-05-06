@@ -176,18 +176,13 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		// Only provide the energy capability if we are not disabled on that side.
 		if (cap == CapabilityHeatable.HEAT_STORAGE_CAPABILITY) {
-			boolean disabled = false;
-			if (side != null) {
+			if (side == null || !isSideDisabled(side)) {
+				// On the client, return this. On the server, return the heat network's storage.
 				if (isClientSide()) {
-					disabled = isSideDisabled(side);
-				} else {
-					Optional<Cable> cable = getCable();
-					disabled = cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
+					return LazyOptional.of(() -> this).cast();
+				} else if (getHeatNetworkModule().isPresent()) {
+					return LazyOptional.of(() -> getHeatNetworkModule().get().getHeatStorage()).cast();
 				}
-			}
-
-			if (!disabled) {
-				return LazyOptional.of(() -> this).cast();
 			}
 		}
 		return LazyOptional.empty();
