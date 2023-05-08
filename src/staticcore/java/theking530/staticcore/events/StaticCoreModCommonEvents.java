@@ -29,6 +29,7 @@ import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
+import theking530.staticcore.climate.ClimateManager;
 import theking530.staticcore.data.gamedata.StaticCoreGameDataManager.StaticCoreDataRegisterEvent;
 import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.teams.TeamManager;
@@ -43,6 +44,9 @@ public class StaticCoreModCommonEvents {
 			ModLoader.get().postEvent(staticCoreDataRegisterEvent);
 			staticCoreDataRegisterEvent.register(TeamManager.ID, (isClientSide) -> {
 				return new TeamManager(isClientSide);
+			});
+			staticCoreDataRegisterEvent.register(ClimateManager.ID, (isClientSide) -> {
+				return new ClimateManager(isClientSide);
 			});
 
 			ItemAttributeRegisterEvent itemAttributeEvent = new ItemAttributeRegisterEvent();

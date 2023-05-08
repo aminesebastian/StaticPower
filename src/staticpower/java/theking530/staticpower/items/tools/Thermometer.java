@@ -42,9 +42,9 @@ import theking530.staticpower.client.rendering.items.ThermometerItemModel;
 import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
-public class Themometer extends StaticPowerItem implements ICustomModelProvider {
+public class Thermometer extends StaticPowerItem implements ICustomModelProvider {
 
-	public Themometer() {
+	public Thermometer() {
 		super(new Item.Properties().stacksTo(1).tab(ModCreativeTabs.TOOLS));
 	}
 

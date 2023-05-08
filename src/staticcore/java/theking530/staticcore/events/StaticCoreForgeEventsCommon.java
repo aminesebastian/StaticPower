@@ -95,6 +95,7 @@ public class StaticCoreForgeEventsCommon {
 		}
 	}
 
+
 	@SubscribeEvent
 	public static void mappingChanged(IdMappingEvent evt) {
 		FluidIngredient.invalidateAll();

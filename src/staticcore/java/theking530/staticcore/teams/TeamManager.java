@@ -23,12 +23,10 @@ import theking530.staticcore.data.gamedata.StaticCoreGameDataManager.StaticCoreD
 
 public class TeamManager extends BasicStaticCoreGameData {
 	public static final ResourceLocation ID = new ResourceLocation(StaticCore.MOD_ID, "teams");
-	private final boolean isClientSide;
 	private final Map<String, ITeam> teams;
 
 	public TeamManager(boolean isClientSide) {
 		super(ID, isClientSide);
-		this.isClientSide = isClientSide;
 		teams = new HashMap<String, ITeam>();
 	}
 
@@ -116,10 +114,6 @@ public class TeamManager extends BasicStaticCoreGameData {
 	 */
 	public List<ITeam> getTeams() {
 		return List.copyOf(teams.values());
-	}
-
-	public boolean isClientSide() {
-		return isClientSide;
 	}
 
 	@Override

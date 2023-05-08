@@ -62,7 +62,7 @@ import theking530.staticpower.items.tools.Magnet;
 import theking530.staticpower.items.tools.Multimeter;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
-import theking530.staticpower.items.tools.Themometer;
+import theking530.staticpower.items.tools.Thermometer;
 import theking530.staticpower.items.tools.TurbineBlades;
 import theking530.staticpower.items.tools.WireCutters;
 import theking530.staticpower.items.tools.chainsaw.Chainsaw;
@@ -457,7 +457,7 @@ public class ModItems {
 	public static final RegistryObject<StaticWrench> LumumWrench = ITEMS.register("wrench_lumum",
 			() -> new StaticWrench());
 
-	public static final RegistryObject<Themometer> Thermometer = ITEMS.register("thermometer", () -> new Themometer());
+	public static final RegistryObject<Thermometer> Thermometer = ITEMS.register("thermometer", () -> new Thermometer());
 
 	public static final RegistryObject<StaticPowerItem> WeakMagnet = ITEMS.register("magnet_weak",
 			() -> new StaticPowerItem());

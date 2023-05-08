@@ -62,10 +62,8 @@ public class HeatStorageUtilities {
 				heatAndConductivity = new HeatQuery(storage.getOverheatThreshold(), heatAndConductivity.conductivity());
 			}
 
-			float averageConductivity = (heatAndConductivity.conductivity() + storage.getConductivity()) / 2.0f;
-			float delta = heatAndConductivity.temperature() - storage.getCurrentHeat();
-			float heatAmount = averageConductivity * delta;
-			float heatAmountPerTick = heatAmount * 1 / 2000.0f;
+			float heatAmountPerTick = calculateHeatTransfer(heatAndConductivity.conductivity(),
+					heatAndConductivity.temperature(), storage.getConductivity(), storage.getCurrentHeat());
 			totalPassive += heatAmountPerTick;
 		}
 
@@ -85,16 +83,15 @@ public class HeatStorageUtilities {
 				IHeatStorage otherStorage = be
 						.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).orElse(null);
 				if (otherStorage != null && otherStorage != storage) {
-					float averageConductivity = (otherStorage.getConductivity() + storage.getConductivity()) / 2.0f;
-					float delta = otherStorage.getCurrentHeat() - storage.getCurrentHeat();
-					float heatAmount = averageConductivity * delta * 1 / 200.0f;
+					float heatAmountPerTick = calculateHeatTransfer(otherStorage.getConductivity(),
+							otherStorage.getCurrentHeat(), storage.getConductivity(), storage.getCurrentHeat());
 
-					if (heatAmount > 0) {
-						float cooled = otherStorage.cool(heatAmount, HeatTransferAction.SIMULATE);
+					if (heatAmountPerTick > 0) {
+						float cooled = otherStorage.cool(heatAmountPerTick, HeatTransferAction.SIMULATE);
 						float heated = storage.heat(cooled, action);
 						otherStorage.cool(heated, action);
 					} else {
-						float heated = otherStorage.heat(-heatAmount, HeatTransferAction.SIMULATE);
+						float heated = otherStorage.heat(-heatAmountPerTick, HeatTransferAction.SIMULATE);
 						float cooled = storage.cool(heated, action);
 						otherStorage.heat(cooled, action);
 					}
@@ -230,6 +227,14 @@ public class HeatStorageUtilities {
 
 	public static boolean canFullyAbsorbHeat(IHeatStorage storage, float heatAmount) {
 		return storage.getCurrentHeat() + heatAmount <= storage.getMaximumHeat();
+	}
+
+	public static float calculateHeatTransfer(float targetTemperature, float targetConductivity,
+			float sourceTemperature, float sourceConductivity) {
+		float averageConductivity = (sourceConductivity + targetConductivity) / 2.0f;
+		float delta = sourceTemperature - targetTemperature;
+		float heatAmount = averageConductivity * delta;
+		return heatAmount * 1 / 2000.0f;
 	}
 
 }
