@@ -1,6 +1,6 @@
 {
   "type": "staticcore:thermal_conducitity",
-  "conductivity": 5.0,
+  "conductivity": 2.0,
   "fluid": {
     "amount": 1,
     "fluids": {

@@ -20,7 +20,6 @@ import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
-import theking530.staticcore.climate.ClimateManager;
 import theking530.staticcore.init.StaticCoreUpgradeTypes;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.utilities.TriFunction;
@@ -108,9 +107,6 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	@Override
 	public void postProcessUpdate() {
 		if (!getLevel().isClientSide) {
-			ClimateManager.getServer().getClimateData(getLevel()).addTemperature(getPos(), getCurrentHeat(),
-					getConductivity());
-
 			// Handle sync.
 			if (issueSyncPackets) {
 				// Get the current delta between the amount of power we have and the power we

@@ -1,0 +1,9 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "Name": "staticpower:heat_sink_gold"
+    }
+  },
+  "conductivity": 25.0
+}

@@ -1,0 +1,11 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "Name": "minecraft:torch"
+    }
+  },
+  "conductivity": 2.0,
+  "has_active_temperature": true,
+  "temperature": 300.0
+}

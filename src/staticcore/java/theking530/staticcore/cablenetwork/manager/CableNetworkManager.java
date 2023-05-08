@@ -2,12 +2,13 @@ package theking530.staticcore.cablenetwork.manager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
@@ -44,8 +45,8 @@ public class CableNetworkManager extends SavedData implements ICableNetworkManag
 	private static long curentSparseLinkId = 0;
 
 	private final Level level;
-	private final HashMap<BlockPos, Cable> worldCables;
-	private final HashMap<Long, CableNetwork> worldNetworks;
+	private final Map<BlockPos, Cable> worldCables;
+	private final Map<Long, CableNetwork> worldNetworks;
 	private final String name;
 	private long CurrentNetworkId = 0;
 	private boolean firstTick = false;
@@ -53,8 +54,8 @@ public class CableNetworkManager extends SavedData implements ICableNetworkManag
 	public CableNetworkManager(String name, Level level) {
 		this.name = name;
 		this.level = level;
-		worldCables = new HashMap<BlockPos, Cable>();
-		worldNetworks = new HashMap<Long, CableNetwork>();
+		worldCables = new ConcurrentHashMap<BlockPos, Cable>();
+		worldNetworks = new ConcurrentHashMap<Long, CableNetwork>();
 	}
 
 	public void preWorldTick() {

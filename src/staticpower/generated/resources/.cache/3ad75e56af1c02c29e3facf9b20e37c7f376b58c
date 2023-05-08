@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-30T01:50:08.3338956	Item Models: staticpower
+// 1.19.2	2023-05-08T01:10:10.3981823	Item Models: staticpower
 6027aa6d17b10a748c750596a1e41617fddb06da assets/staticpower/models/item/alloy_furnace.json
 a719b3e89ea4ecd25522280007f7e8b66eacafc0 assets/staticpower/models/item/automatic_placer.json
 32a59e36d1d4e959c6c1f1436a7c1d1efed2bf87 assets/staticpower/models/item/backpack.json
@@ -482,6 +482,7 @@ abdd139eaf9655639795f21777ebb6b727b24069 assets/staticpower/models/item/light_bu
 a379e6e898323a91b51242b3db0be1765c45dc78 assets/staticpower/models/item/light_bulb_yellow.json
 f2607727e1980270c9028a2402ca8f73ed7b5c33 assets/staticpower/models/item/light_socket.json
 220ac617ff0c70fa52533b9eb3d959a8a14bfa57 assets/staticpower/models/item/logic_gate_power_sync.json
+96d0b4b275cc026d44674034db69be7d6c93c082 assets/staticpower/models/item/log_burnt.json
 8f0b207b9344c34f833c0e653d962ad4b2309e39 assets/staticpower/models/item/log_energized.json
 1cfa09afd9175f22827e47d946234ccf918e4480 assets/staticpower/models/item/log_lumum.json
 3c230d2085ccc109e3cef8b1d77fff52bfaa6793 assets/staticpower/models/item/log_static.json

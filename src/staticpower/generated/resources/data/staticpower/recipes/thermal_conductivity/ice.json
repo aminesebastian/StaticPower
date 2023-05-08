@@ -1,0 +1,18 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "minecraft:ice"
+    }
+  },
+  "conductivity": 2.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "minecraft:water",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 100
+  }
+}

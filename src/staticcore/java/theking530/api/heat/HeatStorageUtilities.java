@@ -62,8 +62,8 @@ public class HeatStorageUtilities {
 				heatAndConductivity = new HeatQuery(storage.getOverheatThreshold(), heatAndConductivity.conductivity());
 			}
 
-			float heatAmountPerTick = calculateHeatTransfer(heatAndConductivity.conductivity(),
-					heatAndConductivity.temperature(), storage.getConductivity(), storage.getCurrentHeat());
+			float heatAmountPerTick = calculateHeatTransfer(heatAndConductivity.temperature(),
+					heatAndConductivity.conductivity(), storage.getCurrentHeat(), storage.getConductivity());
 			totalPassive += heatAmountPerTick;
 		}
 
@@ -209,7 +209,7 @@ public class HeatStorageUtilities {
 						}
 
 						// If an overheated item is established, spawn it.
-						if (!recipe.getOverheatingBehaviour().hasItem()) {
+						if (recipe.getOverheatingBehaviour().hasItem()) {
 							ItemStack output = recipe.getOverheatingBehaviour().getItem().calculateOutput();
 							if (!output.isEmpty()) {
 								WorldUtilities.dropItem(world, offsetPos, output);
@@ -232,7 +232,7 @@ public class HeatStorageUtilities {
 	public static float calculateHeatTransfer(float targetTemperature, float targetConductivity,
 			float sourceTemperature, float sourceConductivity) {
 		float averageConductivity = (sourceConductivity + targetConductivity) / 2.0f;
-		float delta = sourceTemperature - targetTemperature;
+		float delta = targetTemperature - sourceTemperature;
 		float heatAmount = averageConductivity * delta;
 		return heatAmount * 1 / 2000.0f;
 	}

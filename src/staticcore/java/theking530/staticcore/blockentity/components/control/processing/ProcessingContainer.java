@@ -15,7 +15,7 @@ public class ProcessingContainer implements INBTSerializable<CompoundTag> {
 	public ProcessingContainer() {
 		inputs = new ConcretizedProductContainer();
 		outputs = new ConcretizedProductContainer();
-		customParameters = null;
+		customParameters = new CompoundTag();
 	}
 
 	public ConcretizedProductContainer getInputs() {

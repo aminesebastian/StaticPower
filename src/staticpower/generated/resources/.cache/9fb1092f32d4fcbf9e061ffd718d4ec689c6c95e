@@ -1,6 +1,10 @@
-// 1.19.2	2023-05-03T01:16:47.1853107	Recipes
-f66bde49281ca5c5810e36d1cdc2ea36badeefbf data/staticpower/recipes/refining/coal_liquifaction.json
-046a763c8cdf08b9cfe8525cbea867f834f80fb1 data/staticpower/recipes/refining/crude_cracking.json
-8f98fba27fa81736ea7946293f670cb0ef99b2dc data/staticpower/recipes/refining/fuel.json
-1242f00c27a6ade057232bee4964ef68232b9999 data/staticpower/recipes/refining/heavy_cracking.json
-57a2fe413aa46b38b05d61d35edfcc008d4f9ce9 data/staticpower/recipes/refining/light_cracking.json
+// 1.19.2	2023-05-08T01:10:10.423165	Recipes
+9992f343b6dd3cfdf3c0cdafea0351564ad09761 data/staticpower/recipes/bottling/apple_juice.json
+3db8b1f1f7ec91b7054cf94d34f9396b12d81e05 data/staticpower/recipes/bottling/beetroot_juice.json
+acc43424533e3292d82e44aadb80eba319a81754 data/staticpower/recipes/bottling/berry_juice.json
+41ea8fefc2978857d580452f17b83d04c5f6dc88 data/staticpower/recipes/bottling/carrot_juice.json
+057a575adb63b566da3218c45a83fd4ec814e065 data/staticpower/recipes/bottling/honey_bottle.json
+7762fb25d9fe9f04765e61111429b14bef452d9b data/staticpower/recipes/bottling/melon_juice.json
+3391290097105841281d5cb28cb60a1c64127bc1 data/staticpower/recipes/bottling/milk.json
+4a36a194b3feb0ffd0a756afc375319a172cdd62 data/staticpower/recipes/bottling/pumpkin_juice.json
+c248ab381484b1da1d7e158452a1c54ac14c2a19 data/staticpower/recipes/bottling/water_bottle.json

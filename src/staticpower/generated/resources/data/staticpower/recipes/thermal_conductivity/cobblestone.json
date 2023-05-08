@@ -1,0 +1,18 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:cobblestone"
+    }
+  },
+  "conductivity": 0.5,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "minecraft:lava",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 1000
+  }
+}

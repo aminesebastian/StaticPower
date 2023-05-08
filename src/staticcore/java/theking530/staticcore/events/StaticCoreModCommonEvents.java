@@ -45,10 +45,6 @@ public class StaticCoreModCommonEvents {
 			staticCoreDataRegisterEvent.register(TeamManager.ID, (isClientSide) -> {
 				return new TeamManager(isClientSide);
 			});
-			staticCoreDataRegisterEvent.register(ClimateManager.ID, (isClientSide) -> {
-				return new ClimateManager(isClientSide);
-			});
-
 			ItemAttributeRegisterEvent itemAttributeEvent = new ItemAttributeRegisterEvent();
 			ModLoader.get().postEvent(itemAttributeEvent);
 

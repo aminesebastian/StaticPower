@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -147,7 +149,8 @@ public class WorldUtilities {
 
 	public static int getAreaBetweenCorners(BlockPos pos1, BlockPos pos2) {
 		BlockPos temp1 = pos2.subtract(pos1);
-		BlockPos absPos = new BlockPos(Math.abs(temp1.getX()), Math.max(pos1.getY(), pos2.getY()), Math.abs(temp1.getZ()));
+		BlockPos absPos = new BlockPos(Math.abs(temp1.getX()), Math.max(pos1.getY(), pos2.getY()),
+				Math.abs(temp1.getZ()));
 		return absPos.getX() * absPos.getY() * absPos.getZ();
 	}
 
@@ -170,7 +173,8 @@ public class WorldUtilities {
 		return itemEntity;
 	}
 
-	public static ItemEntity dropItem(Level worldIn, Direction direction, double x, double y, double z, ItemStack stack, int count) {
+	public static ItemEntity dropItem(Level worldIn, Direction direction, double x, double y, double z, ItemStack stack,
+			int count) {
 		ItemEntity item = null;
 		if (direction == Direction.EAST) {
 			item = dropItem(worldIn, x, y, z, stack, count);
@@ -203,7 +207,8 @@ public class WorldUtilities {
 
 	public static void dropExperience(Level worldIn, Direction facing, BlockPos pos, int amount) {
 		Vector3D direction = new Vector3D(facing);
-		dropExperience(worldIn, new BlockPos(pos.getX() + 0.5f + direction.getX(), pos.getY() + 0.5f + direction.getY(), pos.getZ() + 0.5f + direction.getZ()), amount);
+		dropExperience(worldIn, new BlockPos(pos.getX() + 0.5f + direction.getX(), pos.getY() + 0.5f + direction.getY(),
+				pos.getZ() + 0.5f + direction.getZ()), amount);
 	}
 
 	public static void dropExperience(Level worldIn, BlockPos pos, int amount) {
@@ -220,6 +225,12 @@ public class WorldUtilities {
 		worldIn.addFreshEntity(orb);
 	}
 
+	public static ChunkPos getChunkPosFromBlockPos(BlockPos pos) {
+		int chunkX = SectionPos.blockToSectionCoord(pos.getX());
+		int chunkZ = SectionPos.blockToSectionCoord(pos.getZ());
+		return new ChunkPos(chunkX, chunkZ);
+	}
+
 	/**
 	 * Gets all the drops for the provided block. Returns an empty list if called on
 	 * the client.
@@ -230,7 +241,8 @@ public class WorldUtilities {
 	 */
 	public static List<ItemStack> getBlockDrops(Level world, BlockPos pos) {
 		if (world.isClientSide()) {
-			throw new RuntimeException("The #getBlockDrops method was excuted on the client. This should only be excuted on the server.");
+			throw new RuntimeException(
+					"The #getBlockDrops method was excuted on the client. This should only be excuted on the server.");
 		}
 		if (!world.isClientSide()) {
 			NonNullList<ItemStack> output = NonNullList.create();
@@ -249,7 +261,8 @@ public class WorldUtilities {
 		return Collections.emptyList();
 	}
 
-	public static boolean tryPlaceFluid(FluidStack fluid, @Nullable Player player, Level world, BlockPos pos, @Nullable BlockHitResult hitResult) {
+	public static boolean tryPlaceFluid(FluidStack fluid, @Nullable Player player, Level world, BlockPos pos,
+			@Nullable BlockHitResult hitResult) {
 		if (fluid.getAmount() < 1000) {
 			return false;
 		}
@@ -259,22 +272,27 @@ public class WorldUtilities {
 		Block block = blockstate.getBlock();
 		Material material = blockstate.getMaterial();
 		boolean flag = blockstate.canBeReplaced(content);
-		boolean flag1 = blockstate.isAir() || flag
-				|| block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(world, pos, blockstate, content);
+		boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer
+				&& ((LiquidBlockContainer) block).canPlaceLiquid(world, pos, blockstate, content);
 		if (!flag1) {
-			return hitResult != null && tryPlaceFluid(fluid, player, world, hitResult.getBlockPos().relative(hitResult.getDirection()), (BlockHitResult) null);
+			return hitResult != null && tryPlaceFluid(fluid, player, world,
+					hitResult.getBlockPos().relative(hitResult.getDirection()), (BlockHitResult) null);
 		} else if (world.dimensionType().ultraWarm() && TagUtilities.matches(FluidTags.WATER, content)) {
 			int i = pos.getX();
 			int j = pos.getY();
 			int k = pos.getZ();
-			world.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+			world.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
+					2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 
 			for (int l = 0; l < 8; ++l) {
-				world.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0D, 0.0D, 0.0D);
+				world.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(),
+						(double) k + Math.random(), 0.0D, 0.0D, 0.0D);
 			}
 			return true;
-		} else if (block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(world, pos, blockstate, content)) {
-			((LiquidBlockContainer) block).placeLiquid(world, pos, blockstate, ((FlowingFluid) content).getSource(false));
+		} else if (block instanceof LiquidBlockContainer
+				&& ((LiquidBlockContainer) block).canPlaceLiquid(world, pos, blockstate, content)) {
+			((LiquidBlockContainer) block).placeLiquid(world, pos, blockstate,
+					((FlowingFluid) content).getSource(false));
 			playBucketEmptySound(fluid, player, world, pos);
 			return true;
 		} else {
@@ -282,7 +300,8 @@ public class WorldUtilities {
 				world.destroyBlock(pos, true);
 			}
 
-			if (!world.setBlock(pos, content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
+			if (!world.setBlock(pos, content.defaultFluidState().createLegacyBlock(), 11)
+					&& !blockstate.getFluidState().isSource()) {
 				return false;
 			} else if (blockstate.isAir()) {
 				playBucketEmptySound(fluid, player, world, pos);
@@ -292,31 +311,37 @@ public class WorldUtilities {
 		return false;
 	}
 
-	public static void playBucketFillSound(FluidStack incomingFluid, @Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos) {
+	public static void playBucketFillSound(FluidStack incomingFluid, @Nullable Player pPlayer, LevelAccessor pLevel,
+			BlockPos pPos) {
 		Fluid content = incomingFluid.getFluid();
 		SoundEvent soundevent = content.getFluidType().getSound(SoundActions.BUCKET_FILL);
 		if (soundevent == null)
-			soundevent = TagUtilities.matches(FluidTags.LAVA, content) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA;
+			soundevent = TagUtilities.matches(FluidTags.LAVA, content) ? SoundEvents.BUCKET_FILL_LAVA
+					: SoundEvents.BUCKET_EMPTY_LAVA;
 		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
 		pLevel.gameEvent(pPlayer, GameEvent.FLUID_PLACE, pPos);
 	}
 
-	public static void playBucketEmptySound(FluidStack outgoingFluid, @Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos) {
+	public static void playBucketEmptySound(FluidStack outgoingFluid, @Nullable Player pPlayer, LevelAccessor pLevel,
+			BlockPos pPos) {
 		Fluid content = outgoingFluid.getFluid();
 		SoundEvent soundevent = content.getFluidType().getSound(SoundActions.BUCKET_EMPTY);
 		if (soundevent == null)
-			soundevent = TagUtilities.matches(FluidTags.LAVA, content) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
+			soundevent = TagUtilities.matches(FluidTags.LAVA, content) ? SoundEvents.BUCKET_EMPTY_LAVA
+					: SoundEvents.BUCKET_EMPTY;
 		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
 		pLevel.gameEvent(pPlayer, GameEvent.FLUID_PLACE, pPos);
 	}
 
-	public static boolean canBlockContainFluid(IFluidHandler fluidHandler, Level worldIn, BlockPos posIn, BlockState blockstate) {
+	public static boolean canBlockContainFluid(IFluidHandler fluidHandler, Level worldIn, BlockPos posIn,
+			BlockState blockstate) {
 		Fluid content = fluidHandler.getFluidInTank(0).getFluid();
 		return blockstate.getBlock() instanceof LiquidBlockContainer
 				&& ((LiquidBlockContainer) blockstate.getBlock()).canPlaceLiquid(worldIn, posIn, blockstate, content);
 	}
 
-	public static <T> Map<BlockPos, T> bfsTraverseWorld(Level level, BlockPos startingPos, TriFunction<BlockPos, BlockState, BlockEntity, T> shouldCapture) {
+	public static <T> Map<BlockPos, T> bfsTraverseWorld(Level level, BlockPos startingPos,
+			TriFunction<BlockPos, BlockState, BlockEntity, T> shouldCapture) {
 		Map<BlockPos, T> output = new HashMap<BlockPos, T>();
 
 		Set<BlockPos> visited = new HashSet<>();

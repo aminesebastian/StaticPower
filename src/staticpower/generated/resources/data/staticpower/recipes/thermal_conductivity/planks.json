@@ -1,0 +1,23 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "conductivity": 0.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "minecraft:fire",
+      "Properties": {
+        "age": "0",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    "temperature": 200
+  }
+}

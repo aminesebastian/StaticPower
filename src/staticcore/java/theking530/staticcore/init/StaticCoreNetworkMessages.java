@@ -13,6 +13,8 @@ import theking530.staticcore.blockentity.components.team.PacketSetBlockEntityTea
 import theking530.staticcore.blockentity.components.team.PacketSetBlockEntityTeamFromServer;
 import theking530.staticcore.cablenetwork.CableStateSyncPacket;
 import theking530.staticcore.cablenetwork.CableStateSyncRequestPacket;
+import theking530.staticcore.climate.ClimateDataReceievePacket;
+import theking530.staticcore.climate.ClimateDataRequestPacket;
 import theking530.staticcore.container.PacketCloseCurrentContainer;
 import theking530.staticcore.container.PacketRevertToParentContainer;
 import theking530.staticcore.data.gamedata.StaticPowerGameDataSyncPacket;
@@ -62,5 +64,8 @@ public class StaticCoreNetworkMessages {
 
 		StaticCoreMessageHandler.registerMessage(PacketRequestProductionTimeline.class);
 		StaticCoreMessageHandler.registerMessage(PacketRecieveProductionTimeline.class);
+		
+		StaticCoreMessageHandler.registerMessage(ClimateDataRequestPacket.class);
+		StaticCoreMessageHandler.registerMessage(ClimateDataReceievePacket.class);
 	}
 }

@@ -7,6 +7,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
 
 public class ThermalConductivityBehaviours {
@@ -57,6 +58,18 @@ public class ThermalConductivityBehaviours {
 										.forGetter(recipe -> recipe.getItem()))
 						.apply(instance, OverheatingBehaviour::new));
 
+		public OverheatingBehaviour(int temperature, BlockState block) {
+			this(temperature, block, StaticPowerOutputItem.EMPTY);
+		}
+
+		public OverheatingBehaviour(int temperature, StaticPowerOutputItem itemstack) {
+			this(temperature, Blocks.AIR.defaultBlockState(), itemstack);
+		}
+
+		public OverheatingBehaviour(int temperature, Fluid fluid) {
+			this(temperature, fluid.getStateDefinition().any().createLegacyBlock(), StaticPowerOutputItem.EMPTY);
+		}
+
 		public OverheatingBehaviour(int temperature, BlockState block, StaticPowerOutputItem itemstack) {
 			super(temperature, block, itemstack);
 		}
@@ -78,6 +91,18 @@ public class ThermalConductivityBehaviours {
 								StaticPowerOutputItem.CODEC.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
 										.forGetter(recipe -> recipe.getItem()))
 						.apply(instance, FreezingBehaviour::new));
+
+		public FreezingBehaviour(int temperature, BlockState block) {
+			this(temperature, block, StaticPowerOutputItem.EMPTY);
+		}
+
+		public FreezingBehaviour(int temperature, StaticPowerOutputItem itemstack) {
+			this(temperature, Blocks.AIR.defaultBlockState(), itemstack);
+		}
+
+		public FreezingBehaviour(int temperature, Fluid fluid) {
+			this(temperature, fluid.getStateDefinition().any().createLegacyBlock(), StaticPowerOutputItem.EMPTY);
+		}
 
 		public FreezingBehaviour(int temperature, BlockState block, StaticPowerOutputItem itemstack) {
 			super(temperature, block, itemstack);

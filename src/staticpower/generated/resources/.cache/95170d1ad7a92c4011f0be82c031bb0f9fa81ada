@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-24T00:13:54.4235462	Block States: staticpower
+// 1.19.2	2023-05-08T01:10:10.4135698	Block States: staticpower
 c2522358e82c7a72664181fe69af3fd6d7634534 assets/staticpower/blockstates/alloy_furnace.json
 6b3b3d59e926b1f7713b29d8ae247432edc8bf2a assets/staticpower/blockstates/automatic_placer.json
 0767f7bfba3a728c4dbe5b9c9bb9fa69b5552f17 assets/staticpower/blockstates/battery_block_advanced.json
@@ -248,6 +248,7 @@ df9b605e99c4ea21c00e3cf91152821f174bde67 assets/staticpower/blockstates/juice_me
 d1cd384d1c656554c7ff794be01f25c51c9c0f65 assets/staticpower/blockstates/lamp_static.json
 d0e19c0e2727ffbbfb56d57d4fe8d98f5f92ffdf assets/staticpower/blockstates/latex.json
 2ec60218277f5ceb35becac4197ed951e26775ef assets/staticpower/blockstates/light_socket.json
+b76dec549316257f66583ea935cf03e213b85eba assets/staticpower/blockstates/log_burnt.json
 3c0c5c6cf5270c1ba32c99b393ba56053c87ae05 assets/staticpower/blockstates/log_energized.json
 5b584983d1f0463a9b9e21bdd72fa01a77649b49 assets/staticpower/blockstates/log_lumum.json
 791e4afebe523fcfeb4908d4865a0aea7718f19a assets/staticpower/blockstates/log_static.json
@@ -833,6 +834,8 @@ c4c086a37c5e692d46ad1e326aeb085ab7f31a78 assets/staticpower/models/block/juice_c
 69560deedb670a3fe3ca122cd634f8ba0fea90c5 assets/staticpower/models/block/lamp_lumum.json
 a78a078f840d770242914e9b304751297b137051 assets/staticpower/models/block/lamp_static.json
 b3e62d7d31e32d6f0f0faedd926a558d0862d12d assets/staticpower/models/block/latex.json
+b0786c62673ed7aa5a0d6832657cf07163539729 assets/staticpower/models/block/log_burnt.json
+6414ac072a9f0defc868d0a966055748972ae1c7 assets/staticpower/models/block/log_burnt_horizontal.json
 9844949960fdad8dca9936138496bef6b3264e63 assets/staticpower/models/block/log_energized.json
 a37354f065b476e6edf711b584d85826401fbccd assets/staticpower/models/block/log_energized_horizontal.json
 7a1553e5f26e4cb25d626660e6d07b2dd4f98a4b assets/staticpower/models/block/log_lumum.json

@@ -1,0 +1,23 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "minecraft:logs_that_burn"
+    }
+  },
+  "conductivity": 0.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "staticpower:log_burnt",
+      "Properties": {
+        "axis": "y"
+      }
+    },
+    "item": {
+      "item": {
+        "id": "minecraft:charcoal"
+      }
+    },
+    "temperature": 300
+  }
+}

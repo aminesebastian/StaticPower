@@ -688,6 +688,7 @@
 	"block.staticpower.log_static": "Static Log",
 	"block.staticpower.log_energized": "Energized Log",
 	"block.staticpower.log_lumum": "Lumum Log",
+	"block.staticpower.log_burnt": "Burnt Log",
 	"block.staticpower.chest_vacuum": "Vacuum Chest",
 	"block.staticpower.machine_powered_furnace": "Powered Furnace",
 	"block.staticpower.machine_powered_grinder": "Powered Grinder",

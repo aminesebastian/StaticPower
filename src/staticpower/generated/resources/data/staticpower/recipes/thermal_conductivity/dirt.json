@@ -1,0 +1,9 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "minecraft:dirt"
+    }
+  },
+  "conductivity": 0.25
+}

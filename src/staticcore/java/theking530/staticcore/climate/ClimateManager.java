@@ -60,7 +60,7 @@ public class ClimateManager extends BasicStaticCoreGameData {
 
 	public DimensionClimateState getClimateData(Level level) {
 		if (!dimensionStates.containsKey(level.dimension().location())) {
-			dimensionStates.put(level.dimension().location(), new DimensionClimateState(level));
+			dimensionStates.put(level.dimension().location(), new DimensionClimateState());
 		}
 		return dimensionStates.get(level.dimension().location());
 	}

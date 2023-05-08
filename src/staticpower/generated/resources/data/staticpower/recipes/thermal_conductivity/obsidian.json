@@ -1,0 +1,18 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:obsidian"
+    }
+  },
+  "conductivity": 2.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "minecraft:lava",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 1000
+  }
+}

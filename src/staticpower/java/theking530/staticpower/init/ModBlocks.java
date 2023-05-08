@@ -92,6 +92,7 @@ import theking530.staticpower.blockentities.power.solidgenerator.BlockSolidGener
 import theking530.staticpower.blockentities.power.transformer.BlockTransformer;
 import theking530.staticpower.blockentities.power.turbine.BlockTurbine;
 import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
+import theking530.staticpower.blocks.BurntLog;
 import theking530.staticpower.blocks.EnergizedGrass;
 import theking530.staticpower.blocks.StaticGrass;
 import theking530.staticpower.blocks.StaticPowerBlock;
@@ -165,6 +166,9 @@ public class ModBlocks {
 			() -> new StaticPowerRotatePillarBlock(Properties.copy(Blocks.BIRCH_WOOD)));
 	public static final RegistryObject<StaticPowerRotatePillarBlock> LumumLog = registerBlock("log_lumum",
 			() -> new StaticPowerRotatePillarBlock(Properties.copy(Blocks.BIRCH_WOOD)));
+
+	public static final RegistryObject<BurntLog> BurntLog = registerBlock("log_burnt",
+			() -> new BurntLog(Properties.copy(Blocks.BIRCH_WOOD)));
 
 	// Planks
 	public static final RegistryObject<StaticPowerBlock> StaticPlanks = registerBlock("planks_static",

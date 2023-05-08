@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
@@ -55,6 +56,8 @@ public class ModBlockLootTables extends BlockLoot {
 		addCrop(ModBlocks.LumumCrop.get(), ModItems.LumumFruit.get(), ModItems.LumumSeeds.get());
 
 		addLeavesDrops(ModBlocks.RubberTreeLeaves.get(), ModBlocks.RubberTreeSapling.get(), 0.05f, 0.0625f, 0.083333336f, 0.1f);
+		
+		dropOther(ModBlocks.BurntLog.get(), Items.CHARCOAL);
 	}
 
 	public void add(Block p_124166_, LootTable.Builder p_124167_) {

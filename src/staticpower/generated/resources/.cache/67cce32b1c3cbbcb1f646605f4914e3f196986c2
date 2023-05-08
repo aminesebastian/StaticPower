@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-24T00:13:54.4110052	LootTables
+// 1.19.2	2023-05-08T01:10:10.3885828	LootTables
 5f1c4bd7d919817df3c517022b2bb5c6d61b5d9d data/staticpower/loot_tables/blocks/alloy_furnace.json
 ec0346cd8a4b004d8afe4ac900233eb8bfd496e4 data/staticpower/loot_tables/blocks/automatic_placer.json
 f782be601a12395d5e5c205629f67cdcf8579ac0 data/staticpower/loot_tables/blocks/battery_block_advanced.json
@@ -198,6 +198,7 @@ ec0805b094bce58839843b2f5cb6c2560c4162a7 data/staticpower/loot_tables/blocks/lam
 c3495558e342f407db34f7e89520b320c1a7919e data/staticpower/loot_tables/blocks/lamp_lumum.json
 2c5d5967114e076b1d988e8ad473c629073b06bb data/staticpower/loot_tables/blocks/lamp_static.json
 6ee71cde9b91b00c67db43a62174e0e15ef23100 data/staticpower/loot_tables/blocks/light_socket.json
+695fb05e0a8beccd73a40dbb5ac6cbed8249fbbd data/staticpower/loot_tables/blocks/log_burnt.json
 09ed5d995b7098aafd69ecf78d561db9a2bf4712 data/staticpower/loot_tables/blocks/log_energized.json
 9bd3440caba7bb72c97be3ce36a8fe0347caedf1 data/staticpower/loot_tables/blocks/log_lumum.json
 0584fc52f3c0b0718ed1725455ad1f048f08d403 data/staticpower/loot_tables/blocks/log_static.json
