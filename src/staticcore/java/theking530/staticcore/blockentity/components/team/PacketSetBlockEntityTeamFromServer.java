@@ -11,6 +11,7 @@ import theking530.api.team.CapabilityTeamOwnable;
 import theking530.api.team.ITeamOwnable;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class PacketSetBlockEntityTeamFromServer extends NetworkMessage {
 	protected String teamId;
@@ -37,11 +38,11 @@ public class PacketSetBlockEntityTeamFromServer extends NetworkMessage {
 		teamId = buffer.readUtf();
 	}
 
-	@SuppressWarnings({ "deprecation", "resource" })
+	@SuppressWarnings({ "resource" })
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			if (Minecraft.getInstance().level.isAreaLoaded(blockEntityPos, 1)) {
+			if (WorldUtilities.isBlockPosInLoadedChunk(ctx.get().getSender().level, blockEntityPos)) {
 				BlockEntity blockEntity = Minecraft.getInstance().level.getBlockEntity(blockEntityPos);
 				ITeamOwnable ownable = blockEntity.getCapability(CapabilityTeamOwnable.TEAM_OWNABLE_CAPABILITY)
 						.orElse(null);

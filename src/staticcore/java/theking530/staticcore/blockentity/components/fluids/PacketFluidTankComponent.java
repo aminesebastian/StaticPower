@@ -6,10 +6,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class PacketFluidTankComponent extends NetworkMessage {
 	private CompoundTag fluidComponentNBT;
@@ -44,13 +46,15 @@ public class PacketFluidTankComponent extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			if (Minecraft.getInstance().player.containerMenu == Minecraft.getInstance().player.inventoryMenu) {
-				if (Minecraft.getInstance().player.level.isAreaLoaded(position, 1)) {
-					BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(position);
+			Player player = Minecraft.getInstance().player;
+			if (player.containerMenu == player.inventoryMenu) {
+				if (WorldUtilities.isBlockPosInLoadedChunk(player.level, position)) {
+					BlockEntity rawTileEntity = player.level.getBlockEntity(position);
 
-					ComponentUtilities.getComponent(FluidTankComponent.class, componentName, rawTileEntity).ifPresent(comp -> {
-						comp.deserializeUpdateNbt(fluidComponentNBT, true);
-					});
+					ComponentUtilities.getComponent(FluidTankComponent.class, componentName, rawTileEntity)
+							.ifPresent(comp -> {
+								comp.deserializeUpdateNbt(fluidComponentNBT, true);
+							});
 				}
 			}
 		});

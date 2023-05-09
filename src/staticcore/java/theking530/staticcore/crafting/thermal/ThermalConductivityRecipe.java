@@ -33,15 +33,16 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 					Codec.BOOL.optionalFieldOf("has_active_temperature", false)
 							.forGetter(recipe -> recipe.hasActiveTemperature()),
 					Codec.FLOAT.optionalFieldOf("temperature", 0.0f).forGetter(recipe -> recipe.getTemperature()),
+					Codec.FLOAT.optionalFieldOf("thermalMass", 0.0f).forGetter(recipe -> recipe.getThermalMass()),
 					Codec.FLOAT.fieldOf("conductivity").forGetter(recipe -> recipe.getConductivity()),
 
 					OverheatingBehaviour.CODEC.optionalFieldOf("overheating_behaviour")
 							.forGetter(recipe -> Optional.ofNullable(recipe.getOverheatingBehaviour())),
 					FreezingBehaviour.CODEC.optionalFieldOf("freezing_behaviour")
 							.forGetter(recipe -> Optional.ofNullable(recipe.getFreezingBehaviour())))
-			.apply(instance, (id, blocks, fluids, hasActiveTemp, temp, conductivity, overheatingBehaviour,
+			.apply(instance, (id, blocks, fluids, hasActiveTemp, temp, mass, conductivity, overheatingBehaviour,
 					freezingBehaviour) -> {
-				return new ThermalConductivityRecipe(id, blocks, fluids, hasActiveTemp, temp, conductivity,
+				return new ThermalConductivityRecipe(id, blocks, fluids, hasActiveTemp, temp, mass, conductivity,
 						overheatingBehaviour.isPresent() ? overheatingBehaviour.get() : null,
 						freezingBehaviour.isPresent() ? freezingBehaviour.get() : null);
 			}));
@@ -49,6 +50,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	private final BlockStateIngredient blocks;
 	private final FluidIngredient fluids;
 
+	private final float thermalMass;
 	private final float temperature;
 	private final boolean hasActiveTemperature;
 	private final float conductivity;
@@ -58,17 +60,22 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	private final FreezingBehaviour freezingBehaviour;
 
 	public ThermalConductivityRecipe(ResourceLocation id, BlockStateIngredient blocks, FluidIngredient fluids,
-			boolean hasActiveTemperature, float temperature, float conductivity,
+			boolean hasActiveTemperature, float temperature, float thermalMass, float conductivity,
 			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
 		super(id);
 		this.blocks = blocks;
 		this.fluids = fluids;
 		this.temperature = temperature;
 		this.hasActiveTemperature = hasActiveTemperature;
+		this.thermalMass = thermalMass;
 		this.conductivity = conductivity;
 		this.overheatingBehaviour = overheatingBehaviour;
 		this.freezingBehaviour = freezingBehaviour;
 		this.isAirRecipe = fluids.isEmpty() && blocks.isEmpty();
+	}
+
+	public float getThermalMass() {
+		return thermalMass;
 	}
 
 	public float getTemperature() {

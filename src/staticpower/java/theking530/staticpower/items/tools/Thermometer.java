@@ -81,7 +81,7 @@ public class Thermometer extends StaticPowerItem implements ICustomModelProvider
 				IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, face)
 						.orElse(be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, null).orElse(null));
 				if (otherStorage != null) {
-					temperature = otherStorage.getCurrentHeat();
+					temperature = otherStorage.getCurrentTemperature();
 					found = true;
 				}
 			}

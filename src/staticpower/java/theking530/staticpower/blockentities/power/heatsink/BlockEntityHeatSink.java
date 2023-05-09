@@ -63,15 +63,16 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 			conductivity = 300.0f;
 		}
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), conductivity));
+		registerComponent(
+				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.defaultMachineThermalMass.get(),
+						tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), conductivity));
 	}
 
 	@Override
 	public void process() {
 		if (!level.isClientSide) {
 			// Damage entities if too hot.
-			if (heatStorage.getCurrentHeat() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold.get()) {
+			if (heatStorage.getCurrentTemperature() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold.get()) {
 				AABB aabb = new AABB(this.worldPosition.offset(0.0, 0, 0.0), this.worldPosition.offset(1.0, 2.0, 1.0));
 				List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, aabb);
 				for (LivingEntity entity : list) {
@@ -82,7 +83,7 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 
 		// If under water, generate bubbles.
 		// TODO: Tweak this number to == the temp we say water boils.
-		if (heatStorage.getCurrentHeat() >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
+		if (heatStorage.getCurrentTemperature() >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
 			float randomOffset = (3 * getLevel().getRandom().nextFloat()) - 1.5f;
 			if (SDMath.diceRoll(0.25f)
 					&& level.getBlockState(getBlockPos().relative(Direction.UP)).getBlock() == Blocks.WATER) {

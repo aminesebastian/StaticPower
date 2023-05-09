@@ -14,5 +14,6 @@
       }
     },
     "temperature": 1000
-  }
+  },
+  "thermalMass": 100.0
 }

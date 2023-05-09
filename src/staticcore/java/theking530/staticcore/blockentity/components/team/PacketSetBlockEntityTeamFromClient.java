@@ -10,6 +10,7 @@ import theking530.api.team.CapabilityTeamOwnable;
 import theking530.api.team.ITeamOwnable;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class PacketSetBlockEntityTeamFromClient extends NetworkMessage {
 	protected String teamId;
@@ -36,11 +37,10 @@ public class PacketSetBlockEntityTeamFromClient extends NetworkMessage {
 		teamId = buffer.readUtf();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			if (ctx.get().getSender().level.isAreaLoaded(blockEntityPos, 1)) {
+			if (WorldUtilities.isBlockPosInLoadedChunk(ctx.get().getSender().level, blockEntityPos)) {
 				BlockEntity blockEntity = ctx.get().getSender().level.getBlockEntity(blockEntityPos);
 				ITeamOwnable ownable = blockEntity.getCapability(CapabilityTeamOwnable.TEAM_OWNABLE_CAPABILITY)
 						.orElse(null);

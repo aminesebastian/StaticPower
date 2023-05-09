@@ -5,5 +5,6 @@
       "tag": "minecraft:dirt"
     }
   },
-  "conductivity": 0.25
+  "conductivity": 0.25,
+  "thermalMass": 100.0
 }

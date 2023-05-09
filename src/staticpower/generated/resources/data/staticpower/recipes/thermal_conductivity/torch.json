@@ -7,5 +7,6 @@
   },
   "conductivity": 2.0,
   "has_active_temperature": true,
-  "temperature": 300.0
+  "temperature": 300.0,
+  "thermalMass": 100.0
 }

@@ -372,4 +372,8 @@ public class WorldUtilities {
 
 		return output;
 	}
+
+	public static boolean isBlockPosInLoadedChunk(Level level, BlockPos pos) {
+		return level.hasChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()));
+	}
 }

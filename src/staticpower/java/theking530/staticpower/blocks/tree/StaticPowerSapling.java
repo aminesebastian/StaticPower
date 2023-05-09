@@ -24,9 +24,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
 import theking530.staticcore.block.IItemBlockProvider;
 import theking530.staticcore.block.IRenderLayerProvider;
+import theking530.staticcore.world.WorldUtilities;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 
-public class StaticPowerSapling extends BushBlock implements BonemealableBlock, IItemBlockProvider, IRenderLayerProvider {
+public class StaticPowerSapling extends BushBlock
+		implements BonemealableBlock, IItemBlockProvider, IRenderLayerProvider {
 	public static final IntegerProperty STAGE = BlockStateProperties.STAGE;
 	protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
 	private final Supplier<AbstractTreeGrower> tree;
@@ -45,7 +47,7 @@ public class StaticPowerSapling extends BushBlock implements BonemealableBlock, 
 	@Override
 	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
 		super.tick(state, worldIn, pos, rand);
-		if (!worldIn.isAreaLoaded(pos, 1)) {
+		if (!WorldUtilities.isBlockPosInLoadedChunk(worldIn, pos)) {
 			return;
 		}
 		if (worldIn.getMaxLocalRawBrightness(pos.above()) >= 9 && rand.nextInt(7) == 0) {

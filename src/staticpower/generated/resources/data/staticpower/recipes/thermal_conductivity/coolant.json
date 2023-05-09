@@ -6,5 +6,6 @@
     "fluids": {
       "fluid": "staticpower:coolant"
     }
-  }
+  },
+  "thermalMass": 100.0
 }

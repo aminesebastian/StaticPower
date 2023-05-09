@@ -9,13 +9,14 @@ public interface IHeatStorage {
 	public static final float ROOM_TEMPERATURE = 20;
 	public static final float WATER_FREEZING_TEMPERATURE = 0;
 	public static final float MINIMUM_TEMPERATURE = -273;
+	public static final float DEFAULT_BLOCK_MASS = 100;
 
 	/**
 	 * Returns the amount of heat currently stored in this heatable entity.
 	 * 
 	 * @return
 	 */
-	public float getCurrentHeat();
+	public float getCurrentTemperature();
 
 	/**
 	 * Returns the maximum amount of heat that *should* be stored in this heatable
@@ -47,7 +48,7 @@ public interface IHeatStorage {
 	 * @return
 	 */
 	public default boolean isOverheated() {
-		return getCurrentHeat() >= getOverheatThreshold();
+		return getCurrentTemperature() >= getOverheatThreshold();
 	}
 
 	/**
@@ -56,7 +57,7 @@ public interface IHeatStorage {
 	 * @return
 	 */
 	public default boolean isFrozen() {
-		return getCurrentHeat() <= getMinimumHeatThreshold();
+		return getCurrentTemperature() <= getMinimumHeatThreshold();
 	}
 
 	/**
@@ -78,6 +79,14 @@ public interface IHeatStorage {
 	public default float getConductivity() {
 		return 1.0f;
 	}
+
+	/**
+	 * Returns the mass of this heat storage. The higher the mass, the slower then
+	 * transfer of heat.
+	 * 
+	 * @return
+	 */
+	public float getMass();
 
 	/**
 	 * Adds heat to this heatable entity.

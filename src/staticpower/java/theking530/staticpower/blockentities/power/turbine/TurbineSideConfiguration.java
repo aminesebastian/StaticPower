@@ -14,8 +14,8 @@ public class TurbineSideConfiguration extends SideConfigurationPreset {
 		}
 		
 		clearPossibleConfigurations(BlockSide.TOP);
-		setDefaultOnSide(BlockSide.TOP, MachineSideMode.Input);
-
+		setDefaultOnSide(BlockSide.TOP, MachineSideMode.Never);
+		
 		clearPossibleConfigurations(BlockSide.BOTTOM);
 		setDefaultOnSide(BlockSide.BOTTOM, MachineSideMode.Never);
 	}

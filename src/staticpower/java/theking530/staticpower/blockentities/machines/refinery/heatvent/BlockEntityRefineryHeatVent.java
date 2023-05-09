@@ -64,9 +64,9 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	public float getCurrentHeat() {
+	public float getCurrentTemperature() {
 		if (hasController()) {
-			return getController().heatStorage.getCurrentHeat();
+			return getController().heatStorage.getCurrentTemperature();
 		}
 		return 0;
 	}
@@ -91,6 +91,14 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	public float getConductivity() {
 		if (hasController()) {
 			return getController().heatStorage.getConductivity();
+		}
+		return 0;
+	}
+
+	@Override
+	public float getMass() {
+		if (hasController()) {
+			return getController().heatStorage.getMass();
 		}
 		return 0;
 	}

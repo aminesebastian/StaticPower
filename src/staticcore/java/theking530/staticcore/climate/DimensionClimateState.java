@@ -41,8 +41,9 @@ public class DimensionClimateState implements INBTSerializable<CompoundTag> {
 				for (Direction dir : Direction.values()) {
 					BlockPos target = pos.relative(dir);
 					ClimateState otherState = getClimateState(level, target);
-					float transfered = HeatStorageUtilities.calculateHeatTransfer(state.getTemperature(), 1,
-							otherState.getTemperature(), 1);
+					float transfered = 0;
+					;// HeatStorageUtilities.calculateHeatTransfer(state.getTemperature(),
+						// 1,otherState.getTemperature(), 1);
 
 					state.setTemperature(state.getTemperature() - transfered);
 					otherState.setTemperature(otherState.getTemperature() + transfered);
@@ -56,8 +57,8 @@ public class DimensionClimateState implements INBTSerializable<CompoundTag> {
 		ChunkClimateState chunkState = getChunk(pos);
 		ClimateState state = chunkState.getState(level, pos);
 		float existingTemperature = state.getTemperature();
-		float transfer = HeatStorageUtilities.calculateHeatTransfer(existingTemperature, conductivity,
-				existingTemperature, 10.0f);
+		float transfer = 0.0f; // HeatStorageUtilities.calculateHeatTransfer(existingTemperature, conductivity,
+								// existingTemperature, 10.0f);
 		state.setTemperature(existingTemperature + transfer);
 	}
 

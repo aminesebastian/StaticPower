@@ -13,11 +13,7 @@
         "axis": "y"
       }
     },
-    "item": {
-      "item": {
-        "id": "minecraft:charcoal"
-      }
-    },
     "temperature": 300
-  }
+  },
+  "thermalMass": 100.0
 }

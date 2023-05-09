@@ -29,7 +29,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 	public HeatNetworkModule() {
 		super(ModCableModules.Heat.get());
 		// The actual input and output rates are controlled by the individual cables.
-		heatStorage = new HeatStorage(0, 0, Float.MAX_VALUE);
+		heatStorage = new HeatStorage(25, 0, 0, Float.MAX_VALUE);
 	}
 
 	public HeatStorage getHeatStorage() {
@@ -44,7 +44,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 		}
 		averageThermalConductivity /= Network.getGraph().getCables().size();
 
-		Component currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentHeat(),
+		Component currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentTemperature(),
 				heatStorage.getOverheatThreshold());
 		Component cooling = GuiTextUtilities.formatHeatRateToString(heatStorage.getTicker().getAverageCooledPerTick());
 		Component heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getTicker().getAverageHeatedPerTick());
@@ -116,12 +116,12 @@ public class HeatNetworkModule extends CableNetworkModule {
 		super.onAddedToNetwork(other);
 		if (other.hasModule(ModCableModules.Heat.get())) {
 			HeatNetworkModule module = (HeatNetworkModule) other.getModule(ModCableModules.Heat.get());
-			module.getHeatStorage().heat(heatStorage.getCurrentHeat(), HeatTransferAction.EXECUTE);
+			module.getHeatStorage().heat(heatStorage.getCurrentTemperature(), HeatTransferAction.EXECUTE);
 		}
 	}
 
 	public double getHeatPerCable() {
-		return heatStorage.getCurrentHeat() / Network.getGraph().getCables().size();
+		return heatStorage.getCurrentTemperature();
 	}
 
 	protected HashMap<IHeatStorage, DestinationWrapper> getValidDestinations() {
@@ -137,7 +137,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 								wrapper.getFirstConnectedDestinationSide())
 						.orElse(null);
 				if (otherHeatStorage != null
-						&& otherHeatStorage.heat(heatStorage.getCurrentHeat(), HeatTransferAction.SIMULATE) > 0) {
+						&& otherHeatStorage.heat(heatStorage.getCurrentTemperature(), HeatTransferAction.SIMULATE) > 0) {
 					destinations.put(otherHeatStorage, wrapper);
 				}
 			}

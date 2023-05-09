@@ -11,6 +11,7 @@ import theking530.staticcore.blockentity.components.ComponentUtilities;
 import theking530.staticcore.blockentity.components.items.FluidContainerInventoryComponent;
 import theking530.staticcore.blockentity.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class PacketFluidContainerComponent extends NetworkMessage {
 	private CompoundTag fluidComponentNBT;
@@ -21,7 +22,8 @@ public class PacketFluidContainerComponent extends NetworkMessage {
 	public PacketFluidContainerComponent() {
 	}
 
-	public PacketFluidContainerComponent(FluidContainerInventoryComponent fluidContainerComponent, FluidContainerInteractionMode mode, BlockPos pos) {
+	public PacketFluidContainerComponent(FluidContainerInventoryComponent fluidContainerComponent,
+			FluidContainerInteractionMode mode, BlockPos pos) {
 		fluidComponentNBT = new CompoundTag();
 		modeOrdinal = mode.ordinal();
 		position = pos;
@@ -47,14 +49,15 @@ public class PacketFluidContainerComponent extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			if (context.get().getSender().level.isAreaLoaded(position, 1)) {
+			if (WorldUtilities.isBlockPosInLoadedChunk(context.get().getSender().level, position)) {
 				BlockEntity rawTileEntity = context.get().getSender().level.getBlockEntity(position);
 
 				// Get the component.
-				ComponentUtilities.getComponent(FluidContainerInventoryComponent.class, componentName, rawTileEntity).ifPresent(comp -> {
-					// Set the mode.
-					comp.setMode(FluidContainerInteractionMode.values()[modeOrdinal]);
-				});
+				ComponentUtilities.getComponent(FluidContainerInventoryComponent.class, componentName, rawTileEntity)
+						.ifPresent(comp -> {
+							// Set the mode.
+							comp.setMode(FluidContainerInteractionMode.values()[modeOrdinal]);
+						});
 			}
 		});
 	}

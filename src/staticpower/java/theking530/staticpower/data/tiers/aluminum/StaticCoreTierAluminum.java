@@ -35,7 +35,7 @@ public class StaticCoreTierAluminum extends StaticCoreTier {
 
 	@Override
 	protected float getHeatSinkConductivity() {
-		return 3f;
+		return 100f;
 	}
 
 
@@ -46,12 +46,12 @@ public class StaticCoreTierAluminum extends StaticCoreTier {
 
 		@Override
 		protected float getHeatCableCapacity() {
-			return 256.0f;
+			return 512.0f;
 		}
 
 		@Override
 		protected float getHeatCableConductivity() {
-			return 3;
+			return 200;
 		}
 	}
 

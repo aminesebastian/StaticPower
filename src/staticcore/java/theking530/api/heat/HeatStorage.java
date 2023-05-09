@@ -6,6 +6,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
 
+	protected float mass;
 	protected float currentHeat;
 	protected float minimumThreshold;
 	protected float overheatThreshold;
@@ -17,16 +18,18 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 
 	protected HeatTicker ticker;
 
-	public HeatStorage(float overheatThreshold, float maximumHeat, float conductivity) {
-		this(IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maximumHeat, conductivity, 0);
+	public HeatStorage(float mass, float overheatThreshold, float maximumHeat, float conductivity) {
+		this(mass, IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maximumHeat, conductivity, 0);
 	}
 
-	public HeatStorage(float minimumThreshold, float overheatThreshold, float maximumHeat, float conductivity) {
-		this(minimumThreshold, overheatThreshold, maximumHeat, conductivity, 0);
+	public HeatStorage(float mass, float minimumThreshold, float overheatThreshold, float maximumHeat,
+			float conductivity) {
+		this(mass, minimumThreshold, overheatThreshold, maximumHeat, conductivity, 0);
 	}
 
-	public HeatStorage(float minimumThreshold, float overheatThreshold, float maximumHeat, float conductivity,
-			int meltdownRecoveryTicks) {
+	public HeatStorage(float mass, float minimumThreshold, float overheatThreshold, float maximumHeat,
+			float conductivity, int meltdownRecoveryTicks) {
+		this.mass = mass;
 		this.maximumHeat = maximumHeat;
 		this.minimumThreshold = minimumThreshold;
 		this.overheatThreshold = overheatThreshold;
@@ -37,7 +40,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 	}
 
 	@Override
-	public float getCurrentHeat() {
+	public float getCurrentTemperature() {
 		return currentHeat;
 	}
 
@@ -106,10 +109,10 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 			float remainingHeatCapacity = maximumHeat - currentHeat;
 			actualAmount = Math.min(remainingHeatCapacity, amount);
 		} else {
-			float remainingCoolCapacity = MINIMUM_TEMPERATURE - getCurrentHeat();
+			float remainingCoolCapacity = MINIMUM_TEMPERATURE - getCurrentTemperature();
 			actualAmount = -Math.min(Math.abs(remainingCoolCapacity), Math.abs(amount));
 		}
-		
+
 		if (action == HeatTransferAction.EXECUTE) {
 			currentHeat += actualAmount;
 			if (actualAmount > 0) {
@@ -176,5 +179,10 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 	@Override
 	public HeatTicker getTicker() {
 		return ticker;
+	}
+
+	@Override
+	public float getMass() {
+		return mass;
 	}
 }

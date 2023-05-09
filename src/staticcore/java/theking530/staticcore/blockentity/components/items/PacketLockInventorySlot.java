@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class PacketLockInventorySlot extends NetworkMessage {
 	private BlockPos position;
@@ -22,7 +23,8 @@ public class PacketLockInventorySlot extends NetworkMessage {
 	public PacketLockInventorySlot() {
 	}
 
-	public PacketLockInventorySlot(InventoryComponent inventoryComponent, int slot, boolean locked, ItemStack filteredIem) {
+	public PacketLockInventorySlot(InventoryComponent inventoryComponent, int slot, boolean locked,
+			ItemStack filteredIem) {
 		this.position = inventoryComponent.getBlockEntity().getBlockPos();
 		this.componentName = inventoryComponent.getComponentName();
 		this.slot = slot;
@@ -48,11 +50,10 @@ public class PacketLockInventorySlot extends NetworkMessage {
 		buf.writeUtf(componentName);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			if (context.get().getSender().level.isAreaLoaded(position, 1)) {
+			if (WorldUtilities.isBlockPosInLoadedChunk(context.get().getSender().level, position)) {
 				BlockEntity rawTileEntity = context.get().getSender().level.getBlockEntity(position);
 
 				if (rawTileEntity != null && rawTileEntity instanceof BlockEntityBase) {
@@ -65,12 +66,16 @@ public class PacketLockInventorySlot extends NetworkMessage {
 
 						// Update the locked state.
 						if (locked) {
-							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.SPYGLASS_USE, SoundSource.BLOCKS, 1, 1.25f);
-							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.BLOCKS, 0.15f, 1.25f);
+							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.SPYGLASS_USE,
+									SoundSource.BLOCKS, 1, 1.25f);
+							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK,
+									SoundSource.BLOCKS, 0.15f, 1.25f);
 							component.lockSlot(slot, filteredIem);
 						} else {
-							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.SPYGLASS_USE, SoundSource.BLOCKS, 1, 1);
-							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.BLOCKS, 0.15f, 1f);
+							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.SPYGLASS_USE,
+									SoundSource.BLOCKS, 1, 1);
+							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK,
+									SoundSource.BLOCKS, 0.15f, 1f);
 							component.unlockSlot(slot);
 						}
 					}

@@ -45,6 +45,16 @@ public class StaticCoreTierEnergized extends StaticCoreTier {
 	}
 
 	@Override
+	protected float getDefaultMachineThermalConductivity() {
+		return 25;
+	}
+
+	@Override
+	protected float getDefaultMachineThermalMass() {
+		return 100;
+	}
+
+	@Override
 	protected float getDefaultMachineOverheatTemperature() {
 		return 1400.0f;
 	}
@@ -95,7 +105,8 @@ public class StaticCoreTierEnergized extends StaticCoreTier {
 	}
 
 	@Override
-	protected TierCableAttachmentConfiguration createCableAttachmentConfiguration(ForgeConfigSpec.Builder builder, String modId) {
+	protected TierCableAttachmentConfiguration createCableAttachmentConfiguration(ForgeConfigSpec.Builder builder,
+			String modId) {
 		return new EnergizedCableConfiguration.CableAttachmentConfiguration(builder, modId);
 	}
 

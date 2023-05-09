@@ -45,6 +45,16 @@ public class StaticCoreTierLumum extends StaticCoreTier {
 	}
 
 	@Override
+	protected float getDefaultMachineThermalConductivity() {
+		return 50;
+	}
+
+	@Override
+	protected float getDefaultMachineThermalMass() {
+		return 100;
+	}
+
+	@Override
 	protected float getDefaultMachineOverheatTemperature() {
 		return 2800.0f;
 	}
@@ -95,7 +105,8 @@ public class StaticCoreTierLumum extends StaticCoreTier {
 	}
 
 	@Override
-	protected TierCableAttachmentConfiguration createCableAttachmentConfiguration(ForgeConfigSpec.Builder builder, String modId) {
+	protected TierCableAttachmentConfiguration createCableAttachmentConfiguration(ForgeConfigSpec.Builder builder,
+			String modId) {
 		return new LumumCableConfiguration.CableAttachmentConfiguration(builder, modId);
 	}
 

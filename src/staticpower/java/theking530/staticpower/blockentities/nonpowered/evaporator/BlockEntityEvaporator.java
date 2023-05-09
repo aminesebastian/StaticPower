@@ -89,8 +89,8 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 				MachineSideMode.Output));
 
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tierObject.defaultMachineOverheatTemperature.get(), tierObject.defaultMachineMaximumTemperature.get(),
-				50.0f));
+				tierObject.defaultMachineThermalMass.get(), tierObject.defaultMachineOverheatTemperature.get(),
+				tierObject.defaultMachineMaximumTemperature.get(), tierObject.defaultMachineThermalConductivity.get()));
 	}
 
 	@Override
@@ -110,6 +110,12 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 	}
 
 	@Override
+	public void prepareComponentForProcessing(RecipeProcessingComponent<EvaporatorRecipe> component,
+			EvaporatorRecipe recipe, ConcretizedProductContainer outputContainer) {
+		heatStorage.setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());
+	}
+
+	@Override
 	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<EvaporatorRecipe> component,
 			EvaporatorRecipe recipe, ConcretizedProductContainer outputContainer) {
 		// Check if the output fluid matches the already exists fluid if one exists.
@@ -123,8 +129,12 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 			return ProcessingCheckState.fluidOutputFull();
 		}
 		// Check the heat level.
-		if (heatStorage.getCurrentHeat() < recipe.getProcessingSection().getMinimumHeat()) {
-			return ProcessingCheckState.error("Heat level is not high enough!");
+		if (heatStorage.getCurrentTemperature() < recipe.getProcessingSection().getMinimumHeat()) {
+			return ProcessingCheckState.notEnoughHeatCapacity(recipe.getProcessingSection().getMinimumHeat());
+		}
+
+		if (heatStorage.isOverheated()) {
+			return ProcessingCheckState.heatStorageTooHot(heatStorage.getOverheatThreshold());
 		}
 
 		return ProcessingCheckState.ok();

@@ -20,5 +20,6 @@
       }
     },
     "temperature": 200
-  }
+  },
+  "thermalMass": 100.0
 }

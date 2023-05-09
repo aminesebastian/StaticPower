@@ -24,7 +24,7 @@ public class HeatStorageTicker implements INBTSerializable<CompoundTag> {
 
 	public void tick(Level world, BlockPos currentPos) {
 		// Put us into meltdown mode if this ticker wants that.
-		if (hasMeltdownBehavior && storage.getCurrentHeat() >= storage.getOverheatThreshold()) {
+		if (hasMeltdownBehavior && storage.getCurrentTemperature() >= storage.getOverheatThreshold()) {
 			remainingMeltdownTicks = metldownTicks;
 		}
 

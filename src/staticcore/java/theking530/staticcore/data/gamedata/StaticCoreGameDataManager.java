@@ -96,7 +96,6 @@ public class StaticCoreGameDataManager {
 						"An error occured when attempting to load data: %1$s from the database.", entry.getKey()), e);
 			}
 		});
-		loadDataForClients();
 		StaticCore.LOGGER.info("Finished Loading Static Core data!");
 	}
 
@@ -145,16 +144,10 @@ public class StaticCoreGameDataManager {
 	}
 
 	/**
-	 * Synchronizes the data to all clients and forces them to completely clear
-	 * their local data. This is good for sending when players first join in case
-	 * they were already in another server that also has your mod.
+	 * Synchronizes the data to the player forces them to completely clear their
+	 * local data. This is good for sending when players first join in case they
+	 * were already in another server that also has your mod.
 	 */
-	public void loadDataForClients() {
-		for (IStaticCoreGameData data : cachedData.values()) {
-			data.syncToClients();
-		}
-	}
-
 	public void loadDataForClient(ServerPlayer player) {
 		for (IStaticCoreGameData data : cachedData.values()) {
 			data.syncToClient(player);

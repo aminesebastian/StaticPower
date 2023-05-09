@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.StaticCore;
+import theking530.staticcore.network.StaticCoreMessageHandler;
 
 public abstract class BasicStaticCoreGameData implements IStaticCoreGameData {
 	private final ResourceLocation id;
@@ -41,6 +42,7 @@ public abstract class BasicStaticCoreGameData implements IStaticCoreGameData {
 		}
 
 		StaticCore.LOGGER.debug(String.format("Recieved synchronization data for GameData with name: %1$s.", getId()));
+		deserialize(tag);
 	}
 
 	@Override
@@ -48,6 +50,8 @@ public abstract class BasicStaticCoreGameData implements IStaticCoreGameData {
 		if (isClientSide()) {
 			throw new RuntimeException("#syncToClients should only be called from the server side!");
 		}
+		StaticCoreMessageHandler.sendToAllPlayers(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
+				new StaticPowerGameDataSyncPacket(this));
 	}
 
 	@Override
@@ -55,5 +59,8 @@ public abstract class BasicStaticCoreGameData implements IStaticCoreGameData {
 		if (isClientSide()) {
 			throw new RuntimeException("#syncToClient should only be called from the server side!");
 		}
+
+		StaticCoreMessageHandler.sendMessageToPlayer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, player,
+				new StaticPowerGameDataSyncPacket(this));
 	}
 }

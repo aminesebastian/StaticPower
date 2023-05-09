@@ -7,6 +7,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -32,11 +33,12 @@ public class BlockEntityHeatCable extends BlockEntityBase {
 	public void process() {
 		if (!getLevel().isClientSide()) {
 			cableComponent.getHeatNetworkModule().ifPresent(module -> {
-				if (module.getHeatPerCable() >= 100.0f) {
+				float temperature = (float) module.getHeatPerCable();
+				if (temperature >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
 					AABB aabb = new AABB(getBlockPos().offset(0.0, 0, 0.0), getBlockPos().offset(1.0, 1, 1.0));
 					List<LivingEntity> list = getLevel().getEntitiesOfClass(LivingEntity.class, aabb);
 					for (LivingEntity entity : list) {
-						entity.hurt(DamageSource.HOT_FLOOR, 1.0f);
+						entity.hurt(DamageSource.HOT_FLOOR, temperature / IHeatStorage.WATER_BOILING_TEMPERATURE);
 					}
 				}
 			});

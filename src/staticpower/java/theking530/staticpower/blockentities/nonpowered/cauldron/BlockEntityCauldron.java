@@ -66,7 +66,8 @@ public class BlockEntityCauldron extends BlockEntityBase {
 
 		// Only allow this to be heated by other sources.
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 50.0f)
+				tier.defaultMachineThermalMass.get(), tier.defaultMachineOverheatTemperature.get(),
+				tier.defaultMachineMaximumTemperature.get(), tier.defaultMachineThermalConductivity.get())
 				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.HEAT));
 	}
 
@@ -112,7 +113,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 	}
 
 	public boolean isBoiling() {
-		return heatStorage.getCurrentHeat() >= BOILING_TEMP;
+		return heatStorage.getCurrentTemperature() >= BOILING_TEMP;
 	}
 
 	/**

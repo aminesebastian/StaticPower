@@ -7,6 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class PacketPackagerSizeChange extends NetworkMessage {
 	private BlockPos position;
@@ -32,11 +33,10 @@ public class PacketPackagerSizeChange extends NetworkMessage {
 		buf.writeInt(size);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			if (context.get().getSender().getCommandSenderWorld().isAreaLoaded(position, 1)) {
+			if (WorldUtilities.isBlockPosInLoadedChunk(context.get().getSender().level, position)) {
 				BlockEntity rawTileEntity = context.get().getSender().getCommandSenderWorld().getBlockEntity(position);
 				if (rawTileEntity instanceof BlockEntityPackager) {
 					BlockEntityPackager packager = (BlockEntityPackager) rawTileEntity;

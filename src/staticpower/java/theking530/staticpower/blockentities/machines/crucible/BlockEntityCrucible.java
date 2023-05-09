@@ -77,7 +77,8 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 
 		// Register the heate component.
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 50.0f));
+				tier.defaultMachineThermalMass.get(), tier.defaultMachineOverheatTemperature.get(),
+				tier.defaultMachineMaximumTemperature.get(), tier.defaultMachineThermalConductivity.get()));
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent",
@@ -149,7 +150,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 		}
 
 		// Check the heat.
-		if (heatStorage.getCurrentHeat() < recipe.getProcessingSection().getMinimumHeat()) {
+		if (heatStorage.getCurrentTemperature() < recipe.getProcessingSection().getMinimumHeat()) {
 			return ProcessingCheckState.error("Minimum heat temperature of "
 					+ GuiTextUtilities.formatHeatToString(recipe.getProcessingSection().getMinimumHeat()).getString()
 					+ " has not been reached!");

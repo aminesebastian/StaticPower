@@ -5,11 +5,13 @@ import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class FluidCableUpdatePacket extends NetworkMessage {
 	private BlockPos position;
@@ -40,12 +42,13 @@ public class FluidCableUpdatePacket extends NetworkMessage {
 		pressure = buffer.readFloat();
 	}
 
-	@SuppressWarnings({ "resource", "deprecation" })
+	@SuppressWarnings({ "resource" })
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			if (Minecraft.getInstance().player.level.isAreaLoaded(position, 1)) {
-				BlockEntity rawTileEntity = Minecraft.getInstance().player.getLevel().getBlockEntity(position);
+			Player player = Minecraft.getInstance().player;
+			if (WorldUtilities.isBlockPosInLoadedChunk(player.level, position)) {
+				BlockEntity rawTileEntity = player.getLevel().getBlockEntity(position);
 				ComponentUtilities.getComponent(FluidCableComponent.class, rawTileEntity).ifPresent(comp -> {
 					comp.recieveUpdateRenderValues(fluid, pressure);
 				});

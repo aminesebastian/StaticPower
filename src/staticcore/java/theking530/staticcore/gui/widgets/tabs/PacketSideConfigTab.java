@@ -11,6 +11,7 @@ import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class PacketSideConfigTab extends NetworkMessage {
 	private MachineSideMode[] configuration;
@@ -53,11 +54,10 @@ public class PacketSideConfigTab extends NetworkMessage {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			if (context.get().getSender().getLevel().isAreaLoaded(position, 1)) {
+			if (WorldUtilities.isBlockPosInLoadedChunk(context.get().getSender().level, position)) {
 				BlockEntity te = context.get().getSender().level.getBlockEntity(position);
 
 				if (te instanceof BlockEntityBase) {

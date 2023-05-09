@@ -5,5 +5,6 @@
       "Name": "staticpower:heat_sink_copper"
     }
   },
-  "conductivity": 10.0
+  "conductivity": 10.0,
+  "thermalMass": 100.0
 }

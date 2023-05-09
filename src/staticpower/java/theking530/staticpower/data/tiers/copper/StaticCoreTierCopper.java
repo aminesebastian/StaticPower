@@ -31,12 +31,12 @@ public class StaticCoreTierCopper extends StaticCoreTier {
 
 	@Override
 	protected float getHeatsinkMaximumTemperature() {
-		return 1024.0f;
+		return 1024f;
 	}
 
 	@Override
 	protected float getHeatSinkConductivity() {
-		return 6f;
+		return 200;
 	}
 
 	public static class HeatCableConfiguration extends TierHeatCableConfiguration {
@@ -46,12 +46,12 @@ public class StaticCoreTierCopper extends StaticCoreTier {
 
 		@Override
 		protected float getHeatCableCapacity() {
-			return 512.0f;
+			return 1024f;
 		}
 
 		@Override
 		protected float getHeatCableConductivity() {
-			return 6;
+			return 400;
 		}
 	}
 

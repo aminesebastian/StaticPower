@@ -38,8 +38,8 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 	}
 
 	@Override
-	public void renderTileEntityBase(BlockEntityTurbine tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
-			int combinedOverlay) {
+	public void renderTileEntityBase(BlockEntityTurbine tileEntity, BlockPos pos, float partialTicks,
+			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 
 		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Turbine");
 		// Set the block renderer if we haven't already.
@@ -55,7 +55,7 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 			BakedModel model = Minecraft.getInstance().getModelManager().getModel(modelLocation);
 
 			// Get the data.
-			ModelData data = model.getModelData(tileEntity.getLevel(), pos, tileEntity.getLevel().getBlockState(pos), ModelData.EMPTY);
+			ModelData data = tileEntity.getModelData();
 
 			if (data.has(BlockEntityTurbine.TURBINE_RENDERING_STATE)) {
 				// Get the thread safe rotation container.
@@ -73,29 +73,29 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, renderingState.rotationAngle, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
-						combinedOverlay, data, RenderType.cutout());
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()),
+						state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data, RenderType.cutout());
 
 				matrixStack.translate(0, 0.2, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
-						combinedOverlay, data, RenderType.cutout());
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()),
+						state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data, RenderType.cutout());
 
 				matrixStack.translate(0, 0.2, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
-						combinedOverlay, data, RenderType.cutout());
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()),
+						state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data, RenderType.cutout());
 
 				matrixStack.translate(0, 0.22, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
-						combinedOverlay, data, RenderType.cutout());
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()),
+						state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data, RenderType.cutout());
 
 				// Pop the matrix we pushed.
 				matrixStack.popPose();
@@ -110,15 +110,16 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 			// Get the fluid attributes and add alpha to the fluid.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 			SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
-			fluidColor.setAlpha(0.2f);
+			fluidColor.setAlpha(0.8f);
 
 			// Get the height and y position.
 			float height = tileEntity.inputFluidTankComponent.getVisualFillLevel() * TEXEL * 15;
 			float yPosition = 16.0f * TEXEL - (16f * TEXEL * height);
 
 			// Render the fluid.
-			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(1 * TEXEL, yPosition - (TEXEL * 1), 1 * TEXEL), new Vector3f(14f * TEXEL, 16f * TEXEL * height, 14f * TEXEL),
-					fluidColor, sprite, new Vector3D(1.0f, height, 1.0f));
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(1 * TEXEL, yPosition - (TEXEL * 1), 1 * TEXEL),
+					new Vector3f(14f * TEXEL, 16f * TEXEL * height, 14f * TEXEL), fluidColor, sprite,
+					new Vector3D(1.0f, height, 1.0f));
 		}
 		Minecraft.getInstance().getProfiler().pop();
 	}

@@ -62,21 +62,21 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	private boolean issueSyncPackets;
 	private int timeSinceLastSync;
 
-	public HeatStorageComponent(String name, float maxHeat, float conductivity) {
-		this(name, IHeatStorage.MINIMUM_TEMPERATURE, maxHeat, maxHeat, conductivity);
+	public HeatStorageComponent(String name, float mass, float maxHeat, float conductivity) {
+		this(name, mass, IHeatStorage.MINIMUM_TEMPERATURE, maxHeat, maxHeat, conductivity);
 	}
 
-	public HeatStorageComponent(String name, float overheatThreshold, float maxHeat, float conductivity) {
-		this(name, IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maxHeat, conductivity);
+	public HeatStorageComponent(String name, float mass, float overheatThreshold, float maxHeat, float conductivity) {
+		this(name, mass, IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maxHeat, conductivity);
 	}
 
-	public HeatStorageComponent(String name, float minHeat, float overheatThreshold, float maxHeat,
+	public HeatStorageComponent(String name, float mass, float minHeat, float overheatThreshold, float maxHeat,
 			float conductivity) {
 		super(name);
 		defaultCapacity = maxHeat;
 		defaultConductivity = conductivity;
 		issueSyncPackets = false;
-		heatStorage = new HeatStorage(minHeat, overheatThreshold, maxHeat, conductivity);
+		heatStorage = new HeatStorage(mass, minHeat, overheatThreshold, maxHeat, conductivity);
 		exposeAsCapability = true;
 
 		// Create the accessors.
@@ -111,15 +111,15 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 			if (issueSyncPackets) {
 				// Get the current delta between the amount of power we have and the power we
 				// had last tick.
-				double delta = Math.abs(heatStorage.getCurrentHeat() - lastSyncHeat);
+				double delta = Math.abs(heatStorage.getCurrentTemperature() - lastSyncHeat);
 
 				// Determine if we should sync.
 				boolean shouldSync = delta > HEAT_SYNC_MAX_DELTA;
 				if (!shouldSync) {
-					shouldSync = heatStorage.getCurrentHeat() == 0 && lastSyncHeat != 0;
+					shouldSync = heatStorage.getCurrentTemperature() == 0 && lastSyncHeat != 0;
 				}
 				if (!shouldSync) {
-					shouldSync = heatStorage.getCurrentHeat() == heatStorage.getMaximumHeat()
+					shouldSync = heatStorage.getCurrentTemperature() == heatStorage.getMaximumHeat()
 							&& lastSyncHeat != heatStorage.getMaximumHeat();
 				}
 				if (!shouldSync) {
@@ -128,7 +128,7 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 
 				// If we should sync, perform the sync.
 				if (shouldSync) {
-					lastSyncHeat = heatStorage.getCurrentHeat();
+					lastSyncHeat = heatStorage.getCurrentTemperature();
 					timeSinceLastSync = 0;
 					syncToClient();
 				} else {
@@ -207,11 +207,11 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	}
 
 	public boolean isOverheated() {
-		return this.heatStorage.getCurrentHeat() > this.heatStorage.getOverheatThreshold();
+		return this.heatStorage.getCurrentTemperature() > this.heatStorage.getOverheatThreshold();
 	}
 
 	public boolean isAboveMinimumHeat() {
-		return this.heatStorage.getCurrentHeat() > this.heatStorage.getMinimumHeatThreshold();
+		return this.heatStorage.getCurrentTemperature() > this.heatStorage.getMinimumHeatThreshold();
 	}
 
 	/**
@@ -360,8 +360,8 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		}
 
 		@Override
-		public float getCurrentHeat() {
-			return HeatStorageComponent.this.getCurrentHeat();
+		public float getCurrentTemperature() {
+			return HeatStorageComponent.this.getCurrentTemperature();
 		}
 
 		@Override
@@ -378,11 +378,16 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		public HeatTicker getTicker() {
 			return HeatStorageComponent.this.getTicker();
 		}
+
+		@Override
+		public float getMass() {
+			return HeatStorageComponent.this.getMass();
+		}
 	}
 
 	@Override
-	public float getCurrentHeat() {
-		return heatStorage.getCurrentHeat();
+	public float getCurrentTemperature() {
+		return heatStorage.getCurrentTemperature();
 	}
 
 	@Override
@@ -438,5 +443,10 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 
 	public double getHeatPerTick() {
 		return heatStorage.getTicker().getAverageHeatedPerTick();
+	}
+
+	@Override
+	public float getMass() {
+		return heatStorage.getMass();
 	}
 }

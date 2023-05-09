@@ -18,8 +18,8 @@ public class EvaporationRecipeGenerator extends SCRecipeProvider<EvaporatorRecip
 
 	@Override
 	protected void buildRecipes() {
-		addRecipe("evaporated_mash", create(FluidIngredient.of(ModFluids.Mash.getTag(), 1), new FluidStack(ModFluids.EvaporatedMash.getSource().get(), 1), 5, 100));
-		addRecipe("steam", create(FluidIngredient.of(FluidTags.WATER, 1), new FluidStack(ModFluids.Steam.getSource().get(), 10), 10, 100));
+		addRecipe("evaporated_mash", create(FluidIngredient.of(ModFluids.Mash.getTag(), 1), new FluidStack(ModFluids.EvaporatedMash.getSource().get(), 1), 10, 100));
+		addRecipe("steam", create(FluidIngredient.of(FluidTags.WATER, 1), new FluidStack(ModFluids.Steam.getSource().get(), 10), 20, 100));
 
 	}
 

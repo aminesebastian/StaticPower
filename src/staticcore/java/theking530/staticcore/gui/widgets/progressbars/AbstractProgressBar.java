@@ -104,6 +104,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 		visualCurrentProgress = 0.0f;
 		maxProgress = 0;
 		enableProgressTooltip = true;
+		drawErrorIcons= true;
 		percentageDelay = Optional.empty();
 		percentageDelayBefore = false;
 		errorDrawable = new SpriteDrawable(StaticCoreSprites.ERROR, 16, 16);

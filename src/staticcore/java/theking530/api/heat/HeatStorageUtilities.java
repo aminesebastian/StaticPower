@@ -22,7 +22,7 @@ import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
 public class HeatStorageUtilities {
-	public record HeatQuery(float temperature, float conductivity) {
+	public record HeatQuery(float mass, float temperature, float conductivity) {
 	}
 
 	public static final float HEATING_RATE = 1 / 50f;
@@ -53,17 +53,17 @@ public class HeatStorageUtilities {
 			}
 
 			// Get the temperature and conductivity on this side.
-			HeatQuery heatAndConductivity = HeatStorageUtilities.getThermalPowerOnSide(world, currentPos, side,
-					storage);
+			HeatQuery adjacentHeat = HeatStorageUtilities.getThermalPowerOnSide(world, currentPos, side, storage);
 
 			// If we're simulating and want to see max efficiency, set the temp on the side
 			// to the overheat temp, as that is the point of maximum efficiency.
 			if (action == HeatTransferAction.SIMULATE_MAX_EFFICIENCY) {
-				heatAndConductivity = new HeatQuery(storage.getOverheatThreshold(), heatAndConductivity.conductivity());
+				adjacentHeat = new HeatQuery(adjacentHeat.mass(), storage.getOverheatThreshold(),
+						adjacentHeat.conductivity());
 			}
 
-			float heatAmountPerTick = calculateHeatTransfer(heatAndConductivity.temperature(),
-					heatAndConductivity.conductivity(), storage.getCurrentHeat(), storage.getConductivity());
+			float heatAmountPerTick = calculateHeatTransfer(adjacentHeat,
+					new HeatQuery(storage.getMass(), storage.getCurrentTemperature(), storage.getConductivity()));
 			totalPassive += heatAmountPerTick;
 		}
 
@@ -83,8 +83,10 @@ public class HeatStorageUtilities {
 				IHeatStorage otherStorage = be
 						.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).orElse(null);
 				if (otherStorage != null && otherStorage != storage) {
-					float heatAmountPerTick = calculateHeatTransfer(otherStorage.getConductivity(),
-							otherStorage.getCurrentHeat(), storage.getConductivity(), storage.getCurrentHeat());
+					float heatAmountPerTick = calculateHeatTransfer(
+							new HeatQuery(otherStorage.getMass(), otherStorage.getCurrentTemperature(),
+									otherStorage.getConductivity()),
+							new HeatQuery(storage.getMass(), storage.getCurrentTemperature(), storage.getConductivity()));
 
 					if (heatAmountPerTick > 0) {
 						float cooled = otherStorage.cool(heatAmountPerTick, HeatTransferAction.SIMULATE);
@@ -142,7 +144,7 @@ public class HeatStorageUtilities {
 			ambientHeat -= 5;
 		}
 
-		return new HeatQuery(ambientHeat, 1.0f);
+		return new HeatQuery(IHeatStorage.DEFAULT_BLOCK_MASS, ambientHeat, 1.0f);
 	}
 
 	public static HeatQuery getThermalPowerOnSide(Level world, BlockPos currentPos, Direction side,
@@ -154,7 +156,8 @@ public class HeatStorageUtilities {
 			IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite())
 					.orElse(null);
 			if (otherStorage != null) {
-				return new HeatQuery(otherStorage.getCurrentHeat(), otherStorage.getConductivity());
+				return new HeatQuery(otherStorage.getMass(), otherStorage.getCurrentTemperature(),
+						otherStorage.getConductivity());
 			}
 		}
 
@@ -172,11 +175,12 @@ public class HeatStorageUtilities {
 
 		// Get the temperature on that side.
 		if (recipe != null) {
-			return new HeatQuery(
+			return new HeatQuery(recipe.getThermalMass(),
 					recipe.hasActiveTemperature() ? recipe.getTemperature() : ambientTemperature.temperature(),
 					recipe.getConductivity());
 		} else {
-			return new HeatQuery(ambientTemperature.temperature(), ambientTemperature.conductivity() / 10.0f);
+			return new HeatQuery(IHeatStorage.DEFAULT_BLOCK_MASS, ambientTemperature.temperature(),
+					ambientTemperature.conductivity());
 		}
 	}
 
@@ -199,7 +203,7 @@ public class HeatStorageUtilities {
 		if (recipe != null) {
 			// Check if there is an overheating behaviour.
 			if (recipe.hasOverheatingBehaviour()) {
-				if (storage.getCurrentHeat() >= recipe.getOverheatingBehaviour().getTemperature()) {
+				if (storage.getCurrentTemperature() >= recipe.getOverheatingBehaviour().getTemperature()) {
 					// Add a little random in there.
 					if (SDMath.diceRoll(0.025)) {
 						// Perform the overheating with a block.
@@ -226,15 +230,15 @@ public class HeatStorageUtilities {
 	}
 
 	public static boolean canFullyAbsorbHeat(IHeatStorage storage, float heatAmount) {
-		return storage.getCurrentHeat() + heatAmount <= storage.getMaximumHeat();
+		return storage.getCurrentTemperature() + heatAmount <= storage.getMaximumHeat();
 	}
 
-	public static float calculateHeatTransfer(float targetTemperature, float targetConductivity,
-			float sourceTemperature, float sourceConductivity) {
-		float averageConductivity = (sourceConductivity + targetConductivity) / 2.0f;
-		float delta = targetTemperature - sourceTemperature;
+	public static float calculateHeatTransfer(HeatQuery source, HeatQuery target) {
+		float totalMass = source.mass() + target.mass();
+		float averageConductivity = (source.conductivity() + target.temperature()) / 2.0f;
+		float delta = source.temperature() - target.temperature();
 		float heatAmount = averageConductivity * delta;
-		return heatAmount * 1 / 2000.0f;
+		return heatAmount / (totalMass * 200.0f);
 	}
 
 }

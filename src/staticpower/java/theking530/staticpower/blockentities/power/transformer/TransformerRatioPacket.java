@@ -7,6 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class TransformerRatioPacket extends NetworkMessage {
 	private BlockPos position;
@@ -32,11 +33,10 @@ public class TransformerRatioPacket extends NetworkMessage {
 		ratio = buffer.readByte();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			if (ctx.get().getSender().getLevel().isAreaLoaded(position, 1)) {
+			if (WorldUtilities.isBlockPosInLoadedChunk(ctx.get().getSender().level, position)) {
 				BlockEntity rawTileEntity = ctx.get().getSender().getLevel().getBlockEntity(position);
 				if (rawTileEntity != null && rawTileEntity instanceof BlockEntityTransformer) {
 					BlockEntityTransformer battery = (BlockEntityTransformer) rawTileEntity;

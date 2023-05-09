@@ -7,11 +7,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.world.WorldUtilities;
 
 public class LoopingSoundPacketStart extends NetworkMessage {
 	private String componentName;
@@ -25,7 +27,8 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 	public LoopingSoundPacketStart() {
 	}
 
-	public LoopingSoundPacketStart(LoopingSoundComponent component, ResourceLocation soundIdIn, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos) {
+	public LoopingSoundPacketStart(LoopingSoundComponent component, ResourceLocation soundIdIn, SoundSource categoryIn,
+			float volumeIn, float pitchIn, BlockPos pos) {
 		super();
 		this.componentName = component.getComponentName();
 		this.soundIdIn = soundIdIn;
@@ -59,18 +62,21 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 	}
 
 	@Override
-	@SuppressWarnings({ "resource", "deprecation" })
+	@SuppressWarnings({ "resource" })
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
+			Player player = Minecraft.getInstance().player;
 			// Make sure the position is loaded.
-			if (Minecraft.getInstance().player.level.isAreaLoaded(position, 1)) {
+			if (WorldUtilities.isBlockPosInLoadedChunk(player.level, position)) {
 				// Get the tile entity.
-				BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(position);
+				BlockEntity rawTileEntity = player.level.getBlockEntity(position);
 
 				// If the component is found on the client, play the sound.
-				ComponentUtilities.getComponent(LoopingSoundComponent.class, componentName, rawTileEntity).ifPresent(comp -> {
-					comp.startPlayingSound(ForgeRegistries.SOUND_EVENTS.getValue(soundIdIn), categoryIn, volumeIn, pitchIn, soundPosition, 0);
-				});
+				ComponentUtilities.getComponent(LoopingSoundComponent.class, componentName, rawTileEntity)
+						.ifPresent(comp -> {
+							comp.startPlayingSound(ForgeRegistries.SOUND_EVENTS.getValue(soundIdIn), categoryIn,
+									volumeIn, pitchIn, soundPosition, 0);
+						});
 			}
 		});
 	}

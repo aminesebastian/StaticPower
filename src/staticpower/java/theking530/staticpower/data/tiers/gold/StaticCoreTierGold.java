@@ -35,7 +35,7 @@ public class StaticCoreTierGold extends StaticCoreTier {
 
 	@Override
 	protected float getHeatSinkConductivity() {
-		return 15f;
+		return 400f;
 	}
 
 	public static class HeatCableConfiguration extends TierHeatCableConfiguration {
@@ -50,7 +50,7 @@ public class StaticCoreTierGold extends StaticCoreTier {
 
 		@Override
 		protected float getHeatCableConductivity() {
-			return 15;
+			return 800;
 		}
 	}
 

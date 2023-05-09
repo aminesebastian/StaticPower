@@ -6,5 +6,6 @@
     "fluids": {
       "fluid": "minecraft:flowing_water"
     }
-  }
+  },
+  "thermalMass": 100.0
 }

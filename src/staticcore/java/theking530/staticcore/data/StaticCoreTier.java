@@ -40,6 +40,8 @@ public abstract class StaticCoreTier {
 	/***********************
 	 * Machine Configuration
 	 ***********************/
+	public final ConfigValue<Float> defaultMachineThermalConductivity;
+	public final ConfigValue<Float> defaultMachineThermalMass;
 	public final ConfigValue<Float> defaultMachineOverheatTemperature;
 	public final ConfigValue<Float> defaultMachineMaximumTemperature;
 	public final ConfigValue<Integer> defaultTankCapacity;
@@ -126,7 +128,14 @@ public abstract class StaticCoreTier {
 		builder.pop();
 
 		builder.push("Machines");
-
+		defaultMachineThermalConductivity = builder.comment(
+				"The thermal conductivity of this machine. The higher this value, the faster the heat dissipation for the machine is (in λ).")
+				.translation(modId + ".config." + "defaultMachineThermalConductivity")
+				.define("DefaultMachineThermalConductivity", getDefaultMachineThermalConductivity());
+		defaultMachineThermalMass = builder.comment(
+				"The thermal mass of machines of this tier. The higher this value, the slower the heat dissipation for the machine is (in kg).")
+				.translation(modId + ".config." + "defaultMachineThermalMass")
+				.define("DefaultMachineThermalMass", getDefaultMachineThermalMass());
 		defaultMachineOverheatTemperature = builder.comment(
 				"The temperature at which a machine of this tier overheats and stops processing (in mC [1C = 1000mC]).")
 				.translation(modId + ".config." + "defaultMachineOverheatTemperature")
@@ -254,6 +263,14 @@ public abstract class StaticCoreTier {
 	}
 
 	protected int getCapsuleCapacity() {
+		return 0;
+	}
+
+	protected float getDefaultMachineThermalConductivity() {
+		return 0;
+	}
+
+	protected float getDefaultMachineThermalMass() {
 		return 0;
 	}
 

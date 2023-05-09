@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.blockentity.BlockEntityBase;
+import theking530.staticcore.world.WorldUtilities;
 
 /**
  * Packet used to synchronize a {@link BlockEntityBase} ad hoc. This should
@@ -65,11 +66,11 @@ public class BlockEntityBasicSyncPacket extends NetworkMessage {
 		}
 	}
 
-	@SuppressWarnings({ "resource", "deprecation" })
+	@SuppressWarnings({ "resource" })
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			if (Minecraft.getInstance().player.level.isAreaLoaded(tileEntityPosition, 1)) {
+			if (WorldUtilities.isBlockPosInLoadedChunk(Minecraft.getInstance().player.level, tileEntityPosition)) {
 				BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(tileEntityPosition);
 				if (rawTileEntity != null && rawTileEntity instanceof BlockEntityBase) {
 					BlockEntityBase tileEntity = (BlockEntityBase) rawTileEntity;

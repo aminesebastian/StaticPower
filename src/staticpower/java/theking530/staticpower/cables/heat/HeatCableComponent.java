@@ -43,11 +43,11 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		super.preProcessUpdate();
 		if (!isClientSide()) {
 			this.<HeatNetworkModule>getNetworkModule(ModCableModules.Heat.get()).ifPresent(network -> {
-				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat()
+				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentTemperature()
 						- clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
 				shouldUpdate |= network.getHeatStorage().getOverheatThreshold() != clientSideHeatCapacity;
-				shouldUpdate |= clientSideHeat == 0 && network.getHeatStorage().getCurrentHeat() > 0;
-				shouldUpdate |= clientSideHeat > 0 && network.getHeatStorage().getCurrentHeat() == 0;
+				shouldUpdate |= clientSideHeat == 0 && network.getHeatStorage().getCurrentTemperature() > 0;
+				shouldUpdate |= clientSideHeat > 0 && network.getHeatStorage().getCurrentTemperature() == 0;
 				if (shouldUpdate) {
 					updateClientValues();
 				}
@@ -58,8 +58,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public void updateClientValues() {
 		if (!isClientSide()) {
 			this.<HeatNetworkModule>getNetworkModule(ModCableModules.Heat.get()).ifPresent(network -> {
-				clientSideHeat = network.getHeatStorage().getCurrentHeat();
-				clientSideHeatCapacity = network.getHeatStorage().getOverheatThreshold();
+				clientSideHeat = network.getHeatStorage().getCurrentTemperature();
+				clientSideHeatCapacity = network.getHeatStorage().getMaximumHeat();
 
 				// Only send the packet to nearby players since these packets get sent
 				// frequently.
@@ -77,9 +77,9 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public float getCurrentHeat() {
+	public float getCurrentTemperature() {
 		if (!getBlockEntity().getLevel().isClientSide) {
-			return getHeatNetworkModule().isPresent() ? getHeatNetworkModule().get().getHeatStorage().getCurrentHeat()
+			return getHeatNetworkModule().isPresent() ? getHeatNetworkModule().get().getHeatStorage().getCurrentTemperature()
 					: 0.0f;
 		} else {
 			return clientSideHeat;
@@ -101,6 +101,16 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
 			return module != null ? module.getHeatStorage().getOverheatThreshold() : 0;
+		} else {
+			return clientSideHeatCapacity;
+		}
+	}
+
+	@Override
+	public float getMass() {
+		if (!getBlockEntity().getLevel().isClientSide) {
+			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
+			return module != null ? module.getHeatStorage().getMass() : 0;
 		} else {
 			return clientSideHeatCapacity;
 		}

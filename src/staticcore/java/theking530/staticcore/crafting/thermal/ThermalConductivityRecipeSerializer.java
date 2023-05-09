@@ -21,9 +21,9 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 		BlockStateIngredient blocks = BlockStateIngredient.readFromBuffer(buffer);
 		FluidIngredient fluids = FluidIngredient.readFromBuffer(buffer);
 
-		// Read the int values.
-		float temperature = buffer.readFloat();
 		boolean hasActiveTemperature = buffer.readBoolean();
+		float temperature = buffer.readFloat();
+		float thermalMass = buffer.readFloat();
 		float conductivity = buffer.readFloat();
 
 		// Read the over heat values.
@@ -40,8 +40,8 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 			freezingBehaviour = FreezingBehaviour.fromNetwork(buffer);
 		}
 
-		return new ThermalConductivityRecipe(recipeId, blocks, fluids, hasActiveTemperature, temperature, conductivity,
-				overheatBehaviour, freezingBehaviour);
+		return new ThermalConductivityRecipe(recipeId, blocks, fluids, hasActiveTemperature, temperature, thermalMass,
+				conductivity, overheatBehaviour, freezingBehaviour);
 	}
 
 	@Override
@@ -50,8 +50,9 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 		recipe.getFluids().writeToBuffer(buffer);
 
 		// Write the int values.
-		buffer.writeFloat(recipe.getTemperature());
 		buffer.writeBoolean(recipe.hasActiveTemperature());
+		buffer.writeFloat(recipe.getTemperature());
+		buffer.writeFloat(recipe.getThermalMass());
 		buffer.writeFloat(recipe.getConductivity());
 
 		// Write the over heat values.

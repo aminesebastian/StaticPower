@@ -167,9 +167,9 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 				// Render water particles.
 				if (SDMath.diceRoll(0.4f)) {
 					float randomOffset = (2 * getLevel().getRandom().nextFloat()) - 1.0f;
-					randomOffset /= 2f;
+					randomOffset /= 2.5f;
 					getLevel().addParticle(ParticleTypes.FALLING_WATER, getBlockPos().getX() + 0.5 + randomOffset,
-							getBlockPos().getY() - 0.5, getBlockPos().getZ() + 0.5 + randomOffset, 0.0f, 0.01f, 0.0f);
+							getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5 + randomOffset, 0.0f, 0.01f, 0.0f);
 				}
 			}
 		}
@@ -223,7 +223,10 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 
 		// Check to make sure we have turbine blades.
 		if (!hasTurbineBlades()) {
+			renderingState.bladesTier = null;
 			return ProcessingCheckState.error("Missing Turbine Blades!");
+		}else {
+			renderingState.bladesTier = this.getTurbileBladesItem().getTier();
 		}
 
 		return ProcessingCheckState.ok();
@@ -309,6 +312,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 		}
 
 		public void rotate(float deltaTime) {
+			deltaTime /= 10;
 			rotationAngle += (speed * deltaTime);
 			if (isGenerating) {
 				if (speed < MAX_SPEED) {

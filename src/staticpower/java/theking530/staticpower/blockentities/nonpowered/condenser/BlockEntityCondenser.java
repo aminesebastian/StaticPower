@@ -77,8 +77,8 @@ public class BlockEntityCondenser extends BlockEntityBase implements IRecipeProc
 				MachineSideMode.Output));
 
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tierObject.defaultMachineOverheatTemperature.get(), tierObject.defaultMachineMaximumTemperature.get(),
-			50.0f));
+				tierObject.defaultMachineThermalMass.get(), tierObject.defaultMachineOverheatTemperature.get(),
+				tierObject.defaultMachineMaximumTemperature.get(), tierObject.defaultMachineThermalConductivity.get()));
 	}
 
 	@Override
@@ -113,11 +113,11 @@ public class BlockEntityCondenser extends BlockEntityBase implements IRecipeProc
 		}
 
 		// Check the heat level.
-		if (heatStorage.getCurrentHeat() + recipe.getProcessingSection().getHeat() > heatStorage
+		if (heatStorage.getCurrentTemperature() + recipe.getProcessingSection().getHeat() > heatStorage
 				.getOverheatThreshold()) {
 			return ProcessingCheckState.notEnoughHeatCapacity(recipe.getProcessingSection().getHeat());
 		}
-		if (heatStorage.getCurrentHeat() > recipe.getProcessingSection().getMinimumHeat()) {
+		if (heatStorage.getCurrentTemperature() > recipe.getProcessingSection().getMinimumHeat()) {
 			return ProcessingCheckState.heatStorageTooHot(recipe.getProcessingSection().getMinimumHeat());
 		}
 

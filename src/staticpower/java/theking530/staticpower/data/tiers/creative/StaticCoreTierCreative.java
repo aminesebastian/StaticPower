@@ -59,6 +59,26 @@ public class StaticCoreTierCreative extends StaticCoreTier {
 	}
 
 	@Override
+	protected float getDefaultMachineThermalConductivity() {
+		return 1000;
+	}
+
+	@Override
+	protected float getDefaultMachineThermalMass() {
+		return 1;
+	}
+
+	@Override
+	protected float getDefaultMachineOverheatTemperature() {
+		return Integer.MAX_VALUE / 2;
+	}
+
+	@Override
+	protected float getDefaultMachineMaximumTemperature() {
+		return Integer.MAX_VALUE;
+	}
+
+	@Override
 	protected TierPowerConfiguration createPowerConfiguration(Builder builder, String modId) {
 		return new CreativePowerConfiguration(builder, modId);
 	}

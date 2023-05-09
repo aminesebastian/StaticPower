@@ -5,6 +5,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
+import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.block.BlockStateIngredient;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
 import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.FreezingBehaviour;
@@ -70,64 +71,69 @@ public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<Thermal
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluids, float conductivity) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, false, 0, conductivity, null, null);
+		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS,
+				conductivity, null, null);
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluids, boolean hasActiveTemperature, int temperature,
 			float conductivity) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, hasActiveTemperature, temperature, conductivity,
-				null, null);
+		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, hasActiveTemperature, temperature,
+				IHeatStorage.DEFAULT_BLOCK_MASS, conductivity, null, null);
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluids, float conductivity,
 			OverheatingBehaviour overheatingBehaviour) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, false, 0, conductivity, overheatingBehaviour, null);
+		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS,
+				conductivity, overheatingBehaviour, null);
 	}
 
 	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, float conductivity,
 			OverheatingBehaviour overheatingBehaviour) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, false, 0, conductivity, overheatingBehaviour, null);
+		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS, conductivity,
+				overheatingBehaviour, null);
 	}
 
 	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, float conductivity) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, false, 0, conductivity, null, null);
+		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS, conductivity,
+				null, null);
 	}
 
 	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, boolean hasActiveTemperature,
 			int temperature, float conductivity) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, hasActiveTemperature, temperature, conductivity, null,
-				null);
+		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, hasActiveTemperature, temperature,
+				IHeatStorage.DEFAULT_BLOCK_MASS, conductivity, null, null);
 	}
 
 	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, boolean hasActiveTemperature,
 			int temperature, float conductivity, OverheatingBehaviour overheatingBehaviour,
 			FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, hasActiveTemperature, temperature, conductivity,
-				overheatingBehaviour, freezingBehaviour);
+		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, hasActiveTemperature, temperature,
+				IHeatStorage.DEFAULT_BLOCK_MASS, conductivity, overheatingBehaviour, freezingBehaviour);
 	}
 
 	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, float conductivity,
 			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, false, 0, conductivity, overheatingBehaviour,
-				freezingBehaviour);
+		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS, conductivity,
+				overheatingBehaviour, freezingBehaviour);
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluids, boolean hasActiveTemperature, int temperature,
 			float conductivity, OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, hasActiveTemperature, temperature, conductivity,
-				overheatingBehaviour, freezingBehaviour);
+		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, hasActiveTemperature, temperature,
+				IHeatStorage.DEFAULT_BLOCK_MASS, conductivity, overheatingBehaviour, freezingBehaviour);
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluids, float conductivity,
 			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, false, 0, conductivity, overheatingBehaviour,
-				freezingBehaviour);
+		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS,
+				conductivity, overheatingBehaviour, freezingBehaviour);
 	}
 
 	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, FluidIngredient fluids,
-			boolean hasActiveTemperature, int temperature, float conductivity,
+			boolean hasActiveTemperature, int temperature, float thermalMass, float conductivity,
 			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride, SCRecipeBuilder.create(new ThermalConductivityRecipe(null, blocks, fluids,
-				hasActiveTemperature, temperature, conductivity, overheatingBehaviour, freezingBehaviour)));
+		addRecipe(nameOverride,
+				SCRecipeBuilder.create(new ThermalConductivityRecipe(null, blocks, fluids, hasActiveTemperature,
+						temperature, thermalMass, conductivity, overheatingBehaviour, freezingBehaviour)));
 	}
 }
