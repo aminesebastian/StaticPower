@@ -54,7 +54,6 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	private final float temperature;
 	private final boolean hasActiveTemperature;
 	private final float conductivity;
-	private final boolean isAirRecipe;
 
 	private final OverheatingBehaviour overheatingBehaviour;
 	private final FreezingBehaviour freezingBehaviour;
@@ -71,7 +70,6 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		this.conductivity = conductivity;
 		this.overheatingBehaviour = overheatingBehaviour;
 		this.freezingBehaviour = freezingBehaviour;
-		this.isAirRecipe = fluids.isEmpty() && blocks.isEmpty();
 	}
 
 	public float getThermalMass() {
@@ -88,10 +86,6 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 
 	public float getConductivity() {
 		return conductivity;
-	}
-
-	public boolean isAirRecipe() {
-		return isAirRecipe;
 	}
 
 	public BlockStateIngredient getBlocks() {

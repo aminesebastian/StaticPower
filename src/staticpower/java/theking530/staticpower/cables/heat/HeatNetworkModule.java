@@ -29,7 +29,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 	public HeatNetworkModule() {
 		super(ModCableModules.Heat.get());
 		// The actual input and output rates are controlled by the individual cables.
-		heatStorage = new HeatStorage(25, 0, 0, Float.MAX_VALUE);
+		heatStorage = new HeatStorage(10, 0, 0, Float.MAX_VALUE);
 	}
 
 	public HeatStorage getHeatStorage() {
@@ -94,6 +94,31 @@ public class HeatNetworkModule extends CableNetworkModule {
 	}
 
 	@Override
+	public void onFirstAddedToNetwork(CableNetwork other) {
+		super.onFirstAddedToNetwork(other);
+
+		float averageBiomeTemperature = 0.0f;
+		for (Cable cable : Network.getGraph().getCables().values()) {
+			averageBiomeTemperature += HeatStorageUtilities.getBiomeAmbientTemperature(other.getWorld(), cable.getPos())
+					.temperature();
+		}
+		averageBiomeTemperature /= Network.getGraph().getCables().size();
+		heatStorage.setCurrentHeat(averageBiomeTemperature);
+	}
+
+	@Override
+	public void onJoinedOtherNetwork(CableNetwork other) {
+		super.onJoinedOtherNetwork(other);
+		if (other.hasModule(ModCableModules.Heat.get())) {
+			HeatNetworkModule module = (HeatNetworkModule) other.getModule(ModCableModules.Heat.get());
+			float existingHeat = module.getHeatStorage().getCurrentTemperature();
+			float currentTemperature = heatStorage.getCurrentTemperature();
+			float averageTemperature = (existingHeat + currentTemperature) / 2.0f;
+			module.getHeatStorage().setCurrentHeat(averageTemperature);
+		}
+	}
+
+	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 		// Allocate the total capacity.
 		int total = 0;
@@ -109,15 +134,6 @@ public class HeatNetworkModule extends CableNetworkModule {
 		// Set the capacity of the heat storage to the average of the network.
 		float average = (float) total / Math.max(mapper.getDiscoveredCables().size(), 1);
 		heatStorage.setMaximumHeat((int) average);
-	}
-
-	@Override
-	public void onAddedToNetwork(CableNetwork other) {
-		super.onAddedToNetwork(other);
-		if (other.hasModule(ModCableModules.Heat.get())) {
-			HeatNetworkModule module = (HeatNetworkModule) other.getModule(ModCableModules.Heat.get());
-			module.getHeatStorage().heat(heatStorage.getCurrentTemperature(), HeatTransferAction.EXECUTE);
-		}
 	}
 
 	public double getHeatPerCable() {
@@ -136,8 +152,8 @@ public class HeatNetworkModule extends CableNetworkModule {
 						.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY,
 								wrapper.getFirstConnectedDestinationSide())
 						.orElse(null);
-				if (otherHeatStorage != null
-						&& otherHeatStorage.heat(heatStorage.getCurrentTemperature(), HeatTransferAction.SIMULATE) > 0) {
+				if (otherHeatStorage != null && otherHeatStorage.heat(heatStorage.getCurrentTemperature(),
+						HeatTransferAction.SIMULATE) > 0) {
 					destinations.put(otherHeatStorage, wrapper);
 				}
 			}

@@ -14,11 +14,14 @@ public class ThermalConductivityBehaviours {
 	private final int temperature;
 	private final BlockState block;
 	private final StaticPowerOutputItem itemstack;
+	private final boolean destroyExisting;
 
-	public ThermalConductivityBehaviours(int temperature, BlockState block, StaticPowerOutputItem itemstack) {
+	public ThermalConductivityBehaviours(int temperature, BlockState block, StaticPowerOutputItem itemstack,
+			boolean destroyExisting) {
 		this.temperature = temperature;
 		this.block = block;
 		this.itemstack = itemstack;
+		this.destroyExisting = destroyExisting;
 	}
 
 	public int getTemperature() {
@@ -33,6 +36,10 @@ public class ThermalConductivityBehaviours {
 		return itemstack;
 	}
 
+	public boolean shouldDestroyExisting() {
+		return destroyExisting;
+	}
+
 	public boolean hasBlock() {
 		return block != Blocks.AIR.defaultBlockState();
 	}
@@ -43,20 +50,21 @@ public class ThermalConductivityBehaviours {
 
 	public void toNetwork(FriendlyByteBuf buffer) {
 		buffer.writeInt(getTemperature());
+		buffer.writeBoolean(shouldDestroyExisting());
 		buffer.writeNbt(NbtUtils.writeBlockState(getBlockState()));
 		getItem().writeToBuffer(buffer);
 	}
 
 	public static class OverheatingBehaviour extends ThermalConductivityBehaviours {
 
-		public static final Codec<OverheatingBehaviour> CODEC = RecordCodecBuilder
-				.create(instance -> instance
-						.group(Codec.INT.optionalFieldOf("temperature", 0).forGetter(recipe -> recipe.getTemperature()),
-								BlockState.CODEC.optionalFieldOf("block", Blocks.AIR.defaultBlockState())
-										.forGetter(recipe -> recipe.getBlockState()),
-								StaticPowerOutputItem.CODEC.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
-										.forGetter(recipe -> recipe.getItem()))
-						.apply(instance, OverheatingBehaviour::new));
+		public static final Codec<OverheatingBehaviour> CODEC = RecordCodecBuilder.create(instance -> instance
+				.group(Codec.INT.optionalFieldOf("temperature", 0).forGetter(recipe -> recipe.getTemperature()),
+						BlockState.CODEC.optionalFieldOf("block", Blocks.AIR.defaultBlockState())
+								.forGetter(recipe -> recipe.getBlockState()),
+						StaticPowerOutputItem.CODEC.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
+								.forGetter(recipe -> recipe.getItem()),
+						Codec.BOOL.optionalFieldOf("destroyExisting", true).forGetter(recipe -> recipe.shouldDestroyExisting()))
+				.apply(instance, OverheatingBehaviour::new));
 
 		public OverheatingBehaviour(int temperature, BlockState block) {
 			this(temperature, block, StaticPowerOutputItem.EMPTY);
@@ -70,27 +78,37 @@ public class ThermalConductivityBehaviours {
 			this(temperature, fluid.getStateDefinition().any().createLegacyBlock(), StaticPowerOutputItem.EMPTY);
 		}
 
+		public OverheatingBehaviour(int temperature) {
+			this(temperature, Blocks.AIR.defaultBlockState(), StaticPowerOutputItem.EMPTY);
+		}
+
 		public OverheatingBehaviour(int temperature, BlockState block, StaticPowerOutputItem itemstack) {
-			super(temperature, block, itemstack);
+			this(temperature, block, itemstack, true);
+		}
+
+		public OverheatingBehaviour(int temperature, BlockState block, StaticPowerOutputItem itemstack,
+				boolean destroy) {
+			super(temperature, block, itemstack, destroy);
 		}
 
 		public static OverheatingBehaviour fromNetwork(FriendlyByteBuf buffer) {
 			int freezingTemperature = buffer.readInt();
+			boolean shouldDestroy = buffer.readBoolean();
 			BlockState freezingBlock = NbtUtils.readBlockState(buffer.readNbt());
 			StaticPowerOutputItem freezingItemStack = StaticPowerOutputItem.readFromBuffer(buffer);
-			return new OverheatingBehaviour(freezingTemperature, freezingBlock, freezingItemStack);
+			return new OverheatingBehaviour(freezingTemperature, freezingBlock, freezingItemStack, shouldDestroy);
 		}
 	}
 
 	public static class FreezingBehaviour extends ThermalConductivityBehaviours {
-		public static final Codec<FreezingBehaviour> CODEC = RecordCodecBuilder
-				.create(instance -> instance
-						.group(Codec.INT.optionalFieldOf("temperature", 0).forGetter(recipe -> recipe.getTemperature()),
-								BlockState.CODEC.optionalFieldOf("block", Blocks.AIR.defaultBlockState())
-										.forGetter(recipe -> recipe.getBlockState()),
-								StaticPowerOutputItem.CODEC.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
-										.forGetter(recipe -> recipe.getItem()))
-						.apply(instance, FreezingBehaviour::new));
+		public static final Codec<FreezingBehaviour> CODEC = RecordCodecBuilder.create(instance -> instance
+				.group(Codec.INT.optionalFieldOf("temperature", 0).forGetter(recipe -> recipe.getTemperature()),
+						BlockState.CODEC.optionalFieldOf("block", Blocks.AIR.defaultBlockState())
+								.forGetter(recipe -> recipe.getBlockState()),
+						StaticPowerOutputItem.CODEC.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
+								.forGetter(recipe -> recipe.getItem()),
+						Codec.BOOL.optionalFieldOf("destroyExisting", true).forGetter(recipe -> recipe.shouldDestroyExisting()))
+				.apply(instance, FreezingBehaviour::new));
 
 		public FreezingBehaviour(int temperature, BlockState block) {
 			this(temperature, block, StaticPowerOutputItem.EMPTY);
@@ -104,15 +122,24 @@ public class ThermalConductivityBehaviours {
 			this(temperature, fluid.getStateDefinition().any().createLegacyBlock(), StaticPowerOutputItem.EMPTY);
 		}
 
+		public FreezingBehaviour(int temperature) {
+			this(temperature, Blocks.AIR.defaultBlockState(), StaticPowerOutputItem.EMPTY);
+		}
+
 		public FreezingBehaviour(int temperature, BlockState block, StaticPowerOutputItem itemstack) {
-			super(temperature, block, itemstack);
+			this(temperature, block, itemstack, true);
+		}
+
+		public FreezingBehaviour(int temperature, BlockState block, StaticPowerOutputItem itemstack, boolean destroy) {
+			super(temperature, block, itemstack, destroy);
 		}
 
 		public static FreezingBehaviour fromNetwork(FriendlyByteBuf buffer) {
 			int freezingTemperature = buffer.readInt();
+			boolean shouldDestroy = buffer.readBoolean();
 			BlockState freezingBlock = NbtUtils.readBlockState(buffer.readNbt());
 			StaticPowerOutputItem freezingItemStack = StaticPowerOutputItem.readFromBuffer(buffer);
-			return new FreezingBehaviour(freezingTemperature, freezingBlock, freezingItemStack);
+			return new FreezingBehaviour(freezingTemperature, freezingBlock, freezingItemStack, shouldDestroy);
 		}
 	}
 }

@@ -45,13 +45,15 @@ public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<Thermal
 				new OverheatingBehaviour(100, ModFluids.Steam.getBlock().get().defaultBlockState(),
 						StaticPowerOutputItem.EMPTY),
 				new FreezingBehaviour(0, Blocks.ICE.defaultBlockState(), StaticPowerOutputItem.EMPTY));
-		addRecipe("water_flowing", FluidIngredient.of(1, Fluids.FLOWING_WATER), 10);
+		addRecipe("water_flowing", FluidIngredient.of(1, Fluids.FLOWING_WATER), 10, new OverheatingBehaviour(100),
+				new FreezingBehaviour(0, Blocks.POWDER_SNOW.defaultBlockState(), StaticPowerOutputItem.EMPTY));
 
 		addRecipe("campfire", BlockStateIngredient.of(Blocks.CAMPFIRE), true, 1000, 3);
 		addRecipe("fire", BlockStateIngredient.of(Blocks.FIRE), true, 750, 5);
 		addRecipe("torch", BlockStateIngredient.of(Blocks.TORCH), true, 300, 2);
 
-		addRecipe("stone", BlockStateIngredient.of(Tags.Blocks.STONE), 1, new OverheatingBehaviour(1000, Fluids.LAVA));
+		addRecipe("stone", BlockStateIngredient.of(Tags.Blocks.STONE), 1,
+				new OverheatingBehaviour(1000, Fluids.FLOWING_LAVA));
 		addRecipe("cobblestone", BlockStateIngredient.of(Tags.Blocks.COBBLESTONE), 0.5f,
 				new OverheatingBehaviour(1000, Fluids.LAVA));
 		addRecipe("obsidian", BlockStateIngredient.of(Tags.Blocks.OBSIDIAN), 2,

@@ -173,7 +173,7 @@ public class BlockStateIngredient implements Predicate<BlockState> {
 			List<BlockState> list = Lists.newArrayList();
 
 			for (Block holder : ForgeRegistries.BLOCKS.tags().getTag(tag).stream().toList()) {
-				list.add(holder.defaultBlockState());
+				list.addAll(holder.getStateDefinition().getPossibleStates());
 			}
 
 			if (list.size() == 0) {

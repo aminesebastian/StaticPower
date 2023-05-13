@@ -100,7 +100,7 @@ public class CableNetwork {
 
 		// Add the module and let it know that it was added to a network.
 		modules.put(module.getType(), module);
-		module.onAddedToNetwork(this);
+		module.onFirstAddedToNetwork(this);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -210,7 +210,7 @@ public class CableNetwork {
 
 	public void onJoinedWithOtherNetwork(CableNetwork mainNetwork) {
 		for (CableNetworkModule module : modules.values()) {
-			module.onAddedToNetwork(mainNetwork);
+			module.onJoinedOtherNetwork(mainNetwork);
 		}
 	}
 

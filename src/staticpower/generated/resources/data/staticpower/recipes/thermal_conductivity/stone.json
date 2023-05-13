@@ -10,7 +10,7 @@
     "block": {
       "Name": "minecraft:lava",
       "Properties": {
-        "level": "0"
+        "level": "15"
       }
     },
     "temperature": 1000

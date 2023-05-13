@@ -170,10 +170,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, ThermalConductivityJEIRecipeWrapper recipe,
 			IFocusGroup ingredients) {
-		// Set the input.
-		if (!recipe.getRecipe().isAirRecipe()) {
-			addBlockStateIngredientSlot(builder, 6, 6, recipe.getBlocks());
-		}
+		addBlockStateIngredientSlot(builder, 6, 6, recipe.getBlocks());
 
 		// Set the input fluid.
 		if (!recipe.getFluidInput().isEmpty()) {

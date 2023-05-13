@@ -30,17 +30,18 @@ public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid impleme
 	}
 
 	protected void spread(LevelAccessor level, BlockPos pos, FluidState fluidState) {
+		// If the fluid is near the world height, kill it.
+		if (pos.getY() >= level.getMaxBuildHeight() - 2) {
+			level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+			return;
+		}
+
 		if (!fluidState.getType().getFluidType().isLighterThanAir()) {
 			super.spread(level, pos, fluidState);
 			return;
 		}
 
 		if (!fluidState.isEmpty()) {
-			// If the fluid is near the world height, kill it.
-			if (pos.getY() >= level.getMaxBuildHeight()) {
-				level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-				return;
-			}
 
 			// If we can flow upwards, do so. Otherwise, check if the block above is solid.
 			// If it is not, let the gas continue going up.

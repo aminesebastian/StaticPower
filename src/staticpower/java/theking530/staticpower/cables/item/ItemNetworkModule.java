@@ -101,8 +101,8 @@ public class ItemNetworkModule extends CableNetworkModule {
 	 * other one.
 	 */
 	@Override
-	public void onAddedToNetwork(CableNetwork other) {
-		super.onAddedToNetwork(other);
+	public void onJoinedOtherNetwork(CableNetwork other) {
+		super.onJoinedOtherNetwork(other);
 		if (other.hasModule(ModCableModules.Item.get())) {
 			ItemNetworkModule module = (ItemNetworkModule) other.getModule(ModCableModules.Item.get());
 

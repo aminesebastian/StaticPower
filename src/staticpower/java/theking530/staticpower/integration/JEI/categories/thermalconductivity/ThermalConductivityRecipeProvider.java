@@ -35,10 +35,6 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 		// Iterate through all the recipes.
 		for (ThermalConductivityRecipe recipe : originalRecipes) {
 			try {
-				if (recipe.isAirRecipe()) {
-					continue;
-				}
-
 				boolean isFireInput = !recipe.getBlocks().isEmpty() && recipe.getBlocks().test(Blocks.FIRE);
 				ThermalConductivityJEIRecipeWrapper jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe,
 						isFireInput);

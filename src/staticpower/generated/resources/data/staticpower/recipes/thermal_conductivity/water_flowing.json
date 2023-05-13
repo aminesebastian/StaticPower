@@ -7,5 +7,13 @@
       "fluid": "minecraft:flowing_water"
     }
   },
+  "freezing_behaviour": {
+    "block": {
+      "Name": "minecraft:powder_snow"
+    }
+  },
+  "overheating_behaviour": {
+    "temperature": 100
+  },
   "thermalMass": 100.0
 }

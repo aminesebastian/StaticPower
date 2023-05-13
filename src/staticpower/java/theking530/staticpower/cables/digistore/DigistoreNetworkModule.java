@@ -198,8 +198,8 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 	}
 
 	@Override
-	public void onAddedToNetwork(CableNetwork other) {
-		super.onAddedToNetwork(other);
+	public void onJoinedOtherNetwork(CableNetwork other) {
+		super.onJoinedOtherNetwork(other);
 		if (other.hasModule(ModCableModules.Digistore.get())) {
 			DigistoreNetworkModule module = (DigistoreNetworkModule) other.getModule(ModCableModules.Digistore.get());
 			module.craftingManager.mergeWithOtherManager(craftingManager);

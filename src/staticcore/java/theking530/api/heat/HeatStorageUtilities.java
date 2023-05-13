@@ -4,11 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -26,6 +28,7 @@ public class HeatStorageUtilities {
 	}
 
 	public static final float HEATING_RATE = 1 / 50f;
+	public static final float THERMAL_BEHAVIOUR_DELTA_CHANCE_DIVISOR = 4000f;
 
 	/**
 	 * Transfers the heat stored in this storage to adjacent blocks. The transfered
@@ -86,7 +89,8 @@ public class HeatStorageUtilities {
 					float heatAmountPerTick = calculateHeatTransfer(
 							new HeatQuery(otherStorage.getMass(), otherStorage.getCurrentTemperature(),
 									otherStorage.getConductivity()),
-							new HeatQuery(storage.getMass(), storage.getCurrentTemperature(), storage.getConductivity()));
+							new HeatQuery(storage.getMass(), storage.getCurrentTemperature(),
+									storage.getConductivity()));
 
 					if (heatAmountPerTick > 0) {
 						float cooled = otherStorage.cool(heatAmountPerTick, HeatTransferAction.SIMULATE);
@@ -185,45 +189,84 @@ public class HeatStorageUtilities {
 	}
 
 	public static void handleOverheatingOnSide(Level world, BlockPos pos, Direction side, IHeatStorage storage) {
-		// Get the offset position.
 		BlockPos offsetPos = pos.relative(side);
-
-		// Get the block and fluid states at the offset pos.
 		FluidState fluidState = world.getFluidState(offsetPos);
 		BlockState blockstate = world.getBlockState(offsetPos);
 
-		// If there is a recipe for thermal conductivity for this block
+
+
 		ThermalConductivityRecipe recipe = world.getRecipeManager()
 				.getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
 						new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)),
 						world)
 				.orElse(null);
 
-		// Perform the transfer.
-		if (recipe != null) {
-			// Check if there is an overheating behaviour.
-			if (recipe.hasOverheatingBehaviour()) {
-				if (storage.getCurrentTemperature() >= recipe.getOverheatingBehaviour().getTemperature()) {
-					// Add a little random in there.
-					if (SDMath.diceRoll(0.025)) {
-						// Perform the overheating with a block.
+		if (recipe == null) {
+			return;
+		}
+
+		if (recipe.hasOverheatingBehaviour()) {
+			float overheatAmount = storage.getCurrentTemperature() - recipe.getOverheatingBehaviour().getTemperature();
+			if (overheatAmount > 0) {
+				// Add a little random in there.
+				if (SDMath.diceRoll(overheatAmount / THERMAL_BEHAVIOUR_DELTA_CHANCE_DIVISOR)) {
+					if (recipe.getOverheatingBehaviour().shouldDestroyExisting()) {
 						if (recipe.getOverheatingBehaviour().hasBlock()
 								&& recipe.getOverheatingBehaviour().getBlockState() != world.getBlockState(offsetPos)) {
 							world.setBlockAndUpdate(offsetPos, recipe.getOverheatingBehaviour().getBlockState());
+						} else {
+							world.setBlockAndUpdate(offsetPos, Blocks.AIR.defaultBlockState());
 						}
-
-						// If an overheated item is established, spawn it.
-						if (recipe.getOverheatingBehaviour().hasItem()) {
-							ItemStack output = recipe.getOverheatingBehaviour().getItem().calculateOutput();
-							if (!output.isEmpty()) {
-								WorldUtilities.dropItem(world, offsetPos, output);
-							}
-						}
-						world.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.AMBIENT, 0.5f,
-								SDMath.getRandomIntInRange(8, 12) / 10.0f);
-						world.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.5f, pos.getY() + 1.0f, pos.getZ() + 0.5f,
-								0.0f, 0.01f, 0.0f);
 					}
+
+					// If an overheated item is established, spawn it.
+					if (recipe.getOverheatingBehaviour().hasItem()) {
+						ItemStack output = recipe.getOverheatingBehaviour().getItem().calculateOutput();
+						if (!output.isEmpty()) {
+							WorldUtilities.dropItem(world, offsetPos, output);
+						}
+					}
+					world.playSound(null, offsetPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.AMBIENT, 0.25f,
+							SDMath.getRandomIntInRange(8, 12) / 10.0f);
+
+					if (!world.isClientSide()) {
+						((ServerLevel) world).sendParticles(ParticleTypes.LARGE_SMOKE,
+								offsetPos.getX() + world.random.nextFloat(), offsetPos.getY() + 1.0,
+								offsetPos.getZ() + world.random.nextFloat(), 1, 0.0D, 0.1D, 0.0D, 0.0D);
+					}
+					storage.cool(recipe.getOverheatingBehaviour().getTemperature(), HeatTransferAction.EXECUTE);
+					return;
+				}
+			}
+		}
+
+		if (recipe.hasFreezeBehaviour()) {
+			float freezeAmount = storage.getCurrentTemperature() - recipe.getFreezingBehaviour().getTemperature();
+			if (freezeAmount < 0) {
+				// Add a little random in there.
+				if (SDMath.diceRoll(Math.abs(freezeAmount) / THERMAL_BEHAVIOUR_DELTA_CHANCE_DIVISOR)) {
+					if (recipe.getFreezingBehaviour().shouldDestroyExisting()) {
+						if (recipe.getFreezingBehaviour().hasBlock()
+								&& recipe.getFreezingBehaviour().getBlockState() != world.getBlockState(offsetPos)) {
+							world.setBlockAndUpdate(offsetPos, recipe.getFreezingBehaviour().getBlockState());
+						} else {
+							world.destroyBlock(offsetPos, false);
+						}
+					}
+
+					// If an overheated item is established, spawn it.
+					if (recipe.getFreezingBehaviour().hasItem()) {
+						ItemStack output = recipe.getFreezingBehaviour().getItem().calculateOutput();
+						if (!output.isEmpty()) {
+							WorldUtilities.dropItem(world, offsetPos, output);
+						}
+					}
+					world.playSound(null, offsetPos, SoundEvents.BREWING_STAND_BREW, SoundSource.AMBIENT, 0.5f,
+							SDMath.getRandomIntInRange(8, 12) / 10.0f);
+					world.addParticle(ParticleTypes.SPLASH, offsetPos.getX() + 0.5f, offsetPos.getY() + 1.0f,
+							offsetPos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);
+					storage.heat(recipe.getFreezingBehaviour().getTemperature(), HeatTransferAction.EXECUTE);
+					return;
 				}
 			}
 		}
@@ -235,7 +278,7 @@ public class HeatStorageUtilities {
 
 	public static float calculateHeatTransfer(HeatQuery source, HeatQuery target) {
 		float totalMass = source.mass() + target.mass();
-		float averageConductivity = (source.conductivity() + target.temperature()) / 2.0f;
+		float averageConductivity = (source.conductivity() + target.conductivity()) / 2.0f;
 		float delta = source.temperature() - target.temperature();
 		float heatAmount = averageConductivity * delta;
 		return heatAmount / (totalMass * 200.0f);
