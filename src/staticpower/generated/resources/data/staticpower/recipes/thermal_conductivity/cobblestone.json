@@ -5,7 +5,7 @@
       "tag": "forge:cobblestone"
     }
   },
-  "conductivity": 0.5,
+  "conductivity": 1.0,
   "overheating_behaviour": {
     "block": {
       "Name": "minecraft:lava",

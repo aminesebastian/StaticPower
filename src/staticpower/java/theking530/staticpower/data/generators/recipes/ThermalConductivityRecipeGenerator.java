@@ -25,11 +25,11 @@ public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<Thermal
 
 	@Override
 	protected void buildRecipes() {
-		addRecipe("lava", FluidIngredient.of(1, Fluids.LAVA), true, 1500, 1);
-		addRecipe("lava_flowing", FluidIngredient.of(1, Fluids.FLOWING_LAVA), true, 1500, 2);
+		addRecipe("lava", FluidIngredient.of(1, Fluids.LAVA), true, 1500, 2);
+		addRecipe("lava_flowing", FluidIngredient.of(1, Fluids.FLOWING_LAVA), true, 1500, 5);
 
 		addRecipe("coolant", FluidIngredient.of(1, ModFluids.Coolant.getSource().get()), 10);
-		addRecipe("coolant_flowing", FluidIngredient.of(1, ModFluids.Coolant.getFlowing().get()), 100);
+		addRecipe("coolant_flowing", FluidIngredient.of(1, ModFluids.Coolant.getFlowing().get()), 20);
 
 		addRecipe("ethanol", FluidIngredient.of(1, ModFluids.Ethanol.getSource().get()), 5,
 				new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState()));
@@ -45,27 +45,27 @@ public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<Thermal
 				new OverheatingBehaviour(100, ModFluids.Steam.getBlock().get().defaultBlockState(),
 						StaticPowerOutputItem.EMPTY),
 				new FreezingBehaviour(0, Blocks.ICE.defaultBlockState(), StaticPowerOutputItem.EMPTY));
-		addRecipe("water_flowing", FluidIngredient.of(1, Fluids.FLOWING_WATER), 10, new OverheatingBehaviour(100),
+		addRecipe("water_flowing", FluidIngredient.of(1, Fluids.FLOWING_WATER), 5, new OverheatingBehaviour(100),
 				new FreezingBehaviour(0, Blocks.POWDER_SNOW.defaultBlockState(), StaticPowerOutputItem.EMPTY));
 
-		addRecipe("campfire", BlockStateIngredient.of(Blocks.CAMPFIRE), true, 1000, 3);
-		addRecipe("fire", BlockStateIngredient.of(Blocks.FIRE), true, 750, 5);
-		addRecipe("torch", BlockStateIngredient.of(Blocks.TORCH), true, 300, 2);
+		addRecipe("campfire", BlockStateIngredient.of(Blocks.CAMPFIRE), true, 1000, 1);
+		addRecipe("fire", BlockStateIngredient.of(Blocks.FIRE), true, 750, 1);
+		addRecipe("torch", BlockStateIngredient.of(Blocks.TORCH), true, 300, 1);
 
-		addRecipe("stone", BlockStateIngredient.of(Tags.Blocks.STONE), 1,
+		addRecipe("stone", BlockStateIngredient.of(Tags.Blocks.STONE), 2,
 				new OverheatingBehaviour(1000, Fluids.FLOWING_LAVA));
-		addRecipe("cobblestone", BlockStateIngredient.of(Tags.Blocks.COBBLESTONE), 0.5f,
+		addRecipe("cobblestone", BlockStateIngredient.of(Tags.Blocks.COBBLESTONE), 1f,
 				new OverheatingBehaviour(1000, Fluids.LAVA));
 		addRecipe("obsidian", BlockStateIngredient.of(Tags.Blocks.OBSIDIAN), 2,
 				new OverheatingBehaviour(1000, Fluids.LAVA));
 
-		addRecipe("dirt", BlockStateIngredient.of(BlockTags.DIRT), 0.25f);
+		addRecipe("dirt", BlockStateIngredient.of(BlockTags.DIRT), 0.5f);
 		addRecipe("planks", BlockStateIngredient.of(BlockTags.PLANKS), 0.0f,
 				new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState()));
 		addRecipe("logs", BlockStateIngredient.of(BlockTags.LOGS_THAT_BURN), 0.0f,
 				new OverheatingBehaviour(300, ModBlocks.BurntLog.get().defaultBlockState()));
 
-		addRecipe("ice", BlockStateIngredient.of(BlockTags.ICE), 2, new OverheatingBehaviour(100, Fluids.WATER));
+		addRecipe("ice", BlockStateIngredient.of(BlockTags.ICE), 5, new OverheatingBehaviour(100, Fluids.WATER));
 
 		addRecipe("heatsink_aluminum", BlockStateIngredient.of(ModBlocks.AluminumHeatSink.get()), 5);
 		addRecipe("heatsink_copper", BlockStateIngredient.of(ModBlocks.CopperHeatSink.get()), 10);

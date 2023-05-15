@@ -5,7 +5,7 @@
       "tag": "minecraft:ice"
     }
   },
-  "conductivity": 2.0,
+  "conductivity": 5.0,
   "overheating_behaviour": {
     "block": {
       "Name": "minecraft:water",

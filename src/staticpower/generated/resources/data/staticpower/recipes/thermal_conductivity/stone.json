@@ -5,7 +5,7 @@
       "tag": "forge:stone"
     }
   },
-  "conductivity": 1.0,
+  "conductivity": 2.0,
   "overheating_behaviour": {
     "block": {
       "Name": "minecraft:lava",

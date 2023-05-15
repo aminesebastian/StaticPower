@@ -193,7 +193,10 @@ public class HeatStorageUtilities {
 		FluidState fluidState = world.getFluidState(offsetPos);
 		BlockState blockstate = world.getBlockState(offsetPos);
 
-
+		// Edgecase to handle waterlogged blocks for now.
+		if (!fluidState.isEmpty() && blockstate.getBlock() != fluidState.createLegacyBlock().getBlock()) {
+			return;
+		}
 
 		ThermalConductivityRecipe recipe = world.getRecipeManager()
 				.getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
