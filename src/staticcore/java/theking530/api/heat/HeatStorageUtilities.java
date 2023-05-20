@@ -27,7 +27,7 @@ public class HeatStorageUtilities {
 	public record HeatQuery(float mass, float temperature, float conductivity) {
 	}
 
-	public static final float HEATING_RATE = 1 / 50f;
+	public static final float HEATING_RATE = 200.0f;
 	public static final float THERMAL_BEHAVIOUR_DELTA_CHANCE_DIVISOR = 4000f;
 
 	/**
@@ -148,7 +148,7 @@ public class HeatStorageUtilities {
 			ambientHeat -= 5;
 		}
 
-		return new HeatQuery(IHeatStorage.DEFAULT_BLOCK_MASS, ambientHeat, 1.0f);
+		return new HeatQuery(IHeatStorage.DEFAULT_BLOCK_MASS, ambientHeat, 0.01f);
 	}
 
 	public static HeatQuery getThermalPowerOnSide(Level world, BlockPos currentPos, Direction side,
@@ -284,7 +284,7 @@ public class HeatStorageUtilities {
 		float averageConductivity = (source.conductivity() + target.conductivity()) / 2.0f;
 		float delta = source.temperature() - target.temperature();
 		float heatAmount = averageConductivity * delta;
-		return heatAmount / (totalMass * 200.0f);
+		return heatAmount / (totalMass * HEATING_RATE);
 	}
 
 }

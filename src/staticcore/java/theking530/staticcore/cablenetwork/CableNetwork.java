@@ -100,7 +100,7 @@ public class CableNetwork {
 
 		// Add the module and let it know that it was added to a network.
 		modules.put(module.getType(), module);
-		module.onFirstAddedToNetwork(this);
+		module.onModuleFirstCreated(this);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -249,7 +249,7 @@ public class CableNetwork {
 			ResourceLocation moduleType = new ResourceLocation(moduleTagCompound.getString("type"));
 
 			// Create the module.
-			CableNetworkModule moduleInstance = StaticCoreRegistries.CableModuleRegsitry().getValue(moduleType).create();
+			CableNetworkModule moduleInstance = StaticCoreRegistries.CableModuleRegsitry().getValue(moduleType).create(moduleTagCompound);
 
 			// Add the attachment to the attachments list.
 			network.addModule(moduleInstance);

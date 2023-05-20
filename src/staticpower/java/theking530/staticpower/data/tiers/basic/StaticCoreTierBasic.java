@@ -46,7 +46,7 @@ public class StaticCoreTierBasic extends StaticCoreTier {
 
 	@Override
 	protected float getDefaultMachineThermalConductivity() {
-		return 5;
+		return 100;
 	}
 
 	@Override

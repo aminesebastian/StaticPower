@@ -2,6 +2,7 @@ package theking530.api.heat;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
+import theking530.staticcore.utilities.math.SDMath;
 
 public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
@@ -78,7 +79,10 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 	}
 
 	public void setCurrentHeat(float heat) {
-		currentHeat = heat;
+		if (Float.isNaN(heat)) {
+			return;
+		}
+		currentHeat = SDMath.clamp(heat, MINIMUM_TEMPERATURE, maximumHeat);
 	}
 
 	@Override
@@ -114,7 +118,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 		}
 
 		if (action == HeatTransferAction.EXECUTE) {
-			currentHeat += actualAmount;
+			setCurrentHeat(currentHeat + actualAmount);
 			if (actualAmount > 0) {
 				getTicker().heated(actualAmount);
 			} else {
@@ -151,10 +155,6 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
-		if (currentHeat > maximumHeat) {
-			currentHeat = maximumHeat;
-		}
-
 		currentHeat = nbt.getFloat("current_heat");
 		minimumThreshold = nbt.getFloat("minimum_heat");
 		overheatThreshold = nbt.getFloat("overheat_threshold");

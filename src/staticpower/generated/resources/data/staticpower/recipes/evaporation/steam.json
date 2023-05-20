@@ -11,7 +11,7 @@
     "fluid": "staticpower:steam"
   },
   "processing": {
-    "heat": 20,
+    "heat": 10,
     "minimum_heat": 100,
     "processing_time": 10
   }

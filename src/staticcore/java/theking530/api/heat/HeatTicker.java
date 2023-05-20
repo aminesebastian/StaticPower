@@ -12,7 +12,7 @@ import theking530.staticcore.StaticCore;
 
 public class HeatTicker implements INBTSerializable<CompoundTag> {
 	public static final float INSTANT_SNAP_DELTA_THRESHOLD = 1e4f;
-	public static final float SMOOTHING_FACTOR = 1.0f / 5.0f;
+	public static final float SMOOTHING_FACTOR = 1.0f / 20.0f;
 
 	protected final float smoothingFactor;
 	protected final IHeatStorage owningStorage;

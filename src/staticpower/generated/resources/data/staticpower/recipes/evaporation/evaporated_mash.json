@@ -11,7 +11,7 @@
     "fluid": "staticpower:evaporated_mash"
   },
   "processing": {
-    "heat": 10,
+    "heat": 5,
     "minimum_heat": 100,
     "processing_time": 10
   }

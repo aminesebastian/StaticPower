@@ -34,7 +34,7 @@ public abstract class CableNetworkModule {
 	 * 
 	 * @param network
 	 */
-	public void onFirstAddedToNetwork(CableNetwork network) {
+	public void onModuleFirstCreated(CableNetwork network) {
 		this.Network = network;
 	}
 

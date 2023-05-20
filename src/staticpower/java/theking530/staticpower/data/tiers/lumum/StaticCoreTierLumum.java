@@ -46,7 +46,7 @@ public class StaticCoreTierLumum extends StaticCoreTier {
 
 	@Override
 	protected float getDefaultMachineThermalConductivity() {
-		return 50;
+		return 100;
 	}
 
 	@Override

@@ -1,20 +1,20 @@
 {
   "values": [
-    "staticpower:light_bulb_magenta",
-    "staticpower:light_bulb_yellow",
-    "staticpower:light_bulb_light_gray",
-    "staticpower:light_bulb_green",
-    "staticpower:light_bulb_gray",
-    "staticpower:light_bulb_blue",
-    "staticpower:light_bulb_brown",
-    "staticpower:light_bulb_red",
-    "staticpower:light_bulb_cyan",
-    "staticpower:light_bulb_black",
+    "staticpower:light_bulb_orange",
     "staticpower:light_bulb_white",
     "staticpower:light_bulb_pink",
-    "staticpower:light_bulb_orange",
+    "staticpower:light_bulb_gray",
+    "staticpower:light_bulb_green",
+    "staticpower:light_bulb_cyan",
+    "staticpower:light_bulb_black",
+    "staticpower:light_bulb_magenta",
     "staticpower:light_bulb_purple",
+    "staticpower:light_bulb_blue",
+    "staticpower:light_bulb_red",
+    "staticpower:light_bulb_light_blue",
+    "staticpower:light_bulb_yellow",
+    "staticpower:light_bulb_brown",
     "staticpower:light_bulb_lime",
-    "staticpower:light_bulb_light_blue"
+    "staticpower:light_bulb_light_gray"
   ]
 }

@@ -21,14 +21,17 @@ public class GuiTextUtilities {
 	/** Translation text component for millibuckets (mB). */
 	public static final MutableComponent FLUID_UNIT_TRANSLATION = Component.translatable("gui.staticcore.fluid_unit");
 	/** Translation text component for millibuckets Per Tick (mB/t). */
-	public static final MutableComponent FLUID_RATE_TRANSLATION = Component.translatable("gui.staticcore.fluid_unit_per_tick");
+	public static final MutableComponent FLUID_RATE_TRANSLATION = Component
+			.translatable("gui.staticcore.fluid_unit_per_tick");
 
 	/** Translation text component for heat (H). */
 	public static final MutableComponent HEAT_UNIT_TRANSLATION = Component.translatable("gui.staticcore.heat_unit");
 	/** Translation text component for Heat Per Tick (H/t). */
-	public static final MutableComponent HEAT_RATE_TRANSLATION = Component.translatable("gui.staticcore.heat_unit_per_tick");
+	public static final MutableComponent HEAT_RATE_TRANSLATION = Component
+			.translatable("gui.staticcore.heat_unit_per_tick");
 	/** Translation text component for Conductivity. */
-	public static final MutableComponent HEAT_CONDUCTIVITY_TRANSLATION = Component.translatable("gui.staticcore.heat_conductivity_unit");
+	public static final MutableComponent HEAT_CONDUCTIVITY_TRANSLATION = Component
+			.translatable("gui.staticcore.heat_conductivity_unit");
 
 	/** Single instance of number formatter with two decimal places.. */
 	private static final NumberFormat NUMBER_FORMATTER_TWO_DECIMAL;
@@ -55,7 +58,8 @@ public class GuiTextUtilities {
 	}
 
 	public static MutableComponent formatTicksToTimeUnit(int ticks) {
-		return Component.translatable(NUMBER_FORMATTER_ONE_DECIMAL.format(ticks / 20)).append(Component.translatable("gui.staticcore.seconds.short"));
+		return Component.translatable(NUMBER_FORMATTER_ONE_DECIMAL.format(ticks / 20))
+				.append(Component.translatable("gui.staticcore.seconds.short"));
 	}
 
 	public static MutableComponent formatHeatToString(float currentHeat, float capacity) {
@@ -75,11 +79,16 @@ public class GuiTextUtilities {
 		if ((int) heat == Integer.MAX_VALUE) {
 			output = Component.literal("∞");
 		} else {
-			MetricConverter metricEnergy = new MetricConverter(heat);
-			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
+			MetricConverter metricRate = new MetricConverter(heat);
+
+			if (String.valueOf(metricRate.getValue()).length() > 2) {
+				output = Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(metricRate.getValue()));
+			} else {
+				output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue()));
+			}
 
 			if (includeMetricUnit) {
-				output.append(metricEnergy.getSuffix());
+				output.append(metricRate.getSuffix());
 			}
 		}
 
@@ -98,7 +107,13 @@ public class GuiTextUtilities {
 			output = Component.literal("∞");
 		} else {
 			MetricConverter metricRate = new MetricConverter(heatTransferRate);
-			output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).append(" ").append(metricRate.getSuffix());
+
+			if (String.valueOf(metricRate.getValue()).length() > 2) {
+				output = Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(metricRate.getValue()));
+			} else {
+				output = Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue()));
+			}
+			output.append(metricRate.getSuffix());
 		}
 
 		return output.append(HEAT_RATE_TRANSLATION);
@@ -113,7 +128,8 @@ public class GuiTextUtilities {
 			output = Component.literal("∞");
 		} else {
 			MetricConverter metricRate = new MetricConverter(conductivity);
-			output = Component.literal(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).append(metricRate.getSuffix());
+			output = Component.literal(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue()))
+					.append(metricRate.getSuffix());
 		}
 
 		return output.append(" ").append(HEAT_CONDUCTIVITY_TRANSLATION);
@@ -178,7 +194,8 @@ public class GuiTextUtilities {
 			output = Component.literal("∞");
 		} else {
 			MetricConverter metricRate = new MetricConverter(fluidRate, -1);
-			output = Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(metricRate.getValue())).append(includeSpace ? " " : "").append(metricRate.getSuffix());
+			output = Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(metricRate.getValue()))
+					.append(includeSpace ? " " : "").append(metricRate.getSuffix());
 		}
 
 		return output.append(FLUID_RATE_TRANSLATION);
@@ -201,22 +218,29 @@ public class GuiTextUtilities {
 	}
 
 	public static MutableComponent formatNumberAsPercentStringNoDecimal(double number) {
-		return Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100)).append("%");
+		return Component.literal(NUMBER_FORMATTER_NO_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100))
+				.append("%");
 	}
 
 	public static MutableComponent formatNumberAsPercentStringOneDecimal(double number) {
-		return Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100)).append("%");
+		return Component.literal(NUMBER_FORMATTER_ONE_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100))
+				.append("%");
 	}
 
-	public static void addColoredBulletTooltip(List<Component> tooltip, String key, ChatFormatting keyColor, String value) {
-		addColoredBulletTooltip(tooltip, key, Style.EMPTY.withColor(keyColor), value, Style.EMPTY.withColor(ChatFormatting.WHITE));
+	public static void addColoredBulletTooltip(List<Component> tooltip, String key, ChatFormatting keyColor,
+			String value) {
+		addColoredBulletTooltip(tooltip, key, Style.EMPTY.withColor(keyColor), value,
+				Style.EMPTY.withColor(ChatFormatting.WHITE));
 	}
 
-	public static void addColoredBulletTooltip(List<Component> tooltip, String key, ChatFormatting keyColor, String value, ChatFormatting valueColor) {
-		addColoredBulletTooltip(tooltip, key, Style.EMPTY.withColor(keyColor), value, Style.EMPTY.withColor(valueColor));
+	public static void addColoredBulletTooltip(List<Component> tooltip, String key, ChatFormatting keyColor,
+			String value, ChatFormatting valueColor) {
+		addColoredBulletTooltip(tooltip, key, Style.EMPTY.withColor(keyColor), value,
+				Style.EMPTY.withColor(valueColor));
 	}
 
-	public static void addColoredBulletTooltip(List<Component> tooltip, String key, Style keyStyle, String value, Style valueStyle) {
+	public static void addColoredBulletTooltip(List<Component> tooltip, String key, Style keyStyle, String value,
+			Style valueStyle) {
 		tooltip.add(Component.translatable(key).setStyle(keyStyle));
 		tooltip.add(Component.literal("• ").append(Component.translatable(value).setStyle(valueStyle)));
 	}
@@ -234,14 +258,18 @@ public class GuiTextUtilities {
 	}
 
 	public static List<Component> createColoredBulletTooltip(String key, ChatFormatting keyColor, String value) {
-		return createColoredBulletTooltip(key, Style.EMPTY.withColor(keyColor), value, Style.EMPTY.withColor(ChatFormatting.WHITE));
+		return createColoredBulletTooltip(key, Style.EMPTY.withColor(keyColor), value,
+				Style.EMPTY.withColor(ChatFormatting.WHITE));
 	}
 
-	public static List<Component> createColoredBulletTooltip(String key, ChatFormatting keyColor, String value, ChatFormatting valueColor) {
-		return createColoredBulletTooltip(key, Style.EMPTY.withColor(keyColor), value, Style.EMPTY.withColor(valueColor));
+	public static List<Component> createColoredBulletTooltip(String key, ChatFormatting keyColor, String value,
+			ChatFormatting valueColor) {
+		return createColoredBulletTooltip(key, Style.EMPTY.withColor(keyColor), value,
+				Style.EMPTY.withColor(valueColor));
 	}
 
-	public static List<Component> createColoredBulletTooltip(String key, Style keyStyle, String value, Style valueStyle) {
+	public static List<Component> createColoredBulletTooltip(String key, Style keyStyle, String value,
+			Style valueStyle) {
 		List<Component> output = new ArrayList<Component>();
 		addColoredBulletTooltip(output, key, keyStyle, value, valueStyle);
 		return output;

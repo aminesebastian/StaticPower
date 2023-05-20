@@ -28,8 +28,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 
 	public HeatNetworkModule() {
 		super(ModCableModules.Heat.get());
-		// The actual input and output rates are controlled by the individual cables.
-		heatStorage = new HeatStorage(10, 0, 0, Float.MAX_VALUE);
+		heatStorage = new HeatStorage(50, 0, Float.MAX_VALUE,  0);
 	}
 
 	public HeatStorage getHeatStorage() {
@@ -38,17 +37,17 @@ public class HeatNetworkModule extends CableNetworkModule {
 
 	@Override
 	public void getReaderOutput(List<Component> components, BlockPos pos) {
-		float averageThermalConductivity = 0.0f;
-		for (Cable cable : Network.getGraph().getCables().values()) {
-			averageThermalConductivity += cable.getDataTag().getFloat(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
+		if (!Network.getGraph().getCables().containsKey(pos)) {
+			return;
 		}
-		averageThermalConductivity /= Network.getGraph().getCables().size();
 
+		Cable cable = Network.getGraph().getCables().get(pos);
 		Component currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentTemperature(),
 				heatStorage.getOverheatThreshold());
 		Component cooling = GuiTextUtilities.formatHeatRateToString(heatStorage.getTicker().getAverageCooledPerTick());
 		Component heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getTicker().getAverageHeatedPerTick());
-		Component averageConductivity = GuiTextUtilities.formatHeatRateToString(averageThermalConductivity);
+		Component averageConductivity = GuiTextUtilities
+				.formatHeatRateToString(cable.getDataTag().getFloat(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY));
 
 		components.add(Component.literal(ChatFormatting.WHITE.toString()).append(Component.literal("Contains: "))
 				.append(ChatFormatting.GRAY.toString()).append(currentHeat));
@@ -56,9 +55,8 @@ public class HeatNetworkModule extends CableNetworkModule {
 				.append(ChatFormatting.GRAY.toString()).append(heating));
 		components.add(Component.literal(ChatFormatting.BLUE.toString()).append(Component.literal("Cooling: "))
 				.append(ChatFormatting.GRAY.toString()).append(cooling));
-		components.add(
-				Component.literal(ChatFormatting.AQUA.toString()).append(Component.literal("Average Conductivity: "))
-						.append(ChatFormatting.GRAY.toString()).append(averageConductivity));
+		components.add(Component.literal(ChatFormatting.AQUA.toString()).append(Component.literal("Conductivity: "))
+				.append(ChatFormatting.GRAY.toString()).append(averageConductivity));
 	}
 
 	@Override
@@ -94,8 +92,8 @@ public class HeatNetworkModule extends CableNetworkModule {
 	}
 
 	@Override
-	public void onFirstAddedToNetwork(CableNetwork other) {
-		super.onFirstAddedToNetwork(other);
+	public void onModuleFirstCreated(CableNetwork other) {
+		super.onModuleFirstCreated(other);
 
 		float averageBiomeTemperature = 0.0f;
 		for (Cable cable : Network.getGraph().getCables().values()) {
