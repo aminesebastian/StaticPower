@@ -1,0 +1,19 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:storage_blocks/raw_platinum"
+    }
+  },
+  "conductivity": 70.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "staticpower:molten_platinum",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 1770
+  },
+  "thermalMass": 100.0
+}

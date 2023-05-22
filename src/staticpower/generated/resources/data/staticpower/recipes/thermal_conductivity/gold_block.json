@@ -1,0 +1,19 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:storage_blocks/gold"
+    }
+  },
+  "conductivity": 320.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "staticpower:molten_gold",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 1000
+  },
+  "thermalMass": 100.0
+}

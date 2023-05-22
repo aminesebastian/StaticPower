@@ -1,0 +1,19 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:storage_blocks/raw_magnesium"
+    }
+  },
+  "conductivity": 160.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "staticpower:molten_magnesium",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 650
+  },
+  "thermalMass": 100.0
+}

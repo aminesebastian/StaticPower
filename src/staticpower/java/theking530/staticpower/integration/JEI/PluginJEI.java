@@ -31,6 +31,7 @@ import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.crafting.MachineRecipeProcessingSection;
 import theking530.staticcore.crafting.StaticPowerOutputItem;
 import theking530.staticcore.gui.screens.StaticPowerContainerScreen;
+import theking530.staticcore.init.StaticCoreRecipeTypes;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.machines.autocrafter.ContainerAutoCraftingTable;
 import theking530.staticpower.blockentities.machines.autosolderingtable.ContainerAutoSolderingTable;
@@ -159,47 +160,82 @@ public class PluginJEI implements IModPlugin {
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistration subtypeRegistry) {
 		subtypeRegistry.useNbtForSubtypes(ModItems.CableCover.get());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicPortableBattery.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedPortableBattery.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticPortableBattery.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedPortableBattery.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumPortableBattery.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.CreativePortableBattery.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicPortableBattery.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedPortableBattery.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticPortableBattery.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedPortableBattery.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumPortableBattery.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.CreativePortableBattery.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicBatteryPack.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedBatteryPack.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticBatteryPack.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedBatteryPack.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumBatteryPack.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.CreativeBatteryPack.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicBatteryPack.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedBatteryPack.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticBatteryPack.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedBatteryPack.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumBatteryPack.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.CreativeBatteryPack.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.ElectringSolderingIron.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.ElectringSolderingIron.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicMiningDrill.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedMiningDrill.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticMiningDrill.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedMiningDrill.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumMiningDrill.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicMiningDrill.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedMiningDrill.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticMiningDrill.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedMiningDrill.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumMiningDrill.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicChainsaw.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedChainsaw.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticChainsaw.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedChainsaw.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumChainsaw.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicChainsaw.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedChainsaw.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticChainsaw.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedChainsaw.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumChainsaw.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicMagnet.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedMagnet.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticMagnet.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedMagnet.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumMagnet.get(), new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicMagnet.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedMagnet.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticMagnet.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedMagnet.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumMagnet.get(),
+				new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.IronFluidCapsule.get(), new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicFluidCapsule.get(), new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedFluidCapsule.get(), new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticFluidCapsule.get(), new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedFluidCapsule.get(), new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumFluidCapsule.get(), new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.CreativeFluidCapsule.get(), new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.IronFluidCapsule.get(),
+				new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.BasicFluidCapsule.get(),
+				new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AdvancedFluidCapsule.get(),
+				new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.StaticFluidCapsule.get(),
+				new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.EnergizedFluidCapsule.get(),
+				new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.LumumFluidCapsule.get(),
+				new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.CreativeFluidCapsule.get(),
+				new FluidCapsule.FluidCapsuleItemJEIInterpreter());
 	}
 
 	@Override
@@ -207,48 +243,79 @@ public class PluginJEI implements IModPlugin {
 		@SuppressWarnings("resource")
 		RecipeManager recipeManager = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager();
 
-		registration.addRecipes(LumberMillRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.LUMBER_MILL_RECIPE_TYPE.get()));
+		registration.addRecipes(LumberMillRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.LUMBER_MILL_RECIPE_TYPE.get()));
 		registration.addRecipes(PoweredFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(RecipeType.SMELTING));
-		registration.addRecipes(FormerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.FORMER_RECIPE_TYPE.get()));
-		registration.addRecipes(SolderingTableRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.SOLDERING_RECIPE_TYPE.get()));
-		registration.addRecipes(ThermalConductivityRecipeCategory.TYPE, ThermalConductivityRecipeProvider.getRecipes());
-		registration.addRecipes(HammerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.HAMMER_RECIPE_TYPE.get()));
-		registration.addRecipes(CauldronRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.CAULDRON_RECIPE_TYPE.get()));
-		registration.addRecipes(FertilizerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get()));
-		registration.addRecipes(AlloyFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get()));
-		registration.addRecipes(PoweredGrinderRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.GRINDER_RECIPE_TYPE.get()));
-		registration.addRecipes(CentrifugeRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.CENTRIFUGE_RECIPE_TYPE.get()));
-		registration.addRecipes(SolidGeneratorRecipeCategory.TYPE, recipeManager.getAllRecipesFor(SolidFuelRecipe.RECIPE_TYPE));
-		registration.addRecipes(LatheRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.LATHE_RECIPE_TYPE.get()));
-		registration.addRecipes(TumblerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.TUMBLER_RECIPE_TYPE.get()));
+		registration.addRecipes(FormerRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.FORMER_RECIPE_TYPE.get()));
+		registration.addRecipes(SolderingTableRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.SOLDERING_RECIPE_TYPE.get()));
+		registration.addRecipes(ThermalConductivityRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get()));
+		registration.addRecipes(HammerRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.HAMMER_RECIPE_TYPE.get()));
+		registration.addRecipes(CauldronRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.CAULDRON_RECIPE_TYPE.get()));
+		registration.addRecipes(FertilizerRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get()));
+		registration.addRecipes(AlloyFurnaceRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get()));
+		registration.addRecipes(PoweredGrinderRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.GRINDER_RECIPE_TYPE.get()));
+		registration.addRecipes(CentrifugeRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.CENTRIFUGE_RECIPE_TYPE.get()));
+		registration.addRecipes(SolidGeneratorRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(SolidFuelRecipe.RECIPE_TYPE));
+		registration.addRecipes(LatheRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.LATHE_RECIPE_TYPE.get()));
+		registration.addRecipes(TumblerRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.TUMBLER_RECIPE_TYPE.get()));
 		registration.addRecipes(SmithingRecipeCategory.TYPE, SmithingRecipeProvider.getRecipes());
 		registration.addRecipes(PackagerRecipeCategory.TYPE, PackagerRecipeProvider.getRecipes());
-		registration.addRecipes(FermenterRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.FERMENTER_RECIPE_TYPE.get()));
-		registration.addRecipes(SqueezerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.SQUEEZER_RECIPE_TYPE.get()));
-		registration.addRecipes(BottleRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.BOTTLER_RECIPE_TYPE.get()));
-		registration.addRecipes(FluidInfuserRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.FLUID_INFUSION_RECIPE_TYPE.get()));
-		registration.addRecipes(FluidGeneratorRecipeCateogry.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.FLUID_GENERATOR_RECIPE_TYPE.get()));
-		registration.addRecipes(CasterRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.CASTING_RECIPE_TYPE.get()));
-		registration.addRecipes(FusionFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.FUSION_FURNACE_RECIPE_TYPE.get()));
-		registration.addRecipes(EvaporatorRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.EVAPORATOR_RECIPE_TYPE.get()));
-		registration.addRecipes(CondenserRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.CONDENSATION_RECIPE_TYPE.get()));
-		registration.addRecipes(VulcanizerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.VULCANIZER_RECIPE_TYPE.get()));
-		registration.addRecipes(MixerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.MIXER_RECIPE_TYPE.get()));
-		registration.addRecipes(CrucibleRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.CRUCIBLE_RECIPE_TYPE.get()));
-		registration.addRecipes(RefineryRecipeCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipeTypes.REFINERY_RECIPE_TYPE.get()));
+		registration.addRecipes(FermenterRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.FERMENTER_RECIPE_TYPE.get()));
+		registration.addRecipes(SqueezerRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.SQUEEZER_RECIPE_TYPE.get()));
+		registration.addRecipes(BottleRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.BOTTLER_RECIPE_TYPE.get()));
+		registration.addRecipes(FluidInfuserRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.FLUID_INFUSION_RECIPE_TYPE.get()));
+		registration.addRecipes(FluidGeneratorRecipeCateogry.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.FLUID_GENERATOR_RECIPE_TYPE.get()));
+		registration.addRecipes(CasterRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.CASTING_RECIPE_TYPE.get()));
+		registration.addRecipes(FusionFurnaceRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.FUSION_FURNACE_RECIPE_TYPE.get()));
+		registration.addRecipes(EvaporatorRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.EVAPORATOR_RECIPE_TYPE.get()));
+		registration.addRecipes(CondenserRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.CONDENSATION_RECIPE_TYPE.get()));
+		registration.addRecipes(VulcanizerRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.VULCANIZER_RECIPE_TYPE.get()));
+		registration.addRecipes(MixerRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.MIXER_RECIPE_TYPE.get()));
+		registration.addRecipes(CrucibleRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.CRUCIBLE_RECIPE_TYPE.get()));
+		registration.addRecipes(RefineryRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.REFINERY_RECIPE_TYPE.get()));
 	}
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.LumberMill.get()), LumberMillRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredFurnace.get()), PoweredFurnaceRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredFurnace.get()),
+				PoweredFurnaceRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Former.get()), FormerRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolderingTable.get()), SolderingTableRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable.get()), SolderingTableRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolderingTable.get()),
+				SolderingTableRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable.get()),
+				SolderingTableRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AlloyFurnace.get()), AlloyFurnaceRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredGrinder.get()), PoweredGrinderRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredGrinder.get()),
+				PoweredGrinderRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge.get()), CentrifugeRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator.get()), SolidGeneratorRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator.get()),
+				SolidGeneratorRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSmith.get()), SmithingRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Carpenter.get()), LatheRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler.get()), TumblerRecipeCategory.TYPE);
@@ -257,7 +324,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Squeezer.get()), SqueezerRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Bottler.get()), BottleRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidInfuser.get()), FluidInfuserRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidGenerator.get()), FluidGeneratorRecipeCateogry.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidGenerator.get()),
+				FluidGeneratorRecipeCateogry.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Caster.get()), CasterRecipeCategory.TYPE);
 
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoCraftingTable.get()), RecipeTypes.CRAFTING);
@@ -273,9 +341,10 @@ public class PluginJEI implements IModPlugin {
 			registration.addRecipeCatalyst(new ItemStack(regObject.get()), ThermalConductivityRecipeCategory.TYPE);
 		}
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatSink.get()),
+				ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink.get()),
+				ThermalConductivityRecipeCategory.TYPE);
 
 		registration.addRecipeCatalyst(new ItemStack(ModItems.BronzeMetalHammer.get()), HammerRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.CreativeMetalHammer.get()), HammerRecipeCategory.TYPE);
@@ -289,7 +358,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CleanCauldron.get()), CauldronRecipeCategory.TYPE);
 
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.BasicFarmer.get()), FertilizerRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModItems.SprinklerAttachment.get()), FertilizerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.SprinklerAttachment.get()),
+				FertilizerRecipeCategory.TYPE);
 	}
 
 	@Override
@@ -302,19 +372,25 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+		registration
+				.addRecipeTransferHandler(
+						new CraftingRecipeTransferHandler<ContainerDigistoreCraftingTerminal, CraftingRecipe>(
+								ContainerDigistoreCraftingTerminal.class, RecipeTypes.CRAFTING, 9),
+						RecipeTypes.CRAFTING);
+		registration
+				.addRecipeTransferHandler(new CraftingRecipeTransferHandler<ContainerAutoCraftingTable, CraftingRecipe>(
+						ContainerAutoCraftingTable.class, RecipeTypes.CRAFTING, 9), RecipeTypes.CRAFTING);
 		registration.addRecipeTransferHandler(
-				new CraftingRecipeTransferHandler<ContainerDigistoreCraftingTerminal, CraftingRecipe>(ContainerDigistoreCraftingTerminal.class, RecipeTypes.CRAFTING, 9),
+				new CraftingRecipeTransferHandler<ContainerDigistorePatternEncoder, CraftingRecipe>(
+						ContainerDigistorePatternEncoder.class, RecipeTypes.CRAFTING, 9),
 				RecipeTypes.CRAFTING);
 		registration.addRecipeTransferHandler(
-				new CraftingRecipeTransferHandler<ContainerAutoCraftingTable, CraftingRecipe>(ContainerAutoCraftingTable.class, RecipeTypes.CRAFTING, 9), RecipeTypes.CRAFTING);
-		registration.addRecipeTransferHandler(
-				new CraftingRecipeTransferHandler<ContainerDigistorePatternEncoder, CraftingRecipe>(ContainerDigistorePatternEncoder.class, RecipeTypes.CRAFTING, 9),
-				RecipeTypes.CRAFTING);
-		registration.addRecipeTransferHandler(
-				new CraftingRecipeTransferHandler<ContainerSolderingTable, SolderingRecipe>(ContainerSolderingTable.class, SolderingTableRecipeCategory.TYPE, 9),
+				new CraftingRecipeTransferHandler<ContainerSolderingTable, SolderingRecipe>(
+						ContainerSolderingTable.class, SolderingTableRecipeCategory.TYPE, 9),
 				SolderingTableRecipeCategory.TYPE);
 		registration.addRecipeTransferHandler(
-				new CraftingRecipeTransferHandler<ContainerAutoSolderingTable, SolderingRecipe>(ContainerAutoSolderingTable.class, SolderingTableRecipeCategory.TYPE, 9),
+				new CraftingRecipeTransferHandler<ContainerAutoSolderingTable, SolderingRecipe>(
+						ContainerAutoSolderingTable.class, SolderingTableRecipeCategory.TYPE, 9),
 				SolderingTableRecipeCategory.TYPE);
 	}
 

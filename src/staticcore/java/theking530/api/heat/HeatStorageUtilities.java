@@ -24,7 +24,7 @@ import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
 public class HeatStorageUtilities {
-	public record HeatQuery(float mass, float temperature, float conductivity) {
+	public record HeatQuery(float mass, float temperature, float conductivity, IHeatStorage heatStorage) {
 	}
 
 	public static final float HEATING_RATE = 200.0f;
@@ -43,16 +43,14 @@ public class HeatStorageUtilities {
 	public static int transferHeatWithSurroundings(IHeatStorage storage, Level world, BlockPos currentPos,
 			HeatTransferAction action) {
 		float totalPassive = 0;
-		float totalApplied = 0;
 
 		for (Direction side : Direction.values()) {
 			// Skip any other entities with heat storage capability, we'll deal with those
 			// after.
 			BlockEntity be = world.getBlockEntity(currentPos.relative(side));
-			if (be != null) {
-				if (be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).isPresent()) {
-					continue;
-				}
+			if (be != null
+					&& be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).isPresent()) {
+				continue;
 			}
 
 			// Get the temperature and conductivity on this side.
@@ -62,11 +60,11 @@ public class HeatStorageUtilities {
 			// to the overheat temp, as that is the point of maximum efficiency.
 			if (action == HeatTransferAction.SIMULATE_MAX_EFFICIENCY) {
 				adjacentHeat = new HeatQuery(adjacentHeat.mass(), storage.getOverheatThreshold(),
-						adjacentHeat.conductivity());
+						adjacentHeat.conductivity(), adjacentHeat.heatStorage());
 			}
 
-			float heatAmountPerTick = calculateHeatTransfer(adjacentHeat,
-					new HeatQuery(storage.getMass(), storage.getCurrentTemperature(), storage.getConductivity()));
+			float heatAmountPerTick = calculateHeatTransfer(adjacentHeat, new HeatQuery(storage.getMass(),
+					storage.getCurrentTemperature(), storage.getConductivity(), storage));
 			totalPassive += heatAmountPerTick;
 		}
 
@@ -74,6 +72,7 @@ public class HeatStorageUtilities {
 			totalPassive = 0;
 		}
 
+		float totalApplied = 0;
 		if (totalPassive > 0) {
 			totalApplied += storage.heat(totalPassive, action);
 		} else if (totalPassive < 0) {
@@ -82,26 +81,29 @@ public class HeatStorageUtilities {
 
 		for (Direction side : Direction.values()) {
 			BlockEntity be = world.getBlockEntity(currentPos.relative(side));
-			if (be != null) {
-				IHeatStorage otherStorage = be
-						.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).orElse(null);
-				if (otherStorage != null && otherStorage != storage) {
-					float heatAmountPerTick = calculateHeatTransfer(
-							new HeatQuery(otherStorage.getMass(), otherStorage.getCurrentTemperature(),
-									otherStorage.getConductivity()),
-							new HeatQuery(storage.getMass(), storage.getCurrentTemperature(),
-									storage.getConductivity()));
+			if (be == null) {
+				continue;
+			}
 
-					if (heatAmountPerTick > 0) {
-						float cooled = otherStorage.cool(heatAmountPerTick, HeatTransferAction.SIMULATE);
-						float heated = storage.heat(cooled, action);
-						otherStorage.cool(heated, action);
-					} else {
-						float heated = otherStorage.heat(-heatAmountPerTick, HeatTransferAction.SIMULATE);
-						float cooled = storage.cool(heated, action);
-						otherStorage.heat(cooled, action);
-					}
-				}
+			IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite())
+					.orElse(null);
+			if (otherStorage == null || otherStorage != storage) {
+				continue;
+			}
+
+			float heatAmountPerTick = calculateHeatTransfer(
+					new HeatQuery(otherStorage.getMass(), otherStorage.getCurrentTemperature(),
+							otherStorage.getConductivity(), otherStorage),
+					new HeatQuery(storage.getMass(), storage.getCurrentTemperature(), storage.getConductivity(), storage));
+
+			if (heatAmountPerTick > 0) {
+				float cooled = otherStorage.cool(heatAmountPerTick, HeatTransferAction.SIMULATE);
+				float heated = storage.heat(cooled, action);
+				totalApplied -= otherStorage.cool(heated, action);
+			} else {
+				float heated = otherStorage.heat(-heatAmountPerTick, HeatTransferAction.SIMULATE);
+				float cooled = storage.cool(heated, action);
+				totalApplied += otherStorage.heat(cooled, action);
 			}
 		}
 
@@ -148,7 +150,7 @@ public class HeatStorageUtilities {
 			ambientHeat -= 5;
 		}
 
-		return new HeatQuery(IHeatStorage.DEFAULT_BLOCK_MASS, ambientHeat, 0.01f);
+		return new HeatQuery(IHeatStorage.DEFAULT_BLOCK_MASS, ambientHeat, 0.01f, null);
 	}
 
 	public static HeatQuery getThermalPowerOnSide(Level world, BlockPos currentPos, Direction side,
@@ -161,7 +163,7 @@ public class HeatStorageUtilities {
 					.orElse(null);
 			if (otherStorage != null) {
 				return new HeatQuery(otherStorage.getMass(), otherStorage.getCurrentTemperature(),
-						otherStorage.getConductivity());
+						otherStorage.getConductivity(), otherStorage);
 			}
 		}
 
@@ -181,10 +183,10 @@ public class HeatStorageUtilities {
 		if (recipe != null) {
 			return new HeatQuery(recipe.getThermalMass(),
 					recipe.hasActiveTemperature() ? recipe.getTemperature() : ambientTemperature.temperature(),
-					recipe.getConductivity());
+					recipe.getConductivity(), null);
 		} else {
 			return new HeatQuery(IHeatStorage.DEFAULT_BLOCK_MASS, ambientTemperature.temperature(),
-					ambientTemperature.conductivity());
+					ambientTemperature.conductivity(), null);
 		}
 	}
 

@@ -8,7 +8,7 @@
       "item": "staticpower:upgrade_plate_static"
     },
     "r": {
-      "item": "staticpower:heat_sink_copper"
+      "item": "staticpower:heat_sink_aluminum"
     }
   },
   "pattern": [

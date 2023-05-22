@@ -59,13 +59,6 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (getTier() == StaticPowerTiers.COPPER) {
-			return BlockEntityHeatSink.TYPE_COPPER.create(pos, state);
-		} else if (getTier() == StaticPowerTiers.GOLD) {
-			return BlockEntityHeatSink.TYPE_GOLD.create(pos, state);
-		} else if (getTier() == StaticPowerTiers.ALUMINUM) {
-			return BlockEntityHeatSink.TYPE_ALUMINUM.create(pos, state);
-		}
-		return null;
+		return BlockEntityHeatSink.TYPE.create(pos, state);
 	}
 }

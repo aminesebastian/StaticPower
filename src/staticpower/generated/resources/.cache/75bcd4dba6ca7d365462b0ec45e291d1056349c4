@@ -1,18 +1,18 @@
-// 1.19.2	2023-05-20T02:23:19.1621934	Tags for minecraft:block
+// 1.19.2	2023-05-21T18:33:12.3930926	Tags for minecraft:block
 1ed8c6375235d71cbedaa412167804ea4fb8fc97 data/forge/tags/blocks/ores.json
 a2bda67c5d909a46c468ef0fe160e60f0bf49f1e data/forge/tags/blocks/ores/aluminum.json
-1158fcf06bd78d5574c197da71006072cc599cde data/forge/tags/blocks/ores/coal.json
+5ec8034d3f37dad3b9f5d4f22d7f542fb0df81ee data/forge/tags/blocks/ores/coal.json
 e10dcc3d253588da35280d811123dcd8ea25b33c data/forge/tags/blocks/ores/copper.json
-bc1fc1fe3eb47ce508f5cd1d239594763484349b data/forge/tags/blocks/ores/diamond.json
-3e0b4a795eda7e51c4f6f0c4fc66f833f540004e data/forge/tags/blocks/ores/emerald.json
+f28dc9f2c7d071fef84fb760a59427d564938731 data/forge/tags/blocks/ores/diamond.json
+913bc5c31b098eada6b776a32e560c19f9515e61 data/forge/tags/blocks/ores/emerald.json
 2103a8f8b5ea89756360692f00eff36c1669f8ab data/forge/tags/blocks/ores/gold.json
 385a3114ef01b4fe6109f57887dc06d38dfbed8f data/forge/tags/blocks/ores/iron.json
-d6910f007934c61baf681e23511ff92bc5c46873 data/forge/tags/blocks/ores/lapis.json
+89a7253fe70309e791af46e2363de068e26b63f2 data/forge/tags/blocks/ores/lapis.json
 1ea484565567160e9431ce43a1d4348cc22b2426 data/forge/tags/blocks/ores/lead.json
 8b05808d79ab659bd72e616c0ed1a8d117985786 data/forge/tags/blocks/ores/magnesium.json
 790ca15ed8965110621dec733061a4cdcc447c93 data/forge/tags/blocks/ores/platinum.json
 d6cc7b45842bf7bada70aae6db2b46a4d2882c31 data/forge/tags/blocks/ores/quartz.json
-d4e7ade5daee1ca7e937e90960c80f487d95cd26 data/forge/tags/blocks/ores/redstone.json
+d1b3de80a7e228bb1b85aa05703471032bc2a8c8 data/forge/tags/blocks/ores/redstone.json
 6255b0bfa9467a786fc5d05158284257f26e3943 data/forge/tags/blocks/ores/ruby.json
 163cf6ca087cea2c47af13bbfee1795391d36038 data/forge/tags/blocks/ores/sapphire.json
 4d851757267ce40c0d5b7f2188f6d59b80932897 data/forge/tags/blocks/ores/silver.json
@@ -83,7 +83,7 @@ b5528cd01649a1309202d569b50e24035689575d data/staticpower/tags/blocks/chests.jso
 be555cbc5abd8b3fe4b58955a78d28fa6945a6ee data/staticpower/tags/blocks/circuit_breakers.json
 2fffdb63683f8a6653f815eec7ebc8e7db031f8c data/staticpower/tags/blocks/conveyors.json
 8d9dedb8749238a5f9ce282961cbf7962727cfac data/staticpower/tags/blocks/farmland.json
-cf4f3fd377f7504c8d19ecfeeab4477187e0e095 data/staticpower/tags/blocks/heatsinks.json
+868d9ca30503342443ac885ec1191010b4a0dda6 data/staticpower/tags/blocks/heatsinks.json
 a69680e41844ef84fad37036549c67565cabe5db data/staticpower/tags/blocks/machines.json
 2528913fac539e196dfc1dd3beaf5a78d22819ff data/staticpower/tags/blocks/machine_blocks.json
 63f67065e9cfa7b08a81c80a40bb8167a17684f4 data/staticpower/tags/blocks/power_management.json

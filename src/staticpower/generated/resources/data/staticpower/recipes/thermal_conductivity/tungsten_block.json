@@ -1,0 +1,19 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:storage_blocks/raw_tungsten"
+    }
+  },
+  "conductivity": 200.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "staticpower:molten_tungsten",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 3400
+  },
+  "thermalMass": 100.0
+}

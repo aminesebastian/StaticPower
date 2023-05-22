@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-08T01:10:10.3981823	Item Models: staticpower
+// 1.19.2	2023-05-21T18:17:40.2612891	Item Models: staticpower
 6027aa6d17b10a748c750596a1e41617fddb06da assets/staticpower/models/item/alloy_furnace.json
 a719b3e89ea4ecd25522280007f7e8b66eacafc0 assets/staticpower/models/item/automatic_placer.json
 32a59e36d1d4e959c6c1f1436a7c1d1efed2bf87 assets/staticpower/models/item/backpack.json
@@ -419,7 +419,6 @@ e729f5e93fef3723b0763a4068f96301db400add assets/staticpower/models/item/hammer_t
 0e7e50e6dc8c3cdb92ea4b6c54fc32419de36406 assets/staticpower/models/item/hammer_zinc.json
 87ba765603fb11bbad86a357bfc87702ab4f8f00 assets/staticpower/models/item/heat_sink_aluminum.json
 ec29f39ef0e65f3c57cf10988d93f4d51c13f627 assets/staticpower/models/item/heat_sink_copper.json
-904a48be6ca3c7a769c5891e32398910f85ad00c assets/staticpower/models/item/heat_sink_gold.json
 c6eb5bc74a3957fafb6c5bb3b970c230d4123739 assets/staticpower/models/item/ingot_aluminum.json
 c6eb5bc74a3957fafb6c5bb3b970c230d4123739 assets/staticpower/models/item/ingot_aluminum_heated.json
 64139e4576c2c88d51bfd8cf35bc38a96f69a5e1 assets/staticpower/models/item/ingot_brass.json

@@ -182,7 +182,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 		simpleColumnWithCustomTexture(ModBlocks.AluminumHeatSink.get(), "heat_sink_aluminum");
 		simpleColumnWithCustomTexture(ModBlocks.CopperHeatSink.get(), "heat_sink_copper");
-		simpleColumnWithCustomTexture(ModBlocks.GoldHeatSink.get(), "heat_sink_gold");
 
 		solarPanel(ModBlocks.SolarPanelBasic.get(), "basic");
 		solarPanel(ModBlocks.SolarPanelAdvanced.get(), "advanced");

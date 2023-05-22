@@ -1,0 +1,19 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:storage_blocks/raw_lead"
+    }
+  },
+  "conductivity": 40.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "staticpower:molten_lead",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 320
+  },
+  "thermalMass": 100.0
+}

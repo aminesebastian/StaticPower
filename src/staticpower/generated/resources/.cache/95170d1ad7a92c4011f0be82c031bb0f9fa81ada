@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-08T01:10:10.4135698	Block States: staticpower
+// 1.19.2	2023-05-21T18:17:40.2417879	Block States: staticpower
 c2522358e82c7a72664181fe69af3fd6d7634534 assets/staticpower/blockstates/alloy_furnace.json
 6b3b3d59e926b1f7713b29d8ae247432edc8bf2a assets/staticpower/blockstates/automatic_placer.json
 0767f7bfba3a728c4dbe5b9c9bb9fa69b5552f17 assets/staticpower/blockstates/battery_block_advanced.json
@@ -232,7 +232,6 @@ ba630f13f1c00c0af348503046a0227718bedf6b assets/staticpower/blockstates/fuel.jso
 e1cdefdd5bd4cfe58117b803a8a4ea6e00d8ddf9 assets/staticpower/blockstates/grass_static.json
 91bacc76f6a493dd868847c800f8729ee5988640 assets/staticpower/blockstates/heat_sink_aluminum.json
 6ce576ef6e7c1a4384a3c148d3c000769bda6af1 assets/staticpower/blockstates/heat_sink_copper.json
-66c86e8b6981d00e76d06b603603b5340bed0c34 assets/staticpower/blockstates/heat_sink_gold.json
 2bab0064b422293393335f7541409c1a2c11a3db assets/staticpower/blockstates/honey.json
 39608c4b12b94a2740cb5243cba992dba70bf563 assets/staticpower/blockstates/infernal_tree_sap.json
 56ac9afc4b9e58249c54c63c2586aa1d04bb6744 assets/staticpower/blockstates/inverter.json
@@ -819,7 +818,6 @@ a33107e884cb665cccbeb325274239f7ae8051be assets/staticpower/models/block/farmlan
 a6259651a71ad05ef27f232080fe85395e679771 assets/staticpower/models/block/grass_static.json
 4d8c78e96c7ff56f295cc97eade8b16b74a59bd6 assets/staticpower/models/block/heat_sink_aluminum.json
 c7ccc81142fb589d2eb36308808d800b2795f896 assets/staticpower/models/block/heat_sink_copper.json
-bb33aa199cd3225a34bcbaac9143a04e2735300a assets/staticpower/models/block/heat_sink_gold.json
 c2f44f815c9a2b0c2c6e8aa2170568aa2a4309b8 assets/staticpower/models/block/honey.json
 57227f956842ad4aa145bd2456c44fa7c11b3a7c assets/staticpower/models/block/infernal_tree_sap.json
 e6b4e032e7fddbd270719e5ebfe8a2bd0b647f77 assets/staticpower/models/block/juice_apple.json

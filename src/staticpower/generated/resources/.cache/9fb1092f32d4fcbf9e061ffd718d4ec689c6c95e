@@ -1,3 +1,6 @@
-// 1.19.2	2023-05-20T02:23:19.1762083	Recipes
-d731fe0bd9ffd1c89c11a11bbe9608a95fa0abb5 data/staticpower/recipes/evaporation/evaporated_mash.json
-06ef9d171b12a35199702ea9a7c48598e6924907 data/staticpower/recipes/evaporation/steam.json
+// 1.19.2	2023-05-21T18:33:12.3945938	Recipes
+f66bde49281ca5c5810e36d1cdc2ea36badeefbf data/staticpower/recipes/refining/coal_liquifaction.json
+046a763c8cdf08b9cfe8525cbea867f834f80fb1 data/staticpower/recipes/refining/crude_cracking.json
+8f98fba27fa81736ea7946293f670cb0ef99b2dc data/staticpower/recipes/refining/fuel.json
+1242f00c27a6ade057232bee4964ef68232b9999 data/staticpower/recipes/refining/heavy_cracking.json
+57a2fe413aa46b38b05d61d35edfcc008d4f9ce9 data/staticpower/recipes/refining/light_cracking.json

@@ -1,0 +1,19 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:storage_blocks/raw_brass"
+    }
+  },
+  "conductivity": 150.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "staticpower:molten_brass",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 900
+  },
+  "thermalMass": 100.0
+}

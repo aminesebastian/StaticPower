@@ -387,8 +387,6 @@ public class ModBlocks {
 			() -> new BlockHeatSink(StaticPowerTiers.ALUMINUM));
 	public static final RegistryObject<BlockHeatSink> CopperHeatSink = registerBlock("heat_sink_copper",
 			() -> new BlockHeatSink(StaticPowerTiers.COPPER));
-	public static final RegistryObject<BlockHeatSink> GoldHeatSink = registerBlock("heat_sink_gold",
-			() -> new BlockHeatSink(StaticPowerTiers.GOLD));
 
 	public static final RegistryObject<BlockSolarPanel> SolarPanelBasic = registerBlock("solar_panel_basic",
 			() -> new BlockSolarPanel(StaticPowerTiers.BASIC));

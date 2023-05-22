@@ -14,8 +14,10 @@ import theking530.staticcore.crafting.thermal.ThermalConductivityRecipe;
 import theking530.staticcore.data.generators.helpers.SCRecipeBuilder;
 import theking530.staticcore.data.generators.helpers.SCRecipeProvider;
 import theking530.staticcore.fluid.FluidIngredient;
+import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.init.ModMaterials;
 
 public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<ThermalConductivityRecipe> {
 
@@ -67,9 +69,57 @@ public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<Thermal
 
 		addRecipe("ice", BlockStateIngredient.of(BlockTags.ICE), 5, new OverheatingBehaviour(100, Fluids.WATER));
 
-		addRecipe("heatsink_aluminum", BlockStateIngredient.of(ModBlocks.AluminumHeatSink.get()), 5);
-		addRecipe("heatsink_copper", BlockStateIngredient.of(ModBlocks.CopperHeatSink.get()), 10);
-		addRecipe("heatsink_gold", BlockStateIngredient.of(ModBlocks.GoldHeatSink.get()), 25);
+		addRecipe("aluminum_block",
+				BlockStateIngredient.of(ModMaterials.ALUMINUM.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 250,
+				new OverheatingBehaviour(660,
+						ModMaterials.ALUMINUM.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("copper_block",
+				BlockStateIngredient.of(ModMaterials.COPPER.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 400,
+				new OverheatingBehaviour(1000,
+						ModMaterials.COPPER.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("tin_block", BlockStateIngredient.of(ModMaterials.TIN.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()),
+				230, new OverheatingBehaviour(100,
+						ModMaterials.TIN.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("zinc_block",
+				BlockStateIngredient.of(ModMaterials.ZINC.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 125,
+				new OverheatingBehaviour(420,
+						ModMaterials.ZINC.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("magnesium_block",
+				BlockStateIngredient.of(ModMaterials.MAGNESIUM.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 160,
+				new OverheatingBehaviour(650,
+						ModMaterials.MAGNESIUM.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("lead_block",
+				BlockStateIngredient.of(ModMaterials.LEAD.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 40,
+				new OverheatingBehaviour(320,
+						ModMaterials.LEAD.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("platinum_block",
+				BlockStateIngredient.of(ModMaterials.PLATINUM.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 70,
+				new OverheatingBehaviour(1770,
+						ModMaterials.PLATINUM.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("silver_block",
+				BlockStateIngredient.of(ModMaterials.SILVER.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 400,
+				new OverheatingBehaviour(960,
+						ModMaterials.SILVER.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("gold_block",
+				BlockStateIngredient.of(ModMaterials.GOLD.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 320,
+				new OverheatingBehaviour(1000,
+						ModMaterials.GOLD.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("iron_block",
+				BlockStateIngredient.of(ModMaterials.IRON.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 100,
+				new OverheatingBehaviour(1100,
+						ModMaterials.IRON.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("tungsten_block",
+				BlockStateIngredient.of(ModMaterials.TUNGSTEN.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 200,
+				new OverheatingBehaviour(3400,
+						ModMaterials.TUNGSTEN.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("bronze_block",
+				BlockStateIngredient.of(ModMaterials.BRONZE.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 200,
+				new OverheatingBehaviour(900,
+						ModMaterials.BRONZE.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+		addRecipe("brass_block",
+				BlockStateIngredient.of(ModMaterials.BRASS.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 150,
+				new OverheatingBehaviour(900,
+						ModMaterials.BRASS.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluids, float conductivity) {

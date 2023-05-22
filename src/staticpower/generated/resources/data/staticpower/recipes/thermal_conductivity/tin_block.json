@@ -1,0 +1,19 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:storage_blocks/raw_tin"
+    }
+  },
+  "conductivity": 230.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "staticpower:molten_tin",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 100
+  },
+  "thermalMass": 100.0
+}

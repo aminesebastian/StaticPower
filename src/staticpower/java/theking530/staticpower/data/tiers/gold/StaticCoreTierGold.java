@@ -23,21 +23,6 @@ public class StaticCoreTierGold extends StaticCoreTier {
 		return "tier.staticpower.gold";
 	}
 
-	@Override
-	protected float getHeatsinkOverheatTemperature() {
-		return 4096.0f;
-	}
-
-	@Override
-	protected float getHeatsinkMaximumTemperature() {
-		return 8192.0f;
-	}
-
-	@Override
-	protected float getHeatSinkConductivity() {
-		return 400f;
-	}
-
 	public static class HeatCableConfiguration extends TierHeatCableConfiguration {
 		public HeatCableConfiguration(Builder builder, String modId) {
 			super(builder, modId);
@@ -45,12 +30,12 @@ public class StaticCoreTierGold extends StaticCoreTier {
 
 		@Override
 		protected float getHeatCableCapacity() {
-			return 2048.0f;
+			return 1024.0f;
 		}
 
 		@Override
 		protected float getHeatCableConductivity() {
-			return 800;
+			return 300;
 		}
 	}
 

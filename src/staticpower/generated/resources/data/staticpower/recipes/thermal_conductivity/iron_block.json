@@ -1,0 +1,19 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "forge:storage_blocks/iron"
+    }
+  },
+  "conductivity": 100.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "staticpower:molten_iron",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "temperature": 1100
+  },
+  "thermalMass": 100.0
+}

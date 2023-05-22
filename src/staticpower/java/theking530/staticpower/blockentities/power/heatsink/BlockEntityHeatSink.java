@@ -31,48 +31,29 @@ import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvider {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_ALUMINUM = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
-			"heat_sink_aluminum",
+	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
+			"heat_sink",
 			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.ALUMINUM),
-			ModBlocks.AluminumHeatSink);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_COPPER = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
-			"heat_sink_copper",
-			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.COPPER),
-			ModBlocks.CopperHeatSink);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_GOLD = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
-			"heat_sink_gold",
-			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.GOLD),
-			ModBlocks.GoldHeatSink);
+			ModBlocks.AluminumHeatSink, ModBlocks.CopperHeatSink);
 
 	public final HeatStorageComponent heatStorage;
-	private final ResourceLocation heatSinkTier;
 
 	public BlockEntityHeatSink(BlockEntityTypeAllocator<BlockEntityHeatSink> allocator, BlockPos pos, BlockState state,
 			ResourceLocation heatSinkTier) {
 		super(allocator, pos, state);
-		this.heatSinkTier = heatSinkTier;
 		StaticCoreTier tier = StaticCoreConfig.getTier(heatSinkTier);
 
-		// TODO: Fix this to read from a config.
-		float conductivity = 400.0f;
-		if (heatSinkTier == StaticPowerTiers.ALUMINUM) {
-			conductivity = 200.0f;
-		} else if (heatSinkTier == StaticPowerTiers.GOLD) {
-			conductivity = 300.0f;
-		}
-
-		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.defaultMachineThermalMass.get(),
-						tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), conductivity));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
+				tier.defaultMachineThermalMass.get(), tier.heatSinkOverheatTemperature.get(),
+				tier.heatSinkMaximumTemperature.get(), tier.heatSinkConductivity.get()));
 	}
 
 	@Override
 	public void process() {
 		if (!level.isClientSide) {
 			// Damage entities if too hot.
-			if (heatStorage.getCurrentTemperature() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold.get()) {
+			if (heatStorage.getCurrentTemperature() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold
+					.get()) {
 				AABB aabb = new AABB(this.worldPosition.offset(0.0, 0, 0.0), this.worldPosition.offset(1.0, 2.0, 1.0));
 				List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, aabb);
 				for (LivingEntity entity : list) {
@@ -82,7 +63,6 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 		}
 
 		// If under water, generate bubbles.
-		// TODO: Tweak this number to == the temp we say water boils.
 		if (heatStorage.getCurrentTemperature() >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
 			float randomOffset = (3 * getLevel().getRandom().nextFloat()) - 1.5f;
 			if (SDMath.diceRoll(0.25f)

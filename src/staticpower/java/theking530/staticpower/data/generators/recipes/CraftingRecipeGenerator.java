@@ -40,13 +40,11 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		beginShapelessRecipe(ModBlocks.StaticPlanks.get(), 4, "wood/static_planks").requires(ModBlocks.StaticLog.get())
 				.unlockedBy("has_log", hasItems(ModBlocks.StaticLog.get()));
 		beginShapelessRecipe(ModBlocks.EnergizedPlanks.get(), 4, "wood/energized_planks")
-				.requires(ModBlocks.EnergizedLog.get()).unlockedBy("has_log",
-						hasItems(ModBlocks.EnergizedLog.get()));
+				.requires(ModBlocks.EnergizedLog.get()).unlockedBy("has_log", hasItems(ModBlocks.EnergizedLog.get()));
 		beginShapelessRecipe(ModBlocks.LumumPlanks.get(), 4, "wood/lumum_planks").requires(ModBlocks.LumumLog.get())
 				.unlockedBy("has_log", hasItems(ModBlocks.LumumLog.get()));
 		beginShapelessRecipe(ModBlocks.RubberTreePlanks.get(), 4, "wood/rubber_planks")
-				.requires(ModItemTags.RUBBER_WOOD_LOGS).unlockedBy("has_log",
-						hasItems(ModItemTags.RUBBER_WOOD_LOGS));
+				.requires(ModItemTags.RUBBER_WOOD_LOGS).unlockedBy("has_log", hasItems(ModItemTags.RUBBER_WOOD_LOGS));
 
 		// @formatter:off
 		beginShapedRecipe(ModBlocks.RubberTreeStrippedWood.get(), "wood/rubber_wood_stripped/")
@@ -88,9 +86,8 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 
 				beginShapelessRecipe(material.get(MaterialTypes.RAW_MATERIAL).get(), 9,
 						"raw_materials/from_block/" + material.getName())
-						.requires(material.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag())
-						.unlockedBy("has_raw_block",
-								hasItems(material.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag()));
+						.requires(material.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag()).unlockedBy(
+								"has_raw_block", hasItems(material.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag()));
 			}
 
 			if (material.has(MaterialTypes.INGOT) && material.hasGeneratedMaterial(MaterialTypes.NUGGET)) {
@@ -134,8 +131,7 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 
 			if (material.has(MaterialTypes.WIRE)) {
 				beginShapelessRecipe(material.get(MaterialTypes.WIRE).get(), 3, "wire/from_ingot/" + material.getName())
-						.requires(material.get(MaterialTypes.INGOT).getItemTag())
-						.requires(ModItemTags.WIRE_CUTTER)
+						.requires(material.get(MaterialTypes.INGOT).getItemTag()).requires(ModItemTags.WIRE_CUTTER)
 						.unlockedBy("has_ingot", hasItems(material.get(MaterialTypes.INGOT).getItemTag()))
 						.unlockedBy("has_wire_cutter", hasWireCutter());
 
@@ -185,23 +181,20 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 
 		beginShapelessRecipe(ModMaterials.COPPER.get(MaterialTypes.DUST).get(), 2, "dusts/brass_from_dusts")
 				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag())
-				.requires(ModMaterials.ZINC.get(MaterialTypes.DUST).getItemTag())
-				.unlockedBy("has_brass_dust_components",
-						hasItems(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag(),
+				.requires(ModMaterials.ZINC.get(MaterialTypes.DUST).getItemTag()).unlockedBy(
+						"has_brass_dust_components", hasItems(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag(),
 								ModMaterials.ZINC.get(MaterialTypes.DUST).getItemTag()));
 
 		beginShapelessRecipe(ModMaterials.COPPER.get(MaterialTypes.DUST).get(), 4, "dusts/bronze_from_dusts")
 				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag())
 				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag())
 				.requires(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag())
-				.requires(ModMaterials.TIN.get(MaterialTypes.DUST).getItemTag())
-				.unlockedBy("has_brass_dust_components",
+				.requires(ModMaterials.TIN.get(MaterialTypes.DUST).getItemTag()).unlockedBy("has_brass_dust_components",
 						hasItems(ModMaterials.COPPER.get(MaterialTypes.DUST).getItemTag(),
 								ModMaterials.TIN.get(MaterialTypes.DUST).getItemTag()));
 
 		beginShapelessRecipe(ModMaterials.INERT_INFUSION.get(MaterialTypes.DUST).get(), 3,
-				"dusts/inert_infusion_from_dusts")
-				.requires(ModMaterials.IRON.get(MaterialTypes.DUST).getItemTag())
+				"dusts/inert_infusion_from_dusts").requires(ModMaterials.IRON.get(MaterialTypes.DUST).getItemTag())
 				.requires(ModMaterials.GOLD.get(MaterialTypes.DUST).getItemTag())
 				.requires(ModMaterials.PLATINUM.get(MaterialTypes.DUST).getItemTag())
 				.unlockedBy("has_inert_infusion_dust_components",
@@ -210,9 +203,8 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 								ModMaterials.PLATINUM.get(MaterialTypes.DUST).getItemTag()));
 
 		beginShapelessRecipe(ModMaterials.REDSTONE_ALLOY.get(MaterialTypes.DUST).get(), 2,
-				"dusts/redstone_alloy_from_dusts")
-				.requires(ModMaterials.SILVER.get(MaterialTypes.DUST).getItemTag()).requires(Items.REDSTONE)
-				.unlockedBy("has_redston_alloy_dust_components",
+				"dusts/redstone_alloy_from_dusts").requires(ModMaterials.SILVER.get(MaterialTypes.DUST).getItemTag())
+				.requires(Items.REDSTONE).unlockedBy("has_redston_alloy_dust_components",
 						hasItems(ModMaterials.SILVER.get(MaterialTypes.DUST).getItemTag(), Tags.Items.DUSTS_REDSTONE));
 
 		portableBattery("basic", ModItems.BasicPortableBattery.get(),
@@ -571,18 +563,15 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		chainsaw("basic", ModItems.BasicChainsaw.get(),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.GEAR).getItemTag()),
-				RecipeItem.of(ModItems.BasicPortableBattery.get()),
-				RecipeItem.of(ModItems.BasicProcessor.get()));
+				RecipeItem.of(ModItems.BasicPortableBattery.get()), RecipeItem.of(ModItems.BasicProcessor.get()));
 		chainsaw("advanced", ModItems.AdvancedChainsaw.get(),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.GEAR).getItemTag()),
-				RecipeItem.of(ModItems.AdvancedPortableBattery.get()),
-				RecipeItem.of(ModItems.AdvancedProcessor.get()));
+				RecipeItem.of(ModItems.AdvancedPortableBattery.get()), RecipeItem.of(ModItems.AdvancedProcessor.get()));
 		chainsaw("static", ModItems.StaticChainsaw.get(),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.GEAR).getItemTag()),
-				RecipeItem.of(ModItems.StaticPortableBattery.get()),
-				RecipeItem.of(ModItems.StaticProcessor.get()));
+				RecipeItem.of(ModItems.StaticPortableBattery.get()), RecipeItem.of(ModItems.StaticProcessor.get()));
 		chainsaw("energized", ModItems.EnergizedChainsaw.get(),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.GEAR).getItemTag()),
@@ -591,24 +580,20 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		chainsaw("lumum", ModItems.LumumChainsaw.get(),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.GEAR).getItemTag()),
-				RecipeItem.of(ModItems.LumumPortableBattery.get()),
-				RecipeItem.of(ModItems.LumumProcessor.get()));
+				RecipeItem.of(ModItems.LumumPortableBattery.get()), RecipeItem.of(ModItems.LumumProcessor.get()));
 
 		miningDrill("basic", ModItems.BasicMiningDrill.get(),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.GEAR).getItemTag()),
-				RecipeItem.of(ModItems.BasicPortableBattery.get()),
-				RecipeItem.of(ModItems.BasicProcessor.get()));
+				RecipeItem.of(ModItems.BasicPortableBattery.get()), RecipeItem.of(ModItems.BasicProcessor.get()));
 		miningDrill("advanced", ModItems.AdvancedMiningDrill.get(),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.GEAR).getItemTag()),
-				RecipeItem.of(ModItems.AdvancedPortableBattery.get()),
-				RecipeItem.of(ModItems.AdvancedProcessor.get()));
+				RecipeItem.of(ModItems.AdvancedPortableBattery.get()), RecipeItem.of(ModItems.AdvancedProcessor.get()));
 		miningDrill("static", ModItems.StaticMiningDrill.get(),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.GEAR).getItemTag()),
-				RecipeItem.of(ModItems.StaticPortableBattery.get()),
-				RecipeItem.of(ModItems.StaticProcessor.get()));
+				RecipeItem.of(ModItems.StaticPortableBattery.get()), RecipeItem.of(ModItems.StaticProcessor.get()));
 		miningDrill("energized", ModItems.EnergizedMiningDrill.get(),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.GEAR).getItemTag()),
@@ -617,8 +602,7 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		miningDrill("lumum", ModItems.LumumMiningDrill.get(),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.GEAR).getItemTag()),
-				RecipeItem.of(ModItems.LumumPortableBattery.get()),
-				RecipeItem.of(ModItems.LumumProcessor.get()));
+				RecipeItem.of(ModItems.LumumPortableBattery.get()), RecipeItem.of(ModItems.LumumProcessor.get()));
 
 		hammer("iron", ModItems.IronMetalHammer.get(),
 				RecipeItem.of(ModMaterials.IRON.get(MaterialTypes.INGOT).getItemTag()));
@@ -690,8 +674,7 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 
 		digistoreCard("basic", ModItems.BasicDigistoreCard.get(),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModItems.BasicCard.get()),
-				RecipeItem.of(ModItems.DigistoreCore.get()));
+				RecipeItem.of(ModItems.BasicCard.get()), RecipeItem.of(ModItems.DigistoreCore.get()));
 		digistoreStackedCard("basic", ModItems.BasicStackedDigistoreCard.get(),
 				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
 				RecipeItem.of(ModItems.BasicCard.get()), RecipeItem.of(ModItems.DigistoreCore.get()));
@@ -863,20 +846,18 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		heatCapacityUpgrade("basic", ModItems.BasicHeatCapacityUpgrade.get(),
 				RecipeItem.of(ModItems.BasicUpgradePlate.get()), RecipeItem.of(ModBlocks.AluminumHeatSink.get()));
 		heatCapacityUpgrade("static", ModItems.StaticHeatCapacityUpgrade.get(),
-				RecipeItem.of(ModItems.StaticUpgradePlate.get()), RecipeItem.of(ModBlocks.CopperHeatSink.get()));
+				RecipeItem.of(ModItems.StaticUpgradePlate.get()), RecipeItem.of(ModBlocks.AluminumHeatSink.get()));
 		heatCapacityUpgrade("energized", ModItems.EnergizedHeatCapacityUpgrade.get(),
-				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
-				RecipeItem.of(ModBlocks.GoldHeatSink.get()));
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()), RecipeItem.of(ModBlocks.CopperHeatSink.get()));
 		heatCapacityUpgrade("lumum", ModItems.LumumHeatCapacityUpgrade.get(),
-				RecipeItem.of(ModItems.LumumUpgradePlate.get()), RecipeItem.of(ModBlocks.GoldHeatSink.get()));
+				RecipeItem.of(ModItems.LumumUpgradePlate.get()), RecipeItem.of(ModBlocks.CopperHeatSink.get()));
 
 		outputUpgrade("basic", ModItems.BasicOutputMultiplierUpgrade.get(),
 				RecipeItem.of(ModItems.BasicUpgradePlate.get()), RecipeItem.of(Tags.Items.GEMS_LAPIS));
 		outputUpgrade("static", ModItems.StaticOutputMultiplierUpgrade.get(),
 				RecipeItem.of(ModItems.StaticUpgradePlate.get()), RecipeItem.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
 		outputUpgrade("energized", ModItems.EnergizedOutputMultiplierUpgrade.get(),
-				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()),
-				RecipeItem.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
+				RecipeItem.of(ModItems.EnergizedUpgradePlate.get()), RecipeItem.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
 		outputUpgrade("lumum", ModItems.LumumOutputMultiplierUpgrade.get(),
 				RecipeItem.of(ModItems.LumumUpgradePlate.get()), RecipeItem.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
 
@@ -965,8 +946,7 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 
 		beginShapelessRecipe(ModItems.RubberBar.get(), "rubber_bar_from_latex").requires(ModItems.LatexChunk.get(), 2)
-				.requires(ModItemTags.COALS_DUST).unlockedBy("has_latex_chunk",
-						hasItems(ModItems.LatexChunk.get()));
+				.requires(ModItemTags.COALS_DUST).unlockedBy("has_latex_chunk", hasItems(ModItems.LatexChunk.get()));
 
 		// @formatter:off
 		beginShapedRecipe(ModItems.Motor.get())
@@ -1011,8 +991,7 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		// @formatter:on
 
 		beginShapelessRecipe(ModItems.ElectringSolderingIron.get(), "tools/electric_soldering_iron")
-				.requires(ModItems.SolderingIron.get())
-				.requires(ModItems.BasicPortableBattery.get())
+				.requires(ModItems.SolderingIron.get()).requires(ModItems.BasicPortableBattery.get())
 				.unlockedBy("has_battery", hasItems(ModItems.BasicPortableBattery.get()));
 
 		// @formatter:off
