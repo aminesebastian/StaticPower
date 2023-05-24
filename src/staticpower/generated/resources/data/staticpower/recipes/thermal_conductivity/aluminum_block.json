@@ -6,6 +6,7 @@
     }
   },
   "conductivity": 250.0,
+  "mass": 100.0,
   "overheating_behaviour": {
     "block": {
       "Name": "staticpower:molten_aluminum",
@@ -15,5 +16,5 @@
     },
     "temperature": 660
   },
-  "thermalMass": 100.0
+  "specific_heat": 100.0
 }

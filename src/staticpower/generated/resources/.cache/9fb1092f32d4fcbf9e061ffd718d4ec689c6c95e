@@ -1,6 +1,21 @@
-// 1.19.2	2023-05-21T18:33:12.3945938	Recipes
-f66bde49281ca5c5810e36d1cdc2ea36badeefbf data/staticpower/recipes/refining/coal_liquifaction.json
-046a763c8cdf08b9cfe8525cbea867f834f80fb1 data/staticpower/recipes/refining/crude_cracking.json
-8f98fba27fa81736ea7946293f670cb0ef99b2dc data/staticpower/recipes/refining/fuel.json
-1242f00c27a6ade057232bee4964ef68232b9999 data/staticpower/recipes/refining/heavy_cracking.json
-57a2fe413aa46b38b05d61d35edfcc008d4f9ce9 data/staticpower/recipes/refining/light_cracking.json
+// 1.19.2	2023-05-22T18:13:23.7676206	Recipes
+6a664ecaed3b4c30f83bb4b82c1c97121c0987bc data/staticpower/recipes/mixing/concrete/black.json
+fe038b20f689f83db510ef9b1d92980eca32f5cc data/staticpower/recipes/mixing/concrete/blue.json
+8b4767f3fbeed778376034494e20d0af9cb70ae8 data/staticpower/recipes/mixing/concrete/brown.json
+13aa983a68a2d50b50a2769985c87f03eea0b2e9 data/staticpower/recipes/mixing/concrete/cyan.json
+06b01259d01d4eb322d7f719f2e363d81de463e4 data/staticpower/recipes/mixing/concrete/from_slag.json
+fabf264832cb9e804c230f57b29e249779708192 data/staticpower/recipes/mixing/concrete/gray.json
+89e10ca133c72dad54df20316d5c9d5a61beeb75 data/staticpower/recipes/mixing/concrete/green.json
+fe32686deb029135ccf69d8109acd4d6fb640e7f data/staticpower/recipes/mixing/concrete/light_blue.json
+650a84b57a9ad43a2e729b75f1a5c66dfa1ac782 data/staticpower/recipes/mixing/concrete/light_gray.json
+f7a2f95a9863cc3711c9ebcfc3dfcf26cee52862 data/staticpower/recipes/mixing/concrete/lime.json
+0a4b4b0a9fe50a89cd6705fc8554b538458102d2 data/staticpower/recipes/mixing/concrete/magenta.json
+4d150305b497d55423532a64a93c43da19570002 data/staticpower/recipes/mixing/concrete/orange.json
+1443623d8957a97eec89bf55e0bba1d13b589baf data/staticpower/recipes/mixing/concrete/pink.json
+33cf028de6aca171fdcd62c21d9c6f22d6ffe08e data/staticpower/recipes/mixing/concrete/purple.json
+2dbf2e4dd61575c0ea0b9ec4690c5cc0f39f6d65 data/staticpower/recipes/mixing/concrete/red.json
+d62072ec318720be65673e465cb859024ed792bd data/staticpower/recipes/mixing/concrete/white.json
+be7fcf001aae6e98eed671abfca2efec1e6b0b1f data/staticpower/recipes/mixing/concrete/yellow.json
+fce6b34aaa9e24c788d0884ad1e925e67607bf7e data/staticpower/recipes/mixing/metal/brass.json
+7768d06f0495c43bc5c5484261dfa20700bd9ea9 data/staticpower/recipes/mixing/metal/bronze.json
+a3d494e00cb639ff35f1d334eb67189398c1bf9f data/staticpower/recipes/mixing/misc/coolant.json

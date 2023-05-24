@@ -33,24 +33,26 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 					Codec.BOOL.optionalFieldOf("has_active_temperature", false)
 							.forGetter(recipe -> recipe.hasActiveTemperature()),
 					Codec.FLOAT.optionalFieldOf("temperature", 0.0f).forGetter(recipe -> recipe.getTemperature()),
-					Codec.FLOAT.optionalFieldOf("thermalMass", 0.0f).forGetter(recipe -> recipe.getThermalMass()),
+					Codec.FLOAT.optionalFieldOf("mass", 0.0f).forGetter(recipe -> recipe.getMass()),
+					Codec.FLOAT.optionalFieldOf("specific_heat", 0.0f).forGetter(recipe -> recipe.getMass()),
 					Codec.FLOAT.fieldOf("conductivity").forGetter(recipe -> recipe.getConductivity()),
 
 					OverheatingBehaviour.CODEC.optionalFieldOf("overheating_behaviour")
 							.forGetter(recipe -> Optional.ofNullable(recipe.getOverheatingBehaviour())),
 					FreezingBehaviour.CODEC.optionalFieldOf("freezing_behaviour")
 							.forGetter(recipe -> Optional.ofNullable(recipe.getFreezingBehaviour())))
-			.apply(instance, (id, blocks, fluids, hasActiveTemp, temp, mass, conductivity, overheatingBehaviour,
-					freezingBehaviour) -> {
-				return new ThermalConductivityRecipe(id, blocks, fluids, hasActiveTemp, temp, mass, conductivity,
-						overheatingBehaviour.isPresent() ? overheatingBehaviour.get() : null,
+			.apply(instance, (id, blocks, fluids, hasActiveTemp, temp, mass, specificHeat, conductivity,
+					overheatingBehaviour, freezingBehaviour) -> {
+				return new ThermalConductivityRecipe(id, blocks, fluids, hasActiveTemp, temp, mass, specificHeat,
+						conductivity, overheatingBehaviour.isPresent() ? overheatingBehaviour.get() : null,
 						freezingBehaviour.isPresent() ? freezingBehaviour.get() : null);
 			}));
 
 	private final BlockStateIngredient blocks;
 	private final FluidIngredient fluids;
 
-	private final float thermalMass;
+	private final float mass;
+	private final float specificHeat;
 	private final float temperature;
 	private final boolean hasActiveTemperature;
 	private final float conductivity;
@@ -59,21 +61,26 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	private final FreezingBehaviour freezingBehaviour;
 
 	public ThermalConductivityRecipe(ResourceLocation id, BlockStateIngredient blocks, FluidIngredient fluids,
-			boolean hasActiveTemperature, float temperature, float thermalMass, float conductivity,
+			boolean hasActiveTemperature, float temperature, float mass, float specificHeat, float conductivity,
 			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
 		super(id);
 		this.blocks = blocks;
 		this.fluids = fluids;
 		this.temperature = temperature;
 		this.hasActiveTemperature = hasActiveTemperature;
-		this.thermalMass = thermalMass;
+		this.mass = mass;
+		this.specificHeat = specificHeat;
 		this.conductivity = conductivity;
 		this.overheatingBehaviour = overheatingBehaviour;
 		this.freezingBehaviour = freezingBehaviour;
 	}
 
-	public float getThermalMass() {
-		return thermalMass;
+	public float getMass() {
+		return mass;
+	}
+
+	public float getSpecificHeat() {
+		return specificHeat;
 	}
 
 	public float getTemperature() {

@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -61,10 +62,16 @@ public class ThermalConductivityBehaviours {
 				.group(Codec.INT.optionalFieldOf("temperature", 0).forGetter(recipe -> recipe.getTemperature()),
 						BlockState.CODEC.optionalFieldOf("block", Blocks.AIR.defaultBlockState())
 								.forGetter(recipe -> recipe.getBlockState()),
-						StaticPowerOutputItem.CODEC.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
+						StaticPowerOutputItem.CODEC
+								.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
 								.forGetter(recipe -> recipe.getItem()),
-						Codec.BOOL.optionalFieldOf("destroyExisting", true).forGetter(recipe -> recipe.shouldDestroyExisting()))
+						Codec.BOOL.optionalFieldOf("destroyExisting", true)
+								.forGetter(recipe -> recipe.shouldDestroyExisting()))
 				.apply(instance, OverheatingBehaviour::new));
+
+		public OverheatingBehaviour(int temperature, Block block) {
+			this(temperature, block.defaultBlockState(), StaticPowerOutputItem.EMPTY);
+		}
 
 		public OverheatingBehaviour(int temperature, BlockState block) {
 			this(temperature, block, StaticPowerOutputItem.EMPTY);
@@ -105,10 +112,17 @@ public class ThermalConductivityBehaviours {
 				.group(Codec.INT.optionalFieldOf("temperature", 0).forGetter(recipe -> recipe.getTemperature()),
 						BlockState.CODEC.optionalFieldOf("block", Blocks.AIR.defaultBlockState())
 								.forGetter(recipe -> recipe.getBlockState()),
-						StaticPowerOutputItem.CODEC.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
+						StaticPowerOutputItem.CODEC
+								.optionalFieldOf("item", StaticPowerOutputItem.EMPTY)
 								.forGetter(recipe -> recipe.getItem()),
-						Codec.BOOL.optionalFieldOf("destroyExisting", true).forGetter(recipe -> recipe.shouldDestroyExisting()))
+						Codec.BOOL.optionalFieldOf("destroyExisting", true)
+								.forGetter(recipe -> recipe.shouldDestroyExisting()))
 				.apply(instance, FreezingBehaviour::new));
+
+		public FreezingBehaviour(int temperature, Block block) {
+			this(temperature, block.defaultBlockState(), StaticPowerOutputItem.EMPTY);
+
+		}
 
 		public FreezingBehaviour(int temperature, BlockState block) {
 			this(temperature, block, StaticPowerOutputItem.EMPTY);

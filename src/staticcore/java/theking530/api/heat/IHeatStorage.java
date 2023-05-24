@@ -6,9 +6,16 @@ public interface IHeatStorage {
 	}
 
 	public static final float WATER_BOILING_TEMPERATURE = 100;
-	public static final float ROOM_TEMPERATURE = 20;
 	public static final float WATER_FREEZING_TEMPERATURE = 0;
-	public static final float MINIMUM_TEMPERATURE = -273;
+	public static final float WATER_SPECIFIC_HEAT = 4000;
+	public static final float WATER_CONDUCIVITY = 1f;
+
+	public static final float AIR_SPECIFIC_HEAT = 1;
+	public static final float AIR_CONDUCTIVITY = 0.01f;
+
+	public static final float ROOM_TEMPERATURE = 20;
+
+	public static final float ABSOLUTE_ZERO = -273;
 	public static final float DEFAULT_BLOCK_MASS = 100;
 
 	/**
@@ -27,8 +34,8 @@ public interface IHeatStorage {
 	 * 
 	 * @return
 	 */
-	public default float getOverheatThreshold() {
-		return getMaximumHeat();
+	public default float getOverheatTemperature() {
+		return getMaximumTemperature();
 	}
 
 	/**
@@ -38,7 +45,7 @@ public interface IHeatStorage {
 	 * 
 	 * @return
 	 */
-	public default float getMinimumHeatThreshold() {
+	public default float getMinimumTemperatureThreshold() {
 		return WATER_FREEZING_TEMPERATURE;
 	}
 
@@ -48,7 +55,7 @@ public interface IHeatStorage {
 	 * @return
 	 */
 	public default boolean isOverheated() {
-		return getCurrentTemperature() >= getOverheatThreshold();
+		return getCurrentTemperature() >= getOverheatTemperature();
 	}
 
 	/**
@@ -57,7 +64,7 @@ public interface IHeatStorage {
 	 * @return
 	 */
 	public default boolean isFrozen() {
-		return getCurrentTemperature() <= getMinimumHeatThreshold();
+		return getCurrentTemperature() <= getMinimumTemperatureThreshold();
 	}
 
 	/**
@@ -69,7 +76,7 @@ public interface IHeatStorage {
 	 * 
 	 * @return
 	 */
-	public float getMaximumHeat();
+	public float getMaximumTemperature();
 
 	/**
 	 * Gets the maximum rate that this heatable entity can transfer thermal energy.
@@ -81,7 +88,7 @@ public interface IHeatStorage {
 	}
 
 	/**
-	 * Returns the mass of this heat storage. The higher the mass, the slower then
+	 * Returns the mass of this heat storage. The higher the mass, the slower the
 	 * transfer of heat.
 	 * 
 	 * @return
@@ -89,22 +96,30 @@ public interface IHeatStorage {
 	public float getMass();
 
 	/**
-	 * Adds heat to this heatable entity.
+	 * Returns the specific heat of this heat storage. This represents the amount of
+	 * energy required to increase the temperature of this storage by 1 degree.
 	 * 
-	 * @param heatToRecieve
-	 * @param simulate
 	 * @return
 	 */
-	public float heat(float amountToHeat, HeatTransferAction action);
+	public float getSpecificHeat();
+
+	/**
+	 * Adds heat to this heatable entity.
+	 * 
+	 * @param heatFlux The amount of thermal power to add.
+	 * @param action
+	 * @return
+	 */
+	public float heat(float heatFlux, HeatTransferAction action);
 
 	/**
 	 * Cools down this heatable entity.
 	 * 
-	 * @param amountToCool
-	 * @param simulate
+	 * @param heatFlux The amount of thermal power to remove.
+	 * @param action
 	 * @return
 	 */
-	public float cool(float amountToCool, HeatTransferAction action);
+	public float cool(float heatFlux, HeatTransferAction action);
 
 	public HeatTicker getTicker();
 }

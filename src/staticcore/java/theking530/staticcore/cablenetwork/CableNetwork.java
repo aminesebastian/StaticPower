@@ -3,6 +3,7 @@
  */
 package theking530.staticcore.cablenetwork;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,12 +59,22 @@ public class CableNetwork {
 			try {
 				module.preWorldTick(level);
 			} catch (Exception e) {
-				throw new RuntimeException(String.format("An error occured when attempting to pre-tick a graph module of type: %1$s.", module.getType().toString()), e);
+				throw new RuntimeException(
+						String.format("An error occured when attempting to pre-tick a graph module of type: %1$s.",
+								module.getType().toString()),
+						e);
 			}
 		}
 
-		for (Cable cable : graph.getCables().values()) {
-			cable.preWorldTick();
+		// We iterate on a cached list of cables to avoid concurrent modification
+		// exceptions that stem from cables triggered a graph update during iteration.
+		// TODO: Queue all calls to updating the graph to happen at the beginning of the
+		// subsequent tick.
+		List<Cable> cables = new ArrayList<>(graph.getCables().values());
+		for (Cable cable : cables) {
+			if (graph.hasCable(cable.getPos())) {
+				cable.preWorldTick();
+			}
 		}
 	}
 
@@ -79,7 +90,10 @@ public class CableNetwork {
 			try {
 				module.tick(level);
 			} catch (Exception e) {
-				throw new RuntimeException(String.format("An error occured when attempting to tick a graph module of type: %1$s.", module.getType().toString()), e);
+				throw new RuntimeException(
+						String.format("An error occured when attempting to tick a graph module of type: %1$s.",
+								module.getType().toString()),
+						e);
 			}
 		}
 
@@ -95,7 +109,8 @@ public class CableNetwork {
 	public void addModule(CableNetworkModule module) {
 		// If we have already registered an module of this type, throw an error.
 		if (hasModule(module.getType())) {
-			throw new RuntimeException(String.format("Attempted to add a module of a type: %1$s that was already added.", module.getType()));
+			throw new RuntimeException(String
+					.format("Attempted to add a module of a type: %1$s that was already added.", module.getType()));
 		}
 
 		// Add the module and let it know that it was added to a network.
@@ -107,13 +122,18 @@ public class CableNetwork {
 	public <T extends CableNetworkModule> T getModule(CableNetworkModuleType type) {
 		// If we have already registered an module of this type, throw an error.
 		if (!hasModule(type)) {
-			throw new RuntimeException(String.format("Attempted to get a module of a type: %1$s that does not exist on this network.", type));
+			throw new RuntimeException(String
+					.format("Attempted to get a module of a type: %1$s that does not exist on this network.", type));
 		}
 		return (T) modules.get(type);
 	}
 
 	public List<CableNetworkModule> getModules() {
 		return modules.values().stream().collect(Collectors.toList());
+	}
+
+	public boolean hasCable(BlockPos pos) {
+		return this.getGraph().hasCable(pos);
 	}
 
 	public @Nullable NetworkMapper updateGraph(Level world, BlockPos startingPosition, boolean force) {
@@ -132,7 +152,9 @@ public class CableNetwork {
 			try {
 				module.onNetworkGraphUpdated(output, startingPosition);
 			} catch (Exception e) {
-				throw new RuntimeException(String.format("An error occured when attempting to update a network module of type: %1$s with a new graph.", module.getType().toString()), e);
+				throw new RuntimeException(String.format(
+						"An error occured when attempting to update a network module of type: %1$s with a new graph.",
+						module.getType().toString()), e);
 			}
 		}
 
@@ -168,8 +190,9 @@ public class CableNetwork {
 			try {
 				module.onNetworksSplitOff(newNetworks);
 			} catch (Exception e) {
-				throw new RuntimeException(
-						String.format("An error occured when attempting to let a network module of type: %1$s know of new networks that resulted from a split.", module.getType().toString()), e);
+				throw new RuntimeException(String.format(
+						"An error occured when attempting to let a network module of type: %1$s know of new networks that resulted from a split.",
+						module.getType().toString()), e);
 			}
 		}
 	}
@@ -178,7 +201,8 @@ public class CableNetwork {
 		// Allocate the output list.
 		List<Component> output = new LinkedList<Component>();
 		output.add(Component.literal(""));
-		output.add(Component.literal("NetworkID: ").append(String.format("%1$s%2$d with %3$d cables", ChatFormatting.GRAY.toString(), networkId, graph.getCables().size())));
+		output.add(Component.literal("NetworkID: ").append(String.format("%1$s%2$d with %3$d cables",
+				ChatFormatting.GRAY.toString(), networkId, graph.getCables().size())));
 
 		// Capture the output contents of the modules.
 		for (CableNetworkModule module : modules.values()) {
@@ -249,7 +273,8 @@ public class CableNetwork {
 			ResourceLocation moduleType = new ResourceLocation(moduleTagCompound.getString("type"));
 
 			// Create the module.
-			CableNetworkModule moduleInstance = StaticCoreRegistries.CableModuleRegsitry().getValue(moduleType).create(moduleTagCompound);
+			CableNetworkModule moduleInstance = StaticCoreRegistries.CableModuleRegsitry().getValue(moduleType)
+					.create(moduleTagCompound);
 
 			// Add the attachment to the attachments list.
 			network.addModule(moduleInstance);

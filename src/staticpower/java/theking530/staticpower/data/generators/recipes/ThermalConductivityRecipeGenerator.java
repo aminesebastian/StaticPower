@@ -7,7 +7,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.block.BlockStateIngredient;
-import theking530.staticcore.crafting.StaticPowerOutputItem;
 import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.FreezingBehaviour;
 import theking530.staticcore.crafting.thermal.ThermalConductivityBehaviours.OverheatingBehaviour;
 import theking530.staticcore.crafting.thermal.ThermalConductivityRecipe;
@@ -27,165 +26,189 @@ public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<Thermal
 
 	@Override
 	protected void buildRecipes() {
-		addRecipe("lava", FluidIngredient.of(1, Fluids.LAVA), true, 1500, 2);
-		addRecipe("lava_flowing", FluidIngredient.of(1, Fluids.FLOWING_LAVA), true, 1500, 5);
+		addRecipe("lava", ThermalRecipeBuilder.of(FluidIngredient.of(Fluids.LAVA), 0.5f, 0.8f).withTemperature(1500)
+				.freezes(new FreezingBehaviour(700, Blocks.OBSIDIAN)));
+		addRecipe("lava_flowing",
+				ThermalRecipeBuilder.of(FluidIngredient.of(Fluids.FLOWING_LAVA), 1.0f, 0.8f).withTemperature(1500));
 
-		addRecipe("coolant", FluidIngredient.of(1, ModFluids.Coolant.getSource().get()), 10);
-		addRecipe("coolant_flowing", FluidIngredient.of(1, ModFluids.Coolant.getFlowing().get()), 20);
+		// Coolant and ethanol should be the same, except ethanol catches fire at 200.
+		addRecipe("coolant",
+				ThermalRecipeBuilder.of(FluidIngredient.of(ModFluids.Coolant.getSource().get()), 0.25f, 2.5f));
+		addRecipe("coolant_flowing",
+				ThermalRecipeBuilder.of(FluidIngredient.of(ModFluids.Coolant.getFlowing().get()), 0.5f, 2.5f));
 
-		addRecipe("ethanol", FluidIngredient.of(1, ModFluids.Ethanol.getSource().get()), 5,
-				new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState()));
-		addRecipe("ethanol_flowing", FluidIngredient.of(1, ModFluids.Ethanol.getFlowing().get()), 50,
-				new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState()));
+		addRecipe("ethanol",
+				ThermalRecipeBuilder.of(FluidIngredient.of(ModFluids.Ethanol.getSource().get()), 0.25f, 2.5f)
+						.overheats(new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState())));
+		addRecipe("ethanol_flowing",
+				ThermalRecipeBuilder.of(FluidIngredient.of(ModFluids.Ethanol.getFlowing().get()), 0.5f, 2.5f)
+						.overheats(new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState())));
 
-		addRecipe("oil", FluidIngredient.of(1, ModFluids.CrudeOil.getSource().get()), 1,
-				new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState()));
-		addRecipe("oil_flowing", FluidIngredient.of(1, ModFluids.CrudeOil.getFlowing().get()), 2,
-				new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState()));
+		addRecipe("oil", ThermalRecipeBuilder.of(FluidIngredient.of(ModFluids.CrudeOil.getSource().get()), 0.25f, 2000f)
+				.overheats(new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState())));
+		addRecipe("oil_flowing",
+				ThermalRecipeBuilder.of(FluidIngredient.of(ModFluids.CrudeOil.getFlowing().get()), 0.5f, 2000f)
+						.overheats(new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState())));
 
-		addRecipe("water", FluidIngredient.of(1, Fluids.WATER), 1,
-				new OverheatingBehaviour(100, ModFluids.Steam.getBlock().get().defaultBlockState(),
-						StaticPowerOutputItem.EMPTY),
-				new FreezingBehaviour(0, Blocks.ICE.defaultBlockState(), StaticPowerOutputItem.EMPTY));
-		addRecipe("water_flowing", FluidIngredient.of(1, Fluids.FLOWING_WATER), 5, new OverheatingBehaviour(100),
-				new FreezingBehaviour(0, Blocks.POWDER_SNOW.defaultBlockState(), StaticPowerOutputItem.EMPTY));
+		addRecipe("water", ThermalRecipeBuilder
+				.of(FluidIngredient.of(Fluids.WATER), IHeatStorage.WATER_CONDUCIVITY, IHeatStorage.WATER_SPECIFIC_HEAT)
+				.overheats(new OverheatingBehaviour(100, ModFluids.Steam.getSource().get()))
+				.freezes(new FreezingBehaviour(0, Blocks.ICE)));
+		addRecipe("water_flowing",
+				ThermalRecipeBuilder.of(FluidIngredient.of(Fluids.FLOWING_WATER), IHeatStorage.WATER_CONDUCIVITY * 2,
+						IHeatStorage.WATER_SPECIFIC_HEAT).overheats(new OverheatingBehaviour(100)));
 
-		addRecipe("campfire", BlockStateIngredient.of(Blocks.CAMPFIRE), true, 1000, 1);
-		addRecipe("fire", BlockStateIngredient.of(Blocks.FIRE), true, 750, 1);
-		addRecipe("torch", BlockStateIngredient.of(Blocks.TORCH), true, 300, 1);
+		addRecipe("campfire",
+				ThermalRecipeBuilder.of(BlockStateIngredient.of(Blocks.CAMPFIRE), 1, 1200f).withTemperature(1000));
+		addRecipe("fire", ThermalRecipeBuilder.of(BlockStateIngredient.of(Blocks.FIRE), 1, 1200f).withTemperature(750));
+		addRecipe("torch",
+				ThermalRecipeBuilder.of(BlockStateIngredient.of(Blocks.TORCH), 1, 1000f).withTemperature(300));
 
-		addRecipe("stone", BlockStateIngredient.of(Tags.Blocks.STONE), 2,
-				new OverheatingBehaviour(1000, Fluids.FLOWING_LAVA));
-		addRecipe("cobblestone", BlockStateIngredient.of(Tags.Blocks.COBBLESTONE), 1f,
-				new OverheatingBehaviour(1000, Fluids.LAVA));
-		addRecipe("obsidian", BlockStateIngredient.of(Tags.Blocks.OBSIDIAN), 2,
-				new OverheatingBehaviour(1000, Fluids.LAVA));
+		addRecipe("stone", ThermalRecipeBuilder.of(BlockStateIngredient.of(Tags.Blocks.STONE), 2, 1000)
+				.overheats(new OverheatingBehaviour(1000, Fluids.FLOWING_LAVA)));
+		addRecipe("cobblestone", ThermalRecipeBuilder.of(BlockStateIngredient.of(Tags.Blocks.COBBLESTONE), 1, 1000)
+				.overheats(new OverheatingBehaviour(1000, Fluids.LAVA)));
+		addRecipe("obsidian", ThermalRecipeBuilder.of(BlockStateIngredient.of(Tags.Blocks.OBSIDIAN), 2, 1000)
+				.overheats(new OverheatingBehaviour(1000, Fluids.LAVA)));
 
-		addRecipe("dirt", BlockStateIngredient.of(BlockTags.DIRT), 0.5f);
-		addRecipe("planks", BlockStateIngredient.of(BlockTags.PLANKS), 0.0f,
-				new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState()));
-		addRecipe("logs", BlockStateIngredient.of(BlockTags.LOGS_THAT_BURN), 0.0f,
-				new OverheatingBehaviour(300, ModBlocks.BurntLog.get().defaultBlockState()));
+		addRecipe("dirt", ThermalRecipeBuilder.of(BlockStateIngredient.of(BlockTags.DIRT), 0.5f, 800f));
+		addRecipe("planks", ThermalRecipeBuilder.of(BlockStateIngredient.of(BlockTags.PLANKS), 0, 1.75f)
+				.overheats(new OverheatingBehaviour(200, Blocks.FIRE.defaultBlockState())));
+		addRecipe("logs", ThermalRecipeBuilder.of(BlockStateIngredient.of(BlockTags.LOGS_THAT_BURN), 0.0f, 1500f)
+				.overheats(new OverheatingBehaviour(300, ModBlocks.BurntLog.get().defaultBlockState())));
 
-		addRecipe("ice", BlockStateIngredient.of(BlockTags.ICE), 5, new OverheatingBehaviour(100, Fluids.WATER));
+		addRecipe("ice", ThermalRecipeBuilder.of(BlockStateIngredient.of(BlockTags.ICE), 5, 2000).withTemperature(0)
+				.overheats(new OverheatingBehaviour(100, Fluids.WATER)));
 
 		addRecipe("aluminum_block",
-				BlockStateIngredient.of(ModMaterials.ALUMINUM.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 250,
-				new OverheatingBehaviour(660,
-						ModMaterials.ALUMINUM.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+				ThermalRecipeBuilder
+						.of(BlockStateIngredient.of(ModMaterials.ALUMINUM.getBlockTag(MaterialTypes.STORAGE_BLOCK)),
+								250, 900)
+						.overheats(new OverheatingBehaviour(660,
+								ModMaterials.ALUMINUM.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
 		addRecipe("copper_block",
-				BlockStateIngredient.of(ModMaterials.COPPER.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 400,
-				new OverheatingBehaviour(1000,
-						ModMaterials.COPPER.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
-		addRecipe("tin_block", BlockStateIngredient.of(ModMaterials.TIN.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()),
-				230, new OverheatingBehaviour(100,
-						ModMaterials.TIN.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
-		addRecipe("zinc_block",
-				BlockStateIngredient.of(ModMaterials.ZINC.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 125,
-				new OverheatingBehaviour(420,
-						ModMaterials.ZINC.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+				ThermalRecipeBuilder
+						.of(BlockStateIngredient.of(ModMaterials.COPPER.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 400,
+								400)
+						.overheats(new OverheatingBehaviour(1000,
+								ModMaterials.COPPER.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
+		addRecipe("tin_block", ThermalRecipeBuilder
+				.of(BlockStateIngredient.of(ModMaterials.TIN.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 230, 220)
+				.overheats(new OverheatingBehaviour(100, ModMaterials.TIN.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
+		addRecipe("zinc_block", ThermalRecipeBuilder
+				.of(BlockStateIngredient.of(ModMaterials.ZINC.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 125, 380)
+				.overheats(
+						new OverheatingBehaviour(420, ModMaterials.ZINC.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
 		addRecipe("magnesium_block",
-				BlockStateIngredient.of(ModMaterials.MAGNESIUM.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 160,
-				new OverheatingBehaviour(650,
-						ModMaterials.MAGNESIUM.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
-		addRecipe("lead_block",
-				BlockStateIngredient.of(ModMaterials.LEAD.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 40,
-				new OverheatingBehaviour(320,
-						ModMaterials.LEAD.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+				ThermalRecipeBuilder
+						.of(BlockStateIngredient.of(ModMaterials.MAGNESIUM.getBlockTag(MaterialTypes.STORAGE_BLOCK)),
+								160, 1050)
+						.overheats(new OverheatingBehaviour(650,
+								ModMaterials.MAGNESIUM.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
+		addRecipe("lead_block", ThermalRecipeBuilder
+				.of(BlockStateIngredient.of(ModMaterials.LEAD.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 40, 130)
+				.overheats(
+						new OverheatingBehaviour(320, ModMaterials.LEAD.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
 		addRecipe("platinum_block",
-				BlockStateIngredient.of(ModMaterials.PLATINUM.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 70,
-				new OverheatingBehaviour(1770,
-						ModMaterials.PLATINUM.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
-		addRecipe("silver_block",
-				BlockStateIngredient.of(ModMaterials.SILVER.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 400,
-				new OverheatingBehaviour(960,
-						ModMaterials.SILVER.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
-		addRecipe("gold_block",
-				BlockStateIngredient.of(ModMaterials.GOLD.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 320,
-				new OverheatingBehaviour(1000,
-						ModMaterials.GOLD.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
-		addRecipe("iron_block",
-				BlockStateIngredient.of(ModMaterials.IRON.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 100,
-				new OverheatingBehaviour(1100,
-						ModMaterials.IRON.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+				ThermalRecipeBuilder
+						.of(BlockStateIngredient.of(ModMaterials.PLATINUM.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 70,
+								130)
+						.overheats(new OverheatingBehaviour(1770,
+								ModMaterials.PLATINUM.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
+		addRecipe("silver_block", ThermalRecipeBuilder
+				.of(BlockStateIngredient.of(ModMaterials.SILVER.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 400, 235)
+				.overheats(
+						new OverheatingBehaviour(960, ModMaterials.SILVER.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
+		addRecipe("gold_block", ThermalRecipeBuilder
+				.of(BlockStateIngredient.of(ModMaterials.GOLD.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 320, 130)
+				.overheats(
+						new OverheatingBehaviour(1000, ModMaterials.GOLD.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
+		addRecipe("iron_block", ThermalRecipeBuilder
+				.of(BlockStateIngredient.of(ModMaterials.IRON.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 100, 450)
+				.overheats(
+						new OverheatingBehaviour(1100, ModMaterials.IRON.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
 		addRecipe("tungsten_block",
-				BlockStateIngredient.of(ModMaterials.TUNGSTEN.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 200,
-				new OverheatingBehaviour(3400,
-						ModMaterials.TUNGSTEN.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
-		addRecipe("bronze_block",
-				BlockStateIngredient.of(ModMaterials.BRONZE.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 200,
-				new OverheatingBehaviour(900,
-						ModMaterials.BRONZE.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
-		addRecipe("brass_block",
-				BlockStateIngredient.of(ModMaterials.BRASS.get(MaterialTypes.STORAGE_BLOCK).getBlockTag()), 150,
-				new OverheatingBehaviour(900,
-						ModMaterials.BRASS.get(MaterialTypes.MOLTEN_FLUID).get().getSource().get()));
+				ThermalRecipeBuilder
+						.of(BlockStateIngredient.of(ModMaterials.TUNGSTEN.getBlockTag(MaterialTypes.STORAGE_BLOCK)),
+								200, 130)
+						.overheats(new OverheatingBehaviour(3400,
+								ModMaterials.TUNGSTEN.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
+		addRecipe("bronze_block", ThermalRecipeBuilder
+				.of(BlockStateIngredient.of(ModMaterials.BRONZE.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 200, 370)
+				.overheats(
+						new OverheatingBehaviour(900, ModMaterials.BRONZE.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
+		addRecipe("brass_block", ThermalRecipeBuilder
+				.of(BlockStateIngredient.of(ModMaterials.BRASS.getBlockTag(MaterialTypes.STORAGE_BLOCK)), 150, 375)
+				.overheats(
+						new OverheatingBehaviour(900, ModMaterials.BRASS.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
+
 	}
 
-	protected void addRecipe(String nameOverride, FluidIngredient fluids, float conductivity) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS,
-				conductivity, null, null);
+	protected void addRecipe(String nameOverride, ThermalRecipeBuilder builder) {
+		addRecipe(nameOverride, SCRecipeBuilder.create(builder.recipe()));
 	}
 
-	protected void addRecipe(String nameOverride, FluidIngredient fluids, boolean hasActiveTemperature, int temperature,
-			float conductivity) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, hasActiveTemperature, temperature,
-				IHeatStorage.DEFAULT_BLOCK_MASS, conductivity, null, null);
-	}
+	protected static class ThermalRecipeBuilder {
+		private final BlockStateIngredient blocks;
+		private final FluidIngredient fluids;
 
-	protected void addRecipe(String nameOverride, FluidIngredient fluids, float conductivity,
-			OverheatingBehaviour overheatingBehaviour) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS,
-				conductivity, overheatingBehaviour, null);
-	}
+		private final float mass;
+		private final float conductivity;
+		private final float specificHeat;
 
-	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, float conductivity,
-			OverheatingBehaviour overheatingBehaviour) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS, conductivity,
-				overheatingBehaviour, null);
-	}
+		private boolean hasTemperature;
+		private float temperature;
+		private OverheatingBehaviour overheatingBehaviour;
+		private FreezingBehaviour freezingBehaviour;
 
-	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, float conductivity) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS, conductivity,
-				null, null);
-	}
+		public ThermalRecipeBuilder(BlockStateIngredient blocks, FluidIngredient fluids, float mass, float conductivity,
+				float specificHeat) {
+			this.blocks = blocks;
+			this.fluids = fluids;
+			this.mass = mass;
+			this.conductivity = conductivity;
+			this.specificHeat = specificHeat;
+		}
 
-	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, boolean hasActiveTemperature,
-			int temperature, float conductivity) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, hasActiveTemperature, temperature,
-				IHeatStorage.DEFAULT_BLOCK_MASS, conductivity, null, null);
-	}
+		public static ThermalRecipeBuilder of(FluidIngredient fluids, float mass, float conductivity,
+				float specificHeat) {
+			return new ThermalRecipeBuilder(BlockStateIngredient.EMPTY, fluids, mass, conductivity, specificHeat);
+		}
 
-	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, boolean hasActiveTemperature,
-			int temperature, float conductivity, OverheatingBehaviour overheatingBehaviour,
-			FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, hasActiveTemperature, temperature,
-				IHeatStorage.DEFAULT_BLOCK_MASS, conductivity, overheatingBehaviour, freezingBehaviour);
-	}
+		public static ThermalRecipeBuilder of(BlockStateIngredient blocks, float mass, float conductivity,
+				float specificHeat) {
+			return new ThermalRecipeBuilder(blocks, FluidIngredient.EMPTY, mass, conductivity, specificHeat);
+		}
 
-	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, float conductivity,
-			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride, blocks, FluidIngredient.EMPTY, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS, conductivity,
-				overheatingBehaviour, freezingBehaviour);
-	}
+		public static ThermalRecipeBuilder of(FluidIngredient fluids, float conductivity, float specificHeat) {
+			return new ThermalRecipeBuilder(BlockStateIngredient.EMPTY, fluids, IHeatStorage.DEFAULT_BLOCK_MASS,
+					conductivity, specificHeat);
+		}
 
-	protected void addRecipe(String nameOverride, FluidIngredient fluids, boolean hasActiveTemperature, int temperature,
-			float conductivity, OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, hasActiveTemperature, temperature,
-				IHeatStorage.DEFAULT_BLOCK_MASS, conductivity, overheatingBehaviour, freezingBehaviour);
-	}
+		public static ThermalRecipeBuilder of(BlockStateIngredient blocks, float conductivity, float specificHeat) {
+			return new ThermalRecipeBuilder(blocks, FluidIngredient.EMPTY, IHeatStorage.DEFAULT_BLOCK_MASS,
+					conductivity, specificHeat);
+		}
 
-	protected void addRecipe(String nameOverride, FluidIngredient fluids, float conductivity,
-			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride, BlockStateIngredient.EMPTY, fluids, false, 0, IHeatStorage.DEFAULT_BLOCK_MASS,
-				conductivity, overheatingBehaviour, freezingBehaviour);
-	}
+		public ThermalRecipeBuilder withTemperature(float temperature) {
+			this.hasTemperature = true;
+			this.temperature = temperature;
+			return this;
+		}
 
-	protected void addRecipe(String nameOverride, BlockStateIngredient blocks, FluidIngredient fluids,
-			boolean hasActiveTemperature, int temperature, float thermalMass, float conductivity,
-			OverheatingBehaviour overheatingBehaviour, FreezingBehaviour freezingBehaviour) {
-		addRecipe(nameOverride,
-				SCRecipeBuilder.create(new ThermalConductivityRecipe(null, blocks, fluids, hasActiveTemperature,
-						temperature, thermalMass, conductivity, overheatingBehaviour, freezingBehaviour)));
+		public ThermalRecipeBuilder overheats(OverheatingBehaviour overheatingBehaviour) {
+			this.overheatingBehaviour = overheatingBehaviour;
+			return this;
+		}
+
+		public ThermalRecipeBuilder freezes(FreezingBehaviour freezingBehaviour) {
+			this.freezingBehaviour = freezingBehaviour;
+			return this;
+		}
+
+		public ThermalConductivityRecipe recipe() {
+			return new ThermalConductivityRecipe(null, blocks, fluids, hasTemperature, temperature, mass, specificHeat,
+					conductivity, overheatingBehaviour, freezingBehaviour);
+		}
 	}
 }

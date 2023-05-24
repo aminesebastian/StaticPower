@@ -18,6 +18,7 @@ import theking530.staticcore.blockentity.components.heat.HeatStorageComponent;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.cablenetwork.Cable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
+import theking530.staticpower.init.cables.ModCableCapabilities;
 import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -26,7 +27,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public static final String HEAT_CAPACITY_DATA_TAG_KEY = "heat_capacity";
 	public static final String HEAT_CONDUCTIVITY_TAG_KEY = "heat_transfer_rate";
 	private final float capacity;
-	private final float transferRate;
+	private final float conductivity;
 	@UpdateSerialize
 	private float clientSideHeat;
 	@UpdateSerialize
@@ -35,7 +36,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public HeatCableComponent(String name, float capacity, float conductivity) {
 		super(name, ModCableModules.Heat.get());
 		this.capacity = capacity;
-		this.transferRate = conductivity;
+		this.conductivity = conductivity;
 	}
 
 	@Override
@@ -43,11 +44,11 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		super.preProcessUpdate();
 		if (!isClientSide()) {
 			this.<HeatNetworkModule>getNetworkModule(ModCableModules.Heat.get()).ifPresent(network -> {
-				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentTemperature()
+				boolean shouldUpdate = Math.abs(getServerHeatStorage().getCurrentTemperature()
 						- clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
-				shouldUpdate |= network.getHeatStorage().getOverheatThreshold() != clientSideHeatCapacity;
-				shouldUpdate |= clientSideHeat == 0 && network.getHeatStorage().getCurrentTemperature() > 0;
-				shouldUpdate |= clientSideHeat > 0 && network.getHeatStorage().getCurrentTemperature() == 0;
+				shouldUpdate |= getServerHeatStorage().getOverheatTemperature() != clientSideHeatCapacity;
+				shouldUpdate |= clientSideHeat == 0 && getServerHeatStorage().getCurrentTemperature() > 0;
+				shouldUpdate |= clientSideHeat > 0 && getServerHeatStorage().getCurrentTemperature() == 0;
 				if (shouldUpdate) {
 					updateClientValues();
 				}
@@ -58,8 +59,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public void updateClientValues() {
 		if (!isClientSide()) {
 			this.<HeatNetworkModule>getNetworkModule(ModCableModules.Heat.get()).ifPresent(network -> {
-				clientSideHeat = network.getHeatStorage().getCurrentTemperature();
-				clientSideHeatCapacity = network.getHeatStorage().getMaximumHeat();
+				clientSideHeat = getServerHeatStorage().getCurrentTemperature();
+				clientSideHeatCapacity = getServerHeatStorage().getMaximumTemperature();
 
 				// Only send the packet to nearby players since these packets get sent
 				// frequently.
@@ -79,30 +80,29 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	@Override
 	public float getCurrentTemperature() {
 		if (!getBlockEntity().getLevel().isClientSide) {
-			return getHeatNetworkModule().isPresent() ? getHeatNetworkModule().get().getHeatStorage().getCurrentTemperature()
-					: 0.0f;
+			return getHeatNetworkModule().isPresent() ? getServerHeatStorage().getCurrentTemperature() : 0.0f;
 		} else {
 			return clientSideHeat;
 		}
 	}
 
 	@Override
-	public float getMaximumHeat() {
+	public float getMaximumTemperature() {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
-			return module != null ? module.getHeatStorage().getMaximumHeat() : 0;
+			return module != null ? getServerHeatStorage().getMaximumTemperature() : 0;
 		} else {
 			return clientSideHeatCapacity;
 		}
 	}
 
 	@Override
-	public float getOverheatThreshold() {
+	public float getOverheatTemperature() {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
-			return module != null ? module.getHeatStorage().getOverheatThreshold() : 0;
+			return module != null ? getServerHeatStorage().getOverheatTemperature() : 0;
 		} else {
-			return clientSideHeatCapacity;
+			return 0;
 		}
 	}
 
@@ -110,22 +110,37 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public float getMass() {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
-			return module != null ? module.getHeatStorage().getMass() : 0;
+			return module != null ? getServerHeatStorage().getMass() : 0;
 		} else {
-			return clientSideHeatCapacity;
+			return 0;
 		}
 	}
 
 	@Override
 	public float getConductivity() {
-		return transferRate;
+		if (!getBlockEntity().getLevel().isClientSide) {
+			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
+			return module != null ? getServerHeatStorage().getConductivity() : 0;
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	public float getSpecificHeat() {
+		if (!getBlockEntity().getLevel().isClientSide) {
+			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
+			return module != null ? getServerHeatStorage().getSpecificHeat() : 0;
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
 	public float heat(float amountToHeat, HeatTransferAction action) {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
-			return module != null ? module.getHeatStorage().heat(amountToHeat, action) : 0;
+			return module != null ? getServerHeatStorage().heat(amountToHeat, action) : 0;
 		} else {
 			return 0;
 		}
@@ -135,7 +150,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public float cool(float amountToCool, HeatTransferAction action) {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
-			return module != null ? module.getHeatStorage().cool(amountToCool, action) : 0;
+			return module != null ? getServerHeatStorage().cool(amountToCool, action) : 0;
 		} else {
 			return 0;
 		}
@@ -143,12 +158,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public HeatTicker getTicker() {
-		if (!getBlockEntity().getLevel().isClientSide) {
-			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
-			return module != null ? module.getHeatStorage().getTicker() : null;
-		} else {
-			return null;
-		}
+		return null;
 	}
 
 	public void updateFromNetworkUpdatePacket(float clientHeat, float clientCapacity) {
@@ -174,7 +184,10 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 			LivingEntity placer, ItemStack stack) {
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putFloat(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
-		cable.getDataTag().putFloat(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
+		cable.getDataTag().putFloat(HEAT_CONDUCTIVITY_TAG_KEY, conductivity);
+		HeatCableCapability heatCapability = ModCableCapabilities.Heat.get().create(cable);
+		heatCapability.initialize(50, 400, 400, 2000);
+		cable.registerCapability(heatCapability);
 	}
 
 	@Override
@@ -191,11 +204,28 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 				if (isClientSide()) {
 					return LazyOptional.of(() -> this).cast();
 				} else if (getHeatNetworkModule().isPresent()) {
-					return LazyOptional.of(() -> getHeatNetworkModule().get().getHeatStorage()).cast();
+					return LazyOptional.of(() -> getServerHeatStorage()).cast();
 				}
 			}
 		}
 		return LazyOptional.empty();
 	}
 
+	protected IHeatStorage getServerHeatStorage() {
+		if (isClientSide()) {
+			throw new RuntimeException("#getServerHeatStorage should only be called on the server!");
+		}
+
+		HeatNetworkModule module = getHeatNetworkModule().orElse(null);
+		if (module == null) {
+			return null;
+		}
+
+		Optional<HeatCableCapability> capability = module.getHeatCableCapability(getPos());
+		if (capability.isEmpty()) {
+			return null;
+		}
+
+		return capability.get().getStorage();
+	}
 }

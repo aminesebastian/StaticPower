@@ -1,5 +1,10 @@
 package theking530.api.heat;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -23,101 +28,86 @@ import theking530.staticcore.init.StaticCoreRecipeTypes;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
-public class HeatStorageUtilities {
-	public record HeatQuery(float mass, float temperature, float conductivity, IHeatStorage heatStorage) {
+public class HeatUtilities {
+	public record HeatInfo(float mass, float temperature, float conductivity, float specificHeat,
+			IHeatStorage heatStorage) {
+
+		public HeatInfo(IHeatStorage storage) {
+			this(storage.getMass(), storage.getCurrentTemperature(), storage.getConductivity(),
+					storage.getSpecificHeat(), storage);
+		}
+
+		public HeatInfo(float mass, float temperature, float conductivity, float specificHeat) {
+			this(mass, temperature, conductivity, specificHeat, null);
+		}
 	}
 
-	public static final float HEATING_RATE = 200.0f;
+	public static final float HEAT_TRANSFER_RATE = 100.0f;
 	public static final float THERMAL_BEHAVIOUR_DELTA_CHANCE_DIVISOR = 4000f;
 
-	/**
-	 * Transfers the heat stored in this storage to adjacent blocks. The transfered
-	 * amount is equal to the thermal conductivity of the adjacent block multiplied
-	 * by the thermal conductivity of the heat storage.
-	 * 
-	 * @param storage    The heat storage that provides the heat.
-	 * @param world      The world access.
-	 * @param currentPos The position of this heat storage.
-	 */
-
-	public static int transferHeatWithSurroundings(IHeatStorage storage, Level world, BlockPos currentPos,
+	public static float transferHeat(IHeatStorage storage, Level world, BlockPos currentPos,
 			HeatTransferAction action) {
-		float totalPassive = 0;
 
+		float totalTransfered = 0.0f;
+		List<Direction> randomDirections = new ArrayList<Direction>(6);
 		for (Direction side : Direction.values()) {
-			// Skip any other entities with heat storage capability, we'll deal with those
-			// after.
-			BlockEntity be = world.getBlockEntity(currentPos.relative(side));
-			if (be != null
-					&& be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).isPresent()) {
+			randomDirections.add(side);
+		}
+		Collections.shuffle(randomDirections);
+
+		for (Direction side : randomDirections) {
+			HeatInfo adjacentHeat = HeatUtilities.getHeatInfoOnSide(world, currentPos, side, storage);
+			if (adjacentHeat.heatStorage() == storage) {
 				continue;
 			}
 
-			// Get the temperature and conductivity on this side.
-			HeatQuery adjacentHeat = HeatStorageUtilities.getThermalPowerOnSide(world, currentPos, side, storage);
-
-			// If we're simulating and want to see max efficiency, set the temp on the side
-			// to the overheat temp, as that is the point of maximum efficiency.
-			if (action == HeatTransferAction.SIMULATE_MAX_EFFICIENCY) {
-				adjacentHeat = new HeatQuery(adjacentHeat.mass(), storage.getOverheatThreshold(),
-						adjacentHeat.conductivity(), adjacentHeat.heatStorage());
-			}
-
-			float heatAmountPerTick = calculateHeatTransfer(adjacentHeat, new HeatQuery(storage.getMass(),
-					storage.getCurrentTemperature(), storage.getConductivity(), storage));
-			totalPassive += heatAmountPerTick;
-		}
-
-		if (Math.abs(totalPassive) < 0.001f) {
-			totalPassive = 0;
-		}
-
-		float totalApplied = 0;
-		if (totalPassive > 0) {
-			totalApplied += storage.heat(totalPassive, action);
-		} else if (totalPassive < 0) {
-			totalApplied -= storage.cool(-totalPassive, action);
-		}
-
-		for (Direction side : Direction.values()) {
-			BlockEntity be = world.getBlockEntity(currentPos.relative(side));
-			if (be == null) {
+			HeatInfo source = new HeatInfo(storage);
+			float flux = calculateHeatFluxTransfer(source, adjacentHeat);
+			if (flux == 0) {
 				continue;
 			}
 
-			IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite())
-					.orElse(null);
-			if (otherStorage == null || otherStorage != storage) {
-				continue;
-			}
-
-			float heatAmountPerTick = calculateHeatTransfer(
-					new HeatQuery(otherStorage.getMass(), otherStorage.getCurrentTemperature(),
-							otherStorage.getConductivity(), otherStorage),
-					new HeatQuery(storage.getMass(), storage.getCurrentTemperature(), storage.getConductivity(), storage));
-
-			if (heatAmountPerTick > 0) {
-				float cooled = otherStorage.cool(heatAmountPerTick, HeatTransferAction.SIMULATE);
-				float heated = storage.heat(cooled, action);
-				totalApplied -= otherStorage.cool(heated, action);
+			if (adjacentHeat.heatStorage() != null) {
+				if (flux > 0) {
+					float actualFlux = storage.cool(flux, action);
+					totalTransfered -= adjacentHeat.heatStorage().heat(actualFlux, action);
+				} else {
+					float actualFlux = storage.heat(-flux, action);
+					totalTransfered += adjacentHeat.heatStorage().cool(actualFlux, action);
+				}
 			} else {
-				float heated = otherStorage.heat(-heatAmountPerTick, HeatTransferAction.SIMULATE);
-				float cooled = storage.cool(heated, action);
-				totalApplied += otherStorage.heat(cooled, action);
+				if (flux > 0) {
+					totalTransfered -= source.heatStorage().cool(flux, action);
+				} else {
+					totalTransfered += source.heatStorage().heat(-flux, action);
+				}
 			}
 		}
 
-		// Process any overheating on each side.
 		if (action == HeatTransferAction.EXECUTE) {
 			for (Direction dir : Direction.values()) {
-				HeatStorageUtilities.handleOverheatingOnSide(world, currentPos, dir, storage);
+				HeatUtilities.handleOverheatingOnSide(world, currentPos, dir, storage);
 			}
 		}
 
-		return (int) totalApplied;
+		return totalTransfered;
 	}
 
-	public static HeatQuery getBiomeAmbientTemperature(Level world, BlockPos currentPos) {
+	public static float calculateTemperatureDelta(float heatFlux, float specificHeat, float mass) {
+		return heatFlux / (specificHeat * mass);
+	}
+
+	public static float calculateHeatFluxForTemperatureDelta(float temperatureDelta, float specificHeat, float mass) {
+		return temperatureDelta * specificHeat * mass;
+	}
+
+	public static float calculateHeatFluxTransfer(HeatInfo source, HeatInfo target) {
+		float conductivity = source.conductivity() + target.conductivity();
+		float delta = source.temperature() - target.temperature();
+		return (conductivity * delta) / 20;
+	}
+
+	public static HeatInfo getAmbientProperties(Level world, BlockPos currentPos) {
 		// Get the current biome we're in.
 		Holder<Biome> biome = world.getBiome(currentPos);
 
@@ -150,11 +140,11 @@ public class HeatStorageUtilities {
 			ambientHeat -= 5;
 		}
 
-		return new HeatQuery(IHeatStorage.DEFAULT_BLOCK_MASS, ambientHeat, 0.01f, null);
+		return new HeatInfo(IHeatStorage.DEFAULT_BLOCK_MASS, ambientHeat, IHeatStorage.AIR_CONDUCTIVITY,
+				IHeatStorage.AIR_SPECIFIC_HEAT, null);
 	}
 
-	public static HeatQuery getThermalPowerOnSide(Level world, BlockPos currentPos, Direction side,
-			IHeatStorage storage) {
+	public static HeatInfo getHeatInfoOnSide(Level world, BlockPos currentPos, Direction side, IHeatStorage storage) {
 		// Get the offset position.
 		BlockPos offsetPos = currentPos.relative(side);
 		BlockEntity be = world.getBlockEntity(offsetPos);
@@ -162,32 +152,26 @@ public class HeatStorageUtilities {
 			IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite())
 					.orElse(null);
 			if (otherStorage != null) {
-				return new HeatQuery(otherStorage.getMass(), otherStorage.getCurrentTemperature(),
-						otherStorage.getConductivity(), otherStorage);
+				return new HeatInfo(otherStorage);
 			}
 		}
 
-		// Get the block and fluid states at the offset pos.
 		FluidState fluidState = world.getFluidState(offsetPos);
 		BlockState blockstate = world.getBlockState(offsetPos);
-		HeatQuery ambientTemperature = getBiomeAmbientTemperature(world, offsetPos);
-
-		// If there is a recipe for thermal conductivity for this block
 		ThermalConductivityRecipe recipe = world.getRecipeManager()
 				.getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
 						new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)),
 						world)
 				.orElse(null);
 
-		// Get the temperature on that side.
-		if (recipe != null) {
-			return new HeatQuery(recipe.getThermalMass(),
-					recipe.hasActiveTemperature() ? recipe.getTemperature() : ambientTemperature.temperature(),
-					recipe.getConductivity(), null);
-		} else {
-			return new HeatQuery(IHeatStorage.DEFAULT_BLOCK_MASS, ambientTemperature.temperature(),
-					ambientTemperature.conductivity(), null);
+		HeatInfo ambientTemperature = getAmbientProperties(world, offsetPos);
+		if (recipe == null) {
+			return ambientTemperature;
 		}
+
+		return new HeatInfo(recipe.getMass(),
+				recipe.hasActiveTemperature() ? recipe.getTemperature() : ambientTemperature.temperature(),
+				recipe.getConductivity(), recipe.getSpecificHeat());
 	}
 
 	public static void handleOverheatingOnSide(Level world, BlockPos pos, Direction side, IHeatStorage storage) {
@@ -277,16 +261,18 @@ public class HeatStorageUtilities {
 		}
 	}
 
-	public static boolean canFullyAbsorbHeat(IHeatStorage storage, float heatAmount) {
-		return storage.getCurrentTemperature() + heatAmount <= storage.getMaximumHeat();
+	public static Optional<ThermalConductivityRecipe> getThermalPropertiesForFluid(Level level, FluidStack fluid) {
+		return level.getRecipeManager().getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
+				new RecipeMatchParameters(fluid), level);
 	}
 
-	public static float calculateHeatTransfer(HeatQuery source, HeatQuery target) {
-		float totalMass = source.mass() + target.mass();
-		float averageConductivity = (source.conductivity() + target.conductivity()) / 2.0f;
-		float delta = source.temperature() - target.temperature();
-		float heatAmount = averageConductivity * delta;
-		return heatAmount / (totalMass * HEATING_RATE);
+	public static Optional<ThermalConductivityRecipe> getThermalPropertiesForBlock(Level level, BlockState block) {
+		return level.getRecipeManager().getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
+				new RecipeMatchParameters(block), level);
+	}
+
+	public static boolean canFullyAbsorbHeat(IHeatStorage storage, float heatAmount) {
+		return storage.getCurrentTemperature() + heatAmount <= storage.getMaximumTemperature();
 	}
 
 }

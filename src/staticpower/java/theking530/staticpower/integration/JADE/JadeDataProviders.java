@@ -50,7 +50,7 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		te.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY).ifPresent(heatStorage -> {
 			CompoundTag heatData = new CompoundTag();
 			heatData.putFloat("value", heatStorage.getCurrentTemperature());
-			heatData.putFloat("max", heatStorage.getMaximumHeat());
+			heatData.putFloat("max", heatStorage.getMaximumTemperature());
 			data.put(HEAT_TAG, heatData);
 		});
 

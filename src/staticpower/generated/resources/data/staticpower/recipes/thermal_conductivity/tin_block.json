@@ -6,6 +6,7 @@
     }
   },
   "conductivity": 230.0,
+  "mass": 100.0,
   "overheating_behaviour": {
     "block": {
       "Name": "staticpower:molten_tin",
@@ -15,5 +16,5 @@
     },
     "temperature": 100
   },
-  "thermalMass": 100.0
+  "specific_heat": 100.0
 }

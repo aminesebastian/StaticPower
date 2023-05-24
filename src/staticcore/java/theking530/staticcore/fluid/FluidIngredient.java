@@ -67,6 +67,10 @@ public class FluidIngredient implements Predicate<FluidStack> {
 		return EMPTY;
 	}
 
+	public static FluidIngredient of(Fluid... fluids) {
+		return of(1, fluids);
+	}
+
 	public static FluidIngredient of(int amount, Fluid... fluids) {
 		return of(Arrays.stream(fluids).map((fluid) -> new FluidStack(fluid, amount)), amount);
 	}

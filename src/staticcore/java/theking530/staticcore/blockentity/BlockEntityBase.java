@@ -134,6 +134,7 @@ public abstract class BlockEntityBase extends BlockEntity
 		if (isRemoved()) {
 			return;
 		}
+		preProcess();
 
 		// Pre process all the components.
 		preProcessUpdateComponents();
@@ -258,6 +259,14 @@ public abstract class BlockEntityBase extends BlockEntity
 
 		// Call the super AFTER everything has been cleaned up.
 		super.setRemoved();
+	}
+
+	/**
+	 * This method is raised on tick after the components have had any time to
+	 * process.
+	 */
+	public void preProcess() {
+
 	}
 
 	/**

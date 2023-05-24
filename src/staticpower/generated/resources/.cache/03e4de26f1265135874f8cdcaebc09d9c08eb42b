@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-21T18:33:12.3815825	Tags for minecraft:item
+// 1.19.2	2023-05-22T18:13:23.7427568	Tags for minecraft:item
 51b00e5b14b17e9df81bc1b25cec37a2fe8031dc data/forge/tags/items/chunks/aluminum.json
 51bedc018c85271eca5afd8b657d0c5c1c7ffeac data/forge/tags/items/chunks/coal.json
 d8a3eb079dc5e7de3ceeafed90cc657c79950b6c data/forge/tags/items/chunks/copper.json
@@ -90,11 +90,11 @@ fa3fe04857c986e0a44a6667f34c61476ce44c3d data/forge/tags/items/nuggets/tungsten.
 1ed8c6375235d71cbedaa412167804ea4fb8fc97 data/forge/tags/items/ores.json
 a2bda67c5d909a46c468ef0fe160e60f0bf49f1e data/forge/tags/items/ores/aluminum.json
 6ab60a84dde670dba86298809f66887a05c426c4 data/forge/tags/items/ores/coal.json
-eead424cffc987dc75af69c04d0544dc849f75c0 data/forge/tags/items/ores/copper.json
+d1c688f6b4d83d63871b6d81f913f656c42ff10d data/forge/tags/items/ores/copper.json
 3e785627fc8676629e25406630d77b36f8c19890 data/forge/tags/items/ores/diamond.json
 81984ab90ad9a6d70742045f6fb24d214c84750e data/forge/tags/items/ores/emerald.json
-1618925ae9ef48897c974a69ac84ada5a10407e7 data/forge/tags/items/ores/gold.json
-2aebc51370923c24dc84a46410ccebdfb7d66246 data/forge/tags/items/ores/iron.json
+9ebccd990449eb0dc4e5b543497d9ba8d7e4fb56 data/forge/tags/items/ores/gold.json
+6f644be81935031ad964cbde4b17688dbe2bf388 data/forge/tags/items/ores/iron.json
 f26dad5c414194fa368d5bb30692d0407602b04e data/forge/tags/items/ores/lapis.json
 1ea484565567160e9431ce43a1d4348cc22b2426 data/forge/tags/items/ores/lead.json
 8b05808d79ab659bd72e616c0ed1a8d117985786 data/forge/tags/items/ores/magnesium.json
@@ -263,7 +263,7 @@ e931e350be5042e282e2061a6667161aedcb8fd4 data/staticpower/tags/items/ingot_or_pl
 35c86d69724a6fbde4f9778cbae604be21d4430b data/staticpower/tags/items/ingot_or_plate/tin.json
 c3ee03b6ec91f239e2a1e4dbe7ca9f3414305560 data/staticpower/tags/items/ingot_or_plate/tungsten.json
 6b12387585a43cc1314d136279dda18d1d1a86b6 data/staticpower/tags/items/ingot_or_plate/zinc.json
-80b2ed2371fc29d98a32e8983a6f8d11ee28d4db data/staticpower/tags/items/lightbulbs.json
+17abca3502548daaa46b37c2d1d86c8510cba685 data/staticpower/tags/items/lightbulbs.json
 a69680e41844ef84fad37036549c67565cabe5db data/staticpower/tags/items/machines.json
 2528913fac539e196dfc1dd3beaf5a78d22819ff data/staticpower/tags/items/machine_blocks.json
 e8f309955d537f37f48055743def9728df64488b data/staticpower/tags/items/materials.json

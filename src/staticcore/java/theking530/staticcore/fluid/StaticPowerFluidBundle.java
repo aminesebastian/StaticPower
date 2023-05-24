@@ -12,14 +12,14 @@ import theking530.staticcore.fluid.AbstractStaticPowerFluid.Source;
 
 public class StaticPowerFluidBundle {
 	protected final TagKey<Fluid> tag;
-	protected final RegistryObject<FluidType> type;
+	protected final RegistryObject<StaticCoreFluidType> type;
 	protected final FluidType.Properties typeProperties;
 	protected final RegistryObject<StaticPowerFluidBlock> block;
 	protected final RegistryObject<BucketItem> bucket;
 	protected final RegistryObject<AbstractStaticPowerFluid.Source> source;
 	protected final RegistryObject<AbstractStaticPowerFluid.Flowing> flowing;
 
-	public StaticPowerFluidBundle(TagKey<Fluid> tag, RegistryObject<FluidType> type, Properties typeProperties, RegistryObject<StaticPowerFluidBlock> block,
+	public StaticPowerFluidBundle(TagKey<Fluid> tag, RegistryObject<StaticCoreFluidType> type, Properties typeProperties, RegistryObject<StaticPowerFluidBlock> block,
 			RegistryObject<BucketItem> bucket, RegistryObject<Source> source, RegistryObject<Flowing> flowing) {
 		this.tag = tag;
 		this.type = type;
@@ -38,7 +38,7 @@ public class StaticPowerFluidBundle {
 		return tag;
 	}
 
-	public RegistryObject<FluidType> getType() {
+	public RegistryObject<StaticCoreFluidType> getType() {
 		return type;
 	}
 

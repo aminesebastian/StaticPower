@@ -42,10 +42,8 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 			ResourceLocation heatSinkTier) {
 		super(allocator, pos, state);
 		StaticCoreTier tier = StaticCoreConfig.getTier(heatSinkTier);
-
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tier.defaultMachineThermalMass.get(), tier.heatSinkOverheatTemperature.get(),
-				tier.heatSinkMaximumTemperature.get(), tier.heatSinkConductivity.get()));
+//		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tier));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 100, 400, 1000, 2000, 400));
 	}
 
 	@Override

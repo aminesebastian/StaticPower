@@ -4,9 +4,9 @@ import java.util.function.Predicate;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
@@ -18,7 +18,8 @@ public class FluidInputServoComponent extends AbstractBlockEntityComponent {
 	private Predicate<FluidStack> filter;
 	private MachineSideMode inputMode;
 
-	public FluidInputServoComponent(String name, int inputRate, IFluidHandler owningTank, MachineSideMode inputMode, Predicate<FluidStack> filter) {
+	public FluidInputServoComponent(String name, int inputRate, IFluidHandler owningTank, MachineSideMode inputMode,
+			Predicate<FluidStack> filter) {
 		super(name);
 		this.inputRate = inputRate;
 		this.owningTank = owningTank;
@@ -49,7 +50,7 @@ public class FluidInputServoComponent extends AbstractBlockEntityComponent {
 		if (owningTank == null) {
 			return;
 		}
-		if (!getBlockEntity().getLevel().isClientSide) {
+		if (!isClientSide()) {
 			for (Direction dir : Direction.values()) {
 				// If we can't input from the provided side, skip it.
 				if (!canInputFromSide(dir)) {
@@ -68,7 +69,7 @@ public class FluidInputServoComponent extends AbstractBlockEntityComponent {
 		}
 
 		// Attempt to get the fluid handler for that tile entity.
-		te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).ifPresent(tank -> {
+		te.getCapability(ForgeCapabilities.FLUID_HANDLER, side).ifPresent(tank -> {
 			// Simulate a transfer and capture the result.
 			FluidStack potentialSuck = FluidUtil.tryFluidTransfer(owningTank, tank, inputRate, false);
 
@@ -84,7 +85,8 @@ public class FluidInputServoComponent extends AbstractBlockEntityComponent {
 
 	public boolean canInputFromSide(Direction side) {
 		if (getBlockEntity().hasComponentOfType(SideConfigurationComponent.class)) {
-			return getBlockEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side) == inputMode;
+			return getBlockEntity().getComponent(SideConfigurationComponent.class)
+					.getWorldSpaceDirectionConfiguration(side) == inputMode;
 		}
 		return true;
 	}

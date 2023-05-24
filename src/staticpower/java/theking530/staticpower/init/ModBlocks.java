@@ -70,6 +70,7 @@ import theking530.staticpower.blockentities.nonpowered.conveyors.supplier.BlockC
 import theking530.staticpower.blockentities.nonpowered.directdropper.BlockDirectDropper;
 import theking530.staticpower.blockentities.nonpowered.evaporator.BlockEvaporator;
 import theking530.staticpower.blockentities.nonpowered.experiencehopper.BlockExperienceHopper;
+import theking530.staticpower.blockentities.nonpowered.heatexchanger.BlockHeatExchanger;
 import theking530.staticpower.blockentities.nonpowered.miner.BlockMiner;
 import theking530.staticpower.blockentities.nonpowered.placer.BlockAutomaticPlacer;
 import theking530.staticpower.blockentities.nonpowered.randomitem.BlockRandomItemGenerator;
@@ -355,6 +356,8 @@ public class ModBlocks {
 			() -> new BlockLaboratory());
 	public static final RegistryObject<BlockResearchCheater> ResearchCheater = registerBlock("research_cheater",
 			() -> new BlockResearchCheater());
+	public static final RegistryObject<BlockHeatExchanger> HeatExchanger = registerBlock("heat_exchanger",
+			() -> new BlockHeatExchanger());
 
 	public static final Map<ResourceLocation, RegistryObject<BlockStraightConveyor>> ConveyorsStraight = new HashMap<>();
 	public static final Map<ResourceLocation, RegistryObject<BlockRampUpConveyor>> ConveyorsRampUp = new HashMap<>();

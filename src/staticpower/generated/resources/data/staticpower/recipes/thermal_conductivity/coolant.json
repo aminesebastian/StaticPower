@@ -1,11 +1,12 @@
 {
   "type": "staticcore:thermal_conducitity",
-  "conductivity": 10.0,
+  "conductivity": 0.25,
   "fluid": {
     "amount": 1,
     "fluids": {
       "fluid": "staticpower:coolant"
     }
   },
-  "thermalMass": 100.0
+  "mass": 100.0,
+  "specific_heat": 100.0
 }

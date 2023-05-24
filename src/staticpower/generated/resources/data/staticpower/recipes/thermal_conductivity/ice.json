@@ -6,6 +6,8 @@
     }
   },
   "conductivity": 5.0,
+  "has_active_temperature": true,
+  "mass": 100.0,
   "overheating_behaviour": {
     "block": {
       "Name": "minecraft:water",
@@ -15,5 +17,5 @@
     },
     "temperature": 100
   },
-  "thermalMass": 100.0
+  "specific_heat": 100.0
 }

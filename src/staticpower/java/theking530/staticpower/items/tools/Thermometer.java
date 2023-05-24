@@ -30,7 +30,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.api.heat.HeatStorageUtilities;
+import theking530.api.heat.HeatUtilities;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.client.ICustomModelProvider;
 import theking530.staticcore.crafting.RecipeMatchParameters;
@@ -52,7 +52,7 @@ public class Thermometer extends StaticPowerItem implements ICustomModelProvider
 	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
 			InteractionHand hand, ItemStack item) {
 		if (!world.isClientSide()) {
-			float temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos()).temperature();
+			float temperature = HeatUtilities.getAmbientProperties(world, player.getOnPos()).temperature();
 
 			BlockHitResult traceResult = RaytracingUtilities.findPlayerRayTrace(world, player, ClipContext.Fluid.ANY);
 			if (traceResult.getType() == HitResult.Type.MISS) {
@@ -70,7 +70,7 @@ public class Thermometer extends StaticPowerItem implements ICustomModelProvider
 	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos,
 			Direction face, Player player, ItemStack item) {
 		if (!world.isClientSide()) {
-			float temperature = HeatStorageUtilities.getBiomeAmbientTemperature(world, player.getOnPos()).temperature();
+			float temperature = HeatUtilities.getAmbientProperties(world, player.getOnPos()).temperature();
 			MutableComponent chatComponent = Component.literal("Temperature (")
 					.append(ChatFormatting.GREEN + GuiTextUtilities.formatHeatToString(temperature).getString())
 					.append(")");

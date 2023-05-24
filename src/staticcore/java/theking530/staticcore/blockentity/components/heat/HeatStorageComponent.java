@@ -13,13 +13,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorage;
-import theking530.api.heat.HeatStorageUtilities;
+import theking530.api.heat.HeatUtilities;
 import theking530.api.heat.HeatTicker;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
+import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.init.StaticCoreUpgradeTypes;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.utilities.TriFunction;
@@ -62,21 +63,28 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	private boolean issueSyncPackets;
 	private int timeSinceLastSync;
 
-	public HeatStorageComponent(String name, float mass, float maxHeat, float conductivity) {
-		this(name, mass, IHeatStorage.MINIMUM_TEMPERATURE, maxHeat, maxHeat, conductivity);
+	public HeatStorageComponent(String name, float mass, float specificHeat, float maxHeat, float conductivity) {
+		this(name, mass, specificHeat, IHeatStorage.ABSOLUTE_ZERO, maxHeat, maxHeat, conductivity);
 	}
 
-	public HeatStorageComponent(String name, float mass, float overheatThreshold, float maxHeat, float conductivity) {
-		this(name, mass, IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maxHeat, conductivity);
-	}
-
-	public HeatStorageComponent(String name, float mass, float minHeat, float overheatThreshold, float maxHeat,
+	public HeatStorageComponent(String name, float mass, float specificHeat, float overheatThreshold, float maxHeat,
 			float conductivity) {
+		this(name, mass, specificHeat, IHeatStorage.ABSOLUTE_ZERO, overheatThreshold, maxHeat, conductivity);
+	}
+
+	public HeatStorageComponent(String name, StaticCoreTier tier) {
+		this(name, tier.defaultMachineThermalMass.get(), tier.defaultMachineSpecificHeat.get(),
+				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(),
+				tier.defaultMachineThermalConductivity.get());
+	}
+
+	public HeatStorageComponent(String name, float mass, float specificHeat, float minHeat, float overheatThreshold,
+			float maxHeat, float conductivity) {
 		super(name);
 		defaultCapacity = maxHeat;
 		defaultConductivity = conductivity;
 		issueSyncPackets = false;
-		heatStorage = new HeatStorage(mass, minHeat, overheatThreshold, maxHeat, conductivity);
+		heatStorage = new HeatStorage(mass, specificHeat, minHeat, overheatThreshold, maxHeat, conductivity);
 		exposeAsCapability = true;
 
 		// Create the accessors.
@@ -90,7 +98,7 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	@Override
 	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
 		super.onOwningBlockEntityLoaded(level, pos, state);
-		heatStorage.setCurrentHeat(HeatStorageUtilities.getBiomeAmbientTemperature(getLevel(), getPos()).temperature());
+		heatStorage.setTemperature(HeatUtilities.getAmbientProperties(getLevel(), getPos()).temperature());
 	}
 
 	@SuppressWarnings("resource")
@@ -119,8 +127,8 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 					shouldSync = heatStorage.getCurrentTemperature() == 0 && lastSyncHeat != 0;
 				}
 				if (!shouldSync) {
-					shouldSync = heatStorage.getCurrentTemperature() == heatStorage.getMaximumHeat()
-							&& lastSyncHeat != heatStorage.getMaximumHeat();
+					shouldSync = heatStorage.getCurrentTemperature() == heatStorage.getMaximumTemperature()
+							&& lastSyncHeat != heatStorage.getMaximumTemperature();
 				}
 				if (!shouldSync) {
 					shouldSync = timeSinceLastSync >= HEAT_SYNC_MAX_TICKS;
@@ -137,7 +145,7 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 			}
 
 			// Capture heat transfer metrics.
-			heatStorage.getTicker().tickWithHeatTransfer(getLevel(), getPos());
+			heatStorage.getTicker().tick(getLevel(), getPos());
 			if (hasMeltdownBehavior && heatStorage.isOverheated()) {
 				// Only do the following ONCE after we started the meltdown.
 				if (!enteredMeltdownState) {
@@ -207,11 +215,11 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	}
 
 	public boolean isOverheated() {
-		return this.heatStorage.getCurrentTemperature() > this.heatStorage.getOverheatThreshold();
+		return this.heatStorage.getCurrentTemperature() > this.heatStorage.getOverheatTemperature();
 	}
 
 	public boolean isAboveMinimumHeat() {
-		return this.heatStorage.getCurrentTemperature() > this.heatStorage.getMinimumHeatThreshold();
+		return this.heatStorage.getCurrentTemperature() > this.heatStorage.getMinimumTemperatureThreshold();
 	}
 
 	/**
@@ -332,13 +340,13 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		}
 
 		@Override
-		public float getOverheatThreshold() {
-			return HeatStorageComponent.this.getOverheatThreshold();
+		public float getOverheatTemperature() {
+			return HeatStorageComponent.this.getOverheatTemperature();
 		}
 
 		@Override
-		public float getMinimumHeatThreshold() {
-			return HeatStorageComponent.this.getMinimumHeatThreshold();
+		public float getMinimumTemperatureThreshold() {
+			return HeatStorageComponent.this.getMinimumTemperatureThreshold();
 		}
 
 		@Override
@@ -365,8 +373,8 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		}
 
 		@Override
-		public float getMaximumHeat() {
-			return HeatStorageComponent.this.getMaximumHeat();
+		public float getMaximumTemperature() {
+			return HeatStorageComponent.this.getMaximumTemperature();
 		}
 
 		@Override
@@ -383,6 +391,11 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		public float getMass() {
 			return HeatStorageComponent.this.getMass();
 		}
+
+		@Override
+		public float getSpecificHeat() {
+			return HeatStorageComponent.this.getSpecificHeat();
+		}
 	}
 
 	@Override
@@ -391,18 +404,18 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	}
 
 	@Override
-	public float getOverheatThreshold() {
-		return heatStorage.getOverheatThreshold();
+	public float getOverheatTemperature() {
+		return heatStorage.getOverheatTemperature();
 	}
 
 	@Override
-	public float getMinimumHeatThreshold() {
-		return heatStorage.getMinimumHeatThreshold();
+	public float getMinimumTemperatureThreshold() {
+		return heatStorage.getMinimumTemperatureThreshold();
 	}
 
 	@Override
-	public float getMaximumHeat() {
-		return heatStorage.getMaximumHeat();
+	public float getMaximumTemperature() {
+		return heatStorage.getMaximumTemperature();
 	}
 
 	@Override
@@ -434,7 +447,7 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	}
 
 	public void setMinimumHeatThreshold(int minimumHeat) {
-		heatStorage.setMinimumHeatThreshold(minimumHeat);
+		heatStorage.setMinimumTemperatureThreshold(minimumHeat);
 	}
 
 	public double getCooledPerTick() {
@@ -448,5 +461,10 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	@Override
 	public float getMass() {
 		return heatStorage.getMass();
+	}
+
+	@Override
+	public float getSpecificHeat() {
+		return heatStorage.getSpecificHeat();
 	}
 }

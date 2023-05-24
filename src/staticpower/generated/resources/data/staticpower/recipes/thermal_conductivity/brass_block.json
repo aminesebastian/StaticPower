@@ -6,6 +6,7 @@
     }
   },
   "conductivity": 150.0,
+  "mass": 100.0,
   "overheating_behaviour": {
     "block": {
       "Name": "staticpower:molten_brass",
@@ -15,5 +16,5 @@
     },
     "temperature": 900
   },
-  "thermalMass": 100.0
+  "specific_heat": 100.0
 }

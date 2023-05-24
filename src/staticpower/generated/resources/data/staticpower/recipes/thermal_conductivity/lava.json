@@ -1,13 +1,20 @@
 {
   "type": "staticcore:thermal_conducitity",
-  "conductivity": 2.0,
+  "conductivity": 0.5,
   "fluid": {
     "amount": 1,
     "fluids": {
       "fluid": "minecraft:lava"
     }
   },
+  "freezing_behaviour": {
+    "block": {
+      "Name": "minecraft:obsidian"
+    },
+    "temperature": 700
+  },
   "has_active_temperature": true,
-  "temperature": 1500.0,
-  "thermalMass": 100.0
+  "mass": 100.0,
+  "specific_heat": 100.0,
+  "temperature": 1500.0
 }

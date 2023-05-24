@@ -6,5 +6,6 @@
     }
   },
   "conductivity": 0.5,
-  "thermalMass": 100.0
+  "mass": 100.0,
+  "specific_heat": 100.0
 }

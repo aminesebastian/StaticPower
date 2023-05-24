@@ -170,7 +170,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 						capacity = heatData.getFloat("max");
 					} else {
 						stored = storage.getCurrentTemperature();
-						capacity = storage.getOverheatThreshold();
+						capacity = storage.getOverheatTemperature();
 					}
 
 					// Draw bar

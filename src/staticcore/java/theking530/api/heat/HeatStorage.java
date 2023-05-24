@@ -8,32 +8,34 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
 
 	protected float mass;
-	protected float currentHeat;
-	protected float minimumThreshold;
-	protected float overheatThreshold;
-	protected float maximumHeat;
+	protected float currentTemperature;
+	protected float minimumTemperature;
+	protected float overheatTemperature;
+	protected float maximumTemperature;
 	protected float conductivity;
+	protected float specificHeat;
 
 	protected boolean canHeat;
 	protected boolean canCool;
 
 	protected HeatTicker ticker;
 
-	public HeatStorage(float mass, float overheatThreshold, float maximumHeat, float conductivity) {
-		this(mass, IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maximumHeat, conductivity, 0);
+	public HeatStorage(float mass, float specificHeat, float overheatThreshold, float maximumHeat, float conductivity) {
+		this(mass, specificHeat, IHeatStorage.ABSOLUTE_ZERO, overheatThreshold, maximumHeat, conductivity, 0);
 	}
 
-	public HeatStorage(float mass, float minimumThreshold, float overheatThreshold, float maximumHeat,
-			float conductivity) {
-		this(mass, minimumThreshold, overheatThreshold, maximumHeat, conductivity, 0);
+	public HeatStorage(float mass, float specificHeat, float minimumThreshold, float overheatThreshold,
+			float maximumHeat, float conductivity) {
+		this(mass, specificHeat, minimumThreshold, overheatThreshold, maximumHeat, conductivity, 0);
 	}
 
-	public HeatStorage(float mass, float minimumThreshold, float overheatThreshold, float maximumHeat,
-			float conductivity, int meltdownRecoveryTicks) {
+	public HeatStorage(float mass, float specificHeat, float minimumThreshold, float overheatThreshold,
+			float maximumHeat, float conductivity, int meltdownRecoveryTicks) {
 		this.mass = mass;
-		this.maximumHeat = maximumHeat;
-		this.minimumThreshold = minimumThreshold;
-		this.overheatThreshold = overheatThreshold;
+		this.specificHeat = specificHeat;
+		this.maximumTemperature = maximumHeat;
+		this.minimumTemperature = minimumThreshold;
+		this.overheatTemperature = overheatThreshold;
 		this.conductivity = conductivity;
 		canHeat = true;
 		canCool = true;
@@ -42,31 +44,31 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 
 	@Override
 	public float getCurrentTemperature() {
-		return currentHeat;
+		return currentTemperature;
 	}
 
 	@Override
-	public float getMinimumHeatThreshold() {
-		return minimumThreshold;
+	public float getMinimumTemperatureThreshold() {
+		return minimumTemperature;
 	}
 
-	public void setMinimumHeatThreshold(int minimumThreshold) {
-		this.minimumThreshold = minimumThreshold;
-	}
-
-	@Override
-	public float getOverheatThreshold() {
-		return overheatThreshold;
+	public void setMinimumTemperatureThreshold(int minimumThreshold) {
+		this.minimumTemperature = minimumThreshold;
 	}
 
 	@Override
-	public float getMaximumHeat() {
-		return maximumHeat;
+	public float getOverheatTemperature() {
+		return overheatTemperature;
+	}
+
+	@Override
+	public float getMaximumTemperature() {
+		return maximumTemperature;
 	}
 
 	public void setMaximumHeat(float newMax) {
-		maximumHeat = newMax;
-		currentHeat = Math.min(maximumHeat, currentHeat);
+		maximumTemperature = newMax;
+		currentTemperature = Math.min(maximumTemperature, currentTemperature);
 	}
 
 	@Override
@@ -78,63 +80,59 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 		this.conductivity = conductivity;
 	}
 
-	public void setCurrentHeat(float heat) {
+	public void setTemperature(float heat) {
 		if (Float.isNaN(heat)) {
 			return;
 		}
-		currentHeat = SDMath.clamp(heat, MINIMUM_TEMPERATURE, maximumHeat);
+		currentTemperature = SDMath.clamp(heat, ABSOLUTE_ZERO, maximumTemperature);
 	}
 
 	@Override
-	public float heat(float amountToHeat, HeatTransferAction action) {
-		if (!canHeat || amountToHeat <= 0) {
+	public float heat(float heatFlux, HeatTransferAction action) {
+		if (!canHeat || heatFlux <= 0) {
 			return 0;
 		}
 
-		return handleThermalTransfer(amountToHeat, action);
+		return handlePowerTransfer(heatFlux, action);
 	}
 
 	@Override
-	public float cool(float amountToCool, HeatTransferAction action) {
-		if (!canCool || amountToCool <= 0) {
+	public float cool(float heatFlux, HeatTransferAction action) {
+		if (!canCool || heatFlux <= 0) {
 			return 0;
 		}
 
-		return handleThermalTransfer(-amountToCool, action);
+		return handlePowerTransfer(-heatFlux, action);
 	}
 
-	protected float handleThermalTransfer(float amount, HeatTransferAction action) {
-		if (amount == 0) {
+	protected float handlePowerTransfer(float heatFlux, HeatTransferAction action) {
+		if (heatFlux == 0) {
 			return 0;
 		}
 
-		float actualAmount = amount;
-		if (amount > 0) {
-			float remainingHeatCapacity = maximumHeat - currentHeat;
-			actualAmount = Math.min(remainingHeatCapacity, amount);
-		} else {
-			float remainingCoolCapacity = MINIMUM_TEMPERATURE - getCurrentTemperature();
-			actualAmount = -Math.min(Math.abs(remainingCoolCapacity), Math.abs(amount));
-		}
+		float temperatureDelta = HeatUtilities.calculateTemperatureDelta(heatFlux, getSpecificHeat(), getMass());
+		float newTemperature = SDMath.clamp(currentTemperature + temperatureDelta, ABSOLUTE_ZERO,
+				getMaximumTemperature());
+		float actualDelta = newTemperature - currentTemperature;
 
 		if (action == HeatTransferAction.EXECUTE) {
-			setCurrentHeat(currentHeat + actualAmount);
-			if (actualAmount > 0) {
-				getTicker().heated(actualAmount);
+			setTemperature(newTemperature);
+			if (temperatureDelta > 0) {
+				getTicker().heated(actualDelta);
 			} else {
-				getTicker().cooled(-actualAmount);
+				getTicker().cooled(-actualDelta);
 			}
 		}
 
-		return Math.abs(actualAmount);
+		return Math.abs(temperatureDelta);
 	}
 
 	public boolean isAtMaxHeat() {
-		return currentHeat == maximumHeat;
+		return currentTemperature == maximumTemperature;
 	}
 
 	public boolean isEmpty() {
-		return currentHeat == 0.0f;
+		return currentTemperature == 0.0f;
 	}
 
 	public boolean isCanHeat() {
@@ -154,29 +152,6 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 	}
 
 	@Override
-	public void deserializeNBT(CompoundTag nbt) {
-		currentHeat = nbt.getFloat("current_heat");
-		minimumThreshold = nbt.getFloat("minimum_heat");
-		overheatThreshold = nbt.getFloat("overheat_threshold");
-		maximumHeat = nbt.getFloat("maximum_heat");
-		conductivity = nbt.getFloat("maximum_transfer_rate");
-		getTicker().deserializeNBT(nbt.getCompound("ticker"));
-	}
-
-	@Override
-	public CompoundTag serializeNBT() {
-		CompoundTag output = new CompoundTag();
-
-		output.putFloat("current_heat", currentHeat);
-		output.putFloat("minimum_heat", minimumThreshold);
-		output.putFloat("overheat_threshold", overheatThreshold);
-		output.putFloat("maximum_heat", maximumHeat);
-		output.putFloat("maximum_transfer_rate", conductivity);
-		output.put("ticker", getTicker().serializeNBT());
-		return output;
-	}
-
-	@Override
 	public HeatTicker getTicker() {
 		return ticker;
 	}
@@ -184,5 +159,45 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 	@Override
 	public float getMass() {
 		return mass;
+	}
+
+	public void setMass(float mass) {
+		this.mass = mass;
+	}
+
+	@Override
+	public float getSpecificHeat() {
+		return specificHeat;
+	}
+
+	public void setSpecificHeat(float specificHeat) {
+		this.specificHeat = specificHeat;
+	}
+
+	@Override
+	public void deserializeNBT(CompoundTag nbt) {
+		currentTemperature = nbt.getFloat("temp");
+		minimumTemperature = nbt.getFloat("min_temp");
+		overheatTemperature = nbt.getFloat("overheat_temp");
+		maximumTemperature = nbt.getFloat("max_temp");
+		conductivity = nbt.getFloat("conductivity");
+		mass = nbt.getFloat("mass");
+		specificHeat = nbt.getFloat("specific_heat");
+		getTicker().deserializeNBT(nbt.getCompound("ticker"));
+	}
+
+	@Override
+	public CompoundTag serializeNBT() {
+		CompoundTag output = new CompoundTag();
+
+		output.putFloat("temp", currentTemperature);
+		output.putFloat("min_temp", minimumTemperature);
+		output.putFloat("overheat_temp", overheatTemperature);
+		output.putFloat("max_temp", maximumTemperature);
+		output.putFloat("conductivity", conductivity);
+		output.putFloat("mass", mass);
+		output.putFloat("specific_heat", specificHeat);
+		output.put("ticker", getTicker().serializeNBT());
+		return output;
 	}
 }

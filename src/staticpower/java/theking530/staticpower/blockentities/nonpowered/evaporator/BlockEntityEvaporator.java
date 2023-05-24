@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import theking530.api.heat.HeatUtilities;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
@@ -88,9 +89,7 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent,
 				MachineSideMode.Output));
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tierObject.defaultMachineThermalMass.get(), tierObject.defaultMachineOverheatTemperature.get(),
-				tierObject.defaultMachineMaximumTemperature.get(), tierObject.defaultMachineThermalConductivity.get()));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tierObject));
 	}
 
 	@Override
@@ -134,7 +133,7 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 		}
 
 		if (heatStorage.isOverheated()) {
-			return ProcessingCheckState.heatStorageTooHot(heatStorage.getOverheatThreshold());
+			return ProcessingCheckState.heatStorageTooHot(heatStorage.getOverheatTemperature());
 		}
 
 		return ProcessingCheckState.ok();
@@ -150,7 +149,8 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 	public void onProcessingCompleted(RecipeProcessingComponent<EvaporatorRecipe> component,
 			ProcessingContainer processingContainer) {
 		outputTankComponent.fill(processingContainer.getOutputs().getFluid(0), FluidAction.EXECUTE);
-		heatStorage.cool(component.getProcessingRecipe().get().getProcessingSection().getHeat(),
-				HeatTransferAction.EXECUTE);
+		heatStorage.cool(HeatUtilities.calculateHeatFluxForTemperatureDelta(
+				component.getProcessingRecipe().get().getProcessingSection().getHeat(), heatStorage.getSpecificHeat(),
+				heatStorage.getMass()), HeatTransferAction.EXECUTE);
 	}
 }

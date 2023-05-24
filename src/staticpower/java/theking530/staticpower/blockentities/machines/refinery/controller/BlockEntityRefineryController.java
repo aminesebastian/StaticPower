@@ -140,8 +140,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		fluidTanks[4].setAutoSyncPacketsEnabled(true);
 
 		// Add the heat storage and the upgrade inventory to the heat component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 0,
-				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 50)
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tier)
 				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL)
 				.setExposedAsCapability(false).setMeltdownRecoveryTicks(100));
 		heatStorage.setUpgradeInventory(upgradesInventory);

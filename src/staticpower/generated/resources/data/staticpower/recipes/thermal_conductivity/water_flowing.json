@@ -1,19 +1,15 @@
 {
   "type": "staticcore:thermal_conducitity",
-  "conductivity": 5.0,
+  "conductivity": 2.0,
   "fluid": {
     "amount": 1,
     "fluids": {
       "fluid": "minecraft:flowing_water"
     }
   },
-  "freezing_behaviour": {
-    "block": {
-      "Name": "minecraft:powder_snow"
-    }
-  },
+  "mass": 100.0,
   "overheating_behaviour": {
     "temperature": 100
   },
-  "thermalMass": 100.0
+  "specific_heat": 100.0
 }

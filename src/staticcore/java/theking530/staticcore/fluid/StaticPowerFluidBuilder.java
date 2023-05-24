@@ -33,7 +33,7 @@ public class StaticPowerFluidBuilder implements IClientFluidTypeExtensions {
 	public RegistryObject<AbstractStaticPowerFluid.Flowing> flowing;
 	public RegistryObject<StaticPowerFluidBlock> block;
 	public RegistryObject<BucketItem> bucket;
-	public RegistryObject<FluidType> type;
+	public RegistryObject<StaticCoreFluidType> type;
 
 	public StaticPowerFluidBuilder(String modId, CreativeModeTab creativeTab, String name, SDColor fogColor) {
 		this.name = name;
@@ -82,7 +82,7 @@ public class StaticPowerFluidBuilder implements IClientFluidTypeExtensions {
 			extraAttributes.accept(typeProperties);
 		}
 
-		type = fluidTypeRegistry.register(name, () -> new FluidType(typeProperties) {
+		type = fluidTypeRegistry.register(name, () -> new StaticCoreFluidType(typeProperties) {
 			@Override
 			public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
 				consumer.accept(clientExtension);

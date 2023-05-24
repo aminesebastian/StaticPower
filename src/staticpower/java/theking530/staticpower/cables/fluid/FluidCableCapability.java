@@ -22,7 +22,7 @@ public class FluidCableCapability extends ServerCableCapability implements IFlui
 	private PipePressureProperties pressureProperties;
 	private FluidPipeType type;
 
-	public FluidCableCapability(ServerCableCapabilityType<?> type, Cable owningCable) {
+	protected FluidCableCapability(ServerCableCapabilityType<?> type, Cable owningCable) {
 		super(type, owningCable);
 		this.containedFluid = FluidStack.EMPTY.copy();
 		this.headPressure = 0;

@@ -14,8 +14,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
-import theking530.api.heat.HeatStorageUtilities;
-import theking530.api.heat.HeatStorageUtilities.HeatQuery;
+import theking530.api.heat.HeatUtilities;
+import theking530.api.heat.HeatUtilities.HeatInfo;
 import theking530.staticcore.world.WorldUtilities;
 
 public class DimensionClimateState implements INBTSerializable<CompoundTag> {
@@ -127,7 +127,7 @@ public class DimensionClimateState implements INBTSerializable<CompoundTag> {
 				if (!WorldUtilities.getChunkPosFromBlockPos(pos).equals(chunkPos)) {
 					return null;
 				}
-				HeatQuery temp = HeatStorageUtilities.getBiomeAmbientTemperature(level, pos);
+				HeatInfo temp = HeatUtilities.getAmbientProperties(level, pos);
 				ClimateState state = new ClimateState(temp.temperature());
 				state.setTemperature(0);
 				blocks.put(pos, state);

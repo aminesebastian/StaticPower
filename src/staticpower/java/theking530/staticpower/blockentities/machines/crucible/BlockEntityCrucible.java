@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.api.heat.HeatStorageUtilities;
+import theking530.api.heat.HeatUtilities;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
@@ -76,9 +76,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Register the heate component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tier.defaultMachineThermalMass.get(), tier.defaultMachineOverheatTemperature.get(),
-				tier.defaultMachineMaximumTemperature.get(), tier.defaultMachineThermalConductivity.get()));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tier));
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent",
@@ -112,7 +110,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 		super.process();
 		if (!level.isClientSide && redstoneControlComponent.passesRedstoneCheck()) {
 			if (powerStorage.canSupplyPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get())
-					&& HeatStorageUtilities.canFullyAbsorbHeat(heatStorage,
+					&& HeatUtilities.canFullyAbsorbHeat(heatStorage,
 							StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
 				heatStorage.heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(),
 						HeatTransferAction.EXECUTE);

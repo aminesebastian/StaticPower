@@ -40,13 +40,13 @@ public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget<GuiHeatBarFromH
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		GuiHeatBarUtilities.drawHeatBar(matrix, 0, 0, getSize().getX(), getSize().getY(), 0.0f, heatStorage.getCurrentTemperature(), heatStorage.getMinimumHeatThreshold(),
-				heatStorage.getOverheatThreshold(), heatStorage.getMaximumHeat());
+		GuiHeatBarUtilities.drawHeatBar(matrix, 0, 0, getSize().getX(), getSize().getY(), 0.0f, heatStorage.getCurrentTemperature(), heatStorage.getMinimumTemperatureThreshold(),
+				heatStorage.getOverheatTemperature(), heatStorage.getMaximumTemperature());
 	}
 
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		tooltips.addAll(GuiHeatBarUtilities.getTooltip(heatStorage.getCurrentTemperature(), heatStorage.getMinimumHeatThreshold(), heatStorage.getOverheatThreshold(),
-				heatStorage.getMaximumHeat(), heatStorage.getConductivity()));
+		tooltips.addAll(GuiHeatBarUtilities.getTooltip(heatStorage.getCurrentTemperature(), heatStorage.getMinimumTemperatureThreshold(), heatStorage.getOverheatTemperature(),
+				heatStorage.getMaximumTemperature(), heatStorage.getConductivity()));
 	}
 }

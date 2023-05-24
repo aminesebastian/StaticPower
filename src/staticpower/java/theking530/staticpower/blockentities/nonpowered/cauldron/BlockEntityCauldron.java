@@ -65,9 +65,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 				.setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
 
 		// Only allow this to be heated by other sources.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tier.defaultMachineThermalMass.get(), tier.defaultMachineOverheatTemperature.get(),
-				tier.defaultMachineMaximumTemperature.get(), tier.defaultMachineThermalConductivity.get())
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tier)
 				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.HEAT));
 	}
 

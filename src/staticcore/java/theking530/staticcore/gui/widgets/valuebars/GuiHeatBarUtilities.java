@@ -26,17 +26,17 @@ public class GuiHeatBarUtilities {
 	}
 
 	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, float currentTemp, float maximumTemp) {
-		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.MINIMUM_TEMPERATURE, maximumTemp, maximumTemp);
+		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.ABSOLUTE_ZERO, maximumTemp, maximumTemp);
 	}
 
 	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, float currentTemp, float overheatTemp, float maximumTemp) {
-		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.MINIMUM_TEMPERATURE, overheatTemp, maximumTemp);
+		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.ABSOLUTE_ZERO, overheatTemp, maximumTemp);
 	}
 
 	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, float currentTemp, float minimumTemp, float overheatTemp,
 			float maximumTemp) {
-		float totalHeight = maximumTemp - IHeatStorage.MINIMUM_TEMPERATURE;
-		float percentFilled = (currentTemp - IHeatStorage.MINIMUM_TEMPERATURE) / totalHeight;
+		float totalHeight = maximumTemp - IHeatStorage.ABSOLUTE_ZERO;
+		float percentFilled = (currentTemp - IHeatStorage.ABSOLUTE_ZERO) / totalHeight;
 		float filledHeight = percentFilled * height;
 
 		@SuppressWarnings("resource")
@@ -56,12 +56,12 @@ public class GuiHeatBarUtilities {
 		GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - filledHeight - 5, zLevel, 0, 0, 1, 1, SDColor.GREY);
 
 		if (overheatTemp != maximumTemp) {
-			float overheatHeight = ((overheatTemp - IHeatStorage.MINIMUM_TEMPERATURE) / totalHeight) * height;
+			float overheatHeight = ((overheatTemp - IHeatStorage.ABSOLUTE_ZERO) / totalHeight) * height;
 			GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - overheatHeight - 5, zLevel, 0, 0, 1, 1, SDColor.RED);
 		}
 
-		if (minimumTemp != IHeatStorage.MINIMUM_TEMPERATURE) {
-			float minimumHeight = ((minimumTemp - IHeatStorage.MINIMUM_TEMPERATURE) / totalHeight) * height;
+		if (minimumTemp != IHeatStorage.ABSOLUTE_ZERO) {
+			float minimumHeight = ((minimumTemp - IHeatStorage.ABSOLUTE_ZERO) / totalHeight) * height;
 			GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - minimumHeight - 5, zLevel, 0, 0, 1, 1, SDColor.GREEN);
 		}
 

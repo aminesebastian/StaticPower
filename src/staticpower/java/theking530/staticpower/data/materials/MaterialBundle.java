@@ -7,7 +7,9 @@ import java.util.Map;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.DeferredRegister;
+import theking530.staticcore.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.data.materials.Material.BlockMaterial;
 import theking530.staticpower.data.materials.Material.FluidMaterial;
 import theking530.staticpower.data.materials.Material.ItemMaterial;
@@ -101,7 +103,8 @@ public class MaterialBundle {
 	}
 
 	public boolean hasOre() {
-		return materials.containsKey(MaterialTypes.OVERWORLD_ORE) || materials.containsKey(MaterialTypes.DEEPSLATE_ORE) || materials.containsKey(MaterialTypes.NETHER_ORE);
+		return materials.containsKey(MaterialTypes.OVERWORLD_ORE) || materials.containsKey(MaterialTypes.DEEPSLATE_ORE)
+				|| materials.containsKey(MaterialTypes.NETHER_ORE);
 	}
 
 	public boolean hasGeneratedOre() {
@@ -128,7 +131,9 @@ public class MaterialBundle {
 
 	public <T extends Block> MaterialBundle blockMaterial(BlockMaterial<T> material) {
 		if (materials.containsKey(material.getType())) {
-			throw new RuntimeException(String.format("Material bundle: %1$s already has a material of type: %2$s registered!", name, material.getType()));
+			throw new RuntimeException(
+					String.format("Material bundle: %1$s already has a material of type: %2$s registered!", name,
+							material.getType()));
 		}
 		materials.put(material.getType(), material);
 
@@ -137,7 +142,9 @@ public class MaterialBundle {
 
 	public <T extends Item> MaterialBundle itemMaterial(ItemMaterial<T> material) {
 		if (materials.containsKey(material.getType())) {
-			throw new RuntimeException(String.format("Material bundle: %1$s already has a material of type: %2$s registered!", name, material.getType()));
+			throw new RuntimeException(
+					String.format("Material bundle: %1$s already has a material of type: %2$s registered!", name,
+							material.getType()));
 		}
 		materials.put(material.getType(), material);
 		return this;
@@ -145,7 +152,9 @@ public class MaterialBundle {
 
 	public MaterialBundle fluidMaterial(FluidMaterial material) {
 		if (materials.containsKey(material.getType())) {
-			throw new RuntimeException(String.format("Material bundle: %1$s already has a material of type: %2$s registered!", name, material.getType()));
+			throw new RuntimeException(
+					String.format("Material bundle: %1$s already has a material of type: %2$s registered!", name,
+							material.getType()));
 		}
 		materials.put(material.getType(), material);
 		return this;
@@ -180,5 +189,17 @@ public class MaterialBundle {
 	@SuppressWarnings("unchecked")
 	public <T> Material<T> get(IMaterialType<T> type) {
 		return (Material<T>) materials.get(type);
+	}
+
+	public TagKey<Block> getBlockTag(IMaterialType<Block> type) {
+		return materials.get(type).getBlockTag();
+	}
+
+	public TagKey<Fluid> getFluidTag() {
+		return get(MaterialTypes.MOLTEN_FLUID).get().getTag();
+	}
+
+	public Fluid getFluidSource(IMaterialType<StaticPowerFluidBundle> type) {
+		return get(type).get().getSource().get();
 	}
 }

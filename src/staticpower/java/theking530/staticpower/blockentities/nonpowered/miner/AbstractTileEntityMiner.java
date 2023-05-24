@@ -15,7 +15,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.api.heat.HeatStorageUtilities;
+import theking530.api.heat.HeatUtilities;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.StaticCoreConfig;
 import theking530.staticcore.blockentity.BlockEntityBase;
@@ -105,9 +105,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
 		// Add the heat storage and the upgrade inventory to the heat component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent",
-				tierObject.defaultMachineThermalMass.get(), tierObject.defaultMachineOverheatTemperature.get(),
-				tierObject.defaultMachineMaximumTemperature.get(), tierObject.defaultMachineThermalConductivity.get())
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tierObject)
 				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 
@@ -199,7 +197,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityBase
 		if (getDrillBit().getDamageValue() >= getDrillBit().getMaxDamage()) {
 			return ProcessingCheckState.error("Drill bit needs repair!");
 		}
-		if (!HeatStorageUtilities.canFullyAbsorbHeat(heatStorage, getHeatGeneration())) {
+		if (!HeatUtilities.canFullyAbsorbHeat(heatStorage, getHeatGeneration())) {
 			return ProcessingCheckState.error("Not enough heat capacity (Requires "
 					+ GuiTextUtilities.formatHeatToString(getHeatGeneration()).getString() + ")");
 		}

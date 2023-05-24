@@ -45,7 +45,7 @@ public class HeatTicker implements INBTSerializable<CompoundTag> {
 		averageCooled = 0;
 	}
 
-	public void tickWithHeatTransfer(Level level, BlockPos pos) {
+	public void tick(Level level, BlockPos pos) {
 		if (lastTickTime == level.getGameTime()) {
 			StaticCore.LOGGER.error("StaticPowerStorageTicker#tick should only be called once per tick!");
 			return;
@@ -54,17 +54,7 @@ public class HeatTicker implements INBTSerializable<CompoundTag> {
 
 		captureMetrics();
 
-		if (pos != null) {
-			handleHeatTransfer(level, pos);
-		}
-	}
-
-	public void tickWithoutHeatTransfer(Level level) {
-		tickWithHeatTransfer(level, null);
-	}
-
-	protected void handleHeatTransfer(Level level, BlockPos pos) {
-		HeatStorageUtilities.transferHeatWithSurroundings(owningStorage, level, pos, HeatTransferAction.EXECUTE);
+		HeatUtilities.transferHeat(owningStorage, level, pos, HeatTransferAction.EXECUTE);
 	}
 
 	/**

@@ -31,7 +31,9 @@ public class CableNetworkGraph {
 		try {
 			// If the cable is bad, return early.
 			if (!CableNetworkAccessor.get(world).isTrackingCable(scanStartPosition)) {
-				StaticCore.LOGGER.error(String.format("Encountered a null starting cable at position: %1$s when attempting to scan the network.", scanStartPosition));
+				StaticCore.LOGGER.error(String.format(
+						"Encountered a null starting cable at position: %1$s when attempting to scan the network.",
+						scanStartPosition));
 				return mapper;
 			}
 
@@ -65,7 +67,9 @@ public class CableNetworkGraph {
 			// Raise the network joined event.
 			mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(owningNetwork));
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("An error occured when attempting to scan a network starting at cable position: %1$s.", scanStartPosition), e);
+			throw new RuntimeException(String.format(
+					"An error occured when attempting to scan a network starting at cable position: %1$s.",
+					scanStartPosition), e);
 		}
 
 		return mapper;
@@ -73,6 +77,10 @@ public class CableNetworkGraph {
 
 	public HashMap<BlockPos, Cable> getCables() {
 		return cables;
+	}
+
+	public boolean hasCable(BlockPos pos) {
+		return cables.containsKey(pos);
 	}
 
 	public HashMap<BlockPos, DestinationWrapper> getDestinations() {
