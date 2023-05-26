@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.api.energy.CurrentType;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
@@ -24,6 +26,7 @@ import theking530.staticcore.blockentity.components.control.processing.recipe.Re
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationPreset;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.presets.AllSidesNever;
+import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
 import theking530.staticcore.blockentity.components.heat.HeatStorageComponent;
 import theking530.staticcore.blockentity.components.heat.HeatStorageComponent.HeatManipulationAction;
@@ -73,12 +76,14 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public final HeatStorageComponent heatStorage;
 	public final FluidTankComponent[] fluidTanks;
 	private float currentProcessingProductivity;
+	private boolean lastTickMultiblockSuccess;
 
 	private final MultiBlockCache<BlockEntityRefineryController> multiBlockCache;
 
 	public BlockEntityRefineryController(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 		multiBlockCache = new MultiBlockCache<>(this, this::isValidForMultiBlock, this::isWellFormed);
+		lastTickMultiblockSuccess = false;
 
 		// Get the tier object.
 		StaticCoreTier tier = getTierObject();
@@ -92,6 +97,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		// Create the energy storage and and set the energy storage upgrade inventory.
 		powerStorage.setExposeAsCapability(false);
 		powerStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setSideConfiguration(null);
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", 1,
@@ -147,18 +153,28 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	@Override
+	protected PowerStorageComponent createPowerStorageComponent() {
+		return new PowerStorageComponent("PowerStorage", 10000, StaticPowerVoltage.LOW, StaticPowerVoltage.HIGH, 5000,
+				new CurrentType[] { CurrentType.DIRECT }, StaticPowerVoltage.LOW, 1000, CurrentType.DIRECT, true,
+				false);
+	}
+
+	@Override
 	public void process() {
 		multiBlockCache.update();
+		if (lastTickMultiblockSuccess != multiBlockCache.getStatus().isSuccessful()) {
+			lastTickMultiblockSuccess = multiBlockCache.getStatus().isSuccessful();
+			updateMultiblockBlockStates(processingComponent.isBlockStateOn());
+		}
 
 		if (!getLevel().isClientSide()) {
 			if (redstoneControlComponent.passesRedstoneCheck() && getProductivity() > 0
 					&& processingComponent.getProcessingOrPendingRecipe().isPresent()) {
-				double powerCost = StaticPowerConfig.SERVER.refineryPowerUsage.get();
-				boolean shouldHeat = processingComponent.performedWorkLastTick()
-						|| !heatStorage.isRecoveringFromMeltdown();
-				if (powerStorage.canSupplyPower(powerCost) && shouldHeat) {
-					powerStorage.drainPower(powerCost, false);
-					heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
+				boolean shouldHeat = !heatStorage.isRecoveringFromMeltdown();
+				if (shouldHeat) {
+					float maxPowerUsage = getMaxHeatGeneration();
+					float usedPower = heatStorage.heat(maxPowerUsage, HeatTransferAction.EXECUTE);
+					powerStorage.drainPower(usedPower, false);
 				}
 			}
 
@@ -229,7 +245,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	private boolean isValidForMultiBlock(BlockPos pos, BlockState state, BlockEntity be) {
-		return state.is(ModBlockTags.REFINERY_BLOCK);
+		return ModBlockTags.matches(ModBlockTags.REFINERY_BLOCK, state.getBlock());
 	}
 
 	private MultiBlockFormationStatus isWellFormed(Map<BlockPos, MultiBlockEntry<BlockEntityRefineryController>> map) {
@@ -273,8 +289,8 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		return StaticPowerConfig.SERVER.refineryMinimumHeat.get();
 	}
 
-	public float getHeatGeneration() {
-		return StaticPowerConfig.SERVER.refineryPerBoilerHeatGeneration.get() * getBoilers().size();
+	public float getMaxHeatGeneration() {
+		return (float) powerStorage.drainPower(Double.MAX_VALUE, true).getPower();
 	}
 
 	public FluidTankComponent getInputTank(int index) {
@@ -342,7 +358,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState checkHeatStorageReady() {
+	protected ProcessingCheckState checkHeatStorageReady(RefineryRecipe recipe) {
 		if (heatStorage.isRecoveringFromMeltdown()) {
 			return ProcessingCheckState.error("Machine recovering from overheat! (" + GuiTextUtilities
 					.formatTicksToTimeUnit(this.heatStorage.getMeltdownRecoveryTicksRemaining()).getString() + ")");
@@ -350,39 +366,40 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		if (heatStorage.isOverheated()) {
 			return ProcessingCheckState.error("Machine overheating!");
 		}
-		if (!heatStorage.isAboveMinimumHeat()) {
-			return ProcessingCheckState.error("Not enough heat!");
+
+		if (!heatStorage.isAboveMinimumHeat()
+				|| heatStorage.getCurrentTemperature() < recipe.getProcessingSection().getMinimumHeat()) {
+			return ProcessingCheckState.heatStorageTooCold(recipe.getProcessingSection().getMinimumHeat());
 		}
+
 		return ProcessingCheckState.ok();
 	}
 
 	protected ProcessingCheckState fillOutputTanksWithOutput(ConcretizedProductContainer outputContainer,
 			FluidAction action) {
-		FluidStack output1 = outputContainer.getFluid(0).copy();
-		if (!output1.isEmpty()) {
+		if (outputContainer.getFluids().size() > 0) {
+			FluidStack output0 = outputContainer.getFluid(0).copy();
+			output0.setAmount((int) (output0.getAmount() * currentProcessingProductivity));
+
+			if (getOutputTank(0).fill(output0, action) != output0.getAmount()) {
+				return ProcessingCheckState.fluidOutputFull();
+			}
+		}
+
+		if (outputContainer.getFluids().size() > 1) {
+			FluidStack output1 = outputContainer.getFluid(1).copy();
 			output1.setAmount((int) (output1.getAmount() * currentProcessingProductivity));
+			if (getOutputTank(1).fill(output1, action) != output1.getAmount()) {
+				return ProcessingCheckState.fluidOutputFull();
+			}
 		}
 
-		FluidStack output2 = outputContainer.getFluid(1).copy();
-		if (!output2.isEmpty()) {
+		if (outputContainer.getFluids().size() > 2) {
+			FluidStack output2 = outputContainer.getFluid(2).copy();
 			output2.setAmount((int) (output2.getAmount() * currentProcessingProductivity));
-		}
-
-		FluidStack output3 = outputContainer.getFluid(2).copy();
-		if (!output3.isEmpty()) {
-			output3.setAmount((int) (output3.getAmount() * currentProcessingProductivity));
-		}
-
-		if (getOutputTank(0).fill(output1, action) != output1.getAmount()) {
-			return ProcessingCheckState.fluidOutputFull();
-		}
-
-		if (getOutputTank(1).fill(output2, action) != output2.getAmount()) {
-			return ProcessingCheckState.fluidOutputFull();
-		}
-
-		if (getOutputTank(2).fill(output3, action) != output3.getAmount()) {
-			return ProcessingCheckState.fluidOutputFull();
+			if (getOutputTank(2).fill(output2, action) != output2.getAmount()) {
+				return ProcessingCheckState.fluidOutputFull();
+			}
 		}
 
 		return ProcessingCheckState.ok();
@@ -438,7 +455,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 			return tankCheck;
 		}
 
-		ProcessingCheckState heatCheck = checkHeatStorageReady();
+		ProcessingCheckState heatCheck = checkHeatStorageReady(recipe);
 		if (!heatCheck.isOk()) {
 			return heatCheck;
 		}

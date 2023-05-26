@@ -79,6 +79,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 		baseCapacity = capacity;
 		baseInputVoltageRange = new StaticVoltageRange(minInputVoltage, maxInputVoltage);
 		baseVoltageOutput = voltageOutput;
+		baseMaximumInputPower = maxInputPower;
 		baseMaximumOutputPower = maxPowerOutput;
 
 		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage),

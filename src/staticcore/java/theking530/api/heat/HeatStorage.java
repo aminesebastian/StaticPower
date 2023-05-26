@@ -114,7 +114,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 		float newTemperature = SDMath.clamp(currentTemperature + temperatureDelta, ABSOLUTE_ZERO,
 				getMaximumTemperature());
 		float actualDelta = newTemperature - currentTemperature;
-
+		float usedPower = HeatUtilities.calculateHeatPowerPerTickRequired(actualDelta, getSpecificHeat(), getMass());
 		if (action == HeatTransferAction.EXECUTE) {
 			setTemperature(newTemperature);
 			if (temperatureDelta > 0) {
@@ -124,7 +124,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 			}
 		}
 
-		return Math.abs(temperatureDelta);
+		return usedPower;
 	}
 
 	public boolean isAtMaxHeat() {

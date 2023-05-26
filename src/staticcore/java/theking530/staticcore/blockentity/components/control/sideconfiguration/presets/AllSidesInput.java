@@ -9,7 +9,7 @@ public class AllSidesInput extends SideConfigurationPreset {
 
 	public AllSidesInput() {
 		for (BlockSide side : BlockSide.values()) {
-			setDefaultOnSide(BlockSide.RIGHT, MachineSideMode.Input);
+			setDefaultOnSide(side, MachineSideMode.Input);
 			addPossibleConfiguration(side, MachineSideMode.Disabled);
 		}
 	}

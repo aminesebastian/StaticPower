@@ -13,7 +13,7 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockRefineryController extends StaticPowerMachineBlock {
 
 	public BlockRefineryController() {
-		super(StaticPowerTiers.STATIC);
+		super(StaticPowerTiers.ENERGIZED);
 	}
 
 	@Override

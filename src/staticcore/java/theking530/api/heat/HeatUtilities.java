@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,6 +25,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.crafting.thermal.ThermalConductivityRecipe;
+import theking530.staticcore.fluid.StaticCoreFluidType;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
@@ -93,12 +95,12 @@ public class HeatUtilities {
 		return totalTransfered;
 	}
 
-	public static float calculateTemperatureDelta(float heatFlux, float specificHeat, float mass) {
-		return heatFlux / (specificHeat * mass);
+	public static float calculateTemperatureDelta(float heatPower, float specificHeat, float mass) {
+		return heatPower / (specificHeat * mass);
 	}
 
-	public static float calculateHeatFluxForTemperatureDelta(float temperatureDelta, float specificHeat, float mass) {
-		return temperatureDelta * specificHeat * mass;
+	public static float calculateHeatPowerPerTickRequired(float temperatureDelta, float specificHeat, float mass) {
+		return (temperatureDelta * specificHeat * mass);
 	}
 
 	public static float calculateHeatFluxTransfer(HeatInfo source, HeatInfo target) {
@@ -275,4 +277,21 @@ public class HeatUtilities {
 		return storage.getCurrentTemperature() + heatAmount <= storage.getMaximumTemperature();
 	}
 
+	public static void setFluidTemperature(FluidStack fluid, float temperature) {
+		CompoundTag tag = fluid.getOrCreateTag();
+		tag.putFloat(StaticCoreFluidType.TEMPERATURE_TAG, temperature);
+	}
+
+	public static float getFluidTemperature(Level level, BlockPos pos, FluidStack fluid) {
+		if (fluid.hasTag() && fluid.getTag().contains(StaticCoreFluidType.TEMPERATURE_TAG)) {
+			return fluid.getTag().getFloat(StaticCoreFluidType.TEMPERATURE_TAG);
+		}
+
+		Optional<ThermalConductivityRecipe> recipe = getThermalPropertiesForFluid(level, fluid);
+		if (recipe.isPresent() && recipe.get().hasActiveTemperature()) {
+			return recipe.get().getTemperature();
+		}
+
+		return getAmbientProperties(level, pos).temperature();
+	}
 }

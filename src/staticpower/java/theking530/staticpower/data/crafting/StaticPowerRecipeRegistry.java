@@ -17,7 +17,7 @@ public class StaticPowerRecipeRegistry {
 	 */
 	public static boolean isValidFormerMold(ItemStack stack) {
 		for (AbstractStaticPowerRecipe recipe : StaticCoreRecipeManager.getRecipes()
-				.get(ModRecipeTypes.FORMER_RECIPE_TYPE.get())) {
+				.get(ModRecipeTypes.FORMER_RECIPE_TYPE.get()).values()) {
 			FormerRecipe formerRecipe = (FormerRecipe) recipe;
 			if (formerRecipe.getRequiredMold().test(stack)) {
 				return true;
@@ -35,7 +35,7 @@ public class StaticPowerRecipeRegistry {
 	 */
 	public static boolean isValidCastingMold(ItemStack stack) {
 		for (AbstractStaticPowerRecipe recipe : StaticCoreRecipeManager.getRecipes()
-				.get(ModRecipeTypes.CASTING_RECIPE_TYPE.get())) {
+				.get(ModRecipeTypes.CASTING_RECIPE_TYPE.get()).values()) {
 			CastingRecipe castingRecipe = (CastingRecipe) recipe;
 			if (castingRecipe.getRequiredMold().test(stack)) {
 				return true;

@@ -73,7 +73,7 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	}
 
 	public HeatStorageComponent(String name, StaticCoreTier tier) {
-		this(name, tier.defaultMachineThermalMass.get(), tier.defaultMachineSpecificHeat.get(),
+		this(name, 10, tier.defaultMachineSpecificHeat.get(),
 				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(),
 				tier.defaultMachineThermalConductivity.get());
 	}
@@ -305,25 +305,26 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 
 	protected void checkUpgrades() {
 		// Do nothing if there is no upgrade inventory.
-		if (upgradeInventory == null) {
-			return;
-		}
+		if (upgradeInventory != null) {
+			UpgradeItemWrapper<Double> heatCapacityUpgrade = upgradeInventory
+					.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_CAPACITY.get());
+			if (!heatCapacityUpgrade.isEmpty()) {
+				heatCapacityUpgradeMultiplier = (float) (1.0f
+						+ (heatCapacityUpgrade.getUpgradeValue() * heatCapacityUpgrade.getUpgradeWeight()));
+			} else {
+				heatCapacityUpgradeMultiplier = 1.0f;
+			}
 
-		UpgradeItemWrapper<Double> heatCapacityUpgrade = upgradeInventory
-				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_CAPACITY.get());
-		if (!heatCapacityUpgrade.isEmpty()) {
-			heatCapacityUpgradeMultiplier = (float) (1.0f
-					+ (heatCapacityUpgrade.getUpgradeValue() * heatCapacityUpgrade.getUpgradeWeight()));
+			UpgradeItemWrapper<Double> heatTransferUpgrade = upgradeInventory
+					.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_TRANSFER.get());
+			if (!heatTransferUpgrade.isEmpty()) {
+				heatConductivityMultiplier = (float) (1.0f
+						+ (heatTransferUpgrade.getUpgradeValue() * heatTransferUpgrade.getUpgradeWeight()));
+			} else {
+				heatConductivityMultiplier = 1.0f;
+			}
 		} else {
 			heatCapacityUpgradeMultiplier = 1.0f;
-		}
-
-		UpgradeItemWrapper<Double> heatTransferUpgrade = upgradeInventory
-				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.HEAT_TRANSFER.get());
-		if (!heatTransferUpgrade.isEmpty()) {
-			heatConductivityMultiplier = (float) (1.0f
-					+ (heatTransferUpgrade.getUpgradeValue() * heatTransferUpgrade.getUpgradeWeight()));
-		} else {
 			heatConductivityMultiplier = 1.0f;
 		}
 

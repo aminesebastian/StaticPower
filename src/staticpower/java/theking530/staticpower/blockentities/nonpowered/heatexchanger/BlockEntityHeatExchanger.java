@@ -56,6 +56,8 @@ public class BlockEntityHeatExchanger extends BlockEntityBase {
 			return;
 		}
 
+		heatStorage.setMaxConductivity(400);
+
 		float drained = Math.abs(tank.getStorage().getDrainedPerTick());
 		if (drained <= 0 || tank.isEmpty()) {
 			return;
@@ -68,14 +70,13 @@ public class BlockEntityHeatExchanger extends BlockEntityBase {
 			return;
 		}
 
-		float drainSpeed = drained;
 		HeatInfo sourceHeatInfo = new HeatInfo(heatStorage);
 		HeatInfo ambientProperties = HeatUtilities.getAmbientProperties(getLevel(), getBlockPos());
 		HeatInfo waterHeatInfo = new HeatInfo(recipe.getMass(),
 				recipe.hasActiveTemperature() ? recipe.getTemperature() : ambientProperties.temperature(),
 				recipe.getConductivity(), recipe.getSpecificHeat(), null);
 
-		float transferedFlux = HeatUtilities.calculateHeatFluxTransfer(sourceHeatInfo, waterHeatInfo) * drainSpeed;
+		float transferedFlux = HeatUtilities.calculateHeatFluxTransfer(sourceHeatInfo, waterHeatInfo);
 		heatStorage.cool(transferedFlux, HeatTransferAction.EXECUTE);
 	}
 

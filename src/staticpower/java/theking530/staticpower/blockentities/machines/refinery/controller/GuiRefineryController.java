@@ -107,7 +107,7 @@ public class GuiRefineryController
 						+ GuiTextUtilities.formatNumberAsString(getTileEntity().getBoilers().size()).getString())
 				.append(" Boilers" + ChatFormatting.RESET + ")"), ChatFormatting.GREEN);
 		infoTab.addKeyValueTwoLiner("heat_gen", Component.literal("Heat Generation"),
-				GuiTextUtilities.formatHeatRateToString(getTileEntity().getHeatGeneration()), ChatFormatting.RED);
+				GuiTextUtilities.formatHeatRateToString(getTileEntity().getMaxHeatGeneration()), ChatFormatting.RED);
 
 		updateNotificationWidget();
 	}

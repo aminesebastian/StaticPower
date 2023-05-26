@@ -117,6 +117,11 @@ public class ProcessingCheckState implements INBTSerializable<CompoundTag> {
 				Component.translatable("gui.staticcore.alert.heat_storage_too_hot", mininumHeat));
 	}
 
+	public static ProcessingCheckState heatStorageTooCold(double mininumHeat) {
+		return new ProcessingCheckState(ProcessingState.ERROR,
+				Component.translatable("gui.staticcore.alert.heat_storage_too_cold", mininumHeat));
+	}
+
 	public static ProcessingCheckState powerOutputFull() {
 		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.power_output_full");
 	}

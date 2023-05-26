@@ -149,7 +149,7 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 	public void onProcessingCompleted(RecipeProcessingComponent<EvaporatorRecipe> component,
 			ProcessingContainer processingContainer) {
 		outputTankComponent.fill(processingContainer.getOutputs().getFluid(0), FluidAction.EXECUTE);
-		heatStorage.cool(HeatUtilities.calculateHeatFluxForTemperatureDelta(
+		heatStorage.cool(HeatUtilities.calculateHeatPowerPerTickRequired(
 				component.getProcessingRecipe().get().getProcessingSection().getHeat(), heatStorage.getSpecificHeat(),
 				heatStorage.getMass()), HeatTransferAction.EXECUTE);
 	}

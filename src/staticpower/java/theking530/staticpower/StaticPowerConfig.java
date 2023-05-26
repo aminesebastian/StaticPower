@@ -223,9 +223,7 @@ public class StaticPowerConfig {
 		public final ConfigValue<Double> enchanterPowerUsage;
 		public final ConfigValue<Integer> enchanterProcessingTime;
 
-		public final ConfigValue<Double> refineryPowerUsage;
 		public final ConfigValue<Integer> refineryProcessingTime;
-		public final ConfigValue<Float> refineryPerBoilerHeatGeneration;
 		public final ConfigValue<Float> refineryMinimumHeat;
 		public final ConfigValue<Float> refineryHeatUse;
 		public final ConfigValue<Integer> refineryOverheatCooldownTime;
@@ -910,18 +908,10 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Refinery");
-					refineryPowerUsage = builder.comment(
-							"Controls how much power is used per tick in this machine (in SW). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "refineryPowerUsage")
-							.define("RefineryPowerUsage", 20.0);
 					refineryProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryProcessingTime")
 							.define("RefineryProcessingTime", 20);
-					refineryPerBoilerHeatGeneration = builder.comment(
-							"Defines how much heat (in mC [1C = 1000mC]) is produced by the refinery per tick ([1 Second = 20 Ticks]).")
-							.translation(StaticPower.MOD_ID + ".config." + "refineryHeatGeneration")
-							.define("RefineryHeatGeneration", 10.0f);
 					refineryMinimumHeat = builder.comment(
 							"Defines how much heat (in mC [1C = 1000mC]) is required by the refinery before it begins processing.")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryMinimumHeat")

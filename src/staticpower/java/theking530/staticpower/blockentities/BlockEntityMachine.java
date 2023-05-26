@@ -29,13 +29,17 @@ public abstract class BlockEntityMachine extends BlockEntityBase {
 	public BlockEntityMachine(BlockEntityTypeAllocator<? extends BlockEntityMachine> allocator, BlockPos pos,
 			BlockState state) {
 		super(allocator, pos, state);
-		registerComponent(powerStorage = new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, false));
+		registerComponent(powerStorage = createPowerStorageComponent());
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
 				getDefaultSideConfiguration()));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent",
 				RedstoneMode.Ignore));
 
 		powerStorage.setSideConfiguration(ioSideConfiguration);
+	}
+
+	protected PowerStorageComponent createPowerStorageComponent() {
+		return new TieredPowerStorageComponent("MainEnergyStorage", getTier(), true, false);
 	}
 
 	@Override

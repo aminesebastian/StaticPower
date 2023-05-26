@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,12 +25,12 @@ import theking530.staticcore.research.ResearchUnlock.ResearchUnlockType;
 import theking530.staticcore.teams.ServerTeam;
 
 public class StaticCoreRecipeManager {
-	private static final HashMap<RecipeType<?>, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<>();
+	private static final HashMap<RecipeType<?>, HashMap<ResourceLocation, AbstractStaticPowerRecipe>> RECIPES = new HashMap<>();
 	private static final Map<ResourceLocation, SmeltingRecipe> FURNACE_RECIPES = new HashMap<>();
 	private static final Map<ResourceLocation, CraftingRecipe> CRAFTING_RECIPES = new HashMap<>();
 	private static final Map<ResourceLocation, Set<ResourceLocation>> LOCKED_RECIPES = new LinkedHashMap<>();
 
-	public static final HashMap<RecipeType<?>, LinkedList<AbstractStaticPowerRecipe>> getRecipes() {
+	public static final HashMap<RecipeType<?>, HashMap<ResourceLocation, AbstractStaticPowerRecipe>> getRecipes() {
 		return RECIPES;
 	}
 
@@ -51,12 +50,8 @@ public class StaticCoreRecipeManager {
 			return Optional.empty();
 		}
 
-		// Iterate through the recipe linked list and return the first instance that
-		// matches.
-		for (AbstractStaticPowerRecipe recipe : RECIPES.get(recipeType)) {
-			if (recipe.getId().equals(id)) {
-				return Optional.of((T) recipe);
-			}
+		if (RECIPES.containsKey(recipeType)) {
+			return Optional.ofNullable((T) RECIPES.get(recipeType).get(id));
 		}
 
 		// If we find no match, return empty.
@@ -75,13 +70,7 @@ public class StaticCoreRecipeManager {
 				return Optional.of((T) FURNACE_RECIPES.get(id));
 			}
 		} else if (RECIPES.containsKey(recipeType)) {
-			// Iterate through the recipe linked list and return the first instance that
-			// matches.
-			for (AbstractStaticPowerRecipe recipe : RECIPES.get(recipeType)) {
-				if (recipe.getId().equals(id)) {
-					return Optional.of((T) recipe);
-				}
-			}
+			return Optional.ofNullable((T) RECIPES.get(recipeType).get(id));
 		}
 
 		// If we find no match, return empty.
@@ -176,9 +165,9 @@ public class StaticCoreRecipeManager {
 	 */
 	private static void cacheRecipe(AbstractStaticPowerRecipe recipe) {
 		if (!RECIPES.containsKey(recipe.getType())) {
-			RECIPES.put(recipe.getType(), new LinkedList<AbstractStaticPowerRecipe>());
+			RECIPES.put(recipe.getType(), new HashMap<ResourceLocation, AbstractStaticPowerRecipe>());
 		}
-		RECIPES.get(recipe.getType()).add(recipe);
+		RECIPES.get(recipe.getType()).put(recipe.getId(), recipe);
 	}
 
 	private static void handleCraftingResearchRecipeReplacement(RecipeManager manager,
