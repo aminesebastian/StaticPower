@@ -5,8 +5,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 import theking530.staticcore.utilities.math.SDMath;
 
 public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> {
-	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
-
 	protected float mass;
 	protected float currentTemperature;
 	protected float minimumTemperature;
@@ -52,7 +50,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 		return minimumTemperature;
 	}
 
-	public void setMinimumTemperatureThreshold(int minimumThreshold) {
+	public void setMinimumTemperatureThreshold(float minimumThreshold) {
 		this.minimumTemperature = minimumThreshold;
 	}
 
@@ -114,13 +112,13 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 		float newTemperature = SDMath.clamp(currentTemperature + temperatureDelta, ABSOLUTE_ZERO,
 				getMaximumTemperature());
 		float actualDelta = newTemperature - currentTemperature;
-		float usedPower = HeatUtilities.calculateHeatPowerPerTickRequired(actualDelta, getSpecificHeat(), getMass());
+		float usedPower = HeatUtilities.calculateHeatFluxRequiredForTemperatureChange(actualDelta, getSpecificHeat(), getMass());
 		if (action == HeatTransferAction.EXECUTE) {
 			setTemperature(newTemperature);
 			if (temperatureDelta > 0) {
-				getTicker().heated(actualDelta);
+				getTicker().heated(actualDelta, usedPower);
 			} else {
-				getTicker().cooled(-actualDelta);
+				getTicker().cooled(-actualDelta, -usedPower);
 			}
 		}
 

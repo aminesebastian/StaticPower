@@ -19,22 +19,22 @@ public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 	public static final String ID = "alloy_furnace";
 	public static final int DEFAULT_PROCESSING_TIME = 200;
 
-	public static final Codec<AlloyFurnaceRecipe> CODEC = RecordCodecBuilder
-			.create(instance -> instance
-					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-							StaticPowerIngredient.CODEC.fieldOf("input_1").forGetter(recipe -> recipe.getInput1()),
-							StaticPowerIngredient.CODEC.fieldOf("input_2").forGetter(recipe -> recipe.getInput2()),
-							StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
-							Codec.FLOAT.fieldOf("experience").forGetter(recipe -> recipe.getExperience()),
-							MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection()))
-					.apply(instance, AlloyFurnaceRecipe::new));
+	public static final Codec<AlloyFurnaceRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
+			.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+					StaticPowerIngredient.CODEC.fieldOf("input_1").forGetter(recipe -> recipe.getInput1()),
+					StaticPowerIngredient.CODEC.fieldOf("input_2").forGetter(recipe -> recipe.getInput2()),
+					StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
+					Codec.FLOAT.fieldOf("experience").forGetter(recipe -> recipe.getExperience()),
+					MachineRecipeProcessingSection.CODEC.fieldOf("processing")
+							.forGetter(recipe -> recipe.getProcessingSection()))
+			.apply(instance, AlloyFurnaceRecipe::new));
 
 	private final StaticPowerIngredient input1;
 	private final StaticPowerIngredient input2;
 	private final StaticPowerOutputItem output;
 
-	public AlloyFurnaceRecipe(ResourceLocation id, StaticPowerIngredient input1, StaticPowerIngredient input2, StaticPowerOutputItem output, float experience,
-			MachineRecipeProcessingSection processing) {
+	public AlloyFurnaceRecipe(ResourceLocation id, StaticPowerIngredient input1, StaticPowerIngredient input2,
+			StaticPowerOutputItem output, float experience, MachineRecipeProcessingSection processing) {
 		super(id, experience, processing);
 		this.input1 = input1;
 		this.input2 = input2;
@@ -91,6 +91,7 @@ public class AlloyFurnaceRecipe extends AbstractMachineRecipe {
 
 	@Override
 	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
-		return MachineRecipeProcessingSection.hardcoded(() -> DEFAULT_PROCESSING_TIME, () -> 0.0, () -> 0, () -> 0);
+		return MachineRecipeProcessingSection.hardcoded(() -> DEFAULT_PROCESSING_TIME, () -> 0.0, () -> 0.0f,
+				() -> 0.0f);
 	}
 }

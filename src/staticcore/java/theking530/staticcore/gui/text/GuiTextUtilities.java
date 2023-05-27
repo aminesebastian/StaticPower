@@ -28,7 +28,7 @@ public class GuiTextUtilities {
 	public static final MutableComponent HEAT_UNIT_TRANSLATION = Component.translatable("gui.staticcore.heat_unit");
 	/** Translation text component for Heat Per Tick (H/t). */
 	public static final MutableComponent HEAT_RATE_TRANSLATION = Component
-			.translatable("gui.staticcore.heat_unit_per_tick");
+			.translatable("gui.staticcore.heat_unit_per_second");
 	/** Translation text component for Conductivity. */
 	public static final MutableComponent HEAT_CONDUCTIVITY_TRANSLATION = Component
 			.translatable("gui.staticcore.heat_conductivity_unit");
@@ -101,11 +101,11 @@ public class GuiTextUtilities {
 	public static MutableComponent formatHeatRateToString(double heatTransferRate) {
 		// Allocate the text component.
 		MutableComponent output;
-
 		// If the value is equal to the integer max, make it infinite.
 		if ((int) heatTransferRate == Integer.MAX_VALUE) {
 			output = Component.literal("∞");
 		} else {
+			heatTransferRate *= 20.0f;
 			MetricConverter metricRate = new MetricConverter(heatTransferRate);
 
 			if (String.valueOf(metricRate.getValue()).length() > 2) {

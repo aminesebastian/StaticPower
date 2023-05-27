@@ -23,17 +23,21 @@ public class CastingRecipe extends AbstractMachineRecipe {
 	public static final double DEFAULT_POWER_COST = 2.0;
 
 	public static final Codec<CastingRecipe> CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-					StaticPowerIngredient.CODEC.fieldOf("mold").forGetter(recipe -> recipe.getRequiredMold()),
-					StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
-					FluidIngredient.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.getInputFluid()),
-					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, CastingRecipe::new));
+			.create(instance -> instance
+					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+							StaticPowerIngredient.CODEC.fieldOf("mold").forGetter(recipe -> recipe.getRequiredMold()),
+							StaticPowerOutputItem.CODEC.fieldOf("output").forGetter(recipe -> recipe.getOutput()),
+							FluidIngredient.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.getInputFluid()),
+							MachineRecipeProcessingSection.CODEC.fieldOf("processing")
+									.forGetter(recipe -> recipe.getProcessingSection()))
+					.apply(instance, CastingRecipe::new));
 
 	private FluidIngredient inputFluid;
 	private StaticPowerIngredient requiredMold;
 	private StaticPowerOutputItem outputItemStack;
 
-	public CastingRecipe(ResourceLocation name, StaticPowerIngredient mold, StaticPowerOutputItem output, FluidIngredient inputFluid, MachineRecipeProcessingSection processing) {
+	public CastingRecipe(ResourceLocation name, StaticPowerIngredient mold, StaticPowerOutputItem output,
+			FluidIngredient inputFluid, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.inputFluid = inputFluid;
 		requiredMold = mold;
@@ -76,7 +80,8 @@ public class CastingRecipe extends AbstractMachineRecipe {
 
 	@Override
 	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
-		return MachineRecipeProcessingSection.hardcoded(() -> DEFAULT_PROCESSING_TIME, () -> DEFAULT_POWER_COST, () -> 0, () -> 0);
+		return MachineRecipeProcessingSection.hardcoded(() -> DEFAULT_PROCESSING_TIME, () -> DEFAULT_POWER_COST,
+				() -> 0.0f, () -> 0.0f);
 	}
 
 	@Override

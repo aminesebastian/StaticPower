@@ -22,16 +22,19 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 	public static final int DEFAULT_PROCESSING_TIME = 200;
 	public static final double DEFAULT_POWER_COST = 5.0;
 
-	public static final Codec<GrinderRecipe> CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-					StaticPowerIngredient.CODEC.fieldOf("input").forGetter(recipe -> recipe.getInputIngredient()),
-					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection()),
-					StaticPowerOutputItem.CODEC.listOf().fieldOf("outputs").forGetter(recipe -> recipe.getOutputItems())).apply(instance, GrinderRecipe::new));
+	public static final Codec<GrinderRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+			StaticPowerIngredient.CODEC.fieldOf("input").forGetter(recipe -> recipe.getInputIngredient()),
+			MachineRecipeProcessingSection.CODEC.fieldOf("processing")
+					.forGetter(recipe -> recipe.getProcessingSection()),
+			StaticPowerOutputItem.CODEC.listOf().fieldOf("outputs").forGetter(recipe -> recipe.getOutputItems()))
+			.apply(instance, GrinderRecipe::new));
 
 	private final StaticPowerIngredient inputItem;
 	private final List<StaticPowerOutputItem> outputs;
 
-	public GrinderRecipe(ResourceLocation id, StaticPowerIngredient input, MachineRecipeProcessingSection processing, List<StaticPowerOutputItem> outputs) {
+	public GrinderRecipe(ResourceLocation id, StaticPowerIngredient input, MachineRecipeProcessingSection processing,
+			List<StaticPowerOutputItem> outputs) {
 		super(id, processing);
 		this.inputItem = input;
 		this.outputs = outputs;
@@ -73,6 +76,7 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 
 	@Override
 	protected MachineRecipeProcessingSection getDefaultProcessingSection() {
-		return MachineRecipeProcessingSection.hardcoded(() -> DEFAULT_PROCESSING_TIME, () -> DEFAULT_POWER_COST, () -> 0, () -> 0);
+		return MachineRecipeProcessingSection.hardcoded(() -> DEFAULT_PROCESSING_TIME, () -> DEFAULT_POWER_COST,
+				() -> 0.0f, () -> 0.0f);
 	}
 }

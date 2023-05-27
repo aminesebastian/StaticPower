@@ -54,6 +54,9 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	@UpdateSerialize
 	private boolean enteredMeltdownState;
 
+	@UpdateSerialize
+	private boolean transferHeatWithEnvironment;
+
 	protected TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter;
 
 	private UpgradeInventoryComponent upgradeInventory;
@@ -73,9 +76,8 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 	}
 
 	public HeatStorageComponent(String name, StaticCoreTier tier) {
-		this(name, 10, tier.defaultMachineSpecificHeat.get(),
-				tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(),
-				tier.defaultMachineThermalConductivity.get());
+		this(name, 10, tier.defaultMachineSpecificHeat.get(), tier.defaultMachineOverheatTemperature.get(),
+				tier.defaultMachineMaximumTemperature.get(), tier.defaultMachineThermalConductivity.get());
 	}
 
 	public HeatStorageComponent(String name, float mass, float specificHeat, float minHeat, float overheatThreshold,
@@ -86,6 +88,7 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		issueSyncPackets = false;
 		heatStorage = new HeatStorage(mass, specificHeat, minHeat, overheatThreshold, maxHeat, conductivity);
 		exposeAsCapability = true;
+		transferHeatWithEnvironment = true;
 
 		// Create the accessors.
 		accessors = new HashMap<Direction, HeatComponentCapabilityAccess>();
@@ -145,7 +148,8 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 			}
 
 			// Capture heat transfer metrics.
-			heatStorage.getTicker().tick(getLevel(), getPos());
+			heatStorage.getTicker().tick(getLevel(), getPos(), transferHeatWithEnvironment);
+
 			if (hasMeltdownBehavior && heatStorage.isOverheated()) {
 				// Only do the following ONCE after we started the meltdown.
 				if (!enteredMeltdownState) {
@@ -170,6 +174,11 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 				}
 			}
 		}
+	}
+
+	public HeatStorageComponent setTransferHeatWithEnvironment(boolean transferHeatWithEnvironment) {
+		this.transferHeatWithEnvironment = transferHeatWithEnvironment;
+		return this;
 	}
 
 	public HeatStorageComponent setMaxHeat(int heat) {
@@ -447,7 +456,7 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		heatStorage.setCanCool(canCool);
 	}
 
-	public void setMinimumHeatThreshold(int minimumHeat) {
+	public void setMinimumHeatThreshold(float minimumHeat) {
 		heatStorage.setMinimumTemperatureThreshold(minimumHeat);
 	}
 
@@ -464,8 +473,18 @@ public class HeatStorageComponent extends AbstractBlockEntityComponent implement
 		return heatStorage.getMass();
 	}
 
+	public HeatStorageComponent setMass(float mass) {
+		heatStorage.setMass(mass);
+		return this;
+	}
+
 	@Override
 	public float getSpecificHeat() {
 		return heatStorage.getSpecificHeat();
+	}
+
+	public HeatStorageComponent setSpecificHeat(float specificHeat) {
+		heatStorage.setSpecificHeat(specificHeat);
+		return this;
 	}
 }

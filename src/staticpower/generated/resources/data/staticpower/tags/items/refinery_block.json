@@ -7,6 +7,7 @@
     "staticpower:machine_refinery_heat_vent",
     "staticpower:machine_refinery_item_input",
     "staticpower:machine_refinery_power_tap",
-    "staticpower:machine_refinery_tower"
+    "staticpower:machine_refinery_tower",
+    "staticpower:machine_block_industrial"
   ]
 }

@@ -20,7 +20,7 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class RefineryRecipe extends AbstractMachineRecipe {
 	public static final String ID = "refinery";
-	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final int DEFAULT_PROCESSING_TIME = 1;
 	public static final double DEFAULT_POWER_COST = 5.0;
 
 	public static final Codec<RefineryRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -105,8 +105,10 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 
 		// Check fluids.
 		if (matchParams.shouldVerifyFluids()) {
-			// If we dont have enough fluids, return false.
-			if (matchParams.getFluids().length < getRequiredFluidCount()) {
+			// If we dont have an exact match of fluids, return false. This is to prevent
+			// cases where sending in oil and water will return the first recipe that
+			// matches instead of the accurate one.
+			if (matchParams.getFluids().length != getRequiredFluidCount()) {
 				return false;
 			}
 

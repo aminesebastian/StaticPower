@@ -40,6 +40,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		simpleBlockWithCustomTexture(ModBlocks.RandomItemGenerator.get(), "placeholder_texture");
 		simpleBlockWithCustomTexture(ModBlocks.RandomOreGenerator.get(), "placeholder_texture");
 		simpleBlockWithCustomTexture(ModBlocks.ResearchCheater.get(), "placeholder_texture");
+		simpleBlockWithCustomTexture(ModBlocks.HeatExchanger.get(), "placeholder_texture");
 
 		makeCrop(ModBlocks.StaticCrop.get(), "crops/static");
 		makeCrop(ModBlocks.EnergizedCrop.get(), "crops/energized");
@@ -173,12 +174,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		machine(ModBlocks.Laboratory.get(), "aluminum", "machines/laboratory");
 
 		machine(ModBlocks.RefineryController.get(), "industrial", "machines/refinery/controller");
-		refineryBlock(ModBlocks.RefineryPowerTap.get(), "power_tap");
-		refineryBlock(ModBlocks.RefineryFluidInput.get(), "fluid_input");
-		refineryBlock(ModBlocks.RefineryFluidOutput.get(), "fluid_output");
-		refineryBlock(ModBlocks.RefineryItemInput.get(), "item_input");
-		refineryBlock(ModBlocks.RefineryHeatVent.get(), "heat_vent");
-		refineryBlock(ModBlocks.RefineryBoiler.get(), "boiler");
+		refineryBlock(ModBlocks.RefineryPowerTap.get(), "power_tap", false);
+		refineryBlock(ModBlocks.RefineryFluidInput.get(), "fluid_input", false);
+		refineryBlock(ModBlocks.RefineryFluidOutput.get(), "fluid_output", false);
+		refineryBlock(ModBlocks.RefineryItemInput.get(), "item_input", false);
+		refineryBlock(ModBlocks.RefineryHeatVent.get(), "heat_vent", true);
+		refineryBlock(ModBlocks.RefineryBoiler.get(), "boiler", true);
 
 		simpleColumnWithCustomTexture(ModBlocks.AluminumHeatSink.get(), "heat_sink_aluminum");
 		simpleColumnWithCustomTexture(ModBlocks.CopperHeatSink.get(), "heat_sink_copper");
@@ -464,19 +465,24 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		});
 	}
 
-	public void refineryBlock(Block block, String overlayName) {
+	public void refineryBlock(Block block, String overlayName, boolean hasOnModel) {
 		ResourceLocation sideOverlay = new ResourceLocation(StaticPower.MOD_ID,
 				"blocks/machines/refinery/" + overlayName);
-		ModelFile offModel = models()
-				.withExistingParent(name(block),
-						new ResourceLocation(StaticPower.MOD_ID, "block/base_models/refinery_block"))
-				.texture("side_overlay", sideOverlay);
-		ModelFile onModel = models()
-				.withExistingParent(name(block) + "_on",
-						new ResourceLocation(StaticPower.MOD_ID, "block/base_models/refinery_block"))
-				.texture("side_overlay", sideOverlay);
 
 		getVariantBuilder(block).forAllStates(state -> {
+			ModelFile offModel = models()
+					.withExistingParent(name(block),
+							new ResourceLocation(StaticPower.MOD_ID, "block/base_models/refinery_block"))
+					.texture("side_overlay", sideOverlay);
+
+			ModelFile onModel = offModel;
+			if (hasOnModel) {
+				onModel = models()
+						.withExistingParent(name(block) + "_on",
+								new ResourceLocation(StaticPower.MOD_ID, "block/base_models/refinery_block"))
+						.texture("side_overlay", sideOverlay + "_on");
+			}
+
 			return ConfiguredModel.builder()
 					.modelFile(state.getValue(StaticPowerMachineBlock.IS_ON) ? onModel : offModel).build();
 		});

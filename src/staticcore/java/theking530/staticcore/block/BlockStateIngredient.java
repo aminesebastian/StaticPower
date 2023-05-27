@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -47,7 +48,7 @@ public class BlockStateIngredient implements Predicate<BlockState> {
 
 	// Because Mojang caches things... we need to invalidate them.. so... here we
 	// go..
-	private static final java.util.concurrent.atomic.AtomicInteger INVALIDATION_COUNTER = new java.util.concurrent.atomic.AtomicInteger();
+	private static final AtomicInteger INVALIDATION_COUNTER = new AtomicInteger();
 	public static final BlockStateIngredient EMPTY = new BlockStateIngredient(Stream.empty());
 
 	public static void invalidateAll() {

@@ -28,7 +28,8 @@ public class HeatCableCapability extends ServerCableCapability {
 
 	@Override
 	public void preWorldTick() {
-		heatStorage.getTicker().tick(getOwningCable().getLevel(), getPos());
+		heatStorage.getTicker().tick(getOwningCable().getLevel(), getPos(), true);
+		heatStorage.setConductivity(80);
 	}
 
 	@Override

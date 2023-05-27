@@ -124,8 +124,7 @@ public class BlockEntityTransformer extends BlockEntityBase {
 
 		double transfered = powerDistributor.manuallyDistributePower(powerStorage, transformedStack, simulate);
 		if (!simulate) {
-			powerStorage.getEnergyTracker().powerAdded(stack.copyWithPower(transfered));
-			powerStorage.getEnergyTracker().powerDrained(transfered);
+			powerStorage.getEnergyTracker().powerTransfered(stack.copyWithPower(transfered));
 			powerStorage.setOutputVoltage(outputVoltageClass);
 		}
 		return transfered;

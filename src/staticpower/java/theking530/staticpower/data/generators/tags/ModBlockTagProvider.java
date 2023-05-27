@@ -131,7 +131,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 		tag(ModBlockTags.REFINERY_BLOCK).add(ModBlocks.RefineryBoiler.get(), ModBlocks.RefineryController.get(),
 				ModBlocks.RefineryFluidInput.get(), ModBlocks.RefineryFluidOutput.get(),
 				ModBlocks.RefineryHeatVent.get(), ModBlocks.RefineryItemInput.get(), ModBlocks.RefineryPowerTap.get(),
-				ModBlocks.RefineryTower.get());
+				ModBlocks.RefineryTower.get(), ModBlocks.MachineBlockIndustrial.get());
 
 		tag(ModBlockTags.CAULDRONS).add(ModBlocks.CleanCauldron.get(), ModBlocks.RustyCauldron.get());
 		tag(ModBlockTags.CHESTS).add(ModBlocks.BasicChest.get(), ModBlocks.AdvancedChest.get(),

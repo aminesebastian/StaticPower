@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -144,7 +145,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 					BlockPos testPos = cable.getPos().relative(dir);
 
 					if (mapper.getDestinations().containsKey(testPos)) {
-						CachedFluidDestination dest = getInterfaceForDesination(cable, mapper.getDestinations().get(testPos));
+						CachedFluidDestination dest = getInterfaceForDesination(cable,
+								mapper.getDestinations().get(testPos));
 						if (dest != null) {
 							fluidDest.add(dest);
 						}
@@ -163,7 +165,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 
 		output.add(Component.literal(String.valueOf(capability.get().getHeadPressure())));
-		output.addAll(GuiFluidBarUtilities.getTooltip(capability.get().getFluidAmount(), capability.get().getCapacity(), capability.get().getFluid()));
+		output.addAll(GuiFluidBarUtilities.getTooltip(capability.get().getFluidAmount(), capability.get().getCapacity(),
+				capability.get().getFluid()));
 	}
 
 	protected Optional<FluidCableCapability> getFluidCableCapability(BlockPos pos) {
@@ -224,9 +227,11 @@ public class FluidNetworkModule extends CableNetworkModule {
 		Direction connectedSide = wrapper.getConnectedCables().get(connectedCable.getPos());
 
 		if (wrapper.supportsType(ModCableDestinations.Fluid.get())) {
-			IFluidHandler handler = wrapper.getTileEntity().getCapability(ForgeCapabilities.FLUID_HANDLER, connectedSide).orElse(null);
+			IFluidHandler handler = wrapper.getTileEntity()
+					.getCapability(ForgeCapabilities.FLUID_HANDLER, connectedSide).orElse(null);
 			if (handler != null) {
-				return new CachedFluidDestination(connectedSide, Network.getGraph().getCables().get(connectedCable.getPos()), wrapper.getPos());
+				return new CachedFluidDestination(connectedSide,
+						Network.getGraph().getCables().get(connectedCable.getPos()), wrapper.getPos());
 			}
 		}
 		return null;
@@ -236,7 +241,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 		return propagateFlow(fluid.copy(), cable, pressure, action, new HashSet<FluidCableCapability>());
 	}
 
-	private int propagateFlow(FluidStack fluid, FluidCableCapability initialCable, float initialPressure, FluidAction action, Set<FluidCableCapability> visited) {
+	private int propagateFlow(FluidStack fluid, FluidCableCapability initialCable, float initialPressure,
+			FluidAction action, Set<FluidCableCapability> visited) {
 		Queue<Tuple<FluidCableCapability, Float>> bfsQueue = new LinkedList<>();
 		bfsQueue.add(new Tuple<>(initialCable, initialPressure));
 		int filled = 0;
@@ -267,7 +273,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 					FluidCableCapability adjacent = adjacents.get(flowDir);
 					float pressureDelta = cable.getPressureProperties().getPressureDeltaForToDirection(flowDir);
-					float newPressure = SDMath.clamp(pressure + pressureDelta, 0, IStaticPowerFluidHandler.MAX_PRESSURE);
+					float newPressure = SDMath.clamp(pressure + pressureDelta, 0,
+							IStaticPowerFluidHandler.MAX_PRESSURE);
 					if (!visited.contains(adjacent)) {
 						bfsQueue.add(new Tuple<>(adjacent, newPressure));
 					}
@@ -285,7 +292,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 				}
 
 				if (fillSelf) {
-					FluidStack maxFluid = getMaximumFlowFluidStack(fluid, cable, action == FluidAction.EXECUTE ? IStaticPowerFluidHandler.MAX_PRESSURE : pressure);
+					FluidStack maxFluid = getMaximumFlowFluidStack(fluid, cable,
+							action == FluidAction.EXECUTE ? IStaticPowerFluidHandler.MAX_PRESSURE : pressure);
 					int selfFilled = cable.fill(maxFluid, action);
 					fluid.shrink(selfFilled);
 					filled += selfFilled;
@@ -293,7 +301,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 			}
 
 			// If there is a cable above us, only supply to it if we're already full.
-			if (adjacents.containsKey(Direction.UP) && cable.getFluidAmount() == cable.getCapacity() && !fluid.isEmpty()) {
+			if (adjacents.containsKey(Direction.UP) && cable.getFluidAmount() == cable.getCapacity()
+					&& !fluid.isEmpty()) {
 				FluidCableCapability aboveCable = adjacents.get(Direction.UP);
 				float pressureDelta = cable.getPressureProperties().getPressureDeltaForToDirection(Direction.UP);
 				float newPressure = SDMath.clamp(pressure + pressureDelta, 0, IStaticPowerFluidHandler.MAX_PRESSURE);
@@ -341,7 +350,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 			Map<Direction, Float> supplyAmounts = new HashMap<>();
 			float totalSupplied = 0;
 			for (Direction dir : Direction.values()) {
-				int supplied = distributeOnCableSide(cable, adjacentDestinations, cable.getFluidAmount(), dir, FluidAction.SIMULATE);
+				int supplied = distributeOnCableSide(cable, adjacentDestinations, cable.getFluidAmount(), dir,
+						FluidAction.SIMULATE);
 				supplyAmounts.put(dir, (float) supplied);
 				totalSupplied += supplied;
 			}
@@ -358,7 +368,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 	}
 
-	private int distributeOnCableSide(FluidCableCapability cable, Map<Direction, CachedFluidDestination> adjacentDestinations, int maxFluidAmount, Direction side,
+	private int distributeOnCableSide(FluidCableCapability cable,
+			Map<Direction, CachedFluidDestination> adjacentDestinations, int maxFluidAmount, Direction side,
 			FluidAction action) {
 		if (cable.isEmpty() || !adjacentDestinations.containsKey(side) || maxFluidAmount == 0) {
 			return 0;
@@ -380,7 +391,12 @@ public class FluidNetworkModule extends CableNetworkModule {
 	}
 
 	private LazyOptional<IFluidHandler> getFluidHandler(CachedFluidDestination destination) {
-		return getNetwork().getWorld().getBlockEntity(destination.desintationPos()).getCapability(ForgeCapabilities.FLUID_HANDLER, destination.connectedSide());
+		BlockEntity entity = getNetwork().getWorld().getBlockEntity(destination.desintationPos());
+		if (entity == null) {
+			return LazyOptional.empty();
+		}
+		return getNetwork().getWorld().getBlockEntity(destination.desintationPos())
+				.getCapability(ForgeCapabilities.FLUID_HANDLER, destination.connectedSide());
 	}
 
 	private void updatePressures() {
@@ -400,7 +416,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 			// First try to push all the fluid in the directions that have positive
 			// pressure.
 			for (Direction flowDir : FLOW_DIRECTION_PRIORITY) {
-				if (adjacents.containsKey(flowDir) && cable.getPressureProperties().getPressureDeltaForToDirection(flowDir) > 0) {
+				if (adjacents.containsKey(flowDir)
+						&& cable.getPressureProperties().getPressureDeltaForToDirection(flowDir) > 0) {
 					FluidStack simDrained = cable.drain(cable.getCapacity(), FluidAction.SIMULATE);
 					int filled = adjacents.get(flowDir).fill(simDrained, FluidAction.EXECUTE);
 					cable.drain(filled, FluidAction.EXECUTE);

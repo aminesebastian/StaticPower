@@ -27,6 +27,8 @@ public class BlockEntityResistor extends BlockEntityBase {
 	public final SideConfigurationComponent ioSideConfiguration;
 	private final PowerDistributionComponent powerDistributor;
 
+	private double currentTickTransfered;
+
 	public BlockEntityResistor(BlockEntityTypeAllocator<BlockEntityResistor> allocator, BlockPos pos,
 			BlockState state) {
 		super(allocator, pos, state);
@@ -52,11 +54,12 @@ public class BlockEntityResistor extends BlockEntityBase {
 		powerStorage.setMaximumOutputPower(StaticPowerEnergyUtilities.getMaximumPower());
 
 		powerStorage.setCapacity(0);
+		currentTickTransfered = 0;
 	}
 
 	@Override
 	public void process() {
-
+		currentTickTransfered = 0;
 	}
 
 	public double transferPower(PowerStack stack, boolean simulate) {
@@ -64,14 +67,17 @@ public class BlockEntityResistor extends BlockEntityBase {
 			return 0;
 		}
 
+		double remainingLimit = getPowerLimit() - currentTickTransfered;
 		PowerStack limitedTransfer = stack.copy();
-		limitedTransfer.setPower(Math.min(stack.getPower(), getPowerLimit()));
-		
+		limitedTransfer.setPower(Math.min(limitedTransfer.getPower(), getPowerLimit()));
+		limitedTransfer.setPower(Math.min(limitedTransfer.getPower(), remainingLimit));
+
 		double transfered = powerDistributor.manuallyDistributePower(powerStorage, limitedTransfer, simulate);
+
 		if (!simulate) {
-			powerStorage.getEnergyTracker().powerAdded(stack.copyWithPower(transfered));
-			powerStorage.getEnergyTracker().powerDrained(transfered);
+			powerStorage.getEnergyTracker().powerTransfered(stack.copyWithPower(transfered));
 			powerStorage.setOutputVoltage(stack.getVoltage());
+			currentTickTransfered += transfered;
 		}
 		return transfered;
 	}

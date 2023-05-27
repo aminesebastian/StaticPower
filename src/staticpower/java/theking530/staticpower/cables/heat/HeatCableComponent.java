@@ -186,7 +186,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		cable.getDataTag().putFloat(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.getDataTag().putFloat(HEAT_CONDUCTIVITY_TAG_KEY, conductivity);
 		HeatCableCapability heatCapability = ModCableCapabilities.Heat.get().create(cable);
-		heatCapability.initialize(50, 400, 400, 2000);
+		heatCapability.initialize(10, 400, 400, 1000);
 		cable.registerCapability(heatCapability);
 	}
 

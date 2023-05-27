@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.StaticPowerVoltage;
+import theking530.api.heat.HeatUtilities;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.blockentity.components.control.processing.ConcretizedProductContainer;
 import theking530.staticcore.blockentity.components.control.processing.ProcessingCheckState;
@@ -109,6 +110,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setPowerComponent(powerStorage);
+		processingComponent.setModulateProcessingTimeByPowerSatisfaction(false);
 
 		// Setup the input fluid tanks.
 		fluidTanks = new FluidTankComponent[5];
@@ -148,7 +150,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		// Add the heat storage and the upgrade inventory to the heat component.
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tier)
 				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL)
-				.setExposedAsCapability(false).setMeltdownRecoveryTicks(100));
+				.setExposedAsCapability(false).setMeltdownRecoveryTicks(100).setTransferHeatWithEnvironment(false));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 	}
 
@@ -166,15 +168,24 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 			lastTickMultiblockSuccess = multiBlockCache.getStatus().isSuccessful();
 			updateMultiblockBlockStates(processingComponent.isBlockStateOn());
 		}
+		heatStorage.setMass(getBoilers().size() * 1);
 
 		if (!getLevel().isClientSide()) {
-			if (redstoneControlComponent.passesRedstoneCheck() && getProductivity() > 0
-					&& processingComponent.getProcessingOrPendingRecipe().isPresent()) {
-				boolean shouldHeat = !heatStorage.isRecoveringFromMeltdown();
-				if (shouldHeat) {
-					float maxPowerUsage = getMaxHeatGeneration();
-					float usedPower = heatStorage.heat(maxPowerUsage, HeatTransferAction.EXECUTE);
-					powerStorage.drainPower(usedPower, false);
+			if (redstoneControlComponent.passesRedstoneCheck() && !getBoilers().isEmpty()) {
+
+				if (!heatStorage.isRecoveringFromMeltdown()) {
+					double maxPowerOutput = powerStorage.drainPower(powerStorage.getMaximumPowerOutput(), true)
+							.getPower();
+					float maxHeatFlux = HeatUtilities.calculateHeatFluxFromPower(maxPowerOutput);
+					float usedHeatFlux = heatStorage.heat(maxHeatFlux, HeatTransferAction.EXECUTE);
+					powerStorage.drainPower(HeatUtilities.calculatePowerFromHeatFlux(usedHeatFlux), false);
+				}
+
+				Optional<RefineryRecipe> recipe = processingComponent.getProcessingOrPendingRecipe();
+				if (recipe.isPresent() && getProductivity() > 0) {
+					if (processingComponent.hasProcessingStarted() && !processingComponent.isProcessingPaused()) {
+						heatStorage.cool(recipe.get().getProcessingSection().getHeat(), HeatTransferAction.EXECUTE);
+					}
 				}
 			}
 
@@ -184,6 +195,10 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 						getBlockPos(), 64);
 			} else {
 				generatingSoundComponent.stopPlayingSound();
+			}
+			
+			for(BlockPos boilerPos : getBoilers().keySet()) {
+				HeatUtilities.transferHeat(heatStorage, level, boilerPos, HeatTransferAction.EXECUTE);
 			}
 
 			updateMultiblockBlockStates(processingComponent.isBlockStateOn());
@@ -290,7 +305,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	public float getMaxHeatGeneration() {
-		return (float) powerStorage.drainPower(Double.MAX_VALUE, true).getPower();
+		return HeatUtilities.calculateHeatFluxFromPower((float) powerStorage.getMaximumPowerOutput());
 	}
 
 	public FluidTankComponent getInputTank(int index) {
@@ -466,8 +481,6 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	@Override
 	public void prepareComponentForProcessing(RecipeProcessingComponent<RefineryRecipe> component,
 			RefineryRecipe recipe, ConcretizedProductContainer outputContainer) {
-		component.setBaseProcessingTime(recipe.getProcessingTime());
-		component.setBasePowerUsage(recipe.getPowerCost());
 		heatStorage.setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());
 		currentProcessingProductivity = getProductivity();
 	}
@@ -477,17 +490,34 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
 		if (recipe.hasCatalyst()) {
 			inputContainer.addItem(catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), false));
+		} else {
+			inputContainer.addFluid(FluidStack.EMPTY);
 		}
 		if (recipe.hasPrimaryFluidInput()) {
 			inputContainer.addFluid(getInputTank(0).drain(
 					(int) (recipe.getPrimaryFluidInput().getAmount() * currentProcessingProductivity),
 					FluidAction.EXECUTE));
+		} else {
+			inputContainer.addFluid(FluidStack.EMPTY);
 		}
 		if (recipe.hasSecondaryFluidInput()) {
 			inputContainer.addFluid(getInputTank(1).drain(
 					(int) (recipe.getSecondaryFluidInput().getAmount() * currentProcessingProductivity),
 					FluidAction.EXECUTE));
+		} else {
+			inputContainer.addFluid(FluidStack.EMPTY);
 		}
+	}
+
+	public ProcessingCheckState canContinueProcessing(RecipeProcessingComponent<RefineryRecipe> component,
+			ProcessingContainer processingContainer) {
+		Optional<RefineryRecipe> recipe = component.getProcessingRecipe();
+
+		ProcessingCheckState heatCheck = checkHeatStorageReady(recipe.get());
+		if (!heatCheck.isOk()) {
+			return heatCheck;
+		}
+		return ProcessingCheckState.ok();
 	}
 
 	@Override

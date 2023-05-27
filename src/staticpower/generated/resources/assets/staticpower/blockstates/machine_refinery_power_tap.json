@@ -4,25 +4,25 @@
       "model": "staticpower:block/machine_refinery_power_tap"
     },
     "facing=east,is_on=true": {
-      "model": "staticpower:block/machine_refinery_power_tap_on"
+      "model": "staticpower:block/machine_refinery_power_tap"
     },
     "facing=north,is_on=false": {
       "model": "staticpower:block/machine_refinery_power_tap"
     },
     "facing=north,is_on=true": {
-      "model": "staticpower:block/machine_refinery_power_tap_on"
+      "model": "staticpower:block/machine_refinery_power_tap"
     },
     "facing=south,is_on=false": {
       "model": "staticpower:block/machine_refinery_power_tap"
     },
     "facing=south,is_on=true": {
-      "model": "staticpower:block/machine_refinery_power_tap_on"
+      "model": "staticpower:block/machine_refinery_power_tap"
     },
     "facing=west,is_on=false": {
       "model": "staticpower:block/machine_refinery_power_tap"
     },
     "facing=west,is_on=true": {
-      "model": "staticpower:block/machine_refinery_power_tap_on"
+      "model": "staticpower:block/machine_refinery_power_tap"
     }
   }
 }

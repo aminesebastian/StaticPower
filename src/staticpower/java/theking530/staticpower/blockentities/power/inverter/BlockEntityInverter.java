@@ -63,8 +63,7 @@ public class BlockEntityInverter extends BlockEntityBase {
 
 			double transfered = powerDistributor.manuallyDistributePower(powerStorage, alternatingVersion, simulate);
 			if (!simulate) {
-				powerStorage.getEnergyTracker().powerAdded(stack.copyWithPower(transfered));
-				powerStorage.getEnergyTracker().powerDrained(transfered);
+				powerStorage.getEnergyTracker().powerTransfered(stack.copyWithPower(transfered));
 				powerStorage.setOutputVoltage(stack.getVoltage());
 			}
 			return transfered;

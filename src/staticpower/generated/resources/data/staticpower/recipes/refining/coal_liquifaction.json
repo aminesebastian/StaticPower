@@ -30,7 +30,9 @@
     "fluid": "staticpower:fuel"
   },
   "processing": {
+    "heat_flux": 2000.0,
+    "minimum_temperature": 700.0,
     "power": 5.0,
-    "processing_time": 200
+    "processing_time": 1
   }
 }

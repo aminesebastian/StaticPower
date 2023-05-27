@@ -11,8 +11,8 @@
     "fluid": "staticpower:ethanol"
   },
   "processing": {
-    "heat": 20,
-    "minimum_heat": 100,
+    "heat_flux": 20.0,
+    "minimum_temperature": 100.0,
     "processing_time": 40
   }
 }

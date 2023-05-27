@@ -78,7 +78,7 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<?>> implements IRec
 		return FluidStack.EMPTY;
 	}
 
-	public int getNetHighestMultipleOf10(int value) {
+	public int getNetHighestMultipleOf10(float value) {
 		// If the amount == 1, it's usually just for display so we want to render a 100%
 		// full bar.
 		if (value == 1) {

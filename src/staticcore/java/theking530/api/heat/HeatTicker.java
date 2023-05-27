@@ -45,16 +45,18 @@ public class HeatTicker implements INBTSerializable<CompoundTag> {
 		averageCooled = 0;
 	}
 
-	public void tick(Level level, BlockPos pos) {
+	public void tick(Level level, BlockPos pos, boolean transferHeatWithEnvironment) {
 		if (lastTickTime == level.getGameTime()) {
 			StaticCore.LOGGER.error("StaticPowerStorageTicker#tick should only be called once per tick!");
 			return;
 		}
 		lastTickTime = level.getGameTime();
 
+		if (transferHeatWithEnvironment) {
+			HeatUtilities.transferHeat(owningStorage, level, pos, HeatTransferAction.EXECUTE);
+		}
+		
 		captureMetrics();
-
-		HeatUtilities.transferHeat(owningStorage, level, pos, HeatTransferAction.EXECUTE);
 	}
 
 	/**
@@ -103,12 +105,12 @@ public class HeatTicker implements INBTSerializable<CompoundTag> {
 		return newAverage;
 	}
 
-	public void heated(float heat) {
-		currentFrameHeated.add(heat);
+	public void heated(float deltaTemperature, float powerAdded) {
+		currentFrameHeated.add(deltaTemperature);
 	}
 
-	public void cooled(float power) {
-		currentFrameCooled.add(power);
+	public void cooled(float deltaTemperature, float powerRemoved) {
+		currentFrameCooled.add(deltaTemperature);
 	}
 
 	public double getCurrentFrameAdded() {

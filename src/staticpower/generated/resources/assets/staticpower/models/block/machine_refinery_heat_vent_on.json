@@ -1,6 +1,6 @@
 {
   "parent": "staticpower:block/base_models/refinery_block",
   "textures": {
-    "side_overlay": "staticpower:blocks/machines/refinery/heat_vent"
+    "side_overlay": "staticpower:blocks/machines/refinery/heat_vent_on"
   }
 }

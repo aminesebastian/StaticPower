@@ -123,9 +123,12 @@ public class PackagerRecipeProvider implements IRecipeManagerPlugin {
 			Optional<CraftingRecipe> twoRecipe = recipeManager.getRecipeFor(RecipeType.CRAFTING, sizeTwoInv, null);
 			if (twoRecipe.isPresent()) {
 				CraftingRecipe recipe = twoRecipe.get();
-				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
-				return Optional.of(new PackagerRecipe(id, 2, StaticPowerIngredient.of(stack.copy(), 4), StaticPowerOutputItem.of(recipe.getResultItem()),
-						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime, StaticPowerConfig.SERVER.packagerPowerUsage, () -> 0, () -> 0)));
+				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(),
+						recipe.getId().getPath() + "_packager_2_dynamic");
+				return Optional.of(new PackagerRecipe(id, 2, StaticPowerIngredient.of(stack.copy(), 4),
+						StaticPowerOutputItem.of(recipe.getResultItem()),
+						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime,
+								StaticPowerConfig.SERVER.packagerPowerUsage, () -> 0.0f, () -> 0.0f)));
 			}
 		} else if (size == 3) {
 			FakeCraftingInventory sizeThreeInv = new FakeCraftingInventory(3, 3);
@@ -136,9 +139,12 @@ public class PackagerRecipeProvider implements IRecipeManagerPlugin {
 			Optional<CraftingRecipe> threeRecipe = recipeManager.getRecipeFor(RecipeType.CRAFTING, sizeThreeInv, null);
 			if (threeRecipe.isPresent()) {
 				CraftingRecipe recipe = threeRecipe.get();
-				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
-				return Optional.of(new PackagerRecipe(id, 3, StaticPowerIngredient.of(stack.copy(), 9), StaticPowerOutputItem.of(recipe.getResultItem()),
-						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime, StaticPowerConfig.SERVER.packagerPowerUsage, () -> 0, () -> 0)));
+				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(),
+						recipe.getId().getPath() + "_packager_3_dynamic");
+				return Optional.of(new PackagerRecipe(id, 3, StaticPowerIngredient.of(stack.copy(), 9),
+						StaticPowerOutputItem.of(recipe.getResultItem()),
+						MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime,
+								StaticPowerConfig.SERVER.packagerPowerUsage, () -> 0.0f, () -> 0.0f)));
 			}
 		}
 

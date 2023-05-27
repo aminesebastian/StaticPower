@@ -70,6 +70,7 @@
 	
 	"gui.staticcore.heat_unit": "°C",
 	"gui.staticcore.heat_unit_per_tick": "°C/t",
+	"gui.staticcore.heat_unit_per_second": "°C/s",
 	
 	"gui.staticcore.heat_conductivity_unit": "λ",
 	

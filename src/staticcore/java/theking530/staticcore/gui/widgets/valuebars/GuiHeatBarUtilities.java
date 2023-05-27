@@ -15,26 +15,39 @@ import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.utilities.SDColor;
 
 public class GuiHeatBarUtilities {
-	public static List<Component> getTooltip(float currentTemp, float minimumTemp, float overheatTemp, float maximumTemp, double heatPerTick) {
+	public static List<Component> getTooltip(float currentTemp, float minimumTemp, float overheatTemp,
+			float maximumTemp, double heatPerTick) {
 		List<Component> tooltip = new ArrayList<Component>();
 
 		// Show the total amount of energy remaining / total energy capacity.
 		tooltip.add(GuiTextUtilities.formatHeatToString(currentTemp, maximumTemp));
-		tooltip.add(Component.literal("Overheat: ").withStyle(ChatFormatting.RED).append(GuiTextUtilities.formatHeatToString(overheatTemp)));
 
+		if (overheatTemp != maximumTemp) {
+			tooltip.add(Component.literal("Overheat: ").withStyle(ChatFormatting.RED)
+					.append(GuiTextUtilities.formatHeatToString(overheatTemp)));
+		}
+
+		if (minimumTemp != IHeatStorage.ABSOLUTE_ZERO) {
+			tooltip.add(Component.literal("Minimum: ").withStyle(ChatFormatting.GREEN)
+					.append(GuiTextUtilities.formatHeatToString(minimumTemp)));
+		}
 		return tooltip;
 	}
 
-	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, float currentTemp, float maximumTemp) {
-		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.ABSOLUTE_ZERO, maximumTemp, maximumTemp);
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel,
+			float currentTemp, float maximumTemp) {
+		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.ABSOLUTE_ZERO, maximumTemp,
+				maximumTemp);
 	}
 
-	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, float currentTemp, float overheatTemp, float maximumTemp) {
-		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.ABSOLUTE_ZERO, overheatTemp, maximumTemp);
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel,
+			float currentTemp, float overheatTemp, float maximumTemp) {
+		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.ABSOLUTE_ZERO, overheatTemp,
+				maximumTemp);
 	}
 
-	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, float currentTemp, float minimumTemp, float overheatTemp,
-			float maximumTemp) {
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel,
+			float currentTemp, float minimumTemp, float overheatTemp, float maximumTemp) {
 		float totalHeight = maximumTemp - IHeatStorage.ABSOLUTE_ZERO;
 		float percentFilled = (currentTemp - IHeatStorage.ABSOLUTE_ZERO) / totalHeight;
 		float filledHeight = percentFilled * height;
@@ -51,18 +64,23 @@ public class GuiHeatBarUtilities {
 		stack.pushPose();
 		stack.translate(xpos, ypos, 0);
 		GuiDrawUtilities.drawSlot(stack, width, height, 0, 0, 0);
-		GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_BG, width, height, 0, 0, 1, 1, SDColor.WHITE);
-		GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_FG, width, filledHeight, 0, height - filledHeight, 0, 0, 1 - percentFilled, 1, 1, new SDColor(1, 1, 1, 1.0f));
-		GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - filledHeight - 5, zLevel, 0, 0, 1, 1, SDColor.GREY);
+		GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_BG, width, height, 0, 0, 1, 1,
+				SDColor.WHITE);
+		GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_FG, width, filledHeight, 0,
+				height - filledHeight, 0, 0, 1 - percentFilled, 1, 1, new SDColor(1, 1, 1, 1.0f));
+		GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f,
+				height - filledHeight - 5, zLevel, 0, 0, 1, 1, SDColor.GREY);
 
 		if (overheatTemp != maximumTemp) {
 			float overheatHeight = ((overheatTemp - IHeatStorage.ABSOLUTE_ZERO) / totalHeight) * height;
-			GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - overheatHeight - 5, zLevel, 0, 0, 1, 1, SDColor.RED);
+			GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f,
+					height - overheatHeight - 5, zLevel, 0, 0, 1, 1, SDColor.RED);
 		}
 
 		if (minimumTemp != IHeatStorage.ABSOLUTE_ZERO) {
 			float minimumHeight = ((minimumTemp - IHeatStorage.ABSOLUTE_ZERO) / totalHeight) * height;
-			GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - minimumHeight - 5, zLevel, 0, 0, 1, 1, SDColor.GREEN);
+			GuiDrawUtilities.drawTexture(stack, StaticCoreGuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f,
+					height - minimumHeight - 5, zLevel, 0, 0, 1, 1, SDColor.GREEN);
 		}
 
 		stack.popPose();

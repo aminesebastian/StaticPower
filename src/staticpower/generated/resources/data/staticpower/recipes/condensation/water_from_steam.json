@@ -11,8 +11,8 @@
     "fluid": "minecraft:water"
   },
   "processing": {
-    "heat": 10,
-    "minimum_heat": 100,
+    "heat_flux": 10.0,
+    "minimum_temperature": 100.0,
     "processing_time": 40
   }
 }

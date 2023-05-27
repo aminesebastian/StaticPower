@@ -64,8 +64,7 @@ public class BlockEntityRectifier extends BlockEntityBase {
 
 			double transfered = powerDistributor.manuallyDistributePower(powerStorage, directVersion, simulate);
 			if (!simulate) {
-				powerStorage.getEnergyTracker().powerAdded(stack.copyWithPower(transfered));
-				powerStorage.getEnergyTracker().powerDrained(transfered);
+				powerStorage.getEnergyTracker().powerTransfered(stack.copyWithPower(transfered));
 				powerStorage.setOutputVoltage(stack.getVoltage());
 			}
 			return transfered;

@@ -51,6 +51,7 @@ public class HeatUtilities {
 			HeatTransferAction action) {
 
 		float totalTransfered = 0.0f;
+
 		List<Direction> randomDirections = new ArrayList<Direction>(6);
 		for (Direction side : Direction.values()) {
 			randomDirections.add(side);
@@ -68,6 +69,9 @@ public class HeatUtilities {
 			if (flux == 0) {
 				continue;
 			}
+
+			// This value is in flux/second, so bring it down to per tick.
+			flux /= 20.0f;
 
 			if (adjacentHeat.heatStorage() != null) {
 				if (flux > 0) {
@@ -99,7 +103,8 @@ public class HeatUtilities {
 		return heatPower / (specificHeat * mass);
 	}
 
-	public static float calculateHeatPowerPerTickRequired(float temperatureDelta, float specificHeat, float mass) {
+	public static float calculateHeatFluxRequiredForTemperatureChange(float temperatureDelta, float specificHeat,
+			float mass) {
 		return (temperatureDelta * specificHeat * mass);
 	}
 
@@ -107,6 +112,14 @@ public class HeatUtilities {
 		float conductivity = source.conductivity() + target.conductivity();
 		float delta = source.temperature() - target.temperature();
 		return (conductivity * delta) / 20;
+	}
+
+	public static float calculateHeatFluxFromPower(double power) {
+		return (float) (power * 10);
+	}
+
+	public static double calculatePowerFromHeatFlux(float flux) {
+		return flux / 10;
 	}
 
 	public static HeatInfo getAmbientProperties(Level world, BlockPos currentPos) {

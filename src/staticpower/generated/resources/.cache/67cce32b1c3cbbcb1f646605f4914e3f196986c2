@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-21T18:17:40.2763186	LootTables
+// 1.19.2	2023-05-26T12:43:08.3629095	LootTables
 5f1c4bd7d919817df3c517022b2bb5c6d61b5d9d data/staticpower/loot_tables/blocks/alloy_furnace.json
 ec0346cd8a4b004d8afe4ac900233eb8bfd496e4 data/staticpower/loot_tables/blocks/automatic_placer.json
 f782be601a12395d5e5c205629f67cdcf8579ac0 data/staticpower/loot_tables/blocks/battery_block_advanced.json
@@ -189,6 +189,7 @@ c0e2e48480b431e360ff623964bbe37a35334e9d data/staticpower/loot_tables/blocks/exp
 625cb9ac83f6895173789170e494ce338d1d0aea data/staticpower/loot_tables/blocks/glass_obsidian.json
 568a14b6c28e11bd758b5894fe01d6b6aabc381c data/staticpower/loot_tables/blocks/grass_energized.json
 e8892e8db0da73bce47c9d460d2d757d399881ac data/staticpower/loot_tables/blocks/grass_static.json
+49118281261dcf01528c5851c703670cccd2c793 data/staticpower/loot_tables/blocks/heat_exchanger.json
 48a7dff059a984fa2c4498e03bb2c6b1575a26e0 data/staticpower/loot_tables/blocks/heat_sink_aluminum.json
 2d0aa063ddc3342e45536c49e3d7aee345823a89 data/staticpower/loot_tables/blocks/heat_sink_copper.json
 df06db25d3f8066df78a2bfed788aee191a448ba data/staticpower/loot_tables/blocks/inverter.json
