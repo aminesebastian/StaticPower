@@ -45,6 +45,7 @@ import theking530.staticpower.init.ModItemSlots;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModLootSerializers;
 import theking530.staticpower.init.ModMaterials;
+import theking530.staticpower.init.ModMultiblocks;
 import theking530.staticpower.init.ModNetworkMessages;
 import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.init.ModRecipeSerializers;
@@ -119,6 +120,7 @@ public class StaticPower {
 		ModFeatures.init(eventBus);
 		ModIntegrations.init(eventBus);
 		ModAttributes.init(eventBus);
+		ModMultiblocks.init(eventBus);
 
 		REGISTRATION.registerBlockEntityTypes(eventBus, BLOCK_ENTITY_TYPES);
 		REGISTRATION.registerContainerTypes(eventBus, MENU_TYPES);

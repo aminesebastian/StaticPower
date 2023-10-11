@@ -26,30 +26,51 @@ public class SolderingRecipeGenerator extends SCRecipeProvider<SolderingRecipe> 
 
 	@Override
 	protected void buildRecipes() {
-		addCardRecipe("basic", ModItems.BasicCard.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()), RecipeItem.of(ModItems.BasicProcessor.get()),
-				RecipeItem.of(Tags.Items.INGOTS_COPPER), RecipeItem.of(Tags.Items.DUSTS_REDSTONE));
-		addCardRecipe("advanced", ModItems.AdvancedCard.get(), RecipeItem.of(ModMaterials.GOLD.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModItems.AdvancedProcessor.get()), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()), RecipeItem.of(Tags.Items.GEMS_DIAMOND));
-		addCardRecipe("static", ModItems.StaticCard.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModItems.StaticProcessor.get()), RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.INGOT).getItemTag()),
+		addCardRecipe("basic", ModItems.BasicCard.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModItems.BasicProcessor.get()), RecipeItem.of(Tags.Items.INGOTS_COPPER),
+				RecipeItem.of(Tags.Items.DUSTS_REDSTONE));
+		addCardRecipe("advanced", ModItems.AdvancedCard.get(),
+				RecipeItem.of(ModMaterials.GOLD.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModItems.AdvancedProcessor.get()),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.INGOT).getItemTag()),
+				RecipeItem.of(Tags.Items.GEMS_DIAMOND));
+		addCardRecipe("static", ModItems.StaticCard.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModItems.StaticProcessor.get()),
+				RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModItems.CrystalStatic.get()));
-		addCardRecipe("energized", ModItems.EnergizedCard.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModItems.EnergizedProcessor.get()), RecipeItem.of(ModMaterials.GOLD.get(MaterialTypes.INGOT).getItemTag()),
+		addCardRecipe("energized", ModItems.EnergizedCard.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModItems.EnergizedProcessor.get()),
+				RecipeItem.of(ModMaterials.GOLD.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModItems.CrystalEnergized.get()));
-		addCardRecipe("lumum", ModItems.LumumCard.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModItems.LumumProcessor.get()), RecipeItem.of(ModMaterials.PLATINUM.get(MaterialTypes.INGOT).getItemTag()),
+		addCardRecipe("lumum", ModItems.LumumCard.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModItems.LumumProcessor.get()),
+				RecipeItem.of(ModMaterials.PLATINUM.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModItems.CrystalLumum.get()));
 
-		addProcessorRecipe("basic", ModItems.BasicProcessor.get(), RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(ModItemTags.SILICON));
-		addProcessorRecipe("advanced", ModItems.AdvancedProcessor.get(), RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(ModItemTags.SILICON));
-		addProcessorRecipe("static", ModItems.StaticProcessor.get(), RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(ModItems.StaticDopedSilicon.get()));
-		addProcessorRecipe("energized", ModItems.EnergizedProcessor.get(), RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.GOLD.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(ModItems.EnergizedDopedSilicon.get()));
-		addProcessorRecipe("lumum", ModItems.LumumProcessor.get(), RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
-				RecipeItem.of(ModMaterials.PLATINUM.get(MaterialTypes.NUGGET).getItemTag()), RecipeItem.of(ModItems.LumumDopedSilicon.get()));
+		addProcessorRecipe("basic", ModItems.BasicProcessor.get(),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.NUGGET).getItemTag()),
+				RecipeItem.of(ModItemTags.SILICON));
+		addProcessorRecipe("advanced", ModItems.AdvancedProcessor.get(),
+				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.TIN.get(MaterialTypes.NUGGET).getItemTag()),
+				RecipeItem.of(ModItemTags.SILICON));
+		addProcessorRecipe("static", ModItems.StaticProcessor.get(),
+				RecipeItem.of(ModMaterials.STATIC_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.SILVER.get(MaterialTypes.NUGGET).getItemTag()),
+				RecipeItem.of(ModItems.StaticDopedSilicon.get()));
+		addProcessorRecipe("energized", ModItems.EnergizedProcessor.get(),
+				RecipeItem.of(ModMaterials.ENERGIZED_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.GOLD.get(MaterialTypes.NUGGET).getItemTag()),
+				RecipeItem.of(ModItems.EnergizedDopedSilicon.get()));
+		addProcessorRecipe("lumum", ModItems.LumumProcessor.get(),
+				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.PLATE).getItemTag()),
+				RecipeItem.of(ModMaterials.PLATINUM.get(MaterialTypes.NUGGET).getItemTag()),
+				RecipeItem.of(ModItems.LumumDopedSilicon.get()));
 
 		// @formatter:off
 		addRecipe("servo_from_ingots", StaticPowerOutputItem.of(ModItems.Servo.get(), 3), ShapedRecipePatternBuilder.create()
@@ -109,7 +130,8 @@ public class SolderingRecipeGenerator extends SCRecipeProvider<SolderingRecipe> 
 		// @formatter:on
 	}
 
-	protected void addCardRecipe(String name, ItemLike output, RecipeItem plate, RecipeItem processor, RecipeItem contactMetal, RecipeItem sides) {
+	protected void addCardRecipe(String name, ItemLike output, RecipeItem plate, RecipeItem processor,
+			RecipeItem contactMetal, RecipeItem sides) {
 		// @formatter:off
 		addRecipe("cards/"+name, StaticPowerOutputItem.of(output), ShapedRecipePatternBuilder.create()
 			.define('l', plate)
@@ -123,7 +145,8 @@ public class SolderingRecipeGenerator extends SCRecipeProvider<SolderingRecipe> 
 		// @formatter:on
 	}
 
-	protected void addProcessorRecipe(String name, ItemLike output, RecipeItem plate, RecipeItem nugget, RecipeItem silicon) {
+	protected void addProcessorRecipe(String name, ItemLike output, RecipeItem plate, RecipeItem nugget,
+			RecipeItem silicon) {
 		// @formatter:off
 		addRecipe("processor/"+name, StaticPowerOutputItem.of(output), ShapedRecipePatternBuilder.create()
 			.define('p', plate)
@@ -139,7 +162,9 @@ public class SolderingRecipeGenerator extends SCRecipeProvider<SolderingRecipe> 
 		addRecipe(nameOverride, output, builder, null);
 	}
 
-	protected void addRecipe(String nameOverride, StaticPowerOutputItem output, ShapedRecipePatternBuilder builder, Ingredient solderingIron) {
-		addRecipe(nameOverride, SCRecipeBuilder.create(new SolderingRecipe(null, builder.build(), Optional.ofNullable(solderingIron), output)));
+	protected void addRecipe(String nameOverride, StaticPowerOutputItem output, ShapedRecipePatternBuilder builder,
+			Ingredient solderingIron) {
+		addRecipe(nameOverride, SCRecipeBuilder
+				.create(new SolderingRecipe(null, builder.build(), Optional.ofNullable(solderingIron), output)));
 	}
 }

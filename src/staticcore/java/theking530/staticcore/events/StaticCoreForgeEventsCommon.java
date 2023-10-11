@@ -15,6 +15,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -23,6 +25,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -53,6 +56,10 @@ import theking530.api.attributes.rendering.ItemAttributeRegistration;
 import theking530.api.attributes.type.AttributeType;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.StaticCore;
+import theking530.staticcore.StaticCoreRegistries;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockType;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.commands.ResearchCommands;
 import theking530.staticcore.commands.TeamCommands;
@@ -81,6 +88,7 @@ public class StaticCoreForgeEventsCommon {
 		TeamCommands.register(commandDispatcher);
 	}
 
+	@SuppressWarnings("resource")
 	@SubscribeEvent
 	public static void serverTickEvent(TickEvent.ServerTickEvent event) {
 		Level overworld = event.getServer().overworld();
@@ -93,8 +101,19 @@ public class StaticCoreForgeEventsCommon {
 			CableNetworkAccessor.get(event.getServer().overworld()).tick();
 			StaticCoreDataAccessor.getServer().tickGameData(overworld);
 		}
-	}
 
+		for (ServerLevel level : event.getServer().getAllLevels()) {
+			for (ChunkHolder chunkHolder : level.getChunkSource().chunkMap.getChunks()) {
+				LevelChunk chunk = chunkHolder.getFullChunk();
+				if (chunk == null) {
+					continue;
+				}
+				for (BlockEntity be : chunk.getBlockEntities().values()) {
+
+				}
+			}
+		}
+	}
 
 	@SubscribeEvent
 	public static void mappingChanged(IdMappingEvent evt) {
@@ -140,6 +159,18 @@ public class StaticCoreForgeEventsCommon {
 			return;
 		}
 
+		for (ResourceLocation id : StaticCoreRegistries.MultiblockTypes().getKeys()) {
+			MultiblockType<?> type = StaticCoreRegistries.MultiblockTypes().getValue(id);
+			AbstractMultiblockPattern pattern = type.getPattern();
+			if (pattern.isValidBlock(event.getState())) {
+				MultiblockState state = pattern.checkWellFormed(event.getEntity().getLevel(), event.getPos());
+				if (state.isWellFormed()) {
+					pattern.onWellFormedOnPlaceEvent(state, event);
+					break;
+				}
+			}
+		}
+
 		BlockEntity blockEntity = event.getLevel().getBlockEntity(event.getPos());
 		ITeam team = TeamManager.get(event.getLevel()).getTeamForPlayer((Player) event.getEntity());
 		if (team != null) {
@@ -149,7 +180,6 @@ public class StaticCoreForgeEventsCommon {
 
 	@SubscribeEvent
 	public static void onServerPlayerLoggedIn(PlayerLoggedInEvent loggedIn) {
-		StaticCoreDataAccessor.getServer().loadDataForClient((ServerPlayer) loggedIn.getEntity());
 		// TODO: Change this back later, for now there will only be one team.
 		if (TeamManager.get(loggedIn.getEntity().getLevel()).getTeamForPlayer(loggedIn.getEntity()) == null) {
 			if (TeamManager.get(loggedIn.getEntity().getLevel()).getTeams().size() == 0) {
@@ -158,6 +188,7 @@ public class StaticCoreForgeEventsCommon {
 				TeamManager.get(loggedIn.getEntity().getLevel()).getTeams().get(0).addPlayer(loggedIn.getEntity());
 			}
 		}
+		TeamManager.get(loggedIn.getEntity().getLevel()).syncToClient((ServerPlayer) loggedIn.getEntity());
 	}
 
 	@SubscribeEvent

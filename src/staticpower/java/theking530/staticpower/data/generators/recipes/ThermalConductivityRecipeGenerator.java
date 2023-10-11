@@ -142,6 +142,8 @@ public class ThermalConductivityRecipeGenerator extends SCRecipeProvider<Thermal
 				.overheats(
 						new OverheatingBehaviour(900, ModMaterials.BRASS.getFluidSource(MaterialTypes.MOLTEN_FLUID))));
 
+		addRecipe("wool", ThermalRecipeBuilder.of(BlockStateIngredient.of(BlockTags.WOOL), 0.04f, 3)
+				.overheats(new OverheatingBehaviour(600, Blocks.FIRE.defaultBlockState())));
 	}
 
 	protected void addRecipe(String nameOverride, ThermalRecipeBuilder builder) {

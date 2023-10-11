@@ -1,5 +1,6 @@
 {
   "values": [
+    "staticpower:ingot_steel_heated",
     "staticpower:ingot_static_metal_heated",
     "staticpower:ingot_redstone_alloy_heated",
     "staticpower:ingot_lumum_metal_heated",

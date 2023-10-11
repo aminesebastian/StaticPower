@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "tag": "staticpower:plates/energized_metal"
+    },
+    "t": {
+      "item": "staticpower:tank_static"
+    }
+  },
+  "pattern": [
+    "ppp",
+    "tit",
+    "ppp"
+  ],
+  "result": {
+    "item": "staticpower:tank_energized"
+  }
+}

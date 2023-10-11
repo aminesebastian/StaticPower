@@ -1,5 +1,8 @@
 package theking530.staticpower.events;
 
+import com.mojang.brigadier.CommandDispatcher;
+
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -9,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -24,6 +28,7 @@ import theking530.staticpower.entities.player.datacapability.CapabilityStaticPow
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerCapabilityProvider;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerData;
+import theking530.staticpower.init.ModCommands;
 import theking530.staticpower.items.backpack.Backpack;
 import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -32,6 +37,12 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public class StaticPowerForgeEventsCommon {
 	public static final ResourceLocation STATIC_POWER_PLAYER_DATA = new ResourceLocation(StaticPower.MOD_ID,
 			"player_data");
+
+	@SubscribeEvent
+	public static void onRegisterCommandEvent(RegisterCommandsEvent event) {
+		CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
+		ModCommands.register(commandDispatcher);
+	}
 
 	@SubscribeEvent
 	public static void playerTickEvent(TickEvent.PlayerTickEvent event) {

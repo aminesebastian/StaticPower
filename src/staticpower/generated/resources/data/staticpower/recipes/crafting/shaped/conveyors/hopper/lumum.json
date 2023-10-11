@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "h": {
+      "item": "minecraft:hopper"
+    },
+    "p": {
+      "tag": "staticpower:plates/lumum_metal"
+    },
+    "r": {
+      "item": "staticpower:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "   ",
+    "rrr",
+    "php"
+  ],
+  "result": {
+    "item": "staticpower:conveyor_hopper_lumum"
+  }
+}

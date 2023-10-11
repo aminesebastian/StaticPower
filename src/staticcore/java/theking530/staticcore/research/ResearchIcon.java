@@ -7,17 +7,22 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.JsonUtilities;
 
 public class ResearchIcon {
+	private static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation("", "");
+	public static final ResearchIcon EMPTY = new ResearchIcon(ItemStack.EMPTY, EMPTY_TEXTURE);
 	private final ItemStack itemIcon;
 	private final ResourceLocation textureIcon;
 
-	public static final Codec<ResearchIcon> CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(JsonUtilities.ITEMSTACK_CODEC.optionalFieldOf("item", null).forGetter(icon -> icon.getItemIcon()),
-					ResourceLocation.CODEC.optionalFieldOf("texture", null).forGetter(icon -> icon.getTextureIcon())).apply(instance, ResearchIcon::new));
+	public static final Codec<ResearchIcon> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			JsonUtilities.ITEMSTACK_CODEC.optionalFieldOf("item", ItemStack.EMPTY)
+					.forGetter(icon -> icon.getItemIcon()),
+			ResourceLocation.CODEC.optionalFieldOf("texture", EMPTY_TEXTURE).forGetter(icon -> icon.getTextureIcon()))
+			.apply(instance, ResearchIcon::new));
 
 	public ResearchIcon(ItemStack itemIcon, ResourceLocation textureIcon) {
 		this.itemIcon = itemIcon;
@@ -25,19 +30,23 @@ public class ResearchIcon {
 	}
 
 	public ItemStack getItemIcon() {
-		return itemIcon;
+		return itemIcon == null ? ItemStack.EMPTY : itemIcon;
 	}
 
 	public ResourceLocation getTextureIcon() {
-		return textureIcon;
+		return textureIcon == null ? EMPTY_TEXTURE : textureIcon;
 	}
 
 	public boolean isItemIcon() {
-		return itemIcon != null;
+		return itemIcon != null && !itemIcon.isEmpty();
 	}
 
 	public static ResearchIcon fromItem(ItemStack stack) {
 		return new ResearchIcon(stack, null);
+	}
+
+	public static ResearchIcon fromItem(Item item) {
+		return new ResearchIcon(new ItemStack(item), null);
 	}
 
 	public static ResearchIcon fromTexture(ResourceLocation textureIcon) {

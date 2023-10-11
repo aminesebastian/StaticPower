@@ -119,7 +119,7 @@ public class AdvancedCableConfiguration {
 
 		@Override
 		protected double getCableMaxCurrent() {
-			return 10;
+			return 100;
 		}
 
 		@Override
@@ -134,7 +134,7 @@ public class AdvancedCableConfiguration {
 
 		@Override
 		protected double getWireTerminalMaxCurrent() {
-			return 10;
+			return 100;
 		}
 
 		@Override

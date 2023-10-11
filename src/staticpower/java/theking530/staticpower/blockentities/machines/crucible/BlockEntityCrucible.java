@@ -148,7 +148,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 		}
 
 		// Check the heat.
-		if (heatStorage.getCurrentTemperature() < recipe.getProcessingSection().getMinimumHeat()) {
+		if (heatStorage.getTemperature() < recipe.getProcessingSection().getMinimumHeat()) {
 			return ProcessingCheckState.error("Minimum heat temperature of "
 					+ GuiTextUtilities.formatHeatToString(recipe.getProcessingSection().getMinimumHeat()).getString()
 					+ " has not been reached!");

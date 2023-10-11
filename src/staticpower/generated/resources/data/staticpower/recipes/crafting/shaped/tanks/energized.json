@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:fluid_capsule_energized"
+    },
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "tag": "staticpower:plates/energized_metal"
+    }
+  },
+  "pattern": [
+    "pcp",
+    "cic",
+    "pcp"
+  ],
+  "result": {
+    "item": "staticpower:tank_energized"
+  }
+}

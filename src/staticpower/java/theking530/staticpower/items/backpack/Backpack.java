@@ -47,12 +47,13 @@ import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.item.InventoryUtilities;
 import theking530.staticcore.utilities.item.ItemUtilities;
 import theking530.staticpower.client.rendering.items.BackpackItemModel;
+import theking530.staticpower.init.ModCreativeTabs;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 	public enum BackpackMode {
-		DEFAULT("gui.staticpower.backpack_mode.default"), REFIL("gui.staticpower.backpack_mode.refill"), LOCKED("gui.staticpower.backpack_mode.locked"),
-		RELOAD("gui.staticpower.backpack_mode.reload");
+		DEFAULT("gui.staticpower.backpack_mode.default"), REFIL("gui.staticpower.backpack_mode.refill"),
+		LOCKED("gui.staticpower.backpack_mode.locked"), RELOAD("gui.staticpower.backpack_mode.reload");
 
 		public final String unlocalizedName;
 
@@ -68,7 +69,7 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 	private Ingredient lazyLoadedIngredient;
 
 	public Backpack(int slots, ResourceLocation openModel, TagKey<Item> tag) {
-		super(new Properties().stacksTo(1).setNoRepair().fireResistant());
+		super(new Properties().stacksTo(1).setNoRepair().fireResistant().tab(ModCreativeTabs.TOOLS));
 		this.openModel = openModel;
 		this.slots = slots;
 		this.inputTag = tag;
@@ -84,7 +85,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, slots));
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, slots));
 	}
 
 	@Override
@@ -137,7 +139,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 	}
 
 	@Override
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level level, Player player, InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level level, Player player,
+			InteractionHand hand, ItemStack item) {
 		if (!level.isClientSide()) {
 			if (player.isCrouching()) {
 				incrementMode(player, item);
@@ -150,7 +153,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 	}
 
 	@Override
-	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level level, BlockPos pos, Direction face, Player player, ItemStack item) {
+	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level level, BlockPos pos,
+			Direction face, Player player, ItemStack item) {
 		if (player.isCrouching()) {
 			if (getMode(item) == BackpackMode.RELOAD) {
 				if (transferInventoryContentsToBackpack(item, player, pos, face)) {
@@ -182,7 +186,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 		return super.shouldCauseBlockBreakReset(oldStack, newStack) && getMode(newStack) != getMode(oldStack);
 	}
 
-	protected boolean transferInventoryContentsToBackpack(ItemStack backpack, Player player, BlockPos blockPos, Direction face) {
+	protected boolean transferInventoryContentsToBackpack(ItemStack backpack, Player player, BlockPos blockPos,
+			Direction face) {
 		BlockEntity entity = player.level.getBlockEntity(blockPos);
 		if (entity != null) {
 			IItemHandler inventory = entity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).orElse(null);
@@ -196,7 +201,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 					}
 
 					// Attempt to insert the item into the backpack.
-					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(backpackInventory, simulatedExtract, false);
+					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(backpackInventory,
+							simulatedExtract, false);
 					int transfered = simulatedExtract.getCount() - remaining.getCount();
 					inventory.extractItem(i, transfered, false);
 				}
@@ -206,7 +212,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 		return false;
 	}
 
-	protected boolean transferBackpackContentsToBlock(ItemStack backpack, Player player, BlockPos blockPos, Direction face) {
+	protected boolean transferBackpackContentsToBlock(ItemStack backpack, Player player, BlockPos blockPos,
+			Direction face) {
 		BlockEntity entity = player.level.getBlockEntity(blockPos);
 		if (entity != null) {
 			IItemHandler inventory = entity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).orElse(null);
@@ -214,7 +221,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 				IItemHandler backpackInventory = backpack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 				for (int i = 0; i < backpackInventory.getSlots(); i++) {
 					ItemStack simulatedExtract = backpackInventory.extractItem(i, Integer.MAX_VALUE, true);
-					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(inventory, simulatedExtract, false);
+					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(inventory, simulatedExtract,
+							false);
 
 					int transfered = simulatedExtract.getCount() - remaining.getCount();
 					backpackInventory.extractItem(i, transfered, false);
@@ -226,7 +234,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 	}
 
 	protected boolean openBackpack(ItemStack backpack, Player player) {
-		player.level.playSound(null, player.blockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.4f, 1.0f);
+		player.level.playSound(null, player.blockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.4f,
+				1.0f);
 		NetworkGUI.openScreen((ServerPlayer) player, new BackPackContainerProvider(backpack), buff -> {
 			buff.writeInt(player.getInventory().selected);
 		});
@@ -251,7 +260,8 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 			backpack.getTag().putByte("mode", (byte) newMode.ordinal());
 
 			// Send a change message.
-			player.sendSystemMessage(Component.translatable("gui.staticpower.backpack_mode_updated", Component.translatable(newMode.unlocalizedName)));
+			player.sendSystemMessage(Component.translatable("gui.staticpower.backpack_mode_updated",
+					Component.translatable(newMode.unlocalizedName)));
 			player.getInventory().setChanged();
 		}
 	}
@@ -277,7 +287,7 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 		if (this.getMode(backpack) == BackpackMode.LOCKED) {
 			return item;
 		}
-		
+
 		// Test to see if any of the lazy loaded ingredients support the picked up item.
 		if (canAcceptItem(backpack, item)) {
 			// If we have nothing to match against, don't auto pickup anything.
@@ -308,13 +318,15 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new BackpackItemModel(existingModel, event.getModels().get(openModel));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+			boolean isShowingAdvanced) {
 		IItemHandler backpackInventory = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 		if (backpackInventory == null) {
 			return;
@@ -333,7 +345,9 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 		if (occupied == 0) {
 			tooltip.add(Component.translatable("gui.staticcore.empty").withStyle(ChatFormatting.GRAY));
 		} else {
-			tooltip.add(Component.translatable("gui.staticcore.filled_amount", GuiTextUtilities.formatNumberAsPercentStringNoDecimal(occupied / max))
+			tooltip.add(Component
+					.translatable("gui.staticcore.filled_amount",
+							GuiTextUtilities.formatNumberAsPercentStringNoDecimal(occupied / max))
 					.withStyle(ChatFormatting.GRAY));
 		}
 	}
@@ -363,8 +377,11 @@ public class Backpack extends StaticPowerItem implements ICustomModelProvider {
 		}
 
 		for (Entry<Item, Integer> entry : itemMap.entrySet()) {
-			Component component = GuiTextUtilities.createColoredBulletTooltip(entry.getKey().getDescription().getString(), ChatFormatting.GRAY);
-			tooltip.add(Component.literal("  ").append(component).append(Component.literal(String.format(" x%1$d", entry.getValue()))).withStyle(component.getStyle()));
+			Component component = GuiTextUtilities
+					.createColoredBulletTooltip(entry.getKey().getDescription().getString(), ChatFormatting.GRAY);
+			tooltip.add(Component.literal("  ").append(component)
+					.append(Component.literal(String.format(" x%1$d", entry.getValue())))
+					.withStyle(component.getStyle()));
 		}
 	}
 

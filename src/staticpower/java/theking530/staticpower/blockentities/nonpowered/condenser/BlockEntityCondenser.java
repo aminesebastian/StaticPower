@@ -111,11 +111,11 @@ public class BlockEntityCondenser extends BlockEntityBase implements IRecipeProc
 		}
 
 		// Check the heat level.
-		if (heatStorage.getCurrentTemperature() + recipe.getProcessingSection().getHeat() > heatStorage
-				.getOverheatTemperature()) {
+		if (heatStorage.getTemperature() + recipe.getProcessingSection().getHeat() > heatStorage
+				.getOverheatThreshold()) {
 			return ProcessingCheckState.notEnoughHeatCapacity(recipe.getProcessingSection().getHeat());
 		}
-		if (heatStorage.getCurrentTemperature() > recipe.getProcessingSection().getMinimumHeat()) {
+		if (heatStorage.getTemperature() > recipe.getProcessingSection().getMinimumHeat()) {
 			return ProcessingCheckState.heatStorageTooHot(recipe.getProcessingSection().getMinimumHeat());
 		}
 

@@ -32,16 +32,18 @@ public class TeamManager extends BasicStaticCoreGameData {
 
 	@Override
 	public void tick(Level level) {
-		boolean isDirty = false;
-		for (ITeam team : teams.values()) {
-			team.tick(level);
-			if (team.isDirty()) {
-				isDirty = true;
-				team.markDirty(false);
+		if (!level.isClientSide()) {
+			boolean isDirty = false;
+			for (ITeam team : teams.values()) {
+				team.tick(level);
+				if (team.isDirty()) {
+					isDirty = true;
+					team.markDirty(false);
+				}
 			}
-		}
-		if (isDirty) {
-			syncToClients();
+			if (isDirty) {
+				syncToClients();
+			}
 		}
 	}
 

@@ -1,0 +1,25 @@
+{
+  "type": "staticcore:research",
+  "color": {
+    "b": 0.0,
+    "g": 0.0,
+    "r": 1.0
+  },
+  "description": "research.basic_research.description",
+  "hidden_until_available": false,
+  "icon": {
+    "item": {
+      "id": "staticcore:research_tier_1"
+    }
+  },
+  "prerequisites": [],
+  "research_requirements": [
+    {
+      "count": 10,
+      "ingredient": {
+        "item": "staticcore:research_tier_1"
+      }
+    }
+  ],
+  "title": "research.basic_research.title"
+}

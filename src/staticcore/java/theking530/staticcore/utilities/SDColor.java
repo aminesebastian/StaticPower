@@ -20,12 +20,14 @@ import theking530.staticcore.utilities.math.SDMath;
  */
 public class SDColor extends AbstractVector<SDColor> {
 	public static final Codec<SDColor> CODEC = RecordCodecBuilder.create(instance -> instance
-			.group(Codec.FLOAT.fieldOf("r").forGetter(vector -> vector.getRed()), Codec.FLOAT.fieldOf("g").forGetter(vector -> vector.getBlue()),
-					Codec.FLOAT.fieldOf("b").forGetter(vector -> vector.getGreen()), Codec.FLOAT.fieldOf("a").forGetter(vector -> vector.getAlpha()))
+			.group(Codec.FLOAT.fieldOf("r").forGetter(vector -> vector.getRed()),
+					Codec.FLOAT.fieldOf("g").forGetter(vector -> vector.getBlue()),
+					Codec.FLOAT.fieldOf("b").forGetter(vector -> vector.getGreen()),
+					Codec.FLOAT.optionalFieldOf("a", 1.0f).forGetter(vector -> vector.getAlpha()))
 			.apply(instance, SDColor::new));
 
-	public static final List<String> DYE_COLORS = Arrays.asList("white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple",
-			"blue", "brown", "green", "red", "black");
+	public static final List<String> DYE_COLORS = Arrays.asList("white", "orange", "magenta", "light_blue", "yellow",
+			"lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black");
 
 	public static final SDColor EIGHT_BIT_RED = new SDColor(255.0f, 0.0f, 0.0f, 255.0f);
 	public static final SDColor EIGHT_BIT_WHITE = new SDColor(255.0f, 255.0f, 255.0f, 255.0f);
@@ -173,7 +175,8 @@ public class SDColor extends AbstractVector<SDColor> {
 	}
 
 	public static SDColor fromJson(JsonObject object) {
-		return new SDColor(object.get("r").getAsFloat(), object.get("g").getAsFloat(), object.get("b").getAsFloat(), object.get("a").getAsFloat());
+		return new SDColor(object.get("r").getAsFloat(), object.get("g").getAsFloat(), object.get("b").getAsFloat(),
+				object.get("a").getAsFloat());
 	}
 
 	public static SDColor fromBuffer(FriendlyByteBuf buff) {
@@ -183,7 +186,8 @@ public class SDColor extends AbstractVector<SDColor> {
 	public static SDColor lerp(SDColor first, SDColor second, float alpha) {
 		alpha = SDMath.clamp(alpha, 0, 1);
 		float inverseAlpha = 1.0f - alpha;
-		return new SDColor(first.getRed() * inverseAlpha + second.getRed() * alpha, first.getGreen() * inverseAlpha + second.getGreen() * alpha,
+		return new SDColor(first.getRed() * inverseAlpha + second.getRed() * alpha,
+				first.getGreen() * inverseAlpha + second.getGreen() * alpha,
 				first.getBlue() * inverseAlpha + second.getBlue() * alpha);
 	}
 }

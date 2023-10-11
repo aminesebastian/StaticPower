@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "l": {
+      "item": "minecraft:lever"
+    },
+    "p": {
+      "tag": "forge:plates/tin"
+    },
+    "q": {
+      "tag": "forge:wires/copper"
+    },
+    "w": {
+      "tag": "forge:wires/copper"
+    }
+  },
+  "pattern": [
+    " l ",
+    "pwp",
+    "pqp"
+  ],
+  "result": {
+    "item": "staticpower:circuit_breaker_5"
+  }
+}

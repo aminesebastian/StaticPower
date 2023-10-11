@@ -11,38 +11,18 @@ public class AdvancedPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
-	protected double getDefaultPowerCapacity() {
-		return 1000;
-	}
-
-	@Override
-	protected StaticPowerVoltage getDefaultOutputVoltage() {
-		return StaticPowerVoltage.LOW;
-	}
-
-	@Override
 	protected StaticPowerVoltage internalGetMaximumBatteryInputVoltage() {
 		return StaticPowerVoltage.MEDIUM;
 	}
 
 	@Override
-	protected double getDefaultMaximumPowerInput() {
-		return 20;
-	}
-
-	@Override
 	protected double getDefaultMaximumPowerOutput() {
-		return 10;
-	}
-
-	@Override
-	protected double getBatteryMaximumPowerOutput() {
-		return 50;
+		return 100;
 	}
 
 	@Override
 	protected double getSolarPanelPowerGeneration() {
-		return 2;
+		return 5;
 	}
 
 	@Override

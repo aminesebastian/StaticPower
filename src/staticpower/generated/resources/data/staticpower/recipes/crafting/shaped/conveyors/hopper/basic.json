@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "h": {
+      "item": "minecraft:hopper"
+    },
+    "p": {
+      "tag": "forge:plates/tin"
+    },
+    "r": {
+      "item": "staticpower:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "   ",
+    "rrr",
+    "php"
+  ],
+  "result": {
+    "item": "staticpower:conveyor_hopper_basic"
+  }
+}

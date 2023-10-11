@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:fluid_capsule_iron"
+    },
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "tag": "forge:plates/iron"
+    }
+  },
+  "pattern": [
+    "pcp",
+    "cic",
+    "pcp"
+  ],
+  "result": {
+    "item": "staticpower:tank_iron"
+  }
+}

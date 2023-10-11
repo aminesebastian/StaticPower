@@ -57,8 +57,8 @@ import theking530.staticcore.utilities.ITooltipProvider;
  * @author Amine Sebastian
  *
  */
-public abstract class StaticCoreBlock extends Block implements IItemBlockProvider, IBlockLootTableProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider,
-		SimpleWaterloggedBlock, IBlockItemCreativeTabProvider {
+public abstract class StaticCoreBlock extends Block implements IItemBlockProvider, IBlockLootTableProvider,
+		IRenderLayerProvider, IWrenchable, ITooltipProvider, SimpleWaterloggedBlock, IBlockItemCreativeTabProvider {
 	/**
 	 * Rotation property used by blocks who don't use {@link #HORIZONTAL_FACING} but
 	 * still need the option to rotate to either face X, Y, or Z.
@@ -120,7 +120,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+			Player player) {
 		return IBreakSerializeable.createItemDrop(this, player, world, pos);
 	}
 
@@ -153,7 +154,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 		if (!canBeWaterlogged()) {
 			return super.getFluidState(state);
 		}
-		return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+		return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false)
+				: super.getFluidState(state);
 	}
 
 	@Override
@@ -185,7 +187,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 	 * @param te     The {@link TileEntity} of the block (if one existed).
 	 * @param stack  The {@link ItemStack} that the block was harvested by.
 	 */
-	public void onStaticCoreBlockHarvested(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
+	public void onStaticCoreBlockHarvested(Level world, Player player, BlockPos pos, BlockState state,
+			@Nullable BlockEntity te, ItemStack stack) {
 
 	}
 
@@ -206,7 +209,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 	 * @param hit    The hit result of the activation.
 	 * @return The result of the activation.
 	 */
-	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player,
+			InteractionHand hand, BlockHitResult hit) {
 		return InteractionResult.PASS;
 	}
 
@@ -214,19 +218,23 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 
 	}
 
-	public void onStaticCoreBlockPlaced(BlockPlaceContext context, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void onStaticCoreBlockPlaced(BlockPlaceContext context, Level world, BlockPos pos, BlockState state,
+			LivingEntity placer, ItemStack stack) {
 
 	}
 
-	public void onStaticPowerNeighborChanged(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor, boolean isMoving) {
+	public void onStaticPowerNeighborChanged(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor,
+			boolean isMoving) {
 
 	}
 
-	public void onStaticCoreBlockRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving, boolean newBlock) {
+	public void onStaticCoreBlockRemove(BlockState state, Level world, BlockPos pos, BlockState newState,
+			boolean isMoving, boolean newBlock) {
 
 	}
 
-	public void onNeighborReplaced(BlockState state, Direction dir, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
+	public void onNeighborReplaced(BlockState state, Direction dir, BlockState facingState, LevelAccessor world,
+			BlockPos pos, BlockPos facingPos) {
 
 	}
 
@@ -245,7 +253,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+			boolean isShowingAdvanced) {
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -257,7 +266,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 	 * wrench.
 	 */
 	@Override
-	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world,
+			BlockPos pos, Direction facing, boolean returnDrops) {
 		return InteractionResult.PASS;
 	}
 
@@ -265,12 +275,14 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 	 * Defines the behavior for when this block is sneak right clicked by a wrench.
 	 */
 	@Override
-	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world,
+			BlockPos pos, Direction facing, boolean returnDrops) {
 		return InteractionResult.PASS;
 	}
 
 	@Override
-	public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
+	public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te,
+			ItemStack stack) {
 		// Raise the inheritor's method.
 		onStaticCoreBlockHarvested(world, player, pos, state, te, stack);
 
@@ -278,7 +290,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 		super.playerDestroy(world, player, pos, state, te, stack);
 	}
 
-	public static void updateOrDestroy(BlockState p_49909_, BlockState p_49910_, LevelAccessor p_49911_, BlockPos p_49912_, int p_49913_, int p_49914_) {
+	public static void updateOrDestroy(BlockState p_49909_, BlockState p_49910_, LevelAccessor p_49911_,
+			BlockPos p_49912_, int p_49913_, int p_49914_) {
 		if (p_49910_ != p_49909_) {
 			if (p_49910_.isAir()) {
 				if (!p_49911_.isClientSide()) {
@@ -314,8 +327,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 	}
 
 	@Override
-	public InteractionResult use(final BlockState state, final Level world, final BlockPos pos, final Player player, final InteractionHand hand,
-			final BlockHitResult hit) {
+	public InteractionResult use(final BlockState state, final Level world, final BlockPos pos, final Player player,
+			final InteractionHand hand, final BlockHitResult hit) {
 		// Return the super call if needed.
 		@SuppressWarnings("deprecation")
 		InteractionResult superResult = super.use(state, world, pos, player, hand, hit);
@@ -326,7 +339,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 		// Raise the tile entity's activated method and return here if it does not
 		// pass.
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
-			InteractionResult teResult = ((BlockEntityBase) world.getBlockEntity(pos)).onBlockActivated(state, player, hand, hit);
+			InteractionResult teResult = ((BlockEntityBase) world.getBlockEntity(pos)).onBlockActivated(state, player,
+					hand, hit);
 			if (teResult != InteractionResult.PASS) {
 				return teResult;
 			}
@@ -347,7 +361,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 
 	}
 
-	public void onPlacedInWorld(BlockPlaceContext context, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void onPlacedInWorld(BlockPlaceContext context, Level world, BlockPos pos, BlockState state,
+			LivingEntity placer, ItemStack stack) {
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
 			((BlockEntityBase) world.getBlockEntity(pos)).onPlaced(context, state, placer, stack);
 		}
@@ -366,23 +381,26 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public BlockState updateShape(BlockState state, Direction dir, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
-		super.updateShape(state, dir, facingState, world, pos, facingPos);
+	public BlockState updateShape(BlockState state, Direction dir, BlockState facingState, LevelAccessor world,
+			BlockPos pos, BlockPos facingPos) {
+		BlockState superState = super.updateShape(state, dir, facingState, world, pos, facingPos);
 
-		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
+		if (superState.hasProperty(BlockStateProperties.WATERLOGGED)
+				&& superState.getValue(BlockStateProperties.WATERLOGGED)) {
 			world.scheduleTick(facingPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
-			((BlockEntityBase) world.getBlockEntity(pos)).onNeighborReplaced(state, dir, facingState, facingPos);
+			((BlockEntityBase) world.getBlockEntity(pos)).onNeighborReplaced(superState, dir, facingState, facingPos);
 		}
-		onNeighborReplaced(state, dir, facingState, world, pos, facingPos);
-		return state;
+		onNeighborReplaced(superState, dir, facingState, world, pos, facingPos);
+		return superState;
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos,
+			boolean isMoving) {
 		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
 			((BlockEntityBase) world.getBlockEntity(pos)).onNeighborChanged(state, fromPos, isMoving);
@@ -406,7 +424,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 
 		if (!p_56308_.getValue(BlockStateProperties.WATERLOGGED) && p_56309_.getType() == Fluids.WATER) {
 			if (!p_56306_.isClientSide()) {
-				p_56306_.setBlock(p_56307_, p_56308_.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)), 3);
+				p_56306_.setBlock(p_56307_, p_56308_.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)),
+						3);
 				p_56306_.scheduleTick(p_56307_, p_56309_.getType(), p_56309_.getType().getTickDelay(p_56306_));
 			}
 
@@ -423,7 +442,8 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 		}
 
 		if (p_154562_.getValue(BlockStateProperties.WATERLOGGED)) {
-			p_154560_.setBlock(p_154561_, p_154562_.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false)), 3);
+			p_154560_.setBlock(p_154561_, p_154562_.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false)),
+					3);
 			if (!p_154562_.canSurvive(p_154560_, p_154561_)) {
 				p_154560_.destroyBlock(p_154561_, true);
 			}

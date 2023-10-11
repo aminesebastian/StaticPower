@@ -278,7 +278,7 @@ public abstract class StaticCoreTier {
 	}
 
 	protected float getDefaultMachineThermalMass() {
-		return 0;
+		return 100;
 	}
 
 	protected float getDefaultMachineSpecificHeat() {

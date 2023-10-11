@@ -40,6 +40,7 @@ public class ActiveResearchHUD extends StaticCoreHUDElement {
 		// We constantly update the position to glue this widget to the top right.
 		int screenRight = Minecraft.getInstance().getWindow().getGuiScaledWidth();
 		activeResearch.setPosition(screenRight - activeResearch.getSize().getX() - 3, 3);
+		setVisible(activeResearch.getResearch() != null);
 	}
 
 	@Override

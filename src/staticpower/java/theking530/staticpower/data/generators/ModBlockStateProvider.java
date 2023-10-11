@@ -10,10 +10,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.machines.refinery.condenser.BlockRefineryCondenser;
+import theking530.staticpower.blockentities.nonpowered.blastfurnace.BlockBlastFurnace;
 import theking530.staticpower.blockentities.power.circuit_breaker.BlockCircuitBreaker;
 import theking530.staticpower.blocks.StaticPowerBlockProperties;
 import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
@@ -41,6 +44,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		simpleBlockWithCustomTexture(ModBlocks.RandomOreGenerator.get(), "placeholder_texture");
 		simpleBlockWithCustomTexture(ModBlocks.ResearchCheater.get(), "placeholder_texture");
 		simpleBlockWithCustomTexture(ModBlocks.HeatExchanger.get(), "placeholder_texture");
+		simpleBlockWithCustomTexture(ModBlocks.ElectricHeater.get(), "placeholder_texture");
 
 		makeCrop(ModBlocks.StaticCrop.get(), "crops/static");
 		makeCrop(ModBlocks.EnergizedCrop.get(), "crops/energized");
@@ -176,10 +180,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		machine(ModBlocks.RefineryController.get(), "industrial", "machines/refinery/controller");
 		refineryBlock(ModBlocks.RefineryPowerTap.get(), "power_tap", false);
 		refineryBlock(ModBlocks.RefineryFluidInput.get(), "fluid_input", false);
-		refineryBlock(ModBlocks.RefineryFluidOutput.get(), "fluid_output", false);
 		refineryBlock(ModBlocks.RefineryItemInput.get(), "item_input", false);
 		refineryBlock(ModBlocks.RefineryHeatVent.get(), "heat_vent", true);
 		refineryBlock(ModBlocks.RefineryBoiler.get(), "boiler", true);
+		refineryCondenser(ModBlocks.RefineryCondenser.get());
 
 		simpleColumnWithCustomTexture(ModBlocks.AluminumHeatSink.get(), "heat_sink_aluminum");
 		simpleColumnWithCustomTexture(ModBlocks.CopperHeatSink.get(), "heat_sink_copper");
@@ -213,6 +217,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		wireTerminal(ModBlocks.WireConnectorDigistore.get(), "digistore_terminal");
 
 		basicCustomModelOnOff(ModBlocks.AlloyFurnace.get(), "alloy_furnace");
+		blastFurnace(ModBlocks.BlastFurnace.get());
 		basicCustomModelOnOff(ModBlocks.DirectDropper.get(), "direct_dropper");
 		basicCustomModelOnOff(ModBlocks.AutomaticPlacer.get(), "automatic_placer");
 		pumpTube(ModBlocks.PumpTube.get());
@@ -488,6 +493,23 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		});
 	}
 
+	public void refineryCondenser(Block block) {
+		ModelFile body = models().getExistingFile(
+				new ResourceLocation(StaticPower.MOD_ID, "block/refinery_condenser/machine_refinery_condenser"));
+		ModelFile connector = models().getExistingFile(new ResourceLocation(StaticPower.MOD_ID,
+				"block/refinery_condenser/machine_refinery_condenser_connector"));
+
+		MultiPartBlockStateBuilder builder = getMultipartBuilder(block);
+
+		Direction.Plane.HORIZONTAL.forEach(dir -> {
+			builder.part().modelFile(body).rotationY(((int) dir.toYRot() + 180) % 360).addModel()
+					.condition(BlockStateProperties.HORIZONTAL_FACING, dir);
+			builder.part().modelFile(connector).rotationY(((int) dir.toYRot() + 180) % 360).addModel()
+					.condition(BlockRefineryCondenser.IS_CONNECTED, true)
+					.condition(BlockStateProperties.HORIZONTAL_FACING, dir);
+		});
+	}
+
 	public void solarPanel(Block block, String panel) {
 		ResourceLocation panelTexture = new ResourceLocation(StaticPower.MOD_ID,
 				"blocks/machines/solar_panel/" + panel);
@@ -667,6 +689,26 @@ public class ModBlockStateProvider extends BlockStateProvider {
 			return ConfiguredModel.builder().modelFile(state.getValue(StaticPowerMachineBlock.IS_ON) ? modelOn : model)
 					.rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
 					.build();
+		});
+	}
+
+	public void blastFurnace(Block block) {
+		ResourceLocation side = new ResourceLocation(StaticPower.MOD_ID,
+				"blocks/machines/blast_furnace/blast_furnace_side");
+		ResourceLocation frontOff = new ResourceLocation(StaticPower.MOD_ID,
+				"blocks/machines/blast_furnace/blast_furnace_controller_off");
+		ResourceLocation frontOn = new ResourceLocation(StaticPower.MOD_ID,
+				"blocks/machines/blast_furnace/blast_furnace_controller_on");
+		ModelFile simpleModel = models().cubeAll(name(block), side);
+		ModelFile offModel = models().cubeBottomTop(name(block) + "_off", frontOff, side, side);
+		ModelFile onModel = models().cubeBottomTop(name(block) + "_on", frontOn, side, side);
+
+		getVariantBuilder(block).forAllStates(state -> {
+			if (!state.getValue(BlockBlastFurnace.SHOW_FACE)) {
+				return ConfiguredModel.builder().modelFile(simpleModel).build();
+			}
+			ModelFile model = state.getValue(StaticPowerMachineBlock.IS_ON) ? onModel : offModel;
+			return ConfiguredModel.builder().modelFile(model).build();
 		});
 	}
 

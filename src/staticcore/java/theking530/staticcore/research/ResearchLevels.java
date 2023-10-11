@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
+import theking530.staticcore.research.TreeViewGenerator.NodeItem;
 import theking530.staticcore.utilities.math.Vector2D;
 
 public class ResearchLevels {
@@ -76,8 +77,23 @@ public class ResearchLevels {
 			node.finalize();
 		}
 
-		// Populate the relative positions for each node.
-		populatePositions(output, allNodes);
+		TreeViewGenerator generator = new TreeViewGenerator();
+		NodeItem<ResearchNode> convertedNode = convertNode(allNodes.get(0));
+		generator.run(convertedNode);
+
+		Queue<NodeItem<ResearchNode>> nodes = new LinkedList<>();
+		nodes.add(convertedNode);
+
+		while (!nodes.isEmpty()) {
+			NodeItem<ResearchNode> poppedNode = nodes.poll();
+			poppedNode.payload.relativePosition.x = (float) poppedNode.x;
+			poppedNode.payload.relativePosition.y = (float) poppedNode.y;
+
+			for (NodeItem<ResearchNode> child : poppedNode.children) {
+				nodes.add(child);
+			}
+		}
+
 		return output;
 	}
 
@@ -95,73 +111,6 @@ public class ResearchLevels {
 			output = Math.max(output, maxWidthChildBranch(child));
 		}
 		return output;
-	}
-
-	private static void populatePositions(ResearchLevels levels, List<ResearchNode> allNodes) {
-		if (levels.getLevels().isEmpty()) {
-			return;
-		}
-
-		ResearchLevel level = levels.getLevels().get(0);
-		Queue<ResearchNode> queue = new LinkedList<ResearchNode>();
-		for (ResearchNode research : level.getResearch()) {
-			queue.add(research);
-		}
-
-		while (!queue.isEmpty()) {
-			ResearchNode research = queue.poll();
-
-			// Capture the amount of TYPICAL children (children where this is the only
-			// parent).
-			int childCount = 0; // Math.max(0, research.getChildren().size() - 1);
-			for (ResearchNode child : research.getChildren()) {
-				if (child.getAllParents().size() == 1) {
-					childCount++;
-				}
-			}
-			childCount = Math.max(0, childCount - 1);
-
-			// Base our offsets based on the amount of SOLO children we have.
-			float initialOffset = childCount / -2.0f;
-			float currentOffset = initialOffset;
-
-			for (int i = 0; i < research.getChildren().size(); i++) {
-				ResearchNode child = research.getChildren().get(i);
-
-				float minParentX = Integer.MAX_VALUE;
-				float maxParentX = Integer.MIN_VALUE;
-				for (ResearchNode parent : child.getAllParents()) {
-					if (parent.getRelativePosition().getX() < minParentX) {
-						minParentX = parent.getRelativePosition().getX();
-					}
-					if (parent.getRelativePosition().getX() > maxParentX) {
-						maxParentX = parent.getRelativePosition().getX();
-					}
-				}
-
-				// The following is a useful debug line.
-				// System.out.println("Parent: " + research.getResearch().getId() + " Child: " +
-				// child.getResearch().getId() + " " + currentOffset);
-
-				float targetX = (minParentX + maxParentX) / 2;
-
-				// Only apply the current offset if this is a single parent node (ie. the
-				// current research we pulled off the queue is its ONLY parent).
-				if (child.getAllParents().size() == 1) {
-					targetX += currentOffset;
-				}
-				child.setRelativeX(targetX + child.getResearch().getVisualOffset().getX());
-
-				float yOffset = 0;
-				if (research.getChildren().size() > 2) {
-					yOffset += (i % 2 == 0 ? -0.05f : 0.05f);
-				}
-				child.setRelativeY(research.getRelativePosition().getY() + 1
-						+ child.getResearch().getVisualOffset().getY() + yOffset);
-				queue.add(child);
-				currentOffset += 1.0f;
-			}
-		}
 	}
 
 	private static void setParent(ResearchNode lookingForParent, ResearchLevels cachedLevels) {
@@ -345,5 +294,26 @@ public class ResearchLevels {
 		public void finalize() {
 			sortNodes(children);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static NodeItem<ResearchNode> convertNode(ResearchNode node) {
+		NodeItem<ResearchNode> result = new NodeItem<ResearchNode>(node);
+		result.width = 1;
+		result.height = 1;
+		result.children = new NodeItem[node.getChildren().size()];
+		for (int i = 0; i < node.getChildren().size(); i++) {
+			result.children[i] = convertNode(node.getChildren().get(i));
+			result.children[i].parent = result;
+		}
+		for (int i = 0; i < result.children.length; i++) {
+			if (i != 0) {
+				result.children[i].prevSibling = result.children[i - 1];
+			}
+			if (i != result.children.length - 1) {
+				result.children[i].nextSibling = result.children[i + 1];
+			}
+		}
+		return result;
 	}
 }

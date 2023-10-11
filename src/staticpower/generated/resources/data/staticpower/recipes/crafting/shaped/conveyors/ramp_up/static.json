@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "staticpower:gears/static_metal"
+    },
+    "p": {
+      "tag": "staticpower:plates/static_metal"
+    },
+    "r": {
+      "item": "staticpower:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "  r",
+    " rp",
+    "rpg"
+  ],
+  "result": {
+    "item": "staticpower:conveyor_ramp_up_static"
+  }
+}

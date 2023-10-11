@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:processor_advanced"
+    },
+    "g": {
+      "tag": "staticpower:gears/brass"
+    },
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "tag": "forge:plates/brass"
+    },
+    "r": {
+      "item": "staticpower:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "p  ",
+    "irr",
+    "cgp"
+  ],
+  "result": {
+    "item": "staticpower:conveyor_supplier_advanced"
+  }
+}

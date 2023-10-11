@@ -1,0 +1,19 @@
+{
+  "type": "staticpower:grinder",
+  "input": {
+    "ingredient": {
+      "tag": "forge:ingots/steel"
+    }
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "staticpower:dust_steel"
+      }
+    }
+  ],
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

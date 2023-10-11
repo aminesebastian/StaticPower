@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "item": "staticpower:processor_advanced"
+    },
+    "t": {
+      "tag": "forge:plates/brass"
+    }
+  },
+  "pattern": [
+    "ttt",
+    "tit",
+    "tpt"
+  ],
+  "result": {
+    "item": "staticpower:machine_block_advanced"
+  }
+}

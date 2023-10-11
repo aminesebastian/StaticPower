@@ -1,0 +1,25 @@
+{
+  "type": "staticcore:thermal_conducitity",
+  "block": {
+    "block": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "conductivity": 0.04,
+  "mass": 100.0,
+  "overheating_behaviour": {
+    "block": {
+      "Name": "minecraft:fire",
+      "Properties": {
+        "age": "0",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    "temperature": 600
+  },
+  "specific_heat": 100.0
+}

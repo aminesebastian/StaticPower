@@ -1,10 +1,13 @@
 package theking530.staticpower.blockentities.machines.refinery.controller;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -34,9 +37,9 @@ import theking530.staticcore.blockentity.components.heat.HeatStorageComponent.He
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
-import theking530.staticcore.blockentity.multiblock.MultiBlockCache;
-import theking530.staticcore.blockentity.multiblock.MultiBlockEntry;
-import theking530.staticcore.blockentity.multiblock.MultiBlockFormationStatus;
+import theking530.staticcore.blockentity.components.multiblock.MultiBlockCache;
+import theking530.staticcore.blockentity.components.multiblock.MultiBlockEntry;
+import theking530.staticcore.blockentity.components.multiblock.MultiBlockFormationStatus;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.gui.text.GuiTextUtilities;
@@ -47,6 +50,7 @@ import theking530.staticcore.utilities.math.Vector4D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.machines.refinery.boiler.BlockRefineryBoiler;
+import theking530.staticpower.blockentities.machines.refinery.condenser.BlockEntityRefineryCondenser;
 import theking530.staticpower.blockentities.machines.refinery.heatvent.BlockEntityRefineryHeatVent;
 import theking530.staticpower.blockentities.machines.refinery.tower.BlockRefineryTower;
 import theking530.staticpower.blocks.StaticPowerBlockProperties;
@@ -59,6 +63,15 @@ import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.init.tags.ModBlockTags;
 
 public class BlockEntityRefineryController extends BlockEntityMachine implements IRecipeProcessor<RefineryRecipe> {
+
+	public record RefineryTowerInfo(BlockPos base, BlockPos top, int height) {
+
+		public static final RefineryTowerInfo EMPTY = new RefineryTowerInfo(null, null, 0);
+		public boolean isValid() {
+			return height > 0;
+		}
+	}
+
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityRefineryController> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryController>(
 			"refinery_controller", (type, pos, state) -> new BlockEntityRefineryController(pos, state),
@@ -77,14 +90,14 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public final HeatStorageComponent heatStorage;
 	public final FluidTankComponent[] fluidTanks;
 	private float currentProcessingProductivity;
-	private boolean lastTickMultiblockSuccess;
+	private int lastMultiblockIteration;
 
 	private final MultiBlockCache<BlockEntityRefineryController> multiBlockCache;
 
 	public BlockEntityRefineryController(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 		multiBlockCache = new MultiBlockCache<>(this, this::isValidForMultiBlock, this::isWellFormed);
-		lastTickMultiblockSuccess = false;
+		lastMultiblockIteration = 0;
 
 		// Get the tier object.
 		StaticCoreTier tier = getTierObject();
@@ -163,14 +176,14 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 
 	@Override
 	public void process() {
-		multiBlockCache.update();
-		if (lastTickMultiblockSuccess != multiBlockCache.getStatus().isSuccessful()) {
-			lastTickMultiblockSuccess = multiBlockCache.getStatus().isSuccessful();
-			updateMultiblockBlockStates(processingComponent.isBlockStateOn());
-		}
-		heatStorage.setMass(getBoilers().size() * 1);
-
 		if (!getLevel().isClientSide()) {
+			multiBlockCache.update();
+
+			if (lastMultiblockIteration != multiBlockCache.getIteration()) {
+				lastMultiblockIteration = multiBlockCache.getIteration();
+				heatStorage.setMass(getBoilers().size() * 1 + 10);
+			}
+
 			if (redstoneControlComponent.passesRedstoneCheck() && !getBoilers().isEmpty()) {
 
 				if (!heatStorage.isRecoveringFromMeltdown()) {
@@ -196,12 +209,14 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 			} else {
 				generatingSoundComponent.stopPlayingSound();
 			}
-			
-			for(BlockPos boilerPos : getBoilers().keySet()) {
-				HeatUtilities.transferHeat(heatStorage, level, boilerPos, HeatTransferAction.EXECUTE);
+
+			for (BlockPos boilerPos : getBoilers().keySet()) {
+				HeatUtilities.transferHeat(level, heatStorage, boilerPos, HeatTransferAction.EXECUTE);
 			}
 
 			updateMultiblockBlockStates(processingComponent.isBlockStateOn());
+
+			supplyCondensers();
 		} else {
 			if (processingComponent.isBlockStateOn() && SDMath.diceRoll(0.5f)) {
 				renderParticleEffects();
@@ -288,7 +303,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	}
 
 	public int getHeatUsage() {
-		float heatUse = StaticPowerConfig.SERVER.refineryHeatUse.get();
+		double heatUse = StaticPowerConfig.SERVER.refineryHeatUse.get();
 		Optional<RefineryRecipe> recipe = processingComponent.getProcessingOrPendingRecipe();
 		if (recipe.isPresent()) {
 			heatUse = recipe.get().getProcessingSection().getHeat();
@@ -333,22 +348,62 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public Map<BlockPos, Integer> getBoilers() {
 		HashMap<BlockPos, Integer> output = new HashMap<>();
 
-		for (MultiBlockEntry<BlockEntityRefineryController> wrapper : multiBlockCache) {
-			if (wrapper.getBlockState().getBlock() instanceof BlockRefineryBoiler) {
-				int count = 0;
-				for (int i = 1; i < 6; i++) {
-					BlockPos toCheck = wrapper.getPosition().above(i);
-					if (getLevel().getBlockState(toCheck).getBlock() instanceof BlockRefineryTower) {
-						count++;
-					} else {
-						break;
-					}
-				}
-				output.put(wrapper.getPosition(), count);
+		for (MultiBlockEntry<BlockEntityRefineryController> multiBlockEntry : multiBlockCache) {
+			if (multiBlockEntry.getBlockState().getBlock() instanceof BlockRefineryBoiler) {
+				RefineryTowerInfo towerInfo = getTowerInfoForPos(multiBlockEntry.getPosition().above());
+				output.put(multiBlockEntry.getPosition(), towerInfo.height());
 			}
 		}
 
 		return output;
+	}
+
+	public RefineryTowerInfo getTowerInfoForPos(BlockPos towerPos) {
+		BlockState attachedToState = getLevel().getBlockState(towerPos);
+		if (attachedToState.getBlock() != ModBlocks.RefineryTower.get()) {
+			return RefineryTowerInfo.EMPTY;
+		}
+
+		BlockPos towerTop = null;
+		for (int i = 0; i < 4; i++) {
+			BlockPos queryPos = towerPos.relative(Direction.UP, i);
+			BlockState queryState = getLevel().getBlockState(queryPos);
+			if (queryState.getBlock() != ModBlocks.RefineryTower.get()) {
+				break;
+			}
+
+			TowerPiece position = queryState.getValue(StaticPowerBlockProperties.TOWER_POSITION);
+			if (position == TowerPiece.TOP) {
+				towerTop = queryPos;
+				break;
+			}
+		}
+
+		if (towerTop == null) {
+			return RefineryTowerInfo.EMPTY;
+		}
+
+		BlockPos towerBottom = null;
+		for (int i = 0; i < 4; i++) {
+			BlockPos queryPos = towerPos.relative(Direction.DOWN, i);
+			BlockState queryState = getLevel().getBlockState(queryPos);
+			if (queryState.getBlock() != ModBlocks.RefineryTower.get()) {
+				break;
+			}
+
+			TowerPiece position = queryState.getValue(StaticPowerBlockProperties.TOWER_POSITION);
+			if (position == TowerPiece.BOTTOM) {
+				towerBottom = queryPos;
+				break;
+			}
+		}
+
+		if (towerBottom == null) {
+			return RefineryTowerInfo.EMPTY;
+		}
+
+		int towerHeight = towerTop.getY() - towerBottom.getY() + 1;
+		return new RefineryTowerInfo(towerBottom, towerTop, towerHeight);
 	}
 
 	public float getProductivity() {
@@ -383,7 +438,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		}
 
 		if (!heatStorage.isAboveMinimumHeat()
-				|| heatStorage.getCurrentTemperature() < recipe.getProcessingSection().getMinimumHeat()) {
+				|| heatStorage.getTemperature() < recipe.getProcessingSection().getMinimumHeat()) {
 			return ProcessingCheckState.heatStorageTooCold(recipe.getProcessingSection().getMinimumHeat());
 		}
 
@@ -525,5 +580,46 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 			ProcessingContainer processingContainer) {
 		fillOutputTanksWithOutput(processingContainer.getOutputs(), FluidAction.EXECUTE);
 		heatStorage.cool(getHeatUsage(), HeatTransferAction.EXECUTE);
+	}
+
+	private void supplyCondensers() {
+		Map<Integer, List<BlockEntityRefineryCondenser>> map = new HashMap<>();
+
+		for (MultiBlockEntry<BlockEntityRefineryController> entry : multiBlockCache) {
+			if (entry.getBlockState().getBlock() != ModBlocks.RefineryCondenser.get()) {
+				continue;
+			}
+
+			BlockEntityRefineryCondenser condenser = (BlockEntityRefineryCondenser) getLevel()
+					.getBlockEntity(entry.getPosition());
+			if (!condenser.hasRecipeTankIndex()) {
+				continue;
+			}
+
+			int tankIndex = condenser.getRecipeTankIndex();
+			if (!map.containsKey(tankIndex)) {
+				map.put(tankIndex, new LinkedList<>());
+			}
+			map.get(tankIndex).add(condenser);
+		}
+
+		for (int i = 0; i < 3; i++) {
+			FluidTankComponent outputTank = getOutputTank(i);
+			if (outputTank.isEmpty()) {
+				continue;
+			}
+
+			List<BlockEntityRefineryCondenser> condensers = map.getOrDefault(i, null);
+			if (condensers == null || condensers.isEmpty()) {
+				continue;
+			}
+
+			for (BlockEntityRefineryCondenser condenser : condensers) {
+				FluidTankComponent condenserTank = condenser.tank;
+				FluidStack simulatedDrain = outputTank.drain(1000, FluidAction.SIMULATE);
+				int supplied = condenserTank.fill(simulatedDrain, FluidAction.EXECUTE);
+				outputTank.drain(supplied, FluidAction.EXECUTE);
+			}
+		}
 	}
 }

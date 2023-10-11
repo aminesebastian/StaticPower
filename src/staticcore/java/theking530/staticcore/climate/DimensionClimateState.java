@@ -14,8 +14,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
+import theking530.api.heat.HeatInfo;
 import theking530.api.heat.HeatUtilities;
-import theking530.api.heat.HeatUtilities.HeatInfo;
 import theking530.staticcore.world.WorldUtilities;
 
 public class DimensionClimateState implements INBTSerializable<CompoundTag> {

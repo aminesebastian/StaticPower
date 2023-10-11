@@ -9,8 +9,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.api.heat.HeatUtilities;
 import theking530.api.heat.HeatTicker;
+import theking530.api.heat.HeatUtilities;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -32,7 +32,7 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	public void process() {
 		if (hasController()) {
 			if (!getLevel().isClientSide()) {
-				HeatUtilities.transferHeat(getController().heatStorage, getLevel(), getBlockPos(),
+				HeatUtilities.transferHeat(getLevel(), getController().heatStorage, getBlockPos(),
 						HeatTransferAction.EXECUTE);
 			}
 		}
@@ -64,17 +64,17 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	public float getCurrentTemperature() {
+	public float getTemperature() {
 		if (hasController()) {
-			return getController().heatStorage.getCurrentTemperature();
+			return getController().heatStorage.getTemperature();
 		}
 		return 0;
 	}
 
 	@Override
-	public float getOverheatTemperature() {
+	public float getOverheatThreshold() {
 		if (hasController()) {
-			return getController().heatStorage.getOverheatTemperature();
+			return getController().heatStorage.getOverheatThreshold();
 		}
 		return 0;
 	}

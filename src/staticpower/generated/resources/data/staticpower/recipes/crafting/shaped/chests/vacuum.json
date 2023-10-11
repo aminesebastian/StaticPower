@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "tag": "forge:chests/wooden"
+    },
+    "e": {
+      "tag": "forge:ender_pearls"
+    },
+    "o": {
+      "tag": "forge:obsidian"
+    }
+  },
+  "pattern": [
+    "oeo",
+    "ece",
+    "oeo"
+  ],
+  "result": {
+    "item": "staticpower:chest_vacuum"
+  }
+}

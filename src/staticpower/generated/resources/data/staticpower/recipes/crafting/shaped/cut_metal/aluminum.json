@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "tag": "forge:storage_blocks/raw_aluminum"
+    }
+  },
+  "pattern": [
+    "bb ",
+    "bb ",
+    "   "
+  ],
+  "result": {
+    "count": 4,
+    "item": "staticpower:block_cut_aluminum"
+  }
+}

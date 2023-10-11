@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "minecraft:brick"
+    },
+    "f": {
+      "item": "minecraft:furnace"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "pattern": [
+    "iii",
+    "bfb",
+    "bbb"
+  ],
+  "result": {
+    "item": "staticpower:alloy_furnace"
+  }
+}

@@ -17,7 +17,7 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockAlloyFurnace extends StaticPowerRotateableBlockEntityBlock {
 
 	public BlockAlloyFurnace() {
-		super(StaticPowerTiers.ENERGIZED);
+		super(StaticPowerTiers.BASIC);
 	}
 
 	@Override
@@ -32,7 +32,8 @@ public class BlockAlloyFurnace extends StaticPowerRotateableBlockEntityBlock {
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
+			InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;
 	}
 

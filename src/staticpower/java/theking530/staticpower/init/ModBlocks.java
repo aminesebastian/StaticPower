@@ -30,6 +30,7 @@ import theking530.staticpower.blockentities.machines.centrifuge.BlockCentrifuge;
 import theking530.staticpower.blockentities.machines.chargingstation.BlockChargingStation;
 import theking530.staticpower.blockentities.machines.cropfarmer.BlockBasicFarmer;
 import theking530.staticpower.blockentities.machines.crucible.BlockCrucible;
+import theking530.staticpower.blockentities.machines.electricheater.BlockElectricHeater;
 import theking530.staticpower.blockentities.machines.enchanter.BlockEnchanter;
 import theking530.staticpower.blockentities.machines.fermenter.BlockFermenter;
 import theking530.staticpower.blockentities.machines.fluidinfuser.BlockFluidInfuser;
@@ -46,9 +47,9 @@ import theking530.staticpower.blockentities.machines.poweredgrinder.BlockPowered
 import theking530.staticpower.blockentities.machines.pump.BlockPump;
 import theking530.staticpower.blockentities.machines.pump.BlockPumpTube;
 import theking530.staticpower.blockentities.machines.refinery.boiler.BlockRefineryBoiler;
+import theking530.staticpower.blockentities.machines.refinery.condenser.BlockRefineryCondenser;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockRefineryController;
-import theking530.staticpower.blockentities.machines.refinery.fluidio.input.BlockRefineryFluidInput;
-import theking530.staticpower.blockentities.machines.refinery.fluidio.output.BlockRefineryFluidOutput;
+import theking530.staticpower.blockentities.machines.refinery.fluidinput.BlockRefineryFluidInput;
 import theking530.staticpower.blockentities.machines.refinery.heatvent.BlockRefineryHeatVent;
 import theking530.staticpower.blockentities.machines.refinery.iteminput.BlockRefineryItemInput;
 import theking530.staticpower.blockentities.machines.refinery.powertap.BlockRefineryPowerTap;
@@ -58,6 +59,7 @@ import theking530.staticpower.blockentities.machines.treefarmer.BlockTreeFarmer;
 import theking530.staticpower.blockentities.machines.tumbler.BlockTumbler;
 import theking530.staticpower.blockentities.machines.vulcanizer.BlockVulcanizer;
 import theking530.staticpower.blockentities.nonpowered.alloyfurnace.BlockAlloyFurnace;
+import theking530.staticpower.blockentities.nonpowered.blastfurnace.BlockBlastFurnace;
 import theking530.staticpower.blockentities.nonpowered.cauldron.BlockCauldron;
 import theking530.staticpower.blockentities.nonpowered.chest.BlockStaticChest;
 import theking530.staticpower.blockentities.nonpowered.condenser.BlockCondenser;
@@ -272,6 +274,8 @@ public class ModBlocks {
 			() -> new BlockSqueezer());
 	public static final RegistryObject<BlockBottler> Bottler = registerBlock("machine_bottler",
 			() -> new BlockBottler());
+	public static final RegistryObject<BlockElectricHeater> ElectricHeater = registerBlock("machine_electric_heater",
+			() -> new BlockElectricHeater());
 
 	public static final RegistryObject<BlockSolderingTable> SolderingTable = registerBlock("soldering_table",
 			() -> new BlockSolderingTable());
@@ -335,14 +339,15 @@ public class ModBlocks {
 	public static final RegistryObject<BlockAlloyFurnace> AlloyFurnace = registerBlock("alloy_furnace",
 			() -> new BlockAlloyFurnace());
 
+	public static final RegistryObject<BlockBlastFurnace> BlastFurnace = registerBlock("blast_furnace",
+			() -> new BlockBlastFurnace());
+
 	public static final RegistryObject<BlockRefineryController> RefineryController = registerBlock(
 			"machine_refinery_controller", () -> new BlockRefineryController());
 	public static final RegistryObject<BlockRefineryPowerTap> RefineryPowerTap = registerBlock(
 			"machine_refinery_power_tap", () -> new BlockRefineryPowerTap());
 	public static final RegistryObject<BlockRefineryFluidInput> RefineryFluidInput = registerBlock(
 			"machine_refinery_fluid_input", () -> new BlockRefineryFluidInput());
-	public static final RegistryObject<BlockRefineryFluidOutput> RefineryFluidOutput = registerBlock(
-			"machine_refinery_fluid_output", () -> new BlockRefineryFluidOutput());
 	public static final RegistryObject<BlockRefineryItemInput> RefineryItemInput = registerBlock(
 			"machine_refinery_item_input", () -> new BlockRefineryItemInput());
 	public static final RegistryObject<BlockRefineryHeatVent> RefineryHeatVent = registerBlock(
@@ -351,6 +356,8 @@ public class ModBlocks {
 			() -> new BlockRefineryTower());
 	public static final RegistryObject<BlockRefineryBoiler> RefineryBoiler = registerBlock("machine_refinery_boiler",
 			() -> new BlockRefineryBoiler());
+	public static final RegistryObject<BlockRefineryCondenser> RefineryCondenser = registerBlock(
+			"machine_refinery_condenser", () -> new BlockRefineryCondenser());
 
 	public static final RegistryObject<BlockLaboratory> Laboratory = registerBlock("laboratory",
 			() -> new BlockLaboratory());

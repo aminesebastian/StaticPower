@@ -1,0 +1,50 @@
+{
+  "type": "staticcore:research",
+  "color": {
+    "b": 0.0,
+    "g": 0.0,
+    "r": 1.0
+  },
+  "description": "research.basic_electronics.description",
+  "hidden_until_available": false,
+  "icon": {
+    "item": {
+      "id": "staticpower:plug"
+    }
+  },
+  "prerequisites": [
+    "staticpower:research/primary_tier/tools/hammer"
+  ],
+  "research_requirements": [
+    {
+      "count": 30,
+      "ingredient": {
+        "item": "staticcore:research_tier_1"
+      }
+    }
+  ],
+  "title": "research.basic_electronics.title",
+  "unlocks": [
+    {
+      "type": {
+        "type": "CRAFTING"
+      },
+      "display_key": "io_port",
+      "target": "staticpower:crafting/shaped/io_port"
+    },
+    {
+      "type": {
+        "type": "CRAFTING"
+      },
+      "display_key": "plug",
+      "target": "staticpower:crafting/shaped/plug"
+    },
+    {
+      "type": {
+        "type": "CRAFTING"
+      },
+      "display_key": "motor",
+      "target": "staticpower:crafting/shaped/motor"
+    }
+  ]
+}

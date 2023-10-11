@@ -13,16 +13,21 @@ import theking530.staticcore.blockentity.components.control.processing.Processin
 import theking530.staticcore.blockentity.components.control.processing.ProcessingContainer;
 import theking530.staticcore.blockentity.components.energy.PowerStorageComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
+import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticcore.blockentity.components.serialization.SaveSerialize;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.blockentity.components.team.TeamComponent;
 import theking530.staticcore.init.StaticCoreProductTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes.SpeedMultiplierUpgradeValue;
 import theking530.staticcore.teams.ServerTeam;
 
 public abstract class AbstractMachineProcessingComponent<T extends AbstractProcessingComponent<T, K>, K extends MachineProcessingComponentSyncPacket>
 		extends AbstractProcessingComponent<T, K> {
 
 	protected static final int POWER_SMOOTHING_FACTOR = 10;
+	// Power satisfaction only drops when the stored power % is less than this.
+	protected static final double POWER_SATISFACTION_GRACE_THRESHOLD = 0.9;
 
 	/**
 	 * This is how much power this processing component should use per tick, before
@@ -56,6 +61,15 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	 */
 	protected @Nullable UpgradeInventoryComponent upgradeInventory;
 	/**
+	 * The current speed upgrade value if one is present. Otherwise resorts to the
+	 * default value.
+	 */
+	private SpeedMultiplierUpgradeValue speedUpgradeValue;
+	/**
+	 * The weight of the current speed upgrade. Defaults to 0 if not present.
+	 */
+	private float speedUpgradeWeight;
+	/**
 	 * The optional power inventory that we use to check whether or not we have
 	 * enough power to continue processing.
 	 */
@@ -69,6 +83,8 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	public AbstractMachineProcessingComponent(String name, int processingTime) {
 		super(name, processingTime);
 		this.modulateProcessingTimeByPowerSatisfaction = true;
+		speedUpgradeValue = StaticCoreUpgradeTypes.SPEED.get().getDefaultValue();
+		speedUpgradeWeight = 0;
 	}
 
 	@Override
@@ -78,6 +94,7 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 			return;
 		}
 
+		checkUpgrades();
 		powerSatisfaction = calculatePowerSatisfaction();
 		powerUsage = calculatePowerUsage();
 		super.preProcessUpdate();
@@ -95,6 +112,10 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 				output /= powerSatisfaction;
 			}
 		}
+
+		double upgradeModifier = speedUpgradeWeight * speedUpgradeValue.speedIncrease();
+		output /= (1 + upgradeModifier);
+
 		return output;
 	}
 
@@ -110,7 +131,9 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 		double currentTickSatisfaction = 0;
 		double powerPercentage = powerComponent.getStoredPower() / powerComponent.getCapacity();
 
-		if (powerPercentage > 0.9f) {
+		if (powerPercentage > POWER_SATISFACTION_GRACE_THRESHOLD) {
+			currentTickSatisfaction = 1.0f;
+		} else if (powerComponent.getAveragePowerAddedPerTick() >= getBasePowerUsage()) {
 			currentTickSatisfaction = 1.0f;
 		} else if (powerPercentage > 0.0f) {
 			currentTickSatisfaction = powerPercentage;
@@ -142,21 +165,41 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 		return modulateProcessingTimeByPowerSatisfaction;
 	}
 
+	/**
+	 * Sets the base power usage for this component (before upgrades/power
+	 * satisfaction/etc).
+	 * 
+	 * @param defaultPowerUsage
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public T setBasePowerUsage(double defaultPowerUsage) {
 		this.basePowerUsage = defaultPowerUsage;
 		return (T) this;
 	}
 
+	/**
+	 * Gets the base power usage for this component (before upgrades/power
+	 * satisfaction/etc).
+	 * 
+	 * @return
+	 */
 	public final double getBasePowerUsage() {
 		return basePowerUsage;
 	}
 
 	protected double calculatePowerUsage() {
 		double rawUsage = basePowerUsage * powerSatisfaction;
-		return Math.ceil(rawUsage); // SDMath.clamp(rawUsage, basePowerUsage / 2, basePowerUsage);
+		double upgradeFactor = speedUpgradeWeight * speedUpgradeValue.powerUsageIncrease();
+		return Math.ceil(rawUsage * upgradeFactor);
 	}
 
+	/**
+	 * Returns the per/tick power usage for this component after upgrades/power
+	 * satisfaction/etc have been taken into account.
+	 * 
+	 * @return
+	 */
 	public final double getPowerUsage() {
 		return powerUsage;
 	}
@@ -345,6 +388,22 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 		}
 
 		return ProcessingCheckState.ok();
+	}
+
+	protected void checkUpgrades() {
+		if (upgradeInventory == null) {
+			return;
+		}
+
+		UpgradeItemWrapper<SpeedMultiplierUpgradeValue> powerCapacityUpgrade = upgradeInventory
+				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.SPEED.get());
+		if (powerCapacityUpgrade.isEmpty()) {
+			speedUpgradeValue = StaticCoreUpgradeTypes.SPEED.get().getDefaultValue();
+			speedUpgradeWeight = 0;
+		} else {
+			speedUpgradeValue = powerCapacityUpgrade.getUpgradeValue();
+			speedUpgradeWeight = powerCapacityUpgrade.getUpgradeWeight();
+		}
 	}
 
 	@Override

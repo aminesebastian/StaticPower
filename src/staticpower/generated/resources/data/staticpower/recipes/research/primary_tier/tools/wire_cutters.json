@@ -1,0 +1,46 @@
+{
+  "type": "staticcore:research",
+  "color": {
+    "b": 0.0,
+    "g": 0.0,
+    "r": 1.0
+  },
+  "description": "research.basic_wire_cutting.description",
+  "hidden_until_available": false,
+  "icon": {
+    "item": {
+      "id": "staticpower:wire_cutters_iron",
+      "tag": {
+        "Damage": 0
+      }
+    }
+  },
+  "prerequisites": [
+    "staticpower:research/primary_tier"
+  ],
+  "research_requirements": [
+    {
+      "count": 10,
+      "ingredient": {
+        "item": "staticcore:research_tier_1"
+      }
+    }
+  ],
+  "title": "research.basic_wire_cutting.title",
+  "unlocks": [
+    {
+      "type": {
+        "type": "CRAFTING"
+      },
+      "display_key": "iron",
+      "target": "staticpower:crafting/shaped/tools/wire_cutter/iron"
+    },
+    {
+      "type": {
+        "type": "CRAFTING"
+      },
+      "display_key": "zinc",
+      "target": "staticpower:crafting/shaped/tools/wire_cutter/zinc"
+    }
+  ]
+}

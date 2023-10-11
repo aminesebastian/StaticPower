@@ -164,6 +164,12 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return;
 		}
 
+		int destinationCount = 0;
+		for (List<CachedFluidDestination> dests : destinations.values()) {
+			destinationCount += dests.size();
+		}
+
+		output.add(Component.literal("Destinations: ").append(String.valueOf(destinationCount)));
 		output.add(Component.literal(String.valueOf(capability.get().getHeadPressure())));
 		output.addAll(GuiFluidBarUtilities.getTooltip(capability.get().getFluidAmount(), capability.get().getCapacity(),
 				capability.get().getFluid()));

@@ -1,0 +1,28 @@
+{
+  "type": "staticpower:centrifuge",
+  "input": {
+    "ingredient": {
+      "tag": "forge:gunpowder"
+    }
+  },
+  "minimum_speed": 500,
+  "primary_output": {
+    "item": {
+      "id": "staticpower:dust_saltpeter"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output": {
+    "item": {
+      "id": "staticpower:dust_sulfur"
+    }
+  },
+  "tertiary_output": {
+    "item": {
+      "id": "staticpower:dust_charcoal"
+    }
+  }
+}

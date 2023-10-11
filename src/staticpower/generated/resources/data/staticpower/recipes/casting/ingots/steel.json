@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:casting",
+  "fluid": {
+    "amount": 144,
+    "fluids": {
+      "tag": "staticpower:molten_steel"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "staticpower:mold_ingot"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:ingot_steel"
+    }
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 200
+  }
+}

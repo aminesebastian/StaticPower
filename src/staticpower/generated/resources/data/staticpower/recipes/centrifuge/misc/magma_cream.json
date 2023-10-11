@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:centrifuge",
+  "input": {
+    "ingredient": {
+      "item": "minecraft:magma_cream"
+    }
+  },
+  "minimum_speed": 500,
+  "primary_output": {
+    "item": {
+      "id": "minecraft:slime_ball"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output": {
+    "item": {
+      "id": "minecraft:blaze_powder"
+    }
+  }
+}

@@ -3,6 +3,7 @@
     "staticpower:wire_coil_digistore",
     "staticpower:wire_coil_static_metal",
     "staticpower:wire_coil_lumum_metal",
+    "staticpower:wire_coil_aluminum",
     "staticpower:wire_coil_energized_metal",
     "staticpower:wire_coil_copper",
     "staticpower:wire_coil_brass",

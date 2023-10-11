@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:fluid_capsule_advanced"
+    },
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "tag": "forge:plates/brass"
+    }
+  },
+  "pattern": [
+    "pcp",
+    "cic",
+    "pcp"
+  ],
+  "result": {
+    "item": "staticpower:tank_advanced"
+  }
+}

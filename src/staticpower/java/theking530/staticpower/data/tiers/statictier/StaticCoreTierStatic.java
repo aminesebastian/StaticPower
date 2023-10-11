@@ -48,12 +48,7 @@ public class StaticCoreTierStatic extends StaticCoreTier {
 	protected float getDefaultMachineThermalConductivity() {
 		return 100;
 	}
-
-	@Override
-	protected float getDefaultMachineThermalMass() {
-		return 100;
-	}
-
+	
 	@Override
 	protected float getDefaultMachineOverheatTemperature() {
 		return 700.0f;

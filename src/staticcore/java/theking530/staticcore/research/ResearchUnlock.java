@@ -21,30 +21,35 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticcore.crafting.StaticCoreRecipeManager;
-import theking530.staticcore.gui.StaticCoreGuiTextures;
 import theking530.staticcore.utilities.JsonUtilities;
+import theking530.staticpower.StaticPower;
 
 public class ResearchUnlock {
 	public enum ResearchUnlockType {
 		DISPLAY_ONLY, CRAFTING, MACHINE_RECIPE;
 
 		public static final Codec<ResearchUnlockType> CODEC = RecordCodecBuilder
-				.create(instance -> instance.group(Codec.STRING.fieldOf("type").forGetter(type -> type.toString())).apply(instance, (typeString) -> {
-					for (ResearchUnlockType type : values()) {
-						if (type.toString() == typeString) {
-							return type;
-						}
-					}
-					return DISPLAY_ONLY;
-				}));
+				.create(instance -> instance.group(Codec.STRING.fieldOf("type").forGetter(type -> type.toString()))
+						.apply(instance, (typeString) -> {
+							for (ResearchUnlockType type : values()) {
+								if (type.toString().equals(typeString)) {
+									return type;
+								}
+							}
+							return DISPLAY_ONLY;
+						}));
 	}
 
 	public static final Codec<ResearchUnlock> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.STRING.fieldOf("display_key").forGetter(research -> research.getDisplayKey()), ResearchUnlockType.CODEC.fieldOf("type").forGetter(research -> research.getType()),
-			ResourceLocation.CODEC.fieldOf("target").forGetter(research -> research.getTarget()), ResearchIcon.CODEC.fieldOf("icon").forGetter(research -> research.getIcon()),
-			Codec.STRING.fieldOf("text_description").forGetter(research -> research.textDescription),
-			JsonUtilities.ITEMSTACK_CODEC.fieldOf("item_description").forGetter(research -> research.itemTooltip),
-			Codec.BOOL.fieldOf("hidden_until_unlockable").forGetter(reserach -> reserach.isHidden())).apply(instance, ResearchUnlock::new));
+			Codec.STRING.optionalFieldOf("display_key", "").forGetter(research -> research.getDisplayKey()),
+			ResearchUnlockType.CODEC.fieldOf("type").forGetter(research -> research.getType()),
+			ResourceLocation.CODEC.fieldOf("target").forGetter(research -> research.getTarget()),
+			ResearchIcon.CODEC.optionalFieldOf("icon", ResearchIcon.EMPTY).forGetter(research -> research.getIcon()),
+			Codec.STRING.optionalFieldOf("text_description", "").forGetter(research -> research.textDescription),
+			JsonUtilities.ITEMSTACK_CODEC.optionalFieldOf("item_description", ItemStack.EMPTY)
+					.forGetter(research -> research.itemTooltip),
+			Codec.BOOL.optionalFieldOf("hidden_until_unlockable", false).forGetter(reserach -> reserach.isHidden()))
+			.apply(instance, ResearchUnlock::new));
 
 	private final String displayKey;
 	private final ResourceLocation target;
@@ -58,19 +63,32 @@ public class ResearchUnlock {
 	private ResearchIcon icon;
 	private boolean hidden;
 
-	public ResearchUnlock(String displayKey, ResearchUnlockType type, ResourceLocation target, ResearchIcon icon, String textDescription, ItemStack itemDescription,
-			boolean hidden) {
+	public static ResearchUnlock craftingRecipe(String target) {
+		String[] keys = target.split("/");
+		return craftingRecipe(keys[keys.length - 1], new ResourceLocation(StaticPower.MOD_ID, target));
+	}
+
+	public static ResearchUnlock craftingRecipe(String displayKey, String target) {
+		return craftingRecipe(displayKey, new ResourceLocation(StaticPower.MOD_ID, target));
+	}
+
+	public static ResearchUnlock craftingRecipe(String displayKey, ResourceLocation target) {
+		return new ResearchUnlock(displayKey, ResearchUnlockType.CRAFTING, target, null, null, null, false);
+	}
+
+	public ResearchUnlock(String displayKey, ResearchUnlockType type, ResourceLocation target, ResearchIcon icon,
+			String textDescription, ItemStack itemDescription, boolean hidden) {
 		this.displayKey = displayKey;
 		this.type = type;
 		this.target = target;
 		if (icon == null) {
-			this.icon = new ResearchIcon(null, StaticCoreGuiTextures.BLANK);
+			this.icon = ResearchIcon.EMPTY;
 		} else {
 			this.icon = icon;
 		}
-		this.textDescription = textDescription;
-		this.textTooltip = textDescription;
-		this.itemTooltip = itemDescription;
+		this.textDescription = textDescription == null ? "" : textDescription;
+		this.textTooltip = textDescription == null ? "" : textDescription;
+		this.itemTooltip = itemDescription == null ? ItemStack.EMPTY : itemDescription;
 		this.tooltip = new ArrayList<Component>();
 		if (textDescription != null) {
 			tooltip.add(Component.translatable(textDescription));

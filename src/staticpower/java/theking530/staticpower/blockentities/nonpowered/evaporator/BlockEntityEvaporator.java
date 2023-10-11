@@ -128,12 +128,12 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 			return ProcessingCheckState.fluidOutputFull();
 		}
 		// Check the heat level.
-		if (heatStorage.getCurrentTemperature() < recipe.getProcessingSection().getMinimumHeat()) {
+		if (heatStorage.getTemperature() < recipe.getProcessingSection().getMinimumHeat()) {
 			return ProcessingCheckState.notEnoughHeatCapacity(recipe.getProcessingSection().getMinimumHeat());
 		}
 
 		if (heatStorage.isOverheated()) {
-			return ProcessingCheckState.heatStorageTooHot(heatStorage.getOverheatTemperature());
+			return ProcessingCheckState.heatStorageTooHot(heatStorage.getOverheatThreshold());
 		}
 
 		return ProcessingCheckState.ok();

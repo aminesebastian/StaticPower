@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:fluid_infusion",
+  "input_fluid": {
+    "amount": 100,
+    "fluids": {
+      "tag": "staticpower:fluid_energized"
+    }
+  },
+  "input_item": {
+    "ingredient": {
+      "tag": "forge:glass"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:lamp_energized"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  }
+}

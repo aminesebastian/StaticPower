@@ -225,6 +225,7 @@
 	"item.staticpower.raw_uranium": "Raw Uranium",
 	"item.staticpower.raw_redstone_alloy": "Raw Redstone Alloy",
 	"item.staticpower.raw_inert_infusion_alloy": "Raw Inert Infusion Alloy",
+	"item.staticpower.raw_steel": "Raw Steel",
 	
 	"item.staticpower.ingot_tin": "Tin Ingot",
 	"item.staticpower.ingot_silver": "Silver Ingot",
@@ -242,6 +243,7 @@
 	"item.staticpower.ingot_inert_infusion_alloy": "Inert Infusion Alloy Ingot",
 	"item.staticpower.ingot_redstone_alloy": "Redstone Alloy Ingot",
 	"item.staticpower.ingot_uranium": "Uranium Ingot",
+	"item.staticpower.ingot_steel": "Steel Ingot",
 	"item.staticpower.ingot_tin_heated": "Heated Tin Ingot",
 	"item.staticpower.ingot_silver_heated": "Heated Silver Ingot",
 	"item.staticpower.ingot_lead_heated": "Heated Lead Ingot",
@@ -260,6 +262,7 @@
 	"item.staticpower.ingot_iron_heated": "Heated Iron Ingot",
 	"item.staticpower.ingot_copper_heated": "Heated Copper Ingot",
 	"item.staticpower.ingot_gold_heated": "Heated Gold Ingot",
+	"item.staticpower.ingot_steel_heated": "Heated Steel Ingot",
 	
 	"item.staticpower.nugget_copper": "Copper Nugget",
 	"item.staticpower.nugget_tin": "Tin Nugget",
@@ -278,6 +281,7 @@
 	"item.staticpower.nugget_brass": "Brass Nugget",
 	"item.staticpower.nugget_bronze": "Bronze Nugget",
 	"item.staticpower.nugget_uranium": "Uranium Nugget",
+	"item.staticpower.nugget_steel": "Steel Nugget",
 	
 	"item.staticpower.gem_sapphire": "Sapphire",
 	"item.staticpower.gem_ruby": "Ruby",
@@ -316,6 +320,7 @@
 	"item.staticpower.dust_wood": "Saw Dust",
 	"item.staticpower.dust_saltpeter": "Saltpeter",
 	"item.staticpower.dust_sulfur": "Sulfur",
+	"item.staticpower.dust_steel": "Steel Dust",
 	
 	"item.staticpower.rod_copper": "Copper Rod",
 	"item.staticpower.rod_gold": "Gold Rod",
@@ -343,6 +348,7 @@
 	"item.staticpower.rod_quartz": "Quartz Rod",
 	"item.staticpower.rod_lapis": "Lapis Rod",
 	"item.staticpower.rod_latex": "Latex Rod",
+	"item.staticpower.rod_steel": "Steel Rod",
 	
 	"item.staticpower.chunks_copper": "Copper Ore Chunks",
 	"item.staticpower.chunks_gold": "Gold Ore Chunks",
@@ -383,6 +389,7 @@
 	"item.staticpower.gear_redstone_alloy": "Redstone Alloy Gear",
 	"item.staticpower.gear_brass": "Brass Gear",
 	"item.staticpower.gear_bronze": "Bronze Gear",
+	"item.staticpower.gear_steel": "Steel Gear",
 	
 	"item.staticpower.gear_box_gold": "Gold Gear Box",
 	"item.staticpower.gear_box_iron": "Iron Gear Box",
@@ -421,6 +428,7 @@
 	"item.staticpower.plate_redstone_alloy": "Redstone Alloy Plate",
 	"item.staticpower.plate_brass": "Brass Plate",
 	"item.staticpower.plate_bronze": "Bronze Plate",
+	"item.staticpower.plate_steel": "Steel Plate",
 	
 	"item.staticpower.mold_blank": "Blank Mold",
 	"item.staticpower.mold_gear": "Gear Mold",
@@ -539,6 +547,7 @@
 	"item.staticpower.bucket_molten_bronze": "Molten Bronze Bucket",
 	"item.staticpower.bucket_molten_silver": "Molten Silver Bucket",
 	"item.staticpower.bucket_molten_lead": "Molten Lead Bucket",
+	"item.staticpower.bucket_molten_steel": "Molten Steel Bucket",
 	"item.staticpower.bucket_oil_crude": "Crude Oil Bucket",
 	"item.staticpower.bucket_oil_light": "Light Oil Bucket",
 	"item.staticpower.bucket_oil_heavy": "Heavy Oil Bucket",
@@ -742,6 +751,7 @@
 	"block.staticpower.rusty_cauldron": "Rusty Cauldron",
 	"block.staticpower.clean_cauldron": "Cauldron 2.0",
 	"block.staticpower.alloy_furnace": "Alloy Furnace",
+	"block.staticpower.blast_furnace": "Blast Furnace",
 	
 	"block.staticpower.battery_block_basic": "Basic Battery",
 	"block.staticpower.battery_block_advanced": "Advanced Battery",
@@ -902,6 +912,7 @@
 	"block.staticpower.block_brass": "Block of Brass",
 	"block.staticpower.block_bronze": "Block of Bronze",	
 	"block.staticpower.block_lead": "Block of Lead",
+	"block.staticpower.block_stesel": "Block of Steel",
 	"block.staticpower.block_platinum": "Block of Platinum",
 	"block.staticpower.block_raw_ruby": "Block of Ruby",
 	"block.staticpower.block_raw_sapphire": "Block of Sapphire",
@@ -940,6 +951,7 @@
 	"block.staticpower.block_raw_magnesium": "Raw Magnesium Block",
 	"block.staticpower.block_raw_silver": "Raw Silver Block",
 	"block.staticpower.block_raw_lead": "Raw Lead Block",
+	"block.staticpower.block_raw_steel": "Raw Steel Block",
 	"block.staticpower.block_raw_platinum": "Raw Platinum Block",
 	"block.staticpower.block_raw_tungsten": "Raw Tungsten Block",
 	"block.staticpower.block_raw_static_metal": "Raw Static Metal Block",
@@ -1086,6 +1098,7 @@
 	"fluid_type.staticpower.molten_tungsten": "Molten Tungsten",
 	"fluid_type.staticpower.molten_brass": "Molten Brass",
 	"fluid_type.staticpower.molten_bronze": "Molten Bronze",
+	"fluid_type.staticpower.molten_steel": "Molten Steel",
 	"fluid_type.staticpower.oil_crude": "Crude Oil",
 	"fluid_type.staticpower.oil_light": "Light Oil",
 	"fluid_type.staticpower.oil_heavy": "Heavy Oil",

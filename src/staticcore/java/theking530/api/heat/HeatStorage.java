@@ -41,12 +41,12 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 	}
 
 	@Override
-	public float getCurrentTemperature() {
+	public float getTemperature() {
 		return currentTemperature;
 	}
 
 	@Override
-	public float getMinimumTemperatureThreshold() {
+	public float getMinimumOperatingThreshold() {
 		return minimumTemperature;
 	}
 
@@ -55,7 +55,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 	}
 
 	@Override
-	public float getOverheatTemperature() {
+	public float getOverheatThreshold() {
 		return overheatTemperature;
 	}
 
@@ -112,12 +112,13 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 		float newTemperature = SDMath.clamp(currentTemperature + temperatureDelta, ABSOLUTE_ZERO,
 				getMaximumTemperature());
 		float actualDelta = newTemperature - currentTemperature;
-		float usedPower = HeatUtilities.calculateHeatFluxRequiredForTemperatureChange(actualDelta, getSpecificHeat(), getMass());
+		float usedPower = HeatUtilities.calculateHeatFluxRequiredForTemperatureChange(actualDelta, getSpecificHeat(),
+				getMass());
 		if (action == HeatTransferAction.EXECUTE) {
 			setTemperature(newTemperature);
-			if (temperatureDelta > 0) {
+			if (actualDelta > 0) {
 				getTicker().heated(actualDelta, usedPower);
-			} else {
+			} else if (actualDelta < 0) {
 				getTicker().cooled(-actualDelta, -usedPower);
 			}
 		}

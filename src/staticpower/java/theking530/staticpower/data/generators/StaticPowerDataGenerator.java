@@ -12,6 +12,7 @@ import theking530.staticpower.data.generators.recipes.BottlerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CarpenterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CasterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CauldronRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.CentrifugeRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CondensationRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CraftingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CrucibleRecipeGenerator;
@@ -28,11 +29,13 @@ import theking530.staticpower.data.generators.recipes.HydroponicFarmerRecipeGene
 import theking530.staticpower.data.generators.recipes.LumberMillRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.MixerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.RefineryRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.ResearchRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmeltingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmithingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SmokingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SolderingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.SqueezerRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.StoneCutterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.ThermalConductivityRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.TumblerRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.TurbineRecipeGenerator;
@@ -80,7 +83,10 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new LumberMillRecipeGenerator(generator));
 		generator.addProvider(true, new SmithingRecipeGenerator(generator));
 		generator.addProvider(true, new ThermalConductivityRecipeGenerator(generator));
-		
+		generator.addProvider(true, new CentrifugeRecipeGenerator(generator));
+		generator.addProvider(true, new ResearchRecipeGenerator(generator));
+		generator.addProvider(true, new StoneCutterRecipeGenerator(generator));
+
 		generator.addProvider(true, new ModLootTableProvider(generator));
 		generator.addProvider(true, new ModBlockStateProvider(generator, existingFileHelper));
 		generator.addProvider(true, new ModItemModelProvider(generator, existingFileHelper));

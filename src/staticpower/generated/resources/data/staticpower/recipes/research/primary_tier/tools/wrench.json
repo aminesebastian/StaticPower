@@ -1,0 +1,36 @@
+{
+  "type": "staticcore:research",
+  "color": {
+    "b": 0.0,
+    "g": 0.0,
+    "r": 1.0
+  },
+  "description": "research.wrench.description",
+  "hidden_until_available": false,
+  "icon": {
+    "item": {
+      "id": "staticpower:wrench"
+    }
+  },
+  "prerequisites": [
+    "staticpower:research/primary_tier/tools/hammer"
+  ],
+  "research_requirements": [
+    {
+      "count": 10,
+      "ingredient": {
+        "item": "staticcore:research_tier_1"
+      }
+    }
+  ],
+  "title": "research.wrench.title",
+  "unlocks": [
+    {
+      "type": {
+        "type": "CRAFTING"
+      },
+      "display_key": "wrench",
+      "target": "staticpower:crafting/shaped/tools/wrench"
+    }
+  ]
+}

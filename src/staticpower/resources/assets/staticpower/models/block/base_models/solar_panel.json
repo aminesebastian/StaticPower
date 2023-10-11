@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"panel": "staticpower:blocks/machines/solar_panel/solar_panel_top_basic",
-		"particle": "staticpower:blocks/machines/solar_panel/solar_panel_top_basic",
+		"particle": "staticpower:blocks/machines/solar_panel/basic",
+		"panel": "staticpower:blocks/machines/solar_panel/basic",
 		"base": "staticpower:blocks/machines/solar_panel/base"
 	},
 	"elements": [
@@ -11,12 +11,10 @@
 			"from": [1.5, 1, 1.5],
 			"to": [14.5, 2, 14.5],
 			"faces": {
-				"north": {"uv": [1.5, 14.5, 14.5, 15.5], "texture": "#base"},
-				"east": {"uv": [0.5, 1.5, 1.5, 14.5], "rotation": 270, "texture": "#base"},
-				"south": {"uv": [1.5, 0.5, 14.5, 1.5], "rotation": 180, "texture": "#base"},
-				"west": {"uv": [14.5, 1.5, 15.5, 14.5], "rotation": 90, "texture": "#base"},
-				"up": {"uv": [1.5, 1.5, 14.5, 14.5], "texture": "#base"},
-				"down": {"uv": [1.5, 1.5, 14.5, 14.5], "texture": "#base"}
+				"north": {"uv": [2, 13, 14, 14], "texture": "#base"},
+				"east": {"uv": [2, 2, 3, 14], "rotation": 270, "texture": "#base"},
+				"south": {"uv": [2, 2, 14, 3], "rotation": 180, "texture": "#base"},
+				"west": {"uv": [13, 2, 14, 14], "rotation": 90, "texture": "#base"}
 			}
 		},
 		{
@@ -28,7 +26,7 @@
 				"east": {"uv": [0, 0, 16, 1], "texture": "#base"},
 				"south": {"uv": [15, 0, 16, 16], "rotation": 90, "texture": "#base"},
 				"west": {"uv": [0, 15, 16, 16], "texture": "#base"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#base"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#base"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#base"}
 			}
 		},

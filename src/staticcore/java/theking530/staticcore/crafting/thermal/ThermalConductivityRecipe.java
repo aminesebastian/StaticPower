@@ -33,7 +33,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 					Codec.BOOL.optionalFieldOf("has_active_temperature", false)
 							.forGetter(recipe -> recipe.hasActiveTemperature()),
 					Codec.FLOAT.optionalFieldOf("temperature", 0.0f).forGetter(recipe -> recipe.getTemperature()),
-					Codec.FLOAT.optionalFieldOf("mass", 0.0f).forGetter(recipe -> recipe.getMass()),
+					Codec.FLOAT.optionalFieldOf("mass", 1.0f).forGetter(recipe -> recipe.getMass()),
 					Codec.FLOAT.optionalFieldOf("specific_heat", 0.0f).forGetter(recipe -> recipe.getMass()),
 					Codec.FLOAT.fieldOf("conductivity").forGetter(recipe -> recipe.getConductivity()),
 

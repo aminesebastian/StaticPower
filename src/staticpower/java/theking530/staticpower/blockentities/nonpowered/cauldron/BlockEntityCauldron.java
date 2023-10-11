@@ -111,7 +111,7 @@ public class BlockEntityCauldron extends BlockEntityBase {
 	}
 
 	public boolean isBoiling() {
-		return heatStorage.getCurrentTemperature() >= BOILING_TEMP;
+		return heatStorage.getTemperature() >= BOILING_TEMP;
 	}
 
 	/**

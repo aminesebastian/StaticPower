@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:processor_energized"
+    },
+    "g": {
+      "tag": "staticpower:gears/energized_metal"
+    },
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "tag": "staticpower:plates/energized_metal"
+    },
+    "r": {
+      "item": "staticpower:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "p  ",
+    "irr",
+    "cgp"
+  ],
+  "result": {
+    "item": "staticpower:conveyor_supplier_energized"
+  }
+}

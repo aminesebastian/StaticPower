@@ -1,0 +1,27 @@
+{
+  "type": "staticcore:research",
+  "color": {
+    "b": 0.0,
+    "g": 0.0,
+    "r": 1.0
+  },
+  "description": "research.static_seeds.description",
+  "hidden_until_available": false,
+  "icon": {
+    "item": {
+      "id": "staticpower:seed_static"
+    }
+  },
+  "prerequisites": [
+    "staticpower:research/primary_tier"
+  ],
+  "research_requirements": [
+    {
+      "count": 20,
+      "ingredient": {
+        "item": "staticcore:research_tier_1"
+      }
+    }
+  ],
+  "title": "research.static_seeds.title"
+}

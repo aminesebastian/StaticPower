@@ -33,18 +33,24 @@ public class GuiCrucible extends StaticCoreBlockEntityScreen<ContainerCrucible, 
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromStorage(getTileEntity().powerStorage, 8, 8, 16, 52));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 108, 18, 16, 58, MachineSideMode.Output, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 108, 18, 16, 58,
+				MachineSideMode.Output, getTileEntity()));
 		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage, 28, 8, 6, 52));
-		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(74, 48, 28, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(74, 48, 28, 5)
+				.bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage), true);
+		getTabManager().registerTab(
+				new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT),
+				true);
 		getTabManager()
-				.registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT));
+				.registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent,
+				Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
+
 	}
 
 	@Override

@@ -1,0 +1,31 @@
+{
+  "type": "staticpower:centrifuge",
+  "input": {
+    "count": 8,
+    "ingredient": {
+      "tag": "forge:concrete/magenta"
+    }
+  },
+  "minimum_speed": 500,
+  "primary_output": {
+    "item": {
+      "count": 4,
+      "id": "minecraft:sand"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output": {
+    "item": {
+      "count": 4,
+      "id": "minecraft:gravel"
+    }
+  },
+  "tertiary_output": {
+    "item": {
+      "id": "minecraft:magenta_dye"
+    }
+  }
+}

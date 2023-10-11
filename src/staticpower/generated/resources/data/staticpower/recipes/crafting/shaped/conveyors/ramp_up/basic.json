@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "forge:gears/tin"
+    },
+    "p": {
+      "tag": "forge:plates/tin"
+    },
+    "r": {
+      "item": "staticpower:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "  r",
+    " rp",
+    "rpg"
+  ],
+  "result": {
+    "item": "staticpower:conveyor_ramp_up_basic"
+  }
+}

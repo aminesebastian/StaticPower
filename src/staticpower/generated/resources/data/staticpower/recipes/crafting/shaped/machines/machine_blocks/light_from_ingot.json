@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "tag": "forge:dusts/redstone"
+    },
+    "t": {
+      "tag": "forge:ingots/aluminum"
+    }
+  },
+  "pattern": [
+    "ttt",
+    "tit",
+    "tpt"
+  ],
+  "result": {
+    "item": "staticpower:machine_block_aluminum"
+  }
+}

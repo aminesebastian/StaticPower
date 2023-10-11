@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "staticpower:gears/brass"
+    },
+    "p": {
+      "tag": "forge:plates/brass"
+    },
+    "r": {
+      "item": "staticpower:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "   ",
+    "rrr",
+    "pgp"
+  ],
+  "result": {
+    "item": "staticpower:conveyor_straight_advanced"
+  }
+}

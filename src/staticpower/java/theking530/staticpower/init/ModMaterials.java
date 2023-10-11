@@ -59,6 +59,19 @@ public class ModMaterials {
 			.itemMaterial(ItemMaterial.generate(MaterialTypes.CHUNKS, MaterialDomain.FORGE))
 			.fluidMaterial(FluidMaterial.generate(MaterialTypes.MOLTEN_FLUID, 4000, 32, 2800, new SDColor(1.0f, 0.25f, 0.1f)));
 	
+	public static final MaterialBundle STEEL = registerMaterial("steel", MaterialBundleType.METAL)
+			.blockMaterial(BlockMaterial.generate(MaterialTypes.STORAGE_BLOCK, MaterialDomain.FORGE, Properties.copy(Blocks.IRON_BLOCK)))
+			.blockMaterial(BlockMaterial.generate(MaterialTypes.RAW_STOARGE_BLOCK, MaterialDomain.FORGE, Properties.copy(Blocks.RAW_IRON_BLOCK)))
+			.itemMaterial(ItemMaterial.generate(MaterialTypes.RAW_MATERIAL, MaterialDomain.FORGE))
+			.itemMaterial(ItemMaterial.generate(MaterialTypes.NUGGET, MaterialDomain.FORGE))
+			.itemMaterial(ItemMaterial.generate(MaterialTypes.INGOT, MaterialDomain.FORGE))
+			.itemMaterial(ItemMaterial.generateNoTag(MaterialTypes.HEATED_INGOT, ()-> new HeatedIngot(ModMaterials.TIN.get(MaterialTypes.INGOT).getSupplier())))
+			.itemMaterial(ItemMaterial.generate(MaterialTypes.DUST, MaterialDomain.FORGE))
+			.itemMaterial(ItemMaterial.generate(MaterialTypes.PLATE, MaterialDomain.FORGE))
+			.itemMaterial(ItemMaterial.generate(MaterialTypes.GEAR, MaterialDomain.FORGE))
+			.itemMaterial(ItemMaterial.generate(MaterialTypes.ROD, MaterialDomain.FORGE))
+			.fluidMaterial(FluidMaterial.generate(MaterialTypes.MOLTEN_FLUID, 4000, 32, 2800, new SDColor(1.0f, 0.25f, 0.1f)));
+	
 	public static final MaterialBundle ZINC = registerMaterial("zinc", MaterialBundleType.METAL)
 			.blockMaterial(BlockMaterial.generateNoTag(MaterialTypes.OVERWORLD_ORE, MaterialDomain.FORGE, () -> new StaticPowerOre(Properties.copy(Blocks.COPPER_ORE), 1, 2)))
 			.blockMaterial(BlockMaterial.generateNoTag(MaterialTypes.DEEPSLATE_ORE, MaterialDomain.FORGE, () -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_COPPER_ORE), 1, 2)))
@@ -89,6 +102,7 @@ public class ModMaterials {
 			.itemMaterial(ItemMaterial.generate(MaterialTypes.PLATE, MaterialDomain.FORGE))
 			.itemMaterial(ItemMaterial.generate(MaterialTypes.CHUNKS, MaterialDomain.FORGE))
 			.itemMaterial(ItemMaterial.generate(MaterialTypes.WIRE, MaterialDomain.FORGE))
+			.itemMaterial(ItemMaterial.generate(MaterialTypes.WIRE_COIL, MaterialDomain.FORGE))
 			.fluidMaterial(FluidMaterial.generate(MaterialTypes.MOLTEN_FLUID, 2000, 32, 660, new SDColor(1.0f, 0.25f, 0.1f)));
 	
 	public static final MaterialBundle MAGNESIUM = registerMaterial("magnesium", MaterialBundleType.METAL)

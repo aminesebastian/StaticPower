@@ -1,15 +1,14 @@
 package theking530.staticcore.research.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.TooltipFlag;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.GuiTextUtilities;
@@ -17,7 +16,6 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.research.Research;
-import theking530.staticcore.research.ResearchIcon;
 import theking530.staticcore.research.ResearchLevels.ResearchNode;
 import theking530.staticcore.research.ResearchUnlock;
 import theking530.staticcore.research.ResearchUnlockUtilities;
@@ -32,6 +30,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private final String title;
 	private final List<String> wrappedDescription;
 	private final Research research;
+	private final List<ResearchNodeUnlockWidget> unlockWidgets;
 	private final ResearchNode node;
 	private final SimpleProgressBar progressBar;
 	private final Vector2D collapsedSize;
@@ -46,18 +45,33 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	public ResearchNodeWidget(ResearchNode node, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
 		this.research = node.getResearch();
+		this.unlockWidgets = new ArrayList<>();
 		this.node = node;
 		registerWidget(progressBar = new SimpleProgressBar(28, 20, 86, 7).setMaxProgress(100).disableProgressTooltip());
 		progressBar.setVisible(false);
 		title = Component.translatable(research.getTitle()).getString();
 		this.collapsedSize = new Vector2D(width, height);
-		this.maxExpandedSize = new Vector2D(Math.min(getFontRenderer().width(title) + 15, 100), 100);
+		this.maxExpandedSize = new Vector2D(getFontRenderer().width(title) + 20, 100);
 		this.tileColor = new SDColor(1, 1, 1, 1);
 		this.bodyColor = new SDColor(1, 1, 1, 1);
-		wrappedDescription = GuiDrawUtilities.wrapString(Component.translatable(research.getDescription()).getString(), maxExpandedSize.getXi() * 2 - 32);
+		wrappedDescription = GuiDrawUtilities.wrapString(Component.translatable(research.getDescription()).getString(),
+				maxExpandedSize.getXi() * 2 - 50);
+
+		List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
+		if (unlocks.size() > 0) {
+			for (int i = 0; i < unlocks.size(); i++) {
+				ResearchUnlock unlock = unlocks.get(i);
+				if (unlock.getIcon() != null) {
+					ResearchNodeUnlockWidget widget = new ResearchNodeUnlockWidget(unlock, 0, 0, 11, 11);
+					registerWidget(widget);
+					unlockWidgets.add(widget);
+				}
+			}
+		}
 	}
 
-	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX,
+			int mouseY) {
 
 		// Update the team and manager.
 		team = TeamManager.getLocalTeam();
@@ -72,17 +86,23 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 			expandedAlpha = (float) Math.max(0, expandedAlpha - (partialTicks * 0.75));
 		}
 
+		for (ResearchNodeUnlockWidget unlock : unlockWidgets) {
+			unlock.setVisible(expandedAlpha >= 1.0f);
+		}
+
 		// Update the colors.
 		updatePanelColors();
 
 		// Scale the widget depending on if it is expanded.
 		float maxWidth = (getFontRenderer().width(title) * .85f) * getExpandedAlpha();
 		float maxHeight = 15 + (wrappedDescription.size() * 5.5f) + (research.getUnlocks().size() > 0 ? 15 : 0);
-		setSize(Math.min(maxExpandedSize.getX(), collapsedSize.getX() + (maxWidth * getExpandedAlpha())), collapsedSize.getY() + (maxHeight * getExpandedAlpha()));
+		setSize(Math.min(maxExpandedSize.getX(), collapsedSize.getX() + (maxWidth * getExpandedAlpha())),
+				collapsedSize.getY() + (maxHeight * getExpandedAlpha()));
 
 		// Move the widget up if hovered and to the up and left if going off screen.
 		float maxOffsetY = (getExpandedAlpha() * (getSize().getY() / 2.5f - collapsedSize.getY() / 2));
 		setPosition(getInitialPosition().getX(), getInitialPosition().getY() - maxOffsetY);
+
 	}
 
 	public Research getResearch() {
@@ -105,9 +125,11 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 		// Draw the outline indicator.
 		if (manager.isSelectedResearch(research.getId())) {
-			GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX() + 6, collapsedSize.getY() + 6, -3, -3, 0, new SDColor(2.0f, 1.0f, 0.5f, 1));
+			GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX() + 6, collapsedSize.getY() + 6, -3, -3, 0,
+					new SDColor(2.0f, 1.0f, 0.5f, 1));
 		} else if (manager.hasCompletedResearch(research.getId())) {
-			GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX() + 4, collapsedSize.getY() + 4, -2, -2, 0, new SDColor(0.5f, 2.0f, 0.5f, 1));
+			GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX() + 4, collapsedSize.getY() + 4, -2, -2, 0,
+					new SDColor(0.5f, 2.0f, 0.5f, 1));
 		}
 
 		// Draw the tile and its icon.
@@ -117,7 +139,8 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		if (manager.hasCompletedResearch(research.getId()) || manager.isResearchAvailable(research.getId())) {
 			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 99 + getExpandedAlpha() * 100);
 		} else {
-			GuiDrawUtilities.drawItemSilhouette(pose, research.getIcon().getItemIcon(), 4, 4, 99 + getExpandedAlpha() * 100);
+			GuiDrawUtilities.drawItemSilhouette(pose, research.getIcon().getItemIcon(), 4, 4,
+					99 + getExpandedAlpha() * 100);
 		}
 
 		if (expand) {
@@ -143,17 +166,6 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
-		if (isExpanded()) {
-			Vector2D localPosition = mousePosition.copy().subtract(getScreenSpacePosition());
-			boolean isInUnlockRegion = localPosition.getY() >= (getSize().getY() - 12) && localPosition.getY() <= (getSize().getY() - 1);
-			if (isInUnlockRegion && localPosition.getX() > 9) {
-				List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
-				int index = (int) ((localPosition.getX() - 9) / 11.5f);
-				if (index >= 0 && index < unlocks.size()) {
-					tooltips.addAll(unlocks.get(index).getTooltip(getLocalPlayer(), Screen.hasControlDown() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL));
-				}
-			}
-		}
 	}
 
 	public void setExpanded(boolean expanded) {
@@ -191,7 +203,8 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 				if (isAvailable) {
 					// Set the selected research on both the client AND the server.
 					manager.setSelectedResearch(research.getId());
-					StaticCoreMessageHandler.sendToServer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL, new PacketSetSelectedResearch(team.getId(), research.getId()));
+					StaticCoreMessageHandler.sendToServer(StaticCoreMessageHandler.MAIN_PACKET_CHANNEL,
+							new PacketSetSelectedResearch(team.getId(), research.getId()));
 					playSoundLocally(SoundEvents.UI_BUTTON_CLICK, 0.1f, 1.5f);
 				} else if (manager.hasCompletedResearch(research.getId())) {
 					playSoundLocally(SoundEvents.BREWING_STAND_BREW, 0.5f, 2.0f);
@@ -215,14 +228,21 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		return super.mouseClick(mouseX, mouseY, button);
 	}
 
-	private void drawRearchRequirement(PoseStack pose, @Nullable ResearchInstance instance, StaticPowerIngredient requirement, int requirementIndex, float x, float y) {
+	private void drawRearchRequirement(PoseStack pose, @Nullable ResearchInstance instance,
+			StaticPowerIngredient requirement, int requirementIndex, float x, float y) {
 		GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], x, y, 1, 8f, 8f);
 
 		if (instance != null) {
-			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount() - instance.getRequirementFullfillment(requirementIndex)).getString(), x + 8f,
-					y + 6.5f, 10, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose,
+					GuiTextUtilities
+							.formatNumberAsString(
+									requirement.getCount() - instance.getRequirementFullfillment(requirementIndex))
+							.getString(),
+					x + 8f, y + 6.5f, 10, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
 		} else {
-			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 8f, y + 6.5f, 10, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose,
+					GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 8f, y + 6.5f, 10,
+					0.5f, SDColor.EIGHT_BIT_WHITE, true);
 		}
 	}
 
@@ -230,7 +250,8 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		if (team != null) {
 			progressBar.setSize(getSize().getX() - 32, 7);
 			if (manager.isResearching(research.getId())) {
-				progressBar.setCurrentProgress((int) (manager.getResearchProgress(research.getId()).getFullfillmentPercentage() * 100));
+				progressBar.setCurrentProgress(
+						(int) (manager.getResearchProgress(research.getId()).getFullfillmentPercentage() * 100));
 			} else if (manager.hasCompletedResearch(research.getId())) {
 				progressBar.setCurrentProgress(100);
 			} else {
@@ -242,30 +263,33 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private void drawRequirementsAndUnlocks(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 		// Draw requirements.
 		float requirementsBgSize = research.getRequirements().size() + research.getRequirements().size() * 9.25f;
-		GuiDrawUtilities.drawRectangle(pose, requirementsBgSize, 11, getSize().getX() - requirementsBgSize - 1, getSize().getY() - 12, 0, new SDColor(0.0f, 0.0f, 0.0f, 0.5f));
+		GuiDrawUtilities.drawRectangle(pose, requirementsBgSize, 11, getSize().getX() - requirementsBgSize - 1,
+				getSize().getY() - 12, 0, new SDColor(0.0f, 0.0f, 0.0f, 0.5f));
 
 		for (int i = 0; i < research.getRequirements().size(); i++) {
 			int xOffset = i * 10;
 			StaticPowerIngredient requirement = research.getRequirements().get(i);
-			drawRearchRequirement(pose, null, requirement, i, getSize().getX() - 14 - xOffset, getSize().getY() - 13.5f);
+			drawRearchRequirement(pose, null, requirement, i, getSize().getX() - 14 - xOffset,
+					getSize().getY() - 13.5f);
 		}
 
 		// Split the description into wrapped lines.
 		float descriptionHeight = wrappedDescription.size() * 5;
 		// Draw the description.
 		for (int i = 0; i < wrappedDescription.size(); i++) {
-			GuiDrawUtilities.drawStringLeftAligned(pose, wrappedDescription.get(i), 9, 33 + (i * 5), 0f, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringLeftAligned(pose, wrappedDescription.get(i), 9, 33 + (i * 5), 0f, 0.5f,
+					SDColor.EIGHT_BIT_WHITE, true);
 		}
 
 		// Draw the unlocks.
 		List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
 		if (unlocks.size() > 0) {
-			GuiDrawUtilities.drawStringLeftAligned(pose, "Unlocks:", 9, 40 + descriptionHeight, 0f, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
-			for (int i = 0; i < unlocks.size(); i++) {
-				ResearchUnlock unlock = unlocks.get(i);
-				if (unlock.getIcon() != null) {
-					ResearchIcon.draw(unlock.getIcon(), pose, 6.5f + (i * 11), 40 + descriptionHeight, 155, 11f, 11f);
-				}
+			GuiDrawUtilities.drawStringLeftAligned(pose, "Unlocks:", 9, 40 + descriptionHeight, 0f, 0.5f,
+					SDColor.EIGHT_BIT_WHITE, true);
+			for (int i = 0; i < unlockWidgets.size(); i++) {
+				ResearchNodeUnlockWidget unlock = unlockWidgets.get(i);
+				unlock.setPosition(6.5f + (i * 11), 40 + descriptionHeight);
+				unlock.setZLevel(155);
 			}
 		}
 	}

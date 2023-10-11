@@ -12,7 +12,7 @@ public class HeatTooltipUtilities {
 	}
 
 	public static MutableComponent getActiveTemperatureTooltip(float temperature) {
-		return Component.literal(ChatFormatting.GRAY + "Temperature: ").append(GuiTextUtilities.formatHeatRateToString(temperature)).withStyle(ChatFormatting.GOLD);
+		return Component.literal(ChatFormatting.GRAY + "Temperature: ").append(GuiTextUtilities.formatHeatToString(temperature)).withStyle(ChatFormatting.GOLD);
 	}
 
 	public static MutableComponent getHeatGenerationTooltip(float heatGeneration) {

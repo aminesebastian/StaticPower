@@ -15,11 +15,12 @@ public class HeatCableCapability extends ServerCableCapability {
 		heatStorage = new HeatStorage(0, 0, 0, 0, 0);
 	}
 
-	public void initialize(float mass, float specificHeat, float conductivity, float maximumTemperature) {
+	public void initialize(float ambientTemperature, float mass, float specificHeat, float conductivity, float maximumTemperature) {
 		heatStorage.setMass(mass);
 		heatStorage.setSpecificHeat(specificHeat);
 		heatStorage.setConductivity(conductivity);
 		heatStorage.setMaximumHeat(maximumTemperature);
+		heatStorage.setTemperature(ambientTemperature);
 	}
 
 	public IHeatStorage getStorage() {

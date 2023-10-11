@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "r": {
+      "item": "staticpower:rusty_iron_scrap"
+    }
+  },
+  "pattern": [
+    "r r",
+    "r r",
+    "rrr"
+  ],
+  "result": {
+    "item": "staticpower:rusty_cauldron"
+  }
+}

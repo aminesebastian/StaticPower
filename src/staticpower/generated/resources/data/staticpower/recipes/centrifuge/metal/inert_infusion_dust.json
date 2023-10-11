@@ -1,0 +1,29 @@
+{
+  "type": "staticpower:centrifuge",
+  "input": {
+    "count": 3,
+    "ingredient": {
+      "tag": "staticpower:dusts/inert_infusion_alloy"
+    }
+  },
+  "minimum_speed": 200,
+  "primary_output": {
+    "item": {
+      "id": "staticpower:dust_silver"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output": {
+    "item": {
+      "id": "staticpower:dust_gold"
+    }
+  },
+  "tertiary_output": {
+    "item": {
+      "id": "staticpower:dust_platinum"
+    }
+  }
+}

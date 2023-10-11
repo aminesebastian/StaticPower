@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "tag": "forge:plates/tin"
+    },
+    "t": {
+      "item": "staticpower:tank_iron"
+    }
+  },
+  "pattern": [
+    "ppp",
+    "tit",
+    "ppp"
+  ],
+  "result": {
+    "item": "staticpower:tank_basic"
+  }
+}

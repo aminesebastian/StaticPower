@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:centrifuge",
+  "input": {
+    "ingredient": {
+      "tag": "forge:wool/cyan"
+    }
+  },
+  "minimum_speed": 500,
+  "primary_output": {
+    "item": {
+      "id": "minecraft:cyan_wool"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output": {
+    "item": {
+      "id": "minecraft:cyan_dye"
+    }
+  }
+}

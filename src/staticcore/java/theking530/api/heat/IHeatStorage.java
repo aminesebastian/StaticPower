@@ -16,56 +16,17 @@ public interface IHeatStorage {
 	public static final float ROOM_TEMPERATURE = 20;
 
 	public static final float ABSOLUTE_ZERO = -273;
+
 	public static final float DEFAULT_BLOCK_MASS = 100;
+	public static final float DEFAULT_CONDUCTIVITY = 0.01f;
+	public static final float DEFAULT_SPECIFIC_HEAT = 100;
 
 	/**
 	 * Returns the amount of heat currently stored in this heatable entity.
 	 * 
 	 * @return
 	 */
-	public float getCurrentTemperature();
-
-	/**
-	 * Returns the maximum amount of heat that *should* be stored in this heatable
-	 * entity. After this point, should no longer take heat. Think of this as the
-	 * *danger* point after which nothing smart should actively put heat into this.
-	 * Putting heat into this after hitting the overheat threshold could trigger
-	 * unwanted effects (exploding, melting, etc).
-	 * 
-	 * @return
-	 */
-	public default float getOverheatTemperature() {
-		return getMaximumTemperature();
-	}
-
-	/**
-	 * Returns the minimum amount of heat that *should* be stored in this heatable
-	 * entity. After this point, the owner should exhibit some new effects (stop
-	 * working if a machine, etc).
-	 * 
-	 * @return
-	 */
-	public default float getMinimumTemperatureThreshold() {
-		return WATER_FREEZING_TEMPERATURE;
-	}
-
-	/**
-	 * Returns true if this heat storage is overheated.
-	 * 
-	 * @return
-	 */
-	public default boolean isOverheated() {
-		return getCurrentTemperature() >= getOverheatTemperature();
-	}
-
-	/**
-	 * Returns true if this heat storage is frozen.
-	 * 
-	 * @return
-	 */
-	public default boolean isFrozen() {
-		return getCurrentTemperature() <= getMinimumTemperatureThreshold();
-	}
+	public float getTemperature();
 
 	/**
 	 * Returns the maximum amount of heat that can be stored in this heatable
@@ -84,16 +45,18 @@ public interface IHeatStorage {
 	 * @return
 	 */
 	public default float getConductivity() {
-		return 1.0f;
+		return DEFAULT_CONDUCTIVITY;
 	}
 
 	/**
 	 * Returns the mass of this heat storage. The higher the mass, the slower the
-	 * transfer of heat.
+	 * transfer of heat. This value is in grams.
 	 * 
 	 * @return
 	 */
-	public float getMass();
+	public default float getMass() {
+		return DEFAULT_BLOCK_MASS;
+	}
 
 	/**
 	 * Returns the specific heat of this heat storage. This represents the amount of
@@ -101,7 +64,9 @@ public interface IHeatStorage {
 	 * 
 	 * @return
 	 */
-	public float getSpecificHeat();
+	public default float getSpecificHeat() {
+		return DEFAULT_SPECIFIC_HEAT;
+	}
 
 	/**
 	 * Adds heat to this heatable entity.
@@ -122,4 +87,46 @@ public interface IHeatStorage {
 	public float cool(float heatFlux, HeatTransferAction action);
 
 	public HeatTicker getTicker();
+
+	/**
+	 * Returns the maximum amount of heat that *should* be stored in this heatable
+	 * entity. After this point, should no longer take heat. Think of this as the
+	 * *danger* point after which nothing smart should actively put heat into this.
+	 * Putting heat into this after hitting the overheat threshold could trigger
+	 * unwanted effects (exploding, melting, etc).
+	 * 
+	 * @return
+	 */
+	public default float getOverheatThreshold() {
+		return getMaximumTemperature();
+	}
+
+	/**
+	 * Returns the minimum amount of heat that *should* be stored in this heatable
+	 * entity. After this point, the owner should exhibit some new effects (stop
+	 * working if a machine, etc).
+	 * 
+	 * @return
+	 */
+	public default float getMinimumOperatingThreshold() {
+		return WATER_FREEZING_TEMPERATURE;
+	}
+
+	/**
+	 * Returns true if this heat storage is overheated.
+	 * 
+	 * @return
+	 */
+	public default boolean isOverheated() {
+		return getTemperature() >= getOverheatThreshold();
+	}
+
+	/**
+	 * Returns true if this heat storage is frozen.
+	 * 
+	 * @return
+	 */
+	public default boolean isFrozen() {
+		return getTemperature() <= getMinimumOperatingThreshold();
+	}
 }

@@ -34,8 +34,8 @@ public class HeatNetworkModule extends CableNetworkModule {
 		IHeatStorage heatStorage = capability.get().getStorage();
 
 		Cable cable = Network.getGraph().getCables().get(pos);
-		Component currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentTemperature(),
-				heatStorage.getOverheatTemperature());
+		Component currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getTemperature(),
+				heatStorage.getOverheatThreshold());
 		Component cooling = GuiTextUtilities.formatHeatRateToString(heatStorage.getTicker().getAverageCooledPerTick());
 		Component heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getTicker().getAverageHeatedPerTick());
 		Component averageConductivity = GuiTextUtilities

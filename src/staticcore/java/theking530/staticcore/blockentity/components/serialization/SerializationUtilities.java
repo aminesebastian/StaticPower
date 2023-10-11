@@ -106,7 +106,10 @@ public class SerializationUtilities {
 			boolean isAccessible = field.canAccess(object);
 			try {
 				// Mark it accessible if not.
-				field.setAccessible(true);
+				if (!isAccessible && !field.trySetAccessible()) {
+					continue;
+				}
+
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();
 				if (t.isEnum()) {
@@ -157,7 +160,7 @@ public class SerializationUtilities {
 							field.getName(), t));
 				}
 			} catch (Throwable e) {
-				StaticCore.LOGGER.debug(String.format("There was an error attempting to serialize field: %1$s!", field),
+				StaticCore.LOGGER.trace(String.format("There was an error attempting to serialize field: %1$s!", field),
 						e);
 			} finally {
 				// Reset the private state if needed.
@@ -188,7 +191,9 @@ public class SerializationUtilities {
 			boolean isAccessible = field.canAccess(object);
 			try {
 				// Mark it accessible if not.
-				field.setAccessible(true);
+				if (!isAccessible && !field.trySetAccessible()) {
+					continue;
+				}
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();
 				if (t.isEnum()) {
@@ -233,7 +238,7 @@ public class SerializationUtilities {
 				}
 			} catch (Throwable e) {
 				StaticCore.LOGGER
-						.debug(String.format("There was an error attempting to deserialize field: %1$s!", field), e);
+						.trace(String.format("There was an error attempting to deserialize field: %1$s!", field), e);
 			} finally {
 				// Reset the private state if needed.
 				if (!isAccessible) {

@@ -3,8 +3,8 @@ package theking530.api.energy;
 import theking530.staticcore.utilities.math.SDMath;
 
 public enum StaticPowerVoltage {
-	ZERO("no_voltage", 0.0), LOW("low_voltage", 10.0), MEDIUM("medium_voltage", 100.0), HIGH("high_voltage", 1000.0),
-	EXTREME("extreme_voltage", 10000.0), BONKERS("bonkers_voltage", 100000.0);
+	ZERO("no_voltage", 0.0), LOW("low_voltage", 10.0), MEDIUM("medium_voltage", 100.0), HIGH("high_voltage", 10000.0),
+	EXTREME("extreme_voltage", 100000.0), BONKERS("ultra_voltage", 1000000.0);
 
 	private String unlocalizedName;
 	private String shortName;

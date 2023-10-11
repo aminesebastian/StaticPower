@@ -50,7 +50,7 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 	public void process() {
 		if (!level.isClientSide) {
 			// Damage entities if too hot.
-			if (heatStorage.getCurrentTemperature() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold
+			if (heatStorage.getTemperature() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold
 					.get()) {
 				AABB aabb = new AABB(this.worldPosition.offset(0.0, 0, 0.0), this.worldPosition.offset(1.0, 2.0, 1.0));
 				List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, aabb);
@@ -61,7 +61,7 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 		}
 
 		// If under water, generate bubbles.
-		if (heatStorage.getCurrentTemperature() >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
+		if (heatStorage.getTemperature() >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
 			float randomOffset = (3 * getLevel().getRandom().nextFloat()) - 1.5f;
 			if (SDMath.diceRoll(0.25f)
 					&& level.getBlockState(getBlockPos().relative(Direction.UP)).getBlock() == Blocks.WATER) {

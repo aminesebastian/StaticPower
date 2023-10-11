@@ -62,7 +62,7 @@ public class EnergizedCableConfiguration {
 
 		@Override
 		protected double getCableMaxCurrent() {
-			return 50;
+			return 100;
 		}
 
 		@Override
@@ -77,7 +77,7 @@ public class EnergizedCableConfiguration {
 
 		@Override
 		protected double getWireTerminalMaxCurrent() {
-			return 50;
+			return 100;
 		}
 
 		@Override

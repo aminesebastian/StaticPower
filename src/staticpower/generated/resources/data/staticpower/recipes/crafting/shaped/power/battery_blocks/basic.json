@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_basic"
+    },
+    "m": {
+      "item": "staticpower:machine_block_basic"
+    },
+    "p": {
+      "tag": "forge:plates/tin"
+    }
+  },
+  "pattern": [
+    "bpb",
+    "bmb",
+    "bpb"
+  ],
+  "result": {
+    "item": "staticpower:battery_block_basic"
+  }
+}

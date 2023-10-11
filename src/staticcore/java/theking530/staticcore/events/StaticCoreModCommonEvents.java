@@ -54,6 +54,9 @@ public class StaticCoreModCommonEvents {
 
 	@SubscribeEvent
 	public static void registerCustomRegistries(@Nonnull NewRegistryEvent event) {
+		event.create(new RegistryBuilder<CableNetworkModuleType>()
+				.setName(StaticCoreRegistries.MULTIBLOCK_TYPE_REGISTRY_KEY.location()).setIDRange(0, Integer.MAX_VALUE - 1));
+		
 		event.create(new RegistryBuilder<UpgradeType<?>>()
 				.setName(StaticCoreRegistries.UPGRADE_TYPES_REGISTRY_KEY.location())
 				.setIDRange(0, Integer.MAX_VALUE - 1));

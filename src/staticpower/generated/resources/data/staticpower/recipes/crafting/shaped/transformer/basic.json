@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "tag": "forge:wire_coil/copper"
+    },
+    "i": {
+      "tag": "forge:plates/iron"
+    },
+    "m": {
+      "item": "staticpower:machine_block_basic"
+    }
+  },
+  "pattern": [
+    "c c",
+    "cmc",
+    "iii"
+  ],
+  "result": {
+    "item": "staticpower:transformer_basic"
+  }
+}

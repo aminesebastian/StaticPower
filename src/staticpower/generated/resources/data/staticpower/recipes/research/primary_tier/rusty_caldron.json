@@ -1,0 +1,36 @@
+{
+  "type": "staticcore:research",
+  "color": {
+    "b": 0.0,
+    "g": 0.0,
+    "r": 1.0
+  },
+  "description": "research.rusty_cauldron.description",
+  "hidden_until_available": false,
+  "icon": {
+    "item": {
+      "id": "staticpower:rusty_cauldron"
+    }
+  },
+  "prerequisites": [
+    "staticpower:research/primary_tier/rubber_wood_stripping"
+  ],
+  "research_requirements": [
+    {
+      "count": 30,
+      "ingredient": {
+        "item": "staticcore:research_tier_1"
+      }
+    }
+  ],
+  "title": "research.rusty_cauldron.title",
+  "unlocks": [
+    {
+      "type": {
+        "type": "CRAFTING"
+      },
+      "display_key": "iron",
+      "target": "staticpower:crafting/shaped/machines/rusty_cauldron"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "type": "staticcore:research",
+  "color": {
+    "b": 0.0,
+    "g": 0.0,
+    "r": 1.0
+  },
+  "description": "research.soldering_iron.description",
+  "hidden_until_available": false,
+  "icon": {
+    "item": {
+      "id": "staticpower:soldering_iron",
+      "tag": {
+        "Damage": 0
+      }
+    }
+  },
+  "prerequisites": [
+    "staticpower:research/primary_tier/tools/hammer"
+  ],
+  "research_requirements": [
+    {
+      "count": 10,
+      "ingredient": {
+        "item": "staticcore:research_tier_1"
+      }
+    }
+  ],
+  "title": "research.soldering_iron.title",
+  "unlocks": [
+    {
+      "type": {
+        "type": "CRAFTING"
+      },
+      "display_key": "soldering_iron",
+      "target": "staticpower:crafting/shaped/tools/soldering_iron"
+    }
+  ]
+}

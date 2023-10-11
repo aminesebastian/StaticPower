@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "tag": "forge:chests"
+    },
+    "d": {
+      "item": "minecraft:dropper"
+    },
+    "s": {
+      "tag": "forge:cobblestone"
+    }
+  },
+  "pattern": [
+    "scs",
+    "sds",
+    "s s"
+  ],
+  "result": {
+    "item": "staticpower:direct_dropper"
+  }
+}

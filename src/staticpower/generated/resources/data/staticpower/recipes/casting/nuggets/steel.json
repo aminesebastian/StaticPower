@@ -1,0 +1,23 @@
+{
+  "type": "staticpower:casting",
+  "fluid": {
+    "amount": 16,
+    "fluids": {
+      "tag": "staticpower:molten_steel"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "staticpower:mold_nugget"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:nugget_steel"
+    }
+  },
+  "processing": {
+    "power": 2.0,
+    "processing_time": 22
+  }
+}

@@ -11,38 +11,18 @@ public class EnergizedPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
-	protected double getDefaultPowerCapacity() {
-		return 2500;
-	}
-
-	@Override
-	protected StaticPowerVoltage getDefaultOutputVoltage() {
-		return StaticPowerVoltage.LOW;
-	}
-
-	@Override
 	protected StaticPowerVoltage internalGetMaximumBatteryInputVoltage() {
 		return StaticPowerVoltage.EXTREME;
 	}
 
 	@Override
-	protected double getDefaultMaximumPowerInput() {
-		return 75;
-	}
-
-	@Override
 	protected double getDefaultMaximumPowerOutput() {
-		return 35;
-	}
-
-	@Override
-	protected double getBatteryMaximumPowerOutput() {
-		return 250;
+		return 1000;
 	}
 
 	@Override
 	protected double getSolarPanelPowerGeneration() {
-		return 8;
+		return 15;
 	}
 
 	@Override

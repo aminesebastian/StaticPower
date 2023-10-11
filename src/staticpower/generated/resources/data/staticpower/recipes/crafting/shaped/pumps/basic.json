@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:cable_industrial_fluid_basic"
+    },
+    "g": {
+      "tag": "forge:glass"
+    },
+    "m": {
+      "item": "staticpower:machine_block_basic"
+    },
+    "p": {
+      "item": "staticpower:pump_tube"
+    },
+    "t": {
+      "item": "staticpower:motor"
+    }
+  },
+  "pattern": [
+    "gtg",
+    "cpc",
+    "gmg"
+  ],
+  "result": {
+    "item": "staticpower:pump_basic"
+  }
+}

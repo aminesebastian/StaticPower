@@ -148,7 +148,7 @@ public class StaticCoreGameDataManager {
 	 * local data. This is good for sending when players first join in case they
 	 * were already in another server that also has your mod.
 	 */
-	public void loadDataForClient(ServerPlayer player) {
+	public void syncDataToClient(ServerPlayer player) {
 		for (IStaticCoreGameData data : cachedData.values()) {
 			data.syncToClient(player);
 		}

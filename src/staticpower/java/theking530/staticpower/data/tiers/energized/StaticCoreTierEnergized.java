@@ -50,11 +50,6 @@ public class StaticCoreTierEnergized extends StaticCoreTier {
 	}
 
 	@Override
-	protected float getDefaultMachineThermalMass() {
-		return 100;
-	}
-
-	@Override
 	protected float getDefaultMachineOverheatTemperature() {
 		return 1400.0f;
 	}

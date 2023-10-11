@@ -20,6 +20,7 @@ public class StaticPowerEnergyUtilities {
 	}
 
 	public static final double FE_TO_SP_CONVERSION = 10;
+	public static final double WATTS_TO_KW = 1000;
 
 	public static double convertFEtomSP(int FE) {
 		return FE / FE_TO_SP_CONVERSION;
@@ -50,7 +51,8 @@ public class StaticPowerEnergyUtilities {
 	}
 
 	public static double getMaxOutputPower(IStaticPowerStorage storage) {
-		return StaticPowerEnergyUtilities.getPowerFromVoltageAndCurrent(storage.getOutputVoltage(), storage.getMaximumPowerOutput());
+		return StaticPowerEnergyUtilities.getPowerFromVoltageAndCurrent(storage.getOutputVoltage(),
+				storage.getMaximumPowerOutput());
 	}
 
 	/**
@@ -110,7 +112,8 @@ public class StaticPowerEnergyUtilities {
 		return storage.getStoredPower() + power <= storage.getCapacity();
 	}
 
-	public static ElectricalExplosionTrigger shouldPowerStackTriggerExplosion(PowerStack stack, IStaticPowerStorage storage) {
+	public static ElectricalExplosionTrigger shouldPowerStackTriggerExplosion(PowerStack stack,
+			IStaticPowerStorage storage) {
 		// If there is no power, no need to explode.
 		if (stack.getPower() == 0) {
 			return ElectricalExplosionTrigger.NONE;
@@ -118,7 +121,8 @@ public class StaticPowerEnergyUtilities {
 
 		// If the current is alternating and we don't accept alternating current, that's
 		// bad!
-		if (stack.getCurrentType() == CurrentType.ALTERNATING && !storage.canAcceptCurrentType(stack.getCurrentType())) {
+		if (stack.getCurrentType() == CurrentType.ALTERNATING
+				&& !storage.canAcceptCurrentType(stack.getCurrentType())) {
 			return ElectricalExplosionTrigger.INCOMPATIBLE_CURRENT_TYPE;
 		}
 
@@ -130,11 +134,13 @@ public class StaticPowerEnergyUtilities {
 		return ElectricalExplosionTrigger.NONE;
 	}
 
-	public static <T extends Entity> int applyElectricalDamageInArea(Class<T> entityClass, Level level, AABB area, double current, double damageMultiplier) {
+	public static <T extends Entity> int applyElectricalDamageInArea(Class<T> entityClass, Level level, AABB area,
+			double current, double damageMultiplier) {
 		int hitEntities = 0;
 		List<T> list = level.getEntitiesOfClass(entityClass, area);
 		for (T entity : list) {
-			StaticPowerEnergyUtilities.applyElectricalDamage(entity, current, StaticCoreConfig.SERVER.electricalDamageMultiplier.get());
+			StaticPowerEnergyUtilities.applyElectricalDamage(entity, current,
+					StaticCoreConfig.SERVER.electricalDamageMultiplier.get());
 			hitEntities++;
 		}
 		return hitEntities;
@@ -145,10 +151,15 @@ public class StaticPowerEnergyUtilities {
 		// screen for players).
 		if (entity.invulnerableTime <= 10) {
 			if (entity.hurt(StaticEnergyDamangeSource.get(), (float) (current * damageMultiplier))) {
-				entity.getLevel().playSound(null, entity.getOnPos(), SoundEvents.BEE_POLLINATE, SoundSource.HOSTILE, 2.0f, 0.4f);
+				entity.getLevel().playSound(null, entity.getOnPos(), SoundEvents.BEE_POLLINATE, SoundSource.HOSTILE,
+						2.0f, 0.4f);
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public static double toKW(double watts) {
+		return watts * WATTS_TO_KW;
 	}
 }

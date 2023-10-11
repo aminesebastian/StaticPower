@@ -20,15 +20,15 @@ public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget<GuiHeatBarFromH
 	public GuiHeatBarFromHeatStorage(IHeatStorage heatStorage, int xPosition, int yPosition, int xSize, int ySize) {
 		super(xPosition, yPosition, xSize, ySize);
 		this.heatStorage = heatStorage;
-		interpolatedHeat = this.heatStorage.getCurrentTemperature();
+		interpolatedHeat = this.heatStorage.getTemperature();
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		float delta = heatStorage.getCurrentTemperature() - interpolatedHeat;
-		float distance = interpolatedHeat - heatStorage.getCurrentTemperature();
-		float distanceRatio = distance / heatStorage.getCurrentTemperature();
+		float delta = heatStorage.getTemperature() - interpolatedHeat;
+		float distance = interpolatedHeat - heatStorage.getTemperature();
+		float distanceRatio = distance / heatStorage.getTemperature();
 		int maxMovement = (int) (Math.abs(distanceRatio / 2) * distance);
 		if (delta < 0) {
 			delta = Math.max(delta, -maxMovement);
@@ -40,13 +40,13 @@ public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget<GuiHeatBarFromH
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		GuiHeatBarUtilities.drawHeatBar(matrix, 0, 0, getSize().getX(), getSize().getY(), 0.0f, heatStorage.getCurrentTemperature(), heatStorage.getMinimumTemperatureThreshold(),
-				heatStorage.getOverheatTemperature(), heatStorage.getMaximumTemperature());
+		GuiHeatBarUtilities.drawHeatBar(matrix, 0, 0, getSize().getX(), getSize().getY(), 0.0f, heatStorage.getTemperature(), heatStorage.getMinimumOperatingThreshold(),
+				heatStorage.getOverheatThreshold(), heatStorage.getMaximumTemperature());
 	}
 
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		tooltips.addAll(GuiHeatBarUtilities.getTooltip(heatStorage.getCurrentTemperature(), heatStorage.getMinimumTemperatureThreshold(), heatStorage.getOverheatTemperature(),
+		tooltips.addAll(GuiHeatBarUtilities.getTooltip(heatStorage.getTemperature(), heatStorage.getMinimumOperatingThreshold(), heatStorage.getOverheatThreshold(),
 				heatStorage.getMaximumTemperature(), heatStorage.getConductivity()));
 	}
 }

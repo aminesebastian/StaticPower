@@ -1,0 +1,27 @@
+{
+  "type": "staticcore:research",
+  "color": {
+    "b": 0.0,
+    "g": 0.0,
+    "r": 1.0
+  },
+  "description": "research.rubber_wood_stripping.description",
+  "hidden_until_available": false,
+  "icon": {
+    "item": {
+      "id": "staticpower:rubber_wood_bark"
+    }
+  },
+  "prerequisites": [
+    "staticpower:research/primary_tier"
+  ],
+  "research_requirements": [
+    {
+      "count": 10,
+      "ingredient": {
+        "item": "staticcore:research_tier_1"
+      }
+    }
+  ],
+  "title": "research.rubber_wood_stripping.title"
+}

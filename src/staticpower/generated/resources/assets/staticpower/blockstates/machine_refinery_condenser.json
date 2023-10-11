@@ -1,0 +1,78 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "staticpower:block/refinery_condenser/machine_refinery_condenser"
+      },
+      "when": {
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "staticpower:block/refinery_condenser/machine_refinery_condenser_connector"
+      },
+      "when": {
+        "facing": "north",
+        "is_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "staticpower:block/refinery_condenser/machine_refinery_condenser",
+        "y": 90
+      },
+      "when": {
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "staticpower:block/refinery_condenser/machine_refinery_condenser_connector",
+        "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "is_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "staticpower:block/refinery_condenser/machine_refinery_condenser",
+        "y": 180
+      },
+      "when": {
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "staticpower:block/refinery_condenser/machine_refinery_condenser_connector",
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "is_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "staticpower:block/refinery_condenser/machine_refinery_condenser",
+        "y": 270
+      },
+      "when": {
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "staticpower:block/refinery_condenser/machine_refinery_condenser_connector",
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "is_connected": "true"
+      }
+    }
+  ]
+}

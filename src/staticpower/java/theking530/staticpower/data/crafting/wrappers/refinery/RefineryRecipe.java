@@ -20,7 +20,7 @@ import theking530.staticpower.init.ModRecipeTypes;
 
 public class RefineryRecipe extends AbstractMachineRecipe {
 	public static final String ID = "refinery";
-	public static final int DEFAULT_PROCESSING_TIME = 1;
+	public static final int DEFAULT_PROCESSING_TIME = 10;
 	public static final double DEFAULT_POWER_COST = 5.0;
 
 	public static final Codec<RefineryRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(

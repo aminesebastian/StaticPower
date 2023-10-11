@@ -11,7 +11,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
+import theking530.api.heat.HeatInfo;
 import theking530.api.heat.HeatTicker;
+import theking530.api.heat.HeatUtilities;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.blockentity.components.AbstractCableProviderComponent;
 import theking530.staticcore.blockentity.components.heat.HeatStorageComponent;
@@ -44,11 +46,11 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		super.preProcessUpdate();
 		if (!isClientSide()) {
 			this.<HeatNetworkModule>getNetworkModule(ModCableModules.Heat.get()).ifPresent(network -> {
-				boolean shouldUpdate = Math.abs(getServerHeatStorage().getCurrentTemperature()
+				boolean shouldUpdate = Math.abs(getServerHeatStorage().getTemperature()
 						- clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
-				shouldUpdate |= getServerHeatStorage().getOverheatTemperature() != clientSideHeatCapacity;
-				shouldUpdate |= clientSideHeat == 0 && getServerHeatStorage().getCurrentTemperature() > 0;
-				shouldUpdate |= clientSideHeat > 0 && getServerHeatStorage().getCurrentTemperature() == 0;
+				shouldUpdate |= getServerHeatStorage().getOverheatThreshold() != clientSideHeatCapacity;
+				shouldUpdate |= clientSideHeat == 0 && getServerHeatStorage().getTemperature() > 0;
+				shouldUpdate |= clientSideHeat > 0 && getServerHeatStorage().getTemperature() == 0;
 				if (shouldUpdate) {
 					updateClientValues();
 				}
@@ -59,7 +61,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public void updateClientValues() {
 		if (!isClientSide()) {
 			this.<HeatNetworkModule>getNetworkModule(ModCableModules.Heat.get()).ifPresent(network -> {
-				clientSideHeat = getServerHeatStorage().getCurrentTemperature();
+				clientSideHeat = getServerHeatStorage().getTemperature();
 				clientSideHeatCapacity = getServerHeatStorage().getMaximumTemperature();
 
 				// Only send the packet to nearby players since these packets get sent
@@ -78,9 +80,9 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public float getCurrentTemperature() {
+	public float getTemperature() {
 		if (!getBlockEntity().getLevel().isClientSide) {
-			return getHeatNetworkModule().isPresent() ? getServerHeatStorage().getCurrentTemperature() : 0.0f;
+			return getHeatNetworkModule().isPresent() ? getServerHeatStorage().getTemperature() : 0.0f;
 		} else {
 			return clientSideHeat;
 		}
@@ -97,10 +99,10 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public float getOverheatTemperature() {
+	public float getOverheatThreshold() {
 		if (!getBlockEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
-			return module != null ? getServerHeatStorage().getOverheatTemperature() : 0;
+			return module != null ? getServerHeatStorage().getOverheatThreshold() : 0;
 		} else {
 			return 0;
 		}
@@ -185,8 +187,9 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		super.initializeCableProperties(cable, context, state, placer, stack);
 		cable.getDataTag().putFloat(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.getDataTag().putFloat(HEAT_CONDUCTIVITY_TAG_KEY, conductivity);
+		HeatInfo ambientProperties = HeatUtilities.getAmbientProperties(getLevel(), getPos());
 		HeatCableCapability heatCapability = ModCableCapabilities.Heat.get().create(cable);
-		heatCapability.initialize(10, 400, 400, 1000);
+		heatCapability.initialize(ambientProperties.temperature(), 0.1f, 400, 400, 1000);
 		cable.registerCapability(heatCapability);
 	}
 

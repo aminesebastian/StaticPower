@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 4,
+  "ingredient": {
+    "tag": "staticpower:storage_blocks/raw_redstone_alloy"
+  },
+  "result": "staticpower:block_cut_redstone_alloy"
+}

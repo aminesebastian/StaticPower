@@ -21,6 +21,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
+import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<SolderingRecipe> {
 	public static final RecipeType<SolderingRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "soldering_table"), SolderingRecipe.class);
@@ -82,6 +83,6 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 		}
 
 		builder.addSlot(RecipeIngredientRole.INPUT, 8, 5).addIngredients(recipe.getSolderingIron());
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 23).addItemStack(recipe.getResultItem());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 22).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 	}
 }

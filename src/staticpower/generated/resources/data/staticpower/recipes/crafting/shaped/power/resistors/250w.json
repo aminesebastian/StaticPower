@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "tag": "forge:wire_coil/copper"
+    },
+    "f": {
+      "tag": "forge:dyes/yellow"
+    },
+    "s": {
+      "tag": "forge:dyes/purple"
+    },
+    "t": {
+      "tag": "forge:dyes/red"
+    },
+    "w": {
+      "tag": "forge:wires/copper"
+    }
+  },
+  "pattern": [
+    "fst",
+    "wcw",
+    "   "
+  ],
+  "result": {
+    "item": "staticpower:resistor_250"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "p": {
+      "item": "staticpower:upgrade_plate_energized"
+    },
+    "t": {
+      "item": "staticpower:transformer_energized"
+    },
+    "w": {
+      "tag": "forge:wires/copper"
+    }
+  },
+  "pattern": [
+    " w ",
+    "wtw",
+    " p "
+  ],
+  "result": {
+    "item": "staticpower:upgrade_transformer_lumum"
+  }
+}

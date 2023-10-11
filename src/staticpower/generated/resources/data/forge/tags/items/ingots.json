@@ -1,5 +1,6 @@
 {
   "values": [
+    "staticpower:ingot_steel",
     "staticpower:ingot_static_metal",
     "staticpower:ingot_redstone_alloy",
     "staticpower:ingot_lumum_metal",
@@ -19,6 +20,7 @@
     "minecraft:iron_ingot",
     "staticpower:ingot_silver",
     "staticpower:ingot_uranium",
+    "staticpower:ingot_steel_heated",
     "staticpower:ingot_static_metal_heated",
     "staticpower:ingot_redstone_alloy_heated",
     "staticpower:ingot_lumum_metal_heated",

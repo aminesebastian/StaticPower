@@ -36,7 +36,7 @@ public class BlockEntityHeatCable extends BlockEntityBase {
 			cableComponent.getHeatNetworkModule().ifPresent(module -> {
 				Optional<HeatCableCapability> capability = module.getHeatCableCapability(getBlockPos());
 				if (capability.isPresent()) {
-					float temperature = capability.get().getStorage().getCurrentTemperature();
+					float temperature = capability.get().getStorage().getTemperature();
 					if (temperature >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
 						AABB aabb = new AABB(getBlockPos().offset(0.0, 0, 0.0), getBlockPos().offset(1.0, 1, 1.0));
 						List<LivingEntity> list = getLevel().getEntitiesOfClass(LivingEntity.class, aabb);

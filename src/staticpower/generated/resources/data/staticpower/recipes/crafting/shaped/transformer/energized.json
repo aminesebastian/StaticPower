@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "tag": "staticpower:wire_coil/energized_metal"
+    },
+    "i": {
+      "tag": "forge:plates/iron"
+    },
+    "m": {
+      "item": "staticpower:machine_block_industrial"
+    }
+  },
+  "pattern": [
+    "c c",
+    "cmc",
+    "iii"
+  ],
+  "result": {
+    "item": "staticpower:transformer_energized"
+  }
+}

@@ -12,18 +12,18 @@ public class ModUpgradeTypes {
 			.create(StaticCoreRegistries.UPGRADE_TYPES_REGISTRY_KEY, StaticPower.MOD_ID);
 
 	public static final RegistryObject<UpgradeType<Boolean>> EXPERIENCE_VACUUM = UPGRADE_TYPE_REGISTRY
-			.register("experience_vacuum", () -> new UpgradeType<Boolean>());
+			.register("experience_vacuum", () -> new UpgradeType<Boolean>(false));
 	public static final RegistryObject<UpgradeType<Boolean>> TELEPORT = UPGRADE_TYPE_REGISTRY.register("teleport",
-			() -> new UpgradeType<Boolean>());
+			() -> new UpgradeType<Boolean>(false));
 	public static final RegistryObject<UpgradeType<CentrifugeUpgradeValue>> CENTRIFUGE = UPGRADE_TYPE_REGISTRY
-			.register("centrifuge", () -> new UpgradeType<CentrifugeUpgradeValue>());
+			.register("centrifuge", () -> new UpgradeType<CentrifugeUpgradeValue>(new CentrifugeUpgradeValue(0, 1.0)));
 
 	public static final RegistryObject<UpgradeType<Boolean>> DIGISTORE_CRAFTING = UPGRADE_TYPE_REGISTRY
-			.register("digistore_crafting", () -> new UpgradeType<Boolean>());
+			.register("digistore_crafting", () -> new UpgradeType<Boolean>(false));
 	public static final RegistryObject<UpgradeType<Boolean>> DIGISTORE_STACK = UPGRADE_TYPE_REGISTRY
-			.register("digistore_stack", () -> new UpgradeType<Boolean>());
+			.register("digistore_stack", () -> new UpgradeType<Boolean>(false));
 	public static final RegistryObject<UpgradeType<Double>> DIGISTORE_ACCELERATION = UPGRADE_TYPE_REGISTRY
-			.register("digistore_acceleration", () -> new UpgradeType<Double>());
+			.register("digistore_acceleration", () -> new UpgradeType<Double>(1.0));
 
 	public static void init(IEventBus eventBus) {
 		UPGRADE_TYPE_REGISTRY.register(eventBus);

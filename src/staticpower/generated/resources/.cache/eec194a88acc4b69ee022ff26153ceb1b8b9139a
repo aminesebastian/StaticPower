@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-24T00:13:54.4090035	Tags for minecraft:fluid
+// 1.19.2	2023-10-03T01:15:05.6605207	Tags for minecraft:fluid
 dfcbdfc7c0481081047104fc4c381b1936f84c8e data/staticpower/tags/fluids/concrete.json
 4febb156dc0e77728bfbdbaeeb197c6cd124270f data/staticpower/tags/fluids/concrete_black.json
 5a0f57082912eb30f7f1896469e024282202f2e1 data/staticpower/tags/fluids/concrete_blue.json
@@ -62,6 +62,7 @@ a25ae1242602725162b14418f545d011d608d58d data/staticpower/tags/fluids/molten_lea
 f3b2ed778af9da754ed5e332853bccb4de25f8ca data/staticpower/tags/fluids/molten_magnesium.json
 8452521aa6941a3b4e6347865249ac45c82c1ff1 data/staticpower/tags/fluids/molten_platinum.json
 af0e8aaf5a90c2e9c3e6f711a859c08cfe1efa03 data/staticpower/tags/fluids/molten_silver.json
+978307bb77a133f65964f5aebad54e6eb83715f6 data/staticpower/tags/fluids/molten_steel.json
 416bf96600f148b25995609393849f10f24f6936 data/staticpower/tags/fluids/molten_tin.json
 2d76771f8ec92cc14efd6ed469ba7534276d0447 data/staticpower/tags/fluids/molten_tungsten.json
 2916a96bbcc451a33c34b3b74ad065cef6b68e43 data/staticpower/tags/fluids/molten_zinc.json

@@ -1,8 +1,7 @@
 package theking530.api.heat;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
@@ -31,95 +30,158 @@ import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 
 public class HeatUtilities {
-	public record HeatInfo(float mass, float temperature, float conductivity, float specificHeat,
-			IHeatStorage heatStorage) {
-
-		public HeatInfo(IHeatStorage storage) {
-			this(storage.getMass(), storage.getCurrentTemperature(), storage.getConductivity(),
-					storage.getSpecificHeat(), storage);
-		}
-
-		public HeatInfo(float mass, float temperature, float conductivity, float specificHeat) {
-			this(mass, temperature, conductivity, specificHeat, null);
-		}
-	}
-
-	public static final float HEAT_TRANSFER_RATE = 100.0f;
 	public static final float THERMAL_BEHAVIOUR_DELTA_CHANCE_DIVISOR = 4000f;
 
-	public static float transferHeat(IHeatStorage storage, Level world, BlockPos currentPos,
-			HeatTransferAction action) {
+	public static float transferHeat(Level level, IHeatStorage storage, BlockPos pos, HeatTransferAction action) {
+		float conducted = performConduction(level, storage, pos, action);
+		float convected = performConvection(level, storage, pos, action);
+		handleOverheating(level, storage, pos, action);
+//		System.out.println(String.format("Conducted: %1$f  Convected: %2$f", conducted, convected));
+		return conducted + convected;
+	}
 
-		float totalTransfered = 0.0f;
+	public static float performConduction(Level level, IHeatStorage storage, BlockPos pos, HeatTransferAction action) {
+		HeatInfo source = new HeatInfo(storage);
+		float totalTransfered = 0;
 
-		List<Direction> randomDirections = new ArrayList<Direction>(6);
+		Map<Direction, Float> fluxMap = new HashMap<>();
+		float totalFlux = 0;
 		for (Direction side : Direction.values()) {
-			randomDirections.add(side);
-		}
-		Collections.shuffle(randomDirections);
-
-		for (Direction side : randomDirections) {
-			HeatInfo adjacentHeat = HeatUtilities.getHeatInfoOnSide(world, currentPos, side, storage);
-			if (adjacentHeat.heatStorage() == storage) {
+			HeatInfo adjacentHeat = getHeatInfoOnSide(level, pos, side, storage);
+			if (adjacentHeat.heatStorage() == storage || adjacentHeat.type() == HeatInfoType.AIR) {
 				continue;
 			}
 
-			HeatInfo source = new HeatInfo(storage);
-			float flux = calculateHeatFluxTransfer(source, adjacentHeat);
-			if (flux == 0) {
-				continue;
-			}
-
-			// This value is in flux/second, so bring it down to per tick.
-			flux /= 20.0f;
-
-			if (adjacentHeat.heatStorage() != null) {
+			float flux = calculateHeatFluxFromConduction(adjacentHeat, source);
+			if (adjacentHeat.heatStorage() == null) {
 				if (flux > 0) {
-					float actualFlux = storage.cool(flux, action);
-					totalTransfered -= adjacentHeat.heatStorage().heat(actualFlux, action);
-				} else {
-					float actualFlux = storage.heat(-flux, action);
-					totalTransfered += adjacentHeat.heatStorage().cool(actualFlux, action);
+					totalTransfered += storage.heat(flux / 200, action);
+				} else if (flux < 0) {
+					totalTransfered -= storage.cool(-flux / 200, action);
 				}
+				continue;
+			} else if (storage.getTemperature() > adjacentHeat.heatStorage().getTemperature()) {
+				continue;
+			}
+
+			fluxMap.put(side, flux);
+			totalFlux += flux;
+		}
+
+		// Normalize the flux per side.
+		Map<Direction, Float> fluxRatioMap = new HashMap<>();
+		for (Direction side : fluxMap.keySet()) {
+			fluxRatioMap.put(side, fluxMap.get(side) / totalFlux);
+		}
+
+		for (Direction side : fluxMap.keySet()) {
+			float idealFluxTransfer = fluxMap.get(side);
+			float fluxRatio = fluxRatioMap.get(side);
+			float fluxTransfer = idealFluxTransfer * fluxRatio * (1 / 20.0f);
+
+			HeatInfo adjacentHeat = getHeatInfoOnSide(level, pos, side, storage);
+			if (fluxTransfer > 0) {
+				float actualFlux = storage.heat(fluxTransfer, action);
+				totalTransfered -= adjacentHeat.heatStorage().cool(actualFlux, action);
 			} else {
-				if (flux > 0) {
-					totalTransfered -= source.heatStorage().cool(flux, action);
-				} else {
-					totalTransfered += source.heatStorage().heat(-flux, action);
-				}
-			}
-		}
-
-		if (action == HeatTransferAction.EXECUTE) {
-			for (Direction dir : Direction.values()) {
-				HeatUtilities.handleOverheatingOnSide(world, currentPos, dir, storage);
+				float actualFlux = storage.cool(-fluxTransfer, action);
+				totalTransfered += adjacentHeat.heatStorage().heat(actualFlux, action);
 			}
 		}
 
 		return totalTransfered;
 	}
 
-	public static float calculateTemperatureDelta(float heatPower, float specificHeat, float mass) {
-		return heatPower / (specificHeat * mass);
+	public static float performConvection(Level level, IHeatStorage storage, BlockPos pos, HeatTransferAction action) {
+		HeatInfo source = new HeatInfo(storage);
+		float totalTransfered = 0;
+
+		for (Direction side : Direction.values()) {
+			HeatInfo adjacentHeat = getHeatInfoOnSide(level, pos, side, storage);
+			if (adjacentHeat.type() != HeatInfoType.AIR) {
+				continue;
+			}
+
+			float flux = calculateHeatFluxFromConvection(adjacentHeat, source);
+			if (adjacentHeat.heatStorage() == null) {
+				if (flux > 0) {
+					totalTransfered += storage.heat(flux / 200, action);
+				} else if (flux < 0) {
+					totalTransfered -= storage.cool(-flux / 200, action);
+				}
+				continue;
+			}
+		}
+
+		return totalTransfered;
 	}
 
-	public static float calculateHeatFluxRequiredForTemperatureChange(float temperatureDelta, float specificHeat,
-			float mass) {
-		return (temperatureDelta * specificHeat * mass);
+	public static void handleOverheating(Level level, IHeatStorage storage, BlockPos pos, HeatTransferAction action) {
+		if (action == HeatTransferAction.EXECUTE) {
+			for (Direction dir : Direction.values()) {
+				handleOverheatingOnSide(level, pos, dir, storage);
+			}
+		}
 	}
 
-	public static float calculateHeatFluxTransfer(HeatInfo source, HeatInfo target) {
-		float conductivity = source.conductivity() + target.conductivity();
-		float delta = source.temperature() - target.temperature();
-		return (conductivity * delta) / 20;
+	public static float calculateHeatFluxFromConduction(HeatInfo source, HeatInfo destination) {
+		float thermalConductivity = source.conductivity() + destination.conductivity();
+		float contactArea = 1;
+		float temperatureDelta = source.temperature() - destination.temperature();
+		float materialThickness = 1;
+		return (thermalConductivity * contactArea * temperatureDelta) / materialThickness;
 	}
 
-	public static float calculateHeatFluxFromPower(double power) {
-		return (float) (power * 10);
+	public static float calculateHeatFluxFromConvection(HeatInfo source, HeatInfo destination) {
+		float thermalConductivity = destination.conductivity();
+		float contactArea = 1;
+		float temperatureDelta = source.temperature() - destination.temperature();
+		return (thermalConductivity * contactArea * temperatureDelta);
 	}
 
-	public static double calculatePowerFromHeatFlux(float flux) {
-		return flux / 10;
+	public static HeatInfo getHeatInfoOnSide(Level world, BlockPos currentPos, Direction side, IHeatStorage storage) {
+		// Get the offset position.
+		BlockPos offsetPos = currentPos.relative(side);
+		BlockEntity be = world.getBlockEntity(offsetPos);
+		if (be != null) {
+			IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite())
+					.orElse(null);
+			if (otherStorage != null) {
+				return new HeatInfo(otherStorage);
+			}
+		}
+
+		FluidState fluidState = world.getFluidState(offsetPos);
+		BlockState blockstate = world.getBlockState(offsetPos);
+		ThermalConductivityRecipe recipe = world.getRecipeManager()
+				.getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
+						new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)),
+						world)
+				.orElse(null);
+
+		HeatInfoType type = !fluidState.isEmpty() ? HeatInfoType.FLUID
+				: blockstate.isAir() ? HeatInfoType.AIR : HeatInfoType.BLOCK;
+
+		HeatInfo ambientHeatInfo = getAmbientProperties(world, offsetPos);
+		if (type.isAir()) {
+			return ambientHeatInfo;
+		}
+
+		if (recipe == null) {
+			return new HeatInfo(IHeatStorage.DEFAULT_BLOCK_MASS, ambientHeatInfo.temperature(),
+					IHeatStorage.DEFAULT_CONDUCTIVITY, IHeatStorage.DEFAULT_SPECIFIC_HEAT, type);
+		}
+
+		float temperature;
+		if (recipe.hasActiveTemperature()) {
+			temperature = recipe.getTemperature();
+		} else {
+			float ambientRatio = ambientHeatInfo.temperature() / storage.getTemperature();
+			ambientRatio = Math.abs(ambientRatio - 1);
+			temperature = storage.getTemperature() - (ambientRatio * ambientHeatInfo.temperature());
+		}
+
+		return new HeatInfo(recipe.getMass(), temperature, recipe.getConductivity(), recipe.getSpecificHeat(), type);
 	}
 
 	public static HeatInfo getAmbientProperties(Level world, BlockPos currentPos) {
@@ -155,38 +217,41 @@ public class HeatUtilities {
 			ambientHeat -= 5;
 		}
 
-		return new HeatInfo(IHeatStorage.DEFAULT_BLOCK_MASS, ambientHeat, IHeatStorage.AIR_CONDUCTIVITY,
-				IHeatStorage.AIR_SPECIFIC_HEAT, null);
+		return new HeatInfo(0.1f, ambientHeat, IHeatStorage.AIR_CONDUCTIVITY, IHeatStorage.AIR_SPECIFIC_HEAT,
+				HeatInfoType.AIR);
 	}
 
-	public static HeatInfo getHeatInfoOnSide(Level world, BlockPos currentPos, Direction side, IHeatStorage storage) {
-		// Get the offset position.
-		BlockPos offsetPos = currentPos.relative(side);
-		BlockEntity be = world.getBlockEntity(offsetPos);
-		if (be != null) {
-			IHeatStorage otherStorage = be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite())
-					.orElse(null);
-			if (otherStorage != null) {
-				return new HeatInfo(otherStorage);
-			}
-		}
+	/**
+	 * Returns the temperature delta that will be achieved given the provided heat
+	 * power over the period of ONE SECOND. Divide by 20 to get the temperature
+	 * delta per tick.
+	 * 
+	 * @param heatPower
+	 * @param specificHeat
+	 * @param mass
+	 * @return
+	 */
+	public static float calculateTemperatureDelta(float heatPower, float specificHeat, float mass) {
+		return heatPower / (specificHeat * (mass / 1000.0f));
+	}
 
-		FluidState fluidState = world.getFluidState(offsetPos);
-		BlockState blockstate = world.getBlockState(offsetPos);
-		ThermalConductivityRecipe recipe = world.getRecipeManager()
-				.getRecipeFor(StaticCoreRecipeTypes.THERMAL_CONDUCTIVITY_RECIPE_TYPE.get(),
-						new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000)),
-						world)
-				.orElse(null);
+	public static float calculateHeatFluxRequiredForTemperatureChange(float temperatureDelta, float specificHeat,
+			float mass) {
+		return (temperatureDelta * specificHeat * (mass / 1000.0f));
+	}
 
-		HeatInfo ambientTemperature = getAmbientProperties(world, offsetPos);
-		if (recipe == null) {
-			return ambientTemperature;
-		}
+	public static float calculateHeatFluxTransfer(HeatInfo source, HeatInfo target) {
+		float conductivity = source.conductivity() + target.conductivity();
+		float temperatureDelta = source.temperature() - target.temperature();
+		return (target.mass() / 1000.0f) * conductivity * temperatureDelta;
+	}
 
-		return new HeatInfo(recipe.getMass(),
-				recipe.hasActiveTemperature() ? recipe.getTemperature() : ambientTemperature.temperature(),
-				recipe.getConductivity(), recipe.getSpecificHeat());
+	public static float calculateHeatFluxFromPower(double power) {
+		return (float) (power * 10);
+	}
+
+	public static double calculatePowerFromHeatFlux(float flux) {
+		return flux / 10;
 	}
 
 	public static void handleOverheatingOnSide(Level world, BlockPos pos, Direction side, IHeatStorage storage) {
@@ -210,7 +275,7 @@ public class HeatUtilities {
 		}
 
 		if (recipe.hasOverheatingBehaviour()) {
-			float overheatAmount = storage.getCurrentTemperature() - recipe.getOverheatingBehaviour().getTemperature();
+			float overheatAmount = storage.getTemperature() - recipe.getOverheatingBehaviour().getTemperature();
 			if (overheatAmount > 0) {
 				// Add a little random in there.
 				if (SDMath.diceRoll(overheatAmount / THERMAL_BEHAVIOUR_DELTA_CHANCE_DIVISOR)) {
@@ -245,7 +310,7 @@ public class HeatUtilities {
 		}
 
 		if (recipe.hasFreezeBehaviour()) {
-			float freezeAmount = storage.getCurrentTemperature() - recipe.getFreezingBehaviour().getTemperature();
+			float freezeAmount = storage.getTemperature() - recipe.getFreezingBehaviour().getTemperature();
 			if (freezeAmount < 0) {
 				// Add a little random in there.
 				if (SDMath.diceRoll(Math.abs(freezeAmount) / THERMAL_BEHAVIOUR_DELTA_CHANCE_DIVISOR)) {
@@ -287,7 +352,7 @@ public class HeatUtilities {
 	}
 
 	public static boolean canFullyAbsorbHeat(IHeatStorage storage, float heatAmount) {
-		return storage.getCurrentTemperature() + heatAmount <= storage.getMaximumTemperature();
+		return storage.getTemperature() + heatAmount <= storage.getMaximumTemperature();
 	}
 
 	public static void setFluidTemperature(FluidStack fluid, float temperature) {

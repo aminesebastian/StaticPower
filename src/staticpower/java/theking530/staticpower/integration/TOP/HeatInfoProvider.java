@@ -37,7 +37,7 @@ public class HeatInfoProvider implements IProbeInfoProvider, IProbeConfigProvide
 		}
 
 		be.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY).ifPresent(heatStorage -> {
-			float current = heatStorage.getCurrentTemperature();
+			float current = heatStorage.getTemperature();
 			float max = heatStorage.getMaximumTemperature();
 
 			MutableComponent suffix = GuiTextUtilities.formatHeatToString(current, false, true);

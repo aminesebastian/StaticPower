@@ -10,9 +10,11 @@ import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.materials.Material;
 import theking530.staticpower.data.materials.Material.MaterialClass;
@@ -66,6 +68,40 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 		tag(BlockTags.SAPLINGS).add(ModBlocks.RubberTreeSapling.get());
 		tag(BlockTags.WOOL).add(ModBlocks.SmeepWool.get());
 
+		tag(MinecraftColor.WHITE.getBlockWoolTag()).add(Blocks.WHITE_WOOL);
+		tag(MinecraftColor.ORANGE.getBlockWoolTag()).add(Blocks.ORANGE_WOOL);
+		tag(MinecraftColor.MAGENTA.getBlockWoolTag()).add(Blocks.MAGENTA_WOOL);
+		tag(MinecraftColor.LIGHT_BLUE.getBlockWoolTag()).add(Blocks.LIGHT_BLUE_WOOL);
+		tag(MinecraftColor.YELLOW.getBlockWoolTag()).add(Blocks.YELLOW_WOOL);
+		tag(MinecraftColor.LIME.getBlockWoolTag()).add(Blocks.LIME_WOOL);
+		tag(MinecraftColor.PINK.getBlockWoolTag()).add(Blocks.PINK_WOOL);
+		tag(MinecraftColor.GRAY.getBlockWoolTag()).add(Blocks.GRAY_WOOL);
+		tag(MinecraftColor.LIGHT_GRAY.getBlockWoolTag()).add(Blocks.LIGHT_GRAY_WOOL);
+		tag(MinecraftColor.CYAN.getBlockWoolTag()).add(Blocks.CYAN_WOOL);
+		tag(MinecraftColor.PURPLE.getBlockWoolTag()).add(Blocks.PURPLE_WOOL);
+		tag(MinecraftColor.BLUE.getBlockWoolTag()).add(Blocks.BLUE_WOOL);
+		tag(MinecraftColor.BROWN.getBlockWoolTag()).add(Blocks.BROWN_WOOL);
+		tag(MinecraftColor.GREEN.getBlockWoolTag()).add(Blocks.GREEN_WOOL);
+		tag(MinecraftColor.RED.getBlockWoolTag()).add(Blocks.RED_WOOL);
+		tag(MinecraftColor.BLACK.getBlockWoolTag()).add(Blocks.BLACK_WOOL);
+
+		tag(MinecraftColor.WHITE.getBlockConcreteTag()).add(Blocks.WHITE_CONCRETE);
+		tag(MinecraftColor.ORANGE.getBlockConcreteTag()).add(Blocks.ORANGE_CONCRETE);
+		tag(MinecraftColor.MAGENTA.getBlockConcreteTag()).add(Blocks.MAGENTA_CONCRETE);
+		tag(MinecraftColor.LIGHT_BLUE.getBlockConcreteTag()).add(Blocks.LIGHT_BLUE_CONCRETE);
+		tag(MinecraftColor.YELLOW.getBlockConcreteTag()).add(Blocks.YELLOW_CONCRETE);
+		tag(MinecraftColor.LIME.getBlockConcreteTag()).add(Blocks.LIME_CONCRETE);
+		tag(MinecraftColor.PINK.getBlockConcreteTag()).add(Blocks.PINK_CONCRETE);
+		tag(MinecraftColor.GRAY.getBlockConcreteTag()).add(Blocks.GRAY_CONCRETE);
+		tag(MinecraftColor.LIGHT_GRAY.getBlockConcreteTag()).add(Blocks.LIGHT_GRAY_CONCRETE);
+		tag(MinecraftColor.CYAN.getBlockConcreteTag()).add(Blocks.CYAN_CONCRETE);
+		tag(MinecraftColor.PURPLE.getBlockConcreteTag()).add(Blocks.PURPLE_CONCRETE);
+		tag(MinecraftColor.BLUE.getBlockConcreteTag()).add(Blocks.BLUE_CONCRETE);
+		tag(MinecraftColor.BROWN.getBlockConcreteTag()).add(Blocks.BROWN_CONCRETE);
+		tag(MinecraftColor.GREEN.getBlockConcreteTag()).add(Blocks.GREEN_CONCRETE);
+		tag(MinecraftColor.RED.getBlockConcreteTag()).add(Blocks.RED_CONCRETE);
+		tag(MinecraftColor.BLACK.getBlockConcreteTag()).add(Blocks.BLACK_CONCRETE);
+
 		tag(ModBlockTags.CABLES).add(toArray(ModBlocks.ItemCables)).add(toArray(ModBlocks.PowerCables))
 				.add(toArray(ModBlocks.InsulatedPowerCables)).add(toArray(ModBlocks.IndustrialPowerCables))
 				.add(toArray(ModBlocks.FluidCables)).add(toArray(ModBlocks.CapillaryFluidCables))
@@ -92,9 +128,9 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 				ModBlocks.RandomItemGenerator.get(), ModBlocks.RandomOreGenerator.get(),
 				ModBlocks.HydroponicFarmer.get(), ModBlocks.HydroponicPod.get(), ModBlocks.AlloyFurnace.get(),
 				ModBlocks.RefineryController.get(), ModBlocks.RefineryPowerTap.get(),
-				ModBlocks.RefineryFluidInput.get(), ModBlocks.RefineryFluidOutput.get(),
-				ModBlocks.RefineryItemInput.get(), ModBlocks.RefineryHeatVent.get(), ModBlocks.RefineryTower.get(),
-				ModBlocks.RefineryBoiler.get(), ModBlocks.Laboratory.get(), ModBlocks.ResearchCheater.get());
+				ModBlocks.RefineryFluidInput.get(), ModBlocks.RefineryItemInput.get(), ModBlocks.RefineryHeatVent.get(),
+				ModBlocks.RefineryTower.get(), ModBlocks.RefineryBoiler.get(), ModBlocks.RefineryCondenser.get(),
+				ModBlocks.Laboratory.get(), ModBlocks.ResearchCheater.get());
 
 		tag(ModBlockTags.BATTERY_BLOCKS).add(ModBlocks.BatteryBasic.get(), ModBlocks.BatteryAdvanced.get(),
 				ModBlocks.BatteryStatic.get(), ModBlocks.BatteryEnergized.get(), ModBlocks.BatteryLumum.get(),
@@ -129,9 +165,9 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 		tag(ModBlockTags.PUMP_TUBE).add(ModBlocks.PumpTube.get());
 		tag(ModBlockTags.TILLABLE).addTag(BlockTags.DIRT);
 		tag(ModBlockTags.REFINERY_BLOCK).add(ModBlocks.RefineryBoiler.get(), ModBlocks.RefineryController.get(),
-				ModBlocks.RefineryFluidInput.get(), ModBlocks.RefineryFluidOutput.get(),
-				ModBlocks.RefineryHeatVent.get(), ModBlocks.RefineryItemInput.get(), ModBlocks.RefineryPowerTap.get(),
-				ModBlocks.RefineryTower.get(), ModBlocks.MachineBlockIndustrial.get());
+				ModBlocks.RefineryFluidInput.get(), ModBlocks.RefineryCondenser.get(), ModBlocks.RefineryHeatVent.get(),
+				ModBlocks.RefineryItemInput.get(), ModBlocks.RefineryPowerTap.get(), ModBlocks.RefineryTower.get(),
+				ModBlocks.MachineBlockIndustrial.get());
 
 		tag(ModBlockTags.CAULDRONS).add(ModBlocks.CleanCauldron.get(), ModBlocks.RustyCauldron.get());
 		tag(ModBlockTags.CHESTS).add(ModBlocks.BasicChest.get(), ModBlocks.AdvancedChest.get(),

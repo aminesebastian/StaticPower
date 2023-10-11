@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "forge:nuggets/gold"
+    },
+    "s": {
+      "tag": "forge:string"
+    },
+    "t": {
+      "tag": "staticpower:tools/wrench"
+    },
+    "w": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "www",
+    "tgt",
+    "wsw"
+  ],
+  "result": {
+    "item": "staticpower:backpack_engineer"
+  }
+}

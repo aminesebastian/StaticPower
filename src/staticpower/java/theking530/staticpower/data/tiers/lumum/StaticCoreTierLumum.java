@@ -50,11 +50,6 @@ public class StaticCoreTierLumum extends StaticCoreTier {
 	}
 
 	@Override
-	protected float getDefaultMachineThermalMass() {
-		return 100;
-	}
-
-	@Override
 	protected float getDefaultMachineOverheatTemperature() {
 		return 2800.0f;
 	}

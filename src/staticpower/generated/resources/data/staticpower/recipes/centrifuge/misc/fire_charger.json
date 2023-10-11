@@ -1,0 +1,28 @@
+{
+  "type": "staticpower:centrifuge",
+  "input": {
+    "ingredient": {
+      "item": "minecraft:fire_charge"
+    }
+  },
+  "minimum_speed": 500,
+  "primary_output": {
+    "item": {
+      "id": "minecraft:gunpowder"
+    }
+  },
+  "processing": {
+    "power": 5.0,
+    "processing_time": 200
+  },
+  "secondary_output": {
+    "item": {
+      "id": "minecraft:blaze_powder"
+    }
+  },
+  "tertiary_output": {
+    "item": {
+      "id": "minecraft:coal"
+    }
+  }
+}

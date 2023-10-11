@@ -4,8 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.BlockEntityBase;
-import theking530.staticcore.blockentity.multiblock.IMultiBlockComponent;
-import theking530.staticcore.blockentity.multiblock.MultiBlockEntry;
+import theking530.staticcore.blockentity.components.multiblock.IMultiBlockComponent;
+import theking530.staticcore.blockentity.components.multiblock.MultiBlockEntry;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockEntityRefineryController;
 
@@ -40,12 +40,12 @@ public class BaseRefineryBlockEntity extends BlockEntityBase implements IMultiBl
 	}
 
 	@Override
-	public void setToken(MultiBlockEntry<BlockEntityRefineryController> token) {
+	public void multiBlockValidated(MultiBlockEntry<BlockEntityRefineryController> token) {
 		this.token = token;
 	}
 
 	@Override
-	public void clearToken() {
+	public void multiBlockBroken() {
 		token = null;
 	}
 

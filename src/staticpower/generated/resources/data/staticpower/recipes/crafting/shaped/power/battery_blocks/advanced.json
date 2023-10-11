@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "staticpower:portable_battery_advanced"
+    },
+    "m": {
+      "item": "staticpower:machine_block_advanced"
+    },
+    "p": {
+      "tag": "forge:plates/brass"
+    }
+  },
+  "pattern": [
+    "bpb",
+    "bmb",
+    "bpb"
+  ],
+  "result": {
+    "item": "staticpower:battery_block_advanced"
+  }
+}

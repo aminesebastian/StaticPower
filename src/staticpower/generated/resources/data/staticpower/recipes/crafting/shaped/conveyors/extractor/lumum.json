@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "staticpower:processor_lumum"
+    },
+    "g": {
+      "tag": "staticpower:gears/lumum_metal"
+    },
+    "i": {
+      "item": "staticpower:io_port"
+    },
+    "p": {
+      "tag": "staticpower:plates/lumum_metal"
+    },
+    "r": {
+      "item": "staticpower:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "  p",
+    "rri",
+    "pgc"
+  ],
+  "result": {
+    "item": "staticpower:conveyor_extractor_lumum"
+  }
+}

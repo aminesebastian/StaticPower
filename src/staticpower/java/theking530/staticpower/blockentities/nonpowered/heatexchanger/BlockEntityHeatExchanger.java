@@ -5,8 +5,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.api.heat.HeatInfo;
+import theking530.api.heat.HeatInfoType;
 import theking530.api.heat.HeatUtilities;
-import theking530.api.heat.HeatUtilities.HeatInfo;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.blockentity.BlockEntityBase;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
@@ -74,7 +75,7 @@ public class BlockEntityHeatExchanger extends BlockEntityBase {
 		HeatInfo ambientProperties = HeatUtilities.getAmbientProperties(getLevel(), getBlockPos());
 		HeatInfo waterHeatInfo = new HeatInfo(recipe.getMass(),
 				recipe.hasActiveTemperature() ? recipe.getTemperature() : ambientProperties.temperature(),
-				recipe.getConductivity(), recipe.getSpecificHeat(), null);
+				recipe.getConductivity(), recipe.getSpecificHeat(), null, HeatInfoType.FLUID);
 
 		float transferedFlux = HeatUtilities.calculateHeatFluxTransfer(sourceHeatInfo, waterHeatInfo);
 		heatStorage.cool(transferedFlux, HeatTransferAction.EXECUTE);

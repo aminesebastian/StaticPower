@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "tag": "forge:chests"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "s": {
+      "tag": "forge:cobblestone"
+    }
+  },
+  "pattern": [
+    "sss",
+    "rcs",
+    "sss"
+  ],
+  "result": {
+    "item": "staticpower:automatic_placer"
+  }
+}

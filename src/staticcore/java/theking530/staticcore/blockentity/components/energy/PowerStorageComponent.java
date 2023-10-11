@@ -27,12 +27,14 @@ import theking530.staticcore.blockentity.components.items.UpgradeInventoryCompon
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.init.StaticCoreUpgradeTypes;
+import theking530.staticcore.init.StaticCoreUpgradeTypes.CombinedPowerUpgradeValue;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.utilities.math.SDMath;
 
 public class PowerStorageComponent extends AbstractBlockEntityComponent implements ISidedStaticPowerStorage {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 64;
-	private static final double ENERGY_SYNC_MAX_DELTA_PERCENT = 0.01;
+	private static final double ENERGY_SYNC_MAX_DELTA_PERCENT = 0.05;
+	private static final int DIRTY_SYNC_TIME = 20;
 
 	@UpdateSerialize
 	protected final StaticPowerStorage storage;
@@ -57,6 +59,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	private boolean issueSyncPackets;
 	private double lastSyncEnergy;
 	private boolean pendingManualSync;
+	private long lastSyncTime;
 
 	@UpdateSerialize
 	private boolean isPendingOverVoltageExplostion;
@@ -65,12 +68,14 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	private boolean shouldExplodeWhenOverVolted;
 	private int electricalExplosionTimeRemaining;
 
+	protected boolean isDirty;
+
 	public PowerStorageComponent(String name, double capacity, StaticPowerVoltage minInputVoltage,
 			StaticPowerVoltage maxInputVoltage, double maxInputPower, CurrentType[] acceptableInputCurrents,
 			StaticPowerVoltage voltageOutput, double maxPowerOutput, CurrentType outputCurrentType,
 			boolean canAcceptExternalPower, boolean canOutputExternalPower) {
 		super(name);
-
+		issueSyncPackets = true;
 		exposeAsCapability = true;
 		shouldExplodeWhenOverVolted = true;
 		electricalExplosionTimeRemaining = -1;
@@ -323,11 +328,13 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 
 	@Override
 	public double addPower(PowerStack stack, boolean simulate) {
+		markDirty();
 		return storage.addPower(stack, simulate);
 	}
 
 	@Override
 	public PowerStack drainPower(double power, boolean simulate) {
+		markDirty();
 		return storage.drainPower(power, simulate);
 	}
 
@@ -494,6 +501,16 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 					+ (powerTransferUpgrade.getUpgradeValue() * powerTransferUpgrade.getUpgradeWeight()));
 		}
 
+		UpgradeItemWrapper<CombinedPowerUpgradeValue> combinedPowerUpgrade = upgradeInventory
+				.getMaxTierItemForUpgradeType(StaticCoreUpgradeTypes.POWER_COMBINED_UPGRADE.get());
+		if (combinedPowerUpgrade.isEmpty()) {
+			powerOutputUpgradeMultiplier = 1.0f;
+		} else {
+			powerCapacityUpgradeMultiplier = (float) (1.0f + (combinedPowerUpgrade.getUpgradeValue().powerCapacity()
+					* combinedPowerUpgrade.getUpgradeWeight()));
+			powerOutputUpgradeMultiplier = (float) (1.0f + (combinedPowerUpgrade.getUpgradeValue().powerTransfer()
+					* combinedPowerUpgrade.getUpgradeWeight()));
+		}
 		// Set the new values.
 		storage.setCapacity(baseCapacity * powerCapacityUpgradeMultiplier);
 		storage.setMaximumInputPower(baseMaximumInputPower * powerOutputUpgradeMultiplier);
@@ -515,12 +532,14 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 	}
 
 	protected void handleNetworkSynchronization() {
-		// Get the current delta between the amount of power we have and the power we
-		// had last tick.
-		double delta = Math.abs(getStoredPower() - lastSyncEnergy);
+		long currentGameTime = getLevel().getGameTime();
+		long timeSinceLastSync = currentGameTime - lastSyncTime;
+		boolean shouldSync = timeSinceLastSync >= DIRTY_SYNC_TIME;
 
-		// Determine if we should sync.
-		boolean shouldSync = (delta / getCapacity()) >= ENERGY_SYNC_MAX_DELTA_PERCENT;
+		if (!shouldSync) {
+			double delta = Math.abs(getStoredPower() - lastSyncEnergy);
+			shouldSync = (delta / getCapacity()) >= ENERGY_SYNC_MAX_DELTA_PERCENT;
+		}
 		if (!shouldSync) {
 			shouldSync = getStoredPower() == 0 && lastSyncEnergy != 0;
 		}
@@ -547,6 +566,7 @@ public class PowerStorageComponent extends AbstractBlockEntityComponent implemen
 				getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
 		lastSyncEnergy = getStoredPower();
 		pendingManualSync = false;
+		lastSyncTime = getLevel().getGameTime();
 	}
 
 	protected void tickVoltageBasedExplosion() {

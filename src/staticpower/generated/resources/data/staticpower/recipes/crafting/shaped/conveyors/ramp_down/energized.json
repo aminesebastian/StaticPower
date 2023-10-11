@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "g": {
+      "tag": "staticpower:gears/energized_metal"
+    },
+    "p": {
+      "tag": "staticpower:plates/energized_metal"
+    },
+    "r": {
+      "item": "staticpower:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "r  ",
+    "pr ",
+    "gpr"
+  ],
+  "result": {
+    "item": "staticpower:conveyor_ramp_down_energized"
+  }
+}

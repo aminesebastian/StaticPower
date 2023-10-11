@@ -1,6 +1,7 @@
 {
   "values": [
     "staticpower:rubber_sheet",
+    "staticpower:plate_steel",
     "staticpower:plate_static_metal",
     "staticpower:plate_redstone_alloy",
     "staticpower:plate_lumum_metal",
