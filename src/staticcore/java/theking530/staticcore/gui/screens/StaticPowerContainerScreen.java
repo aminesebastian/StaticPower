@@ -67,6 +67,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 	private boolean shouldDrawSlotModeBorders;
 
 	private final SpriteDrawable lockedSprite;
+	private SDColor backgroundTint;
+	private SDColor textColor;
 
 	/**
 	 * Creates a new Gui.
@@ -77,7 +79,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 	 * @param guiXSize        The gui's xSize.
 	 * @param guiYSize        The gui's ySize;
 	 */
-	public StaticPowerContainerScreen(T container, final Inventory playerInventory, Component title, int guiXSize, int guiYSize) {
+	public StaticPowerContainerScreen(T container, final Inventory playerInventory, Component title, int guiXSize,
+			int guiYSize) {
 		super(container, playerInventory, title);
 		container.setDimensions(guiXSize, guiYSize);
 		inventory = playerInventory;
@@ -89,6 +92,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 		sizeTarget = new Vector2D(imageWidth, imageHeight);
 		outputSlotSize = 24;
 		inputSlotSize = 16;
+		backgroundTint = new SDColor(1, 1, 1, 1);
+		textColor = SDColor.EIGHT_BIT_DARK_GREY.copy();
 		isScreenSizeChanging = false;
 		lockedSprite = new SpriteDrawable(StaticCoreSprites.LOCKED_ICON, 12, 12);
 		lockedSprite.setTint(new SDColor(1.0f, 1.0f, 1.0f, 0.95f));
@@ -170,7 +175,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 		stack.translate(leftPos, topPos, 0);
 
 		// Update the widgets and then draw the background.
-		widgetContainer.updateBeforeRender(stack, new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY, getScreenBounds());
+		widgetContainer.updateBeforeRender(stack, new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY,
+				getScreenBounds());
 		widgetContainer.renderBackground(stack, mouseX, mouseY, partialTicks, getScreenBounds());
 
 		// Draw the container background.
@@ -180,7 +186,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 
 		// Draw the slots.
 		if (menu instanceof StaticPowerTileEntityContainer) {
-			drawContainerSlots(stack, menu.slots, ((StaticPowerTileEntityContainer<?>) menu).getTileEntity().getComponent(SideConfigurationComponent.class));
+			drawContainerSlots(stack, menu.slots, ((StaticPowerTileEntityContainer<?>) menu).getTileEntity()
+					.getComponent(SideConfigurationComponent.class));
 		} else {
 			drawContainerSlots(stack, menu.slots);
 		}
@@ -237,7 +244,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 		// regular clicked chain. Use the SWAP just as a placeholder.
 		if (StaticCoreKeyBindings.SLOT_LOCK.isDown()) {
 			if (hoveredSlot != null) {
-				slotClicked(hoveredSlot, hoveredSlot.index, StaticCoreContainerMenu.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
+				slotClicked(hoveredSlot, hoveredSlot.index,
+						StaticCoreContainerMenu.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
 				return true;
 			}
 		}
@@ -291,7 +299,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 	}
 
 	public RectangleBounds getScreenBounds() {
-		return new RectangleBounds(0, 0, Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
+		return new RectangleBounds(0, 0, Minecraft.getInstance().getWindow().getGuiScaledWidth(),
+				Minecraft.getInstance().getWindow().getGuiScaledHeight());
 	}
 
 	public List<Rect2i> getGuiBounds() {
@@ -310,7 +319,7 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 		return tabBoxes;
 	}
 
-	/**
+	/**`
 	 * Draws the container's title at the top center of the UI.
 	 * 
 	 * @param mouseX The mouse's x position.
@@ -322,13 +331,15 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 			Vector2D containerLabelLocation = getContainerLabelDrawLocation();
 			Component containerName = getTitle();
 			String containerString = containerName.getString();
-			GuiDrawUtilities.drawStringCentered(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 1, 1.0f, SDColor.EIGHT_BIT_DARK_GREY, false);
+			GuiDrawUtilities.drawStringCentered(stack, containerString, containerLabelLocation.getX(),
+					containerLabelLocation.getY(), 1, 1.0f, textColor, false);
 		}
 
 		// Draw the inventory label if requested at the designated location.
 		if (shouldDrawInventoryLabel()) {
 			Vector2D inventoryLabelLocation = getInventoryLabelDrawLocation();
-			font.draw(stack, inventory.getDisplayName().getString(), inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
+			font.draw(stack, inventory.getDisplayName().getString(), inventoryLabelLocation.getX(),
+					inventoryLabelLocation.getY(), textColor.encodeInInteger());
 		}
 	}
 
@@ -441,12 +452,28 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 
 	}
 
+	public SDColor getBackgroundTint() {
+		return backgroundTint;
+	}
+
+	public void setBackgroundTint(SDColor backgroundTint) {
+		this.backgroundTint = backgroundTint;
+	}
+
+	public SDColor getTextColor() {
+		return textColor;
+	}
+
+	public void setTextColor(SDColor textColor) {
+		this.textColor = textColor;
+	}
+
 	/**
 	 * Draws the default Minecraft UI background using the xSize and ySize of the UI
 	 * and screen center for the position.
 	 */
 	public void drawGenericBackground(PoseStack stack) {
-		drawGenericBackground(stack, imageWidth, imageHeight);
+		GuiDrawUtilities.drawGenericBackground(stack, imageWidth, imageHeight, 0, 0, 0.0f, backgroundTint);
 	}
 
 	/**
@@ -457,7 +484,7 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 	 * @param height The height of the background.
 	 */
 	public void drawGenericBackground(PoseStack stack, int width, int height) {
-		GuiDrawUtilities.drawGenericBackground(stack, width, height, 0, 0);
+		GuiDrawUtilities.drawGenericBackground(stack, width, height, 0, 0, 0.0f);
 	}
 
 	/**
@@ -469,7 +496,7 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 	 * @param width  The width of the background.
 	 * @param height The height of the background.
 	 */
-	public void drawGenericBackground(PoseStack stack, int xPos, int yPos, int width, int height) {
+	public void drawGenericBackground(PoseStack stack, int width, int height, int xPos, int yPos) {
 		GuiDrawUtilities.drawGenericBackground(stack, width, height, xPos, yPos);
 	}
 
@@ -486,8 +513,10 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 	 * @param borderTint      The tint to apply to the border (the two pixel rounded
 	 *                        corner border).
 	 */
-	public void drawGenericBackground(PoseStack stack, int xPos, int yPos, int width, int height, SDColor backgroundColor, SDColor borderTint) {
-		GuiDrawUtilities.drawGenericBackground(stack, width, height, xPos + leftPos, yPos + topPos, 0.0f, backgroundColor);
+	public void drawGenericBackground(PoseStack stack, int width, int height, int xPos, int yPos,
+			SDColor backgroundColor) {
+		GuiDrawUtilities.drawGenericBackground(stack, width, height, xPos + leftPos, yPos + topPos, 0.0f,
+				backgroundColor);
 	}
 
 	/**
@@ -525,7 +554,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 	 * @param slotMode The mode of the slot (this dictates the potential color
 	 *                 border).
 	 */
-	public void drawEmptySlot(PoseStack matrixStack, int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
+	public void drawEmptySlot(PoseStack matrixStack, int xPos, int yPos, int width, int height,
+			MachineSideMode slotMode) {
 		// Important we draw the slots on a zlevel >= 1. 0 is reserved for GUI
 		// backgrounds and < 0 clips behind the GUI.
 		if (slotMode == MachineSideMode.NA) {
@@ -554,7 +584,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 		for (Slot slot : slots) {
 			if (slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot) slot;
-				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize : handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
+				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize
+						: handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
 				int sizePosOffset = (slotSize - 16) / 2;
 				handlerSlot.drawSlotOverlay(leftPos, topPos, slotSize, sizePosOffset);
 			}
@@ -565,7 +596,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 		drawContainerSlots(matrixStack, slots, null);
 	}
 
-	public void drawContainerSlots(PoseStack matrixStack, List<Slot> slots, @Nullable SideConfigurationComponent sideConfiguration) {
+	public void drawContainerSlots(PoseStack matrixStack, List<Slot> slots,
+			@Nullable SideConfigurationComponent sideConfiguration) {
 		for (Slot slot : slots) {
 			// Skip null slots
 			if (slot == null) {
@@ -590,26 +622,32 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 				MachineSideMode intendedMode = handlerSlot.getMode();
 
 				// If the slot is an output slot, increase the size of the slot.
-				int slotSize = intendedMode.isOutputMode() || slot instanceof OutputSlot ? outputSlotSize : handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
+				int slotSize = intendedMode.isOutputMode() || slot instanceof OutputSlot ? outputSlotSize
+						: handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
 				int sizePosOffset = (slotSize - 16) / 2;
 
 				// If side configuration is present, draw the slow with a border.
 				if (sideConfiguration != null && shouldDrawSlotModeBorders) {
 					if (intendedMode != MachineSideMode.NA && intendedMode != MachineSideMode.Never) {
 						// Get the side mode to draw with.
-						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.NA;
+						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0
+								? intendedMode
+								: MachineSideMode.NA;
 
 						// If the drawn side is regular, check to see if we can render one of the two
 						// general output or input modes.
 						if (drawnSideMode == MachineSideMode.NA) {
-							if (intendedMode.isOutputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Output) > 0) {
+							if (intendedMode.isOutputMode()
+									&& sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Output) > 0) {
 								drawnSideMode = MachineSideMode.Output;
-							} else if (intendedMode.isInputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Input) > 0) {
+							} else if (intendedMode.isInputMode()
+									&& sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Input) > 0) {
 								drawnSideMode = MachineSideMode.Input;
 							}
 						}
 
-						drawEmptySlot(matrixStack, slot.x - sizePosOffset, slot.y - sizePosOffset, slotSize, slotSize, drawnSideMode);
+						drawEmptySlot(matrixStack, slot.x - sizePosOffset, slot.y - sizePosOffset, slotSize, slotSize,
+								drawnSideMode);
 					} else {
 						drawEmptySlot(matrixStack, slot.x - sizePosOffset, slot.y - sizePosOffset, slotSize, slotSize);
 					}
@@ -624,12 +662,14 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 					if (component.areSlotsLockable()) {
 						// If the slot is locked, render the phantom item & the lock indicator.
 						if (component.isSlotLocked(slot.getSlotIndex())) {
-							GuiDrawUtilities.drawItem(matrixStack, component.getLockedSlotFilter(slot.getSlotIndex()), slot.x, slot.y, 10, 0.5f);
+							GuiDrawUtilities.drawItem(matrixStack, component.getLockedSlotFilter(slot.getSlotIndex()),
+									slot.x, slot.y, 10, 0.5f);
 							RenderSystem.enableDepthTest();
 						}
 
 						// Draw the yellow line lockable indicator.
-						GuiDrawUtilities.drawRectangle(matrixStack, slotSize, 1.0f, slot.x - sizePosOffset, slot.y - sizePosOffset + slotSize, 1.0f, new SDColor(0.9f, 0.8f, 0));
+						GuiDrawUtilities.drawRectangle(matrixStack, slotSize, 1.0f, slot.x - sizePosOffset,
+								slot.y - sizePosOffset + slotSize, 1.0f, new SDColor(0.9f, 0.8f, 0));
 					}
 				}
 
@@ -701,7 +741,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 		// CAN BE DONE WAY BETTER - TO DO.
 		if (changeOccured) {
 			Vector2D expectedDifference = previousSizeTarget.copy().subtract(sizeTarget);
-			Vector2D currentDifference = new Vector2D(imageWidth - sizeTarget.getXi(), imageHeight - sizeTarget.getYi());
+			Vector2D currentDifference = new Vector2D(imageWidth - sizeTarget.getXi(),
+					imageHeight - sizeTarget.getYi());
 			Vector2D alpha = currentDifference.copy().divide(expectedDifference);
 			alpha = new Vector2D(1.0f, 1.0f).subtract(alpha);
 			if (Float.isNaN(alpha.getX())) {

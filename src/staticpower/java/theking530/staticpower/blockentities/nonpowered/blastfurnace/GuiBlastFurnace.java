@@ -6,6 +6,7 @@ import theking530.staticcore.gui.screens.StaticCoreBlockEntityScreen;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticcore.utilities.SDColor;
 
 public class GuiBlastFurnace extends StaticCoreBlockEntityScreen<ContainerBlastFurnace, BlockEntityBlastFurnace> {
 	private GuiInfoTab infoTab;
@@ -14,12 +15,15 @@ public class GuiBlastFurnace extends StaticCoreBlockEntityScreen<ContainerBlastF
 	public GuiBlastFurnace(ContainerBlastFurnace container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 178);
 		setShouldDrawSlotModeBorders(false);
+		setBackgroundTint(new SDColor(0.15f, 0.15f, 0.15f, 1.0f));
+		setTextColor(SDColor.EIGHT_BIT_WHITE);
 	}
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new ArrowProgressBar(78, 40).bindToMachineProcessingComponent(getTileEntity().processingComponent));
-		registerWidget(fireBar = new FireProgressBar(47, 44));
+		registerWidget(
+				new ArrowProgressBar(78, 44).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(fireBar = new FireProgressBar(43, 45));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
 		infoTab.addLine("desc1", Component.literal("Combines basic items into their more complex constructions."));

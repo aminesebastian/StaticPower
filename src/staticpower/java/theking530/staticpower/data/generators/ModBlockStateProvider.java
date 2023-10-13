@@ -13,6 +13,7 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
 import theking530.staticcore.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.machines.refinery.condenser.BlockRefineryCondenser;
@@ -704,11 +705,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		ModelFile onModel = models().cubeBottomTop(name(block) + "_on", frontOn, side, side);
 
 		getVariantBuilder(block).forAllStates(state -> {
-			if (!state.getValue(BlockBlastFurnace.SHOW_FACE)) {
-				return ConfiguredModel.builder().modelFile(simpleModel).build();
+			if (state.getValue(BlockBlastFurnace.SHOW_FACE)
+					&& state.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
+				ModelFile model = state.getValue(StaticPowerMachineBlock.IS_ON) ? onModel : offModel;
+				return ConfiguredModel.builder().modelFile(model).build();
 			}
-			ModelFile model = state.getValue(StaticPowerMachineBlock.IS_ON) ? onModel : offModel;
-			return ConfiguredModel.builder().modelFile(model).build();
+			return ConfiguredModel.builder().modelFile(simpleModel).build();
 		});
 	}
 

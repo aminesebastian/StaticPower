@@ -36,6 +36,8 @@ public class ModItemTags {
 	public static final TagKey<Item> CHESTS = create("chests");
 	public static final TagKey<Item> CONVEYORS = create("conveyors");
 
+	public static final TagKey<Item> BLAST_FURNACE_FUEL = create("blast_furnace_fuel");
+
 	public static final TagKey<Item> BACKPACKS = create("backpacks");
 	public static final TagKey<Item> COVER_SAW = create("tools/cover_saw");
 	public static final TagKey<Item> SOLDERING_IRON = create("tools/soldering_iron");

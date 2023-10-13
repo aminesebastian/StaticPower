@@ -449,9 +449,10 @@ public abstract class BlockEntityBase extends BlockEntity
 	 * 
 	 * @param component The component to register.
 	 */
-	public void registerComponent(AbstractBlockEntityComponent component) {
+	public <T extends AbstractBlockEntityComponent> T registerComponent(T component) {
 		components.put(component.getComponentName(), component);
 		component.onRegistered(this);
+		return component;
 	}
 
 	/**
@@ -476,7 +477,12 @@ public abstract class BlockEntityBase extends BlockEntity
 	 * @return True if the component was removed, false otherwise.
 	 */
 	public boolean removeComponent(AbstractBlockEntityComponent component) {
-		return components.remove(component.getComponentName()) != null;
+		AbstractBlockEntityComponent removed = components.remove(component.getComponentName());
+		if (removed == null) {
+			return false;
+		}
+		removed.onRemovedFromOwner(this);
+		return true;
 	}
 
 	/**

@@ -11,6 +11,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.Tags.Blocks;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPower;
@@ -116,6 +117,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
 		tag(ModItemTags.COALS_DUST).addTag(ModMaterials.COAL.get(MaterialTypes.DUST).getItemTag())
 				.addTag(ModMaterials.CHARCOAL.get(MaterialTypes.DUST).getItemTag());
+
+		tag(ModItemTags.BLAST_FURNACE_FUEL).add(Items.CHARCOAL).add(Items.COAL_BLOCK).add(Items.COAL);
 
 		tag(Tags.Items.NUGGETS).add(
 				toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.NUGGET))

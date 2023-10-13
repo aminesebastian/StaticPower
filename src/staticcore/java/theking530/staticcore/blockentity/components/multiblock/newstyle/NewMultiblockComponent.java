@@ -2,22 +2,26 @@ package theking530.staticcore.blockentity.components.multiblock.newstyle;
 
 import java.util.function.Consumer;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import theking530.staticcore.blockentity.BlockEntityUpdateRequest;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
-import theking530.staticcore.blockentity.components.multiblock.IMultiBlockComponent;
-import theking530.staticcore.blockentity.components.multiblock.MultiBlockEntry;
 
-public class NewMultiblockComponent<T extends BlockEntity> extends AbstractBlockEntityComponent
-		implements IMultiBlockComponent<T> {
-	private AbstractMultiblockPattern pattern;
-	private MultiBlockEntry<T> token;
+public class NewMultiblockComponent<T extends BlockEntity> extends AbstractBlockEntityComponent {
 	private MultiblockState state;
+
+	private AbstractMultiblockPattern pattern;
 	private Consumer<MultiblockState> stateChangedCallback;
 
-	public NewMultiblockComponent(String name, AbstractMultiblockPattern pattern) {
+	public NewMultiblockComponent(String name, AbstractMultiblockPattern pattern, MultiblockState initialState) {
 		super(name);
 		this.pattern = pattern;
-		this.state = MultiblockState.FAILED;
+		this.state = initialState;
+	}
+
+	public MultiblockState getState() {
+		return state;
 	}
 
 	public AbstractMultiblockPattern getPattern() {
@@ -28,19 +32,43 @@ public class NewMultiblockComponent<T extends BlockEntity> extends AbstractBlock
 		return state.isWellFormed();
 	}
 
+	public void addedToMultiblock(MultiblockState state) {
+		this.state = state;
+		this.getBlockEntity().addUpdateRequest(BlockEntityUpdateRequest.syncDataOnly(false), true);
+	}
+
+	protected void onRemovedFromMultiblock(MultiblockState state) {
+		this.state = state;
+	}
+
+	public BlockPos getMasterPosition() {
+		return state.getMasterPos();
+	}
+
+	public boolean isMaster() {
+		// check in this direction because getMasterPos() can be null.
+		return getPos().equals(state.getMasterPos());
+	}
+
 	@Override
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
-		MultiblockState newState = pattern.checkWellFormed(getLevel(), getPos());
-		if (!newState.equals(state)) {
-			state = newState;
-			if (stateChangedCallback != null) {
-				stateChangedCallback.accept(state);
-			}
-			
-			// If we're not well formed, remove this component.
-			if(!state.isWellFormed()) {
-				this.getBlockEntity().removeComponent(this);
+
+		if (getLevel().isClientSide()) {
+			return;
+		}
+
+		if (isMaster()) {
+			MultiblockState newMultiblockState = pattern.isStateStillValid(state, getLevel());
+			if (!newMultiblockState.equals(state)) {
+				if (stateChangedCallback != null) {
+					stateChangedCallback.accept(state);
+				}
+
+				if (!newMultiblockState.isWellFormed()) {
+					pattern.onMultiblockBroken(state, getLevel());
+				}
+				state = newMultiblockState;
 			}
 		}
 	}
@@ -51,24 +79,15 @@ public class NewMultiblockComponent<T extends BlockEntity> extends AbstractBlock
 	}
 
 	@Override
-	public void multiBlockValidated(MultiBlockEntry<T> token) {
-		this.token = token;
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
+		CompoundTag parent = super.serializeUpdateNbt(nbt, fromUpdate);
+		parent.put("mb_state", state.serialize());
+		return nbt;
 	}
 
 	@Override
-	public void multiBlockBroken() {
-		token = null;
-	}
-
-	@Override
-	public MultiBlockEntry<T> getToken() {
-		return token;
-	}
-
-	@Override
-	public void onOwningBlockEntityUnloaded() {
-		if (hasToken()) {
-			getToken().remove();
-		}
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
+		state = MultiblockState.deserialize(nbt.getCompound("mb_state"));
 	}
 }

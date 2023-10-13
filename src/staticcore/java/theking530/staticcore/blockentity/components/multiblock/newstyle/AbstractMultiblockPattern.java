@@ -1,24 +1,24 @@
 package theking530.staticcore.blockentity.components.multiblock.newstyle;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.level.BlockEvent;
-import theking530.staticcore.utilities.math.Vector2D;
-import theking530.staticpower.blockentities.nonpowered.blastfurnace.BlockBlastFurnace;
+import theking530.staticcore.blockentity.BlockEntityBase;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState.MultiblockStateEntry;
 
 public abstract class AbstractMultiblockPattern {
+
+	public abstract boolean isValidBlockForPosition(BlockState state, BlockPos relativePos,
+			boolean bypassExistingCheck);
+
+	public abstract MultiblockState isStateStillValid(MultiblockState existingStat, Level level);
 
 	public abstract MultiblockState checkWellFormed(Level level, BlockPos startPos);
 
 	public abstract boolean isValidBlock(BlockState state);
-
-	public abstract boolean isValidBlockForPosition(BlockState state, Direction facing, BlockPos relativePos);
 
 	public abstract int getMaxX();
 
@@ -26,27 +26,62 @@ public abstract class AbstractMultiblockPattern {
 
 	public abstract int getMaxZ();
 
+	public abstract boolean canBeMaster(BlockPos pos, BlockState state);
+
 	public void onWellFormedOnPlaceEvent(MultiblockState state, BlockEvent.EntityPlaceEvent event) {
-		System.out.println(state);
-		for (Entry<BlockPos, BlockState> entry : state.getBlocks().entrySet()) {
-			if (!entry.getValue().isAir()) {
-				BlockState newState = entry.getValue().setValue(BlockBlastFurnace.IS_IN_VALID_MULTIBLOCK, true);
-				event.getLevel().setBlock(entry.getKey(), newState, 3);
+		for (MultiblockStateEntry entry : state.getBlocks()) {
+			// Update the block state.
+			BlockState blockState = entry.blockState();
+			if (!blockState.isAir() && blockState.hasProperty(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
+				BlockState newState = blockState.setValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK, true);
+
+				if (entry.pos().equals(state.getMasterPos())) {
+					newState = newState.setValue(MultiblockBlockStateProperties.IS_MASTER, true);
+				}
+
+				newState = modifyBlockStateOnFormed(newState, entry.pos(), event.getLevel());
+				event.getLevel().setBlock(entry.pos(), newState, 3);
+			}
+
+			// Update the multiblock components.
+			BlockEntity be = event.getLevel().getBlockEntity(entry.pos());
+			if (be instanceof BlockEntityBase) {
+				BlockEntityBase beb = (BlockEntityBase) be;
+				NewMultiblockComponent<?> component = beb.getComponent(NewMultiblockComponent.class);
+				component.addedToMultiblock(state);
 			}
 		}
+	}
 
-		List<Vector2D> offsets = new ArrayList<>();
-		offsets.add(new Vector2D(1, 0));
-		offsets.add(new Vector2D(0, 1));
-		offsets.add(new Vector2D(2, 1));
-		offsets.add(new Vector2D(1, 2));
+	protected BlockState modifyBlockStateOnFormed(BlockState in, BlockPos pos, LevelAccessor levelAccessor) {
+		return in;
+	}
 
-		BlockPos origin = state.getBlocks().firstKey();
-		for (Vector2D offset : offsets) {
-			BlockPos showFacePos = origin.offset(offset.getXi(), 1, offset.getYi());
-			BlockState newState = event.getLevel().getBlockState(showFacePos).setValue(BlockBlastFurnace.SHOW_FACE,
-					true);
-			event.getLevel().setBlock(showFacePos, newState, 3);
+	public void onMultiblockBroken(MultiblockState state, Level level) {
+		for (MultiblockStateEntry entry : state.getBlocks()) {
+			// Update the multiblock components.
+			BlockEntity be = level.getBlockEntity(entry.pos());
+			if (be instanceof BlockEntityBase) {
+				BlockEntityBase beb = (BlockEntityBase) be;
+				NewMultiblockComponent<?> component = beb.getComponent(NewMultiblockComponent.class);
+				component.onRemovedFromMultiblock(MultiblockState.FAILED);
+			}
+
+			// Update the block state.
+			BlockState existingState = level.getBlockState(entry.pos());
+			if (!existingState.isAir()
+					&& existingState.hasProperty(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
+				BlockState newState = existingState
+						.setValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK, false)
+						.setValue(MultiblockBlockStateProperties.IS_MASTER, false);
+				newState = modifyBlockStateOnBroken(newState, entry.pos(), level);
+
+				level.setBlock(entry.pos(), newState, 3);
+			}
 		}
+	}
+
+	protected BlockState modifyBlockStateOnBroken(BlockState in, BlockPos pos, Level level) {
+		return in;
 	}
 }

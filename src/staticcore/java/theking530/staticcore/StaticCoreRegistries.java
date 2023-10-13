@@ -11,14 +11,15 @@ import theking530.api.attributes.type.AttributeType;
 import theking530.api.attributes.values.AttributeValueType;
 import theking530.api.item.compound.slot.CompoundItemSlot;
 import theking530.api.upgrades.UpgradeType;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockType;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.productivity.product.ProductType;
 
 public class StaticCoreRegistries {
-	public static final ResourceKey<Registry<MultiblockType<?>>> MULTIBLOCK_TYPE_REGISTRY_KEY = key("multi_block_type");
+	public static final ResourceKey<Registry<AbstractMultiblockPattern>> MULTIBLOCK_TYPE_REGISTRY_KEY = key(
+			"multi_block_type");
 
 	public static final ResourceKey<Registry<UpgradeType<?>>> UPGRADE_TYPES_REGISTRY_KEY = key("upgrade_type");
 
@@ -40,7 +41,7 @@ public class StaticCoreRegistries {
 
 	public static final ResourceKey<Registry<CompoundItemSlot>> ITEM_SLOT_KEY = key("item_slot");
 
-	public static final ForgeRegistry<MultiblockType<?>> MultiblockTypes() {
+	public static final ForgeRegistry<AbstractMultiblockPattern> MultiblockTypes() {
 		return RegistryManager.ACTIVE.getRegistry(MULTIBLOCK_TYPE_REGISTRY_KEY);
 	}
 

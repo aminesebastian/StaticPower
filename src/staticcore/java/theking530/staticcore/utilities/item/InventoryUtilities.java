@@ -107,7 +107,8 @@ public class InventoryUtilities {
 	 * @param simulate
 	 * @return
 	 */
-	public static ItemStack getRandomItemStackFromInventory(IItemHandler inv, int startingSlot, int endingSlot, int amount, boolean simulate) {
+	public static ItemStack getRandomItemStackFromInventory(IItemHandler inv, int startingSlot, int endingSlot,
+			int amount, boolean simulate) {
 		// Capture all the slots that have items in them.
 		List<Integer> valueSlots = new LinkedList<Integer>();
 		for (int i = startingSlot; i <= endingSlot; i++) {
@@ -126,7 +127,8 @@ public class InventoryUtilities {
 		return inv.extractItem(targetSlot, amount, simulate);
 	}
 
-	public static int getRandomSlotWithItemFromInventory(IItemHandler inv, int startingSlot, int endingSlot, int amount) {
+	public static int getRandomSlotWithItemFromInventory(IItemHandler inv, int startingSlot, int endingSlot,
+			int amount) {
 		// Capture all the slots that have items in them.
 		List<Integer> valueSlots = new LinkedList<Integer>();
 		for (int i = startingSlot; i <= endingSlot; i++) {
@@ -218,6 +220,10 @@ public class InventoryUtilities {
 		return insertItemIntoInventory(inv, stack, 0, inv.getSlots() - 1, simulate);
 	}
 
+	public static ItemStack insertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack, boolean simulate) {
+		return insertItemIntoInventory(inv, stack, slot, slot, simulate);
+	}
+
 	public static ItemStack extractItemFromInventory(IItemHandler inv, ItemStack stack, int amount, boolean simulate) {
 		ItemStack finalExtract = ItemStack.EMPTY;
 		for (int i = 0; i < inv.getSlots(); i++) {
@@ -238,7 +244,8 @@ public class InventoryUtilities {
 		return finalExtract;
 	}
 
-	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, int start, int stop, boolean simulate) {
+	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, int start, int stop,
+			boolean simulate) {
 		// Do nothing if the input is empty.
 		if (stack.isEmpty()) {
 			return ItemStack.EMPTY;
@@ -274,7 +281,8 @@ public class InventoryUtilities {
 		return extractWithIngredient(ingredient, amount, inv, null);
 	}
 
-	public static int extractWithIngredient(Ingredient ingredient, int amount, IItemHandler inv, List<ItemStack> items) {
+	public static int extractWithIngredient(Ingredient ingredient, int amount, IItemHandler inv,
+			List<ItemStack> items) {
 		if (amount == 0) {
 			return 0;
 		}

@@ -1365,7 +1365,7 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		transformer("basic", ModBlocks.TransformerBasic.get(),
 				RecipeItem.of(ModMaterials.COPPER.get(MaterialTypes.WIRE_COIL).getItemTag()),
 				RecipeItem.of(ModBlocks.MachineBlockBasic.get()));
-		transformer("advanced", ModBlocks.MachineBlockIndustrial.get(),
+		transformer("advanced", ModBlocks.TransformerAdvanced.get(),
 				RecipeItem.of(ModMaterials.BRASS.get(MaterialTypes.WIRE_COIL).getItemTag()),
 				RecipeItem.of(ModBlocks.MachineBlockIndustrial.get()));
 		transformer("static", ModBlocks.TransformerStatic.get(),
@@ -2240,7 +2240,7 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		beginShapedRecipe(output, "transformer/" + name)
 			.define('c', coil)
 			.define('m', machineBlock)
-			.define('i', ModMaterials.IRON.get(MaterialTypes.PLATE).getItemTag())
+			.define('i', ModMaterials.STEEL.get(MaterialTypes.PLATE).getItemTag())
 			.pattern("c c")
 			.pattern("cmc")
 			.pattern("iii")

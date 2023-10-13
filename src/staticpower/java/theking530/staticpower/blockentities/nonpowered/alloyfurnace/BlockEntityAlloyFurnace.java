@@ -132,9 +132,9 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 	public void captureInputs(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe,
 			ProcessingContainer processingContainer, ConcretizedProductContainer inputContainer) {
 		inputContainer.addItem(
-				inputInventory.extractItem(0, component.getProcessingRecipe().get().getInput1().getCount(), true));
+				inputInventory.extractItem(0, component.getProcessingRecipe().get().getInput1().getCount(), false));
 		inputContainer.addItem(
-				inputInventory.extractItem(1, component.getProcessingRecipe().get().getInput2().getCount(), true));
+				inputInventory.extractItem(1, component.getProcessingRecipe().get().getInput2().getCount(), false));
 	}
 
 	@Override

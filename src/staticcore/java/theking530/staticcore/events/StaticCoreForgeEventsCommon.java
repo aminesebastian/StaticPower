@@ -59,7 +59,6 @@ import theking530.staticcore.StaticCore;
 import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockType;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.commands.ResearchCommands;
 import theking530.staticcore.commands.TeamCommands;
@@ -107,9 +106,6 @@ public class StaticCoreForgeEventsCommon {
 				LevelChunk chunk = chunkHolder.getFullChunk();
 				if (chunk == null) {
 					continue;
-				}
-				for (BlockEntity be : chunk.getBlockEntities().values()) {
-
 				}
 			}
 		}
@@ -160,8 +156,7 @@ public class StaticCoreForgeEventsCommon {
 		}
 
 		for (ResourceLocation id : StaticCoreRegistries.MultiblockTypes().getKeys()) {
-			MultiblockType<?> type = StaticCoreRegistries.MultiblockTypes().getValue(id);
-			AbstractMultiblockPattern pattern = type.getPattern();
+			AbstractMultiblockPattern pattern = StaticCoreRegistries.MultiblockTypes().getValue(id);
 			if (pattern.isValidBlock(event.getState())) {
 				MultiblockState state = pattern.checkWellFormed(event.getEntity().getLevel(), event.getPos());
 				if (state.isWellFormed()) {

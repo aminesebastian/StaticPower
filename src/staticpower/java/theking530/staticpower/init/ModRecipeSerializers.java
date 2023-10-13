@@ -11,6 +11,8 @@ import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRe
 import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.blastfurnace.BlastFurnaceRecipe;
+import theking530.staticpower.data.crafting.wrappers.blastfurnace.BlastFurnaceRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottlerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
@@ -129,6 +131,8 @@ public class ModRecipeSerializers {
 			.register(AlloyFurnaceRecipe.ID, () -> new AlloyFurnaceRecipeSerializer());
 	public static final RegistryObject<HydroponicFarmingRecipeSerializer> HYDROPONIC_FARMER_SERIALIZER = SERIALIZERS
 			.register(HydroponicFarmingRecipe.ID, () -> new HydroponicFarmingRecipeSerializer());
+	public static final RegistryObject<BlastFurnaceRecipeSerializer> BLAST_FURNACE_SERIALIZER = SERIALIZERS
+			.register(BlastFurnaceRecipe.ID, () -> new BlastFurnaceRecipeSerializer());
 
 	public static void init(IEventBus eventBus) {
 		SERIALIZERS.register(eventBus);

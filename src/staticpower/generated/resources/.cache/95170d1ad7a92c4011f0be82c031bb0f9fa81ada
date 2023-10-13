@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-10T23:32:59.3421878	Block States: staticpower
+// 1.19.2	2023-10-12T11:39:15.6364267	Block States: staticpower
 c2522358e82c7a72664181fe69af3fd6d7634534 assets/staticpower/blockstates/alloy_furnace.json
 6b3b3d59e926b1f7713b29d8ae247432edc8bf2a assets/staticpower/blockstates/automatic_placer.json
 0767f7bfba3a728c4dbe5b9c9bb9fa69b5552f17 assets/staticpower/blockstates/battery_block_advanced.json
@@ -7,7 +7,7 @@ f6f57b7af4468171b09bfacb4aca1919bfe8d263 assets/staticpower/blockstates/battery_
 c2bb85b7c3d106cc0d20637345a397e0c9af8414 assets/staticpower/blockstates/battery_block_energized.json
 76ed19a7434a74d7c810f5cbbe719efd29b341ae assets/staticpower/blockstates/battery_block_lumum.json
 e534592184e8ebaa28318c7f5c72bd6a6b46d79a assets/staticpower/blockstates/battery_block_static.json
-c7a44842904c9c68068dd284f59a7f6292bffa18 assets/staticpower/blockstates/blast_furnace.json
+a9151edb01c3058b7492c3db86b12fb3764e0bd0 assets/staticpower/blockstates/blast_furnace.json
 e7f9026eccccf82c3ee8f277d36b27aaedb4b39a assets/staticpower/blockstates/block_aluminum.json
 7724a8d4a6f5a56cc569259645363b46a7006209 assets/staticpower/blockstates/block_brass.json
 bf0f8c645b7531859da01a72bbc6156f2aca42cc assets/staticpower/blockstates/block_bronze.json

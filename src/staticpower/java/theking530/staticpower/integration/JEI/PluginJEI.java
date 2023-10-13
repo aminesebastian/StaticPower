@@ -45,6 +45,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModRecipeTypes;
 import theking530.staticpower.integration.JEI.categories.AlloyFurnaceRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.BlastFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.BottleRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.CasterRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.CauldronRecipeCategory;
@@ -146,6 +147,7 @@ public class PluginJEI implements IModPlugin {
 		registerCategory(registration, new FertilizerRecipeCategory(guiHelper));
 		registerCategory(registration, new RefineryRecipeCategory(guiHelper));
 		registerCategory(registration, new AlloyFurnaceRecipeCategory(guiHelper));
+		registerCategory(registration, new BlastFurnaceRecipeCategory(guiHelper));
 	}
 
 	protected void registerCategory(IRecipeCategoryRegistration registration, IRecipeCategory<?> category) {
@@ -260,6 +262,8 @@ public class PluginJEI implements IModPlugin {
 				recipeManager.getAllRecipesFor(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get()));
 		registration.addRecipes(AlloyFurnaceRecipeCategory.TYPE,
 				recipeManager.getAllRecipesFor(ModRecipeTypes.ALLOY_FURNACE_RECIPE_TYPE.get()));
+		registration.addRecipes(BlastFurnaceRecipeCategory.TYPE,
+				recipeManager.getAllRecipesFor(ModRecipeTypes.BLAST_FURNACE_RECIPE_TYPE.get()));
 		registration.addRecipes(PoweredGrinderRecipeCategory.TYPE,
 				recipeManager.getAllRecipesFor(ModRecipeTypes.GRINDER_RECIPE_TYPE.get()));
 		registration.addRecipes(CentrifugeRecipeCategory.TYPE,
@@ -311,6 +315,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable.get()),
 				SolderingTableRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AlloyFurnace.get()), AlloyFurnaceRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.BlastFurnace.get()), BlastFurnaceRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredGrinder.get()),
 				PoweredGrinderRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge.get()), CentrifugeRecipeCategory.TYPE);

@@ -9,6 +9,7 @@ import theking530.staticcore.crafting.StaticPowerRecipeType;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
+import theking530.staticpower.data.crafting.wrappers.blastfurnace.BlastFurnaceRecipe;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
@@ -99,6 +100,8 @@ public class ModRecipeTypes {
 			.register(AlloyFurnaceRecipe.ID, () -> new StaticPowerRecipeType<AlloyFurnaceRecipe>());
 	public static final RegistryObject<RecipeType<HydroponicFarmingRecipe>> HYDROPONIC_FARMING_RECIPE_TYPE = TYPES
 			.register(HydroponicFarmingRecipe.ID, () -> new StaticPowerRecipeType<HydroponicFarmingRecipe>());
+	public static final RegistryObject<RecipeType<BlastFurnaceRecipe>> BLAST_FURNACE_RECIPE_TYPE = TYPES
+			.register(BlastFurnaceRecipe.ID, () -> new StaticPowerRecipeType<BlastFurnaceRecipe>());
 
 	public static void init(IEventBus eventBus) {
 		TYPES.register(eventBus);

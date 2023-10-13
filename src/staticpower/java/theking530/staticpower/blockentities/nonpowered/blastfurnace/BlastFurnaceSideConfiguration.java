@@ -8,21 +8,16 @@ public class BlastFurnaceSideConfiguration extends DefaultMachineNoFacePreset {
 	public static final BlastFurnaceSideConfiguration INSTANCE = new BlastFurnaceSideConfiguration();
 
 	public BlastFurnaceSideConfiguration() {
-		setDefaultOnSide(BlockSide.TOP, MachineSideMode.Input2);
+		setDefaultOnSide(BlockSide.TOP, MachineSideMode.Input);
 		setDefaultOnSide(BlockSide.BOTTOM, MachineSideMode.Output);
-		setDefaultOnSide(BlockSide.FRONT, MachineSideMode.Never);
-		setDefaultOnSide(BlockSide.BACK, MachineSideMode.Input3);
-		setDefaultOnSide(BlockSide.LEFT, MachineSideMode.Input3);
-		setDefaultOnSide(BlockSide.RIGHT, MachineSideMode.Input3);
+		setDefaultOnSide(BlockSide.FRONT, MachineSideMode.Output);
+		setDefaultOnSide(BlockSide.BACK, MachineSideMode.Output);
+		setDefaultOnSide(BlockSide.LEFT, MachineSideMode.Output);
+		setDefaultOnSide(BlockSide.RIGHT, MachineSideMode.Output);
 
 		for (BlockSide side : BlockSide.values()) {
-			if (side == BlockSide.FRONT) {
-				continue;
-			}
+			addPossibleConfiguration(side, MachineSideMode.Input);
 			addPossibleConfiguration(side, MachineSideMode.Output);
-			setDefaultOnSide(BlockSide.TOP, MachineSideMode.Input);
-			setDefaultOnSide(BlockSide.TOP, MachineSideMode.Input2);
-			setDefaultOnSide(BlockSide.TOP, MachineSideMode.Input3);
 		}
 	}
 }

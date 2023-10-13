@@ -31,14 +31,14 @@ public class ContainerBlastFurnace extends StaticPowerTileEntityContainer<BlockE
 	@Override
 	public void initializeContainer() {
 		// Input
-		addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 36, 22));
-		addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 1, 58, 22));
+		addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 43, 24));
 
-		addSlot(new StaticPowerContainerSlot(getTileEntity().fuelInventory, 0, 47, 64));
+		addSlot(new StaticPowerContainerSlot(getTileEntity().fuelInventory, 0, 43, 64));
 
 		// Output
-		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 110, 40)
+		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 120, 30)
 				.shouldApplyExperience(getTileEntity().processingComponent));
+		addSlot(new OutputSlot(getTileEntity().outputInventory, 1, 120, 60));
 		addAllPlayerSlots();
 	}
 }
