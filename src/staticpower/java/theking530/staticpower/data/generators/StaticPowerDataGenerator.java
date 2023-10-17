@@ -14,6 +14,7 @@ import theking530.staticpower.data.generators.recipes.CarpenterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CasterRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CauldronRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CentrifugeRecipeGenerator;
+import theking530.staticpower.data.generators.recipes.CokeOvenRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CondensationRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CraftingRecipeGenerator;
 import theking530.staticpower.data.generators.recipes.CrucibleRecipeGenerator;
@@ -57,6 +58,7 @@ public class StaticPowerDataGenerator {
 		generator.addProvider(true, new GrindingRecipeGenerator(generator));
 		generator.addProvider(true, new AlloyFurnaceRecipeGenerator(generator));
 		generator.addProvider(true, new BlastFurnaceRecipeGenerator(generator));
+		generator.addProvider(true, new CokeOvenRecipeGenerator(generator));
 		generator.addProvider(true, new HammerRecipeGenerator(generator));
 		generator.addProvider(true, new BlastingRecipeGenerator(generator));
 		generator.addProvider(true, new BottlerRecipeGenerator(generator));

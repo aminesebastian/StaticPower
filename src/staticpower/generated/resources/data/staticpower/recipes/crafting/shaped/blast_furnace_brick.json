@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "minecraft:nether_brick"
+    },
+    "s": {
+      "item": "minecraft:soul_sand"
+    }
+  },
+  "pattern": [
+    "bsb",
+    "sbs",
+    "bsb"
+  ],
+  "result": {
+    "item": "staticpower:blast_furnace_brick"
+  }
+}

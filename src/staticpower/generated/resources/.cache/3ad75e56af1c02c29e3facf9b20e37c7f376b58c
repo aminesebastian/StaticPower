@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-10T23:09:13.3957806	Item Models: staticpower
+// 1.19.2	2023-10-14T01:49:45.6277855	Item Models: staticpower
 6027aa6d17b10a748c750596a1e41617fddb06da assets/staticpower/models/item/alloy_furnace.json
 a719b3e89ea4ecd25522280007f7e8b66eacafc0 assets/staticpower/models/item/automatic_placer.json
 32a59e36d1d4e959c6c1f1436a7c1d1efed2bf87 assets/staticpower/models/item/backpack.json
@@ -39,7 +39,7 @@ b1de583c69b7c3e9c5ae7cf2f8fcfbda72044223 assets/staticpower/models/item/blade_ir
 24ce7aeb8c53d0d58345eabd8b0fdf69ed5a7022 assets/staticpower/models/item/blade_lumum.json
 41de504891fbed5a1b570f53e3d29c6c7b28ba4e assets/staticpower/models/item/blade_static.json
 e5418f8ddd1db8b385db0b58aaa1b42d91df0202 assets/staticpower/models/item/blade_tungsten.json
-0355de2f3efb308c767aa8eb117d46a0b5880312 assets/staticpower/models/item/blast_furnace.json
+ebb6b85ba3b85d8215d652bf3ccd6110513e8106 assets/staticpower/models/item/blast_furnace_brick.json
 7d46e3ccd059441fd0ecbd9ebe83810fe07b9446 assets/staticpower/models/item/block_aluminum.json
 fbdabafce43cd7d2f08abfe6c9b636fc318a2a36 assets/staticpower/models/item/block_brass.json
 a28f8d37fbcb4159cf742ba41325733390552e15 assets/staticpower/models/item/block_bronze.json
@@ -70,6 +70,7 @@ ff756182141b3e55c3dad0a9021d367a16766a80 assets/staticpower/models/item/block_lu
 b235196e080bac66f2f9f3f5bce77b3aaf597f95 assets/staticpower/models/item/block_magnesium.json
 2e7feed06018bab47b290bc9c45700bb42f0cbbe assets/staticpower/models/item/block_platinum.json
 de773dfbeecbdb40eaa1c7d9dfde9923b7b0f4b8 assets/staticpower/models/item/block_raw_aluminum.json
+5fc2d6db6af803493ed42cc3f8c7046a222b6434 assets/staticpower/models/item/block_raw_coal_coke.json
 f04588093aa8ac394d63ecd323cc9a1e416a1804 assets/staticpower/models/item/block_raw_energized_metal.json
 391c05a3cee4199593d587e5681e59ca332cc751 assets/staticpower/models/item/block_raw_inert_infusion_alloy.json
 adeee24b415f7145079b9af2cf81c488335c022d assets/staticpower/models/item/block_raw_lead.json
@@ -253,6 +254,7 @@ b09d3bc5b669c1868999794df2eca042694c5ad4 assets/staticpower/models/item/circuit_
 8c576ceee8fb4edf174f9cd08aa7d98559c9cdc7 assets/staticpower/models/item/circuit_breaker_5.json
 f482cfcabd04a751028c87036059b90a318a515e assets/staticpower/models/item/circuit_breaker_50.json
 b79b3e92bb13e2e4d8ba295d4ca3456f28d55fd0 assets/staticpower/models/item/clean_cauldron.json
+e8679e38692c18214b866206c68b931a114fd665 assets/staticpower/models/item/coke_oven_brick.json
 baad2070c823bc993361c4e216be3a78293cc2a2 assets/staticpower/models/item/conveyor_extractor_advanced.json
 547ade0a8f36c88fdf6487fac0a6b07c84656045 assets/staticpower/models/item/conveyor_extractor_basic.json
 b3bb21a71777f7310b16e9093a25211be4a53ad3 assets/staticpower/models/item/conveyor_extractor_energized.json
@@ -662,6 +664,7 @@ c99bf975c437ba3c4aabc99893a3fc8d890b3780 assets/staticpower/models/item/random_o
 67deca607ba4667434d5c7078ed401e7ff63b36a assets/staticpower/models/item/raw_aluminum.json
 ccc5ecc3dc75cae58e8939b79bc38f5e66fc6f27 assets/staticpower/models/item/raw_brass.json
 cd0ed3b5ae6aa7b93c4234cae22c082ce7c08faf assets/staticpower/models/item/raw_bronze.json
+bb76d3d85cb5a60a851d2812b68ef21db7f4bf8c assets/staticpower/models/item/raw_coal_coke.json
 259fdfab0ac69e49d0a4a9eb19ed38d8794db69d assets/staticpower/models/item/raw_energized_metal.json
 15ee303262ae8a71161eca90bdc2166f27c6d6b6 assets/staticpower/models/item/raw_inert_infusion_alloy.json
 5833de6facb3e252b20897f983d867cbd951e682 assets/staticpower/models/item/raw_lead.json

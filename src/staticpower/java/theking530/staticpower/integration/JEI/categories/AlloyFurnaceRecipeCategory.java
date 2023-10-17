@@ -84,7 +84,7 @@ public class AlloyFurnaceRecipeCategory extends BaseJEIRecipeCategory<AlloyFurna
 
 		float experience = recipe.getExperience();
 		if (experience > 0) {
-			MutableComponent experienceString = Component.translatable("gui.staticpower.experience", experience);
+			MutableComponent experienceString = Component.translatable("gui.staticcore.experience", experience);
 			GuiDrawUtilities.drawStringCentered(matrixStack, experienceString.getString(), 100, 10, 0.0f, 1f, SDColor.EIGHT_BIT_GREY, false);
 		}
 

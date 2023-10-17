@@ -26,15 +26,13 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Si
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState.MultiblockStateEntry;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.NewMultiblockComponent;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.item.InventoryUtilities;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.wrappers.blastfurnace.BlastFurnaceRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModMultiblocks;
@@ -44,7 +42,8 @@ import theking530.staticpower.init.tags.ModItemTags;
 public class BlockEntityBlastFurnace extends BlockEntityBase implements IRecipeProcessor<BlastFurnaceRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityBlastFurnace> TYPE = new BlockEntityTypeAllocator<>(
-			"blast_furnace", (type, pos, state) -> new BlockEntityBlastFurnace(pos, state), ModBlocks.BlastFurnace);
+			"blast_furnace", (type, pos, state) -> new BlockEntityBlastFurnace(pos, state),
+			ModBlocks.BlastFurnaceBrick);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent fuelInventory;
@@ -52,7 +51,7 @@ public class BlockEntityBlastFurnace extends BlockEntityBase implements IRecipeP
 	public final RecipeProcessingComponent<BlastFurnaceRecipe> processingComponent;
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final LoopingSoundComponent furnaceSoundComponent;
-	public final NewMultiblockComponent<BlockEntityBlastFurnace> multiblockComponent;
+	public final MultiblockComponent<BlockEntityBlastFurnace> multiblockComponent;
 
 	@UpdateSerialize
 	private int lastFuelBurnTime;
@@ -76,12 +75,11 @@ public class BlockEntityBlastFurnace extends BlockEntityBase implements IRecipeP
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
 				BlastFurnaceSideConfiguration.INSTANCE));
 		registerComponent(processingComponent = new RecipeProcessingComponent<BlastFurnaceRecipe>("ProcessingComponent",
-				StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
-				ModRecipeTypes.BLAST_FURNACE_RECIPE_TYPE.get()));
+				BlastFurnaceRecipe.DEFAULT_PROCESSING_TIME, ModRecipeTypes.BLAST_FURNACE_RECIPE_TYPE.get()));
 		processingComponent.setShouldControlOnBlockState(true);
 
-		registerComponent(multiblockComponent = new NewMultiblockComponent<BlockEntityBlastFurnace>(
-				"MultiblockComponent", ModMultiblocks.BLAST_FURNACE.get(), MultiblockState.FAILED));
+		registerComponent(multiblockComponent = new MultiblockComponent<BlockEntityBlastFurnace>("MultiblockComponent",
+				ModMultiblocks.BLAST_FURNACE.get()));
 	}
 
 	public void process() {
@@ -147,6 +145,9 @@ public class BlockEntityBlastFurnace extends BlockEntityBase implements IRecipeP
 	@Override
 	public ProcessingCheckState canStartProcessingRecipe(RecipeProcessingComponent<BlastFurnaceRecipe> component,
 			BlastFurnaceRecipe recipe, ConcretizedProductContainer outputContainer) {
+		if (!multiblockComponent.isWellFormed()) {
+			return ProcessingCheckState.error("multiblock no");
+		}
 		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -170,10 +171,10 @@ public class BlockEntityBlastFurnace extends BlockEntityBase implements IRecipeP
 	public ProcessingCheckState canContinueProcessing(RecipeProcessingComponent<BlastFurnaceRecipe> component,
 			ProcessingContainer processingContainer) {
 		if (burnTimeRemaining < 0) {
-			return ProcessingCheckState.cancel();
+			return ProcessingCheckState.skip();
 		}
 		if (!multiblockComponent.isWellFormed()) {
-			return ProcessingCheckState.cancel();
+			return ProcessingCheckState.skip();
 		}
 		return ProcessingCheckState.ok();
 	}

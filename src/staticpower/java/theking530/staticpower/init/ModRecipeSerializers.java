@@ -23,6 +23,8 @@ import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.cokeoven.CokeOvenRecipe;
+import theking530.staticpower.data.crafting.wrappers.cokeoven.CokeOvenRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipe;
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.covers.CoverRecipe;
@@ -133,6 +135,8 @@ public class ModRecipeSerializers {
 			.register(HydroponicFarmingRecipe.ID, () -> new HydroponicFarmingRecipeSerializer());
 	public static final RegistryObject<BlastFurnaceRecipeSerializer> BLAST_FURNACE_SERIALIZER = SERIALIZERS
 			.register(BlastFurnaceRecipe.ID, () -> new BlastFurnaceRecipeSerializer());
+	public static final RegistryObject<CokeOvenRecipeSerializer> COKE_OVEN_SERIALIZER = SERIALIZERS
+			.register(CokeOvenRecipe.ID, () -> new CokeOvenRecipeSerializer());
 
 	public static void init(IEventBus eventBus) {
 		SERIALIZERS.register(eventBus);

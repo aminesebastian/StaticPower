@@ -5,7 +5,7 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import theking530.staticcore.blockentity.components.multiblock.MultiBlockFormationStatus;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiBlockFormationStatus;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.StaticCoreSprites;
 import theking530.staticcore.gui.drawables.SpriteDrawable;

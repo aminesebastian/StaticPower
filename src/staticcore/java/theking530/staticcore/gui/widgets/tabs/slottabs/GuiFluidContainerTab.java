@@ -44,7 +44,7 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	}
 
 	public GuiFluidContainerTab(StaticCoreContainerMenu container, FluidContainerInventoryComponent fluidContainerComponent, Item emptyBucketPreview, Item filledBucketPreview) {
-		super("Fluid Containers", SDColor.EIGHT_BIT_WHITE, 26, 73, new SDColor(1, 0, 1, 1), Items.BUCKET);
+		super("Fluid Containers", SDColor.EIGHT_BIT_WHITE, 26, 74, new SDColor(1, 0, 1, 1), Items.BUCKET);
 		this.container = container;
 		this.fluidConatinerInventoryIndecies = new ArrayList<Integer>();
 		this.fluidContainerComponent = fluidContainerComponent;
@@ -54,12 +54,12 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 
 		// Initialize the button.
 		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
-			registerWidget(fillDirectionButton = new SpriteButton(9, 40, 10, 10, StaticCoreSprites.IMPORT, StaticCoreSprites.IMPORT, this::buttonPressed));
+			registerWidget(fillDirectionButton = new SpriteButton(8, 41, 10, 10, StaticCoreSprites.IMPORT, StaticCoreSprites.IMPORT, this::buttonPressed));
 			this.topSlotPreview = filledBucketPreview;
 			this.bottomSlotPreview = emptyBucketPreview;
 			fillDirectionButton.setTooltip(Component.literal("Fill Machine with Container Contents"));
 		} else {
-			registerWidget(fillDirectionButton = new SpriteButton(9, 40, 10, 10, StaticCoreSprites.EXPORT, StaticCoreSprites.EXPORT, this::buttonPressed));
+			registerWidget(fillDirectionButton = new SpriteButton(8, 41, 10, 10, StaticCoreSprites.EXPORT, StaticCoreSprites.EXPORT, this::buttonPressed));
 			this.topSlotPreview = emptyBucketPreview;
 			this.bottomSlotPreview = filledBucketPreview;
 			fillDirectionButton.setTooltip(Component.literal("Fill Container with Machine Contents"));
@@ -94,8 +94,8 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
 		topSlot.y = (int) (this.getYPosition() + 24);
 		bottomSlot.y = (int) (this.getYPosition() + 51);
-		topSlot.x = (int) (getXPosition() + 6);
-		bottomSlot.x = (int) (getXPosition() + 6);
+		topSlot.x = (int) (getXPosition() + 5);
+		bottomSlot.x = (int) (getXPosition() + 5);
 		
 		if(!topSlot.getItem().isEmpty() || !bottomSlot.getItem().isEmpty()) {
 			showNotificationBadge = true;

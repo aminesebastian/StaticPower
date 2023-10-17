@@ -5,7 +5,7 @@
       "tag": "forge:wire_coil/copper"
     },
     "i": {
-      "tag": "forge:plates/iron"
+      "tag": "forge:plates/steel"
     },
     "m": {
       "item": "staticpower:machine_block_basic"

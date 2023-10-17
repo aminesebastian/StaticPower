@@ -141,7 +141,7 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelProvider
 		tooltip.add(Component.translatable("gui.staticpower.remaining_heat_time").append(" ")
 				.append(GuiTextUtilities.formatNumberAsStringOneDecimal(getRemainingHeat(stack) / 20.0f)
 						.withStyle(ChatFormatting.GOLD))
-				.append(Component.translatable("gui.staticpower.seconds.short").withStyle(ChatFormatting.GOLD)));
+				.append(Component.translatable("gui.staticcore.seconds.short").withStyle(ChatFormatting.GOLD)));
 	}
 
 	@Override

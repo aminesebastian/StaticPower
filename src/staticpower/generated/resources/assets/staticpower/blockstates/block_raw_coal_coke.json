@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "staticpower:block/block_raw_coal_coke"
+    }
+  }
+}

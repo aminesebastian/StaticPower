@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-12T16:49:31.7278335	Tags for minecraft:item
+// 1.19.2	2023-10-15T19:17:57.6965082	Tags for minecraft:item
 51b00e5b14b17e9df81bc1b25cec37a2fe8031dc data/forge/tags/items/chunks/aluminum.json
 51bedc018c85271eca5afd8b657d0c5c1c7ffeac data/forge/tags/items/chunks/coal.json
 d8a3eb079dc5e7de3ceeafed90cc657c79950b6c data/forge/tags/items/chunks/copper.json
@@ -146,12 +146,13 @@ a2e412168fe064ffb1acd06f9c9585b079c0aa2c data/forge/tags/items/plates/steel.json
 e431e110691449aaca4a018cba60b00640899f51 data/forge/tags/items/plates/tin.json
 7d526671acc38ce178e5e798a8a18bdd396304f9 data/forge/tags/items/plates/tungsten.json
 6b34be1ff98b12e4b8082d527d774ecb4822f308 data/forge/tags/items/plates/zinc.json
-302c577409c739bf352cb3d6c4de33fca9a0a6ad data/forge/tags/items/raw_materials.json
+377cad3cffbefd09a2a04f0931fea69bc904c080 data/forge/tags/items/raw_materials.json
 2080ab4c1adbff4d48d1c952e085da26f2f0060e data/forge/tags/items/raw_materials/aluminum.json
 9218b9a9714727125a01f530ef3391aa37831154 data/forge/tags/items/raw_materials/brass.json
 c23cc7ac77af2d9b3b3187aa0d3bb3b630582abf data/forge/tags/items/raw_materials/bronze.json
 f470b0889459fb2d48176e69995c70ce18aa66ea data/forge/tags/items/raw_materials/charcoal.json
 05abdd0d8560b0671f8c122f795fcb1bc2155276 data/forge/tags/items/raw_materials/coal.json
+53623d523b45615b84c3c675427d253fb907af1b data/forge/tags/items/raw_materials/coal_coke.json
 04781c595bb382b48dca4f9b99ee18bf225c90da data/forge/tags/items/raw_materials/copper.json
 2643e71b2d2df1df1b97e546852e8cbc7160b9f3 data/forge/tags/items/raw_materials/gold.json
 ecea8bc83cf94eb3096e2cfc737f98794638be17 data/forge/tags/items/raw_materials/iron.json
@@ -172,6 +173,7 @@ b1a2fb1fedd49e2d69ef4ff2467c80ee9df7df8a data/forge/tags/items/rods/tin.json
 f8c5ffdfabe244c3950910be77feb2367ec3a6bf data/forge/tags/items/seeds.json
 d7ce7eec94a7267109bfc05c228f1736caadef2e data/forge/tags/items/storage_blocks/aluminum.json
 150da1135a6d5d7b9cb1ec65250c0aceaa835dff data/forge/tags/items/storage_blocks/coal.json
+3468b4a225506125e4dfd84c9cbccacf3c4fd9ca data/forge/tags/items/storage_blocks/coal_coke.json
 43a45a1abbda26eb85071635bb20e4db6d13fdab data/forge/tags/items/storage_blocks/copper.json
 1e3d0c9747e01354f06542e4ec73935410d30d25 data/forge/tags/items/storage_blocks/cut_aluminum.json
 9544e9530c7c8ba0a4386cb30af4c767ce0aff30 data/forge/tags/items/storage_blocks/cut_brass.json
@@ -257,7 +259,7 @@ efd257ecbbf29278d25a96963857b220b3c7ace3 data/staticpower/tags/items/backpacks/f
 7ef5ca3e9d9ddc55e3dff2f7acc2a6e52440bbf7 data/staticpower/tags/items/backpacks/miner.json
 def3f6e29caccf0479ccc25266c5c749dc336be9 data/staticpower/tags/items/backpacks/tool.json
 2c27d0cdc0e8417ef4b40e36ba76cf4c75b426b9 data/staticpower/tags/items/battery_blocks.json
-e7780121955308d635861804f942f4d435edb4de data/staticpower/tags/items/blast_furnace_fuel.json
+022480c74066894e8ba7baba55b0cf689cf14a5d data/staticpower/tags/items/blast_furnace_fuel.json
 791c2766c6a5c516034d3b4ec9a9cc72a0090b72 data/staticpower/tags/items/cables.json
 f3496554445a0ae3e4bf0d14007db874293a2aa1 data/staticpower/tags/items/cauldrons.json
 b5528cd01649a1309202d569b50e24035689575d data/staticpower/tags/items/chests.json
@@ -307,7 +309,7 @@ e931e350be5042e282e2061a6667161aedcb8fd4 data/staticpower/tags/items/ingot_or_pl
 35c86d69724a6fbde4f9778cbae604be21d4430b data/staticpower/tags/items/ingot_or_plate/tin.json
 c3ee03b6ec91f239e2a1e4dbe7ca9f3414305560 data/staticpower/tags/items/ingot_or_plate/tungsten.json
 6b12387585a43cc1314d136279dda18d1d1a86b6 data/staticpower/tags/items/ingot_or_plate/zinc.json
-5debb08487c6bb11141a4af0d4211eea51d4c121 data/staticpower/tags/items/lightbulbs.json
+e2c4ab2a683d19319ecf6fb11d20599da5e440a1 data/staticpower/tags/items/lightbulbs.json
 ffab557a6ca942610a7598d00146fee0a0804dc0 data/staticpower/tags/items/machines.json
 2528913fac539e196dfc1dd3beaf5a78d22819ff data/staticpower/tags/items/machine_blocks.json
 e8f309955d537f37f48055743def9728df64488b data/staticpower/tags/items/materials.json

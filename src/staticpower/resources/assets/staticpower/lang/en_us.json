@@ -226,6 +226,7 @@
 	"item.staticpower.raw_redstone_alloy": "Raw Redstone Alloy",
 	"item.staticpower.raw_inert_infusion_alloy": "Raw Inert Infusion Alloy",
 	"item.staticpower.raw_steel": "Raw Steel",
+	"item.staticpower.raw_coal_coke": "Coal Coke",
 	
 	"item.staticpower.ingot_tin": "Tin Ingot",
 	"item.staticpower.ingot_silver": "Silver Ingot",
@@ -263,6 +264,7 @@
 	"item.staticpower.ingot_copper_heated": "Heated Copper Ingot",
 	"item.staticpower.ingot_gold_heated": "Heated Gold Ingot",
 	"item.staticpower.ingot_steel_heated": "Heated Steel Ingot",
+	"item.staticpower.ingot_uranium_heated": "Heated Uranium Ingot",
 	
 	"item.staticpower.nugget_copper": "Copper Nugget",
 	"item.staticpower.nugget_tin": "Tin Nugget",
@@ -552,6 +554,7 @@
 	"item.staticpower.bucket_oil_light": "Light Oil Bucket",
 	"item.staticpower.bucket_oil_heavy": "Heavy Oil Bucket",
 	"item.staticpower.bucket_fuel": "Fuel Bucket",
+	"item.staticpower.bucket_oil_creosote": "Creosote Oil Bucket",
 	"item.staticpower.bucket_latex": "Latex Bucket",
 	"item.staticpower.bucket_coolant": "Coolant Bucket",
 	"item.staticpower.bottle_milk": "Milk Bottle",
@@ -751,7 +754,8 @@
 	"block.staticpower.rusty_cauldron": "Rusty Cauldron",
 	"block.staticpower.clean_cauldron": "Cauldron 2.0",
 	"block.staticpower.alloy_furnace": "Alloy Furnace",
-	"block.staticpower.blast_furnace": "Blast Furnace",
+	"block.staticpower.blast_furnace_brick": "Blast Furnace Brick",
+	"block.staticpower.coke_oven_brick": "Coke Oven Brick",
 	
 	"block.staticpower.battery_block_basic": "Basic Battery",
 	"block.staticpower.battery_block_advanced": "Advanced Battery",
@@ -924,6 +928,7 @@
 	"block.staticpower.block_energized_metal": "Block of Energized Metal",
 	"block.staticpower.block_lumum_metal": "Block of Lumum Metal",
 	
+	"block.staticpower.block_raw_sapphire": "Block of Sapphire",
 	"block.staticpower.block_cut_tin": "Cut Tin",
 	"block.staticpower.block_cut_zinc": "Cut Zinc",
 	"block.staticpower.block_cut_aluminum": "Cut Aluminum",
@@ -959,6 +964,7 @@
 	"block.staticpower.block_raw_lumum_metal": "Raw Lumum Metal Block",
 	"block.staticpower.block_raw_uranium": "Raw Uranium Block",
 	"block.staticpower.block_raw_redstone_alloy": "Block of Raw Redstone Alloy",
+	"block.staticpower.block_raw_coal_coke": "Block of Coal Coke",
 	"block.staticpower.rubber_tree_wood": "Rubber Wood",
 	"block.staticpower.rubber_tree_log": "Rubber Wood Log",
 	"block.staticpower.rubber_tree_stripped_log": "Stripped Rubber Wood Log",
@@ -1103,6 +1109,7 @@
 	"fluid_type.staticpower.oil_light": "Light Oil",
 	"fluid_type.staticpower.oil_heavy": "Heavy Oil",
 	"fluid_type.staticpower.fuel": "Fuel",
+	"fluid_type.staticpower.oil_creosote": "Creosote Oil",
 		
 	"gui.staticpower.rpm": "RPM",
 	
@@ -1132,8 +1139,8 @@
 	"gui.staticpower.sprinkler_experience_description": "When attached to a pipe containing experience, converts the experience to experience orbs!",
 	"gui.staticpower.sprinkler_water_growth_rate": "Water Growth Bonus: ",
 
-	"gui.staticpower.experience_hopper_tooltip": "Hoppin' full of XP!",
-	"gui.staticpower.experience_hopper_description": "This hopper is specifically engineered to drain the raw volatile power of liquid experience from a living thing!",
+	"gui.staticcore.experience_hopper_tooltip": "Hoppin' full of XP!",
+	"gui.staticcore.experience_hopper_description": "This hopper is specifically engineered to drain the raw volatile power of liquid experience from a living thing!",
 	"gui.staticpower.rusty_cauldron_tooltip": "Double, double toil and trouble!",
 	"gui.staticpower.rusty_cauldron_description": "The BRAND NEW Static Industries Cauldron! Made from entirely recycled materials, this marvel of engineering will serve as a solid foundation for all your future endeavors. Warranty does not cover damages resulting from excessive rust. You have your tetanus shot, right?",
 	"gui.staticpower.clean_cauldron_tooltip": "An elegant bucket, for a more civilized age.",
@@ -1205,6 +1212,10 @@
 	
 	"gui.staticpower.refinery_status_multiple_controllers": "Multiple controllers detected!",
 	"gui.staticpower.refinery_missing_boiler": "Refinery requires at least one boiler",
+	
+	
+	"gui.staticpower.blast_furnace": "Blast Furnace",
+	"gui.staticpower.coke_oven": "Coke Oven",
 	
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox",

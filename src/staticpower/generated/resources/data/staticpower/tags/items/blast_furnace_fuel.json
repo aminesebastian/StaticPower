@@ -1,7 +1,7 @@
 {
   "values": [
     "minecraft:charcoal",
-    "minecraft:coal_block",
-    "minecraft:coal"
+    "#forge:raw_materials/coal_coke",
+    "#forge:storage_blocks/coal_coke"
   ]
 }

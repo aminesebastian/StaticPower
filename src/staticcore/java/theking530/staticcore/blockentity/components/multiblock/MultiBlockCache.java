@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.StaticCore;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiBlockFormationStatus;
 import theking530.staticcore.utilities.TriFunction;
 import theking530.staticcore.world.WorldUtilities;
 

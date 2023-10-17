@@ -1023,7 +1023,6 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 				RecipeItem.of(ModMaterials.STEEL.get(MaterialTypes.INGOT).getItemTag()),
 				RecipeItem.of(ModItems.AdvancedProcessor.get()));
 
-
 		resistor("1w", ModBlocks.Resistors.get(1).get().asItem(), RecipeItem.of(MinecraftColor.GRAY.getDyeTag()),
 				RecipeItem.of(MinecraftColor.RED.getDyeTag()), RecipeItem.of(MinecraftColor.GRAY.getDyeTag()));
 		resistor("5w", ModBlocks.Resistors.get(5).get().asItem(), RecipeItem.of(MinecraftColor.GRAY.getDyeTag()),
@@ -1300,7 +1299,6 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 //			.unlockedBy("has_items", hasItems(RecipeItem.of(Blocks.CRAFTING_TABLE)));
 //		// @formatter:on
 
-		
 		conveyor("basic", ModBlocks.ConveyorsStraight.get(StaticPowerTiers.BASIC).get(),
 				ModBlocks.ConveyorsRampUp.get(StaticPowerTiers.BASIC).get(),
 				ModBlocks.ConveyorsRampDown.get(StaticPowerTiers.BASIC).get(),
@@ -1377,6 +1375,26 @@ public class CraftingRecipeGenerator extends SCRecipeProvider<CraftingRecipe> {
 		transformer("lumum", ModBlocks.TransformerLumum.get(),
 				RecipeItem.of(ModMaterials.LUMUM_METAL.get(MaterialTypes.WIRE_COIL).getItemTag()),
 				RecipeItem.of(ModBlocks.MachineBlockIndustrial.get()));
+
+		// @formatter:off
+		beginShapedRecipe(ModBlocks.CokeOvenBrick.get(), "coke_oven_brick")
+			.define('b', Items.BRICK)
+			.define('s', Tags.Items.SAND)
+			.pattern("bsb")
+			.pattern("sbs")
+			.pattern("bsb")
+			.unlockedBy("has_items", hasItems(Items.BRICK));
+		// @formatter:on		
+
+		// @formatter:off
+		beginShapedRecipe(ModBlocks.BlastFurnaceBrick.get(), "blast_furnace_brick")
+		.define('b', Items.NETHER_BRICK)
+		.define('s', Items.SOUL_SAND)
+		.pattern("bsb")
+		.pattern("sbs")
+		.pattern("bsb")
+		.unlockedBy("has_items", hasItems(Items.NETHER_BRICK));
+	// @formatter:on
 	}
 
 	protected SCShapedRecipeBuilder beginShapedRecipe(ItemLike result) {

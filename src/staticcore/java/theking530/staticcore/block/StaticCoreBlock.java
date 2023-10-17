@@ -48,6 +48,7 @@ import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.blockentity.BlockEntityBase;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
 import theking530.staticcore.utilities.IBlockItemCreativeTabProvider;
 import theking530.staticcore.utilities.ITooltipProvider;
 
@@ -133,11 +134,26 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 		return false;
 	}
 
-	protected BlockState getDefaultStateForRegistration() {
-		if (canBeWaterlogged()) {
-			return stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false);
+	protected boolean canBePartOfMultiblock() {
+		return false;
+	}
+
+	public boolean isInValidMultiblock(BlockState state) {
+		if (!state.hasProperty(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
+			return false;
 		}
-		return stateDefinition.any();
+		return state.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK);
+	}
+
+	protected BlockState getDefaultStateForRegistration() {
+		BlockState state = stateDefinition.any();
+		if (canBeWaterlogged()) {
+			state = state.setValue(BlockStateProperties.WATERLOGGED, false);
+		}
+		if (canBePartOfMultiblock()) {
+			state = state.setValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK, false);
+		}
+		return state;
 	}
 
 	@Override
@@ -145,6 +161,9 @@ public abstract class StaticCoreBlock extends Block implements IItemBlockProvide
 		super.createBlockStateDefinition(builder);
 		if (canBeWaterlogged()) {
 			builder.add(BlockStateProperties.WATERLOGGED);
+		}
+		if (canBePartOfMultiblock()) {
+			builder.add(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK);
 		}
 	}
 

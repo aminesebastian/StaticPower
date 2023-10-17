@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:blast_furnace",
+  "experience": 9.0,
+  "input": {
+    "ingredient": {
+      "item": "minecraft:raw_iron_block"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:block_raw_steel"
+    }
+  },
+  "processing": {
+    "processing_time": 10800
+  },
+  "slag_output": {
+    "item": {
+      "id": "staticpower:slag"
+    }
+  }
+}

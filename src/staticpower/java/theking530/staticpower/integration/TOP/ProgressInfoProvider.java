@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
 import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.Timer;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
@@ -45,6 +46,19 @@ public class ProgressInfoProvider implements IProbeInfoProvider, IProbeConfigPro
 		@SuppressWarnings("rawtypes")
 		Optional<AbstractProcessingComponent> processing = ComponentUtilities
 				.getComponent(AbstractProcessingComponent.class, be);
+		if (!processing.isPresent()) {
+
+			@SuppressWarnings("rawtypes")
+			Optional<MultiblockComponent> multiblockComp = ComponentUtilities.getComponent(MultiblockComponent.class,
+					be);
+			if (multiblockComp.isPresent() && multiblockComp.get().isWellFormed()) {
+				BlockEntity masterBe = world.getBlockEntity(multiblockComp.get().getMasterPosition());
+				if (masterBe != null) {
+					processing = ComponentUtilities.getComponent(AbstractProcessingComponent.class, masterBe);
+				}
+			}
+		}
+
 		if (processing.isPresent()) {
 			if (processing.get().hasProcessingStarted()) {
 				Timer processingTimer = processing.get().getProcessingTimer();

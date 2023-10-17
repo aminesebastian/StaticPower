@@ -1,27 +1,51 @@
 {
   "variants": {
-    "facing=east,is_on=false": {
+    "facing=east,is_in_valid_multiblock=false,is_on=false": {
       "model": "staticpower:block/machine_refinery_item_input"
     },
-    "facing=east,is_on=true": {
+    "facing=east,is_in_valid_multiblock=false,is_on=true": {
       "model": "staticpower:block/machine_refinery_item_input"
     },
-    "facing=north,is_on=false": {
+    "facing=east,is_in_valid_multiblock=true,is_on=false": {
       "model": "staticpower:block/machine_refinery_item_input"
     },
-    "facing=north,is_on=true": {
+    "facing=east,is_in_valid_multiblock=true,is_on=true": {
       "model": "staticpower:block/machine_refinery_item_input"
     },
-    "facing=south,is_on=false": {
+    "facing=north,is_in_valid_multiblock=false,is_on=false": {
       "model": "staticpower:block/machine_refinery_item_input"
     },
-    "facing=south,is_on=true": {
+    "facing=north,is_in_valid_multiblock=false,is_on=true": {
       "model": "staticpower:block/machine_refinery_item_input"
     },
-    "facing=west,is_on=false": {
+    "facing=north,is_in_valid_multiblock=true,is_on=false": {
       "model": "staticpower:block/machine_refinery_item_input"
     },
-    "facing=west,is_on=true": {
+    "facing=north,is_in_valid_multiblock=true,is_on=true": {
+      "model": "staticpower:block/machine_refinery_item_input"
+    },
+    "facing=south,is_in_valid_multiblock=false,is_on=false": {
+      "model": "staticpower:block/machine_refinery_item_input"
+    },
+    "facing=south,is_in_valid_multiblock=false,is_on=true": {
+      "model": "staticpower:block/machine_refinery_item_input"
+    },
+    "facing=south,is_in_valid_multiblock=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_item_input"
+    },
+    "facing=south,is_in_valid_multiblock=true,is_on=true": {
+      "model": "staticpower:block/machine_refinery_item_input"
+    },
+    "facing=west,is_in_valid_multiblock=false,is_on=false": {
+      "model": "staticpower:block/machine_refinery_item_input"
+    },
+    "facing=west,is_in_valid_multiblock=false,is_on=true": {
+      "model": "staticpower:block/machine_refinery_item_input"
+    },
+    "facing=west,is_in_valid_multiblock=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_item_input"
+    },
+    "facing=west,is_in_valid_multiblock=true,is_on=true": {
       "model": "staticpower:block/machine_refinery_item_input"
     }
   }

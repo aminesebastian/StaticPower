@@ -1,0 +1,24 @@
+{
+  "type": "staticpower:blast_furnace",
+  "experience": 0.5,
+  "input": {
+    "ingredient": {
+      "tag": "staticpower:ingots/energized_metal"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:ingot_energized_metal_heated"
+    }
+  },
+  "processing": {
+    "processing_time": 100
+  },
+  "slag_output": {
+    "chance": 0.0,
+    "item": {
+      "count": 0,
+      "id": "minecraft:air"
+    }
+  }
+}

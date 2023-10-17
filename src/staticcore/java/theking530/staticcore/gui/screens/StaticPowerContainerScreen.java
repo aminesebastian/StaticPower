@@ -66,6 +66,7 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 	private boolean shouldDrawInventoryLabel;
 	private boolean shouldDrawSlotModeBorders;
 
+	private Component titleOverride;
 	private final SpriteDrawable lockedSprite;
 	private SDColor backgroundTint;
 	private SDColor textColor;
@@ -319,8 +320,8 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 		return tabBoxes;
 	}
 
-	/**`
-	 * Draws the container's title at the top center of the UI.
+	/**
+	 * ` Draws the container's title at the top center of the UI.
 	 * 
 	 * @param mouseX The mouse's x position.
 	 * @param mouseY The mouse's y position.
@@ -450,6 +451,15 @@ public abstract class StaticPowerContainerScreen<T extends StaticCoreContainerMe
 	 */
 	protected void getExtraTooltips(List<Component> tooltips, PoseStack stack, int mouseX, int mouseY) {
 
+	}
+
+	public void setTitleOverride(Component name) {
+		this.titleOverride = name;
+	}
+
+	@Override
+	public Component getTitle() {
+		return titleOverride != null ? titleOverride : this.title;
 	}
 
 	public SDColor getBackgroundTint() {

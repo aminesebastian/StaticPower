@@ -21,7 +21,7 @@ public class BlastingRecipeGenerator extends SCRecipeProvider<BlastingRecipe> {
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.has(MaterialTypes.HEATED_INGOT)) {
 				addRecipe("heating/ingot_heated_" + bundle.getName(),
-						SimpleCookingRecipeBuilder.blasting(Ingredient.of(bundle.get(MaterialTypes.INGOT).getItemTag()), bundle.get(MaterialTypes.HEATED_INGOT).get(), 0.5f, 100)
+						SimpleCookingRecipeBuilder.blasting(Ingredient.of(bundle.get(MaterialTypes.INGOT).getItemTag()), bundle.get(MaterialTypes.HEATED_INGOT).get(), 0.5f, 20 * 10)
 								.unlockedBy("has_ingot", hasItems(bundle.get(MaterialTypes.INGOT).getItemTag())));
 			}
 		}

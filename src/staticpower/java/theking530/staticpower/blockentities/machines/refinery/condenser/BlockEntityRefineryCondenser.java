@@ -14,15 +14,13 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Ma
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
-import theking530.staticcore.blockentity.components.multiblock.MultiBlockEntry;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.utilities.math.Vector4D;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
-import theking530.staticpower.blockentities.machines.refinery.controller.BlockEntityRefineryController;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockEntityRefineryController.RefineryTowerInfo;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryCondenser extends BaseRefineryBlockEntity {
@@ -36,7 +34,7 @@ public class BlockEntityRefineryCondenser extends BaseRefineryBlockEntity {
 	private int recipeTankIndex;
 
 	public BlockEntityRefineryCondenser(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, StaticPowerTiers.BASIC);
+		super(TYPE, pos, state);
 		recipeTankIndex = -1;
 
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
@@ -68,15 +66,13 @@ public class BlockEntityRefineryCondenser extends BaseRefineryBlockEntity {
 	}
 
 	@Override
-	public void multiBlockValidated(MultiBlockEntry<BlockEntityRefineryController> token) {
-		super.multiBlockValidated(token);
-		recipeTankIndex = calculateAttachedTank();
-	}
-
-	@Override
-	public void multiBlockBroken() {
-		super.multiBlockBroken();
-		recipeTankIndex = -1;
+	public void multiblockStateChanged(MultiblockState state) {
+		super.multiblockStateChanged(state);
+		if (state.isWellFormed()) {
+			recipeTankIndex = calculateAttachedTank();
+		} else {
+			recipeTankIndex = -1;
+		}
 	}
 
 	private int calculateAttachedTank() {

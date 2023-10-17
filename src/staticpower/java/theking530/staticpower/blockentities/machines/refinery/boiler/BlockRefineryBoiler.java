@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
@@ -19,7 +20,8 @@ public class BlockRefineryBoiler extends StaticPowerBlock {
 
 	@Override
 	protected BlockState getDefaultStateForRegistration() {
-		return super.getDefaultStateForRegistration().setValue(StaticPowerMachineBlock.IS_ON, false);
+		return super.getDefaultStateForRegistration().setValue(StaticPowerMachineBlock.IS_ON, false)
+				.setValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK, false);
 	}
 
 	@Override
@@ -32,6 +34,7 @@ public class BlockRefineryBoiler extends StaticPowerBlock {
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(StaticPowerMachineBlock.IS_ON);
+		builder.add(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK);
 	}
 
 	@Override

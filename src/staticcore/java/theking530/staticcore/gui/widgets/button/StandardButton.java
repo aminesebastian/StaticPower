@@ -36,7 +36,8 @@ public class StandardButton extends AbstractGuiWidget<StandardButton> {
 	private boolean clickSoundEnabled;
 	private List<Component> tooltip;
 
-	public StandardButton(int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClickedEvent) {
+	public StandardButton(int xPos, int yPos, int width, int height,
+			BiConsumer<StandardButton, MouseButton> onClickedEvent) {
 		super(xPos, yPos, width, height);
 		clickSoundPitch = 1.0f;
 		onClicked = onClickedEvent;
@@ -128,7 +129,8 @@ public class StandardButton extends AbstractGuiWidget<StandardButton> {
 
 	protected void drawButton(PoseStack pose) {
 		boolean shouldDrawHighlighted = isClicked() || isHovered() || isToggled();
-		ResourceLocation texture = shouldDrawHighlighted ? StaticCoreGuiTextures.BUTTON_HOVER : StaticCoreGuiTextures.BUTTON;
+		ResourceLocation texture = shouldDrawHighlighted ? StaticCoreGuiTextures.BUTTON_HOVER
+				: StaticCoreGuiTextures.BUTTON;
 
 		float uPixel = 1.0f / 200.0f;
 		float vPixel = 1.0f / 20.0f;
@@ -139,19 +141,26 @@ public class StandardButton extends AbstractGuiWidget<StandardButton> {
 		float zLevel = 0;
 
 		// Body
-		GuiDrawUtilities.drawTexture(pose, texture, width - 4, height - 5, x + 2, y + 2, zLevel, uPixel * 2, vPixel * 2, uPixel * 198, vPixel * 17);
+		GuiDrawUtilities.drawTexture(pose, texture, width - 4, height - 5, x + 2, y + 2, zLevel, uPixel * 2, vPixel * 2,
+				uPixel * 198, vPixel * 17);
 
 		// Corners
 		GuiDrawUtilities.drawTexture(pose, texture, 2, 2, x, y, zLevel, 0.0f, 0.0f, 2 * uPixel, 2 * vPixel);
 		GuiDrawUtilities.drawTexture(pose, texture, 2, 2, x + width - 2, y, zLevel, 198 * uPixel, 0, 1, 2 * vPixel);
-		GuiDrawUtilities.drawTexture(pose, texture, 2, 3, x, y + height - 3, zLevel, 0.0f, 17 * vPixel, 2 * uPixel, 20 * vPixel);
-		GuiDrawUtilities.drawTexture(pose, texture, 2, 3, x + width - 2, y + height - 3, zLevel, 198 * uPixel, 17 * vPixel, 1, 20 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, 2, 3, x, y + height - 3, zLevel, 0.0f, 17 * vPixel, 2 * uPixel,
+				20 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, 2, 3, x + width - 2, y + height - 3, zLevel, 198 * uPixel,
+				17 * vPixel, 1, 20 * vPixel);
 
 		// Sides
-		GuiDrawUtilities.drawTexture(pose, texture, width - 4, 2, x + 2, y, zLevel, 2 * uPixel, 0, 198 * uPixel, 2 * vPixel);
-		GuiDrawUtilities.drawTexture(pose, texture, 2, height - 5, x, y + 2, zLevel, 0.0f, 2 * vPixel, 2 * uPixel, 17 * vPixel);
-		GuiDrawUtilities.drawTexture(pose, texture, 2, height - 5, x + width - 2, y + 2, zLevel, 198 * uPixel, 2 * vPixel, 1, 17 * vPixel);
-		GuiDrawUtilities.drawTexture(pose, texture, width - 4, 3, x + 2, y + height - 3, zLevel, 2 * uPixel, 17 * vPixel, 198 * uPixel, 20 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, width - 4, 2, x + 2, y, zLevel, 2 * uPixel, 0, 198 * uPixel,
+				2 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, 2, height - 5, x, y + 2, zLevel, 0.0f, 2 * vPixel, 2 * uPixel,
+				17 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, 2, height - 5, x + width - 2, y + 2, zLevel, 198 * uPixel,
+				2 * vPixel, 1, 17 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, width - 4, 3, x + 2, y + height - 3, zLevel, 2 * uPixel,
+				17 * vPixel, 198 * uPixel, 20 * vPixel);
 	}
 
 	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {

@@ -3,11 +3,19 @@ package theking530.staticpower.init;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraftforge.common.Tags;
 import theking530.staticcore.utilities.SDColor;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blocks.StaticPowerBlock;
+import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerOre;
 import theking530.staticpower.data.materials.Material.BlockMaterial;
 import theking530.staticpower.data.materials.Material.FluidMaterial;
@@ -18,6 +26,7 @@ import theking530.staticpower.data.materials.MaterialBundle.MaterialBundleType;
 import theking530.staticpower.data.materials.MaterialTypes;
 import theking530.staticpower.items.GearBox;
 import theking530.staticpower.items.HeatedIngot;
+import theking530.staticpower.items.StaticPowerItem;
 
 public class ModMaterials {
 	public static final Map<String, MaterialBundle> MATERIALS = new HashMap<>();
@@ -385,6 +394,30 @@ public class ModMaterials {
 	public static final MaterialBundle CHARCOAL = registerMaterial("charcoal", MaterialBundleType.GEM)
 			.itemMaterial(ItemMaterial.existing(MaterialTypes.RAW_MATERIAL, MaterialDomain.FORGE, () -> Items.CHARCOAL))
 			.itemMaterial(ItemMaterial.generate(MaterialTypes.DUST, MaterialDomain.FORGE));
+	
+	public static final MaterialBundle COAL_COKE = registerMaterial("coal_coke", MaterialBundleType.GEM)
+			.itemMaterial(ItemMaterial.generate(MaterialTypes.RAW_MATERIAL, MaterialDomain.FORGE, ()->{
+				return new StaticPowerItem(ModCreativeTabs.MATERIALS) {
+					@Override
+					public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
+						return StaticPowerConfig.SERVER.coalCoakBurnTime.get();
+					}		
+				};
+			}))
+			.blockMaterial(BlockMaterial.generate(MaterialTypes.RAW_STOARGE_BLOCK, MaterialDomain.FORGE, ()->{
+				return new StaticPowerBlock(ModCreativeTabs.MATERIALS, Properties.copy(Blocks.COAL_BLOCK)) {
+					@Override
+					public BlockItem createItemBlock() {
+						return new StaticPowerItemBlock(this) {
+							@Override
+							public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
+								return StaticPowerConfig.SERVER.coalCoakBurnTime.get() * 9;
+							}
+						};
+					}
+				};
+			}));
+	
 	
 	public static final MaterialBundle QUARTZ = registerMaterial("quartz", MaterialBundleType.GEM)
 			.blockMaterial(BlockMaterial.existing(MaterialTypes.NETHER_ORE, () -> Blocks.NETHER_QUARTZ_ORE, Tags.Items.ORES_QUARTZ, Tags.Blocks.ORES_QUARTZ))

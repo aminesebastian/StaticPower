@@ -15,6 +15,7 @@ import theking530.staticpower.data.crafting.wrappers.carpenter.CarpenterRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
+import theking530.staticpower.data.crafting.wrappers.cokeoven.CokeOvenRecipe;
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipe;
 import theking530.staticpower.data.crafting.wrappers.covers.CoverRecipe;
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
@@ -102,6 +103,8 @@ public class ModRecipeTypes {
 			.register(HydroponicFarmingRecipe.ID, () -> new StaticPowerRecipeType<HydroponicFarmingRecipe>());
 	public static final RegistryObject<RecipeType<BlastFurnaceRecipe>> BLAST_FURNACE_RECIPE_TYPE = TYPES
 			.register(BlastFurnaceRecipe.ID, () -> new StaticPowerRecipeType<BlastFurnaceRecipe>());
+	public static final RegistryObject<RecipeType<CokeOvenRecipe>> COKE_OVEN_RECIPE_TYPE = TYPES
+			.register(CokeOvenRecipe.ID, () -> new StaticPowerRecipeType<CokeOvenRecipe>());
 
 	public static void init(IEventBus eventBus) {
 		TYPES.register(eventBus);

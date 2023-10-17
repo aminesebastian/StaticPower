@@ -31,14 +31,14 @@ public class BlastFurnaceRecipe extends AbstractMachineRecipe {
 
 	private final StaticPowerIngredient input;
 	private final StaticPowerOutputItem output;
-	private final StaticPowerOutputItem slag_output;
+	private final StaticPowerOutputItem slagOutput;
 
 	public BlastFurnaceRecipe(ResourceLocation id, StaticPowerIngredient input, StaticPowerOutputItem output,
-			StaticPowerOutputItem slag_output, float experience, MachineRecipeProcessingSection processing) {
+			StaticPowerOutputItem slagOutput, float experience, MachineRecipeProcessingSection processing) {
 		super(id, experience, processing);
 		this.input = input;
 		this.output = output;
-		this.slag_output = slag_output;
+		this.slagOutput = slagOutput;
 	}
 
 	public StaticPowerIngredient getInput() {
@@ -50,7 +50,7 @@ public class BlastFurnaceRecipe extends AbstractMachineRecipe {
 	}
 
 	public StaticPowerOutputItem getSlagOutput() {
-		return slag_output;
+		return slagOutput;
 	}
 
 	@Override

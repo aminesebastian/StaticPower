@@ -1,12 +1,16 @@
 package theking530.staticcore.blockentity.components.multiblock.newstyle;
 
+import java.util.Collection;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.level.BlockEvent;
 import theking530.staticcore.blockentity.BlockEntityBase;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockManager;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState.MultiblockStateEntry;
 
 public abstract class AbstractMultiblockPattern {
@@ -14,7 +18,7 @@ public abstract class AbstractMultiblockPattern {
 	public abstract boolean isValidBlockForPosition(BlockState state, BlockPos relativePos,
 			boolean bypassExistingCheck);
 
-	public abstract MultiblockState isStateStillValid(MultiblockState existingStat, Level level);
+	public abstract MultiblockState isStateStillValid(MultiblockState existingState, Level level);
 
 	public abstract MultiblockState checkWellFormed(Level level, BlockPos startPos);
 
@@ -27,6 +31,8 @@ public abstract class AbstractMultiblockPattern {
 	public abstract int getMaxZ();
 
 	public abstract boolean canBeMaster(BlockPos pos, BlockState state);
+
+	public abstract Collection<MultiblockMatchClass> getMatchClasses();
 
 	public void onWellFormedOnPlaceEvent(MultiblockState state, BlockEvent.EntityPlaceEvent event) {
 		for (MultiblockStateEntry entry : state.getBlocks()) {
@@ -47,9 +53,14 @@ public abstract class AbstractMultiblockPattern {
 			BlockEntity be = event.getLevel().getBlockEntity(entry.pos());
 			if (be instanceof BlockEntityBase) {
 				BlockEntityBase beb = (BlockEntityBase) be;
-				NewMultiblockComponent<?> component = beb.getComponent(NewMultiblockComponent.class);
+				MultiblockComponent<?> component = beb.getComponent(MultiblockComponent.class);
 				component.addedToMultiblock(state);
 			}
+		}
+
+		if (!event.getLevel().isClientSide()) {
+			MultiblockManager mbManager = MultiblockManager.get((ServerLevel) event.getLevel());
+			mbManager.addMultiblockState(state);
 		}
 	}
 
@@ -63,7 +74,7 @@ public abstract class AbstractMultiblockPattern {
 			BlockEntity be = level.getBlockEntity(entry.pos());
 			if (be instanceof BlockEntityBase) {
 				BlockEntityBase beb = (BlockEntityBase) be;
-				NewMultiblockComponent<?> component = beb.getComponent(NewMultiblockComponent.class);
+				MultiblockComponent<?> component = beb.getComponent(MultiblockComponent.class);
 				component.onRemovedFromMultiblock(MultiblockState.FAILED);
 			}
 
@@ -71,13 +82,22 @@ public abstract class AbstractMultiblockPattern {
 			BlockState existingState = level.getBlockState(entry.pos());
 			if (!existingState.isAir()
 					&& existingState.hasProperty(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
-				BlockState newState = existingState
-						.setValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK, false)
-						.setValue(MultiblockBlockStateProperties.IS_MASTER, false);
+				BlockState newState = existingState.setValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK,
+						false);
+
+				if (entry.pos().equals(state.getMasterPos())) {
+					newState = newState.setValue(MultiblockBlockStateProperties.IS_MASTER, false);
+				}
+
 				newState = modifyBlockStateOnBroken(newState, entry.pos(), level);
 
 				level.setBlock(entry.pos(), newState, 3);
 			}
+		}
+
+		if (!level.isClientSide()) {
+			MultiblockManager mbManager = MultiblockManager.get((ServerLevel) level);
+			mbManager.removeMultiblockState(state);
 		}
 	}
 

@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-12T16:42:16.2983551	Tags for minecraft:block
+// 1.19.2	2023-10-14T16:02:16.9973785	Tags for minecraft:block
 e6fe94a178e9fd2a2c492ba285268c204cabf15e data/forge/tags/blocks/concrete/black.json
 54ee5e92b6e496563517131e7b2e5f57ae5bddb1 data/forge/tags/blocks/concrete/blue.json
 0c7a478cdbdff1235888726394c8d54f9029fb94 data/forge/tags/blocks/concrete/brown.json
@@ -42,6 +42,7 @@ e2bcf9476ab9859445c8efb3294d6e2d81ccff4a data/forge/tags/blocks/ores_in_ground/n
 4b4657fe925db0ed31f82d95aabc53d11894e1a4 data/forge/tags/blocks/rubber_wood_logs.json
 d7ce7eec94a7267109bfc05c228f1736caadef2e data/forge/tags/blocks/storage_blocks/aluminum.json
 150da1135a6d5d7b9cb1ec65250c0aceaa835dff data/forge/tags/blocks/storage_blocks/coal.json
+3468b4a225506125e4dfd84c9cbccacf3c4fd9ca data/forge/tags/blocks/storage_blocks/coal_coke.json
 43a45a1abbda26eb85071635bb20e4db6d13fdab data/forge/tags/blocks/storage_blocks/copper.json
 1e3d0c9747e01354f06542e4ec73935410d30d25 data/forge/tags/blocks/storage_blocks/cut_aluminum.json
 9544e9530c7c8ba0a4386cb30af4c767ce0aff30 data/forge/tags/blocks/storage_blocks/cut_brass.json

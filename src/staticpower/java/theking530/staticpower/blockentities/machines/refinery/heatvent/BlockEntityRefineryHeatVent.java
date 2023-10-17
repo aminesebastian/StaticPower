@@ -15,7 +15,6 @@ import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity implements IHeatStorage {
@@ -25,7 +24,7 @@ public class BlockEntityRefineryHeatVent extends BaseRefineryBlockEntity impleme
 			ModBlocks.RefineryHeatVent);
 
 	public BlockEntityRefineryHeatVent(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
+		super(TYPE, pos, state);
 	}
 
 	@Override

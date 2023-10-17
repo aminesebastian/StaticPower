@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-03T01:15:05.6605207	Tags for minecraft:fluid
+// 1.19.2	2023-10-14T15:38:11.8336423	Tags for minecraft:fluid
 dfcbdfc7c0481081047104fc4c381b1936f84c8e data/staticpower/tags/fluids/concrete.json
 4febb156dc0e77728bfbdbaeeb197c6cd124270f data/staticpower/tags/fluids/concrete_black.json
 5a0f57082912eb30f7f1896469e024282202f2e1 data/staticpower/tags/fluids/concrete_blue.json
@@ -66,6 +66,7 @@ af0e8aaf5a90c2e9c3e6f711a859c08cfe1efa03 data/staticpower/tags/fluids/molten_sil
 416bf96600f148b25995609393849f10f24f6936 data/staticpower/tags/fluids/molten_tin.json
 2d76771f8ec92cc14efd6ed469ba7534276d0447 data/staticpower/tags/fluids/molten_tungsten.json
 2916a96bbcc451a33c34b3b74ad065cef6b68e43 data/staticpower/tags/fluids/molten_zinc.json
+42f257eae1e152c375c9acf56ebe6fdd01a81a9d data/staticpower/tags/fluids/oil_creosote.json
 4fd04d19513128df0d60e95b3bd748a881131048 data/staticpower/tags/fluids/oil_crude.json
 c91fa6fb039e1ce34d1cdab70e84d833003e06ce data/staticpower/tags/fluids/oil_heavy.json
 ca938f1b1eb41f3cddf0b67f4799d53d4f6e715d data/staticpower/tags/fluids/oil_light.json

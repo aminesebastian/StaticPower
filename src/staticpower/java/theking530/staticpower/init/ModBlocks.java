@@ -62,6 +62,7 @@ import theking530.staticpower.blockentities.nonpowered.alloyfurnace.BlockAlloyFu
 import theking530.staticpower.blockentities.nonpowered.blastfurnace.BlockBlastFurnace;
 import theking530.staticpower.blockentities.nonpowered.cauldron.BlockCauldron;
 import theking530.staticpower.blockentities.nonpowered.chest.BlockStaticChest;
+import theking530.staticpower.blockentities.nonpowered.cokeoven.BlockCokeOven;
 import theking530.staticpower.blockentities.nonpowered.condenser.BlockCondenser;
 import theking530.staticpower.blockentities.nonpowered.conveyors.extractor.BlockConveyorExtractor;
 import theking530.staticpower.blockentities.nonpowered.conveyors.hopper.BlockConveyorHopper;
@@ -339,8 +340,11 @@ public class ModBlocks {
 	public static final RegistryObject<BlockAlloyFurnace> AlloyFurnace = registerBlock("alloy_furnace",
 			() -> new BlockAlloyFurnace());
 
-	public static final RegistryObject<BlockBlastFurnace> BlastFurnace = registerBlock("blast_furnace",
+	public static final RegistryObject<BlockBlastFurnace> BlastFurnaceBrick = registerBlock("blast_furnace_brick",
 			() -> new BlockBlastFurnace());
+
+	public static final RegistryObject<BlockCokeOven> CokeOvenBrick = registerBlock("coke_oven_brick",
+			() -> new BlockCokeOven());
 
 	public static final RegistryObject<BlockRefineryController> RefineryController = registerBlock(
 			"machine_refinery_controller", () -> new BlockRefineryController());

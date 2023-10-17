@@ -1,32 +1,122 @@
 {
   "variants": {
-    "facing=east,is_on=false": {
+    "facing=east,is_in_valid_multiblock=false,is_multiblock_master=false,is_on=false": {
       "model": "staticpower:block/machine_refinery_controller",
       "y": 90
     },
-    "facing=east,is_on=true": {
+    "facing=east,is_in_valid_multiblock=false,is_multiblock_master=false,is_on=true": {
       "model": "staticpower:block/machine_refinery_controller_on",
       "y": 90
     },
-    "facing=north,is_on=false": {
+    "facing=east,is_in_valid_multiblock=false,is_multiblock_master=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller",
+      "y": 90
+    },
+    "facing=east,is_in_valid_multiblock=false,is_multiblock_master=true,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on",
+      "y": 90
+    },
+    "facing=east,is_in_valid_multiblock=true,is_multiblock_master=false,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller",
+      "y": 90
+    },
+    "facing=east,is_in_valid_multiblock=true,is_multiblock_master=false,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on",
+      "y": 90
+    },
+    "facing=east,is_in_valid_multiblock=true,is_multiblock_master=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller",
+      "y": 90
+    },
+    "facing=east,is_in_valid_multiblock=true,is_multiblock_master=true,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on",
+      "y": 90
+    },
+    "facing=north,is_in_valid_multiblock=false,is_multiblock_master=false,is_on=false": {
       "model": "staticpower:block/machine_refinery_controller"
     },
-    "facing=north,is_on=true": {
+    "facing=north,is_in_valid_multiblock=false,is_multiblock_master=false,is_on=true": {
       "model": "staticpower:block/machine_refinery_controller_on"
     },
-    "facing=south,is_on=false": {
+    "facing=north,is_in_valid_multiblock=false,is_multiblock_master=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller"
+    },
+    "facing=north,is_in_valid_multiblock=false,is_multiblock_master=true,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on"
+    },
+    "facing=north,is_in_valid_multiblock=true,is_multiblock_master=false,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller"
+    },
+    "facing=north,is_in_valid_multiblock=true,is_multiblock_master=false,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on"
+    },
+    "facing=north,is_in_valid_multiblock=true,is_multiblock_master=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller"
+    },
+    "facing=north,is_in_valid_multiblock=true,is_multiblock_master=true,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on"
+    },
+    "facing=south,is_in_valid_multiblock=false,is_multiblock_master=false,is_on=false": {
       "model": "staticpower:block/machine_refinery_controller",
       "y": 180
     },
-    "facing=south,is_on=true": {
+    "facing=south,is_in_valid_multiblock=false,is_multiblock_master=false,is_on=true": {
       "model": "staticpower:block/machine_refinery_controller_on",
       "y": 180
     },
-    "facing=west,is_on=false": {
+    "facing=south,is_in_valid_multiblock=false,is_multiblock_master=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller",
+      "y": 180
+    },
+    "facing=south,is_in_valid_multiblock=false,is_multiblock_master=true,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on",
+      "y": 180
+    },
+    "facing=south,is_in_valid_multiblock=true,is_multiblock_master=false,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller",
+      "y": 180
+    },
+    "facing=south,is_in_valid_multiblock=true,is_multiblock_master=false,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on",
+      "y": 180
+    },
+    "facing=south,is_in_valid_multiblock=true,is_multiblock_master=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller",
+      "y": 180
+    },
+    "facing=south,is_in_valid_multiblock=true,is_multiblock_master=true,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on",
+      "y": 180
+    },
+    "facing=west,is_in_valid_multiblock=false,is_multiblock_master=false,is_on=false": {
       "model": "staticpower:block/machine_refinery_controller",
       "y": 270
     },
-    "facing=west,is_on=true": {
+    "facing=west,is_in_valid_multiblock=false,is_multiblock_master=false,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on",
+      "y": 270
+    },
+    "facing=west,is_in_valid_multiblock=false,is_multiblock_master=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller",
+      "y": 270
+    },
+    "facing=west,is_in_valid_multiblock=false,is_multiblock_master=true,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on",
+      "y": 270
+    },
+    "facing=west,is_in_valid_multiblock=true,is_multiblock_master=false,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller",
+      "y": 270
+    },
+    "facing=west,is_in_valid_multiblock=true,is_multiblock_master=false,is_on=true": {
+      "model": "staticpower:block/machine_refinery_controller_on",
+      "y": 270
+    },
+    "facing=west,is_in_valid_multiblock=true,is_multiblock_master=true,is_on=false": {
+      "model": "staticpower:block/machine_refinery_controller",
+      "y": 270
+    },
+    "facing=west,is_in_valid_multiblock=true,is_multiblock_master=true,is_on=true": {
       "model": "staticpower:block/machine_refinery_controller_on",
       "y": 270
     }

@@ -1,15 +1,27 @@
 {
   "variants": {
-    "position=bottom": {
+    "is_in_valid_multiblock=false,position=bottom": {
       "model": "staticpower:block/refinery_tower/bottom"
     },
-    "position=full": {
+    "is_in_valid_multiblock=false,position=full": {
       "model": "staticpower:block/refinery_tower/full"
     },
-    "position=middle": {
+    "is_in_valid_multiblock=false,position=middle": {
       "model": "staticpower:block/refinery_tower/middle"
     },
-    "position=top": {
+    "is_in_valid_multiblock=false,position=top": {
+      "model": "staticpower:block/refinery_tower/top"
+    },
+    "is_in_valid_multiblock=true,position=bottom": {
+      "model": "staticpower:block/refinery_tower/bottom"
+    },
+    "is_in_valid_multiblock=true,position=full": {
+      "model": "staticpower:block/refinery_tower/full"
+    },
+    "is_in_valid_multiblock=true,position=middle": {
+      "model": "staticpower:block/refinery_tower/middle"
+    },
+    "is_in_valid_multiblock=true,position=top": {
       "model": "staticpower:block/refinery_tower/top"
     }
   }

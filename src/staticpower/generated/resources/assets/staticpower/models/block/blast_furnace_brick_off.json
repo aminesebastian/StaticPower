@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "staticpower:blocks/machines/blast_furnace/blast_furnace_brick",
+    "side": "staticpower:blocks/machines/blast_furnace/blast_furnace_face_off",
+    "top": "staticpower:blocks/machines/blast_furnace/blast_furnace_brick"
+  }
+}

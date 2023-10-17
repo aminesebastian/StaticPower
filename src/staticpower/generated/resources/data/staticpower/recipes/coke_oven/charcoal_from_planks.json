@@ -1,0 +1,22 @@
+{
+  "type": "staticpower:coke_oven",
+  "experience": 1.0,
+  "input": {
+    "count": 4,
+    "ingredient": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "minecraft:charcoal"
+    }
+  },
+  "output_fluid": {
+    "Amount": 100,
+    "FluidName": "staticpower:oil_creosote"
+  },
+  "processing": {
+    "processing_time": 400
+  }
+}

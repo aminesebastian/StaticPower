@@ -22,17 +22,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.block.StaticCoreBlock;
 import theking530.staticcore.utilities.rendering.VoxelUtilities;
+import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlock;
 import theking530.staticpower.blocks.StaticPowerBlockProperties;
 import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
-import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
-import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockRefineryCondenser extends StaticPowerMachineBlock {
+public class BlockRefineryCondenser extends BaseRefineryBlock {
 	public static final BooleanProperty IS_CONNECTED = BooleanProperty.create("is_connected");
 
 	public BlockRefineryCondenser() {
-		super(StaticPowerTiers.STATIC);
+		super();
 	}
 
 	@Override

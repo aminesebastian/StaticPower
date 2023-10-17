@@ -32,19 +32,20 @@ public class MultiblockState {
 		}
 	}
 
-	public static final MultiblockState FAILED = new MultiblockState(BlockPos.ZERO, null, false);
+	public static final MultiblockState FAILED = new MultiblockState(BlockPos.ZERO, null,
+			MultiBlockFormationStatus.FAILED);
 	private final BlockPos initialPos;
 	private final Direction facingDirection;
-	private final boolean wellFormed;
+	private final MultiBlockFormationStatus status;
 	private final TreeMap<BlockPos, MultiblockStateEntry> blocks;
 	private BlockPos masterPos;
 
-	public MultiblockState(BlockPos initialPos, Direction facingDirection, boolean wellFormed) {
+	public MultiblockState(BlockPos initialPos, Direction facingDirection, MultiBlockFormationStatus status) {
 		this.facingDirection = facingDirection;
 		this.initialPos = initialPos;
 		this.masterPos = null;
 		this.blocks = new TreeMap<>();
-		this.wellFormed = wellFormed;
+		this.status = status;
 	}
 
 	public Collection<MultiblockStateEntry> getBlocks() {
@@ -52,7 +53,11 @@ public class MultiblockState {
 	}
 
 	public boolean isWellFormed() {
-		return wellFormed && facingDirection != null && !blocks.isEmpty();
+		return status.isSuccessful() && facingDirection != null && !blocks.isEmpty();
+	}
+
+	public MultiBlockFormationStatus getStatus() {
+		return status;
 	}
 
 	public BlockPos getInitialPos() {
@@ -76,28 +81,27 @@ public class MultiblockState {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(blocks, wellFormed);
+		return Objects.hash(blocks, facingDirection, initialPos, masterPos, status);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		MultiblockState other = (MultiblockState) obj;
-		return blocks.equals(other.blocks) && wellFormed == other.wellFormed && facingDirection == other.facingDirection
-				&& initialPos.equals(other.initialPos) && masterPos.equals(other.masterPos);
+		return Objects.equals(blocks, other.blocks) && facingDirection == other.facingDirection
+				&& Objects.equals(initialPos, other.initialPos) && Objects.equals(masterPos, other.masterPos)
+				&& Objects.equals(status, other.status);
 	}
 
 	@Override
 	public String toString() {
-		return "MultiblockState [wellFormed=" + wellFormed + ", blocks=" + blocks + "]";
+		return "MultiblockState [initialPos=" + initialPos + ", facingDirection=" + facingDirection + ", status="
+				+ status + ", blocks=" + blocks + ", masterPos=" + masterPos + "]";
 	}
 
 	public CompoundTag serialize() {
@@ -109,7 +113,7 @@ public class MultiblockState {
 		output.putLong("initialPos", initialPos.asLong());
 		output.putLong("masterPos", masterPos.asLong());
 		output.putByte("facing", (byte) facingDirection.ordinal());
-		output.putBoolean("wellFormed", wellFormed);
+		output.put("status", status.serialize());
 		ListTag serializedBlocks = NBTUtilities.serialize(blocks.values(), (entry) -> {
 			return entry.serialize();
 		});
@@ -122,11 +126,7 @@ public class MultiblockState {
 			return FAILED;
 		}
 
-		boolean wellFormed = nbt.getBoolean("wellFormed");
-		if (!wellFormed) {
-			return FAILED;
-		}
-
+		MultiBlockFormationStatus status = MultiBlockFormationStatus.deserialize(nbt.getCompound("status"));
 		BlockPos initialPos = BlockPos.of(nbt.getLong("initialPos"));
 		BlockPos masterPos = BlockPos.of(nbt.getLong("masterPos"));
 		Direction facingDirection = Direction.values()[nbt.getByte("facing")];
@@ -135,7 +135,7 @@ public class MultiblockState {
 					return MultiblockStateEntry.fromNBT((CompoundTag) tag);
 				});
 
-		MultiblockState newState = new MultiblockState(initialPos, facingDirection, wellFormed);
+		MultiblockState newState = new MultiblockState(initialPos, facingDirection, status);
 		for (MultiblockStateEntry entry : entries) {
 			newState.addEntry(entry.pos(), entry.blockState(), entry.patternKey(), entry.pos().equals(masterPos));
 		}

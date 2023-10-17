@@ -61,12 +61,12 @@ public class BlockExperienceHopper extends StaticPowerBlockEntityBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
-			tooltip.add(Component.translatable("gui.staticpower.experience_hopper_tooltip").withStyle(ChatFormatting.GREEN));
+			tooltip.add(Component.translatable("gui.staticcore.experience_hopper_tooltip").withStyle(ChatFormatting.GREEN));
 		}
 	}
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(Component.literal("� ").append(Component.translatable("gui.staticpower.experience_hopper_description")).withStyle(ChatFormatting.BLUE));
+		tooltip.add(Component.literal("� ").append(Component.translatable("gui.staticcore.experience_hopper_description")).withStyle(ChatFormatting.BLUE));
 	}
 }

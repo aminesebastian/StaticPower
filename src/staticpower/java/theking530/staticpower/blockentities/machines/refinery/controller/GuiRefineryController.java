@@ -113,6 +113,6 @@ public class GuiRefineryController
 	}
 
 	private void updateNotificationWidget() {
-		multiblockStatusWidget.setStatus(getTileEntity().getMultiBlockStatus());
+		multiblockStatusWidget.setStatus(getTileEntity().multiblockComponent.getState().getStatus());
 	}
 }

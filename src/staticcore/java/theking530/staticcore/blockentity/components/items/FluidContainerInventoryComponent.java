@@ -1,5 +1,8 @@
 package theking530.staticcore.blockentity.components.items;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
@@ -40,6 +43,7 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 	private final IFluidHandler fluidHandler;
 	private final int fluidToContainerRate;
 	private int fluidDrainTimer;
+	private Set<FluidContainerInteractionMode> allowedModes;
 
 	@UpdateSerialize
 	private FluidContainerInteractionMode interactionMode;
@@ -49,6 +53,7 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 		this.fluidHandler = fluidHandler;
 		interactionMode = FluidContainerInteractionMode.DRAIN;
 		fluidToContainerRate = DEFAULT_FLUID_TO_CONTAINER_RATE;
+		allowedModes = new HashSet<>();
 		setCapabilityExtractEnabled(false);
 		setCapabilityInsertEnabled(false);
 		setShiftClickEnabled(true);
@@ -97,6 +102,23 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 		}
 	}
 
+	public FluidContainerInventoryComponent setAllowedModes(boolean canFillToContainer, boolean canDrainFromContainer) {
+		allowedModes.clear();
+
+		if (canFillToContainer) {
+			allowedModes.add(FluidContainerInteractionMode.FILL);
+		}
+		if (canDrainFromContainer) {
+			allowedModes.add(FluidContainerInteractionMode.DRAIN);
+		}
+
+		if (allowedModes.size() == 1) {
+			setMode(allowedModes.iterator().next());
+		}
+
+		return this;
+	}
+
 	/**
 	 * Fills the container from the owning fluid handler.
 	 * 
@@ -111,10 +133,15 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 				fluidHandler.drain(filledAmount, FluidAction.EXECUTE);
 
 				if (filledAmount >= 1000) {
-					float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
+					float minSound = Math.max(
+							1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0),
+							0.55f) * 1.1f;
 					float maxSound = minSound + 0.1f;
 					// Play the sound.
-					getLevel().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.35f,
+					getLevel().playSound(null, getPos(),
+							simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_FILL_LAVA
+									: SoundEvents.BUCKET_FILL,
+							SoundSource.BLOCKS, 0.35f,
 							SDMath.clamp(getLevel().getRandom().nextFloat(), minSound, maxSound));
 				}
 
@@ -148,10 +175,15 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 				containerHandler.drain(filledAmount, FluidAction.EXECUTE);
 
 				if (filledAmount >= 1000) {
-					float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
+					float minSound = Math.max(
+							1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0),
+							0.55f) * 1.1f;
 					float maxSound = minSound + 0.1f;
 					// Play the sound.
-					getLevel().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.35f,
+					getLevel().playSound(null, getPos(),
+							simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_EMPTY_LAVA
+									: SoundEvents.BUCKET_EMPTY,
+							SoundSource.BLOCKS, 0.35f,
 							SDMath.clamp(getLevel().getRandom().nextFloat(), minSound, maxSound));
 				}
 
@@ -177,6 +209,9 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 	 * @return
 	 */
 	public FluidContainerInventoryComponent setMode(FluidContainerInteractionMode newMode) {
+		if (!allowedModes.contains(newMode)) {
+			return this;
+		}
 		interactionMode = newMode;
 		return this;
 	}

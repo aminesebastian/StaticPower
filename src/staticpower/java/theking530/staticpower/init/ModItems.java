@@ -457,7 +457,8 @@ public class ModItems {
 	public static final RegistryObject<StaticWrench> LumumWrench = ITEMS.register("wrench_lumum",
 			() -> new StaticWrench());
 
-	public static final RegistryObject<Thermometer> Thermometer = ITEMS.register("thermometer", () -> new Thermometer());
+	public static final RegistryObject<Thermometer> Thermometer = ITEMS.register("thermometer",
+			() -> new Thermometer());
 
 	public static final RegistryObject<StaticPowerItem> WeakMagnet = ITEMS.register("magnet_weak",
 			() -> new StaticPowerItem());

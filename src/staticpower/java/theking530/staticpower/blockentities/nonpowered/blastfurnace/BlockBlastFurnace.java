@@ -23,18 +23,20 @@ public class BlockBlastFurnace extends StaticPowerRotateableBlockEntityBlock {
 		super(StaticPowerTiers.BASIC);
 	}
 
+	protected boolean canBePartOfMultiblock() {
+		return true;
+	}
+
 	@Override
 	protected BlockState getDefaultStateForRegistration() {
 		return super.getDefaultStateForRegistration().setValue(StaticPowerMachineBlock.IS_ON, false)
-				.setValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK, false).setValue(SHOW_FACE, false)
-				.setValue(MultiblockBlockStateProperties.IS_MASTER, false);
+				.setValue(SHOW_FACE, false).setValue(MultiblockBlockStateProperties.IS_MASTER, false);
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(StaticPowerMachineBlock.IS_ON);
-		builder.add(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK);
 		builder.add(SHOW_FACE);
 		builder.add(MultiblockBlockStateProperties.IS_MASTER);
 	}
@@ -42,17 +44,17 @@ public class BlockBlastFurnace extends StaticPowerRotateableBlockEntityBlock {
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
 			InteractionHand hand, BlockHitResult hit) {
-		return state.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK) ? HasGuiType.ALWAYS
-				: HasGuiType.NEVER;
+		return isInValidMultiblock(state) ? HasGuiType.ALWAYS : HasGuiType.NEVER;
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		if (state.getValue(MultiblockBlockStateProperties.IS_MASTER)) {
 			return BlockEntityBlastFurnace.TYPE.create(pos, state);
-		} else if (state.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
-			return BlockEntityBlastFurnaceProxy.TYPE.create(pos, state);
 		}
+//		else if (state.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
+//			return BlockEntityBlastFurnaceProxy.TYPE.create(pos, state);
+//		}
 		return null;
 	}
 

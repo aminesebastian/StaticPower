@@ -13,11 +13,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -38,6 +40,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent.Save;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -48,6 +51,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.IdMappingEvent;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.attributes.ItemAttributeRegistry;
@@ -57,6 +61,7 @@ import theking530.api.attributes.type.AttributeType;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.StaticCore;
 import theking530.staticcore.StaticCoreRegistries;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockManager;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
@@ -71,6 +76,7 @@ import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.init.StaticCoreKeyBindings;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
+import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.teams.TeamUtilities;
@@ -170,6 +176,30 @@ public class StaticCoreForgeEventsCommon {
 		ITeam team = TeamManager.get(event.getLevel()).getTeamForPlayer((Player) event.getEntity());
 		if (team != null) {
 			TeamUtilities.setOwningTeam(blockEntity, team);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onBlockRightClicked(RightClickBlock event) {
+		if (event.getLevel().isClientSide()) {
+			return;
+		}
+
+		MultiblockManager mbManager = MultiblockManager.get((ServerLevel) event.getLevel());
+		if (!mbManager.containsBlock(event.getPos())) {
+			return;
+		}
+
+		MultiblockState mbState = mbManager.getMultiblockState(event.getPos());
+		if (!mbState.isWellFormed()) {
+			return;
+		}
+
+		BlockPos masterPos = mbState.getMasterPos();
+		BlockEntity masterBe = event.getLevel().getBlockEntity(masterPos);
+		if (masterBe != null && masterBe instanceof MenuProvider) {
+			ServerPlayer player = (ServerPlayer) event.getEntity();
+			NetworkHooks.openScreen(player, (MenuProvider) masterBe, masterPos);
 		}
 	}
 

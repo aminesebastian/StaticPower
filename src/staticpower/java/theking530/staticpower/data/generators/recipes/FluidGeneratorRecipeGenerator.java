@@ -33,6 +33,7 @@ public class FluidGeneratorRecipeGenerator extends SCRecipeProvider<FluidGenerat
 		addRecipe("oil_heavy", FluidIngredient.of(ModFluids.HeavyOil.getTag(), 1), 36);
 
 		addRecipe("fuel", FluidIngredient.of(ModFluids.Fuel.getTag(), 1), 60);
+		addRecipe("creosote_oil", FluidIngredient.of(ModFluids.CreosoteOil.getTag(), 1), 20);
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluid, int powerGeneration) {
@@ -40,7 +41,8 @@ public class FluidGeneratorRecipeGenerator extends SCRecipeProvider<FluidGenerat
 	}
 
 	protected void addRecipe(String nameOverride, FluidIngredient fluid, int powerGeneration, int processingTime) {
-		FluidGeneratorRecipe recipe = new FluidGeneratorRecipe(null, fluid, MachineRecipeProcessingSection.hardcoded(processingTime, powerGeneration, 0, 0));
+		FluidGeneratorRecipe recipe = new FluidGeneratorRecipe(null, fluid,
+				MachineRecipeProcessingSection.hardcoded(processingTime, powerGeneration, 0, 0));
 		addRecipe(nameOverride, SCRecipeBuilder.create(recipe));
 	}
 }

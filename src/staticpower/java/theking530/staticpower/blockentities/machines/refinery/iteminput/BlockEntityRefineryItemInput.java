@@ -15,19 +15,20 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.pr
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryItemInput extends BaseRefineryBlockEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRefineryItemInput> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryItemInput>("refinery_item_input",
-			(type, pos, state) -> new BlockEntityRefineryItemInput(pos, state), ModBlocks.RefineryItemInput);
+	public static final BlockEntityTypeAllocator<BlockEntityRefineryItemInput> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryItemInput>(
+			"refinery_item_input", (type, pos, state) -> new BlockEntityRefineryItemInput(pos, state),
+			ModBlocks.RefineryItemInput);
 
 	public final SideConfigurationComponent ioSideConfiguration;
 
 	public BlockEntityRefineryItemInput(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AllSidesInput.INSTANCE));
+		super(TYPE, pos, state);
+		registerComponent(
+				ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", AllSidesInput.INSTANCE));
 	}
 
 	@Override
@@ -38,7 +39,8 @@ public class BlockEntityRefineryItemInput extends BaseRefineryBlockEntity {
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (cap == ForgeCapabilities.ITEM_HANDLER && hasController()) {
-			if ((side != null && ioSideConfiguration.getWorldSpaceDirectionConfiguration(side) == MachineSideMode.Input)) {
+			if ((side != null
+					&& ioSideConfiguration.getWorldSpaceDirectionConfiguration(side) == MachineSideMode.Input)) {
 				return getController().catalystInventory.manuallyProvideCapability(cap, side);
 			}
 		}

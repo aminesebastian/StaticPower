@@ -17,6 +17,7 @@ import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
 import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.Timer;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
@@ -88,6 +89,20 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		@SuppressWarnings("rawtypes")
 		Optional<AbstractProcessingComponent> processing = ComponentUtilities
 				.getComponent(AbstractProcessingComponent.class, te);
+
+		if (!processing.isPresent()) {
+
+			@SuppressWarnings("rawtypes")
+			Optional<MultiblockComponent> multiblockComp = ComponentUtilities.getComponent(MultiblockComponent.class,
+					te);
+			if (multiblockComp.isPresent() && multiblockComp.get().isWellFormed()) {
+				BlockEntity masterBe = world.getBlockEntity(multiblockComp.get().getMasterPosition());
+				if (masterBe != null) {
+					processing = ComponentUtilities.getComponent(AbstractProcessingComponent.class, masterBe);
+				}
+			}
+		}
+
 		if (processing.isPresent()) {
 			CompoundTag processingData = new CompoundTag();
 			if (processing.get().hasProcessingStarted()) {
@@ -95,12 +110,12 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 				int remaining = processingTimer.getMaxTime() - processingTimer.getCurrentTime();
 				processingData.putInt("remaining", remaining);
 				processingData.putInt("max", processingTimer.getMaxTime());
-				processingData.putString("description", GuiTextUtilities.formatNumberAsString(remaining).append(" ")
-						.append(Component.translatable("gui.staticcore.ticks_remaining")).getString());
+				processingData.putString("description", GuiTextUtilities.formatNumberAsStringNoDecimal(remaining)
+						.append(" ").append(Component.translatable("gui.staticcore.ticks_remaining")).getString());
 			} else {
 				processingData.putInt("remaining", 0);
 				processingData.putInt("max", 0);
-				processingData.putString("description", GuiTextUtilities.formatNumberAsString(0).append(" ")
+				processingData.putString("description", GuiTextUtilities.formatNumberAsStringNoDecimal(0).append(" ")
 						.append(Component.translatable("gui.staticcore.ticks_remaining")).getString());
 			}
 			data.put(PROCESSING_TAG, processingData);

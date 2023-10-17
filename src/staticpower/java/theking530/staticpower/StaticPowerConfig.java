@@ -240,6 +240,8 @@ public class StaticPowerConfig {
 		public final ConfigValue<Double> drillPowerUsePerBlock;
 		public final ConfigValue<Double> chainsawPowerUsePerBlock;
 
+		public final ConfigValue<Integer> coalCoakBurnTime;
+
 		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Generation");
 			{
@@ -619,7 +621,8 @@ public class StaticPowerConfig {
 					casterPowerUsage = builder.comment(
 							"Controls how much power is used per tick in this machine (in SW). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "casterPowerUsage")
-							.define("CasterPowerUsage", convertPowerUsageFromSecondsToTicks(BASIC_MACHINE_POWER_USAGE_PER_S));
+							.define("CasterPowerUsage",
+									convertPowerUsageFromSecondsToTicks(BASIC_MACHINE_POWER_USAGE_PER_S));
 					casterProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "casterProcessingTime")
@@ -702,7 +705,8 @@ public class StaticPowerConfig {
 					formerPowerUsage = builder.comment(
 							"Controls how much power is used per tick in this machine (in SW). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "formerPowerUsage")
-							.define("FormerPowerUsage", convertPowerUsageFromSecondsToTicks(BASIC_MACHINE_POWER_USAGE_PER_S));
+							.define("FormerPowerUsage",
+									convertPowerUsageFromSecondsToTicks(BASIC_MACHINE_POWER_USAGE_PER_S));
 					formerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "formerProcessingTime")
@@ -743,8 +747,8 @@ public class StaticPowerConfig {
 					builder.push("Lathe");
 					lathePowerUsage = builder.comment(
 							"Controls how much power is used per tick in this machine (in SW). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "lathePowerUsage")
-							.define("LathePowerUsage", convertPowerUsageFromSecondsToTicks(STATIC_MACHINE_POWER_USAGE_PER_S));
+							.translation(StaticPower.MOD_ID + ".config." + "lathePowerUsage").define("LathePowerUsage",
+									convertPowerUsageFromSecondsToTicks(STATIC_MACHINE_POWER_USAGE_PER_S));
 					latheProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "latheProcessingTime")
@@ -980,6 +984,9 @@ public class StaticPowerConfig {
 			chainsawPowerUsePerBlock = builder.comment("The amount of power used to mine a single block by a chainsaw.")
 					.translation(StaticPower.MOD_ID + ".config." + "chainsawPowerUsePerBlock")
 					.define("ChainsawPowerUsePerBlock", 10.0);
+
+			coalCoakBurnTime = builder.comment("The number of ticks coal coke burns in a furnace.")
+					.translation(StaticPower.MOD_ID + ".config." + "coalCoakBurnTime").define("CoalCoakBurnTime", 160);
 			builder.pop();
 		}
 	}

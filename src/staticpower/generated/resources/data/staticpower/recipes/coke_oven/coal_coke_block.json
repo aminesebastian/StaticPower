@@ -1,0 +1,21 @@
+{
+  "type": "staticpower:coke_oven",
+  "experience": 9.0,
+  "input": {
+    "ingredient": {
+      "item": "minecraft:coal_block"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "staticpower:block_raw_coal_coke"
+    }
+  },
+  "output_fluid": {
+    "Amount": 2250,
+    "FluidName": "staticpower:oil_creosote"
+  },
+  "processing": {
+    "processing_time": 10800
+  }
+}

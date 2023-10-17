@@ -60,7 +60,8 @@ public class GuiDrawUtilities {
 		IDENTITY_STACK.setIdentity();
 	}
 
-	public static void drawTexturedBox(PoseStack pose, ResourceLocation texture, float width, float height, Vector4D borderDefenitions, float x, float y, float z, SDColor tint) {
+	public static void drawTexturedBox(PoseStack pose, ResourceLocation texture, float width, float height,
+			Vector4D borderDefenitions, float x, float y, float z, SDColor tint) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, texture);
 		RenderSystem.defaultBlendFunc();
@@ -68,61 +69,73 @@ public class GuiDrawUtilities {
 		RenderSystem.enableBlend();
 
 		// Body
-		drawTexture(pose, texture, width - 4, height - 4, x + 3, y + 3, z, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE,
-				5 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, width - 4, height - 4, x + 3, y + 3, z, 5 * BACKGROUND_PIXEL_SIZE,
+				5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE);
 
 		// Corners
 		drawTexture(pose, texture, 4, 4, x, y, z, 0.0f, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 5, 4, x + width - 5, y, z, 4 * BACKGROUND_PIXEL_SIZE, 0.0f, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 4, 5, x, y + height - 5, z, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 4, 4, x + width - 4, y + height - 4, 0.0f, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE,
-				9 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 5, 4, x + width - 5, y, z, 4 * BACKGROUND_PIXEL_SIZE, 0.0f,
+				9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 4, 5, x, y + height - 5, z, 0.0f, 4 * BACKGROUND_PIXEL_SIZE,
+				4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 4, 4, x + width - 4, y + height - 4, 0.0f, 5 * BACKGROUND_PIXEL_SIZE,
+				5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
 
 		// Sides
-		drawTexture(pose, texture, width - 7, 3, x + 4, y, z, 3 * BACKGROUND_PIXEL_SIZE, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 3, height - 8, x, y + 4, 3, z, 3 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 3, height - 8, x + width - 3, y + 4, z, 6 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE,
+		drawTexture(pose, texture, width - 7, 3, x + 4, y, z, 3 * BACKGROUND_PIXEL_SIZE, 0.0f,
+				4 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 3, height - 8, x, y + 4, 3, z, 3 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE,
 				4 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, width - 8, 3, x + 4, y + height - 3, z, 4 * BACKGROUND_PIXEL_SIZE, 6 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE,
-				9 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 3, height - 8, x + width - 3, y + 4, z, 6 * BACKGROUND_PIXEL_SIZE,
+				3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, width - 8, 3, x + 4, y + height - 3, z, 4 * BACKGROUND_PIXEL_SIZE,
+				6 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
 
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 	}
 
-	public static void drawTexturedBox(PoseStack pose, ResourceLocation texture, float width, float height, Vector4D borderDefenitions, float x, float y, float z) {
+	public static void drawTexturedBox(PoseStack pose, ResourceLocation texture, float width, float height,
+			Vector4D borderDefenitions, float x, float y, float z) {
 		drawTexturedBox(pose, texture, width, height, borderDefenitions, x, y, z, SDColor.WHITE);
 	}
 
-	public static void drawTexturedBox(PoseStack pose, ResourceLocation texture, float width, float height, Vector4D borderDefenitions, float x, float y) {
+	public static void drawTexturedBox(PoseStack pose, ResourceLocation texture, float width, float height,
+			Vector4D borderDefenitions, float x, float y) {
 		drawTexturedBox(pose, texture, width, height, borderDefenitions, x, y, 0.0f, SDColor.WHITE);
 	}
 
-	public static void drawTexturedBox(PoseStack pose, ResourceLocation texture, float width, float height, Vector4D borderDefenitions) {
+	public static void drawTexturedBox(PoseStack pose, ResourceLocation texture, float width, float height,
+			Vector4D borderDefenitions) {
 		drawTexturedBox(pose, texture, width, height, borderDefenitions, 0, 0, 0.0f, SDColor.WHITE);
 	}
 
-	public static void drawGenericBackground(PoseStack pose, float width, float height, float x, float y, float z, SDColor tint) {
+	public static void drawGenericBackground(PoseStack pose, float width, float height, float x, float y, float z,
+			SDColor tint) {
 		ResourceLocation texture = StaticCoreGuiTextures.GENERIC_GUI;
 		RenderSystem.setShaderColor(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha());
 
 		// Body
-		drawTexture(pose, texture, width - 6, height - 6, x + 3, y + 3, z, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE,
-				5 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, width - 6, height - 6, x + 3, y + 3, z, 5 * BACKGROUND_PIXEL_SIZE,
+				5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE);
 
 		// Corners
 		drawTexture(pose, texture, 4, 4, x, y, z, 0.0f, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 4, 4, x + width - 4, y, z, 5 * BACKGROUND_PIXEL_SIZE, 0.0f, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 4, 4, x, y + height - 4, z, 0.0f, 5 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 4, 4, x + width - 4, y + height - 4, z, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE,
-				9 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 4, 4, x + width - 4, y, z, 5 * BACKGROUND_PIXEL_SIZE, 0.0f,
+				9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 4, 4, x, y + height - 4, z, 0.0f, 5 * BACKGROUND_PIXEL_SIZE,
+				4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 4, 4, x + width - 4, y + height - 4, z, 5 * BACKGROUND_PIXEL_SIZE,
+				5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
 
 		// Sides
-		drawTexture(pose, texture, width - 7, 3, x + 4, y, z, 3 * BACKGROUND_PIXEL_SIZE, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 3, height - 8, x, y + 4, z, 0.0f, 3 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, 3, height - 8, x + width - 3, y + 4, z, 6 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE,
-				4 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, width - 8, 4, x + 4, y + height - 4, z, 4 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE,
-				9 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, width - 7, 3, x + 4, y, z, 3 * BACKGROUND_PIXEL_SIZE, 0.0f,
+				4 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 3, height - 8, x, y + 4, z, 0.0f, 3 * BACKGROUND_PIXEL_SIZE,
+				3 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, 3, height - 8, x + width - 3, y + 4, z, 6 * BACKGROUND_PIXEL_SIZE,
+				3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, width - 8, 4, x + 4, y + height - 4, z, 4 * BACKGROUND_PIXEL_SIZE,
+				5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
 
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 
@@ -140,35 +153,40 @@ public class GuiDrawUtilities {
 		drawGenericBackground(pose, width, height, 0, 0, 0.0f, SDColor.WHITE);
 	}
 
-	public static void drawTab(PoseStack pose, float width, float height, float x, float y, float z, SDColor tint, boolean left) {
+	public static void drawTab(PoseStack pose, float width, float height, float x, float y, float z, SDColor tint,
+			boolean left) {
 		ResourceLocation texture = StaticCoreGuiTextures.GENERIC_GUI;
 		RenderSystem.setShaderColor(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha());
 
 		// Body
-		drawTexture(pose, texture, width - 4, height - 4, x + 3, y + 3, z, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE,
-				5 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, width - 4, height - 4, x + 3, y + 3, z, 5 * BACKGROUND_PIXEL_SIZE,
+				5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE);
 
 		// Corners
 		if (left) {
 			drawTexture(pose, texture, 4, 4, x, y, z, 0.0f, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
-			drawTexture(pose, texture, 4, 5, x, y + height - 5, z, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+			drawTexture(pose, texture, 4, 5, x, y + height - 5, z, 0.0f, 4 * BACKGROUND_PIXEL_SIZE,
+					4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
 		} else {
-			drawTexture(pose, texture, 4, 4, x + width - 4, y + height - 4, 0.0f, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE,
-					9 * BACKGROUND_PIXEL_SIZE);
-			drawTexture(pose, texture, 5, 4, x + width - 5, y, z, 4 * BACKGROUND_PIXEL_SIZE, 0.0f, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+			drawTexture(pose, texture, 4, 4, x + width - 4, y + height - 4, 0.0f, 5 * BACKGROUND_PIXEL_SIZE,
+					5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+			drawTexture(pose, texture, 5, 4, x + width - 5, y, z, 4 * BACKGROUND_PIXEL_SIZE, 0.0f,
+					9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
 		}
 
 		// Sides
 		if (left) {
-			drawTexture(pose, texture, 3, height - 8, x, y + 4, z, 0.0f, 3 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+			drawTexture(pose, texture, 3, height - 8, x, y + 4, z, 0.0f, 3 * BACKGROUND_PIXEL_SIZE,
+					3 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
 		} else {
-			drawTexture(pose, texture, 3, height - 8, x + width - 3, y + 4, z, 6 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE,
-					4 * BACKGROUND_PIXEL_SIZE);
+			drawTexture(pose, texture, 3, height - 8, x + width - 3, y + 4, z, 6 * BACKGROUND_PIXEL_SIZE,
+					3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
 		}
 
-		drawTexture(pose, texture, width - 7, 3, x + 4, y, z, 3 * BACKGROUND_PIXEL_SIZE, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE);
-		drawTexture(pose, texture, width - 8, 3, x + 4, y + height - 3, z, 4 * BACKGROUND_PIXEL_SIZE, 6 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE,
-				9 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, width - 7, 3, x + 4, y, z, 3 * BACKGROUND_PIXEL_SIZE, 0.0f,
+				4 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE);
+		drawTexture(pose, texture, width - 8, 3, x + 4, y + height - 3, z, 4 * BACKGROUND_PIXEL_SIZE,
+				6 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
 
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 
@@ -185,7 +203,8 @@ public class GuiDrawUtilities {
 		}
 	}
 
-	public static void drawSlotWithBorder(PoseStack pose, float width, float height, float x, float y, float z, SDColor borderColor) {
+	public static void drawSlotWithBorder(PoseStack pose, float width, float height, float x, float y, float z,
+			SDColor borderColor) {
 		if (borderColor != null) {
 			drawRectangle(pose, width + 4, height + 4, x - 2, y - 2, z, borderColor);
 		}
@@ -219,53 +238,66 @@ public class GuiDrawUtilities {
 		drawRectangle(pose, width, height, 0, 0, 0, color);
 	}
 
-	public static void drawRectangle(PoseStack pose, float width, float height, float x, float y, float z, SDColor color) {
+	public static void drawRectangle(PoseStack pose, float width, float height, float x, float y, float z,
+			SDColor color) {
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 		RenderSystem.enableBlend();
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-		bufferbuilder.vertex(pose.last().pose(), x, y + height, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x + width, y + height, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x + width, y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x, y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x, y + height, z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x + width, y + height, z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x + width, y, z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x, y, z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
 		tessellator.end();
 		RenderSystem.disableBlend();
 	}
 
-	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x, float y) {
+	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x,
+			float y) {
 		drawTexture(pose, texture, width, height, x, y, 0, 0, 0, 1, 1, SDColor.WHITE);
 	}
 
-	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x, float y, SDColor color) {
+	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x,
+			float y, SDColor color) {
 		drawTexture(pose, texture, width, height, x, y, 0, 0, 0, 1, 1, color);
 	}
 
-	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float minU, float minV, float maxU, float maxV, SDColor color) {
+	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float minU,
+			float minV, float maxU, float maxV, SDColor color) {
 		drawTexture(pose, texture, width, height, 0, 0, 0, minU, minV, maxU, maxV, color);
 	}
 
-	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x, float y, float z, float minU, float minV, float maxU, float maxV) {
+	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x,
+			float y, float z, float minU, float minV, float maxU, float maxV) {
 		drawTexture(pose, texture, width, height, x, y, z, minU, minV, maxU, maxV, SDColor.WHITE);
 	}
 
-	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x, float y, float z, float minU, float minV, float maxU, float maxV,
-			SDColor color) {
+	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x,
+			float y, float z, float minU, float minV, float maxU, float maxV, SDColor color) {
 		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.setShaderTexture(0, texture);
 		RenderSystem.enableBlend();
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-		bufferbuilder.vertex(pose.last().pose(), x, (y + height), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minU, maxV).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + height), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxU, maxV)
-				.endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + width), y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxU, minV).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x, y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minU, minV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x, (y + height), z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minU, maxV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + height), z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxU, maxV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), (x + width), y, z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxU, minV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x, y, z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minU, minV).endVertex();
 		tessellator.end();
 	}
 
-	public static void drawScreenOverlay(ResourceLocation texture, SDColor color, float alpha, float width, float height) {
+	public static void drawScreenOverlay(ResourceLocation texture, SDColor color, float alpha, float width,
+			float height) {
 		if (Minecraft.getInstance().getWindow() != null) {
 			RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 			RenderSystem.setShaderTexture(0, texture);
@@ -279,37 +311,46 @@ public class GuiDrawUtilities {
 					Tesselator tessellator = Tesselator.getInstance();
 					BufferBuilder bufferbuilder = tessellator.getBuilder();
 					bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-					bufferbuilder.vertex((x * width), (y * height) + height, 0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(0, 1)
+					bufferbuilder.vertex((x * width), (y * height) + height, 0)
+							.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(0, 1)
 							.endVertex();
-					bufferbuilder.vertex((x * width) + width, (y * height) + height, 0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(1, 1)
+					bufferbuilder.vertex((x * width) + width, (y * height) + height, 0)
+							.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(1, 1)
 							.endVertex();
-					bufferbuilder.vertex((x * width) + width, (y * height), 0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(1, 0)
+					bufferbuilder.vertex((x * width) + width, (y * height), 0)
+							.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(1, 0)
 							.endVertex();
-					bufferbuilder.vertex((x * width), (y * height), 0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(0, 0).endVertex();
+					bufferbuilder.vertex((x * width), (y * height), 0)
+							.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(0, 0)
+							.endVertex();
 					tessellator.end();
 				}
 			}
 		}
 	}
 
-	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float minU, float minV, float maxU, float maxV, SDColor color) {
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height,
+			float minU, float minV, float maxU, float maxV, SDColor color) {
 		drawSprite(pose, spriteLocation, 0, 0, width, height, 0, minU, minV, maxU, maxV);
 	}
 
-	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x, float y, float z, float minU, float minV, float maxU,
-			float maxV) {
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x,
+			float y, float z, float minU, float minV, float maxU, float maxV) {
 		drawSprite(pose, spriteLocation, width, height, x, y, z, minU, minV, maxU, maxV, SDColor.WHITE);
 	}
 
-	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x, float y, float z, SDColor color) {
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x,
+			float y, float z, SDColor color) {
 		drawSprite(pose, spriteLocation, width, height, x, y, z, 0, 0, 1, 1, color);
 	}
 
-	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x, float y, float z) {
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x,
+			float y, float z) {
 		drawSprite(pose, spriteLocation, width, height, x, y, z, 0, 0, 1, 1, SDColor.WHITE);
 	}
 
-	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, SDColor color) {
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height,
+			SDColor color) {
 		drawSprite(pose, spriteLocation, width, height, 0, 0, 0, 0, 0, 1, 1, color);
 	}
 
@@ -317,12 +358,13 @@ public class GuiDrawUtilities {
 		drawSprite(pose, spriteLocation, width, height, 0, 0, 0, 0, 0, 1, 1, SDColor.WHITE);
 	}
 
-	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x, float y, float z, float minU, float minV, float maxU,
-			float maxV, SDColor color) {
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x,
+			float y, float z, float minU, float minV, float maxU, float maxV, SDColor color) {
 		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 		RenderSystem.enableBlend();
-		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(spriteLocation);
+		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+				.apply(spriteLocation);
 
 		float uDiff = sprite.getU1() - sprite.getU0();
 		float vDiff = sprite.getV1() - sprite.getV0();
@@ -335,28 +377,35 @@ public class GuiDrawUtilities {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-		bufferbuilder.vertex(pose.last().pose(), (x + 0), (y + height), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minSpriteU, maxSpriteV)
+		bufferbuilder.vertex(pose.last().pose(), (x + 0), (y + height), z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minSpriteU, maxSpriteV)
 				.endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + height), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxSpriteU, maxSpriteV)
+		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + height), z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxSpriteU, maxSpriteV)
 				.endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + 0), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxSpriteU, minSpriteV)
+		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + 0), z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxSpriteU, minSpriteV)
 				.endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + 0), (y + 0), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minSpriteU, minSpriteV)
+		bufferbuilder.vertex(pose.last().pose(), (x + 0), (y + 0), z)
+				.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minSpriteU, minSpriteV)
 				.endVertex();
 		tessellator.end();
 	}
 
-	public static void drawString(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale, SDColor color, boolean withShadow) {
+	public static void drawString(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale,
+			SDColor color, boolean withShadow) {
 		drawString(matrixStack, text, xPos, yPos, zPos, scale, color.encodeInInteger(), withShadow);
 	}
 
-	public static void drawStringCentered(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale, SDColor color, boolean withShadow) {
+	public static void drawStringCentered(PoseStack matrixStack, String text, float xPos, float yPos, float zPos,
+			float scale, SDColor color, boolean withShadow) {
 		@SuppressWarnings("resource")
 		float width = Minecraft.getInstance().font.width(text) * scale;
 		drawString(matrixStack, text, xPos + (width / 2), yPos, zPos, scale, color.encodeInInteger(), withShadow);
 	}
 
-	public static void drawStringLeftAligned(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale, SDColor color, boolean withShadow) {
+	public static void drawStringLeftAligned(PoseStack matrixStack, String text, float xPos, float yPos, float zPos,
+			float scale, SDColor color, boolean withShadow) {
 		@SuppressWarnings("resource")
 		float width = Minecraft.getInstance().font.width(text) * scale;
 		drawString(matrixStack, text, xPos + width, yPos, zPos, scale, color.encodeInInteger(), withShadow);
@@ -390,7 +439,8 @@ public class GuiDrawUtilities {
 		return lines;
 	}
 
-	public static void drawStringWithSize(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale, ChatFormatting color, boolean withShadow) {
+	public static void drawStringWithSize(PoseStack matrixStack, String text, float xPos, float yPos, float zPos,
+			float scale, ChatFormatting color, boolean withShadow) {
 		drawString(matrixStack, text, xPos, yPos, zPos, scale, color.getColor(), withShadow);
 	}
 
@@ -406,7 +456,8 @@ public class GuiDrawUtilities {
 	 * @param withShadow
 	 */
 	@SuppressWarnings("resource")
-	public static void drawString(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale, int color, boolean withShadow) {
+	public static void drawString(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale,
+			int color, boolean withShadow) {
 		// The matrix stack cannot be null.
 		if (matrixStack == null) {
 			StaticCore.LOGGER.error("A non-null matrix stack must be provided to this method!");
@@ -423,13 +474,15 @@ public class GuiDrawUtilities {
 		final int X = (int) ((xPos - Minecraft.getInstance().font.width(text) * scaleFactor) * inverseScaleFactor);
 		final int Y = (int) ((yPos - 7.0f * scaleFactor) * inverseScaleFactor);
 		MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-		Minecraft.getInstance().font.drawInBatch(text, X, Y, color, withShadow, matrixStack.last().pose(), buffer, true, 0, 15728880);
+		Minecraft.getInstance().font.drawInBatch(text, X, Y, color, withShadow, matrixStack.last().pose(), buffer, true,
+				0, 15728880);
 		buffer.endBatch();
 		RenderSystem.enableBlend();
 		matrixStack.popPose();
 	}
 
-	public static void drawAlignedLine(PoseStack pose, Vector3D start, Vector3D end, SDColor startColor, SDColor endColor, float thickness) {
+	public static void drawAlignedLine(PoseStack pose, Vector3D start, Vector3D end, SDColor startColor,
+			SDColor endColor, float thickness) {
 		Vector3D line1Start = new Vector3D(start.getX(), start.getY(), start.getZ());
 		Vector3D line1End = new Vector3D(start.getX(), end.getY() + 25, start.getZ());
 		Vector3D line2Start = line1End;
@@ -442,7 +495,8 @@ public class GuiDrawUtilities {
 		drawLine(pose, line3Start, line3End, startColor, endColor, thickness);
 	}
 
-	public static void drawLine(PoseStack pose, Vector3D start, Vector3D end, SDColor startcolor, SDColor endColor, float thickness) {
+	public static void drawLine(PoseStack pose, Vector3D start, Vector3D end, SDColor startcolor, SDColor endColor,
+			float thickness) {
 		RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
 		RenderSystem.enableBlend();
 		RenderSystem.disableCull();
@@ -453,8 +507,10 @@ public class GuiDrawUtilities {
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
 		bufferbuilder.vertex(pose.last().pose(), start.getX(), start.getY(), start.getZ())
-				.color(startcolor.getRed(), startcolor.getGreen(), startcolor.getBlue(), startcolor.getAlpha()).normal(normal.getX(), normal.getY(), 0).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), end.getX(), end.getY(), end.getZ()).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha())
+				.color(startcolor.getRed(), startcolor.getGreen(), startcolor.getBlue(), startcolor.getAlpha())
+				.normal(normal.getX(), normal.getY(), 0).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), end.getX(), end.getY(), end.getZ())
+				.color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha())
 				.normal(normal.getX(), normal.getY(), 0).endVertex();
 		tessellator.end();
 		RenderSystem.enableCull();
@@ -480,11 +536,13 @@ public class GuiDrawUtilities {
 		drawItem(pose, item, x, y, z, 16, 16, alpha);
 	}
 
-	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height) {
+	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width,
+			float height) {
 		drawItem(pose, item, x, y, z, width, height, 1);
 	}
 
-	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height, float alpha) {
+	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width,
+			float height, float alpha) {
 		drawItem(pose, item, x, y, z, width, height, alpha, 15728880);
 	}
 
@@ -492,17 +550,21 @@ public class GuiDrawUtilities {
 		drawItem(pose, item, x, y, z, 16.0f, 16.0f, 1.0f, 0);
 	}
 
-	public static void drawItemSilhouette(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height) {
+	public static void drawItemSilhouette(@Nullable PoseStack pose, ItemStack item, float x, float y, float z,
+			float width, float height) {
 		drawItem(pose, item, x, y, z, width, height, 1.0f, 0);
 	}
 
-	public static void drawItemSilhouette(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height, float alpha) {
+	public static void drawItemSilhouette(@Nullable PoseStack pose, ItemStack item, float x, float y, float z,
+			float width, float height, float alpha) {
 		drawItem(pose, item, x, y, z, width, height, alpha, 0);
 	}
 
 	@SuppressWarnings("resource")
-	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height, float alpha, int lightLevel) {
-		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(item, (Level) null, Minecraft.getInstance().player, 0);
+	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width,
+			float height, float alpha, int lightLevel) {
+		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(item, (Level) null,
+				Minecraft.getInstance().player, 0);
 		Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
 		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 		RenderSystem.enableBlend();
@@ -530,14 +592,14 @@ public class GuiDrawUtilities {
 		RenderSystem.applyModelViewMatrix();
 
 		PoseStack posestack1 = new PoseStack();
-		MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
+		MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers()
+				.bufferSource();
 		boolean flag = !model.usesBlockLight();
 		if (flag) {
 			Lighting.setupForFlatItems();
 		}
-
-		Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.GUI, false, posestack1, multibuffersource$buffersource, lightLevel,
-				OverlayTexture.NO_OVERLAY, model);
+		Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.GUI, false, posestack1,
+				multibuffersource$buffersource, lightLevel, OverlayTexture.NO_OVERLAY, model);
 
 		multibuffersource$buffersource.endBatch();
 		RenderSystem.enableDepthTest();
@@ -549,16 +611,30 @@ public class GuiDrawUtilities {
 
 		RenderSystem.applyModelViewMatrix();
 
+		if (item.isBarVisible()) {
+			int barWidth = item.getBarWidth();
+			int barOffset = (16 - barWidth) / 2;
+			int rawBarColor = item.getBarColor();
+			SDColor barColor = SDColor.fromEncodedInteger(rawBarColor);
+			barColor = barColor.fromEightBitToFloat();
+			barColor.setAlpha(1);
+
+			GuiDrawUtilities.drawRectangle(pose, barWidth, 2, x + barOffset + 1, y + 12.5f, z + 1, SDColor.BLACK);
+			GuiDrawUtilities.drawRectangle(pose, barWidth, 1, x + barOffset + 1, y + 12.5f, z + 2, barColor);
+		}
+
 		RenderSystem.disableDepthTest();
 		RenderSystem.enableBlend();
-		GuiDrawUtilities.drawRectangle(pose, width, height, x, y, 0,
-				new SDColor(DEFAULT_SLOT_CORNER_COLOR.getRed(), DEFAULT_SLOT_CORNER_COLOR.getGreen(), DEFAULT_SLOT_CORNER_COLOR.getBlue(), 1.0f - alpha));
+
+		GuiDrawUtilities.drawRectangle(pose, width, height, x, y, 0, new SDColor(DEFAULT_SLOT_CORNER_COLOR.getRed(),
+				DEFAULT_SLOT_CORNER_COLOR.getGreen(), DEFAULT_SLOT_CORNER_COLOR.getBlue(), 1.0f - alpha));
 		RenderSystem.disableBlend();
 		RenderSystem.enableDepthTest();
 	}
 
 	@SuppressWarnings("resource")
-	public static Matrix4f drawBlockState(PoseStack pose, BlockState state, BlockPos pos, ModelData modelData, Vector3D translation, Vector3D rotation, Vector3D scale) {
+	public static Matrix4f drawBlockState(PoseStack pose, BlockState state, BlockPos pos, ModelData modelData,
+			Vector3D translation, Vector3D rotation, Vector3D scale) {
 		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		BakedModel model = renderer.getBlockModel(state);

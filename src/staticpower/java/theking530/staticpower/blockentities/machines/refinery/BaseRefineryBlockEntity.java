@@ -2,68 +2,51 @@ package theking530.staticpower.blockentities.machines.refinery;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.BlockEntityBase;
-import theking530.staticcore.blockentity.components.multiblock.IMultiBlockComponent;
-import theking530.staticcore.blockentity.components.multiblock.MultiBlockEntry;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockEntityRefineryController;
+import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.init.ModMultiblocks;
 
-public class BaseRefineryBlockEntity extends BlockEntityBase implements IMultiBlockComponent<BlockEntityRefineryController> {
-	private MultiBlockEntry<BlockEntityRefineryController> token;
-	private final ResourceLocation tier;
+public class BaseRefineryBlockEntity extends BlockEntityBase {
+	public final MultiblockComponent<BaseRefineryBlockEntity> multiblockComponent;
 
-	public BaseRefineryBlockEntity(BlockEntityTypeAllocator<? extends BaseRefineryBlockEntity> allocator, BlockPos pos, BlockState state, ResourceLocation tier) {
+	public BaseRefineryBlockEntity(BlockEntityTypeAllocator<? extends BaseRefineryBlockEntity> allocator, BlockPos pos,
+			BlockState state) {
 		super(allocator, pos, state);
-		this.tier = tier;
+		registerComponent(multiblockComponent = new MultiblockComponent<BaseRefineryBlockEntity>("MultiblockComponent",
+				ModMultiblocks.REFINERY.get()));
+		multiblockComponent.setStateChangedCallback(this::multiblockStateChanged);
+	}
+
+	public boolean hasController() {
+		return multiblockComponent.isWellFormed();
+	}
+
+	public BlockEntityRefineryController getController() {
+		return (BlockEntityRefineryController) getLevel().getBlockEntity(multiblockComponent.getMasterPosition());
+	}
+
+	public void multiblockStateChanged(MultiblockState state) {
+
 	}
 
 	@Override
-	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
-		super.onNeighborChanged(currentState, neighborPos, isMoving);
-		if (hasToken()) {
-			getToken().remove();
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+		if (hasController()) {
+			return getController().createMenu(windowId, inventory, player);
 		}
-	}
-
-	@Override
-	public void setRemoved() {
-		super.setRemoved();
-		if (hasToken()) {
-			getToken().remove();
-		}
+		return null;
 	}
 
 	@Override
 	public ResourceLocation getTier() {
-		return tier;
+		return StaticPowerTiers.STATIC;
 	}
-
-	@Override
-	public void multiBlockValidated(MultiBlockEntry<BlockEntityRefineryController> token) {
-		this.token = token;
-	}
-
-	@Override
-	public void multiBlockBroken() {
-		token = null;
-	}
-
-	@Override
-	public MultiBlockEntry<BlockEntityRefineryController> getToken() {
-		return token;
-	}
-
-	public boolean hasController() {
-		return hasToken();
-	}
-
-	public BlockEntityRefineryController getController() {
-		if (!hasController()) {
-			return null;
-		}
-
-		return token.getController();
-	}
-
 }

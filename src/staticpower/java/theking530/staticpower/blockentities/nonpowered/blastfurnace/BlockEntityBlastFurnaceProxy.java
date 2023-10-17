@@ -9,8 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticcore.blockentity.BlockEntityBase;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.NewMultiblockComponent;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.init.ModBlocks;
@@ -20,14 +19,14 @@ public class BlockEntityBlastFurnaceProxy extends BlockEntityBase {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityBlastFurnaceProxy> TYPE = new BlockEntityTypeAllocator<>(
 			"blast_furnace_proxy", (type, pos, state) -> new BlockEntityBlastFurnaceProxy(pos, state),
-			ModBlocks.BlastFurnace);
+			ModBlocks.BlastFurnaceBrick);
 
-	public final NewMultiblockComponent<BlockEntityBlastFurnace> multiblockComponent;
+	public final MultiblockComponent<BlockEntityBlastFurnace> multiblockComponent;
 
 	public BlockEntityBlastFurnaceProxy(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		registerComponent(multiblockComponent = new NewMultiblockComponent<BlockEntityBlastFurnace>(
-				"MultiblockComponent", ModMultiblocks.BLAST_FURNACE.get(), MultiblockState.FAILED));
+		registerComponent(multiblockComponent = new MultiblockComponent<BlockEntityBlastFurnace>("MultiblockComponent",
+				ModMultiblocks.BLAST_FURNACE.get()));
 	}
 
 	public BlockPos getContainerReferencedBlockPos() {
@@ -52,7 +51,6 @@ public class BlockEntityBlastFurnaceProxy extends BlockEntityBase {
 		if (!multiblockComponent.isWellFormed()) {
 			return LazyOptional.empty();
 		}
-
 		BlockEntityBlastFurnace master = (BlockEntityBlastFurnace) getLevel()
 				.getBlockEntity(multiblockComponent.getMasterPosition());
 		return master.getCapability(cap, side);

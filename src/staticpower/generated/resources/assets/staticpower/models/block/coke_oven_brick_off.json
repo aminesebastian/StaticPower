@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "staticpower:blocks/machines/coke_oven/coke_oven_brick",
+    "side": "staticpower:blocks/machines/coke_oven/coke_oven_face_off",
+    "top": "staticpower:blocks/machines/coke_oven/coke_oven_brick"
+  }
+}

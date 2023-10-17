@@ -5,7 +5,7 @@
       "tag": "staticpower:wire_coil/energized_metal"
     },
     "i": {
-      "tag": "forge:plates/iron"
+      "tag": "forge:plates/steel"
     },
     "m": {
       "item": "staticpower:machine_block_industrial"

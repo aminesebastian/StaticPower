@@ -17,6 +17,7 @@ public class GuiBlastFurnace extends StaticCoreBlockEntityScreen<ContainerBlastF
 		setShouldDrawSlotModeBorders(false);
 		setBackgroundTint(new SDColor(0.15f, 0.15f, 0.15f, 1.0f));
 		setTextColor(SDColor.EIGHT_BIT_WHITE);
+		setTitleOverride(Component.translatable("gui.staticpower.blast_furnace"));
 	}
 
 	@Override

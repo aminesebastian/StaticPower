@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
@@ -143,7 +144,8 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	 * @param tabYPosition The new y position.
 	 * @param partialTicks The partial ticks (delta time).
 	 */
-	public void updateTabPosition(PoseStack stack, float tabXPosition, float tabYPosition, float partialTicks, int mouseX, int mouseY, int index) {
+	public void updateTabPosition(PoseStack stack, float tabXPosition, float tabYPosition, float partialTicks,
+			int mouseX, int mouseY, int index) {
 		tabIndex = index;
 		this.setPosition(tabXPosition, tabYPosition);
 
@@ -156,7 +158,8 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(stack, new Vector2D(0, 0));
 		if (this.tabSide == TabSide.LEFT) {
-			cachedIconBounds.update(screenSpacePosition.getX() + getWidth() - COLLAPSED_SIZE.getX(), screenSpacePosition.getY(), 24, 24);
+			cachedIconBounds.update(screenSpacePosition.getX() + getWidth() - COLLAPSED_SIZE.getX(),
+					screenSpacePosition.getY(), 24, 24);
 		} else {
 			cachedIconBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), 24, 24);
 		}
@@ -182,12 +185,14 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 			if (tabState == TabState.CLOSED) {
 				tabState = TabState.OPENING;
 				owningManager.tabOpening(this);
+				playSoundLocally(SoundEvents.UI_LOOM_SELECT_PATTERN, 0.2f, 1.5f);
 				onTabOpening();
 				return EInputResult.HANDLED;
 			} else if (tabState == TabState.OPEN) {
 				tabState = TabState.CLOSING;
 				owningManager.tabClosing(this);
 				onTabClosing();
+				playSoundLocally(SoundEvents.UI_LOOM_SELECT_PATTERN, 0.2f, 1.0f);
 				return EInputResult.HANDLED;
 			}
 		} else {
@@ -256,7 +261,7 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 		if (tabSide == TabSide.RIGHT) {
 			xPos -= 16;
 		}
-		GuiDrawUtilities.drawGenericBackground(matrix, width, getHeight(), xPos, 0,  0, tabColor);
+		GuiDrawUtilities.drawGenericBackground(matrix, width, getHeight(), xPos, 0, 0, tabColor);
 
 		if (icon != null) {
 			if (this.tabSide == TabSide.LEFT) {

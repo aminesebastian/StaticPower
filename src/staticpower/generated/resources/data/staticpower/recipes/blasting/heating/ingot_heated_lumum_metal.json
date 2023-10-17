@@ -1,6 +1,6 @@
 {
   "type": "minecraft:blasting",
-  "cookingtime": 100,
+  "cookingtime": 200,
   "experience": 0.5,
   "ingredient": {
     "tag": "staticpower:ingots/lumum_metal"

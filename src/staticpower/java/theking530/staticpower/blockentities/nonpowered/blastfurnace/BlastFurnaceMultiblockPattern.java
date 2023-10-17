@@ -15,8 +15,8 @@ import theking530.staticpower.init.ModBlocks;
 public class BlastFurnaceMultiblockPattern extends FixedMultiblockPattern {
 	public BlastFurnaceMultiblockPattern() {
 		super('c');
-		addDefinition('f', ModBlocks.BlastFurnace);
-		addDefinition('c', ModBlocks.BlastFurnace);
+		addDefinition('f', ModBlocks.BlastFurnaceBrick);
+		addDefinition('c', ModBlocks.BlastFurnaceBrick);
 		// @formatter:off
 		addLayer()
 		.addRow("fff")

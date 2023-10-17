@@ -118,7 +118,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
 		tag(ModItemTags.COALS_DUST).addTag(ModMaterials.COAL.get(MaterialTypes.DUST).getItemTag())
 				.addTag(ModMaterials.CHARCOAL.get(MaterialTypes.DUST).getItemTag());
 
-		tag(ModItemTags.BLAST_FURNACE_FUEL).add(Items.CHARCOAL).add(Items.COAL_BLOCK).add(Items.COAL);
+		tag(ModItemTags.BLAST_FURNACE_FUEL).add(Items.CHARCOAL)
+				.addTag(ModMaterials.COAL_COKE.get(MaterialTypes.RAW_MATERIAL).getItemTag())
+				.addTag(ModMaterials.COAL_COKE.get(MaterialTypes.RAW_STOARGE_BLOCK).getItemTag());
 
 		tag(Tags.Items.NUGGETS).add(
 				toArray(ModMaterials.MATERIALS.values().stream().filter((bundle) -> bundle.has(MaterialTypes.NUGGET))

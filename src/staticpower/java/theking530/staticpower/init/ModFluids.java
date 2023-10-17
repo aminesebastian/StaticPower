@@ -125,6 +125,12 @@ public class ModFluids {
 						.sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_LAVA);
 			}));
 
+	public static final StaticPowerFluidBundle CreosoteOil = registerFluid(
+			create("oil_creosote", new SDColor(0.5f, 0.38f, 0.32f)).addProperties(builder -> {
+				builder.viscosity(1000).density(32).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA)
+						.sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_LAVA);
+			}));
+
 	public static final Map<MinecraftColor, StaticPowerFluidBundle> CONCRETE = new HashMap<>();
 	public static final Map<MinecraftColor, StaticPowerFluidBundle> DYES = new HashMap<>();
 

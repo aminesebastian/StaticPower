@@ -1,6 +1,7 @@
 package theking530.staticcore.blockentity.components.multiblock.newstyle.fixed;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,62 +14,27 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockStateBuilder;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockMatchClass;
 import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
+import theking530.staticpower.init.ModMultiblocks;
 
 public class FixedMultiblockPattern extends AbstractMultiblockPattern {
-	public class MultiBlockPatternLayer {
-		private List<String> rows;
-
-		public MultiBlockPatternLayer() {
-			rows = new ArrayList<>();
-		}
-
-		public String getRow(int i) {
-			return rows.get(i);
-		}
-
-		public int getRowCount() {
-			return rows.size();
-		}
-
-		public MultiBlockPatternLayer addRow(String row) {
-			rows.add(row);
-			onRowAddedToLayer(this);
-			return this;
-		}
-
-		@Override
-		public String toString() {
-			return "MultiBlockPatternLayer [rows=" + rows + "]";
-		}
-	}
-
-	private List<MultiBlockPatternLayer> pattern;
-	private Map<Character, List<MultiblockMatchClass>> definitions;
+	private List<FixedMultiblockPatternLayer> layers;
+	private Map<Character, MultiblockMatchClass> definitions;
 	private Character masterKey;
 	private int maxX;
 	private int maxY;
 	private int maxZ;
 
 	public FixedMultiblockPattern(char masterKey) {
-		pattern = new ArrayList<>();
+		layers = new ArrayList<>();
 		definitions = new HashMap<>();
 		this.masterKey = masterKey;
-	}
-
-	@Override
-	public boolean isValidBlock(BlockState state) {
-		for (List<MultiblockMatchClass> matches : definitions.values()) {
-			for (MultiblockMatchClass matchClass : matches) {
-				if (matchClass.matches(state)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		maxX = -1;
+		maxZ = -1;
 	}
 
 	@Override
@@ -86,35 +52,27 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 		return maxZ;
 	}
 
-
 	public FixedMultiblockPattern addDefinition(char character, TagKey<Block> block) {
 		if (!definitions.containsKey(character)) {
-			definitions.put(character, new ArrayList<>());
+			definitions.put(character, new MultiblockMatchClass(character, 0, Integer.MAX_VALUE, false));
 		}
-		definitions.get(character).add(new MultiblockMatchClass(block));
+		definitions.get(character).addMatch(block);
 		return this;
 	}
 
 	public <T extends Block> FixedMultiblockPattern addDefinition(char character, Supplier<T> block) {
 		if (!definitions.containsKey(character)) {
-			definitions.put(character, new ArrayList<>());
+			definitions.put(character, new MultiblockMatchClass(character, 0, Integer.MAX_VALUE, false));
 		}
 
-		MultiblockMatchClass matchClass = new MultiblockMatchClass(() -> block.get().defaultBlockState());
-		definitions.get(character).add(matchClass);
+		definitions.get(character).addMatch(() -> block.get().defaultBlockState());
 		return this;
 	}
 
-	public MultiBlockPatternLayer addLayer() {
-		MultiBlockPatternLayer layer = new MultiBlockPatternLayer();
-		pattern.add(layer);
-		maxY = pattern.size();
+	public FixedMultiblockPatternLayer addLayer() {
+		FixedMultiblockPatternLayer layer = new FixedMultiblockPatternLayer();
+		layers.add(layer);
 		return layer;
-	}
-
-	protected void onRowAddedToLayer(MultiBlockPatternLayer layer) {
-		maxX = Math.max(maxX, layer.getRowCount());
-		maxZ = Math.max(maxZ, layer.getRow(layer.getRowCount() - 1).length());
 	}
 
 	@Override
@@ -122,8 +80,12 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 		if (definitions.isEmpty()) {
 			return MultiblockState.FAILED;
 		}
-		if (pattern.size() == 0) {
+		if (layers.size() == 0) {
 			return MultiblockState.FAILED;
+		}
+
+		if (maxX == -1 || maxY == -1) {
+			cacheSize();
 		}
 
 		BlockPos offsetStartPos = startPos;
@@ -132,8 +94,16 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 
 		while (!dfsStack.isEmpty()) {
 			BlockPos testPos = dfsStack.pop();
-			if (!isValidBlock(level.getBlockState(testPos))) {
+			BlockState testState = level.getBlockState(testPos);
+			if (!isValidBlock(testState)) {
 				continue;
+			}
+
+			// Stop if we hit a block that's already in a multiblock.
+			if (testState.hasProperty(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
+				if (testState.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
+					continue;
+				}
 			}
 
 			if (Math.abs(testPos.getX() - startPos.getX()) >= maxX) {
@@ -181,27 +151,29 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 
 	private MultiblockState checkWellFormedOriented(Level level, Direction orientation, BlockPos startPos,
 			boolean bypassExistingCheck) {
-		MultiblockState state = new MultiblockState(startPos, orientation, true);
-		for (int y = 0; y < pattern.size(); y++) {
-			for (int x = 0; x < pattern.get(y).getRowCount(); x++) {
-				for (int z = 0; z < pattern.get(y).getRow(x).length(); z++) {
+		MultiblockStateBuilder builder = new MultiblockStateBuilder(this, startPos, orientation);
+
+		for (int y = 0; y < layers.size(); y++) {
+			for (int x = 0; x < layers.get(y).getRowCount(); x++) {
+				for (int z = 0; z < layers.get(y).getRow(x).length(); z++) {
 					BlockPos testPos = startPos.offset(0, y, 0).relative(orientation, x)
 							.relative(orientation.getClockWise(), z);
 					BlockState testState = level.getBlockState(testPos);
-					Character patternValue = pattern.get(y).getRow(x).charAt(z);
+					Character patternValue = layers.get(y).getRow(x).charAt(z);
 					if (!isValidBlockForPosition(testState, new BlockPos(x, y, z), bypassExistingCheck)) {
 						return MultiblockState.FAILED;
 					}
-					state.addEntry(testPos, testState, patternValue, canBeMaster(testPos, testState));
+					builder.addEntry(testPos, testState, patternValue, canBeMaster(testPos, testState));
 				}
 			}
 		}
-		return state;
+
+		return builder.result();
 	}
 
 	@Override
 	public boolean isValidBlockForPosition(BlockState state, BlockPos relativePos, boolean bypassExistingCheck) {
-		Character patternValue = pattern.get(relativePos.getY()).getRow(relativePos.getX()).charAt(relativePos.getZ());
+		Character patternValue = layers.get(relativePos.getY()).getRow(relativePos.getX()).charAt(relativePos.getZ());
 		if (Character.isWhitespace(patternValue)) {
 			return state.isAir();
 		}
@@ -211,10 +183,13 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 				return false;
 			}
 		}
+		return definitions.get(patternValue).matches(state);
+	}
 
-		List<MultiblockMatchClass> definition = definitions.get(patternValue);
-		for (MultiblockMatchClass tag : definition) {
-			if (tag.matches(state)) {
+	@Override
+	public boolean isValidBlock(BlockState state) {
+		for (MultiblockMatchClass matchClass : definitions.values()) {
+			if (matchClass.matches(state)) {
 				return true;
 			}
 		}
@@ -226,13 +201,21 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 		if (!definitions.containsKey(masterKey)) {
 			return false;
 		}
-		
-		List<MultiblockMatchClass> matchClasses = definitions.get(masterKey);
-		for (MultiblockMatchClass matchClass : matchClasses) {
-			if (matchClass.matches(state)) {
-				return true;
-			}
+
+		MultiblockMatchClass matchClass = definitions.get(masterKey);
+		return matchClass.matches(state);
+	}
+
+	@Override
+	public Collection<MultiblockMatchClass> getMatchClasses() {
+		return definitions.values();
+	}
+
+	private void cacheSize() {
+		maxY = layers.size();
+		for (FixedMultiblockPatternLayer layer : layers) {
+			maxX = Math.max(maxX, layer.getRowCount());
+			maxZ = Math.max(maxZ, layer.getRow(layer.getRowCount() - 1).length());
 		}
-		return false;
 	}
 }

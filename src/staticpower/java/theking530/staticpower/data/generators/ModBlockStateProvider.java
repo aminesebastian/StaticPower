@@ -18,6 +18,7 @@ import theking530.staticcore.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.machines.refinery.condenser.BlockRefineryCondenser;
 import theking530.staticpower.blockentities.nonpowered.blastfurnace.BlockBlastFurnace;
+import theking530.staticpower.blockentities.nonpowered.cokeoven.BlockCokeOven;
 import theking530.staticpower.blockentities.power.circuit_breaker.BlockCircuitBreaker;
 import theking530.staticpower.blocks.StaticPowerBlockProperties;
 import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
@@ -218,7 +219,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
 		wireTerminal(ModBlocks.WireConnectorDigistore.get(), "digistore_terminal");
 
 		basicCustomModelOnOff(ModBlocks.AlloyFurnace.get(), "alloy_furnace");
-		blastFurnace(ModBlocks.BlastFurnace.get());
+		blastFurnace(ModBlocks.BlastFurnaceBrick.get());
+		cokeOven(ModBlocks.CokeOvenBrick.get());
 		basicCustomModelOnOff(ModBlocks.DirectDropper.get(), "direct_dropper");
 		basicCustomModelOnOff(ModBlocks.AutomaticPlacer.get(), "automatic_placer");
 		pumpTube(ModBlocks.PumpTube.get());
@@ -695,17 +697,37 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 	public void blastFurnace(Block block) {
 		ResourceLocation side = new ResourceLocation(StaticPower.MOD_ID,
-				"blocks/machines/blast_furnace/blast_furnace_side");
+				"blocks/machines/blast_furnace/blast_furnace_brick");
 		ResourceLocation frontOff = new ResourceLocation(StaticPower.MOD_ID,
-				"blocks/machines/blast_furnace/blast_furnace_controller_off");
+				"blocks/machines/blast_furnace/blast_furnace_face_off");
 		ResourceLocation frontOn = new ResourceLocation(StaticPower.MOD_ID,
-				"blocks/machines/blast_furnace/blast_furnace_controller_on");
+				"blocks/machines/blast_furnace/blast_furnace_face_on");
 		ModelFile simpleModel = models().cubeAll(name(block), side);
 		ModelFile offModel = models().cubeBottomTop(name(block) + "_off", frontOff, side, side);
 		ModelFile onModel = models().cubeBottomTop(name(block) + "_on", frontOn, side, side);
 
 		getVariantBuilder(block).forAllStates(state -> {
 			if (state.getValue(BlockBlastFurnace.SHOW_FACE)
+					&& state.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
+				ModelFile model = state.getValue(StaticPowerMachineBlock.IS_ON) ? onModel : offModel;
+				return ConfiguredModel.builder().modelFile(model).build();
+			}
+			return ConfiguredModel.builder().modelFile(simpleModel).build();
+		});
+	}
+
+	public void cokeOven(Block block) {
+		ResourceLocation side = new ResourceLocation(StaticPower.MOD_ID, "blocks/machines/coke_oven/coke_oven_brick");
+		ResourceLocation frontOff = new ResourceLocation(StaticPower.MOD_ID,
+				"blocks/machines/coke_oven/coke_oven_face_off");
+		ResourceLocation frontOn = new ResourceLocation(StaticPower.MOD_ID,
+				"blocks/machines/coke_oven/coke_oven_face_on");
+		ModelFile simpleModel = models().cubeAll(name(block), side);
+		ModelFile offModel = models().cubeBottomTop(name(block) + "_off", frontOff, side, side);
+		ModelFile onModel = models().cubeBottomTop(name(block) + "_on", frontOn, side, side);
+
+		getVariantBuilder(block).forAllStates(state -> {
+			if (state.getValue(BlockCokeOven.SHOW_FACE)
 					&& state.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
 				ModelFile model = state.getValue(StaticPowerMachineBlock.IS_ON) ? onModel : offModel;
 				return ConfiguredModel.builder().modelFile(model).build();

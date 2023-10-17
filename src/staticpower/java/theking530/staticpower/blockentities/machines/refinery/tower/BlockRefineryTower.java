@@ -13,6 +13,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.StaticPowerBlockProperties;
 import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
@@ -20,7 +21,8 @@ import theking530.staticpower.blocks.StaticPowerBlockProperties.TowerPiece;
 public class BlockRefineryTower extends StaticPowerBlock {
 	private static final VoxelShape MIDDLE_SHAPE = Block.box(3, 0, 3, 13, 16, 13);
 	private static final VoxelShape TOP_SHAPE = Shapes.join(MIDDLE_SHAPE, Block.box(2, 8, 2, 14, 16, 14), BooleanOp.OR);
-	private static final VoxelShape BOTTOM_SHAPE = Shapes.join(MIDDLE_SHAPE, Block.box(2, 0, 2, 14, 4, 14), BooleanOp.OR);
+	private static final VoxelShape BOTTOM_SHAPE = Shapes.join(MIDDLE_SHAPE, Block.box(2, 0, 2, 14, 4, 14),
+			BooleanOp.OR);
 	private static final VoxelShape FULL_SHAPE = Shapes.join(TOP_SHAPE, BOTTOM_SHAPE, BooleanOp.OR);
 
 	public BlockRefineryTower() {
@@ -29,11 +31,14 @@ public class BlockRefineryTower extends StaticPowerBlock {
 
 	@Override
 	protected BlockState getDefaultStateForRegistration() {
-		return super.getDefaultStateForRegistration().setValue(StaticPowerBlockProperties.TOWER_POSITION, TowerPiece.FULL);
+		return super.getDefaultStateForRegistration()
+				.setValue(StaticPowerBlockProperties.TOWER_POSITION, TowerPiece.FULL)
+				.setValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK, false);
 	}
 
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).setValue(StaticPowerBlockProperties.TOWER_POSITION, getTowerPiece(context.getClickedPos(), context.getLevel()));
+		return super.getStateForPlacement(context).setValue(StaticPowerBlockProperties.TOWER_POSITION,
+				getTowerPiece(context.getClickedPos(), context.getLevel()));
 	}
 
 	public TowerPiece getTowerPiece(BlockPos position, BlockGetter blockgetter) {
@@ -70,13 +75,17 @@ public class BlockRefineryTower extends StaticPowerBlock {
 		return getShape(state, worldIn, pos, context);
 	}
 
-	public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
+	@Override
+	public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level,
+			BlockPos pos, BlockPos facingPos) {
 		BlockState superState = super.updateShape(state, direction, facingState, level, pos, facingPos);
 		return superState.setValue(StaticPowerBlockProperties.TOWER_POSITION, getTowerPiece(pos, level));
 	}
 
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_53334_) {
-		super.createBlockStateDefinition(p_53334_);
-		p_53334_.add(StaticPowerBlockProperties.TOWER_POSITION);
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(StaticPowerBlockProperties.TOWER_POSITION);
+		builder.add(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK);
 	}
 }

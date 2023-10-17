@@ -13,13 +13,12 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Ma
 import theking530.staticcore.blockentity.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidInputServoComponent;
 import theking530.staticcore.blockentity.components.fluids.FluidOutputServoComponent;
-import theking530.staticcore.blockentity.components.multiblock.MultiBlockEntry;
+import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
 import theking530.staticcore.fluid.StaticPowerFluidTank;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockEntityRefineryController;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityRefineryFluidInput extends BaseRefineryBlockEntity {
@@ -40,7 +39,7 @@ public class BlockEntityRefineryFluidInput extends BaseRefineryBlockEntity {
 
 	public BlockEntityRefineryFluidInput(BlockEntityTypeAllocator<BlockEntityRefineryFluidInput> type, BlockPos pos,
 			BlockState state) {
-		super(type, pos, state, StaticPowerTiers.ADVANCED);
+		super(type, pos, state);
 
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
 				RefineryFluidInputSideConfiguration.INSTANCE));
@@ -70,23 +69,20 @@ public class BlockEntityRefineryFluidInput extends BaseRefineryBlockEntity {
 	}
 
 	@Override
-	public void multiBlockValidated(MultiBlockEntry<BlockEntityRefineryController> token) {
-		super.multiBlockValidated(token);
-		BlockEntityRefineryController controller = token.getController();
-
-		inputServo1.setTank(controller.getInputTank(0));
-		outputServo1.setTank(controller.getInputTank(0));
-		inputServo2.setTank(controller.getInputTank(1));
-		outputServo2.setTank(controller.getInputTank(1));
-	}
-
-	@Override
-	public void multiBlockBroken() {
-		super.multiBlockBroken();
-		inputServo1.setTank(null);
-		outputServo1.setTank(null);
-		inputServo2.setTank(null);
-		outputServo2.setTank(null);
+	public void multiblockStateChanged(MultiblockState state) {
+		super.multiblockStateChanged(state);
+		if (state.isWellFormed()) {
+			BlockEntityRefineryController controller = getController();
+			inputServo1.setTank(controller.getInputTank(0));
+			outputServo1.setTank(controller.getInputTank(0));
+			inputServo2.setTank(controller.getInputTank(1));
+			outputServo2.setTank(controller.getInputTank(1));
+		} else {
+			inputServo1.setTank(null);
+			outputServo1.setTank(null);
+			inputServo2.setTank(null);
+			outputServo2.setTank(null);
+		}
 	}
 
 	@Override

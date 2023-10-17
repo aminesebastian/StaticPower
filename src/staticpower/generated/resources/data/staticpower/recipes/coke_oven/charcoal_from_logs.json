@@ -1,0 +1,21 @@
+{
+  "type": "staticpower:coke_oven",
+  "experience": 1.0,
+  "input": {
+    "ingredient": {
+      "tag": "minecraft:logs_that_burn"
+    }
+  },
+  "output": {
+    "item": {
+      "id": "minecraft:charcoal"
+    }
+  },
+  "output_fluid": {
+    "Amount": 100,
+    "FluidName": "staticpower:oil_creosote"
+  },
+  "processing": {
+    "processing_time": 400
+  }
+}
