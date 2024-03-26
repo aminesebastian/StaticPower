@@ -230,6 +230,7 @@
 	"gui.staticcore.alert.fluid_output_full": "Output tank does not have enough space!",
 	"gui.staticcore.alert.fluid_output_mismatch": "Recipe fluid does not match fluid in tank.",
 	"gui.staticcore.alert.not_enough_power": "Not enough power! %1$s required!",
+	"gui.staticcore.alert.not_receiving_power": "Not connected to power!",
 	"gui.staticcore.alert.power_output_full": "Energy storage is full!",
 	"gui.staticcore.alert.internal_buffer_not_empty": "Machine's internal buffer not empty.",
 	"gui.staticcore.alert.machine_output_cannot_fit_recipe": "Recipe output cannot be placed in machine output.",

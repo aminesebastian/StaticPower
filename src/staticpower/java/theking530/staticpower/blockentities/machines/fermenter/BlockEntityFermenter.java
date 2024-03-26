@@ -57,7 +57,9 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input)
 				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 					public boolean canInsertItem(int slot, ItemStack stack) {
-						return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts())
+						return processingComponent
+								.getRecipe(new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), stack)
+										.ignoreItemCounts())
 								.isPresent();
 					}
 				}));
@@ -94,8 +96,10 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 
 	protected int getSlotToProccess() {
 		for (int i = 0; i < 9; i++) {
-			FermenterRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERMENTER_RECIPE_TYPE.get(),
-					new RecipeMatchParameters(inputInventory.getStackInSlot(i)), getLevel()).orElse(null);
+			FermenterRecipe recipe = CraftingUtilities
+					.getRecipe(ModRecipeTypes.FERMENTER_RECIPE_TYPE.get(), new RecipeMatchParameters(
+							getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(i)), getLevel())
+					.orElse(null);
 			if (recipe != null) {
 				FluidStack fermentingResult = recipe.getOutputFluidStack();
 				if (fluidTankComponent.fill(fermentingResult, FluidAction.SIMULATE) == fermentingResult.getAmount()) {
@@ -113,9 +117,9 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FermenterRecipe> component) {
 		int slot = getSlotToProccess();
 		if (slot >= 0) {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(slot));
+			return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(slot));
 		}
-		return new RecipeMatchParameters();
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId());
 	}
 
 	@Override

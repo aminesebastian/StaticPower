@@ -1,4 +1,4 @@
-package theking530.staticpower.data.crafting.researchwrappers;
+package theking530.staticcore.crafting.researchwrappers;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;

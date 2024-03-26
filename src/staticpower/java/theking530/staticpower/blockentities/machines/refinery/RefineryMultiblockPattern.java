@@ -1,7 +1,7 @@
 package theking530.staticpower.blockentities.machines.refinery;
 
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiBlockFormationStatus;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.freeform.FreeformMultiblockPattern;
+import theking530.staticcore.blockentity.components.multiblock.MultiBlockFormationStatus;
+import theking530.staticcore.blockentity.components.multiblock.freeform.FreeformMultiblockPattern;
 import theking530.staticpower.init.ModBlocks;
 
 public class RefineryMultiblockPattern extends FreeformMultiblockPattern {

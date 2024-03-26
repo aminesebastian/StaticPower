@@ -36,6 +36,13 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	@SaveSerialize
 	protected double basePowerUsage;
 	/**
+	 * This is the max amount of power this processing component should use per tick
+	 * after modifiers and upgrades but before power satisfaction is taken into
+	 * account.
+	 */
+	@UpdateSerialize
+	protected double powerUsageWithoutSatisfaction;
+	/**
 	 * This is the amount of power this processing component should use per tick
 	 * after modifiers and upgrades.
 	 */
@@ -95,8 +102,9 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 		}
 
 		checkUpgrades();
+		powerUsageWithoutSatisfaction = calculatePowerUsage();
 		powerSatisfaction = calculatePowerSatisfaction();
-		powerUsage = calculatePowerUsage();
+		powerUsage = powerUsageWithoutSatisfaction * powerSatisfaction;
 		super.preProcessUpdate();
 	}
 
@@ -189,9 +197,8 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	}
 
 	protected double calculatePowerUsage() {
-		double rawUsage = basePowerUsage * powerSatisfaction;
 		double upgradeFactor = speedUpgradeWeight * speedUpgradeValue.powerUsageIncrease();
-		return Math.ceil(rawUsage * upgradeFactor);
+		return Math.ceil(basePowerUsage * (1 + upgradeFactor));
 	}
 
 	/**
@@ -200,8 +207,8 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	 * 
 	 * @return
 	 */
-	public final double getPowerUsage() {
-		return powerUsage;
+	public final double getPowerUsage(boolean includeSatisfaction) {
+		return includeSatisfaction ? powerUsage : powerUsageWithoutSatisfaction;
 	}
 
 	public final double getPowerSatisfaction() {
@@ -322,7 +329,7 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 	protected void onProcessingProgressMade(ProcessingContainer processingContainer) {
 		super.onProcessingProgressMade(processingContainer);
 		if (this.powerComponent != null) {
-			PowerStack drained = this.powerComponent.drainPower(getPowerUsage(), false);
+			PowerStack drained = this.powerComponent.drainPower(getPowerUsage(true), false);
 
 			// Update all the production statistics.
 			ITeamOwnable teamComp = getBlockEntity().getComponent(TeamComponent.class);
@@ -376,14 +383,14 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 		}
 
 		if (getBasePowerUsage() > 0) {
-			if (getPowerSatisfaction() <= 0.0) {
-				return ProcessingCheckState.notEnoughPower(getPowerUsage());
+			if (getPowerSatisfaction() <= 0.0 || powerComponent.getStoredPower() == 0) {
+				return ProcessingCheckState.notReceivingPower();
 			}
-			if (powerComponent.getStoredPower() < getPowerUsage()) {
-				return ProcessingCheckState.notEnoughPower(getPowerUsage());
+			if (powerComponent.getStoredPower() < getPowerUsage(true)) {
+				return ProcessingCheckState.notEnoughPower(getPowerUsage(true));
 			}
-			if (powerComponent.getMaximumPowerOutput() < getPowerUsage()) {
-				return ProcessingCheckState.powerUsageTooHigh(getPowerUsage());
+			if (powerComponent.getMaximumPowerOutput() < getPowerUsage(true)) {
+				return ProcessingCheckState.powerUsageTooHigh(getPowerUsage(true));
 			}
 		}
 
@@ -411,10 +418,10 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 		super.updateProductionRates(teamComp);
 		// We capture this here and not as a product when processing starts because the
 		// value can change over time as the power satisfaction changes.
-		if (powerComponent != null && getPowerUsage() > 0) {
+		if (powerComponent != null && getPowerUsage(true) > 0) {
 			getProductionToken(StaticCoreProductTypes.Power.get()).setConsumptionPerSecond(
 					(ServerTeam) teamComp.getOwningTeam(), getPowerProducerId(),
-					getPowerUsage() * 20 * powerSatisfaction, getPowerUsage() * 20);
+					getPowerUsage(true) * 20 * powerSatisfaction, getPowerUsage(true) * 20);
 		}
 	}
 

@@ -8,16 +8,11 @@ public class CokeOvenSideConfiguration extends DefaultMachineNoFacePreset {
 	public static final CokeOvenSideConfiguration INSTANCE = new CokeOvenSideConfiguration();
 
 	public CokeOvenSideConfiguration() {
-		setDefaultOnSide(BlockSide.TOP, MachineSideMode.Input);
+		setDefaultOnSide(BlockSide.TOP, MachineSideMode.Never);
 		setDefaultOnSide(BlockSide.BOTTOM, MachineSideMode.Output);
-		setDefaultOnSide(BlockSide.FRONT, MachineSideMode.Output);
-		setDefaultOnSide(BlockSide.BACK, MachineSideMode.Output);
-		setDefaultOnSide(BlockSide.LEFT, MachineSideMode.Output);
-		setDefaultOnSide(BlockSide.RIGHT, MachineSideMode.Output);
-
-		for (BlockSide side : BlockSide.values()) {
-			addPossibleConfiguration(side, MachineSideMode.Input);
-			addPossibleConfiguration(side, MachineSideMode.Output);
-		}
+		setDefaultOnSide(BlockSide.FRONT, MachineSideMode.Input);
+		setDefaultOnSide(BlockSide.BACK, MachineSideMode.Input);
+		setDefaultOnSide(BlockSide.LEFT, MachineSideMode.Input);
+		setDefaultOnSide(BlockSide.RIGHT, MachineSideMode.Input);
 	}
 }

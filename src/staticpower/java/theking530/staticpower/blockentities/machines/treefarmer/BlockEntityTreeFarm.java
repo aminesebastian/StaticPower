@@ -129,8 +129,10 @@ public class BlockEntityTreeFarm extends BlockEntityMachine implements IProcesso
 		processingComponent.setBasePowerUsage(StaticPowerConfig.SERVER.treeFarmerPowerUsage.get());
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
-			return CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(),
-					new RecipeMatchParameters(fluid), getLevel()).isPresent();
+			return CraftingUtilities
+					.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(),
+							new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), fluid), getLevel())
+					.isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory)
 				.setAutoSyncPacketsEnabled(true));
 
@@ -157,8 +159,10 @@ public class BlockEntityTreeFarm extends BlockEntityMachine implements IProcesso
 	}
 
 	public float getGrowthBonus() {
-		FertalizerRecipe recipe = CraftingUtilities.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(),
-				new RecipeMatchParameters(this.fluidTankComponent.getFluid()), getLevel()).orElse(null);
+		FertalizerRecipe recipe = CraftingUtilities
+				.getRecipe(ModRecipeTypes.FERTALIZER_RECIPE_TYPE.get(), new RecipeMatchParameters(
+						getTeamComponent().getOwningTeamId(), this.fluidTankComponent.getFluid()), getLevel())
+				.orElse(null);
 		if (recipe != null) {
 			return recipe.getFertalizationAmount();
 		}

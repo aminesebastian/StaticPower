@@ -33,11 +33,11 @@ public class Research extends AbstractStaticPowerRecipe {
 			.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(research -> research.getId()),
 					Codec.STRING.fieldOf("title").forGetter(research -> research.getTitle()),
 					Codec.STRING.fieldOf("description").forGetter(research -> research.getDescription()),
-					Vector2D.CODEC
-							.optionalFieldOf("visual_offset", Vector2D.ZERO)
+					Vector2D.CODEC.optionalFieldOf("visual_offset", Vector2D.ZERO)
 							.forGetter(research -> research.getVisualOffset()),
 					Codec.INT.optionalFieldOf("sort_order", 0).forGetter(research -> research.getSortOrder()),
-					ResearchUnlock.CODEC.listOf().optionalFieldOf("unlocks", Collections.emptyList())
+					ResearchUnlock.CODEC
+							.listOf().optionalFieldOf("unlocks", Collections.emptyList())
 							.forGetter(research -> research.getUnlocks()),
 					ResearchIcon.CODEC.fieldOf("icon").forGetter(research -> research.getIcon()),
 					ResourceLocation.CODEC.listOf().fieldOf("prerequisites")
@@ -154,7 +154,7 @@ public class Research extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		// Check items if requested.
 		if (matchParams.shouldVerifyItems()) {
 			// Check if the input counts catch.

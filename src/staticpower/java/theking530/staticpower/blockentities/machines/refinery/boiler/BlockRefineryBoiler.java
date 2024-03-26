@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockBlockStateProperties;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 

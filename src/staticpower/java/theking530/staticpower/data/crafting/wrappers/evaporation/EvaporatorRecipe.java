@@ -53,7 +53,7 @@ public class EvaporatorRecipe extends AbstractMachineRecipe {
 		return ModRecipeTypes.EVAPORATOR_RECIPE_TYPE.get();
 	}
 
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		if (matchParams.hasFluids() && inputFluid.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts())) {
 			if (matchParams.shouldVerifyFluidAmounts()) {
 				return matchParams.getFluids()[0].getAmount() >= inputFluid.getAmount();

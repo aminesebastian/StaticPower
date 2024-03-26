@@ -1,4 +1,4 @@
-// 1.19.2	2023-10-14T16:02:16.9973785	Tags for minecraft:block
+// 1.19.2	2023-10-21T22:47:22.6118468	Tags for minecraft:block
 e6fe94a178e9fd2a2c492ba285268c204cabf15e data/forge/tags/blocks/concrete/black.json
 54ee5e92b6e496563517131e7b2e5f57ae5bddb1 data/forge/tags/blocks/concrete/blue.json
 0c7a478cdbdff1235888726394c8d54f9029fb94 data/forge/tags/blocks/concrete/brown.json
@@ -18,11 +18,11 @@ ae4b098c34918012d84fd5c06517b2ccdd23fc61 data/forge/tags/blocks/concrete/yellow.
 1ed8c6375235d71cbedaa412167804ea4fb8fc97 data/forge/tags/blocks/ores.json
 a2bda67c5d909a46c468ef0fe160e60f0bf49f1e data/forge/tags/blocks/ores/aluminum.json
 1158fcf06bd78d5574c197da71006072cc599cde data/forge/tags/blocks/ores/coal.json
-e10dcc3d253588da35280d811123dcd8ea25b33c data/forge/tags/blocks/ores/copper.json
+37c1e07dffc966dafe0401977955eba42bfaeccf data/forge/tags/blocks/ores/copper.json
 bc1fc1fe3eb47ce508f5cd1d239594763484349b data/forge/tags/blocks/ores/diamond.json
 3e0b4a795eda7e51c4f6f0c4fc66f833f540004e data/forge/tags/blocks/ores/emerald.json
-2103a8f8b5ea89756360692f00eff36c1669f8ab data/forge/tags/blocks/ores/gold.json
-385a3114ef01b4fe6109f57887dc06d38dfbed8f data/forge/tags/blocks/ores/iron.json
+fdf6b43d1eb98ab0a3c0823767b0e85ca26e2abf data/forge/tags/blocks/ores/gold.json
+11016ca20eef8807f79a3d6958510957c0501d65 data/forge/tags/blocks/ores/iron.json
 d6910f007934c61baf681e23511ff92bc5c46873 data/forge/tags/blocks/ores/lapis.json
 1ea484565567160e9431ce43a1d4348cc22b2426 data/forge/tags/blocks/ores/lead.json
 8b05808d79ab659bd72e616c0ed1a8d117985786 data/forge/tags/blocks/ores/magnesium.json

@@ -30,6 +30,15 @@ public class BlastFurnaceRecipeGenerator extends SCRecipeProvider<AlloyFurnaceRe
 				StaticPowerOutputItem.of(ModMaterials.STEEL.get(MaterialTypes.RAW_STOARGE_BLOCK).get()),
 				StaticPowerOutputItem.of(ModItems.Slag.get()), 9, 60 * 20 * 9);
 
+		addRecipe("steel_ingot", StaticPowerIngredient.of(ModMaterials.IRON.get(MaterialTypes.INGOT).get()),
+				StaticPowerOutputItem.of(ModMaterials.STEEL.get(MaterialTypes.INGOT).get()),
+				StaticPowerOutputItem.of(ModItems.Slag.get()), 1, 60 * 20);
+		
+		addRecipe("steel_ingot_block",
+				StaticPowerIngredient.of(ModMaterials.IRON.get(MaterialTypes.STORAGE_BLOCK).get()),
+				StaticPowerOutputItem.of(ModMaterials.STEEL.get(MaterialTypes.STORAGE_BLOCK).get()),
+				StaticPowerOutputItem.of(ModItems.Slag.get()), 9, 60 * 20 * 9);
+		
 		for (MaterialBundle bundle : ModMaterials.MATERIALS.values()) {
 			if (bundle.has(MaterialTypes.HEATED_INGOT)) {
 				addRecipe("heating/ingot_heated_" + bundle.getName(),

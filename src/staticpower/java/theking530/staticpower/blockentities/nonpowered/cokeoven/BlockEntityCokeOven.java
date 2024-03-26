@@ -22,8 +22,8 @@ import theking530.staticcore.blockentity.components.fluids.FluidTankComponent;
 import theking530.staticcore.blockentity.components.items.FluidContainerInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState.MultiblockStateEntry;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockComponent;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockState.MultiblockStateEntry;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -45,7 +45,7 @@ public class BlockEntityCokeOven extends BlockEntityBase implements IRecipeProce
 	public final RecipeProcessingComponent<CokeOvenRecipe> processingComponent;
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final LoopingSoundComponent furnaceSoundComponent;
-	public final MultiblockComponent<BlockEntityCokeOven> multiblockComponent;
+	public final MultiblockComponent multiblockComponent;
 
 	public BlockEntityCokeOven(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
@@ -66,8 +66,8 @@ public class BlockEntityCokeOven extends BlockEntityBase implements IRecipeProce
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContianerComponent",
 				fluidTankComponent).setAllowedModes(true, false));
 
-		registerComponent(multiblockComponent = new MultiblockComponent<BlockEntityCokeOven>("MultiblockComponent",
-				ModMultiblocks.COKE_OVEN.get()));
+		registerComponent(
+				multiblockComponent = new MultiblockComponent("MultiblockComponent", ModMultiblocks.COKE_OVEN.get()));
 	}
 
 	public void process() {
@@ -99,7 +99,7 @@ public class BlockEntityCokeOven extends BlockEntityBase implements IRecipeProce
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CokeOvenRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0));
 	}
 
 	@Override

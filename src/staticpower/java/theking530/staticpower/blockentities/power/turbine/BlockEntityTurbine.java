@@ -225,7 +225,7 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 		if (!hasTurbineBlades()) {
 			renderingState.bladesTier = null;
 			return ProcessingCheckState.error("Missing Turbine Blades!");
-		}else {
+		} else {
 			renderingState.bladesTier = this.getTurbileBladesItem().getTier();
 		}
 
@@ -233,7 +233,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 	}
 
 	public Optional<TurbineRecipe> getRecipe() {
-		RecipeMatchParameters matchParams = new RecipeMatchParameters(inputFluidTankComponent.getFluid());
+		RecipeMatchParameters matchParams = new RecipeMatchParameters(getTeamComponent().getOwningTeamId(),
+				inputFluidTankComponent.getFluid());
 		return CraftingUtilities.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams, getLevel());
 	}
 
@@ -272,7 +273,8 @@ public class BlockEntityTurbine extends BlockEntityMachine {
 				FluidStack fluid = new FluidStack(fluidState.getType(), 1000);
 
 				// Make recipe match parameters.
-				RecipeMatchParameters matchParams = new RecipeMatchParameters(fluid);
+				RecipeMatchParameters matchParams = new RecipeMatchParameters(getTeamComponent().getOwningTeamId(),
+						fluid);
 
 				// If there is a recipe for that fluid, attempt to suck it up.
 				if (CraftingUtilities.getRecipe(ModRecipeTypes.TURBINE_RECIPE_TYPE.get(), matchParams, getLevel())

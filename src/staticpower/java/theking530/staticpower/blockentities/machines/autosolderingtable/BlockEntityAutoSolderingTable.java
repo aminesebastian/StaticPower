@@ -92,7 +92,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 		for (int i = 0; i < patternInventory.getSlots(); i++) {
 			pattern[i] = patternInventory.getStackInSlot(i);
 		}
-		return new RecipeMatchParameters(pattern);
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), pattern);
 	}
 
 	@Override

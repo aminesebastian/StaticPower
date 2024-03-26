@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockBlockStateProperties;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.data.StaticPowerTiers;

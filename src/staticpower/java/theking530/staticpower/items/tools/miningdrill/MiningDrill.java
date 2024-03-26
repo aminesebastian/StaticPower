@@ -60,6 +60,8 @@ import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
+import theking530.staticcore.teams.ITeam;
+import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.world.WorldUtilities;
 import theking530.staticpower.StaticPowerConfig;
@@ -75,7 +77,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	public final ResourceLocation tier;
 
 	public MiningDrill(float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
-		super(new Item.Properties().setNoRepair(), attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_SHOVEL));
+		super(new Item.Properties().setNoRepair(), attackDamageIn, attackSpeedIn,
+				Arrays.asList(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_SHOVEL));
 		this.tier = tier;
 	}
 
@@ -114,8 +117,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		// Only show the animation if the stored power is the same (didn't change).
 		// This is so we don't SPAM the animation on charge or discharge.
-		return super.shouldCauseBlockBreakReset(oldStack, newStack)
-				&& EnergyHandlerItemStackUtilities.getStoredPower(newStack) == EnergyHandlerItemStackUtilities.getStoredPower(oldStack);
+		return super.shouldCauseBlockBreakReset(oldStack, newStack) && EnergyHandlerItemStackUtilities
+				.getStoredPower(newStack) == EnergyHandlerItemStackUtilities.getStoredPower(oldStack);
 	}
 
 	@Override
@@ -130,7 +133,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	public boolean isReadyToMine(ItemStack itemstack) {
-		return getCompoundItemCapability(itemstack).isComplete() && EnergyHandlerItemStackUtilities.getStoredPower(itemstack) > 0;
+		return getCompoundItemCapability(itemstack).isComplete()
+				&& EnergyHandlerItemStackUtilities.getStoredPower(itemstack) > 0;
 	}
 
 	@Override
@@ -155,7 +159,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	 * When right clicked, open the drill UI.
 	 */
 	@Override
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
+			InteractionHand hand, ItemStack item) {
 		if (!world.isClientSide && player.isShiftKeyDown()) {
 			NetworkGUI.openScreen((ServerPlayer) player, new MiningDrillContainerProvider(item), buff -> {
 				buff.writeInt(player.getInventory().selected);
@@ -166,8 +171,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	@Override
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience,
-			boolean isCreative) {
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player,
+			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 		// If the player is in creative, do nothing.
 		if (isCreative) {
 			return;
@@ -175,7 +180,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 		// Get the drill bit attributes.
 		ItemStack drillBit = getCompoundItemCapability(heldItem).getPartInSlot(MINING_DRILL_SLOT);
-		IAttributable drillBitAttributes = drillBit.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
+		IAttributable drillBitAttributes = drillBit.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE)
+				.orElse(null);
 
 		// Allocate a list of the items that would be dropped.
 		List<ItemStack> droppableItems = Block.getDrops(state, player.getLevel(), pos, tileEntity, player, heldItem);
@@ -187,14 +193,16 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			if (drillBitAttributes.hasAttribute(ModAttributes.Grinding.get())) {
 				// Get the grinding attribute and check if its enabled.
 				boolean grindingAttribute = drillBitAttributes.getAttributeValue(ModAttributes.Grinding.get());
-				handleGrindingAttribute(grindingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
+				handleGrindingAttribute(grindingAttribute, droppableItems, state, block, pos, player, tileEntity,
+						heldItem, experience, isCreative);
 			}
 
 			// Check for the smelting attribute. If we do, handle it.
 			if (drillBitAttributes.hasAttribute(ModAttributes.Smelting.get())) {
 				// Get the smelting attribute.
 				boolean smeltingAttribute = drillBitAttributes.getAttributeValue(ModAttributes.Smelting.get());
-				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
+				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity,
+						heldItem, experience, isCreative);
 			}
 		}
 
@@ -212,8 +220,9 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem, true);
 	}
 
-	protected boolean handleGrindingAttribute(boolean grindingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
-			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleGrindingAttribute(boolean grindingAttribute, List<ItemStack> droppableItems,
+			BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity,
+			ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was ground.
 		boolean wasAnythingGround = false;
@@ -227,8 +236,11 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			for (int i = droppableItems.size() - 1; i >= 0; i--) {
 				// Get the droppable stack and get the grinding recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
-				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
-				Optional<GrinderRecipe> recipe = player.level.getRecipeManager().getRecipeFor(ModRecipeTypes.GRINDER_RECIPE_TYPE.get(), matchParameters, player.level);
+				ITeam playerTeam = TeamManager.get(player.getLevel()).getTeamForPlayer(player);
+				RecipeMatchParameters matchParameters = new RecipeMatchParameters(
+						playerTeam != null ? playerTeam.getId() : null, droppableStack);
+				Optional<GrinderRecipe> recipe = player.level.getRecipeManager()
+						.getRecipeFor(ModRecipeTypes.GRINDER_RECIPE_TYPE.get(), matchParameters, player.level);
 
 				// If the recipe is present, create the ground droppables.
 				if (recipe.isPresent()) {
@@ -256,8 +268,9 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		return wasAnythingGround;
 	}
 
-	protected boolean handleSmeltingAttribute(boolean smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
-			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleSmeltingAttribute(boolean smeltingAttribute, List<ItemStack> droppableItems,
+			BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity,
+			ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was smelted.
 		boolean wasAnythingSmelted = false;
@@ -268,7 +281,9 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			for (int i = droppableItems.size() - 1; i >= 0; i--) {
 				// Get the droppable stack and get the furnace recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
-				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
+				ITeam playerTeam = TeamManager.get(player.getLevel()).getTeamForPlayer(player);
+				RecipeMatchParameters matchParameters = new RecipeMatchParameters(
+						playerTeam != null ? playerTeam.getId() : null, droppableStack);
 				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING,
 						new SimpleContainer(matchParameters.getItems()[0]), player.getLevel());
 
@@ -290,7 +305,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			ItemStack bit = getCompoundItemCapability(stack).getPartInSlot(MINING_DRILL_SLOT);
 			bit.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).ifPresent(attributable -> {
 				if (attributable.hasAttribute(ModAttributes.Fortune.get())) {
-					int fLevel = ModAttributes.Fortune.get().getFortuneLevelWithChance(attributable.getAttribute(ModAttributes.Fortune.get()));
+					int fLevel = ModAttributes.Fortune.get()
+							.getFortuneLevelWithChance(attributable.getAttribute(ModAttributes.Fortune.get()));
 					stack.enchant(Enchantments.BLOCK_FORTUNE, fLevel);
 				}
 				if (attributable.hasAttribute(ModAttributes.SilkTouch.get())) {
@@ -314,7 +330,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 		// Update the energy usage on client and server. 1 SV per block.
 		if (!player.isCreative()) {
-			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size() * StaticPowerConfig.SERVER.drillPowerUsePerBlock.get(), false);
+			EnergyHandlerItemStackUtilities.drainPower(stack,
+					blocksMined.size() * StaticPowerConfig.SERVER.drillPowerUsePerBlock.get(), false);
 		}
 
 		// Remove the enchantments.
@@ -324,9 +341,13 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(Component.literal(" ").append(GuiTextUtilities.formatNumberAsString(StaticCoreConfig.getTier(tier).toolConfiguration.drillSpeedMultiplier.get()))
-				.append("x ").append(Component.translatable("gui.staticpower.tool_speed_multiplier")).withStyle(ChatFormatting.DARK_GREEN));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+			boolean isShowingAdvanced) {
+		tooltip.add(Component.literal(" ")
+				.append(GuiTextUtilities.formatNumberAsString(
+						StaticCoreConfig.getTier(tier).toolConfiguration.drillSpeedMultiplier.get()))
+				.append("x ").append(Component.translatable("gui.staticpower.tool_speed_multiplier"))
+				.withStyle(ChatFormatting.DARK_GREEN));
 
 		tooltip.add(Component.literal(" "));
 
@@ -338,7 +359,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			ItemStack drillBit = getCompoundItemCapability(stack).getPartInSlot(MINING_DRILL_SLOT);
 			DrillBit drillBitItem = (DrillBit) drillBit.getItem();
 			drillBitItem.getTooltip(drillBit, worldIn, tooltip, isShowingAdvanced);
-			tooltip.add(Component.translatable("gui.staticcore.mining_speed").append(" ").append(GuiTextUtilities.formatUnitRateToString(this.getEfficiency(stack))));
+			tooltip.add(Component.translatable("gui.staticcore.mining_speed").append(" ")
+					.append(GuiTextUtilities.formatUnitRateToString(this.getEfficiency(stack))));
 			AttributeUtilities.addTooltipsForAttribute(drillBit, tooltip, isShowingAdvanced);
 		}
 	}
@@ -361,8 +383,10 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
 			return new ItemStackMultiCapabilityProvider(stack, nbt)
-					.addCapability(new ItemStackCapabilityInventory("default", stack, 5)).addCapability(new ItemStackStaticPowerEnergyCapability("default", stack,
-							getCapacity(), getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower(), true, false))
+					.addCapability(new ItemStackCapabilityInventory("default", stack, 5))
+					.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getCapacity(),
+							getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower(),
+							true, false))
 					.addCapability(createCompoundItemCapability(stack, nbt));
 		}
 		return null;
@@ -370,7 +394,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
-		return ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction) || ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction);
+		return ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction)
+				|| ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction);
 	}
 
 	@Override
@@ -390,7 +415,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new MiningDrillItemModel(existingModel);
 	}
 

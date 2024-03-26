@@ -1,4 +1,4 @@
-package theking530.staticcore.blockentity.components.multiblock.newstyle;
+package theking530.staticcore.blockentity.components.multiblock;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +11,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.StaticCoreRegistries;
 import theking530.staticcore.utilities.NBTUtilities;
 
 public class MultiblockState {
@@ -32,15 +34,18 @@ public class MultiblockState {
 		}
 	}
 
-	public static final MultiblockState FAILED = new MultiblockState(BlockPos.ZERO, null,
+	public static final MultiblockState FAILED = new MultiblockState(null, BlockPos.ZERO, null,
 			MultiBlockFormationStatus.FAILED);
+	private final AbstractMultiblockPattern pattern;
 	private final BlockPos initialPos;
 	private final Direction facingDirection;
 	private final MultiBlockFormationStatus status;
 	private final TreeMap<BlockPos, MultiblockStateEntry> blocks;
 	private BlockPos masterPos;
 
-	public MultiblockState(BlockPos initialPos, Direction facingDirection, MultiBlockFormationStatus status) {
+	public MultiblockState(AbstractMultiblockPattern pattern, BlockPos initialPos, Direction facingDirection,
+			MultiBlockFormationStatus status) {
+		this.pattern = pattern;
 		this.facingDirection = facingDirection;
 		this.initialPos = initialPos;
 		this.masterPos = null;
@@ -48,12 +53,16 @@ public class MultiblockState {
 		this.status = status;
 	}
 
+	public AbstractMultiblockPattern getPattern() {
+		return pattern;
+	}
+
 	public Collection<MultiblockStateEntry> getBlocks() {
 		return blocks.values();
 	}
 
 	public boolean isWellFormed() {
-		return status.isSuccessful() && facingDirection != null && !blocks.isEmpty();
+		return pattern != null && status.isSuccessful() && facingDirection != null && !blocks.isEmpty();
 	}
 
 	public MultiBlockFormationStatus getStatus() {
@@ -110,6 +119,7 @@ public class MultiblockState {
 			return output;
 		}
 
+		output.putString("pattern", StaticCoreRegistries.MultiblockTypes().getKey(pattern).toString());
 		output.putLong("initialPos", initialPos.asLong());
 		output.putLong("masterPos", masterPos.asLong());
 		output.putByte("facing", (byte) facingDirection.ordinal());
@@ -126,6 +136,12 @@ public class MultiblockState {
 			return FAILED;
 		}
 
+		ResourceLocation patternKey = new ResourceLocation(nbt.getString("pattern"));
+		AbstractMultiblockPattern pattern = StaticCoreRegistries.MultiblockTypes().getValue(patternKey);
+		if (pattern == null) {
+			return FAILED;
+		}
+
 		MultiBlockFormationStatus status = MultiBlockFormationStatus.deserialize(nbt.getCompound("status"));
 		BlockPos initialPos = BlockPos.of(nbt.getLong("initialPos"));
 		BlockPos masterPos = BlockPos.of(nbt.getLong("masterPos"));
@@ -135,7 +151,7 @@ public class MultiblockState {
 					return MultiblockStateEntry.fromNBT((CompoundTag) tag);
 				});
 
-		MultiblockState newState = new MultiblockState(initialPos, facingDirection, status);
+		MultiblockState newState = new MultiblockState(pattern, initialPos, facingDirection, status);
 		for (MultiblockStateEntry entry : entries) {
 			newState.addEntry(entry.pos(), entry.blockState(), entry.patternKey(), entry.pos().equals(masterPos));
 		}

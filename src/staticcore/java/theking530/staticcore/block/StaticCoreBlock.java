@@ -48,7 +48,7 @@ import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.blockentity.BlockEntityBase;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockBlockStateProperties;
 import theking530.staticcore.utilities.IBlockItemCreativeTabProvider;
 import theking530.staticcore.utilities.ITooltipProvider;
 

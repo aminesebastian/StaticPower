@@ -33,7 +33,7 @@ public class SolidFuelRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		return ItemUtilities.areItemStacksStackable(item, matchParams.getItems()[0]);
 	}
 

@@ -91,7 +91,7 @@ public class CarpenterRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		// If there aren't enough items, just return false.
 		if (matchParams.getItems().length != 9) {
 			return false;

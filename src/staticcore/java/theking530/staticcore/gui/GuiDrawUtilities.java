@@ -612,15 +612,20 @@ public class GuiDrawUtilities {
 		RenderSystem.applyModelViewMatrix();
 
 		if (item.isBarVisible()) {
-			int barWidth = item.getBarWidth();
-			int barOffset = (16 - barWidth) / 2;
+			pose.pushPose();
+			pose.translate(8.0D, 8.0D, 0.0D);
+			pose.scale(width / 16.0f, height/ 16.0f, 1.0F);
+			pose.translate(-8.0D, -8.0D, 0.0D);
+			float barWidth = item.getBarWidth();
+			float barOffset = (16 - barWidth) / 2;
 			int rawBarColor = item.getBarColor();
 			SDColor barColor = SDColor.fromEncodedInteger(rawBarColor);
 			barColor = barColor.fromEightBitToFloat();
 			barColor.setAlpha(1);
 
-			GuiDrawUtilities.drawRectangle(pose, barWidth, 2, x + barOffset + 1, y + 12.5f, z + 1, SDColor.BLACK);
-			GuiDrawUtilities.drawRectangle(pose, barWidth, 1, x + barOffset + 1, y + 12.5f, z + 2, barColor);
+			GuiDrawUtilities.drawRectangle(pose, barWidth, 2, x + barOffset, y + 13f, z + 1, SDColor.BLACK);
+			GuiDrawUtilities.drawRectangle(pose, barWidth, 1, x + barOffset, y + 13f, z + 2, barColor);
+			pose.popPose();
 		}
 
 		RenderSystem.disableDepthTest();

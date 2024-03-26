@@ -1,4 +1,4 @@
-package theking530.staticcore.blockentity.components.multiblock.newstyle.freeform;
+package theking530.staticcore.blockentity.components.multiblock.freeform;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,11 +16,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.blockentity.components.multiblock.AbstractMultiblockPattern;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockBlockStateProperties;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockMatchClass;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockState;
 import theking530.staticcore.blockentity.components.multiblock.MultiblockStateBuilder;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockMatchClass;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
 
 public class FreeformMultiblockPattern extends AbstractMultiblockPattern {
 	private Map<Character, MultiblockMatchClass> definitions;
@@ -84,7 +84,8 @@ public class FreeformMultiblockPattern extends AbstractMultiblockPattern {
 	}
 
 	@Override
-	public boolean isValidBlockForPosition(BlockState state, BlockPos relativePos, boolean bypassExistingCheck) {
+	public boolean isValidBlockForPosition(Level level, BlockState state, BlockPos absolutePos, BlockPos relativePos,
+			boolean bypassExistingCheck) {
 		if (!bypassExistingCheck && state.hasProperty(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
 			if (state.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
 				return false;
@@ -95,7 +96,7 @@ public class FreeformMultiblockPattern extends AbstractMultiblockPattern {
 	}
 
 	@Override
-	public MultiblockState isStateStillValid(MultiblockState existingState, Level level) {
+	public MultiblockState isStateStillValid(Level level, MultiblockState existingState) {
 		return checkWellFormedInternal(level, existingState.getInitialPos(), true);
 	}
 
@@ -105,7 +106,7 @@ public class FreeformMultiblockPattern extends AbstractMultiblockPattern {
 	}
 
 	private MultiblockState checkWellFormedInternal(Level level, BlockPos startPos, boolean bypassExistingCheck) {
-		if (!isValidBlockForPosition(level.getBlockState(startPos), startPos, bypassExistingCheck)) {
+		if (!isValidBlockForPosition(level, level.getBlockState(startPos), null, startPos, bypassExistingCheck)) {
 			return MultiblockState.FAILED;
 		}
 
@@ -129,7 +130,8 @@ public class FreeformMultiblockPattern extends AbstractMultiblockPattern {
 
 			for (Direction dir : Direction.values()) {
 				BlockPos newTestPos = testPos.relative(dir);
-				if (isValidBlockForPosition(level.getBlockState(newTestPos), newTestPos, bypassExistingCheck)) {
+				if (isValidBlockForPosition(level, level.getBlockState(newTestPos), newTestPos, newTestPos,
+						bypassExistingCheck)) {
 					dfsStack.push(newTestPos);
 				}
 			}

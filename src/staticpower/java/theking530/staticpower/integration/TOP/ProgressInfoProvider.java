@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.components.ComponentUtilities;
 import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
 import theking530.staticcore.blockentity.components.control.processing.Timer;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockComponent;
 import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;

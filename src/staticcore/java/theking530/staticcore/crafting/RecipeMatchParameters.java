@@ -22,10 +22,20 @@ public class RecipeMatchParameters implements Container {
 	private boolean verifyFluids;
 	private boolean verifyFluidAmounts;
 
-	private int storedEnergy;
+	private String teamId;
+	private boolean verifyResearchRestrictions;
+
 	private final HashMap<String, Object> extraProperties;
 
-	public RecipeMatchParameters() {
+	public RecipeMatchParameters(String teamId) {
+		if (teamId == null || teamId.isBlank()) {
+			this.teamId = null;
+			verifyResearchRestrictions = false;
+		} else {
+			this.teamId = teamId;
+			verifyResearchRestrictions = true;
+		}
+
 		customParameters = new CompoundTag();
 		extraProperties = new HashMap<String, Object>();
 		verifyItemCounts = true;
@@ -36,17 +46,32 @@ public class RecipeMatchParameters implements Container {
 	}
 
 	public RecipeMatchParameters(ItemStack... items) {
-		this();
+		this("");
+		this.items = items;
+	}
+
+	public RecipeMatchParameters(String teamId, ItemStack... items) {
+		this(teamId);
 		this.items = items;
 	}
 
 	public RecipeMatchParameters(BlockState... blocks) {
-		this();
+		this("");
+		this.blocks = blocks;
+	}
+
+	public RecipeMatchParameters(String teamId, BlockState... blocks) {
+		this(teamId);
 		this.blocks = blocks;
 	}
 
 	public RecipeMatchParameters(FluidStack... fluids) {
-		this();
+		this("");
+		this.fluids = fluids;
+	}
+
+	public RecipeMatchParameters(String teamId, FluidStack... fluids) {
+		this(teamId);
 		this.fluids = fluids;
 	}
 
@@ -103,6 +128,19 @@ public class RecipeMatchParameters implements Container {
 		return this;
 	}
 
+	public boolean shouldVerifyResearchRestrictions() {
+		return verifyResearchRestrictions;
+	}
+
+	public String getTeamId() {
+		return teamId;
+	}
+
+	public RecipeMatchParameters ignoreResearchRestrictions() {
+		verifyResearchRestrictions = false;
+		return this;
+	}
+
 	public ItemStack[] getItems() {
 		return items;
 	}
@@ -151,15 +189,6 @@ public class RecipeMatchParameters implements Container {
 		return this;
 	}
 
-	public int getStoredEnergy() {
-		return storedEnergy;
-	}
-
-	public RecipeMatchParameters setStoredEnergy(int energy) {
-		this.storedEnergy = energy;
-		return this;
-	}
-
 	public RecipeMatchParameters addAdditionalProperty(String key, Object value) {
 		extraProperties.put(key, value);
 		return this;
@@ -190,7 +219,7 @@ public class RecipeMatchParameters implements Container {
 
 	@Override
 	public ItemStack getItem(int p_18941_) {
-		return null;
+		return items[p_18941_];
 	}
 
 	@Override
@@ -205,7 +234,7 @@ public class RecipeMatchParameters implements Container {
 
 	@Override
 	public void setItem(int p_18944_, ItemStack p_18945_) {
-
+		items[p_18944_] = p_18945_;
 	}
 
 	@Override

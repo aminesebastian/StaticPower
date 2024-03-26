@@ -428,8 +428,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		lastMatrixStack.translate(screenSpacePosition.getX() - getPosition().getX(),
 				screenSpacePosition.getY() - getPosition().getY(), 0);
 
-		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX() * scale.getX(),
-				this.size.getY() * scale.getY());
+		updateBounds(cachedBounds, screenSpacePosition, scale);
 
 		if (isVisible() && isEnabled()) {
 			if (isHovered()) {
@@ -438,6 +437,11 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 				ticksHovered = 0;
 			}
 		}
+	}
+
+	protected void updateBounds(RectangleBounds bounds, Vector2D screenSpacePosition, Vector3D scale) {
+		bounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX() * scale.getX(),
+				this.size.getY() * scale.getY());
 	}
 
 	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX,

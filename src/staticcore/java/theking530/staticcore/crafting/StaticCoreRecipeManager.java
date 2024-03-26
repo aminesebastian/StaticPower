@@ -18,6 +18,8 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import theking530.staticcore.StaticCore;
+import theking530.staticcore.crafting.researchwrappers.ShapedResearchWrapper;
+import theking530.staticcore.crafting.researchwrappers.ShapelessResearchWrapper;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
 import theking530.staticcore.research.Research;
 import theking530.staticcore.research.ResearchUnlock;
@@ -115,6 +117,7 @@ public class StaticCoreRecipeManager {
 		// Handle research replacements.
 		handleCraftingResearchRecipeReplacement(manager,
 				newRecipes.getOrDefault(RecipeType.CRAFTING, new HashMap<ResourceLocation, Recipe<?>>()));
+
 		// Replace the recipes.
 		// TODO: This feels so dirty, wish I could just add recipes.
 		List<Recipe<?>> collectedNewRecipes = newRecipes.values().stream().flatMap((x) -> x.values().stream()).toList();
@@ -191,14 +194,25 @@ public class StaticCoreRecipeManager {
 
 		// Replace any recipes that need to be replaced.
 		for (Recipe<?> recipe : manager.getAllRecipesFor(RecipeType.CRAFTING)) {
-			if (LOCKED_RECIPES.containsKey(recipe.getId())) {
-				if (recipe instanceof ShapedRecipe) {
-					ShapedRecipe craftingRecipe = (ShapedRecipe) recipe;
-					newRecipes.put(recipe.getId(), craftingRecipe);
-				} else if (recipe instanceof ShapelessRecipe) {
-					ShapelessRecipe craftingRecipe = (ShapelessRecipe) recipe;
-					newRecipes.put(recipe.getId(), craftingRecipe);
-				}
+			if (!LOCKED_RECIPES.containsKey(recipe.getId())) {
+				continue;
+			}
+
+			Set<ResourceLocation> requiredResearch = LOCKED_RECIPES.get(recipe.getId());
+			if (requiredResearch == null || requiredResearch.isEmpty()) {
+				continue;
+			}
+
+			if (recipe instanceof ShapedRecipe) {
+				ShapedRecipe craftingRecipe = (ShapedRecipe) recipe;
+				ShapedResearchWrapper newRecipe = new ShapedResearchWrapper(requiredResearch, craftingRecipe);
+				newRecipes.put(recipe.getId(), newRecipe);
+			}
+			
+			if (recipe instanceof ShapelessRecipe) {
+				ShapelessRecipe craftingRecipe = (ShapelessRecipe) recipe;
+				ShapelessResearchWrapper newRecipe = new ShapelessResearchWrapper(requiredResearch, craftingRecipe);
+				newRecipes.put(recipe.getId(), newRecipe);
 			}
 		}
 	}

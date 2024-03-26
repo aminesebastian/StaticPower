@@ -12,7 +12,6 @@ import theking530.staticcore.container.StaticPowerTileEntityContainer;
 import theking530.staticcore.container.slots.OutputSlot;
 import theking530.staticcore.container.slots.StaticPowerContainerSlot;
 import theking530.staticcore.container.slots.UpgradeItemSlot;
-import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.slots.BatteryItemSlot;
@@ -20,7 +19,8 @@ import theking530.staticpower.items.upgrades.BaseUpgrade;
 
 public class ContainerCentrifuge extends StaticPowerTileEntityContainer<BlockEntityCentrifuge> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerCentrifuge, GuiCentrifuge> TYPE = new ContainerTypeAllocator<>("machine_centrifuge", ContainerCentrifuge::new);
+	public static final ContainerTypeAllocator<ContainerCentrifuge, GuiCentrifuge> TYPE = new ContainerTypeAllocator<>(
+			"machine_centrifuge", ContainerCentrifuge::new);
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE.setScreenFactory(GuiCentrifuge::new);
@@ -58,9 +58,6 @@ public class ContainerCentrifuge extends StaticPowerTileEntityContainer<BlockEnt
 
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
-		if (getTileEntity().processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent() && !mergeItemStack(stack, 0)) {
-			return true;
-		}
 		if (EnergyHandlerItemStackUtilities.isEnergyContainer(stack) && !mergeItemStack(stack, 1)) {
 			return true;
 		}

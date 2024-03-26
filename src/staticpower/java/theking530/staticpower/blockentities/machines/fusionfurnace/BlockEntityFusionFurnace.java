@@ -71,8 +71,9 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRec
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FusionFurnaceRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1),
-				inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3), inputInventory.getStackInSlot(4));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0),
+				inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
+				inputInventory.getStackInSlot(4));
 	}
 
 	@Override

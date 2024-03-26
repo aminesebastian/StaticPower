@@ -60,7 +60,9 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRe
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
 				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 					public boolean canInsertItem(int slot, ItemStack stack) {
-						return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts())
+						return processingComponent
+								.getRecipe(new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), stack)
+										.ignoreItemCounts())
 								.isPresent();
 					}
 				}));
@@ -98,7 +100,7 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRe
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<SmeltingRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0));
 	}
 
 	@Override

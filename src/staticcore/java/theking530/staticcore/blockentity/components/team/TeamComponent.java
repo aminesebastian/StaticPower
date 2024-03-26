@@ -46,6 +46,14 @@ public class TeamComponent extends AbstractBlockEntityComponent implements ITeam
 		return TeamManager.get(getLevel()).getTeamById(teamId);
 	}
 
+	public String getOwningTeamId() {
+		ITeam owningTeam = getOwningTeam();
+		if (owningTeam == null) {
+			return null;
+		}
+		return owningTeam.getId();
+	}
+
 	@Override
 	public boolean hasTeam() {
 		return teamId != null;

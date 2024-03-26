@@ -74,9 +74,8 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 
 		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank",
 				tierObject.defaultTankCapacity.get(), (fluidStack) -> {
-					return processingComponent
-							.getRecipe(new RecipeMatchParameters().setFluids(fluidStack).ignoreFluidAmounts())
-							.isPresent();
+					return processingComponent.getRecipe(new RecipeMatchParameters(getTeamComponent().getOwningTeamId())
+							.setFluids(fluidStack).ignoreFluidAmounts()).isPresent();
 				}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		inputTankComponent.setAutoSyncPacketsEnabled(true);
 
@@ -99,7 +98,7 @@ public class BlockEntityEvaporator extends BlockEntityBase implements IRecipePro
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<EvaporatorRecipe> component) {
-		return new RecipeMatchParameters().setFluids(inputTankComponent.getFluid());
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId()).setFluids(inputTankComponent.getFluid());
 	}
 
 	@Override

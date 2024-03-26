@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockBlockStateProperties;
 import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlock;
 
 public class BlockRefineryController extends BaseRefineryBlock {

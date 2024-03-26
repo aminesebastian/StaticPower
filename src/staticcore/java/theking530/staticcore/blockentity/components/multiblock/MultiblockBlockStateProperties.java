@@ -1,4 +1,4 @@
-package theking530.staticcore.blockentity.components.multiblock.newstyle;
+package theking530.staticcore.blockentity.components.multiblock;
 
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 

@@ -52,7 +52,7 @@ public class TurbineRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		if (matchParams.shouldVerifyFluids() && matchParams.hasFluids()) {
 			return input.test(matchParams.getFluids()[0], matchParams.shouldVerifyFluidAmounts());
 		}

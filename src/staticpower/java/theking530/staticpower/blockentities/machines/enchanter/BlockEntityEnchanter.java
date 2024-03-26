@@ -60,7 +60,9 @@ public class BlockEntityEnchanter extends BlockEntityMachine implements IRecipeP
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 3, MachineSideMode.Input)
 				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 					public boolean canInsertItem(int slot, ItemStack stack) {
-						return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts())
+						return processingComponent
+								.getRecipe(new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), stack)
+										.ignoreItemCounts())
 								.isPresent();
 					}
 				}));
@@ -119,9 +121,9 @@ public class BlockEntityEnchanter extends BlockEntityMachine implements IRecipeP
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<EnchanterRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1),
-				inputInventory.getStackInSlot(2), enchantableInventory.getStackInSlot(0))
-				.setFluids(fluidTankComponent.getFluid());
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0),
+				inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2),
+				enchantableInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
 	}
 
 	@Override

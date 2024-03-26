@@ -99,10 +99,10 @@ public class BlockEntityCarpenter extends BlockEntityMachine implements IRecipeP
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CarpenterRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1),
-				inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3), inputInventory.getStackInSlot(4),
-				inputInventory.getStackInSlot(5), inputInventory.getStackInSlot(6), inputInventory.getStackInSlot(7),
-				inputInventory.getStackInSlot(8));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0),
+				inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
+				inputInventory.getStackInSlot(4), inputInventory.getStackInSlot(5), inputInventory.getStackInSlot(6),
+				inputInventory.getStackInSlot(7), inputInventory.getStackInSlot(8));
 	}
 
 	@Override

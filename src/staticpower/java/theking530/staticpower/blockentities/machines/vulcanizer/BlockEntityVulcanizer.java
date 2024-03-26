@@ -77,7 +77,9 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 		// Setup the fluid tanks and servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get(),
 				(fluidStack) -> {
-					return processingComponent.getRecipe(new RecipeMatchParameters(fluidStack)).isPresent();
+					return processingComponent
+							.getRecipe(new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), fluidStack))
+							.isPresent();
 				}));
 
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
@@ -99,7 +101,8 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<VulcanizerRecipe> component) {
-		return new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(inputInventory.getStackInSlot(0));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), fluidTankComponent.getFluid())
+				.setItems(inputInventory.getStackInSlot(0));
 	}
 
 	@Override

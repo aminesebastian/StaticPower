@@ -63,6 +63,8 @@ import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
+import theking530.staticcore.teams.ITeam;
+import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.world.WorldUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.ChainsawItemModel;
@@ -77,7 +79,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 	public final ResourceLocation tier;
 
 	public Chainsaw(float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
-		super(new Item.Properties().setNoRepair(), attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_AXE));
+		super(new Item.Properties().setNoRepair(), attackDamageIn, attackSpeedIn,
+				Arrays.asList(BlockTags.MINEABLE_WITH_AXE));
 		this.tier = tier;
 	}
 
@@ -110,8 +113,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		// Only show the animation if the stored power is the same (didn't change).
 		// This is so we don't SPAM the animation on charge or discharge.
-		return super.shouldCauseBlockBreakReset(oldStack, newStack)
-				&& EnergyHandlerItemStackUtilities.getStoredPower(newStack) == EnergyHandlerItemStackUtilities.getStoredPower(oldStack);
+		return super.shouldCauseBlockBreakReset(oldStack, newStack) && EnergyHandlerItemStackUtilities
+				.getStoredPower(newStack) == EnergyHandlerItemStackUtilities.getStoredPower(oldStack);
 	}
 
 	@Override
@@ -134,7 +137,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 
 	@Override
 	public boolean isReadyToMine(ItemStack itemstack) {
-		return getCompoundItemCapability(itemstack).isComplete() && EnergyHandlerItemStackUtilities.getStoredPower(itemstack) > 0;
+		return getCompoundItemCapability(itemstack).isComplete()
+				&& EnergyHandlerItemStackUtilities.getStoredPower(itemstack) > 0;
 	}
 
 	@Override
@@ -148,7 +152,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 			blade.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).ifPresent(attributable -> {
 				if (attributable.hasAttribute(ModAttributes.Haste.get())) {
 					AttributeInstance<Number> hasteDefenition = attributable.getAttribute(ModAttributes.Haste.get());
-					efficiency.set(efficiency.get() * (((hasteDefenition.getValue().floatValue() * 10.0f) / 300.0f) + 1.0f));
+					efficiency.set(
+							efficiency.get() * (((hasteDefenition.getValue().floatValue() * 10.0f) / 300.0f) + 1.0f));
 				}
 			});
 		}
@@ -159,7 +164,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 	 * When right clicked, open the UI.
 	 */
 	@Override
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
+			InteractionHand hand, ItemStack item) {
 		if (!world.isClientSide && player.isShiftKeyDown()) {
 			NetworkGUI.openScreen((ServerPlayer) player, new ChainsawContainerProvider(item), buff -> {
 				buff.writeInt(player.getInventory().selected);
@@ -169,8 +175,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		return InteractionResultHolder.pass(item);
 	}
 
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience,
-			boolean isCreative) {
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player,
+			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 		// If the player is in creative, do nothing.
 		if (isCreative) {
 			return;
@@ -188,8 +194,10 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 			// Check for the smelting attribute. If we do, handle it.
 			if (drillBitAttributes.hasAttribute(ModAttributes.Smelting.get())) {
 				// Get the smelting attribute.
-				AttributeInstance<Boolean> smeltingAttribute = drillBitAttributes.getAttribute(ModAttributes.Smelting.get());
-				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
+				AttributeInstance<Boolean> smeltingAttribute = drillBitAttributes
+						.getAttribute(ModAttributes.Smelting.get());
+				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity,
+						heldItem, experience, isCreative);
 			}
 		}
 
@@ -207,8 +215,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem, true);
 	}
 
-	protected boolean handleSmeltingAttribute(AttributeInstance<Boolean> smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
-			ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleSmeltingAttribute(AttributeInstance<Boolean> smeltingAttribute,
+			List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
+			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was smelted.
 		boolean wasAnythingSmelted = false;
@@ -219,7 +228,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 			for (int i = droppableItems.size() - 1; i >= 0; i--) {
 				// Get the droppable stack and get the furnace recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
-				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
+				ITeam playerTeam = TeamManager.get(player.getLevel()).getTeamForPlayer(player);
+				RecipeMatchParameters matchParameters = new RecipeMatchParameters(
+						playerTeam != null ? playerTeam.getId() : null, droppableStack);
 				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING,
 						new SimpleContainer(matchParameters.getItems()[0]), player.getLevel());
 
@@ -249,15 +260,20 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 
 		// Update the energy usage on client and server. 1SV per block.
 		if (!player.isCreative()) {
-			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size() * StaticPowerConfig.SERVER.chainsawPowerUsePerBlock.get(), false);
+			EnergyHandlerItemStackUtilities.drainPower(stack,
+					blocksMined.size() * StaticPowerConfig.SERVER.chainsawPowerUsePerBlock.get(), false);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(Component.literal(" ").append(GuiTextUtilities.formatNumberAsString(StaticCoreConfig.getTier(tier).toolConfiguration.chainsawSpeedMultiplier.get()))
-				.append("x ").append(Component.translatable("gui.staticpower.tool_speed_multiplier")).withStyle(ChatFormatting.DARK_GREEN));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+			boolean isShowingAdvanced) {
+		tooltip.add(Component.literal(" ")
+				.append(GuiTextUtilities.formatNumberAsString(
+						StaticCoreConfig.getTier(tier).toolConfiguration.chainsawSpeedMultiplier.get()))
+				.append("x ").append(Component.translatable("gui.staticpower.tool_speed_multiplier"))
+				.withStyle(ChatFormatting.DARK_GREEN));
 
 		tooltip.add(Component.literal(" "));
 
@@ -269,7 +285,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 			ItemStack blade = getCompoundItemCapability(stack).getPartInSlot(CHAINSAW_BLADE_SLOT);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
 			bladeItem.getTooltip(blade, worldIn, tooltip, isShowingAdvanced);
-			tooltip.add(Component.translatable("gui.staticcore.mining_speed").append(" ").append(String.valueOf(getEfficiency(stack))));
+			tooltip.add(Component.translatable("gui.staticcore.mining_speed").append(" ")
+					.append(String.valueOf(getEfficiency(stack))));
 			AttributeUtilities.addTooltipsForAttribute(blade, tooltip, isShowingAdvanced);
 		}
 	}
@@ -292,8 +309,10 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		if (StaticPowerConfig.SERVER_SPEC.isLoaded()) {
 			return new ItemStackMultiCapabilityProvider(stack, nbt)
-					.addCapability(new ItemStackCapabilityInventory("default", stack, 5)).addCapability(new ItemStackStaticPowerEnergyCapability("default", stack,
-							getCapacity(), getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower(), true, false))
+					.addCapability(new ItemStackCapabilityInventory("default", stack, 5))
+					.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getCapacity(),
+							getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower(),
+							true, false))
 					.addCapability(createCompoundItemCapability(stack, nbt));
 		}
 		return null;
@@ -332,7 +351,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 		return minableBlocks;
 	}
 
-	private void recursiveTreeAnalyzer(ItemStack itemstack, BlockPos pos, Player player, List<BlockPos> positions, Set<BlockPos> visited, int currentDepth) {
+	private void recursiveTreeAnalyzer(ItemStack itemstack, BlockPos pos, Player player, List<BlockPos> positions,
+			Set<BlockPos> visited, int currentDepth) {
 		// If we maxed out on depth, stop.
 		if (currentDepth > MAX_RECURSION) {
 			return;
@@ -357,7 +377,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 
 					// Recurse.
 					for (Direction dir : Direction.values()) {
-						recursiveTreeAnalyzer(itemstack, pos.relative(dir), player, positions, visited, currentDepth + 1);
+						recursiveTreeAnalyzer(itemstack, pos.relative(dir), player, positions, visited,
+								currentDepth + 1);
 					}
 				}
 			}
@@ -371,7 +392,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelPr
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel, ModelEvent.BakingCompleted event) {
+	public BakedModel getBlockModeOverride(BlockState state, BakedModel existingModel,
+			ModelEvent.BakingCompleted event) {
 		return new ChainsawItemModel(existingModel);
 	}
 

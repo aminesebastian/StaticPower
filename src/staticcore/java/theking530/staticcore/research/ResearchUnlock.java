@@ -63,16 +63,16 @@ public class ResearchUnlock {
 	private ResearchIcon icon;
 	private boolean hidden;
 
-	public static ResearchUnlock craftingRecipe(String target) {
+	public static ResearchUnlock crafting(String target) {
 		String[] keys = target.split("/");
-		return craftingRecipe(keys[keys.length - 1], new ResourceLocation(StaticPower.MOD_ID, target));
+		return crafting(keys[keys.length - 1], new ResourceLocation(StaticPower.MOD_ID, target));
 	}
 
-	public static ResearchUnlock craftingRecipe(String displayKey, String target) {
-		return craftingRecipe(displayKey, new ResourceLocation(StaticPower.MOD_ID, target));
+	public static ResearchUnlock crafting(String displayKey, String target) {
+		return crafting(displayKey, new ResourceLocation(StaticPower.MOD_ID, target));
 	}
 
-	public static ResearchUnlock craftingRecipe(String displayKey, ResourceLocation target) {
+	public static ResearchUnlock crafting(String displayKey, ResourceLocation target) {
 		return new ResearchUnlock(displayKey, ResearchUnlockType.CRAFTING, target, null, null, null, false);
 	}
 

@@ -90,7 +90,8 @@ public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProc
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FormerRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), moldInventory.getStackInSlot(0));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0),
+				moldInventory.getStackInSlot(0));
 	}
 
 	@Override

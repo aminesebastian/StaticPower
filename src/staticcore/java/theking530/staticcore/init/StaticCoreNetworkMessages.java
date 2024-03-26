@@ -9,6 +9,7 @@ import theking530.staticcore.blockentity.components.heat.PacketHeatStorageCompon
 import theking530.staticcore.blockentity.components.items.PacketLockInventorySlot;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundPacketStart;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundPacketStop;
+import theking530.staticcore.blockentity.components.multiblock.PacketSyncMultiblockStates;
 import theking530.staticcore.blockentity.components.team.PacketSetBlockEntityTeamFromClient;
 import theking530.staticcore.blockentity.components.team.PacketSetBlockEntityTeamFromServer;
 import theking530.staticcore.cablenetwork.CableStateSyncPacket;
@@ -67,5 +68,7 @@ public class StaticCoreNetworkMessages {
 		
 		StaticCoreMessageHandler.registerMessage(ClimateDataRequestPacket.class);
 		StaticCoreMessageHandler.registerMessage(ClimateDataReceievePacket.class);
+		
+		StaticCoreMessageHandler.registerMessage(PacketSyncMultiblockStates.class);
 	}
 }

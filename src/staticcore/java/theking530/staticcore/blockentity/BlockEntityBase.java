@@ -55,6 +55,7 @@ import theking530.staticcore.block.StaticCoreBlock;
 import theking530.staticcore.block.StaticCoreTieredBlock;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
+import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.CompoundInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
@@ -68,6 +69,7 @@ import theking530.staticcore.network.BlockEntityBasicSyncPacket;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.network.StaticCoreMessageHandler;
 import theking530.staticcore.world.WorldUtilities;
+import theking530.staticpower.StaticPower;
 
 public abstract class BlockEntityBase extends BlockEntity
 		implements MenuProvider, IBreakSerializeable, ICableStateSyncTarget {
@@ -129,70 +131,76 @@ public abstract class BlockEntityBase extends BlockEntity
 	}
 
 	public void tick() {
-		// Not sure if this is needed, but just in case, don't tick after we've been
-		// removed!
-		if (isRemoved()) {
-			return;
+		try {
+			// Not sure if this is needed, but just in case, don't tick after we've been
+			// removed!
+			if (isRemoved()) {
+				return;
+			}
+			preProcess();
+
+			// Pre process all the components.
+			preProcessUpdateComponents();
+
+			// Call the process method for any inheritors to use.
+			process();
+
+			// If an update is queued, perform the update.
+			if (updateRequestQueue.size() > 0) {
+				// Debug the update.
+				StaticCore.LOGGER.debug(
+						String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!",
+								getBlockPos().toString(), getBlockState(), updateRequestQueue.size()));
+
+				// Calculate the flag to use.
+				int flags = 0;
+				boolean shouldSync = false;
+				boolean renderOnDataSync = false;
+				BlockState newState = getBlockState();
+				while (!updateRequestQueue.isEmpty()) {
+					BlockEntityUpdateRequest request = updateRequestQueue.poll();
+					flags |= request.getFlags();
+					if (request.getShouldSyncData()) {
+						shouldSync = true;
+					}
+					if (request.getShouldRenderOnDataSync()) {
+						renderOnDataSync = true;
+					}
+					if (request.getNewBlockState() != null) {
+						newState = request.getNewBlockState();
+					}
+				}
+
+				// Update the block rendering state.
+				if (getLevel().isClientSide()) {
+					addRenderingUpdateRequest();
+				}
+
+				// Perform the block update.
+				if (flags > 0) {
+					level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), getBlockState(), newState,
+							flags, 512);
+				}
+
+				// Perform a data sync if requested.
+				if (shouldSync && !getLevel().isClientSide()) {
+					synchronizeDataToPlayersInRadius(64, renderOnDataSync);
+				}
+
+				// If we also want to mark dirty, do so.
+				if (shouldMarkDirty) {
+					shouldMarkDirty = false;
+					setChanged();
+				}
+			}
+
+			// Post process all the components
+			postProcessUpdateComponents();
+		} catch (Exception e) {
+			StaticPower.LOGGER.warn(String.format(
+					"The block at: %1$s is throwing an error inside it's tick. Please report to the mod authors.",
+					this.getBlockPos().toString()), e);
 		}
-		preProcess();
-
-		// Pre process all the components.
-		preProcessUpdateComponents();
-
-		// Call the process method for any inheritors to use.
-		process();
-
-		// If an update is queued, perform the update.
-		if (updateRequestQueue.size() > 0) {
-			// Debug the update.
-			StaticCore.LOGGER
-					.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!",
-							getBlockPos().toString(), getBlockState(), updateRequestQueue.size()));
-
-			// Calculate the flag to use.
-			int flags = 0;
-			boolean shouldSync = false;
-			boolean renderOnDataSync = false;
-			BlockState newState = getBlockState();
-			while (!updateRequestQueue.isEmpty()) {
-				BlockEntityUpdateRequest request = updateRequestQueue.poll();
-				flags |= request.getFlags();
-				if (request.getShouldSyncData()) {
-					shouldSync = true;
-				}
-				if (request.getShouldRenderOnDataSync()) {
-					renderOnDataSync = true;
-				}
-				if (request.getNewBlockState() != null) {
-					newState = request.getNewBlockState();
-				}
-			}
-
-			// Update the block rendering state.
-			if (getLevel().isClientSide()) {
-				addRenderingUpdateRequest();
-			}
-
-			// Perform the block update.
-			if (flags > 0) {
-				level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), getBlockState(), newState,
-						flags, 512);
-			}
-
-			// Perform a data sync if requested.
-			if (shouldSync && !getLevel().isClientSide()) {
-				synchronizeDataToPlayersInRadius(64, renderOnDataSync);
-			}
-
-			// If we also want to mark dirty, do so.
-			if (shouldMarkDirty) {
-				shouldMarkDirty = false;
-				setChanged();
-			}
-		}
-
-		// Post process all the components
-		postProcessUpdateComponents();
 	}
 
 	protected void onLoadedInWorld(Level world, BlockPos pos, BlockState state) {

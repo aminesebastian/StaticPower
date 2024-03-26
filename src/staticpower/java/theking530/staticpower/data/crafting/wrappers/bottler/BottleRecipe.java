@@ -22,18 +22,23 @@ public class BottleRecipe extends AbstractMachineRecipe {
 	public static final double DEFAULT_POWER_COST = 5.0;
 
 	public static final Codec<BottleRecipe> CODEC = RecordCodecBuilder
-			.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-					StaticPowerIngredient.CODEC.fieldOf("empty_bottle").forGetter(recipe -> recipe.getEmptyBottle()),
-					StaticPowerOutputItem.CODEC.fieldOf("filled_bottle").forGetter(recipe -> recipe.getFilledBottle()),
-					FluidIngredient.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.getFluid()),
-					MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, BottleRecipe::new));
+			.create(instance -> instance
+					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+							StaticPowerIngredient.CODEC.fieldOf("empty_bottle")
+									.forGetter(recipe -> recipe.getEmptyBottle()),
+							StaticPowerOutputItem.CODEC.fieldOf("filled_bottle")
+									.forGetter(recipe -> recipe.getFilledBottle()),
+							FluidIngredient.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.getFluid()),
+							MachineRecipeProcessingSection.CODEC.fieldOf("processing")
+									.forGetter(recipe -> recipe.getProcessingSection()))
+					.apply(instance, BottleRecipe::new));
 
 	private final StaticPowerIngredient emptyBottle;
 	private final StaticPowerOutputItem filledBottle;
 	private final FluidIngredient fluid;
 
-	public BottleRecipe(ResourceLocation id, StaticPowerIngredient emptyBottle, StaticPowerOutputItem filledBottle, FluidIngredient fluid,
-			MachineRecipeProcessingSection processing) {
+	public BottleRecipe(ResourceLocation id, StaticPowerIngredient emptyBottle, StaticPowerOutputItem filledBottle,
+			FluidIngredient fluid, MachineRecipeProcessingSection processing) {
 		super(id, processing);
 		this.emptyBottle = emptyBottle;
 		this.filledBottle = filledBottle;
@@ -62,7 +67,7 @@ public class BottleRecipe extends AbstractMachineRecipe {
 		return ModRecipeTypes.BOTTLER_RECIPE_TYPE.get();
 	}
 
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		// Check if the item and fluid match.
 		if (matchParams.shouldVerifyItems()) {
 			if (!emptyBottle.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {

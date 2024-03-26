@@ -36,9 +36,9 @@ import theking530.staticcore.blockentity.components.heat.HeatStorageComponent.He
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.UpgradeInventoryComponent;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState.MultiblockStateEntry;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockComponent;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockState;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockState.MultiblockStateEntry;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.data.StaticCoreTier;
 import theking530.staticcore.gui.text.GuiTextUtilities;
@@ -48,7 +48,6 @@ import theking530.staticcore.utilities.math.SDMath;
 import theking530.staticcore.utilities.math.Vector4D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.machines.refinery.BaseRefineryBlockEntity;
 import theking530.staticpower.blockentities.machines.refinery.boiler.BlockRefineryBoiler;
 import theking530.staticpower.blockentities.machines.refinery.condenser.BlockEntityRefineryCondenser;
 import theking530.staticpower.blockentities.machines.refinery.heatvent.BlockEntityRefineryHeatVent;
@@ -84,7 +83,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	public final RecipeProcessingComponent<RefineryRecipe> processingComponent;
 	public final HeatStorageComponent heatStorage;
 	public final FluidTankComponent[] fluidTanks;
-	public final MultiblockComponent<BaseRefineryBlockEntity> multiblockComponent;
+	public final MultiblockComponent multiblockComponent;
 	private float currentProcessingProductivity;
 
 	public BlockEntityRefineryController(BlockPos pos, BlockState state) {
@@ -94,11 +93,9 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		StaticCoreTier tier = getTierObject();
 
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
-		registerComponent(multiblockComponent = new MultiblockComponent<BaseRefineryBlockEntity>("MultiblockComponent",
-				ModMultiblocks.REFINERY.get()));
-		multiblockComponent.setStateChangedCallback((multiblockState) -> {
-			this.multiblockStateChanged(multiblockState);
-		});
+		registerComponent(
+				multiblockComponent = new MultiblockComponent("MultiblockComponent", ModMultiblocks.REFINERY.get()));
+		multiblockComponent.setStateChangedCallback(this::multiblockStateChanged);
 
 		// Setup the inventories.
 		registerComponent(catalystInventory = new InventoryComponent("CatalystInventory", 1, MachineSideMode.Input)
@@ -128,16 +125,16 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		registerComponent(
 				fluidTanks[0] = new FluidTankComponent("FluidTank0", tier.defaultTankCapacity.get(), (fluid) -> {
 					FluidStack otherFluid = getInputTank(1).isEmpty() ? ModFluids.WILDCARD : getInputTank(1).getFluid();
-					RecipeMatchParameters params = new RecipeMatchParameters().setFluids(fluid, otherFluid)
-							.ignoreItems().ignoreFluidAmounts();
+					RecipeMatchParameters params = new RecipeMatchParameters(getTeamComponent().getOwningTeamId())
+							.setFluids(fluid, otherFluid).ignoreItems().ignoreFluidAmounts();
 					return processingComponent.getRecipe(params).isPresent();
 				}).setCapabilityExposedModes(MachineSideMode.Input2).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(
 				fluidTanks[1] = new FluidTankComponent("FluidTank1", tier.defaultTankCapacity.get(), (fluid) -> {
 					FluidStack otherFluid = getInputTank(0).isEmpty() ? ModFluids.WILDCARD : getInputTank(0).getFluid();
-					RecipeMatchParameters params = new RecipeMatchParameters().setFluids(otherFluid, fluid)
-							.ignoreItems().ignoreFluidAmounts();
+					RecipeMatchParameters params = new RecipeMatchParameters(getTeamComponent().getOwningTeamId())
+							.setFluids(otherFluid, fluid).ignoreItems().ignoreFluidAmounts();
 					return processingComponent.getRecipe(params).isPresent();
 				}).setCapabilityExposedModes(MachineSideMode.Input3).setUpgradeInventory(upgradesInventory));
 
@@ -451,7 +448,8 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<RefineryRecipe> component) {
-		return new RecipeMatchParameters().setItems(catalystInventory.getStackInSlot(0))
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId())
+				.setItems(catalystInventory.getStackInSlot(0))
 				.setFluids(getInputTank(0).getFluid(), getInputTank(1).getFluid());
 	}
 

@@ -68,7 +68,9 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
 				.setFilter(new ItemStackHandlerFilter() {
 					public boolean canInsertItem(int slot, ItemStack stack) {
-						return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts())
+						return processingComponent
+								.getRecipe(new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), stack)
+										.ignoreItemCounts())
 								.isPresent();
 					}
 				}));
@@ -177,7 +179,7 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CentrifugeRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0));
 	}
 
 	@Override

@@ -26,8 +26,8 @@ import theking530.staticcore.blockentity.components.control.sideconfiguration.Si
 import theking530.staticcore.blockentity.components.items.InventoryComponent;
 import theking530.staticcore.blockentity.components.items.ItemStackHandlerFilter;
 import theking530.staticcore.blockentity.components.loopingsound.LoopingSoundComponent;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState.MultiblockStateEntry;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockComponent;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockState.MultiblockStateEntry;
 import theking530.staticcore.blockentity.components.serialization.UpdateSerialize;
 import theking530.staticcore.crafting.RecipeMatchParameters;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
@@ -51,7 +51,7 @@ public class BlockEntityBlastFurnace extends BlockEntityBase implements IRecipeP
 	public final RecipeProcessingComponent<BlastFurnaceRecipe> processingComponent;
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final LoopingSoundComponent furnaceSoundComponent;
-	public final MultiblockComponent<BlockEntityBlastFurnace> multiblockComponent;
+	public final MultiblockComponent multiblockComponent;
 
 	@UpdateSerialize
 	private int lastFuelBurnTime;
@@ -78,7 +78,7 @@ public class BlockEntityBlastFurnace extends BlockEntityBase implements IRecipeP
 				BlastFurnaceRecipe.DEFAULT_PROCESSING_TIME, ModRecipeTypes.BLAST_FURNACE_RECIPE_TYPE.get()));
 		processingComponent.setShouldControlOnBlockState(true);
 
-		registerComponent(multiblockComponent = new MultiblockComponent<BlockEntityBlastFurnace>("MultiblockComponent",
+		registerComponent(multiblockComponent = new MultiblockComponent("MultiblockComponent",
 				ModMultiblocks.BLAST_FURNACE.get()));
 	}
 
@@ -132,7 +132,7 @@ public class BlockEntityBlastFurnace extends BlockEntityBase implements IRecipeP
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<BlastFurnaceRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0));
 	}
 
 	@Override

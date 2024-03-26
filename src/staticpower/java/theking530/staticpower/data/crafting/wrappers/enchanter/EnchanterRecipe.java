@@ -88,7 +88,7 @@ public class EnchanterRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		// Check if the input counts catch. We check +1 because the match params items
 		// should be the inputs PLUS the item to enchant.
 		if (matchParams.shouldVerifyItems()) {

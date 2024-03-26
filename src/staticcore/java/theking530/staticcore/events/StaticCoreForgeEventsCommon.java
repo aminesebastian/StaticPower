@@ -13,13 +13,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +25,6 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -51,7 +48,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.IdMappingEvent;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.attributes.ItemAttributeRegistry;
@@ -60,10 +56,9 @@ import theking530.api.attributes.rendering.ItemAttributeRegistration;
 import theking530.api.attributes.type.AttributeType;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.StaticCore;
-import theking530.staticcore.StaticCoreRegistries;
-import theking530.staticcore.blockentity.components.multiblock.MultiblockManager;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
+import theking530.staticcore.blockentity.components.multiblock.manager.IMultiblockManager;
+import theking530.staticcore.blockentity.components.multiblock.manager.MultiblockManager;
+import theking530.staticcore.blockentity.components.multiblock.manager.ServerMultiblockManager;
 import theking530.staticcore.cablenetwork.manager.CableNetworkAccessor;
 import theking530.staticcore.commands.ResearchCommands;
 import theking530.staticcore.commands.TeamCommands;
@@ -76,7 +71,6 @@ import theking530.staticcore.fluid.FluidIngredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.init.StaticCoreKeyBindings;
 import theking530.staticcore.init.StaticCoreRecipeTypes;
-import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.teams.ITeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.teams.TeamUtilities;
@@ -93,27 +87,21 @@ public class StaticCoreForgeEventsCommon {
 		TeamCommands.register(commandDispatcher);
 	}
 
-	@SuppressWarnings("resource")
 	@SubscribeEvent
 	public static void serverTickEvent(TickEvent.ServerTickEvent event) {
-		Level overworld = event.getServer().overworld();
 
+	}
+
+	@SubscribeEvent
+	public static void levelTickEvent(TickEvent.LevelTickEvent event) {
 		if (event.phase == TickEvent.Phase.START) {
-			CableNetworkAccessor.get(overworld).preWorldTick();
+			CableNetworkAccessor.get(event.level).preWorldTick();
 		}
 
 		if (event.phase == TickEvent.Phase.END) {
-			CableNetworkAccessor.get(event.getServer().overworld()).tick();
-			StaticCoreDataAccessor.getServer().tickGameData(overworld);
-		}
-
-		for (ServerLevel level : event.getServer().getAllLevels()) {
-			for (ChunkHolder chunkHolder : level.getChunkSource().chunkMap.getChunks()) {
-				LevelChunk chunk = chunkHolder.getFullChunk();
-				if (chunk == null) {
-					continue;
-				}
-			}
+			CableNetworkAccessor.get(event.level).tick();
+			MultiblockManager.get((ServerLevel) event.level).tick();
+			StaticCoreDataAccessor.getServer().tickGameData(event.level);
 		}
 	}
 
@@ -157,49 +145,43 @@ public class StaticCoreForgeEventsCommon {
 
 	@SubscribeEvent
 	public static void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
-		if (!(event.getEntity() instanceof Player)) {
-			return;
+		if (!event.getLevel().isClientSide()) {
+			ServerMultiblockManager mbManager = MultiblockManager.get((ServerLevel) event.getLevel());
+			mbManager.onBlockPlaced(event);
 		}
 
-		for (ResourceLocation id : StaticCoreRegistries.MultiblockTypes().getKeys()) {
-			AbstractMultiblockPattern pattern = StaticCoreRegistries.MultiblockTypes().getValue(id);
-			if (pattern.isValidBlock(event.getState())) {
-				MultiblockState state = pattern.checkWellFormed(event.getEntity().getLevel(), event.getPos());
-				if (state.isWellFormed()) {
-					pattern.onWellFormedOnPlaceEvent(state, event);
-					break;
-				}
+		if (event.getEntity() instanceof Player) {
+			BlockEntity blockEntity = event.getLevel().getBlockEntity(event.getPos());
+			ITeam team = TeamManager.get(event.getLevel()).getTeamForPlayer((Player) event.getEntity());
+			if (team != null) {
+				TeamUtilities.setOwningTeam(blockEntity, team);
 			}
-		}
-
-		BlockEntity blockEntity = event.getLevel().getBlockEntity(event.getPos());
-		ITeam team = TeamManager.get(event.getLevel()).getTeamForPlayer((Player) event.getEntity());
-		if (team != null) {
-			TeamUtilities.setOwningTeam(blockEntity, team);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onBlockRightClicked(RightClickBlock event) {
+		if (event.getEntity().isShiftKeyDown()) {
+			return;
+		}
+
+		boolean validMultiblockHit = false;
 		if (event.getLevel().isClientSide()) {
-			return;
+			IMultiblockManager mbManager = MultiblockManager.get(event.getLevel());
+			if (mbManager.containsBlock(event.getPos())) {
+				validMultiblockHit = true;
+			}
+		} else {
+			ServerMultiblockManager mbManager = MultiblockManager.get((ServerLevel) event.getLevel());
+			if (mbManager.containsBlock(event.getPos())) {
+				mbManager.onBlockRightClicked(event);
+				validMultiblockHit = true;
+			}
 		}
 
-		MultiblockManager mbManager = MultiblockManager.get((ServerLevel) event.getLevel());
-		if (!mbManager.containsBlock(event.getPos())) {
-			return;
-		}
-
-		MultiblockState mbState = mbManager.getMultiblockState(event.getPos());
-		if (!mbState.isWellFormed()) {
-			return;
-		}
-
-		BlockPos masterPos = mbState.getMasterPos();
-		BlockEntity masterBe = event.getLevel().getBlockEntity(masterPos);
-		if (masterBe != null && masterBe instanceof MenuProvider) {
-			ServerPlayer player = (ServerPlayer) event.getEntity();
-			NetworkHooks.openScreen(player, (MenuProvider) masterBe, masterPos);
+		if (validMultiblockHit) {
+			event.setCancellationResult(InteractionResult.CONSUME);
+			event.setCanceled(true);
 		}
 	}
 

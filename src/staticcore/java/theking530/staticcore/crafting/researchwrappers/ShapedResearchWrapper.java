@@ -1,4 +1,4 @@
-package theking530.staticpower.data.crafting.researchwrappers;
+package theking530.staticcore.crafting.researchwrappers;
 
 import java.util.Set;
 
@@ -9,15 +9,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 
-public class ShapelessResearchWrapper extends ShapelessRecipe implements IResearchBlockedRecipe {
-	private final ShapelessRecipe old;
+public class ShapedResearchWrapper extends ShapedRecipe implements IResearchBlockedRecipe {
+	private final ShapedRecipe old;
 	private final Set<ResourceLocation> requiredResearch;
 
-	public ShapelessResearchWrapper(Set<ResourceLocation> requiredResearch, ShapelessRecipe old) {
-		super(old.getId(), old.getGroup(), old.getResultItem(), old.getIngredients());
+	public ShapedResearchWrapper(Set<ResourceLocation> requiredResearch, ShapedRecipe old) {
+		super(old.getId(), old.getGroup(), old.getWidth(), old.getHeight(), old.getIngredients(), old.getResultItem());
 		this.requiredResearch = requiredResearch;
 		this.old = old;
 	}

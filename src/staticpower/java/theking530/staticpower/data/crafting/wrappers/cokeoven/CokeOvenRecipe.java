@@ -56,7 +56,7 @@ public class CokeOvenRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		// Check if the input counts catch.
 		if (matchParams.shouldVerifyItems() && matchParams.getItems().length != 1) {
 			return false;

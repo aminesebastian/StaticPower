@@ -1,6 +1,6 @@
-// 1.19.2	2023-10-15T19:17:57.72101	Recipes
-423f432d6c7c1d41275a02d243b3484693a55aa7 data/staticpower/recipes/refining/coal_liquifaction.json
-b017956297c48477a605826eb80302bbdde579f1 data/staticpower/recipes/refining/crude_cracking.json
-fcc538001cd210229eaf8b4c2d6d099148ba354a data/staticpower/recipes/refining/fuel.json
-7fc8b0be56e5b49fd296d3b94564a0eccbcc8d67 data/staticpower/recipes/refining/heavy_cracking.json
-d350147c848cfbf4ad5551008ed40cb213faff7e data/staticpower/recipes/refining/light_cracking.json
+// 1.19.2	2023-10-21T22:47:22.6289134	Recipes
+39583006626873d15f1b5549c4de775679bf0503 data/staticpower/recipes/coke_oven/charcoal_from_dust.json
+2ce65c2ce79283b7ed712832d1e3965d88041d5b data/staticpower/recipes/coke_oven/charcoal_from_logs.json
+08869fbb41db5f493ca913a54af840833f106f31 data/staticpower/recipes/coke_oven/charcoal_from_planks.json
+c8cfeceaa54cdb0676730a99e64507dd93f44758 data/staticpower/recipes/coke_oven/coal_coke.json
+82c4fe76ec44a6d42dc83753b7f9eb54ff998b56 data/staticpower/recipes/coke_oven/coal_coke_block.json

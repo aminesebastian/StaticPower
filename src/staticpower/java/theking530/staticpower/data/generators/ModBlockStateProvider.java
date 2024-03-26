@@ -13,7 +13,7 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockBlockStateProperties;
 import theking530.staticcore.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.machines.refinery.condenser.BlockRefineryCondenser;

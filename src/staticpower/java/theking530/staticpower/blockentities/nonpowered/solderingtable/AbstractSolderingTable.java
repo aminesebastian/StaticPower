@@ -174,8 +174,8 @@ public abstract class AbstractSolderingTable extends BlockEntityBase implements 
 	}
 
 	public Optional<SolderingRecipe> getRecipeForItems(ItemStack... items) {
-		return CraftingUtilities.getRecipe(ModRecipeTypes.SOLDERING_RECIPE_TYPE.get(), new RecipeMatchParameters(items),
-				getLevel());
+		return CraftingUtilities.getRecipe(ModRecipeTypes.SOLDERING_RECIPE_TYPE.get(),
+				new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), items), getLevel());
 	}
 
 	protected boolean requiresSolderingIron() {

@@ -52,7 +52,7 @@ public class FermenterRecipe extends AbstractMachineRecipe {
 		return input;
 	}
 
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		boolean matched = true;
 
 		// Check items.

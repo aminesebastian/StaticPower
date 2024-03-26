@@ -4,7 +4,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.StaticCoreRegistries;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
+import theking530.staticcore.blockentity.components.multiblock.AbstractMultiblockPattern;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.machines.refinery.RefineryMultiblockPattern;
 import theking530.staticpower.blockentities.nonpowered.blastfurnace.BlastFurnaceMultiblockPattern;

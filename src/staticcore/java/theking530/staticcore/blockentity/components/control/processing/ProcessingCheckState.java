@@ -96,6 +96,11 @@ public class ProcessingCheckState implements INBTSerializable<CompoundTag> {
 		return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticcore.alert.not_enough_fluid");
 	}
 
+	public static ProcessingCheckState notReceivingPower() {
+		return new ProcessingCheckState(ProcessingState.ERROR,
+				Component.translatable("gui.staticcore.alert.not_receiving_power"));
+	}
+
 	public static ProcessingCheckState notEnoughPower(double requiredPower) {
 		return new ProcessingCheckState(ProcessingState.ERROR,
 				Component.translatable("gui.staticcore.alert.not_enough_power", requiredPower));

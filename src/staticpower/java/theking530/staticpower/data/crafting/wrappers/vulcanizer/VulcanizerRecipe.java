@@ -62,7 +62,7 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 
 		// Check fluid.
 		if (matchParams.shouldVerifyFluids()) {

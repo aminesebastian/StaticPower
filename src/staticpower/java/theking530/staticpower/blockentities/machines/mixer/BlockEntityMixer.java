@@ -100,7 +100,7 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<MixerRecipe> component) {
-		return new RecipeMatchParameters()
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId())
 				.setItems(input1Inventory.getStackInSlot(0), input2Inventory.getStackInSlot(0))
 				.setFluids(fluidInput1.getFluid(), fluidInput2.getFluid());
 	}

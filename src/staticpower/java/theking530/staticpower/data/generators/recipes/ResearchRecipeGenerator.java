@@ -41,33 +41,33 @@ public class ResearchRecipeGenerator extends SCRecipeProvider<Research> {
 		addRecipe("primary_tier/tools/hammer",
 				ResearchBuilder.of("basic_hamering", SDColor.RED).setIcon(ModItems.IronMetalHammer.get())
 						.spprerequisite("primary_tier").requirement((StaticCoreItems.ResearchTier1.get()), 10)
-						.unlocks(ResearchUnlock.craftingRecipe("iron", "crafting/shaped/tools/hammer/iron"))
-						.unlocks(ResearchUnlock.craftingRecipe("copper", "crafting/shaped/tools/hammer/copper"))
-						.unlocks(ResearchUnlock.craftingRecipe("zinc", "crafting/shaped/tools/hammer/zinc")));
+						.unlocks(ResearchUnlock.crafting("iron", "crafting/shaped/tools/hammer/iron"))
+						.unlocks(ResearchUnlock.crafting("copper", "crafting/shaped/tools/hammer/copper"))
+						.unlocks(ResearchUnlock.crafting("zinc", "crafting/shaped/tools/hammer/zinc")));
 
 		addRecipe("primary_tier/basic_electronics",
 				ResearchBuilder.of("basic_electronics", SDColor.RED).setIcon(ModItems.Plug.get())
 						.spprerequisite("primary_tier/tools/hammer")
 						.requirement((StaticCoreItems.ResearchTier1.get()), 30)
-						.unlocks(ResearchUnlock.craftingRecipe("crafting/shaped/io_port"))
-						.unlocks(ResearchUnlock.craftingRecipe("crafting/shaped/plug"))
-						.unlocks(ResearchUnlock.craftingRecipe("crafting/shaped/motor")));
+						.unlocks(ResearchUnlock.crafting("crafting/shaped/io_port"))
+						.unlocks(ResearchUnlock.crafting("crafting/shaped/plug"))
+						.unlocks(ResearchUnlock.crafting("crafting/shaped/motor")));
 
 		addRecipe("primary_tier/tools/wrench", ResearchBuilder.of("wrench", SDColor.RED).setIcon(ModItems.Wrench.get())
 				.spprerequisite("primary_tier/tools/hammer").requirement((StaticCoreItems.ResearchTier1.get()), 10)
-				.unlocks(ResearchUnlock.craftingRecipe("crafting/shaped/tools/wrench")));
+				.unlocks(ResearchUnlock.crafting("crafting/shaped/tools/wrench")));
 
 		addRecipe("primary_tier/tools/soldering_iron",
 				ResearchBuilder.of("soldering_iron", SDColor.RED).setIcon(ModItems.SolderingIron.get())
 						.spprerequisite("primary_tier/tools/hammer")
 						.requirement((StaticCoreItems.ResearchTier1.get()), 10)
-						.unlocks(ResearchUnlock.craftingRecipe("crafting/shaped/tools/soldering_iron")));
+						.unlocks(ResearchUnlock.crafting("crafting/shaped/tools/soldering_iron")));
 
 		addRecipe("primary_tier/tools/wire_cutters",
 				ResearchBuilder.of("basic_wire_cutting", SDColor.RED).setIcon(ModItems.IronWireCutters.get())
 						.spprerequisite("primary_tier").requirement((StaticCoreItems.ResearchTier1.get()), 10)
-						.unlocks(ResearchUnlock.craftingRecipe("iron", "crafting/shaped/tools/wire_cutter/iron"))
-						.unlocks(ResearchUnlock.craftingRecipe("zinc", "crafting/shaped/tools/wire_cutter/zinc")));
+						.unlocks(ResearchUnlock.crafting("iron", "crafting/shaped/tools/wire_cutter/iron"))
+						.unlocks(ResearchUnlock.crafting("zinc", "crafting/shaped/tools/wire_cutter/zinc")));
 
 		addRecipe("primary_tier/rubber_wood_stripping",
 				ResearchBuilder.of("rubber_wood_stripping", SDColor.RED).setIcon(ModItems.RubberWoodBark.get())
@@ -77,7 +77,7 @@ public class ResearchRecipeGenerator extends SCRecipeProvider<Research> {
 				ResearchBuilder.of("rusty_cauldron", SDColor.RED).setIcon(ModBlocks.RustyCauldron.get())
 						.spprerequisite("primary_tier/rubber_wood_stripping")
 						.requirement((StaticCoreItems.ResearchTier1.get()), 30)
-						.unlocks(ResearchUnlock.craftingRecipe("iron", "crafting/shaped/machines/rusty_cauldron")));
+						.unlocks(ResearchUnlock.crafting("iron", "crafting/shaped/machines/rusty_cauldron")));
 	}
 
 	protected void addRecipe(String nameOverride, String title, String description, SDColor color,

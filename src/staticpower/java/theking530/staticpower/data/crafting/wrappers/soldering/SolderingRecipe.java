@@ -88,7 +88,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 		return ModRecipeTypes.SOLDERING_RECIPE_TYPE.get();
 	}
 
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		// If there aren't enough items, just return false.
 		if (matchParams.getItems().length != 9) {
 			return false;

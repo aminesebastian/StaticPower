@@ -4,6 +4,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
+import theking530.staticcore.crafting.researchwrappers.CraftingResearchLockingUtilities;
+import theking530.staticcore.teams.TeamManager;
 
 public abstract class AbstractStaticPowerRecipe implements Recipe<RecipeMatchParameters> {
 	private final ResourceLocation id;
@@ -18,9 +20,26 @@ public abstract class AbstractStaticPowerRecipe implements Recipe<RecipeMatchPar
 		this.experience = experience;
 	}
 
-	@Override
-	public boolean matches(RecipeMatchParameters inv, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters inv, Level level) {
+		if (inv.shouldVerifyResearchRestrictions()) {
+			String teamId = inv.getTeamId();
+			if (!CraftingResearchLockingUtilities.canTeamCraftRecipe(TeamManager.get(level).getTeamById(teamId),
+					this)) {
+				return false;
+			}
+		}
 		return false;
+	}
+
+	public final boolean matches(RecipeMatchParameters inv, Level level) {
+		if (inv.shouldVerifyResearchRestrictions() && level != null) {
+			String teamId = inv.getTeamId();
+			if (!CraftingResearchLockingUtilities.canTeamCraftRecipe(TeamManager.get(level).getTeamById(teamId),
+					this)) {
+				return false;
+			}
+		}
+		return matchesInternal(inv, level);
 	}
 
 	@Override

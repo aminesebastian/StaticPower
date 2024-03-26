@@ -11,7 +11,7 @@ import theking530.api.attributes.type.AttributeType;
 import theking530.api.attributes.values.AttributeValueType;
 import theking530.api.item.compound.slot.CompoundItemSlot;
 import theking530.api.upgrades.UpgradeType;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
+import theking530.staticcore.blockentity.components.multiblock.AbstractMultiblockPattern;
 import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;

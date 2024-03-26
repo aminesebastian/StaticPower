@@ -93,7 +93,7 @@ public class CentrifugeRecipe extends AbstractMachineRecipe {
 		return ModRecipeTypes.CENTRIFUGE_RECIPE_TYPE.get();
 	}
 
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		boolean matched = true;
 
 		// Check items.

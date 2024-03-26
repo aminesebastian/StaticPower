@@ -107,7 +107,8 @@ public class BlockEntityAlloyFurnace extends BlockEntityBase implements IRecipeP
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<AlloyFurnaceRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0),
+				inputInventory.getStackInSlot(1));
 	}
 
 	@Override

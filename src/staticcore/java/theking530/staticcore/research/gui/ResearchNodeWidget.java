@@ -3,15 +3,12 @@ package theking530.staticcore.research.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import theking530.staticcore.crafting.StaticPowerIngredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.text.GuiTextUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
 import theking530.staticcore.network.StaticCoreMessageHandler;
@@ -19,18 +16,20 @@ import theking530.staticcore.research.Research;
 import theking530.staticcore.research.ResearchLevels.ResearchNode;
 import theking530.staticcore.research.ResearchUnlock;
 import theking530.staticcore.research.ResearchUnlockUtilities;
-import theking530.staticcore.research.gui.ResearchManager.ResearchInstance;
 import theking530.staticcore.research.network.PacketSetSelectedResearch;
 import theking530.staticcore.teams.ClientTeam;
 import theking530.staticcore.teams.TeamManager;
 import theking530.staticcore.utilities.SDColor;
+import theking530.staticcore.utilities.math.RectangleBounds;
 import theking530.staticcore.utilities.math.Vector2D;
+import theking530.staticcore.utilities.math.Vector3D;
 
 public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private final String title;
 	private final List<String> wrappedDescription;
 	private final Research research;
 	private final List<ResearchNodeUnlockWidget> unlockWidgets;
+	private final List<ResearchRequirementWidget> requirementWidgets;
 	private final ResearchNode node;
 	private final SimpleProgressBar progressBar;
 	private final Vector2D collapsedSize;
@@ -46,12 +45,14 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		super(xPosition, yPosition, width, height);
 		this.research = node.getResearch();
 		this.unlockWidgets = new ArrayList<>();
+		this.requirementWidgets = new ArrayList<>();
 		this.node = node;
 		registerWidget(progressBar = new SimpleProgressBar(28, 20, 86, 7).setMaxProgress(100).disableProgressTooltip());
 		progressBar.setVisible(false);
 		title = Component.translatable(research.getTitle()).getString();
 		this.collapsedSize = new Vector2D(width, height);
-		this.maxExpandedSize = new Vector2D(getFontRenderer().width(title) + 20, 100);
+		int minWidth = 100;
+		this.maxExpandedSize = new Vector2D(Math.max(getFontRenderer().width(title), minWidth) + 10, 100);
 		this.tileColor = new SDColor(1, 1, 1, 1);
 		this.bodyColor = new SDColor(1, 1, 1, 1);
 		wrappedDescription = GuiDrawUtilities.wrapString(Component.translatable(research.getDescription()).getString(),
@@ -67,6 +68,12 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 					unlockWidgets.add(widget);
 				}
 			}
+		}
+
+		for (StaticPowerIngredient requirement : research.getRequirements()) {
+			ResearchRequirementWidget widget = new ResearchRequirementWidget(requirement, null, 0, 0, 11, 11);
+			registerWidget(widget);
+			requirementWidgets.add(widget);
 		}
 	}
 
@@ -90,19 +97,29 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 			unlock.setVisible(expandedAlpha >= 1.0f);
 		}
 
+		for (ResearchRequirementWidget requirement : requirementWidgets) {
+			requirement.setVisible(expandedAlpha >= 1.0f);
+		}
+
 		// Update the colors.
 		updatePanelColors();
 
 		// Scale the widget depending on if it is expanded.
-		float maxWidth = (getFontRenderer().width(title) * .85f) * getExpandedAlpha();
 		float maxHeight = 15 + (wrappedDescription.size() * 5.5f) + (research.getUnlocks().size() > 0 ? 15 : 0);
-		setSize(Math.min(maxExpandedSize.getX(), collapsedSize.getX() + (maxWidth * getExpandedAlpha())),
+		setSize(Math.min(maxExpandedSize.getX(), collapsedSize.getX() + (maxExpandedSize.getX() * getExpandedAlpha())),
 				collapsedSize.getY() + (maxHeight * getExpandedAlpha()));
 
 		// Move the widget up if hovered and to the up and left if going off screen.
 		float maxOffsetY = (getExpandedAlpha() * (getSize().getY() / 2.5f - collapsedSize.getY() / 2));
 		setPosition(getInitialPosition().getX(), getInitialPosition().getY() - maxOffsetY);
 
+	}
+
+	@Override
+	protected void updateBounds(RectangleBounds bounds, Vector2D screenSpacePosition, Vector3D scale) {
+		float expandedScale = expandedAlpha * 4;
+		bounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(),
+				getSize().getX() * scale.getX() + expandedScale, getSize().getY() * scale.getY() + expandedScale);
 	}
 
 	public Research getResearch() {
@@ -228,24 +245,6 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		return super.mouseClick(mouseX, mouseY, button);
 	}
 
-	private void drawRearchRequirement(PoseStack pose, @Nullable ResearchInstance instance,
-			StaticPowerIngredient requirement, int requirementIndex, float x, float y) {
-		GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], x, y, 1, 8f, 8f);
-
-		if (instance != null) {
-			GuiDrawUtilities.drawStringCentered(pose,
-					GuiTextUtilities
-							.formatNumberAsString(
-									requirement.getCount() - instance.getRequirementFullfillment(requirementIndex))
-							.getString(),
-					x + 8f, y + 6.5f, 10, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
-		} else {
-			GuiDrawUtilities.drawStringCentered(pose,
-					GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 8f, y + 6.5f, 10,
-					0.5f, SDColor.EIGHT_BIT_WHITE, true);
-		}
-	}
-
 	private void updateProgressBar(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 		if (team != null) {
 			progressBar.setSize(getSize().getX() - 32, 7);
@@ -266,11 +265,11 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		GuiDrawUtilities.drawRectangle(pose, requirementsBgSize, 11, getSize().getX() - requirementsBgSize - 1,
 				getSize().getY() - 12, 0, new SDColor(0.0f, 0.0f, 0.0f, 0.5f));
 
-		for (int i = 0; i < research.getRequirements().size(); i++) {
+		for (int i = 0; i < this.requirementWidgets.size(); i++) {
 			int xOffset = i * 10;
-			StaticPowerIngredient requirement = research.getRequirements().get(i);
-			drawRearchRequirement(pose, null, requirement, i, getSize().getX() - 14 - xOffset,
-					getSize().getY() - 13.5f);
+			ResearchRequirementWidget requirementWidget = requirementWidgets.get(i);
+			requirementWidget.setPosition(getSize().getX() - 14 - xOffset, getSize().getY() - 13.5f);
+			requirementWidget.setZLevel(155);
 		}
 
 		// Split the description into wrapped lines.

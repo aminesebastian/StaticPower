@@ -7,21 +7,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.blockentity.BlockEntityBase;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockComponent;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockComponent;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockEntityRefineryController;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModMultiblocks;
 
 public class BaseRefineryBlockEntity extends BlockEntityBase {
-	public final MultiblockComponent<BaseRefineryBlockEntity> multiblockComponent;
+	public final MultiblockComponent multiblockComponent;
 
 	public BaseRefineryBlockEntity(BlockEntityTypeAllocator<? extends BaseRefineryBlockEntity> allocator, BlockPos pos,
 			BlockState state) {
 		super(allocator, pos, state);
-		registerComponent(multiblockComponent = new MultiblockComponent<BaseRefineryBlockEntity>("MultiblockComponent",
-				ModMultiblocks.REFINERY.get()));
+		registerComponent(
+				multiblockComponent = new MultiblockComponent("MultiblockComponent", ModMultiblocks.REFINERY.get()));
 		multiblockComponent.setStateChangedCallback(this::multiblockStateChanged);
 	}
 

@@ -150,6 +150,7 @@ public class ResearchManager {
 		completedResearch.clear();
 		activeResearch.clear();
 		setSelectedResearch(getInitialResearch());
+		team.markDirty(true);
 	}
 
 	public ITeam getTeam() {
@@ -281,6 +282,25 @@ public class ResearchManager {
 		}
 
 		public int getRequirementFullfillment(int index) {
+			return requirementFullfillment[index];
+		}
+
+		public int getRequirementFullfillment(StaticPowerIngredient requirement) {
+			if (requirement == null) {
+				return 0;
+			}
+
+			int index = -1;
+			for (int i = 0; i < research.getRequirements().size(); i++) {
+				if (requirement.equals(research.getRequirements().get(i))) {
+					index = i;
+				}
+			}
+
+			if (index < 0) {
+				return 0;
+			}
+
 			return requirementFullfillment[index];
 		}
 

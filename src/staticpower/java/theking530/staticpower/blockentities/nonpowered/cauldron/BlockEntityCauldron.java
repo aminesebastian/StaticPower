@@ -213,6 +213,8 @@ public class BlockEntityCauldron extends BlockEntityBase {
 
 	public Optional<CauldronRecipe> getRecipe(ItemStack input) {
 		return CraftingUtilities.getRecipe(ModRecipeTypes.CAULDRON_RECIPE_TYPE.get(),
-				new RecipeMatchParameters(input).setFluids(internalTank.getFluid()), getLevel());
+				new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), input)
+						.setFluids(internalTank.getFluid()),
+				getLevel());
 	}
 }

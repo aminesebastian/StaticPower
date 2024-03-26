@@ -93,7 +93,7 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		// Check blocks.
 		if (isBlockType()) {
 			if (matchParams.shouldVerifyBlocks() && matchParams.hasBlocks()) {

@@ -125,7 +125,7 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<SolidFuelRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0));
 	}
 
 	@Override

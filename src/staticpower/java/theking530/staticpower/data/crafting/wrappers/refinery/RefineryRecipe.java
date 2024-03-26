@@ -100,7 +100,7 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		boolean matched = true;
 
 		// Check fluids.

@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockBlockStateProperties;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerRotateableBlockEntityBlock;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -51,8 +51,6 @@ public class BlockCokeOven extends StaticPowerRotateableBlockEntityBlock {
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		if (state.getValue(MultiblockBlockStateProperties.IS_MASTER)) {
 			return BlockEntityCokeOven.TYPE.create(pos, state);
-		} else if (state.getValue(MultiblockBlockStateProperties.IS_IN_VALID_MULTIBLOCK)) {
-			return BlockEntityCokeOvenProxy.TYPE.create(pos, state);
 		}
 		return null;
 	}

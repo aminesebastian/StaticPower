@@ -120,7 +120,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		// Check for fluid match.
 		if (!fluids.isEmpty() && matchParams.hasFluids() && !matchParams.getFluids()[0].isEmpty()) {
 			if (fluids.test(matchParams.getFluids()[0])) {

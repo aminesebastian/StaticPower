@@ -40,13 +40,21 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	public static final int DEFAULT_PROCESSING_TIME = 200;
 	public static final double DEFAULT_POWER_COST = 5.0;
 
-	public static final Codec<AutoSmithRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
-			StaticPowerIngredient.CODEC.optionalFieldOf("target", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getSmithTarget()),
-			StaticPowerIngredient.CODEC.optionalFieldOf("input_item", StaticPowerIngredient.EMPTY).forGetter(recipe -> recipe.getModifierMaterial()),
-			FluidIngredient.CODEC.optionalFieldOf("input_fluid", FluidIngredient.EMPTY).forGetter(recipe -> recipe.getModifierFluid()),
-			RecipeAttributeWrapper.CODEC.listOf().optionalFieldOf("attributes", Collections.emptyList()).forGetter(recipe -> recipe.getModifiers()),
-			Codec.INT.optionalFieldOf("repair_amount", 0).forGetter(recipe -> recipe.getRepairAmount()),
-			MachineRecipeProcessingSection.CODEC.fieldOf("processing").forGetter(recipe -> recipe.getProcessingSection())).apply(instance, AutoSmithRecipe::new));
+	public static final Codec<AutoSmithRecipe> CODEC = RecordCodecBuilder
+			.create(instance -> instance
+					.group(ResourceLocation.CODEC.optionalFieldOf("id", null).forGetter(recipe -> recipe.getId()),
+							StaticPowerIngredient.CODEC.optionalFieldOf("target", StaticPowerIngredient.EMPTY)
+									.forGetter(recipe -> recipe.getSmithTarget()),
+							StaticPowerIngredient.CODEC.optionalFieldOf("input_item", StaticPowerIngredient.EMPTY)
+									.forGetter(recipe -> recipe.getModifierMaterial()),
+							FluidIngredient.CODEC.optionalFieldOf("input_fluid", FluidIngredient.EMPTY)
+									.forGetter(recipe -> recipe.getModifierFluid()),
+							RecipeAttributeWrapper.CODEC.listOf().optionalFieldOf("attributes", Collections.emptyList())
+									.forGetter(recipe -> recipe.getModifiers()),
+							Codec.INT.optionalFieldOf("repair_amount", 0).forGetter(recipe -> recipe.getRepairAmount()),
+							MachineRecipeProcessingSection.CODEC.fieldOf("processing")
+									.forGetter(recipe -> recipe.getProcessingSection()))
+					.apply(instance, AutoSmithRecipe::new));
 
 	@Nullable
 	private final StaticPowerIngredient smithTarget;
@@ -55,8 +63,10 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	private final List<RecipeAttributeWrapper<?>> attributeModifiers;
 	private final int repairAmount;
 
-	public AutoSmithRecipe(ResourceLocation id, @Nullable StaticPowerIngredient smithTarget, StaticPowerIngredient modifierMaterial, FluidIngredient modifierFluid,
-			List<RecipeAttributeWrapper<?>> attributeModifiers, int repairAmount, MachineRecipeProcessingSection processing) {
+	public AutoSmithRecipe(ResourceLocation id, @Nullable StaticPowerIngredient smithTarget,
+			StaticPowerIngredient modifierMaterial, FluidIngredient modifierFluid,
+			List<RecipeAttributeWrapper<?>> attributeModifiers, int repairAmount,
+			MachineRecipeProcessingSection processing) {
 		super(id, processing);
 		this.modifierMaterial = modifierMaterial;
 		this.smithTarget = smithTarget;
@@ -66,7 +76,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		if (matchParams.shouldVerifyItems()) {
 			// Check if items are supplied.
 			if (!matchParams.hasItems()) {
@@ -82,7 +92,8 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			}
 
 			// Check the smithing target if this recipes is restricted to specific items.
-			if (!isWildcardRecipe() && !smithTarget.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
+			if (!isWildcardRecipe()
+					&& !smithTarget.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
 				return false;
 			}
 
@@ -97,7 +108,8 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			// applied.
 			boolean appliedModifierIfRequested = false;
 			if (hasModifiers()) {
-				IAttributable attributable = matchParams.getItems()[0].getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
+				IAttributable attributable = matchParams.getItems()[0]
+						.getCapability(CapabilityAttributable.CAPABILITY_ATTRIBUTABLE).orElse(null);
 				if (attributable == null) {
 					return false;
 				}
@@ -122,7 +134,8 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			// Check if this recipe performs a repair.
 			if (performsRepair()) {
 				// See if the item input is repairable and if it has any damage.
-				boolean canRepair = matchParams.getItems()[0].getDamageValue() < matchParams.getItems()[0].getMaxDamage();
+				boolean canRepair = matchParams.getItems()[0].getDamageValue() < matchParams.getItems()[0]
+						.getMaxDamage();
 
 				// If it is not repairable AND no modifiers can be applied, then this recipe can
 				// do nothing. Return false.
@@ -254,7 +267,8 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	public static class RecipeAttributeWrapper<T> {
 		public static final Codec<RecipeAttributeWrapper<?>> CODEC = Codec.PASSTHROUGH.comapFlatMap(dynamic -> {
 			try {
-				RecipeAttributeWrapper<?> ingredient = RecipeAttributeWrapper.fromJson(dynamic.convert(JsonOps.INSTANCE).getValue());
+				RecipeAttributeWrapper<?> ingredient = RecipeAttributeWrapper
+						.fromJson(dynamic.convert(JsonOps.INSTANCE).getValue());
 				return DataResult.success(ingredient);
 			} catch (Exception e) {
 				return DataResult.error(e.getMessage());
@@ -269,7 +283,8 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			this.modifier = modifier;
 		}
 
-		public static <T> RecipeAttributeWrapper<T> create(AttributeType<T> type, AttributeModifierType<T> modifierType, T value) {
+		public static <T> RecipeAttributeWrapper<T> create(AttributeType<T> type, AttributeModifierType<T> modifierType,
+				T value) {
 			return new RecipeAttributeWrapper<T>(type, modifierType.create(value));
 		}
 
@@ -280,14 +295,16 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		@SuppressWarnings("unchecked")
 		public static <T> RecipeAttributeWrapper<T> fromJson(JsonElement element) {
 			if (!(element instanceof JsonObject)) {
-				throw new RuntimeException(String.format("Unable to deserialize modifier from Json: %1$s. Expected an object.", element));
+				throw new RuntimeException(
+						String.format("Unable to deserialize modifier from Json: %1$s. Expected an object.", element));
 			}
 
 			JsonObject json = (JsonObject) element;
 			ResourceLocation attributeType = new ResourceLocation(json.get("type").getAsString());
 			AttributeType<T> attribute = (AttributeType<T>) StaticCoreRegistries.Attribute().getValue(attributeType);
 
-			AttributeModifierInstance<T> modifierInstance = AttributeModifierInstance.deserializeFromJson(json.get("modifier").getAsJsonObject());
+			AttributeModifierInstance<T> modifierInstance = AttributeModifierInstance
+					.deserializeFromJson(json.get("modifier").getAsJsonObject());
 			return new RecipeAttributeWrapper<T>(attribute, modifierInstance);
 		}
 

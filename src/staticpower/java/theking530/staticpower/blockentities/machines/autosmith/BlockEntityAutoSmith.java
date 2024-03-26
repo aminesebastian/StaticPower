@@ -155,8 +155,8 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<AutoSmithRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1))
-				.setFluids(fluidTankComponent.getFluid());
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0),
+				inputInventory.getStackInSlot(1)).setFluids(fluidTankComponent.getFluid());
 	}
 
 	@Override
@@ -202,8 +202,8 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 
 		// Make a hybrid of recipe parameters with the output as the smithing target,
 		// but the inputs as the rest.
-		RecipeMatchParameters nextRecipeParameters = new RecipeMatchParameters(output, inputInventory.getStackInSlot(1))
-				.setFluids(fluidTankComponent.getFluid());
+		RecipeMatchParameters nextRecipeParameters = new RecipeMatchParameters(getTeamComponent().getOwningTeamId(),
+				output, inputInventory.getStackInSlot(1)).setFluids(fluidTankComponent.getFluid());
 
 		// Check to get the recipe that will be processed next based on the modifier.
 		Optional<AutoSmithRecipe> nextRecipe = processingComponent.getRecipe(nextRecipeParameters);

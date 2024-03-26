@@ -93,7 +93,8 @@ public class BlockEntityCaster extends BlockEntityMachine implements IRecipeProc
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CastingRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0))
+				.setFluids(fluidTankComponent.getFluid());
 	}
 
 	@Override

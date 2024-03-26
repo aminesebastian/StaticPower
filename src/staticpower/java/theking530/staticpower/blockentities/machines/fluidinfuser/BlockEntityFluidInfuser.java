@@ -100,7 +100,8 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FluidInfusionRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0))
+				.setFluids(fluidTankComponent.getFluid());
 	}
 
 	@Override

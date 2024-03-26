@@ -1,4 +1,4 @@
-package theking530.staticcore.blockentity.components.multiblock.newstyle.fixed;
+package theking530.staticcore.blockentity.components.multiblock.fixed;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,16 +10,18 @@ import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.blockentity.components.multiblock.AbstractMultiblockPattern;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockBlockStateProperties;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockMatchClass;
+import theking530.staticcore.blockentity.components.multiblock.MultiblockState;
 import theking530.staticcore.blockentity.components.multiblock.MultiblockStateBuilder;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockBlockStateProperties;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockMatchClass;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
-import theking530.staticpower.init.ModMultiblocks;
+import theking530.staticcore.blockentity.components.multiblock.manager.MultiblockManager;
+import theking530.staticcore.blockentity.components.multiblock.manager.ServerMultiblockManager;
 
 public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 	private List<FixedMultiblockPatternLayer> layers;
@@ -140,7 +142,7 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 	}
 
 	@Override
-	public MultiblockState isStateStillValid(MultiblockState existingState, Level level) {
+	public MultiblockState isStateStillValid(Level level, MultiblockState existingState) {
 		if (!existingState.isWellFormed() || existingState.getBlocks().isEmpty()) {
 			return existingState;
 		}
@@ -160,7 +162,8 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 							.relative(orientation.getClockWise(), z);
 					BlockState testState = level.getBlockState(testPos);
 					Character patternValue = layers.get(y).getRow(x).charAt(z);
-					if (!isValidBlockForPosition(testState, new BlockPos(x, y, z), bypassExistingCheck)) {
+					if (!isValidBlockForPosition(level, testState, testPos, new BlockPos(x, y, z),
+							bypassExistingCheck)) {
 						return MultiblockState.FAILED;
 					}
 					builder.addEntry(testPos, testState, patternValue, canBeMaster(testPos, testState));
@@ -172,7 +175,8 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 	}
 
 	@Override
-	public boolean isValidBlockForPosition(BlockState state, BlockPos relativePos, boolean bypassExistingCheck) {
+	public boolean isValidBlockForPosition(Level level, BlockState state, BlockPos absolutePos, BlockPos relativePos,
+			boolean bypassExistingCheck) {
 		Character patternValue = layers.get(relativePos.getY()).getRow(relativePos.getX()).charAt(relativePos.getZ());
 		if (Character.isWhitespace(patternValue)) {
 			return state.isAir();
@@ -183,6 +187,14 @@ public class FixedMultiblockPattern extends AbstractMultiblockPattern {
 				return false;
 			}
 		}
+
+		if (!bypassExistingCheck && !level.isClientSide()) {
+			ServerMultiblockManager mbManager = MultiblockManager.get((ServerLevel) level);
+			if (mbManager.containsBlock(absolutePos)) {
+				return false;
+			}
+		}
+
 		return definitions.get(patternValue).matches(state);
 	}
 

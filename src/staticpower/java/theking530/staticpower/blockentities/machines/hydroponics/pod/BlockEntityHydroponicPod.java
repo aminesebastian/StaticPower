@@ -85,7 +85,8 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipe
 				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 					public boolean canInsertItem(int slot, ItemStack stack) {
 						return CraftingUtilities.getRecipe(ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(),
-								new RecipeMatchParameters(stack), getLevel()).isPresent();
+								new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), stack), getLevel())
+								.isPresent();
 					}
 				}).setSlotLimit(2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 10, MachineSideMode.Output));
@@ -253,7 +254,7 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipe
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(
 			RecipeProcessingComponent<HydroponicFarmingRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0));
 	}
 
 	@Override
@@ -300,8 +301,10 @@ public class BlockEntityHydroponicPod extends BlockEntityBase implements IRecipe
 		// If so, transfer. Then, whatever is left goes into the buffer.
 		for (ItemStack stack : processingContainer.getOutputs().getItems()) {
 			stack = stack.copy();
-			if (CraftingUtilities.getRecipe(ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(),
-					new RecipeMatchParameters(stack), getLevel()).isPresent()) {
+			if (CraftingUtilities
+					.getRecipe(ModRecipeTypes.HYDROPONIC_FARMING_RECIPE_TYPE.get(),
+							new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), stack), getLevel())
+					.isPresent()) {
 				if (inputInventory.getStackInSlot(0).isEmpty()
 						|| ItemUtilities.areItemStacksStackable(inputInventory.getStackInSlot(0), stack)) {
 					ItemStack remaining = inputInventory.insertItem(0, stack.copy(), false);

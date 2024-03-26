@@ -73,7 +73,9 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank",
 				getTierObject().defaultTankCapacity.get(), (fluidStack) -> {
-					return processingComponent.getRecipe(new RecipeMatchParameters(fluidStack)).isPresent();
+					return processingComponent
+							.getRecipe(new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), fluidStack))
+							.isPresent();
 				}).setCapabilityExposedModes(MachineSideMode.Input));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerComponent",
 				fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
@@ -107,7 +109,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FluidGeneratorRecipe> component) {
-		return new RecipeMatchParameters(fluidTankComponent.getFluid());
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), fluidTankComponent.getFluid());
 	}
 
 	@Override

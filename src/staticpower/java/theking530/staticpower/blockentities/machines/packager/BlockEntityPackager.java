@@ -66,8 +66,9 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
 				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 					public boolean canInsertItem(int slot, ItemStack stack) {
-						return processingComponent.getRecipe(
-								new RecipeMatchParameters(stack).setIntParameter("size", gridSize).ignoreItemCounts())
+						return processingComponent
+								.getRecipe(new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), stack)
+										.setIntParameter("size", gridSize).ignoreItemCounts())
 								.isPresent();
 					}
 				}));
@@ -99,7 +100,8 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<PackagerRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setIntParameter("size", gridSize);
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0))
+				.setIntParameter("size", gridSize);
 	}
 
 	public void setRecipeSize(int size) {

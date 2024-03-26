@@ -49,7 +49,7 @@ public class FluidGeneratorRecipe extends AbstractMachineRecipe {
 		return ModRecipeTypes.FLUID_GENERATOR_RECIPE_TYPE.get();
 	}
 
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		if (!matchParams.shouldVerifyFluids()) {
 			return true;
 		}

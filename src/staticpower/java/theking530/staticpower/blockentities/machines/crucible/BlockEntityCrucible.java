@@ -64,7 +64,9 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
 				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 					public boolean canInsertItem(int slot, ItemStack stack) {
-						return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts())
+						return processingComponent
+								.getRecipe(new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), stack)
+										.ignoreItemCounts())
 								.isPresent();
 					}
 
@@ -109,9 +111,8 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 	public void process() {
 		super.process();
 		if (!level.isClientSide && redstoneControlComponent.passesRedstoneCheck()) {
-			if (powerStorage.canSupplyPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get())
-					&& HeatUtilities.canFullyAbsorbHeat(heatStorage,
-							StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
+			if (powerStorage.canSupplyPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get()) && HeatUtilities
+					.canFullyAbsorbHeat(heatStorage, StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
 				heatStorage.heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(),
 						HeatTransferAction.EXECUTE);
 				powerStorage.drainPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get(), false);
@@ -126,7 +127,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 
 	@Override
 	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CrucibleRecipe> component) {
-		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+		return new RecipeMatchParameters(getTeamComponent().getOwningTeamId(), inputInventory.getStackInSlot(0));
 	}
 
 	@Override

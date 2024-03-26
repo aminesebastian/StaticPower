@@ -1,4 +1,4 @@
-package theking530.staticcore.blockentity.components.multiblock.newstyle;
+package theking530.staticcore.blockentity.components.multiblock;
 
 import java.util.ArrayList;
 import java.util.List;

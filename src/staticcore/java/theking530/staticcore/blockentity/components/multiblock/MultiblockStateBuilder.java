@@ -6,10 +6,6 @@ import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.AbstractMultiblockPattern;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiBlockFormationStatus;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockMatchClass;
-import theking530.staticcore.blockentity.components.multiblock.newstyle.MultiblockState;
 
 public class MultiblockStateBuilder {
 	private final AbstractMultiblockPattern pattern;
@@ -18,7 +14,7 @@ public class MultiblockStateBuilder {
 
 	public MultiblockStateBuilder(AbstractMultiblockPattern pattern, BlockPos startPos, Direction facingDirection) {
 		this.pattern = pattern;
-		mbState = new MultiblockState(startPos, facingDirection, MultiBlockFormationStatus.OK);
+		mbState = new MultiblockState(pattern, startPos, facingDirection, MultiBlockFormationStatus.OK);
 		counts = new HashMap<>();
 	}
 

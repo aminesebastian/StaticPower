@@ -71,7 +71,7 @@ public class StaticCoreConfig {
 			builder.push("Research");
 			{
 				initialResearch = builder.comment("The default research that is selected for all players when first loading a game.").translation(StaticCore.MOD_ID + ".config." + "initialResearch")
-						.define("InitialResearch", "staticcore:research_tiers/tier_1");
+						.define("InitialResearch", "statipower:research/primary_tier");
 			}
 			builder.push("Power");
 			{

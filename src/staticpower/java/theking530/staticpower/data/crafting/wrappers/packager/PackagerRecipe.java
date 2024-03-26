@@ -50,7 +50,7 @@ public class PackagerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeMatchParameters matchParams, Level worldIn) {
+	protected boolean matchesInternal(RecipeMatchParameters matchParams, Level worldIn) {
 		// Check the size param.
 		if (matchParams.hasCustomParameter("size")) {
 			int paramSize = matchParams.getCustomParameterContainer().getInt("size");
