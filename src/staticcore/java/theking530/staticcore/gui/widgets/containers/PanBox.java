@@ -17,8 +17,10 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	private float interpolatedZoom;
 	private float targetZoom;
 	private float maxZoom;
+	private float drag;
 
 	private Vector2D interpolatedPan;
+	private Vector2D velocity;
 	private Vector2D targetPan;
 	private Vector4D maxBounds;
 
@@ -30,6 +32,8 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		maxBounds = new Vector4D();
 		interpolatedZoom = 1;
 		targetZoom = 1;
+		velocity = new Vector2D();
+		drag = 0.01f;
 		this.setClipType(WidgetClipType.CLIP);
 	}
 
@@ -37,7 +41,8 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	public void transformPoseBeforeRender(PoseStack pose) {
 		pose.translate((getSize().getX() + getPosition().getX()) / 2, (getSize().getY() + getPosition().getY()) / 2, 0);
 		pose.scale(1 / interpolatedZoom, 1 / interpolatedZoom, 1 / interpolatedZoom);
-		pose.translate((getSize().getX() + getPosition().getX()) / -2, (getSize().getY() + getPosition().getY()) / -2, 0);
+		pose.translate((getSize().getX() + getPosition().getX()) / -2, (getSize().getY() + getPosition().getY()) / -2,
+				0);
 		pose.translate(interpolatedPan.getX(), interpolatedPan.getY(), 0);
 	}
 
@@ -109,10 +114,12 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	}
 
 	public RectangleBounds getClipBounds(PoseStack matrix) {
-		Vector2D resolution = new Vector2D(Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
+		Vector2D resolution = new Vector2D(Minecraft.getInstance().getWindow().getGuiScaledWidth(),
+				Minecraft.getInstance().getWindow().getGuiScaledHeight());
 		Vector2D screenSpace = getScreenSpacePosition();
 		Vector2D adjustedSize = getSize();
-		RectangleBounds output = new RectangleBounds(screenSpace.getX(), resolution.getY() - adjustedSize.getY() - screenSpace.getY(), adjustedSize.getX(), adjustedSize.getY());
+		RectangleBounds output = new RectangleBounds(screenSpace.getX(),
+				resolution.getY() - adjustedSize.getY() - screenSpace.getY(), adjustedSize.getX(), adjustedSize.getY());
 		return output;
 	}
 
@@ -132,7 +139,9 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 
 		// Interpolate the pan target.
 		Vector2D panDelta = targetPan.copy().subtract(interpolatedPan);
-		interpolatedPan.add(panDelta.copy().multiply(0.15f));
+		interpolatedPan.add(panDelta.copy());
+		interpolatedPan.add(velocity.copy().multiply(0.1f));
+		velocity.add(velocity.copy().multiply(-drag));
 	}
 
 	@Override
@@ -143,9 +152,15 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		return super.mouseScrolled(mouseX, mouseY, scrollDelta);
 	}
 
-	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_,
+			double p_mouseDragged_8_) {
 		addPanOffset((float) p_mouseDragged_6_, (float) p_mouseDragged_8_);
 		return super.mouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+	}
+
+	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
+		velocity = targetPan.copy().subtract(interpolatedPan);
+		return super.mouseReleased(mouseX, mouseY, button);
 	}
 
 }

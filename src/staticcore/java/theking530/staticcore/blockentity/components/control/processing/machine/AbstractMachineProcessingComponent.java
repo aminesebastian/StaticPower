@@ -382,14 +382,16 @@ public abstract class AbstractMachineProcessingComponent<T extends AbstractProce
 			return ProcessingCheckState.ok();
 		}
 
-		if (getBasePowerUsage() > 0) {
+		double basePowerUsage = getBasePowerUsage();
+		if (basePowerUsage > 0) {
 			if (getPowerSatisfaction() <= 0.0 || powerComponent.getStoredPower() == 0) {
 				return ProcessingCheckState.notReceivingPower();
 			}
-			if (powerComponent.getStoredPower() < getPowerUsage(true)) {
-				return ProcessingCheckState.notEnoughPower(getPowerUsage(true));
+			double powerUsage = getPowerUsage(true);
+			if (powerComponent.getStoredPower() < powerUsage) {
+				return ProcessingCheckState.notEnoughPower(powerUsage);
 			}
-			if (powerComponent.getMaximumPowerOutput() < getPowerUsage(true)) {
+			if (powerComponent.getMaximumPowerOutput() < powerUsage) {
 				return ProcessingCheckState.powerUsageTooHigh(getPowerUsage(true));
 			}
 		}

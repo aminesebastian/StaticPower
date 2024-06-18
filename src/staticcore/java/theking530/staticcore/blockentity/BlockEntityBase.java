@@ -55,7 +55,6 @@ import theking530.staticcore.block.StaticCoreBlock;
 import theking530.staticcore.block.StaticCoreTieredBlock;
 import theking530.staticcore.blockentity.components.AbstractBlockEntityComponent;
 import theking530.staticcore.blockentity.components.control.RedstoneControlComponent;
-import theking530.staticcore.blockentity.components.control.processing.AbstractProcessingComponent;
 import theking530.staticcore.blockentity.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticcore.blockentity.components.items.CompoundInventoryComponent;
 import theking530.staticcore.blockentity.components.items.InventoryComponent;

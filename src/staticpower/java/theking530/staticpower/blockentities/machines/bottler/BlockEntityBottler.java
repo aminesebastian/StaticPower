@@ -125,8 +125,8 @@ public class BlockEntityBottler extends BlockEntityMachine implements IProcessor
 			inputAmount = recipe.getEmptyBottle().getCount();
 			fluidAmount = recipe.getFluid().getAmount();
 		} else {
-			FluidContainerFillResult result = FluidUtilities.tryFillContainer(inputInventory.getStackInSlot(0),
-					fluidTankComponent, Integer.MAX_VALUE, null, false);
+			FluidContainerFillResult result = FluidUtilities.tryFillContainer(inputInventory.getStackInSlot(0).copy(),
+					fluidTankComponent, Integer.MAX_VALUE, null, true);
 			if (!result.isSuccess()) {
 				return ProcessingCheckState.skip();
 			}
@@ -140,7 +140,7 @@ public class BlockEntityBottler extends BlockEntityMachine implements IProcessor
 		}
 
 		processingComponent.setBasePowerUsage(powerUsage);
-		processingComponent.setBasePowerUsage(processingTime);
+		processingComponent.setBaseProcessingTime(processingTime);
 
 		ItemStack input = inputInventory.getStackInSlot(0).copy();
 		input.setCount(inputAmount);

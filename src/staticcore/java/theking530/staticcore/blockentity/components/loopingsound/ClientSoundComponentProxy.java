@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ClientSoundComponentProxy implements ISoundComponentProxy {
 	private SimpleSoundInstance currentlyPlayingSound;
 
+	@SuppressWarnings("resource")
 	@Override
 	public void startPlayingSound(Level world, ResourceLocation soundIdIn, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
 		if (world.isClientSide) {

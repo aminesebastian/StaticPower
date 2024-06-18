@@ -44,6 +44,7 @@ public class PowerStorageComponentSyncPacket extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
+			@SuppressWarnings("resource")
 			Level world = Minecraft.getInstance().player.getCommandSenderWorld();
 			if (world.getBlockEntity(pos) instanceof BlockEntityBase) {
 				BlockEntityBase te = (BlockEntityBase) world.getBlockEntity(pos);

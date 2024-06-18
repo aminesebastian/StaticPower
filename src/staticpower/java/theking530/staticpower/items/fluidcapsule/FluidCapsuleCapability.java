@@ -95,7 +95,7 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 	public int fill(FluidStack resource, FluidAction action) {
 		FluidStack containedFluid = getFluid();
 
-		if (resource == null || resource.isEmpty() || !containedFluid.isEmpty() && !resource.isFluidEqual(containedFluid)) {
+		if (resource == null || resource.isEmpty() || (!containedFluid.isEmpty() && !resource.isFluidEqual(containedFluid))) {
 			return 0;
 		}
 

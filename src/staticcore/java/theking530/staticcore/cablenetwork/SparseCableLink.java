@@ -2,7 +2,6 @@ package theking530.staticcore.cablenetwork;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import theking530.staticcore.cablenetwork.SparseCableLink.SparseCableConnectionType;
 
 /**
  * 
